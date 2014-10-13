@@ -92,15 +92,15 @@ class VpnPortalService extends Service
     private function validateConfigName($configName)
     {
         if (null === $configName) {
-            throw new BadRequest("missing parameter");
+            throw new BadRequestException("missing parameter");
         }
         if (!is_string($configName)) {
-            throw new BadRequest("malformed parameter");
+            throw new BadRequestException("malformed parameter");
         }
         if (32 < strlen($configName)) {
-            throw new BadRequest("name too long, maximum 32 characters");
+            throw new BadRequestException("name too long, maximum 32 characters");
         }
-        // FIXME: less restrictive in supported characters...
+        // FIXME: be less restrictive in supported characters...
         if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
             throw new BadRequestException("invalid characters in name");
         }
