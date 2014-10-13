@@ -6,7 +6,7 @@ use fkooman\Http\Request;
 use fkooman\Http\Response;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
-use fkooman\Rest\Plugin\BasicAuthentication;
+use fkooman\Rest\ServicePluginInterface;
 use fkooman\Rest\Plugin\UserInfo;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
@@ -14,25 +14,24 @@ use Twig_Environment;
 class VpnPortalService extends Service
 {
     /** @var fkooman\VpnPortal\PdoStorage */
-    private $db;
+    private $pdoStorage;
 
     /** @var fkooman\VpnPortal\VpnCertServiceClient */
-    private $csc;
+    private $vpnCertServiceClient;
 
-    public function __construct(PdoStorage $db) //, VpnCertServiceClient $csc)
+    public function __construct(PdoStorage $pdoStorage, ServicePluginInterface $authenticationPlugin) //, VpnCertServiceClient $vpnCertServiceClient)
     {
         parent::__construct();
-        $this->db = $db;
-        //$this->csc = $csc;
+        $this->pdoStorage = $pdoStorage;
+        //$this->vpnCertServiceClient = $vpnCertServiceClient;
 
-        // use the Mellon plugin to retrieve user info
-        $this->registerBeforeMatchingPlugin(new BasicAuthentication("foo", '$2y$10$zx/fEKn2yleZVULfL8bAt.vUg7OSOkzj1VB1PT2jRAqJ4qrDQOypS', "Realmmmm"));
+        $this->registerBeforeMatchingPlugin($authenticationPlugin);
 
         /* GET */
         $this->get(
             '/manage',
             function (UserInfo $u) {
-                $configs = $this->db->getConfigurations($u->getUserId());
+                $configs = $this->pdoStorage->getConfigurations($u->getUserId());
 
                 $loader = new Twig_Loader_Filesystem(
                     dirname(dirname(dirname(__DIR__)))."/views"
@@ -54,17 +53,18 @@ class VpnPortalService extends Service
             function (Request $request, UserInfo $u) {
                 // FIXME: CRSF protection?
                 $configName = $request->getPostParameter('config_name');
+                // FIXME: less restrictive in supported characters...
                 if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
                     throw new BadRequestException("invalid characters in config_name");
                 }
 
-                $this->db->addConfiguration($u->getUserId(), $configName);
-                //$config = $this->csc->addConfiguration($userId, $configName);
-                $config = "PLACEHOLDER FILE";
+                $this->pdoStorage->addConfiguration($u->getUserId(), $configName);
+                //$vpnConfig = $this->vpnCertServiceClient->addConfiguration($userId, $configName);
+                $vpnConfig = "PLACEHOLDER FILE";
 
                 $response = new Response(201, "application/x-openvpn-profile");
                 $response->setHeader("Content-Disposition", sprintf('attachment; filename="%s.ovpn"', $configName));
-                $response->setContent($config);
+                $response->setContent($vpnConfig);
 
                 return $response;
             }
@@ -77,8 +77,8 @@ class VpnPortalService extends Service
                 // FIXME: CRSF protection?
                 $revokeList = $request->getPostParameter('revoke');
                 foreach ($revokeList as $configName) {
-                    $this->db->revokeConfiguration($u->getUserId(), $configName);
-                    //$this->csc->revokeConfiguration($userId, $configName);
+                    $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
+                    //$this->vpnCertServiceClient->revokeConfiguration($userId, $configName);
                 }
                 $response = new Response(302);
                 // FIXME: find better way to redirect back, do not use Referer!

@@ -9,6 +9,7 @@ use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\Config\Config;
 use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
+use fkooman\Rest\Plugin\BasicAuthentication;
 
 set_error_handler(
     function ($errno, $errstr, $errfile, $errline) {
@@ -21,14 +22,19 @@ try {
         dirname(__DIR__)."/config/config.ini"
     );
 
-    $db = new PDO(
+    $pdo = new PDO(
         $config->s('PdoStorage')->l('dsn', true),
         $config->s('PdoStorage')->l('username', false),
         $config->s('PdoStorage')->l('password', false)
     );
-    $db = new PdoStorage($db);
+    $pdoStorage = new PdoStorage($pdo);
 
-    $vpnPortalService = new VpnPortalService($db);
+    $basicAuthentication = new BasicAuthentication(
+        'foo',
+        '$2y$10$zx/fEKn2yleZVULfL8bAt.vUg7OSOkzj1VB1PT2jRAqJ4qrDQOypS'
+    );
+
+    $vpnPortalService = new VpnPortalService($pdoStorage, $basicAuthentication);
 
     $request = Request::fromIncomingRequest(new IncomingRequest());
     $vpnPortalService->run($request)->sendResponse();
