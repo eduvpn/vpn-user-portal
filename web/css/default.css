@@ -24,6 +24,6 @@ th {
     text-align: left;
 }
 
-span.st {
-    font-style: strike-through;
+span.revoked {
+    color: #999;
 }

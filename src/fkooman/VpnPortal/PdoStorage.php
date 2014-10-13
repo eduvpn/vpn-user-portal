@@ -21,13 +21,13 @@ class PdoStorage
     {
         $stmt = $this->db->prepare(
             sprintf(
-                "SELECT config_name, config_status FROM %s WHERE user_id = :user_id",
+                "SELECT config_name, config_status FROM %s WHERE user_id = :user_id ORDER BY config_status",
                 $this->prefix.'configurations'
             )
         );
         $stmt->bindValue(":user_id", $userId, PDO::PARAM_STR);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // FIXME: returns empty array when no configurations or still false?
         if (false !== $result) {
             return $result;

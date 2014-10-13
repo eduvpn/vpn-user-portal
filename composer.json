@@ -16,7 +16,7 @@
     "name": "fkooman/vpn-user-portal",
     "require": {
         "fkooman/config": "~0.3.3",
-        "fkooman/rest": "~0.5.1",
+        "fkooman/rest": "dev-master",
         "php": ">=5.3.3",
         "twig/twig": "~1.15"
     }

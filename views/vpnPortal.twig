@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VPN Portal</title>
-  <link rel="stylesheet" type="text/css" href="css/default.css">
+  <link rel="stylesheet" type="text/css" href="../css/default.css">
 </head>
 
 <body>
@@ -19,22 +19,35 @@
            occurs.
        </p>
         <form method="post">
-            <input type="text" name="commonName" placeholder="Name...">
+            <input type="text" name="config_name" placeholder="Name...">
             <input type="submit" value="Create">
         </form>
 
         <!-- if existing configurations -->
+        {% if configs %}
         <h2>Existing Configurations</h2>
-        <table>
-            <thead>
-                <tr><th>Configuration</th><th>Actions</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>Phone</td><td><button>Revoke</button></td></tr>
-                <tr><td><strike>Desktop</strike></td><td><button disabled="disabled">Revoke</button></td></tr>
-            </tbody>
-        </table>
-        <!-- /end if existing configurations -->
+        <form method="post" action="delete">
+            <table>
+                <thead>
+                    <tr><th>Configuration</th><th>Revoke</th></tr>
+                </thead>
+                <tbody>
+                {% for config in configs %}
+                    <tr>
+                        {% if config.config_status == 'revoked' %}
+                            <td><span class="revoked">{{ config.config_name|e }}</span></td>
+                            <td><input type="checkbox" disabled="disabled"></td>
+                        {% else %}
+                            <td>{{ config.config_name|e }}</td>
+                            <td><input type="checkbox" name="revoke[]" value="{{ config.config_name|e }}"></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <input type="submit" value="Revoke">
+        </form>
+        {% endif %}
 
     </div> <!-- /container -->
 </body>
