@@ -53,10 +53,7 @@ class VpnPortalService extends Service
             function (Request $request, UserInfo $u) {
                 // FIXME: CRSF protection?
                 $configName = $request->getPostParameter('config_name');
-                // FIXME: less restrictive in supported characters...
-                if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
-                    throw new BadRequestException("invalid characters in config_name");
-                }
+                $this->validateConfigName($configName);
 
                 $this->pdoStorage->addConfiguration($u->getUserId(), $configName);
                 $vpnConfig = $this->vpnCertServiceClient->addConfiguration($u->getUserId(), $configName);
@@ -75,7 +72,11 @@ class VpnPortalService extends Service
             function (Request $request, UserInfo $u) {
                 // FIXME: CRSF protection?
                 $revokeList = $request->getPostParameter('revoke');
+                if (null === $revokeList || !is_array($revokeList)) {
+                    throw new BadRequestException("missing or malformed revoke list");
+                }
                 foreach ($revokeList as $configName) {
+                    $this->validateConfigName($configName);
                     $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
                     $this->vpnCertServiceClient->revokeConfiguration($u->getUserId(), $configName);
                 }
@@ -86,5 +87,22 @@ class VpnPortalService extends Service
                 return $response;
             }
         );
+    }
+
+    private function validateConfigName($configName)
+    {
+        if (null === $configName) {
+            throw new BadRequest("missing parameter");
+        }
+        if (!is_string($configName)) {
+            throw new BadRequest("malformed parameter");
+        }
+        if (32 < strlen($configName)) {
+            throw new BadRequest("name too long, maximum 32 characters");
+        }
+        // FIXME: less restrictive in supported characters...
+        if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
+            throw new BadRequestException("invalid characters in name");
+        }
     }
 }
