@@ -10,11 +10,11 @@ use fkooman\Config\Config;
 use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
 
-#set_error_handler(
-#    function ($errno, $errstr, $errfile, $errline) {
-#        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-#    }
-#);
+set_error_handler(
+    function ($errno, $errstr, $errfile, $errline) {
+        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+    }
+);
 
 try {
     $config = Config::fromIniFile(

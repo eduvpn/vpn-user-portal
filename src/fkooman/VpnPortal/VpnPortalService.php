@@ -11,32 +11,38 @@ class VpnPortalService extends Service
     /** @var fkooman\VpnPortal\PdoStorage */
     private $db;
 
-    public function __construct(PdoStorage $db)
+    /** @var fkooman\VpnPortal\VpnCertServiceClient */
+    private $csc;
+
+    public function __construct(PdoStorage $db, VpnCertServiceClient $csc)
     {
         parent::__construct();
         $this->db = $db;
+        $this->csc = $csc;
 
         // use the Mellon plugin to retrieve user info
-        // $this->registerBeforeMatchingPlugin(...);
+        $this->registerBeforeMatchingPlugin(new BasicAuthentication("foo", "bar", "Realmmmm"));
 
         /* GET */
         $this->get(
             '/manage',
             function () {
-                // get userinfo from melon
-                // show stuff
+                $userId = "foo";
+                $configs = $this->db->getConfigurations($userId);
 
-                // $this->db->getUserConfigurations(...);
+                var_dump($configs);
+                die();
+                $loader = new Twig_Loader_Filesystem(
+                    dirname(__DIR__)."/views"
+                );
+                $twig = new Twig_Environment($loader);
 
-                #$loader = new Twig_Loader_Filesystem(
-                #    dirname(__DIR__)."/views"
-                #);
-                #$twig = new Twig_Environment($loader);
-
-                #$output = $twig->render(
-                #    "vpnPortal.twig",
-                #    array()
-                #);
+                return $twig->render(
+                    "vpnPortal.twig",
+                    array(
+                        $configs,
+                    )
+                );
             }
         );
 
@@ -44,17 +50,18 @@ class VpnPortalService extends Service
         $this->post(
             '/manage',
             function (Request $request) {
-                // get user info from melon to see if everything fits
-                // verify the Referer
+                // FIXME: verify the Referer, CSRF?
+                $userId = "foo";
 
-                $commonName = $request->getPostParameter('commonName');
-                // generate a new config using the vpnCertClient
-                // store metadata in the DB
-                // send the file to the client
-                $response = new Response();
-                $response->setContent("...");
+                $configName = $request->getPostParameter('config_name');
 
-                return $response;
+                $this->db->addConfiguration($userId, $configName);
+                $config = $this->csc->addConfiguration($userId, $configName);
+
+                $response = new Response(201, "application/x-openvpn-profile");
+                $response->setContent($config);
+
+                return $respones;
             }
         );
     }
