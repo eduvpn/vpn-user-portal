@@ -11,7 +11,7 @@
             "fkooman\\VpnPortal": "src/"
         }
     },
-    "description": "End-user Portal to manage OpenVPN client configurations written in PHP",
+    "description": "Portal to manage OpenVPN client configurations written in PHP",
     "license": "Apache-2.0",
     "name": "fkooman/vpn-user-portal",
     "require": {
