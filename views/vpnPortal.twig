@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VPN Portal</title>
+  <link rel="stylesheet" type="text/css" href="css/default.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>VPN Portal</h1>
+        <p>Welcome to the VPN portal. Here you can manage your VPN configurations.</p>
+
+        <h2>New Configuration</h2>
+        <p>Enter a name, e.g. "Phone", for the configuration in the box below and click
+           <em>Create</em>. A download will start immediately if no error
+           occurs.
+       </p>
+        <form method="post">
+            <input type="text" name="commonName" placeholder="Name...">
+            <input type="submit" value="Create">
+        </form>
+
+        <!-- if existing configurations -->
+        <h2>Existing Configurations</h2>
+        <table>
+            <thead>
+                <tr><th>Configuration</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Phone</td><td><button>Revoke</button></td></tr>
+                <tr><td><strike>Desktop</strike></td><td><button disabled="disabled">Revoke</button></td></tr>
+            </tbody>
+        </table>
+        <!-- /end if existing configurations -->
+
+    </div> <!-- /container -->
+</body>
+</html>

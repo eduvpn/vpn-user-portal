@@ -1,0 +1,23 @@
+{
+    "authors": [
+        {
+            "email": "fkooman@tuxed.net",
+            "name": "Fran\u00e7ois Kooman",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "fkooman\\VpnPortal": "src/"
+        }
+    },
+    "description": "End-user Portal to manage OpenVPN client configurations written in PHP",
+    "license": "Apache-2.0",
+    "name": "fkooman/vpn-user-portal",
+    "require": {
+        "fkooman/config": "~0.3.3",
+        "fkooman/rest": "~0.5.1",
+        "php": ">=5.3.3",
+        "twig/twig": "~1.15"
+    }
+}

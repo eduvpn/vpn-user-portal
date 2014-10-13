@@ -1,0 +1,29 @@
+body {
+    background-color: #eee;
+    font-family: sans-serif;
+}
+
+div.container {
+    width: 600px;
+    margin: 40px auto;
+    border-radius: 10px;
+    border: 1px solid #000;
+    background-color: #ddd;
+    padding: 10px;
+}
+
+h1 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+}
+
+th {
+    text-align: left;
+}
+
+span.st {
+    font-style: strike-through;
+}
