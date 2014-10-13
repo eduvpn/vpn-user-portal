@@ -19,11 +19,11 @@ class VpnPortalService extends Service
     /** @var fkooman\VpnPortal\VpnCertServiceClient */
     private $vpnCertServiceClient;
 
-    public function __construct(PdoStorage $pdoStorage, ServicePluginInterface $authenticationPlugin) //, VpnCertServiceClient $vpnCertServiceClient)
+    public function __construct(PdoStorage $pdoStorage, ServicePluginInterface $authenticationPlugin, VpnCertServiceClient $vpnCertServiceClient)
     {
         parent::__construct();
         $this->pdoStorage = $pdoStorage;
-        //$this->vpnCertServiceClient = $vpnCertServiceClient;
+        $this->vpnCertServiceClient = $vpnCertServiceClient;
 
         $this->registerBeforeMatchingPlugin($authenticationPlugin);
 
@@ -59,8 +59,7 @@ class VpnPortalService extends Service
                 }
 
                 $this->pdoStorage->addConfiguration($u->getUserId(), $configName);
-                //$vpnConfig = $this->vpnCertServiceClient->addConfiguration($userId, $configName);
-                $vpnConfig = "PLACEHOLDER FILE";
+                $vpnConfig = $this->vpnCertServiceClient->addConfiguration($u->getUserId(), $configName);
 
                 $response = new Response(201, "application/x-openvpn-profile");
                 $response->setHeader("Content-Disposition", sprintf('attachment; filename="%s.ovpn"', $configName));
@@ -78,7 +77,7 @@ class VpnPortalService extends Service
                 $revokeList = $request->getPostParameter('revoke');
                 foreach ($revokeList as $configName) {
                     $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
-                    //$this->vpnCertServiceClient->revokeConfiguration($userId, $configName);
+                    $this->vpnCertServiceClient->revokeConfiguration($u->getUserId(), $configName);
                 }
                 $response = new Response(302);
                 // FIXME: find better way to redirect back, do not use Referer!

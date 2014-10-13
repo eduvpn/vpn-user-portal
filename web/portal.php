@@ -9,7 +9,9 @@ use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\Config\Config;
 use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
+use fkooman\VpnPortal\VpnCertServiceClient;
 use fkooman\Rest\Plugin\BasicAuthentication;
+//use Guzzle\Http\Client;
 
 set_error_handler(
     function ($errno, $errstr, $errfile, $errline) {
@@ -28,15 +30,13 @@ try {
         $config->s('PdoStorage')->l('password', false)
     );
     $pdoStorage = new PdoStorage($pdo);
-
     $basicAuthentication = new BasicAuthentication(
         'foo',
         '$2y$10$zx/fEKn2yleZVULfL8bAt.vUg7OSOkzj1VB1PT2jRAqJ4qrDQOypS'
     );
-
-    $vpnPortalService = new VpnPortalService($pdoStorage, $basicAuthentication);
-
+    $vpnCertServiceClient = new VpnCertServiceClient(); //new Client());
     $request = Request::fromIncomingRequest(new IncomingRequest());
+    $vpnPortalService = new VpnPortalService($pdoStorage, $basicAuthentication, $vpnCertServiceClient);
     $vpnPortalService->run($request)->sendResponse();
 } catch (Exception $e) {
     if ($e instanceof HttpException) {
