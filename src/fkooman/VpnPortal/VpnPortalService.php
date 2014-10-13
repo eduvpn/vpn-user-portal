@@ -7,6 +7,7 @@ use fkooman\Http\Response;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\BasicAuthentication;
+use fkooman\Rest\Plugin\UserInfo;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 
@@ -30,9 +31,8 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/manage',
-            function () {
-                $userId = "foo";
-                $configs = $this->db->getConfigurations($userId);
+            function (UserInfo $u) {
+                $configs = $this->db->getConfigurations($u->getUserId());
 
                 $loader = new Twig_Loader_Filesystem(
                     dirname(dirname(dirname(__DIR__)))."/views"
@@ -51,17 +51,14 @@ class VpnPortalService extends Service
         /* POST */
         $this->post(
             '/manage',
-            function (Request $request) {
-                //var_dump($request);
-                // FIXME: verify the Referer, CSRF?
-                $userId = "foo";
-
+            function (Request $request, UserInfo $u) {
+                // FIXME: CRSF protection?
                 $configName = $request->getPostParameter('config_name');
                 if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
                     throw new BadRequestException("invalid characters in config_name");
                 }
 
-                $this->db->addConfiguration($userId, $configName);
+                $this->db->addConfiguration($u->getUserId(), $configName);
                 //$config = $this->csc->addConfiguration($userId, $configName);
                 $config = "PLACEHOLDER FILE";
 
@@ -76,18 +73,15 @@ class VpnPortalService extends Service
         /* DELETE */
         $this->post(
             '/delete',
-            function (Request $request) {
-                $userId = "foo";
-
-#                $pp = $request->getPostParameters();
-#                $revokeList = $pp['revoke'];
-
-
+            function (Request $request, UserInfo $u) {
+                // FIXME: CRSF protection?
                 $revokeList = $request->getPostParameter('revoke');
                 foreach ($revokeList as $configName) {
-                    $this->db->revokeConfiguration($userId, $configName);
+                    $this->db->revokeConfiguration($u->getUserId(), $configName);
+                    //$this->csc->revokeConfiguration($userId, $configName);
                 }
                 $response = new Response(302);
+                // FIXME: find better way to redirect back, do not use Referer!
                 $response->setHeader("Location", $request->getHeader("Referer"));
 
                 return $response;
