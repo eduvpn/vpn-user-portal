@@ -11,7 +11,7 @@ use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
 use fkooman\VpnPortal\VpnCertServiceClient;
 use fkooman\Rest\Plugin\BasicAuthentication;
-//use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 
 set_error_handler(
     function ($errno, $errstr, $errfile, $errline) {
@@ -34,7 +34,20 @@ try {
         'foo',
         '$2y$10$zx/fEKn2yleZVULfL8bAt.vUg7OSOkzj1VB1PT2jRAqJ4qrDQOypS'
     );
-    $vpnCertServiceClient = new VpnCertServiceClient(); //new Client());
+
+    $serviceUri = $config->s('vpnCertService', true)->l('serviceUri', true);
+    $serviceAuth = $config->s('vpnCertService', true)->l('serviceUser', true);
+    $servicePass = $config->s('vpnCertService', true)->l('servicePass', true);
+
+    $client = new Client(
+        array(
+            'defaults' => array(
+                'auth' => array($serviceAuth, $servicePass),
+            ),
+        )
+    );
+
+    $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
     $request = Request::fromIncomingRequest(new IncomingRequest());
     $vpnPortalService = new VpnPortalService($pdoStorage, $basicAuthentication, $vpnCertServiceClient);
     $vpnPortalService->run($request)->sendResponse();

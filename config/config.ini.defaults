@@ -1,7 +1,8 @@
 ; vpn-cert-service URI
-vpnCertServiceUri  = 'http://localhost/vpn-cert-service/api.php'
-vpnCertServiceUser = 'admin'
-vpnCertServicePass = 's3cr3t'
+[vpnCertService]
+serviceUri  = 'http://localhost'
+serviceUser = 'admin'
+servicePass = 's3cr3t'
 
 [PdoStorage]
 dsn = "sqlite:/var/lib/vpn-user-portal/configurations.sqlite"
