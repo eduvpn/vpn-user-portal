@@ -67,19 +67,13 @@ class VpnPortalService extends Service
         );
 
         /* DELETE */
-        $this->post(
-            '/delete',
-            function (Request $request, UserInfo $u) {
+        $this->delete(
+            '/manage/:configName',
+            function (Request $request, UserInfo $u, $configName) {
                 // FIXME: CRSF protection?
-                $revokeList = $request->getPostParameter('revoke');
-                if (null === $revokeList || !is_array($revokeList)) {
-                    throw new BadRequestException("missing or malformed revoke list");
-                }
-                foreach ($revokeList as $configName) {
-                    $this->validateConfigName($configName);
-                    $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
-                    $this->vpnCertServiceClient->revokeConfiguration($u->getUserId(), $configName);
-                }
+                $this->validateConfigName($configName);
+                $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
+                $this->vpnCertServiceClient->revokeConfiguration($u->getUserId(), $configName);
                 $response = new Response(302);
                 // FIXME: find better way to redirect back, do not use Referer!
                 $response->setHeader("Location", $request->getHeader("Referer"));

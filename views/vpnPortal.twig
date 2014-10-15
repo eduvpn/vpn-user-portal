@@ -27,27 +27,34 @@
         {% if configs %}
         <h2>Existing Configurations</h2>
         <p>If you lost your device or no longer use the VPN you can "Revoke" a configuration by setting the checkbox and clicking "Revoke".</p>
-        <form method="post" action="delete">
-            <table>
-                <thead>
-                    <tr><th>Configuration</th><th>Revoke</th></tr>
-                </thead>
-                <tbody>
-                {% for config in configs %}
-                    <tr>
-                        {% if config.config_status == 'revoked' %}
-                            <td><span class="revoked">{{ config.config_name|e }}</span></td>
-                            <td><input type="checkbox" disabled="disabled"></td>
-                        {% else %}
-                            <td>{{ config.config_name|e }}</td>
-                            <td><input type="checkbox" name="revoke[]" value="{{ config.config_name|e }}"></td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <input type="submit" value="Revoke">
-        </form>
+        <table>
+            <thead>
+                <tr><th>Configuration</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+            {% for config in configs %}
+                <tr>
+                    {% if config.config_status == 'revoked' %}
+                        <td><span class="revoked">{{ config.config_name|e }}</span></td>
+                        <td>
+                            <form method="post" action="manage/{{ config.config_name|e }}">
+                                <input type="hidden" name="_METHOD" value="DELETE">
+                                <input type="submit" value="Revoke" disabled="disabled">
+                            </form>
+                        </td>
+                    {% else %}
+                        <td>{{ config.config_name|e }}</td>
+                        <td>
+                            <form method="post" action="manage/{{ config.config_name|e }}">
+                                <input type="hidden" name="_METHOD" value="DELETE">
+                                <input type="submit" value="Revoke">
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% endif %}
 
     </div> <!-- /container -->
