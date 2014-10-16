@@ -19,7 +19,7 @@
            occurs.
        </p>
         <form method="post">
-            <input type="text" name="config_name" placeholder="Name...">
+            <input type="text" name="name" placeholder="Name...">
             <input type="submit" value="Create">
         </form>
 
@@ -34,18 +34,18 @@
             <tbody>
             {% for config in configs %}
                 <tr>
-                    {% if config.config_status == 'revoked' %}
-                        <td><span class="revoked">{{ config.config_name|e }}</span></td>
+                    {% if config.status == 'revoked' %}
+                        <td><span class="revoked">{{ config.name|e }}</span></td>
                         <td>
-                            <form method="post" action="manage/{{ config.config_name|e }}">
+                            <form method="post" action="manage/{{ config.name|e }}">
                                 <input type="hidden" name="_METHOD" value="DELETE">
                                 <input type="submit" value="Revoke" disabled="disabled">
                             </form>
                         </td>
                     {% else %}
-                        <td>{{ config.config_name|e }}</td>
+                        <td>{{ config.name|e }}</td>
                         <td>
-                            <form method="post" action="manage/{{ config.config_name|e }}">
+                            <form method="post" action="manage/{{ config.name|e }}">
                                 <input type="hidden" name="_METHOD" value="DELETE">
                                 <input type="submit" value="Revoke">
                             </form>

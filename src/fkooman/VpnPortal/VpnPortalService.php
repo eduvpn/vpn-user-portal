@@ -4,6 +4,7 @@ namespace fkooman\VpnPortal;
 
 use fkooman\Http\Request;
 use fkooman\Http\Response;
+use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServicePluginInterface;
@@ -27,9 +28,11 @@ class VpnPortalService extends Service
 
         $this->registerBeforeMatchingPlugin($authenticationPlugin);
 
+        $this->setDefaultRoute('/config/');
+
         /* GET */
         $this->get(
-            '/manage',
+            '/config/',
             function (UserInfo $u) {
                 $configs = $this->pdoStorage->getConfigurations($u->getUserId());
 
@@ -49,14 +52,14 @@ class VpnPortalService extends Service
 
         /* POST */
         $this->post(
-            '/manage',
+            '/config/',
             function (Request $request, UserInfo $u) {
                 // FIXME: CRSF protection?
-                $configName = $request->getPostParameter('config_name');
+                $configName = $request->getPostParameter('name');
                 $this->validateConfigName($configName);
 
-                $this->pdoStorage->addConfiguration($u->getUserId(), $configName);
                 $vpnConfig = $this->vpnCertServiceClient->addConfiguration($u->getUserId(), $configName);
+                $this->pdoStorage->addConfiguration($u->getUserId(), $configName);
 
                 $response = new Response(201, "application/x-openvpn-profile");
                 $response->setHeader("Content-Disposition", sprintf('attachment; filename="%s.ovpn"', $configName));
@@ -68,17 +71,14 @@ class VpnPortalService extends Service
 
         /* DELETE */
         $this->delete(
-            '/manage/:configName',
+            '/config/:configName',
             function (Request $request, UserInfo $u, $configName) {
                 // FIXME: CRSF protection?
                 $this->validateConfigName($configName);
-                $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
                 $this->vpnCertServiceClient->revokeConfiguration($u->getUserId(), $configName);
-                $response = new Response(302);
-                // FIXME: find better way to redirect back, do not use Referer!
-                $response->setHeader("Location", $request->getHeader("Referer"));
+                $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
 
-                return $response;
+                return new RedirectResponse("http://foo.example.org/config/");
             }
         );
     }

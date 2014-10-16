@@ -21,8 +21,8 @@ class PdoStorage
     {
         $stmt = $this->db->prepare(
             sprintf(
-                "SELECT config_name, config_status FROM %s WHERE user_id = :user_id ORDER BY config_status",
-                $this->prefix.'configurations'
+                "SELECT name, status FROM %s WHERE user_id = :user_id ORDER BY status, name",
+                $this->prefix.'config'
             )
         );
         $stmt->bindValue(":user_id", $userId, PDO::PARAM_STR);
@@ -36,17 +36,17 @@ class PdoStorage
         return null;
     }
 
-    public function addConfiguration($userId, $configName)
+    public function addConfiguration($userId, $name)
     {
         $stmt = $this->db->prepare(
             sprintf(
-                "INSERT INTO %s (user_id, config_name, config_status) VALUES(:user_id, :config_name, :config_status)",
-                $this->prefix.'configurations'
+                "INSERT INTO %s (user_id, name, status) VALUES(:user_id, :name, :status)",
+                $this->prefix.'config'
             )
         );
         $stmt->bindValue(":user_id", $userId, PDO::PARAM_STR);
-        $stmt->bindValue(":config_name", $configName, PDO::PARAM_STR);
-        $stmt->bindValue(":config_status", "active", PDO::PARAM_STR);
+        $stmt->bindValue(":name", $name, PDO::PARAM_STR);
+        $stmt->bindValue(":status", "active", PDO::PARAM_STR);
         $stmt->execute();
 
         if (1 !== $stmt->rowCount()) {
@@ -54,16 +54,16 @@ class PdoStorage
         }
     }
 
-    public function revokeConfiguration($userId, $configName)
+    public function revokeConfiguration($userId, $name)
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'UPDATE %s SET config_status = "revoked" WHERE user_id = :user_id AND config_name = :config_name',
-                $this->prefix.'configurations'
+                'UPDATE %s SET status = "revoked" WHERE user_id = :user_id AND name = :name',
+                $this->prefix.'config'
             )
         );
         $stmt->bindValue(":user_id", $userId, PDO::PARAM_STR);
-        $stmt->bindValue(":config_name", $configName, PDO::PARAM_STR);
+        $stmt->bindValue(":name", $name, PDO::PARAM_STR);
         $stmt->execute();
 
         if (1 !== $stmt->rowCount()) {
@@ -77,11 +77,11 @@ class PdoStorage
         $query[] = sprintf(
             "CREATE TABLE IF NOT EXISTS %s (
                 user_id VARCHAR(255) NOT NULL,
-                config_name VARCHAR(255) NOT NULL,
-                config_status VARCHAR(255) NOT NULL,
-                UNIQUE (user_id, config_name)
+                name VARCHAR(255) NOT NULL,
+                status VARCHAR(255) NOT NULL,
+                UNIQUE (user_id, name)
             )",
-            $prefix.'configurations'
+            $prefix.'config'
         );
 
         return $query;
@@ -94,7 +94,7 @@ class PdoStorage
             $this->db->query($q);
         }
 
-        $tables = array('configurations');
+        $tables = array('config');
         foreach ($tables as $t) {
             // make sure the tables are empty
             $this->db->query(
