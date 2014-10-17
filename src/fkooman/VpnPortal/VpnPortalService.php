@@ -25,10 +25,15 @@ class VpnPortalService extends Service
         parent::__construct();
         $this->pdoStorage = $pdoStorage;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
-
         $this->registerBeforeMatchingPlugin($authenticationPlugin);
-
         $this->setDefaultRoute('/config/');
+
+        $this->get(
+            '/',
+            function () {
+                return new RedirectResponse('config/');
+            }
+        );
 
         /* GET */
         $this->get(
@@ -78,7 +83,8 @@ class VpnPortalService extends Service
                 $this->vpnCertServiceClient->revokeConfiguration($u->getUserId(), $configName);
                 $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
 
-                return new RedirectResponse("http://foo.example.org/config/");
+                // FIXME: is it smart to use the Referer?
+                return new RedirectResponse($request->getHeader("Referer"));
             }
         );
     }

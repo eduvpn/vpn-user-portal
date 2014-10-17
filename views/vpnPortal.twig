@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VPN Portal</title>
-  <link rel="stylesheet" type="text/css" href="css/default.css">
+  <link rel="stylesheet" type="text/css" href="../../css/default.css">
 </head>
 
 <body>
@@ -37,7 +37,7 @@
                     {% if config.status == 'revoked' %}
                         <td><span class="revoked">{{ config.name|e }}</span></td>
                         <td>
-                            <form method="post" action="manage/{{ config.name|e }}">
+                            <form method="post" action="{{ config.name|e }}">
                                 <input type="hidden" name="_METHOD" value="DELETE">
                                 <input type="submit" value="Revoke" disabled="disabled">
                             </form>
@@ -45,7 +45,7 @@
                     {% else %}
                         <td>{{ config.name|e }}</td>
                         <td>
-                            <form method="post" action="manage/{{ config.name|e }}">
+                            <form method="post" action="{{ config.name|e }}">
                                 <input type="hidden" name="_METHOD" value="DELETE">
                                 <input type="submit" value="Revoke">
                             </form>

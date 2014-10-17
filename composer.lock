@@ -88,12 +88,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest.git",
-                "reference": "6df32045bc5951e28cfe38b6151a31273d552769"
+                "reference": "a3905aed8ffafb1ab635857df632cb480e83cb57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/6df32045bc5951e28cfe38b6151a31273d552769",
-                "reference": "6df32045bc5951e28cfe38b6151a31273d552769",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/a3905aed8ffafb1ab635857df632cb480e83cb57",
+                "reference": "a3905aed8ffafb1ab635857df632cb480e83cb57",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +120,7 @@
                 }
             ],
             "description": "Simple PHP library for writing REST services.",
-            "time": "2014-10-16 08:35:35"
+            "time": "2014-10-16 11:07:46"
         },
         {
             "name": "guzzlehttp/guzzle",
