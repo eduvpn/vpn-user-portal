@@ -59,7 +59,9 @@ class VpnPortalService extends Service
         $this->post(
             '/config/',
             function (Request $request, UserInfo $u) {
-                // FIXME: CRSF protection?
+                if ($request->getHeader('Referer') !== $request->getRequestUri()->getUri()) {
+                    throw new BadRequestException("csrf protection triggered");
+                }
                 $configName = $request->getPostParameter('name');
                 $this->validateConfigName($configName);
 
@@ -78,12 +80,13 @@ class VpnPortalService extends Service
         $this->delete(
             '/config/:configName',
             function (Request $request, UserInfo $u, $configName) {
-                // FIXME: CRSF protection?
+                if ($request->getHeader("Referer") !== sprintf('%s/', dirname($request->getRequestUri()->getUri()))) {
+                    throw new BadRequestException("csrf protection triggered");
+                }
                 $this->validateConfigName($configName);
                 $this->vpnCertServiceClient->revokeConfiguration($u->getUserId(), $configName);
                 $this->pdoStorage->revokeConfiguration($u->getUserId(), $configName);
 
-                // FIXME: is it smart to use the Referer?
                 return new RedirectResponse($request->getHeader("Referer"));
             }
         );
