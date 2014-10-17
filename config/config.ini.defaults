@@ -1,6 +1,19 @@
-; vpn-cert-service URI
+;authType = 'MellonAuthentication'
+authType = 'BasicAuthentication'
+
+; authentication
+;[mellonAuthentication]
+samlAttribute = 'MELLON_eduPersonTargetedID'
+;samlAttribute = 'MELLON_NAME_ID'
+
+[basicAuthentication]
+userId = 'foo'
+; password hash for 'bar'
+userPass = '$2y$10$zx/fEKn2yleZVULfL8bAt.vUg7OSOkzj1VB1PT2jRAqJ4qrDQOypS'
+
+; vpn-cert-service
 [vpnCertService]
-serviceUri  = 'http://localhost'
+serviceUri  = 'http://localhost/vpn-cert-service/api.php'
 serviceUser = 'admin'
 servicePass = 's3cr3t'
 

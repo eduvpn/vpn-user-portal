@@ -6,10 +6,6 @@ $baseDir   = dirname(__DIR__);
 require_once $vendorDir.'/password_compat/password.php';
 require_once $vendorDir.'/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 
-# Guzzle 4.0 requirement, should be gone in Guzzle 5.0
-require_once $vendorDir.'/GuzzleHttp/Stream/functions.php';
-require_once $vendorDir.'/GuzzleHttp/functions.php';
-
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
@@ -28,3 +24,7 @@ $loader->registerPrefixes(array(
 ));
 
 $loader->register();
+
+# Guzzle 4.0 requirement, should be gone in Guzzle 5.0
+require_once $vendorDir.'/GuzzleHttp/Stream/functions.php';
+require_once $vendorDir.'/GuzzleHttp/functions.php';
