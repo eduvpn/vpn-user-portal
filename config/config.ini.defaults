@@ -2,7 +2,7 @@
 authType = 'BasicAuthentication'
 
 ; authentication
-;[mellonAuthentication]
+[mellonAuthentication]
 samlAttribute = 'MELLON_eduPersonTargetedID'
 ;samlAttribute = 'MELLON_NAME_ID'
 
