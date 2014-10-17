@@ -25,10 +25,16 @@ Requires:   php-composer(fkooman/json) >= 0.5.1
 Requires:   php-composer(fkooman/json) < 0.6.0
 Requires:   php-composer(fkooman/config) >= 0.3.3
 Requires:   php-composer(fkooman/config) < 0.4.0
-Requires:   php-composer(fkooman/rest) >= 0.5.1
+Requires:   php-composer(fkooman/rest) >= 0.5.2
 Requires:   php-composer(fkooman/rest) < 0.6.0
 Requires:   php-pear(pear.twig-project.org/Twig) >= 1.15
 Requires:   php-pear(pear.twig-project.org/Twig) < 2.0
+Requires:   php-composer(guzzlehttp/guzzle) >= 4.0
+Requires:   php-composer(guzzlehttp/guzzle) < 5.0
+Requires:   php-composer(guzzlehttp/guzzle) >= 4.0
+Requires:   php-composer(guzzlehttp/guzzle) < 5.0
+Requires:   php-composer(guzzlehttp/streams) >= 1.0
+Requires:   php-composer(guzzlehttp/streams) < 2.0
 
 #Starting F21 we can use the composer dependency for Symfony
 #Requires:   php-composer(symfony/classloader) >= 2.3.9
