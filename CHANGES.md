@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+- handle errors with existing configurations before sending a request to the 
+  certificate backend to avoid failed Guzzle requests
+
 ## 0.1.3
 - update the default user inteface a little
 - update to new `fkooman/rest`

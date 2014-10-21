@@ -64,6 +64,9 @@ class VpnPortalService extends Service
                 $configName = $request->getPostParameter('name');
                 $this->validateConfigName($configName);
 
+                if ($this->pdoStorage->isExistingConfiguration($u->getUserId(), $configName)) {
+                    throw new BadRequestException("configuration with this name already exists for this user");
+                }
                 $vpnConfig = $this->vpnCertServiceClient->addConfiguration($u->getUserId(), $configName);
                 $this->pdoStorage->addConfiguration($u->getUserId(), $configName);
 

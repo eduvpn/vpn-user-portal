@@ -12,8 +12,8 @@ class PdoStorage
 
     public function __construct(PDO $db, $prefix = "")
     {
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->db = $db;
-        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->prefix = $prefix;
     }
 
@@ -34,6 +34,22 @@ class PdoStorage
         }
 
         return null;
+    }
+
+    public function isExistingConfiguration($userId, $name)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                "SELECT name, status FROM %s WHERE user_id = :user_id AND name = :name",
+                $this->prefix.'config'
+            )
+        );
+        $stmt->bindValue(":user_id", $userId, PDO::PARAM_STR);
+        $stmt->bindValue(":name", $name, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return false !== $result;
     }
 
     public function addConfiguration($userId, $name)
