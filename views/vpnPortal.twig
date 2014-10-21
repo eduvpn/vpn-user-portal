@@ -23,8 +23,7 @@
             <input type="submit" value="Create">
         </form>
 
-        <!-- if existing configurations -->
-        {% if configs %}
+        {% if configs %} <!-- existing configurations -->
         <h2>Existing Configurations</h2>
         <p>If you lost your device or no longer use the VPN you can use the "Revoke" button to revoke the configuration.</p>
         <table>
@@ -37,10 +36,7 @@
                     {% if config.status == 'revoked' %}
                         <td><span class="revoked">{{ config.name|e }}</span></td>
                         <td>
-                            <form method="post" action="{{ config.name|e }}">
-                                <input type="hidden" name="_METHOD" value="DELETE">
-                                <input type="submit" value="Revoke" disabled="disabled">
-                            </form>
+                            <button disabled="disabled">Revoke</button>
                         </td>
                     {% else %}
                         <td>{{ config.name|e }}</td>
@@ -55,7 +51,7 @@
             {% endfor %}
             </tbody>
         </table>
-        {% endif %}
+        {% endif %} <!-- /existing configurations -->
 
     </div> <!-- /container -->
 </body>
