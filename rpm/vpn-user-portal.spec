@@ -2,7 +2,7 @@
 %global github_name      vpn-user-portal
 
 Name:       vpn-user-portal
-Version:    0.1.2
+Version:    0.1.3
 Release:    1%{?dist}
 Summary:    Portal to manage OpenVPN client configurations
 
@@ -15,22 +15,22 @@ Source2:    vpn-user-portal-autoload.php
 
 BuildArch:  noarch
 
-Requires:   php >= 5.3.3
+Requires:   php >= 5.4
 Requires:   php-openssl
 Requires:   php-pdo
 Requires:   httpd
 
-Requires:   php-password-compat >= 1.0.0
 Requires:   php-composer(fkooman/json) >= 0.5.1
 Requires:   php-composer(fkooman/json) < 0.6.0
 Requires:   php-composer(fkooman/config) >= 0.3.3
 Requires:   php-composer(fkooman/config) < 0.4.0
-Requires:   php-composer(fkooman/rest) >= 0.5.3
-Requires:   php-composer(fkooman/rest) < 0.6.0
+Requires:   php-composer(fkooman/rest) >= 0.6.0
+Requires:   php-composer(fkooman/rest) < 0.7.0
+Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.1.0
+Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.2.0
+
 Requires:   php-pear(pear.twig-project.org/Twig) >= 1.15
 Requires:   php-pear(pear.twig-project.org/Twig) < 2.0
-Requires:   php-composer(guzzlehttp/guzzle) >= 4.0
-Requires:   php-composer(guzzlehttp/guzzle) < 5.0
 Requires:   php-composer(guzzlehttp/guzzle) >= 4.0
 Requires:   php-composer(guzzlehttp/guzzle) < 5.0
 Requires:   php-composer(guzzlehttp/streams) >= 1.0
@@ -103,6 +103,9 @@ fi
 %doc README.md COPYING composer.json config/
 
 %changelog
+* Tue Oct 21 2014 François Kooman <fkooman@tuxed.net> - 0.1.3-1
+- update to 0.1.3
+
 * Fri Oct 17 2014 François Kooman <fkooman@tuxed.net> - 0.1.2-1
 - update to 0.1.2
 

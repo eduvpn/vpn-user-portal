@@ -7,8 +7,7 @@ use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
-use fkooman\Rest\ServicePluginInterface;
-use fkooman\Rest\Plugin\UserInfo;
+use fkooman\Rest\Plugin\Mellon\MellonUserInfo;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 
@@ -20,12 +19,12 @@ class VpnPortalService extends Service
     /** @var fkooman\VpnPortal\VpnCertServiceClient */
     private $vpnCertServiceClient;
 
-    public function __construct(PdoStorage $pdoStorage, ServicePluginInterface $authenticationPlugin, VpnCertServiceClient $vpnCertServiceClient)
+    public function __construct(PdoStorage $pdoStorage, VpnCertServiceClient $vpnCertServiceClient)
     {
         parent::__construct();
         $this->pdoStorage = $pdoStorage;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
-        $this->registerBeforeMatchingPlugin($authenticationPlugin);
+
         $this->setDefaultRoute('/config/');
 
         $this->get(
@@ -38,7 +37,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/',
-            function (UserInfo $u) {
+            function (MellonUserInfo $u) {
                 $configs = $this->pdoStorage->getConfigurations($u->getUserId());
 
                 $loader = new Twig_Loader_Filesystem(
@@ -58,7 +57,7 @@ class VpnPortalService extends Service
         /* POST */
         $this->post(
             '/config/',
-            function (Request $request, UserInfo $u) {
+            function (Request $request, MellonUserInfo $u) {
                 if ($request->getHeader('Referer') !== $request->getRequestUri()->getUri()) {
                     throw new BadRequestException("csrf protection triggered");
                 }
@@ -79,7 +78,7 @@ class VpnPortalService extends Service
         /* DELETE */
         $this->delete(
             '/config/:configName',
-            function (Request $request, UserInfo $u, $configName) {
+            function (Request $request, MellonUserInfo $u, $configName) {
                 if ($request->getHeader("Referer") !== sprintf('%s/', dirname($request->getRequestUri()->getUri()))) {
                     throw new BadRequestException("csrf protection triggered");
                 }

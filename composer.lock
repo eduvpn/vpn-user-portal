@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f47f2f4b54a7aef6ccce7a29d106f403",
+    "hash": "6b1d128747cec7ea3a5e67867525426e",
     "packages": [
         {
             "name": "fkooman/config",
@@ -84,22 +84,24 @@
         },
         {
             "name": "fkooman/rest",
-            "version": "0.5.3",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest.git",
-                "reference": "8c25129cfe127e3f079a0eb817abd9f09e760b74"
+                "reference": "5dcc3136f848922f11790660aec1405d0dcdc644"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/8c25129cfe127e3f079a0eb817abd9f09e760b74",
-                "reference": "8c25129cfe127e3f079a0eb817abd9f09e760b74",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/5dcc3136f848922f11790660aec1405d0dcdc644",
+                "reference": "5dcc3136f848922f11790660aec1405d0dcdc644",
                 "shasum": ""
             },
             "require": {
                 "fkooman/json": "~0.5.1",
-                "ircmaxell/password-compat": "~1.0",
                 "php": ">=5.3.3"
+            },
+            "suggest": {
+                "fkooman/rest-plugin-basic": "Basic Authentication plugin for Service"
             },
             "type": "library",
             "autoload": {
@@ -120,7 +122,45 @@
                 }
             ],
             "description": "Simple PHP library for writing REST services.",
-            "time": "2014-10-17 13:05:11"
+            "time": "2014-10-21 16:30:51"
+        },
+        {
+            "name": "fkooman/rest-plugin-mellon",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fkooman/php-lib-rest-plugin-mellon.git",
+                "reference": "95c0f727a10efe8fcfac53247069d4ecad4e6b8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-mellon/zipball/95c0f727a10efe8fcfac53247069d4ecad4e6b8a",
+                "reference": "95c0f727a10efe8fcfac53247069d4ecad4e6b8a",
+                "shasum": ""
+            },
+            "require": {
+                "fkooman/rest": "~0.6.0",
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "fkooman\\Rest\\Plugin\\Mellon": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "François Kooman",
+                    "email": "fkooman@tuxed.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Mellon (SAML) Authentication plugin for fkooman/rest",
+            "time": "2014-10-21 17:09:23"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -241,45 +281,6 @@
             "time": "2014-08-17 21:15:53"
         },
         {
-            "name": "ircmaxell/password-compat",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ircmaxell/password_compat.git",
-                "reference": "1fc1521b5e9794ea77e4eca30717be9635f1d4f4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ircmaxell/password_compat/zipball/1fc1521b5e9794ea77e4eca30717be9635f1d4f4",
-                "reference": "1fc1521b5e9794ea77e4eca30717be9635f1d4f4",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/password.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anthony Ferrara",
-                    "email": "ircmaxell@ircmaxell.com",
-                    "homepage": "http://blog.ircmaxell.com"
-                }
-            ],
-            "description": "A compatibility library for the proposed simplified password hashing algorithm: https://wiki.php.net/rfc/password_hash",
-            "homepage": "https://github.com/ircmaxell/password_compat",
-            "keywords": [
-                "hashing",
-                "password"
-            ],
-            "time": "2013-04-30 19:58:08"
-        },
-        {
             "name": "symfony/yaml",
             "version": "v2.5.5",
             "target-dir": "Symfony/Component/Yaml",
@@ -390,7 +391,7 @@
     "stability-flags": [],
     "prefer-stable": false,
     "platform": {
-        "php": ">=5.3.3"
+        "php": ">=5.4"
     },
     "platform-dev": []
 }
