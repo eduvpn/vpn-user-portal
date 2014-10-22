@@ -15,16 +15,14 @@ Source2:    vpn-user-portal-autoload.php
 
 BuildArch:  noarch
 
-Requires:   php >= 5.4
+Requires:   php >= 5.3.3
 Requires:   php-openssl
 Requires:   php-pdo
 Requires:   httpd
 
-Requires:   php-composer(fkooman/json) >= 0.5.1
-Requires:   php-composer(fkooman/json) < 0.6.0
-Requires:   php-composer(fkooman/config) >= 0.3.3
+Requires:   php-composer(fkooman/config) >= 0.3.4
 Requires:   php-composer(fkooman/config) < 0.4.0
-Requires:   php-composer(fkooman/rest) >= 0.6.0
+Requires:   php-composer(fkooman/rest) >= 0.6.1
 Requires:   php-composer(fkooman/rest) < 0.7.0
 Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.1.0
 Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.2.0

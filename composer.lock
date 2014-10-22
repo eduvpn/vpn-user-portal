@@ -4,24 +4,24 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6b1d128747cec7ea3a5e67867525426e",
+    "hash": "2b62a4957666ddbb32a0f5a4d2b9b76b",
     "packages": [
         {
             "name": "fkooman/config",
-            "version": "0.3.3",
+            "version": "0.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-config.git",
-                "reference": "f2d34bc367f19c3315c41193d8029588c2d68538"
+                "reference": "19e7d3c95ce3932813596da081a8362bc3018f1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-config/zipball/f2d34bc367f19c3315c41193d8029588c2d68538",
-                "reference": "f2d34bc367f19c3315c41193d8029588c2d68538",
+                "url": "https://api.github.com/repos/fkooman/php-lib-config/zipball/19e7d3c95ce3932813596da081a8362bc3018f1f",
+                "reference": "19e7d3c95ce3932813596da081a8362bc3018f1f",
                 "shasum": ""
             },
             "require": {
-                "fkooman/json": "~0.5.1",
+                "fkooman/json": "~0.6.0",
                 "php": ">=5.3.3",
                 "symfony/yaml": "~2.3"
             },
@@ -43,20 +43,20 @@
                 }
             ],
             "description": "PHP library to handle YAML, INI and JSON configuration files",
-            "time": "2014-09-16 11:21:12"
+            "time": "2014-10-22 13:05:07"
         },
         {
             "name": "fkooman/json",
-            "version": "0.5.1",
+            "version": "0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-json.git",
-                "reference": "b07e3e4166e14ff41ac23f917285fb4061c21ad3"
+                "reference": "556209cf34cdf55f90eefffd778f93a3e9d5bb2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-json/zipball/b07e3e4166e14ff41ac23f917285fb4061c21ad3",
-                "reference": "b07e3e4166e14ff41ac23f917285fb4061c21ad3",
+                "url": "https://api.github.com/repos/fkooman/php-lib-json/zipball/556209cf34cdf55f90eefffd778f93a3e9d5bb2d",
+                "reference": "556209cf34cdf55f90eefffd778f93a3e9d5bb2d",
                 "shasum": ""
             },
             "require": {
@@ -65,7 +65,7 @@
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "fkooman\\Json\\": "src/"
+                    "fkooman\\Json": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -80,28 +80,30 @@
                 }
             ],
             "description": "PHP library to encode and decode JSON",
-            "time": "2014-09-16 11:16:29"
+            "time": "2014-10-22 12:49:20"
         },
         {
             "name": "fkooman/rest",
-            "version": "0.6.0",
+            "version": "0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest.git",
-                "reference": "5dcc3136f848922f11790660aec1405d0dcdc644"
+                "reference": "3a3464df5d01bda08a3dff1f87f3cb4b82418431"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/5dcc3136f848922f11790660aec1405d0dcdc644",
-                "reference": "5dcc3136f848922f11790660aec1405d0dcdc644",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/3a3464df5d01bda08a3dff1f87f3cb4b82418431",
+                "reference": "3a3464df5d01bda08a3dff1f87f3cb4b82418431",
                 "shasum": ""
             },
             "require": {
-                "fkooman/json": "~0.5.1",
+                "fkooman/json": "~0.6.0",
                 "php": ">=5.3.3"
             },
             "suggest": {
-                "fkooman/rest-plugin-basic": "Basic Authentication plugin for Service"
+                "fkooman/rest-plugin-basic": "Basic Authentication plugin",
+                "fkooman/rest-plugin-bearer": "Bearer (OAuth) Authentication plugin",
+                "fkooman/rest-plugin-mellon": "Mellon (SAML) Authentication plugin"
             },
             "type": "library",
             "autoload": {
@@ -122,7 +124,7 @@
                 }
             ],
             "description": "Simple PHP library for writing REST services.",
-            "time": "2014-10-21 16:30:51"
+            "time": "2014-10-22 12:56:41"
         },
         {
             "name": "fkooman/rest-plugin-mellon",
@@ -391,7 +393,7 @@
     "stability-flags": [],
     "prefer-stable": false,
     "platform": {
-        "php": ">=5.4"
+        "php": ">=5.3.3"
     },
     "platform-dev": []
 }

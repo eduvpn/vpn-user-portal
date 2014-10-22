@@ -2,8 +2,6 @@
 
 require_once dirname(__DIR__)."/vendor/autoload.php";
 
-use fkooman\Http\Request;
-use fkooman\Http\IncomingRequest;
 use fkooman\Http\Exception\HttpException;
 use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\Config\Config;
@@ -55,12 +53,7 @@ try {
 
     $vpnPortalService = new VpnPortalService($pdoStorage, $vpnCertServiceClient);
     $vpnPortalService->registerBeforeEachMatchPlugin($mellonAuthentication);
-
-    $request = Request::fromIncomingRequest(
-        new IncomingRequest()
-    );
-
-    $vpnPortalService->run($request)->sendResponse();
+    $vpnPortalService->run()->sendResponse();
 } catch (Exception $e) {
     if ($e instanceof HttpException) {
         $response = $e->getHtmlResponse();
