@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+- update `fkooman/json` and `fkooman/config` dependencies
+- increase padding in UI
+
 ## 0.1.4
 - handle errors with existing configurations before sending a request to the 
   certificate backend to avoid failed Guzzle requests
