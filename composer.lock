@@ -4,31 +4,29 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2b62a4957666ddbb32a0f5a4d2b9b76b",
+    "hash": "6bf65b74d2b031ab9246b8d55918c8af",
     "packages": [
         {
-            "name": "fkooman/config",
-            "version": "0.3.4",
+            "name": "fkooman/ini",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fkooman/php-lib-config.git",
-                "reference": "19e7d3c95ce3932813596da081a8362bc3018f1f"
+                "url": "https://github.com/fkooman/php-lib-ini.git",
+                "reference": "ff4041f98d444ae835cebf010e55e89a0c7638c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-config/zipball/19e7d3c95ce3932813596da081a8362bc3018f1f",
-                "reference": "19e7d3c95ce3932813596da081a8362bc3018f1f",
+                "url": "https://api.github.com/repos/fkooman/php-lib-ini/zipball/ff4041f98d444ae835cebf010e55e89a0c7638c0",
+                "reference": "ff4041f98d444ae835cebf010e55e89a0c7638c0",
                 "shasum": ""
             },
             "require": {
-                "fkooman/json": "~0.6.0",
-                "php": ">=5.3.3",
-                "symfony/yaml": "~2.3"
+                "php": ">=5.4"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "fkooman\\Config\\": "src/"
+                    "fkooman\\Ini": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -42,8 +40,8 @@
                     "role": "Developer"
                 }
             ],
-            "description": "PHP library to handle YAML, INI and JSON configuration files",
-            "time": "2014-10-22 13:05:07"
+            "description": "Handle INI configuration files",
+            "time": "2014-10-22 20:49:43"
         },
         {
             "name": "fkooman/json",
@@ -283,53 +281,6 @@
             "time": "2014-08-17 21:15:53"
         },
         {
-            "name": "symfony/yaml",
-            "version": "v2.5.5",
-            "target-dir": "Symfony/Component/Yaml",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Yaml.git",
-                "reference": "b1dbc53593b98c2d694ebf383660ac9134d30b96"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b1dbc53593b98c2d694ebf383660ac9134d30b96",
-                "reference": "b1dbc53593b98c2d694ebf383660ac9134d30b96",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Yaml\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Symfony Yaml Component",
-            "homepage": "http://symfony.com",
-            "time": "2014-09-22 09:14:18"
-        },
-        {
             "name": "twig/twig",
             "version": "v1.16.2",
             "source": {
@@ -393,7 +344,7 @@
     "stability-flags": [],
     "prefer-stable": false,
     "platform": {
-        "php": ">=5.3.3"
+        "php": ">=5.4"
     },
     "platform-dev": []
 }

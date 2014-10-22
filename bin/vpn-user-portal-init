@@ -3,17 +3,18 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-use fkooman\Config\Config;
+use fkooman\Ini\IniReader;
 use fkooman\VpnPortal\PdoStorage;
 
 $config = Config::fromIniFile(
     dirname(__DIR__)."/config/config.ini"
 );
 
-$db = new PDO(
-    $config->s('PdoStorage')->l('dsn'),
-    $config->s('PdoStorage')->l('username', false),
-    $config->s('PdoStorage')->l('password', false)
-);
-$db = new PdoStorage($db);
-$db->initDatabase();
+    $pdo = new PDO(
+        $iniReader->v(['PdoStorage', 'dsn']),
+        $iniReader->v(['PdoStorage', 'username', false]),
+        $iniReader->v(['PdoStorage', 'password', false])
+    );
+
+$pdoStorage = new PdoStorage($pdo);
+$pdoStorage->initDatabase();

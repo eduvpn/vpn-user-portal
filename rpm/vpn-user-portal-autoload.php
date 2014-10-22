@@ -14,8 +14,7 @@ $loader->registerNamespaces(array(
     'fkooman\\Rest\\Plugin\\Mellon' => $vendorDir,
     'fkooman\\Json'                 => $vendorDir,
     'fkooman\\Http'                 => $vendorDir,
-    'fkooman\\Config'               => $vendorDir,
-    'Symfony\\Component\\Yaml'      => $vendorDir,
+    'fkooman\\Ini'                  => $vendorDir,
     'GuzzleHttp\\Stream'            => $vendorDir,
     'GuzzleHttp'                    => $vendorDir,
 ));

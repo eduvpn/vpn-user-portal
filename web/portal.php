@@ -4,7 +4,7 @@ require_once dirname(__DIR__)."/vendor/autoload.php";
 
 use fkooman\Http\Exception\HttpException;
 use fkooman\Http\Exception\InternalServerErrorException;
-use fkooman\Config\Config;
+use fkooman\Ini\IniReader;
 use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
 use fkooman\VpnPortal\VpnCertServiceClient;
@@ -18,14 +18,14 @@ set_error_handler(
 );
 
 try {
-    $config = Config::fromIniFile(
+    $iniReader = IniReader::fromFile(
         dirname(__DIR__)."/config/config.ini"
     );
 
     $pdo = new PDO(
-        $config->s('PdoStorage')->l('dsn', true),
-        $config->s('PdoStorage')->l('username', false),
-        $config->s('PdoStorage')->l('password', false)
+        $iniReader->v(['PdoStorage', 'dsn']),
+        $iniReader->v(['PdoStorage', 'username', false]),
+        $iniReader->v(['PdoStorage', 'password', false])
     );
 
     // Database
@@ -33,13 +33,13 @@ try {
 
     // Authentication
     $mellonAuthentication = new MellonAuthentication(
-        $config->l('mellonAttribute', true)
+        $iniReader->v(['mellonAttribute'])
     );
 
     // VPN Certificate Service Configuration
-    $serviceUri = $config->s('VpnCertService', true)->l('serviceUri', true);
-    $serviceAuth = $config->s('VpnCertService', true)->l('serviceUser', true);
-    $servicePass = $config->s('VpnCertService', true)->l('servicePass', true);
+    $serviceUri = $iniReader->v(['VpnCertService', 'serviceUri']);
+    $serviceAuth = $iniReader->v(['VpnCertService', 'serviceUser']);
+    $servicePass = $iniReader->v(['VpnCertService', 'servicePass']);
 
     $client = new Client(
         array(
