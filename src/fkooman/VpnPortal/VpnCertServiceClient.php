@@ -20,13 +20,13 @@ class VpnCertServiceClient
 
     public function addConfiguration($userId, $configName)
     {
-        $vpnConfigName = sprintf("%s_%s", $userId, $configName);
+        $vpnConfigName = sprintf('%s_%s', $userId, $configName);
 
         return $this->client->post(
             sprintf('%s/config/', $this->vpnCertServiceUri),
             array(
-                "body" => array(
-                    "commonName" => $vpnConfigName,
+                'body' => array(
+                    'commonName' => $vpnConfigName,
                 ),
             )
         )->getBody();
@@ -34,10 +34,11 @@ class VpnCertServiceClient
 
     public function revokeConfiguration($userId, $configName)
     {
-        $vpnConfigName = sprintf("%s_%s", $userId, $configName);
+        $vpnConfigName = sprintf('%s_%s', $userId, $configName);
 
         return $this->client->delete(
-            sprintf('%s/config/%s',
+            sprintf(
+                '%s/config/%s',
                 $this->vpnCertServiceUri,
                 $vpnConfigName
             )

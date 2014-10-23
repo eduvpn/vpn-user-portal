@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__DIR__)."/vendor/autoload.php";
+require_once dirname(__DIR__).'/vendor/autoload.php';
 
 use fkooman\Http\Exception\HttpException;
 use fkooman\Http\Exception\InternalServerErrorException;
@@ -19,7 +19,7 @@ set_error_handler(
 
 try {
     $iniReader = IniReader::fromFile(
-        dirname(__DIR__)."/config/config.ini"
+        dirname(__DIR__).'/config/config.ini'
     );
 
     $pdo = new PDO(

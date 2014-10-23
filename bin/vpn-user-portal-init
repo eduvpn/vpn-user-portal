@@ -7,7 +7,7 @@ use fkooman\Ini\IniReader;
 use fkooman\VpnPortal\PdoStorage;
 
 $config = Config::fromIniFile(
-    dirname(__DIR__)."/config/config.ini"
+    dirname(__DIR__).'/config/config.ini'
 );
 
     $pdo = new PDO(
