@@ -10,11 +10,11 @@ $config = Config::fromIniFile(
     dirname(__DIR__).'/config/config.ini'
 );
 
-    $pdo = new PDO(
-        $iniReader->v(['PdoStorage', 'dsn']),
-        $iniReader->v(['PdoStorage', 'username', false]),
-        $iniReader->v(['PdoStorage', 'password', false])
-    );
+$pdo = new PDO(
+    $iniReader->v('PdoStorage', 'dsn'),
+    $iniReader->v('PdoStorage', 'username', false),
+    $iniReader->v('PdoStorage', 'password', false)
+);
 
 $pdoStorage = new PdoStorage($pdo);
 $pdoStorage->initDatabase();

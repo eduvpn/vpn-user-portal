@@ -4,24 +4,24 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6bf65b74d2b031ab9246b8d55918c8af",
+    "hash": "57dd9184d7800935a4a0956e6811b000",
     "packages": [
         {
             "name": "fkooman/ini",
-            "version": "0.1.0",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-ini.git",
-                "reference": "ff4041f98d444ae835cebf010e55e89a0c7638c0"
+                "reference": "53bef8aaa28862b68b553f742ee3ecf54394f121"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-ini/zipball/ff4041f98d444ae835cebf010e55e89a0c7638c0",
-                "reference": "ff4041f98d444ae835cebf010e55e89a0c7638c0",
+                "url": "https://api.github.com/repos/fkooman/php-lib-ini/zipball/53bef8aaa28862b68b553f742ee3ecf54394f121",
+                "reference": "53bef8aaa28862b68b553f742ee3ecf54394f121",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=5.3.3"
             },
             "type": "library",
             "autoload": {
@@ -41,7 +41,7 @@
                 }
             ],
             "description": "Handle INI configuration files",
-            "time": "2014-10-22 20:49:43"
+            "time": "2014-10-23 15:33:28"
         },
         {
             "name": "fkooman/json",

@@ -23,9 +23,9 @@ try {
     );
 
     $pdo = new PDO(
-        $iniReader->v(['PdoStorage', 'dsn']),
-        $iniReader->v(['PdoStorage', 'username', false]),
-        $iniReader->v(['PdoStorage', 'password', false])
+        $iniReader->v('PdoStorage', 'dsn'),
+        $iniReader->v('PdoStorage', 'username', false),
+        $iniReader->v('PdoStorage', 'password', false)
     );
 
     // Database
@@ -33,13 +33,13 @@ try {
 
     // Authentication
     $mellonAuthentication = new MellonAuthentication(
-        $iniReader->v(['mellonAttribute'])
+        $iniReader->v('mellonAttribute')
     );
 
     // VPN Certificate Service Configuration
-    $serviceUri = $iniReader->v(['VpnCertService', 'serviceUri']);
-    $serviceAuth = $iniReader->v(['VpnCertService', 'serviceUser']);
-    $servicePass = $iniReader->v(['VpnCertService', 'servicePass']);
+    $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
+    $serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
+    $servicePass = $iniReader->v('VpnCertService', 'servicePass');
 
     $client = new Client(
         array(

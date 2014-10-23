@@ -2,7 +2,7 @@
 %global github_name      vpn-user-portal
 
 Name:       vpn-user-portal
-Version:    0.1.6
+Version:    0.1.7
 Release:    1%{?dist}
 Summary:    Portal to manage OpenVPN client configurations
 
@@ -20,8 +20,8 @@ Requires:   php-openssl
 Requires:   php-pdo
 Requires:   httpd
 
-Requires:   php-composer(fkooman/ini) >= 0.1.0
-Requires:   php-composer(fkooman/ini) < 0.2.0
+Requires:   php-composer(fkooman/ini) >= 0.2.0
+Requires:   php-composer(fkooman/ini) < 0.3.0
 Requires:   php-composer(fkooman/rest) >= 0.6.1
 Requires:   php-composer(fkooman/rest) < 0.7.0
 Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.1.0
@@ -102,6 +102,9 @@ fi
 %doc README.md COPYING composer.json config/
 
 %changelog
+* Thu Oct 23 2014 François Kooman <fkooman@tuxed.net> - 0.1.7-1
+- update to 0.1.7
+
 * Thu Oct 23 2014 François Kooman <fkooman@tuxed.net> - 0.1.6-1
 - update to 0.1.6
 
