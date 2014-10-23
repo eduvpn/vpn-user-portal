@@ -2,6 +2,7 @@
 
 ## 0.1.6
 - use new `fkooman/ini` instead of `fkooman/config`
+- update coding standards
 
 ## 0.1.5
 - update `fkooman/json` and `fkooman/config` dependencies
