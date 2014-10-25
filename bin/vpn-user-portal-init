@@ -6,7 +6,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 use fkooman\Ini\IniReader;
 use fkooman\VpnPortal\PdoStorage;
 
-$config = Config::fromIniFile(
+$config = IniReader::fromFile(
     dirname(__DIR__).'/config/config.ini'
 );
 
