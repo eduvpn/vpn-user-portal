@@ -126,20 +126,20 @@
         },
         {
             "name": "fkooman/rest-plugin-mellon",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest-plugin-mellon.git",
-                "reference": "95c0f727a10efe8fcfac53247069d4ecad4e6b8a"
+                "reference": "a5fadd01f065f5160def8b4a8ebd252c830b1558"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-mellon/zipball/95c0f727a10efe8fcfac53247069d4ecad4e6b8a",
-                "reference": "95c0f727a10efe8fcfac53247069d4ecad4e6b8a",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-mellon/zipball/a5fadd01f065f5160def8b4a8ebd252c830b1558",
+                "reference": "a5fadd01f065f5160def8b4a8ebd252c830b1558",
                 "shasum": ""
             },
             "require": {
-                "fkooman/rest": "~0.6.0",
+                "fkooman/rest": "~0.6.1",
                 "php": ">=5.3.3"
             },
             "type": "library",
@@ -160,7 +160,7 @@
                 }
             ],
             "description": "Mellon (SAML) Authentication plugin for fkooman/rest",
-            "time": "2014-10-21 17:09:23"
+            "time": "2014-10-23 19:24:35"
         },
         {
             "name": "guzzlehttp/guzzle",
