@@ -3,7 +3,7 @@
 
 Name:       vpn-user-portal
 Version:    0.1.7
-Release:    1%{?dist}
+Release:    2%{?dist}
 Summary:    Portal to manage OpenVPN client configurations
 
 Group:      Applications/Internet
@@ -90,7 +90,8 @@ fi
 %files
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/vpn-user-portal.conf
-%config(noreplace) %{_sysconfdir}/vpn-user-portal
+%dir %attr(-,apache,apache) %{_sysconfdir}/vpn-user-portal
+%config(noreplace) %attr(0600,apache,apache) %{_sysconfdir}/vpn-user-portal/config.ini
 %{_bindir}/vpn-user-portal-init
 %dir %{_datadir}/vpn-user-portal
 %{_datadir}/vpn-user-portal/src
@@ -99,9 +100,12 @@ fi
 %{_datadir}/vpn-user-portal/views
 %{_datadir}/vpn-user-portal/config
 %dir %attr(0700,apache,apache) %{_localstatedir}/lib/vpn-user-portal
-%doc README.md COPYING composer.json config/
+%doc README.md COPYING composer.json config/config.ini.defaults
 
 %changelog
+* Sat Oct 25 2014 François Kooman <fkooman@tuxed.net> - 0.1.7-2
+- config file owned and only readable by apache user now
+
 * Thu Oct 23 2014 François Kooman <fkooman@tuxed.net> - 0.1.7-1
 - update to 0.1.7
 
