@@ -2,8 +2,8 @@
 %global github_name      vpn-user-portal
 
 Name:       vpn-user-portal
-Version:    0.1.7
-Release:    2%{?dist}
+Version:    0.1.8
+Release:    1%{?dist}
 Summary:    Portal to manage OpenVPN client configurations
 
 Group:      Applications/Internet
@@ -103,6 +103,10 @@ fi
 %doc README.md COPYING composer.json config/config.ini.defaults
 
 %changelog
+* Sat Oct 25 2014 François Kooman <fkooman@tuxed.net> - 0.1.8-1
+- update to 0.1.8
+- set config file permissions to apache user only
+
 * Sat Oct 25 2014 François Kooman <fkooman@tuxed.net> - 0.1.7-2
 - config file owned and only readable by apache user now
 

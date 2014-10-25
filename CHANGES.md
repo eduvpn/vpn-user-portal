@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.8
+- fix `bin/vpn-user-portal-init`
+- update spec file making apache the owner of the config file
+
 ## 0.1.7
 - update to new `fkooman/ini` API
 
