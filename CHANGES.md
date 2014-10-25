@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.9
+- really fix `bin/vpn-user-portal-init`
+
 ## 0.1.8
 - fix `bin/vpn-user-portal-init`
 - update spec file making apache the owner of the config file
