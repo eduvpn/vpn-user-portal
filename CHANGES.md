@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.11
+- fix PHP 5.3 support
+
 ## 0.1.10
 - return to Guzzle 3.x support for CentOS / Red Hat Enterprise 6 support
 
