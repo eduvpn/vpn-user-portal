@@ -15,7 +15,7 @@ Source2:    vpn-user-portal-autoload.php
 
 BuildArch:  noarch
 
-Requires:   php >= 5.4
+Requires:   php >= 5.3.3
 Requires:   php-openssl
 Requires:   php-pdo
 Requires:   httpd
@@ -30,10 +30,8 @@ Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.2.0
 Requires:   php-pear(pear.twig-project.org/Twig) >= 1.15
 Requires:   php-pear(pear.twig-project.org/Twig) < 2.0
 
-Requires:   php-composer(guzzlehttp/guzzle) >= 4.0
-Requires:   php-composer(guzzlehttp/guzzle) < 5.0
-Requires:   php-composer(guzzlehttp/streams) >= 1.0
-Requires:   php-composer(guzzlehttp/streams) < 2.0
+Requires:   php-composer(guzzle/guzzle) >= 3.9
+Requires:   php-composer(guzzle/guzzle) < 4.0
 
 #Starting F21 we can use the composer dependency for Symfony
 #Requires:   php-composer(symfony/classloader) >= 2.3.9
