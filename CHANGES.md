@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.10
+- return to Guzzle 3.x support for CentOS / Red Hat Enterprise 6 support
+
 ## 0.1.9
 - really fix `bin/vpn-user-portal-init`
 
