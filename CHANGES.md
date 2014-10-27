@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.12
+- validate config name when creating a new config
+
 ## 0.1.11
 - fix PHP 5.3 support
 
