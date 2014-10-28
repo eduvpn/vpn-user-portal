@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0
+- show a download button that can be used once instead of a directly
+  triggered download
+
 ## 0.1.12
 - validate config name when creating a new config
 

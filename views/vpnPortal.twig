@@ -33,18 +33,29 @@
             <tbody>
             {% for config in configs %}
                 <tr>
-                    {% if config.status == 'revoked' %}
+                    {% if config.status == 30 %} <!-- revoked -->
                         <td><span class="revoked">{{ config.name|e }}</span></td>
                         <td>
+                            <button disabled="disabled">Download</button>
                             <button disabled="disabled">Revoke</button>
                         </td>
-                    {% else %}
+                    {% elseif config.status == 20 %} <!-- active -->
                         <td>{{ config.name|e }}</td>
                         <td>
+                            <button disabled="disabled">Download</button>
                             <form method="post" action="{{ config.name|e }}">
                                 <input type="hidden" name="_METHOD" value="DELETE">
                                 <input type="submit" value="Revoke">
                             </form>
+                        </td>
+
+                    {% else %}
+                        <td>{{ config.name|e }}</td> <!-- ready -->
+                        <td>
+                            <form method="get" action="{{ config.name|e }}">
+                                <input type="submit" value="Download">
+                            </form>
+                            <button disabled="disabled">Revoke</button>
                         </td>
                     {% endif %}
                 </tr>

@@ -10,6 +10,10 @@ class PdoStorage
     private $db;
     private $prefix;
 
+    const STATUS_READY   = 10;
+    const STATUS_ACTIVE  = 20;
+    const STATUS_REVOKED = 30;
+
     public function __construct(PDO $db, $prefix = '')
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -36,6 +40,40 @@ class PdoStorage
         return null;
     }
 
+    public function getConfiguration($userId, $name)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT name, status, config FROM %s WHERE user_id = :user_id AND name = :name',
+                $this->prefix.'config'
+            )
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function activateConfiguration($userId, $name)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'UPDATE %s SET status = :status, config = :config WHERE user_id = :user_id AND name = :name',
+                $this->prefix.'config'
+            )
+        );
+        $stmt->bindValue(':status', PdoStorage::STATUS_ACTIVE, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->bindValue(':config', null, PDO::PARAM_LOB);
+        $stmt->execute();
+
+        if (1 !== $stmt->rowCount()) {
+            throw new PdoStorageException('unable to activate configuration');
+        }
+    }
+
     public function isExistingConfiguration($userId, $name)
     {
         $stmt = $this->db->prepare(
@@ -52,17 +90,18 @@ class PdoStorage
         return false !== $result;
     }
 
-    public function addConfiguration($userId, $name)
+    public function addConfiguration($userId, $name, $configData)
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'INSERT INTO %s (user_id, name, status) VALUES(:user_id, :name, :status)',
+                'INSERT INTO %s (user_id, name, status, config) VALUES(:user_id, :name, :status, :config)',
                 $this->prefix.'config'
             )
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-        $stmt->bindValue(':status', 'active', PDO::PARAM_STR);
+        $stmt->bindValue(':status', PdoStorage::STATUS_READY, PDO::PARAM_INT);
+        $stmt->bindValue(':config', $configData, PDO::PARAM_LOB);
         $stmt->execute();
 
         if (1 !== $stmt->rowCount()) {
@@ -74,10 +113,11 @@ class PdoStorage
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'UPDATE %s SET status = "revoked" WHERE user_id = :user_id AND name = :name',
+                'UPDATE %s SET status = :status WHERE user_id = :user_id AND name = :name',
                 $this->prefix.'config'
             )
         );
+        $stmt->bindValue(':status', PdoStorage::STATUS_REVOKED, PDO::PARAM_INT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
         $stmt->execute();
@@ -94,7 +134,8 @@ class PdoStorage
             'CREATE TABLE IF NOT EXISTS %s (
                 user_id VARCHAR(255) NOT NULL,
                 name VARCHAR(255) NOT NULL,
-                status VARCHAR(255) NOT NULL,
+                status INTEGER NOT NULL,
+                config BLOB DEFAULT NULL,
                 UNIQUE (user_id, name)
             )',
             $prefix.'config'

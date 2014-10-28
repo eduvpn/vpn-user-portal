@@ -6,6 +6,7 @@ use fkooman\Http\Request;
 use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
+use fkooman\Http\Exception\NotFoundException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Mellon\MellonUserInfo;
 use Twig_Loader_Filesystem;
@@ -46,6 +47,14 @@ class VpnPortalService extends Service
             }
         );
 
+        /* GET */
+        $this->get(
+            '/config/:configName',
+            function (MellonUserInfo $u, $configName) use ($compatThis) {
+                return $compatThis->getConfig($u->getUserId(), $configName);
+            }
+        );
+
         /* POST */
         $this->post(
             '/config/',
@@ -56,7 +65,8 @@ class VpnPortalService extends Service
 
                 return $compatThis->postConfig(
                     $u->getUserId(),
-                    $request->getPostParameter('name')
+                    $request->getPostParameter('name'),
+                    $request->getHeader('Referer')
                 );
             }
         );
@@ -95,20 +105,34 @@ class VpnPortalService extends Service
         );
     }
 
-    public function postConfig($userId, $configName)
+    public function getConfig($userId, $configName)
+    {
+        $this->validateConfigName($configName);
+        if (!$this->pdoStorage->isExistingConfiguration($userId, $configName)) {
+            throw new NotFoundException('configuration not found');
+        }
+        $vpnConfig = $this->pdoStorage->getConfiguration($userId, $configName);
+        if (PdoStorage::STATUS_READY != $vpnConfig['status']) {
+            throw new NotFoundException('configuration already downloaded');
+        }
+        $this->pdoStorage->activateConfiguration($userId, $configName);
+        $response = new Response(201, 'application/x-openvpn-profile');
+        $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
+        $response->setContent($vpnConfig['config']);
+
+        return $response;
+    }
+
+    public function postConfig($userId, $configName, $returnUri)
     {
         $this->validateConfigName($configName);
         if ($this->pdoStorage->isExistingConfiguration($userId, $configName)) {
             throw new BadRequestException('configuration with this name already exists for this user');
         }
         $vpnConfig = $this->vpnCertServiceClient->addConfiguration($userId, $configName);
-        $this->pdoStorage->addConfiguration($userId, $configName);
+        $this->pdoStorage->addConfiguration($userId, $configName, $vpnConfig);
 
-        $response = new Response(201, 'application/x-openvpn-profile');
-        $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
-        $response->setContent($vpnConfig);
-
-        return $response;
+        return new RedirectResponse($returnUri);
     }
 
     public function deleteConfig($userId, $configName, $returnUri)

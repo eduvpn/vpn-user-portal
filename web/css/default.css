@@ -41,6 +41,10 @@ td {
     font-weight: bold;
 }
 
+form {
+    display: inline;
+}
+
 span.revoked {
     color: #999;
     text-decoration: line-through;
