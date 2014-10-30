@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VPN Portal</title>
+  <link rel="stylesheet" type="text/css" href="../../css/default.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1><a href="../">VPN Portal</a></h1>
+        <p>You can download the configuration &quot;<strong>{{ configName|e }}</strong>&quot; in <tt>ovpn</tt> format and import it in your OpenVPN application.</p>
+        <a href="{{ configName|e}}/ovpn"><button>Download Configuration</button></a>
+        <p><em>You can only download a configuration once. Create a new one for your other devices.</em></p>
+        <h2>Instructions</h2>
+        <p>The installation instructions below help you set up the VPN:</p>
+        <ul>
+            <li><a href="#">Windows</a></li>
+            <li><a href="#">Mac OS</a></li>
+            <li><a href="#">Linux (NetworkManager)</a></li>
+            <li><a href="#">Google Android</a></li>
+            <li><a href="#">Apple iOS</a></li>
+        </ul>
+
+        <h2>Manual Configuration</h2>
+        <p>Below is the full configuration file for your OpenVPN client. For your convenience you can download the certificates separately as a <tt>ZIP</tt> file.</p>
+
+        <a href="{{ configName|e}}/zip"><button>Download Certificates</button></a>
+
+        <div class="frame">
+        <pre>{{ plainConfig|e }}</pre>
+        </div>
+
+    </div> <!-- /container -->
+</body>
+</html>

@@ -55,6 +55,22 @@ class VpnPortalService extends Service
             }
         );
 
+        /* GET */
+        $this->get(
+            '/config/:configName/ovpn',
+            function (MellonUserInfo $u, $configName) use ($compatThis) {
+                return $compatThis->getOvpnConfig($u->getUserId(), $configName);
+            }
+        );
+
+        /* GET */
+        $this->get(
+            '/config/:configName/zip',
+            function (MellonUserInfo $u, $configName) use ($compatThis) {
+                return $compatThis->getZipConfig($u->getUserId(), $configName);
+            }
+        );
+
         /* POST */
         $this->post(
             '/config/',
@@ -115,6 +131,32 @@ class VpnPortalService extends Service
         if (PdoStorage::STATUS_READY != $vpnConfig['status']) {
             throw new NotFoundException('configuration already downloaded');
         }
+
+        $loader = new Twig_Loader_Filesystem(
+            dirname(dirname(dirname(__DIR__))).'/views'
+        );
+        $twig = new Twig_Environment($loader);
+
+        return $twig->render(
+            'vpnConfigDownload.twig',
+            array(
+                'configName' => $configName,
+                'plainConfig' => $vpnConfig['config']
+            )
+        );
+    }
+
+    public function getOvpnConfig($userId, $configName)
+    {
+        $this->validateConfigName($configName);
+        if (!$this->pdoStorage->isExistingConfiguration($userId, $configName)) {
+            throw new NotFoundException('configuration not found');
+        }
+        $vpnConfig = $this->pdoStorage->getConfiguration($userId, $configName);
+        if (PdoStorage::STATUS_READY != $vpnConfig['status']) {
+            throw new NotFoundException('configuration already downloaded');
+        }
+
         $this->pdoStorage->activateConfiguration($userId, $configName);
         $response = new Response(201, 'application/x-openvpn-profile');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
