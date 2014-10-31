@@ -11,6 +11,7 @@ use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Mellon\MellonUserInfo;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
+use ZipArchive;
 
 class VpnPortalService extends Service
 {
@@ -141,7 +142,7 @@ class VpnPortalService extends Service
             'vpnConfigDownload.twig',
             array(
                 'configName' => $configName,
-                'plainConfig' => $vpnConfig['config']
+                'plainConfig' => $vpnConfig['config'],
             )
         );
     }
@@ -161,6 +162,38 @@ class VpnPortalService extends Service
         $response = new Response(201, 'application/x-openvpn-profile');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
         $response->setContent($vpnConfig['config']);
+
+        return $response;
+    }
+
+    public function getZipConfig($userId, $configName)
+    {
+        $response = $this->getOvpnConfig($userId, $configName);
+        $configData = $response->getContent();
+
+        $inlineData = array();
+        foreach (array('cert', 'ca', 'key', 'tls-auth') as $inlineType) {
+            $pattern = sprintf('/\<%s\>(.*)\<\/%s\>/msU', $inlineType, $inlineType);
+            if (1 !== preg_match($pattern, $configData, $matches)) {
+                throw new DomainException('inline type not found');
+            }
+            $inlineData[$inlineType] = $matches[1];
+        }
+
+        $zipName = tempnam(sys_get_temp_dir(), 'vup_');
+        $z = new ZipArchive();
+        $z->open($zipName, ZipArchive::CREATE);
+        $z->addFromString('ca.crt', $inlineData['ca']);
+        $z->addFromString('client.crt', $inlineData['cert']);
+        $z->addFromString('client.key', $inlineData['key']);
+        $z->addFromString('ta.key', $inlineData['tls-auth']);
+        $z->close();
+
+        $response = new Response(201, 'application/octet-stream');
+        $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
+        $response->setContent(file_get_contents($zipName));
+
+        unlink($zipName);
 
         return $response;
     }
