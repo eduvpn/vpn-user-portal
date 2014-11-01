@@ -7,11 +7,19 @@ use fkooman\VpnPortal\Exception\PdoStorageException;
 
 class PdoStorage
 {
+    /** @var PDO */
     private $db;
+
+    /** @var string */
     private $prefix;
 
+    /** ready for download */
     const STATUS_READY   = 10;
+
+    /** already downloaded */
     const STATUS_ACTIVE  = 20;
+
+    /** revoked */
     const STATUS_REVOKED = 30;
 
     public function __construct(PDO $db, $prefix = '')
