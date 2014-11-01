@@ -171,22 +171,34 @@ class VpnPortalService extends Service
         $response = $this->getOvpnConfig($userId, $configName);
         $configData = $response->getContent();
 
-        $inlineData = array();
+        $inlineTypeFileName = array(
+            'ca' => 'ca.crt',
+            'cert' => 'client.crt',
+            'key' => 'client.key',
+            'tls-auth' => 'ta.key',
+        );
+
+        $zipName = tempnam(sys_get_temp_dir(), 'vup_');
+        $z = new ZipArchive();
+        $z->open($zipName, ZipArchive::CREATE);
+
         foreach (array('cert', 'ca', 'key', 'tls-auth') as $inlineType) {
             $pattern = sprintf('/\<%s\>(.*)\<\/%s\>/msU', $inlineType, $inlineType);
             if (1 !== preg_match($pattern, $configData, $matches)) {
                 throw new DomainException('inline type not found');
             }
-            $inlineData[$inlineType] = $matches[1];
+            $configData = preg_replace(
+                $pattern,
+                sprintf(
+                    '%s %s',
+                    $inlineType,
+                    $inlineTypeFileName[$inlineType]
+                ),
+                $configData
+            );
+            $z->addFromString($inlineTypeFileName[$inlineType], trim($matches[1]));
         }
-
-        $zipName = tempnam(sys_get_temp_dir(), 'vup_');
-        $z = new ZipArchive();
-        $z->open($zipName, ZipArchive::CREATE);
-        $z->addFromString('ca.crt', $inlineData['ca']);
-        $z->addFromString('client.crt', $inlineData['cert']);
-        $z->addFromString('client.key', $inlineData['key']);
-        $z->addFromString('ta.key', $inlineData['tls-auth']);
+        $z->addFromString(sprintf('%s.ovpn', $configName), $configData);
         $z->close();
 
         $response = new Response(201, 'application/octet-stream');

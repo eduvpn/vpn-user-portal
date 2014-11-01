@@ -12,7 +12,7 @@
     <div class="container">
         <h1><a href="../">VPN Portal</a></h1>
         <p>You can download the configuration &quot;<strong>{{ configName|e }}</strong>&quot; in <tt>ovpn</tt> format and import it in your OpenVPN application.</p>
-        <a href="{{ configName|e}}/ovpn"><button>Download Configuration</button></a>
+        <a href="{{ configName|e}}/ovpn"><button>Download Configuration (OVPN)</button></a>
         <p><em>You can only download a configuration once. Create a new one for your other devices.</em></p>
         <h2>Instructions</h2>
         <p>The installation instructions below help you set up the VPN:</p>
@@ -25,14 +25,9 @@
         </ul>
 
         <h2>Manual Configuration</h2>
-        <p>Below is the full configuration file for your OpenVPN client. For your convenience you can download the certificates separately as a <tt>ZIP</tt> file.</p>
+        <p>Below you can download a ZIP file with the configuration and certificates as separate files, this is needed for some clients.</p>
 
-        <a href="{{ configName|e}}/zip"><button>Download Certificates</button></a>
-
-        <div class="frame">
-        <pre>{{ plainConfig|e }}</pre>
-        </div>
-
+        <a href="{{ configName|e}}/zip"><button>Download Configuration (ZIP)</button></a>
     </div> <!-- /container -->
 </body>
 </html>

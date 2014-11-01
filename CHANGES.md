@@ -3,6 +3,8 @@
 ## 0.2.0
 - show a download button that can be used once instead of a directly
   triggered download
+= add support for downloading a ZIP file with separate config and
+  certificate files, useful for e.g. NetworkManager on Linux
 
 ## 0.1.12
 - validate config name when creating a new config
