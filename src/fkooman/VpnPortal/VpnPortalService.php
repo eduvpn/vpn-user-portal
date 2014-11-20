@@ -21,12 +21,16 @@ class VpnPortalService extends Service
     /** @var fkooman\VpnPortal\VpnCertServiceClient */
     private $vpnCertServiceClient;
 
-    public function __construct(PdoStorage $pdoStorage, VpnCertServiceClient $vpnCertServiceClient)
+    /** @var array */
+    private $templateData;
+
+    public function __construct(PdoStorage $pdoStorage, VpnCertServiceClient $vpnCertServiceClient, array $templateData)
     {
         parent::__construct();
 
         $this->pdoStorage = $pdoStorage;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
+        $this->templateData = $templateData;
 
         $this->setDefaultRoute('/config/');
 
@@ -118,6 +122,7 @@ class VpnPortalService extends Service
             'vpnPortal.twig',
             array(
                 'configs' => $configs,
+                'templateData' => $this->templateData,
             )
         );
     }
@@ -142,7 +147,7 @@ class VpnPortalService extends Service
             'vpnConfigDownload.twig',
             array(
                 'configName' => $configName,
-                'plainConfig' => $vpnConfig['config'],
+                'templateData' => $this->templateData,
             )
         );
     }

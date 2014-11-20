@@ -33,13 +33,15 @@ try {
 
     // Authentication
     $mellonAuthentication = new MellonAuthentication(
-        $iniReader->v('mellonAttribute')
+        $iniReader->v('Authentication', 'mellonAttribute')
     );
 
     // VPN Certificate Service Configuration
     $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
     $serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
     $servicePass = $iniReader->v('VpnCertService', 'servicePass');
+
+    $templateData = $iniReader->v('Template');
 
     $client = new Client();
     $client->setDefaultOption(
@@ -48,8 +50,11 @@ try {
     );
 
     $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
-
-    $vpnPortalService = new VpnPortalService($pdoStorage, $vpnCertServiceClient);
+    $vpnPortalService = new VpnPortalService(
+        $pdoStorage,
+        $vpnCertServiceClient,
+        $templateData
+    );
     $vpnPortalService->registerBeforeEachMatchPlugin($mellonAuthentication);
     $vpnPortalService->run()->sendResponse();
 } catch (Exception $e) {

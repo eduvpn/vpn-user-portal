@@ -14,11 +14,14 @@
 
         <p>The installation instructions will help you set up the VPN:</p>
         <ul>
-            <li><a href="#">Windows</a></li>
+            {% for key, d in templateData.doc %}
+            <li><a href="{{ d|e }}">{{ key|e }}</a></li>
+            <!--<li><a href="#">Windows</a></li>
             <li><a href="#">Mac OS</a></li>
             <li><a href="#">Linux (NetworkManager)</a></li>
             <li><a href="#">Google Android</a></li>
-            <li><a href="#">Apple iOS</a></li>
+            <li><a href="#">Apple iOS</a></li>-->
+            {% endfor %}
         </ul>
 
         <p>You can download the configuration &quot;<strong>{{ configName|e }}</strong>&quot; in <tt>OVPN</tt> format and import it in your OpenVPN client.</p>
