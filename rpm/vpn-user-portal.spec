@@ -2,7 +2,7 @@
 %global github_name      vpn-user-portal
 
 Name:       vpn-user-portal
-Version:    0.1.12
+Version:    0.2.0
 Release:    1%{?dist}
 Summary:    Portal to manage OpenVPN client configurations
 
@@ -101,6 +101,9 @@ fi
 %doc README.md COPYING composer.json config/config.ini.defaults
 
 %changelog
+* Thu Nov 20 2014 François Kooman <fkooman@tuxed.net> - 0.2.0-2
+- update to 0.2.0
+
 * Tue Nov 18 2014 François Kooman <fkooman@tuxed.net> - 0.1.12-1
 - update to 0.1.12
 

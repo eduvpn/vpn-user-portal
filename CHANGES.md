@@ -5,10 +5,14 @@
   triggered download
 - add support for downloading a ZIP file with separate config and
   certificate files, useful for e.g. NetworkManager on Linux
-- make portal title and first paragraph configurable
-- make documentation links configurable
+- **BREAKING**: make portal title and first paragraph configurable, this needs
+  to be set in the configuration file
+- **BREAKING**: make documentation links configurable, these need to be set in
+  the config file
 - **BREAKING**: move `mellonAttribute` to `Authentication` section, 
   configuration **MUST** be updated
+- **BREAKING**: database modified. The `status` column is now an `INTEGER`, 
+  added `config` column of type `BLOB` for temporary storing the configuration
 
 ## 0.1.12
 - validate config name when creating a new config
