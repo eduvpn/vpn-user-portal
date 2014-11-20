@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+- remove `key-direction 1` line and add 1 to `tls-auth ta.key` line with ZIP
+  export to fix NetworkManager import
+
 ## 0.2.0
 - show a download button that can be used once instead of a directly
   triggered download

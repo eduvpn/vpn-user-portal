@@ -203,6 +203,20 @@ class VpnPortalService extends Service
             );
             $z->addFromString($inlineTypeFileName[$inlineType], trim($matches[1]));
         }
+        // remove "key-direction X" and add it to tls-auth line as last
+        // parameter (hack to make NetworkManager import work)
+        $configData = str_replace(
+            array(
+                'key-direction 1',
+                'tls-auth ta.key',
+            ),
+            array(
+                '',
+                'tls-auth ta.key 1',
+            ),
+            $configData
+        );
+
         $z->addFromString(sprintf('%s.ovpn', $configName), $configData);
         $z->close();
 
