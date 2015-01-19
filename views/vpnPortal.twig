@@ -15,10 +15,15 @@
 
         <h2>New Configuration</h2>
         <p>Enter a name, e.g. &quot;Phone&quot;, for the configuration in the box below and click
-           &quot;<em>Create</em>&quot;.
+           &quot;<em>Create</em>&quot;. Allowed characters are <tt>a-zA-Z0-9-_.@</tt>.
        </p>
+
+        <p>Enter a name, e.g. &quot;Phone&quot;, for the configuration in the box below and click
+           &quot;<em>Create</em>&quot;. <small>Allowed characters are <tt>a-z</tt>, <tt>A-Z</tt>, <tt>0-9</tt>, <tt>-</tt>, <tt>_</tt>, <tt>.</tt>, <tt>@</tt>.</small>
+        </p>
+
         <form method="post">
-            <input type="text" name="name" placeholder="Name...">
+            <input type="text" name="name" placeholder="Name..." required pattern="[a-zA-Z0-9-_.@]+">
             <input type="submit" value="Create">
         </form>
 

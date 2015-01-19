@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+- require the name to be provided when creating a new configuration by 
+  enforcing this using HTML5. Mention the allowed characters and also 
+  'enforce' this using HTML5.
+
 ## 0.2.1
 - remove `key-direction 1` line and add 1 to `tls-auth ta.key` line with ZIP
   export to fix NetworkManager import
