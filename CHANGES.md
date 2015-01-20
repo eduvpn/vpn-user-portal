@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.3 
+- remove duplicate text indicating allowed characters
+
 ## 0.2.2
 - require the name to be provided when creating a new configuration by 
   enforcing this using HTML5. Mention the allowed characters and also 
