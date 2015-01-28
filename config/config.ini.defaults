@@ -3,6 +3,7 @@ mellonAttribute = 'MELLON_NAME_ID'
 ;mellonAttribute = 'MELLON_eduPersonTargetedID'
 
 [Template]
+cssUri = '../../css/default.css'
 serviceName = 'VPN Portal'
 serviceDescription = 'Welcome to the VPN portal. Here you can manage your VPN configurations.'
 doc[Windows] = 'https://duckduckgo.com/?q=openvpn+windows'

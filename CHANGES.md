@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4
+- make CSS URL configurable to allow for style overrides for branding
+  **UPDATE CONFIG FILE** by setting `cssUri` in `[Template]` section
+
 ## 0.2.3 
 - remove duplicate text indicating allowed characters
 
