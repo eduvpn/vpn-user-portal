@@ -11,6 +11,7 @@ use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Mellon\MellonUserInfo;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
+use Twig_SimpleFilter;
 use ZipArchive;
 
 class VpnPortalService extends Service
@@ -270,6 +271,20 @@ class VpnPortalService extends Service
         $templateDirs[] = $defaultTemplateDir;
 
         $loader = new Twig_Loader_Filesystem($templateDirs);
-        return new Twig_Environment($loader);
+        
+        $twig = new Twig_Environment($loader);
+        $twig->addFilter(
+            new Twig_SimpleFilter(
+                'truncate',
+                function ($string, $length) {
+                    if (strlen($string) > $length) {
+                        $string = sprintf('%s...', substr($string, 0, $length));
+                    }
+                    return $string;
+                }
+            )
+        );
+
+        return $twig;
     }
 }
