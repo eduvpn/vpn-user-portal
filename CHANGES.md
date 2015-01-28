@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.7
+- fixes for mobile, mobile first with some 'enhancements' for desktop browsers
+
 ## 0.2.6
 - fix URL rewriting and remove obsolete `portal.php`
 - update `fkooman/rest` dependency to 0.6.5

@@ -2,7 +2,7 @@
 %global github_name      vpn-user-portal
 
 Name:       vpn-user-portal
-Version:    0.2.6
+Version:    0.2.7
 Release:    1%{?dist}
 Summary:    Portal to manage OpenVPN client configurations
 
@@ -101,51 +101,11 @@ fi
 %doc README.md COPYING composer.json config/config.ini.defaults
 
 %changelog
+* Wed Jan 28 2015 François Kooman <fkooman@tuxed.net> - 0.2.7-1
+- update to 0.2.7
+
 * Wed Jan 28 2015 François Kooman <fkooman@tuxed.net> - 0.2.6-1
 - update to 0.2.6
 
 * Wed Jan 28 2015 François Kooman <fkooman@tuxed.net> - 0.2.5-1
 - update to 0.2.5
-
-* Wed Jan 28 2015 François Kooman <fkooman@tuxed.net> - 0.2.4-1
-- update to 0.2.4
-
-* Tue Jan 20 2015 François Kooman - 0.2.3-1
-- update to 0.2.3
-
-* Mon Jan 19 2015 François Kooman - 0.2.2-1
-- update to 0.2.2
-
-* Thu Nov 20 2014 François Kooman <fkooman@tuxed.net> - 0.2.1-1
-- update to 0.2.1
-
-* Thu Nov 20 2014 François Kooman <fkooman@tuxed.net> - 0.2.0-2
-- update to 0.2.0
-
-* Tue Nov 18 2014 François Kooman <fkooman@tuxed.net> - 0.1.12-1
-- update to 0.1.12
-
-* Sun Oct 26 2014 François Kooman <fkooman@tuxed.net> - 0.1.11-1
-- update to 0.1.11
-
-* Sun Oct 26 2014 François Kooman <fkooman@tuxed.net> - 0.1.10-1
-- return to Guzzle 3.x for CentOS/Red Hat Enterprise 6 support
-
-* Sat Oct 25 2014 François Kooman <fkooman@tuxed.net> - 0.1.9-1
-- update to 0.1.9
-
-* Sat Oct 25 2014 François Kooman <fkooman@tuxed.net> - 0.1.8-1
-- update to 0.1.8
-- set config file permissions to apache user only
-
-* Sat Oct 25 2014 François Kooman <fkooman@tuxed.net> - 0.1.7-2
-- config file owned and only readable by apache user now
-
-* Thu Oct 23 2014 François Kooman <fkooman@tuxed.net> - 0.1.7-1
-- update to 0.1.7
-
-* Thu Oct 23 2014 François Kooman <fkooman@tuxed.net> - 0.1.6-1
-- update to 0.1.6
-
-* Wed Oct 22 2014 François Kooman <fkooman@tuxed.net> - 0.1.5-1
-- update to 0.1.5
