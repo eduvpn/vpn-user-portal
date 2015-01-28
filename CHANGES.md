@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.5
+- remove the CSS URL configuration again and instead allow for template 
+  overrides by copying them from `views/${templateName}` to the configuration 
+  directory `config/views/${templateName}`. This allows much more flexibility
+  and customization, including the CSS URL
+- remove all template configuration as that can now be done by overriding the 
+  template
+- update dependencies
+
 ## 0.2.4
 - make CSS URL configurable to allow for style overrides for branding
   **UPDATE CONFIG FILE** by setting `cssUri` in `[Template]` section

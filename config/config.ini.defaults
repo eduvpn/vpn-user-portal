@@ -2,16 +2,6 @@
 mellonAttribute = 'MELLON_NAME_ID'
 ;mellonAttribute = 'MELLON_eduPersonTargetedID'
 
-[Template]
-cssUri = '../../css/default.css'
-serviceName = 'VPN Portal'
-serviceDescription = 'Welcome to the VPN portal. Here you can manage your VPN configurations.'
-doc[Windows] = 'https://duckduckgo.com/?q=openvpn+windows'
-doc[Mac OS] = 'https://duckduckgo.com/?q=openvpn+mac+os'
-doc[Linux (NetworkManager)] = 'https://duckduckgo.com/?q=openvpn+linux+networkmanager'
-doc[Google Android] = 'https://duckduckgo.com/?q=openvpn+google+android'
-doc[Apple iOS] = 'https://duckduckgo.com/?q=openvpn+apple+ios'
-
 [VpnCertService]
 serviceUri  = 'http://localhost/vpn-cert-service/api.php'
 serviceUser = 'admin'

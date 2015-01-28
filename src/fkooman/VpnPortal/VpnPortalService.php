@@ -21,16 +21,12 @@ class VpnPortalService extends Service
     /** @var fkooman\VpnPortal\VpnCertServiceClient */
     private $vpnCertServiceClient;
 
-    /** @var array */
-    private $templateData;
-
-    public function __construct(PdoStorage $pdoStorage, VpnCertServiceClient $vpnCertServiceClient, array $templateData)
+    public function __construct(PdoStorage $pdoStorage, VpnCertServiceClient $vpnCertServiceClient)
     {
         parent::__construct();
 
         $this->pdoStorage = $pdoStorage;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
-        $this->templateData = $templateData;
 
         $this->setDefaultRoute('/config/');
 
@@ -111,18 +107,12 @@ class VpnPortalService extends Service
 
     public function getConfigurations($userId)
     {
-        $configs = $this->pdoStorage->getConfigurations($userId);
-
-        $loader = new Twig_Loader_Filesystem(
-            dirname(dirname(dirname(__DIR__))).'/views'
-        );
-        $twig = new Twig_Environment($loader);
-
+        $vpnConfigurations = $this->pdoStorage->getConfigurations($userId);
+        $twig = $this->getTwigEnvironment();
         return $twig->render(
             'vpnPortal.twig',
             array(
-                'configs' => $configs,
-                'templateData' => $this->templateData,
+                'vpnConfigurations' => $vpnConfigurations
             )
         );
     }
@@ -138,16 +128,11 @@ class VpnPortalService extends Service
             throw new NotFoundException('configuration already downloaded');
         }
 
-        $loader = new Twig_Loader_Filesystem(
-            dirname(dirname(dirname(__DIR__))).'/views'
-        );
-        $twig = new Twig_Environment($loader);
-
+        $twig = $this->getTwigEnvironment();
         return $twig->render(
             'vpnConfigDownload.twig',
             array(
-                'configName' => $configName,
-                'templateData' => $this->templateData,
+                'configName' => $configName
             )
         );
     }
@@ -265,5 +250,26 @@ class VpnPortalService extends Service
         if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
             throw new BadRequestException('invalid characters in name');
         }
+    }
+
+    private function getTwigEnvironment()
+    {
+        // configTemplateDir is where templates are placed to override the
+        // default template
+        $configTemplateDir = dirname(dirname(dirname(__DIR__))).'/config/views';
+        $defaultTemplateDir = dirname(dirname(dirname(__DIR__))).'/views';
+
+        $templateDirs = array();
+
+        // the template directory actually needs to exist, otherwise the
+        // Twig_Loader_Filesystem class will throw an exception when loading
+        // templates, the actual template does not need to exist though...
+        if (false !== is_dir($configTemplateDir)) {
+            $templateDirs[] = $configTemplateDir;
+        }
+        $templateDirs[] = $defaultTemplateDir;
+
+        $loader = new Twig_Loader_Filesystem($templateDirs);
+        return new Twig_Environment($loader);
     }
 }

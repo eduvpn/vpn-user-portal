@@ -41,8 +41,6 @@ try {
     $serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
     $servicePass = $iniReader->v('VpnCertService', 'servicePass');
 
-    $templateData = $iniReader->v('Template');
-
     $client = new Client();
     $client->setDefaultOption(
         'auth',
@@ -52,8 +50,7 @@ try {
     $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
     $vpnPortalService = new VpnPortalService(
         $pdoStorage,
-        $vpnCertServiceClient,
-        $templateData
+        $vpnCertServiceClient
     );
     $vpnPortalService->registerBeforeEachMatchPlugin($mellonAuthentication);
     $vpnPortalService->run()->sendResponse();

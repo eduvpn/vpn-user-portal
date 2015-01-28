@@ -5,13 +5,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VPN Portal</title>
-  <link rel="stylesheet" type="text/css" href="{{ templateData.cssUri|e }}">
+  <link rel="stylesheet" type="text/css" href="../../css/default.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>{{ templateData.serviceName|e }}</h1>
-        <p>{{ templateData.serviceDescription|e }}</p>
+        <h1>VPN Portal</h1>
+        <p>Welcome to the VPN portal. Here you can manage your VPN configurations.</p>
 
         <h2>New Configuration</h2>
         <p>Enter a name, e.g. &quot;Phone&quot;, for the configuration in the box below and click
@@ -23,7 +23,7 @@
             <input type="submit" value="Create">
         </form>
 
-        {% if configs %} <!-- existing configurations -->
+        {% if vpnConfigurations %} <!-- existing configurations -->
         <h2>Existing Configurations</h2>
         <p>If you lost your device or no longer use the VPN you can click &quot;<em>Revoke</em>&quot; to revoke the configuration.</p>
         <table>
@@ -31,7 +31,7 @@
                 <tr><th>Configuration</th><th>Actions</th></tr>
             </thead>
             <tbody>
-            {% for config in configs %}
+            {% for config in vpnConfigurations %}
                 <tr>
                     {% if config.status == 30 %} <!-- revoked -->
                         <td><span class="revoked">{{ config.name|e }}</span></td>
