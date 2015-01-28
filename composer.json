@@ -16,7 +16,7 @@
     "name": "fkooman/vpn-user-portal",
     "require": {
         "fkooman/ini": "~0.2.0",
-        "fkooman/rest": "~0.6.3",
+        "fkooman/rest": "~0.6.5",
         "fkooman/rest-plugin-mellon": "~0.1.2",
         "guzzle/guzzle": "~3.9",
         "php": ">=5.3.3",

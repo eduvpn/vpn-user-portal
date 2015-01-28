@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "74fe27cdc5c44c4390f665f81f479169",
+    "hash": "98427ecb28b370cfce8fab93fa166074",
     "packages": [
         {
             "name": "fkooman/ini",
@@ -82,16 +82,16 @@
         },
         {
             "name": "fkooman/rest",
-            "version": "0.6.4",
+            "version": "0.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest.git",
-                "reference": "5c9cb54f032938d56d5ed0a22998960cc1b57c01"
+                "reference": "86f903380b5525d2b997f09c77150379d37b6c4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/5c9cb54f032938d56d5ed0a22998960cc1b57c01",
-                "reference": "5c9cb54f032938d56d5ed0a22998960cc1b57c01",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/86f903380b5525d2b997f09c77150379d37b6c4b",
+                "reference": "86f903380b5525d2b997f09c77150379d37b6c4b",
                 "shasum": ""
             },
             "require": {
@@ -122,7 +122,7 @@
                 }
             ],
             "description": "Simple PHP library for writing REST services.",
-            "time": "2015-01-24 14:29:31"
+            "time": "2015-01-28 12:36:46"
         },
         {
             "name": "fkooman/rest-plugin-mellon",

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.6
+- fix URL rewriting and remove obsolete `portal.php`
+- update `fkooman/rest` dependency to 0.6.5
+
 ## 0.2.5
 - remove the CSS URL configuration again and instead allow for template 
   overrides by copying them from `views/${templateName}` to the configuration 
