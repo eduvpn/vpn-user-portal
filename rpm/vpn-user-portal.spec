@@ -22,10 +22,10 @@ Requires:   httpd
 
 Requires:   php-composer(fkooman/ini) >= 0.2.0
 Requires:   php-composer(fkooman/ini) < 0.3.0
-Requires:   php-composer(fkooman/rest) >= 0.6.5
+Requires:   php-composer(fkooman/rest) >= 0.6.7
 Requires:   php-composer(fkooman/rest) < 0.7.0
-Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.1.2
-Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.2.0
+Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.2.0
+Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.3.0
 
 Requires:   php-pear(pear.twig-project.org/Twig) >= 1.15
 Requires:   php-pear(pear.twig-project.org/Twig) < 2.0

@@ -8,7 +8,7 @@ use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\Exception\NotFoundException;
 use fkooman\Rest\Service;
-use fkooman\Rest\Plugin\Mellon\MellonUserInfo;
+use fkooman\Rest\Plugin\UserInfo;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_SimpleFilter;
@@ -44,7 +44,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/',
-            function (MellonUserInfo $u) use ($compatThis) {
+            function (UserInfo $u) use ($compatThis) {
                 return $compatThis->getConfigurations($u->getUserId());
             }
         );
@@ -52,7 +52,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/:configName',
-            function (MellonUserInfo $u, $configName) use ($compatThis) {
+            function (UserInfo $u, $configName) use ($compatThis) {
                 return $compatThis->getConfig($u->getUserId(), $configName);
             }
         );
@@ -60,7 +60,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/:configName/ovpn',
-            function (MellonUserInfo $u, $configName) use ($compatThis) {
+            function (UserInfo $u, $configName) use ($compatThis) {
                 return $compatThis->getOvpnConfig($u->getUserId(), $configName);
             }
         );
@@ -68,7 +68,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/:configName/zip',
-            function (MellonUserInfo $u, $configName) use ($compatThis) {
+            function (UserInfo $u, $configName) use ($compatThis) {
                 return $compatThis->getZipConfig($u->getUserId(), $configName);
             }
         );
@@ -76,7 +76,7 @@ class VpnPortalService extends Service
         /* POST */
         $this->post(
             '/config/',
-            function (Request $request, MellonUserInfo $u) use ($compatThis) {
+            function (Request $request, UserInfo $u) use ($compatThis) {
                 if ($request->getHeader('Referer') !== $request->getRequestUri()->getUri()) {
                     throw new BadRequestException('csrf protection triggered');
                 }
@@ -92,7 +92,7 @@ class VpnPortalService extends Service
         /* DELETE */
         $this->delete(
             '/config/:configName',
-            function (Request $request, MellonUserInfo $u, $configName) use ($compatThis) {
+            function (Request $request, UserInfo $u, $configName) use ($compatThis) {
                 if ($request->getHeader('Referer') !== sprintf('%s/', dirname($request->getRequestUri()->getUri()))) {
                     throw new BadRequestException('csrf protection triggered');
                 }

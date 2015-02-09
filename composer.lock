@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "98427ecb28b370cfce8fab93fa166074",
+    "hash": "472876e5c4b7d3713292efe0c4123a96",
     "packages": [
         {
             "name": "fkooman/ini",
@@ -82,16 +82,16 @@
         },
         {
             "name": "fkooman/rest",
-            "version": "0.6.5",
+            "version": "0.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest.git",
-                "reference": "86f903380b5525d2b997f09c77150379d37b6c4b"
+                "reference": "98f7e294a20145c2cc3b8b8c8e5dfc797f8e988a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/86f903380b5525d2b997f09c77150379d37b6c4b",
-                "reference": "86f903380b5525d2b997f09c77150379d37b6c4b",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/98f7e294a20145c2cc3b8b8c8e5dfc797f8e988a",
+                "reference": "98f7e294a20145c2cc3b8b8c8e5dfc797f8e988a",
                 "shasum": ""
             },
             "require": {
@@ -122,24 +122,24 @@
                 }
             ],
             "description": "Simple PHP library for writing REST services.",
-            "time": "2015-01-28 12:36:46"
+            "time": "2015-02-07 22:10:26"
         },
         {
             "name": "fkooman/rest-plugin-mellon",
-            "version": "0.1.2",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest-plugin-mellon.git",
-                "reference": "35e4d60865a6ef2bc7982a28efe76b7ab6125660"
+                "reference": "4f263f81d7654917534325d6a8ae2eaba7537ff9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-mellon/zipball/35e4d60865a6ef2bc7982a28efe76b7ab6125660",
-                "reference": "35e4d60865a6ef2bc7982a28efe76b7ab6125660",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-mellon/zipball/4f263f81d7654917534325d6a8ae2eaba7537ff9",
+                "reference": "4f263f81d7654917534325d6a8ae2eaba7537ff9",
                 "shasum": ""
             },
             "require": {
-                "fkooman/rest": "~0.6.1",
+                "fkooman/rest": "~0.6.7",
                 "php": ">=5.3.3"
             },
             "type": "library",
@@ -160,7 +160,7 @@
                 }
             ],
             "description": "Mellon (SAML) Authentication plugin for fkooman/rest",
-            "time": "2014-10-26 10:11:55"
+            "time": "2015-02-07 22:18:20"
         },
         {
             "name": "guzzle/guzzle",
@@ -256,17 +256,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.6.3",
+            "version": "v2.6.4",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "40ff70cadea3785d83cac1c8309514b36113064e"
+                "reference": "f75989f3ab2743a82fe0b03ded2598a2b1546813"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/40ff70cadea3785d83cac1c8309514b36113064e",
-                "reference": "40ff70cadea3785d83cac1c8309514b36113064e",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/f75989f3ab2743a82fe0b03ded2598a2b1546813",
+                "reference": "f75989f3ab2743a82fe0b03ded2598a2b1546813",
                 "shasum": ""
             },
             "require": {
@@ -310,7 +310,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2015-01-05 14:28:40"
+            "time": "2015-02-01 16:10:57"
         },
         {
             "name": "twig/twig",
