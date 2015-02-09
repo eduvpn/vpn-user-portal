@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.8
+- update `fkooman/rest` and `fkooman/rest-plugin-mellon` dependencies
+
 ## 0.2.7
 - fixes for mobile, mobile first with some 'enhancements' for desktop browsers
 
