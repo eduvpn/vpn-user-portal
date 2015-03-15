@@ -52,16 +52,9 @@ try {
         $pdoStorage,
         $vpnCertServiceClient
     );
-    $vpnPortalService->registerBeforeEachMatchPlugin($mellonAuthentication);
+    $vpnPortalService->registerOnMatchPlugin($mellonAuthentication);
     $vpnPortalService->run()->sendResponse();
 } catch (Exception $e) {
-    if ($e instanceof HttpException) {
-        $response = $e->getHtmlResponse();
-    } else {
-        // we catch all other (unexpected) exceptions and return a 500
-        error_log($e->getTraceAsString());
-        $e = new InternalServerErrorException($e->getMessage());
-        $response = $e->getHtmlResponse();
-    }
-    $response->sendResponse();
+    error_log($e->getMessage());
+    VpnPortalService::handleException($e)->sendResponse();
 }
