@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div id="container">
         <h1>VPN Portal</h1>
         <p>
             To get the VPN working you need to perform two steps:
@@ -28,8 +28,9 @@
 
         <h2>Configuration</h2>
         <p>You can download the configuration &quot;<strong>{{ configName|e }}</strong>&quot; in <tt>OVPN</tt> format and import it in your OpenVPN client.</p>
+        <p class="warn">You can only download a configuration once. Create a new one for your other devices.</p>
         <a href="{{ configName|e}}/ovpn"><button>Download Configuration</button></a>
-        <p><em>You can only download a configuration once. Create a new one for your other devices.</em></p>
+
 
         <p><a href="../">Back to configurations...</a></p>
     </div> <!-- /container -->
