@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1
+- major overhaul of UI
+
 ## 0.3.0
 - update `fkooman/rest` and `fkooman/rest-plugin-mellon` dependencies
 
