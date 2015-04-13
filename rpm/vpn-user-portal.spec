@@ -2,7 +2,7 @@
 %global github_name      vpn-user-portal
 
 Name:       vpn-user-portal
-Version:    0.3.1
+Version:    0.3.2
 Release:    1%{?dist}
 Summary:    Portal to manage OpenVPN client configurations
 
@@ -22,9 +22,9 @@ Requires:   httpd
 
 Requires:   php-composer(fkooman/ini) >= 0.2.0
 Requires:   php-composer(fkooman/ini) < 0.3.0
-Requires:   php-composer(fkooman/rest) >= 0.7.4
-Requires:   php-composer(fkooman/rest) < 0.8.0
-Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.3.0
+Requires:   php-composer(fkooman/rest) >= 0.8.0
+Requires:   php-composer(fkooman/rest) < 0.9.0
+Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.3.1
 Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.4.0
 
 Requires:   php-pear(pear.twig-project.org/Twig) >= 1.15
@@ -101,6 +101,9 @@ fi
 %doc README.md COPYING composer.json config/config.ini.defaults
 
 %changelog
+* Mon Apr 13 2015 François Kooman <fkooman@tuxed.net> - 0.3.2-1
+- update to 0.3.2
+
 * Sat Apr 11 2015 François Kooman <fkooman@tuxed.net> - 0.3.1-1
 - update to 0.3.1
 

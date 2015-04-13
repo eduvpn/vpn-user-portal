@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.2
+- update `fkooman/rest` and authentication plugins
+
 ## 0.3.1
 - major overhaul of UI
 
