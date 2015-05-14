@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.3
+- update `fkooman/rest`
+
 ## 0.3.2
 - update `fkooman/rest` and authentication plugins
 
