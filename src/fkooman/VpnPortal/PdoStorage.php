@@ -14,10 +14,10 @@ class PdoStorage
     private $prefix;
 
     /** ready for download */
-    const STATUS_READY   = 10;
+    const STATUS_READY = 10;
 
     /** already downloaded */
-    const STATUS_ACTIVE  = 20;
+    const STATUS_ACTIVE = 20;
 
     /** revoked */
     const STATUS_REVOKED = 30;
@@ -45,7 +45,7 @@ class PdoStorage
             return $result;
         }
 
-        return null;
+        return;
     }
 
     public function getConfiguration($userId, $name)
@@ -71,7 +71,7 @@ class PdoStorage
                 $this->prefix.'config'
             )
         );
-        $stmt->bindValue(':status', PdoStorage::STATUS_ACTIVE, PDO::PARAM_INT);
+        $stmt->bindValue(':status', self::STATUS_ACTIVE, PDO::PARAM_INT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
         $stmt->bindValue(':config', null, PDO::PARAM_LOB);
@@ -108,7 +108,7 @@ class PdoStorage
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-        $stmt->bindValue(':status', PdoStorage::STATUS_READY, PDO::PARAM_INT);
+        $stmt->bindValue(':status', self::STATUS_READY, PDO::PARAM_INT);
         $stmt->bindValue(':config', $configData, PDO::PARAM_LOB);
         $stmt->execute();
 
@@ -125,7 +125,7 @@ class PdoStorage
                 $this->prefix.'config'
             )
         );
-        $stmt->bindValue(':status', PdoStorage::STATUS_REVOKED, PDO::PARAM_INT);
+        $stmt->bindValue(':status', self::STATUS_REVOKED, PDO::PARAM_INT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
         $stmt->execute();

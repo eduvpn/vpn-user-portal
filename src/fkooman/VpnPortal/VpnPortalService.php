@@ -8,7 +8,7 @@ use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\Exception\NotFoundException;
 use fkooman\Rest\Service;
-use fkooman\Rest\Plugin\UserInfo;
+use fkooman\Rest\Plugin\Mellon\MellonUserInfo;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_SimpleFilter;
@@ -29,8 +29,6 @@ class VpnPortalService extends Service
         $this->pdoStorage = $pdoStorage;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
 
-        $this->setDefaultRoute('/config/');
-
         // in PHP 5.3 we cannot use $this from a closure
         $compatThis = &$this;
 
@@ -44,7 +42,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/',
-            function (UserInfo $u) use ($compatThis) {
+            function (MellonUserInfo $u) use ($compatThis) {
                 return $compatThis->getConfigurations($u->getUserId());
             }
         );
@@ -52,7 +50,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/:configName',
-            function (UserInfo $u, $configName) use ($compatThis) {
+            function (MellonUserInfo $u, $configName) use ($compatThis) {
                 return $compatThis->getConfig($u->getUserId(), $configName);
             }
         );
@@ -60,7 +58,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/:configName/ovpn',
-            function (UserInfo $u, $configName) use ($compatThis) {
+            function (MellonUserInfo $u, $configName) use ($compatThis) {
                 return $compatThis->getOvpnConfig($u->getUserId(), $configName);
             }
         );
@@ -68,7 +66,7 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/:configName/zip',
-            function (UserInfo $u, $configName) use ($compatThis) {
+            function (MellonUserInfo $u, $configName) use ($compatThis) {
                 return $compatThis->getZipConfig($u->getUserId(), $configName);
             }
         );
@@ -76,11 +74,7 @@ class VpnPortalService extends Service
         /* POST */
         $this->post(
             '/config/',
-            function (Request $request, UserInfo $u) use ($compatThis) {
-                if ($request->getHeader('Referer') !== $request->getRequestUri()->getUri()) {
-                    throw new BadRequestException('csrf protection triggered');
-                }
-
+            function (Request $request, MellonUserInfo $u) use ($compatThis) {
                 return $compatThis->postConfig(
                     $u->getUserId(),
                     $request->getPostParameter('name'),
@@ -92,11 +86,7 @@ class VpnPortalService extends Service
         /* DELETE */
         $this->delete(
             '/config/:configName',
-            function (Request $request, UserInfo $u, $configName) use ($compatThis) {
-                if ($request->getHeader('Referer') !== sprintf('%s/', dirname($request->getRequestUri()->getUri()))) {
-                    throw new BadRequestException('csrf protection triggered');
-                }
-
+            function (Request $request, MellonUserInfo $u, $configName) use ($compatThis) {
                 return $compatThis->deleteConfig(
                     $u->getUserId(),
                     $configName,
@@ -110,10 +100,11 @@ class VpnPortalService extends Service
     {
         $vpnConfigurations = $this->pdoStorage->getConfigurations($userId);
         $twig = $this->getTwigEnvironment();
+
         return $twig->render(
             'vpnPortal.twig',
             array(
-                'vpnConfigurations' => $vpnConfigurations
+                'vpnConfigurations' => $vpnConfigurations,
             )
         );
     }
@@ -130,10 +121,11 @@ class VpnPortalService extends Service
         }
 
         $twig = $this->getTwigEnvironment();
+
         return $twig->render(
             'vpnConfigDownload.twig',
             array(
-                'configName' => $configName
+                'configName' => $configName,
             )
         );
     }
@@ -152,7 +144,7 @@ class VpnPortalService extends Service
         $this->pdoStorage->activateConfiguration($userId, $configName);
         $response = new Response(201, 'application/x-openvpn-profile');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
-        $response->setContent($vpnConfig['config']);
+        $response->setBody($vpnConfig['config']);
 
         return $response;
     }
@@ -208,7 +200,7 @@ class VpnPortalService extends Service
 
         $response = new Response(201, 'application/zip');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
-        $response->setContent(file_get_contents($zipName));
+        $response->setBody(file_get_contents($zipName));
 
         unlink($zipName);
 
@@ -271,7 +263,7 @@ class VpnPortalService extends Service
         $templateDirs[] = $defaultTemplateDir;
 
         $loader = new Twig_Loader_Filesystem($templateDirs);
-        
+
         $twig = new Twig_Environment($loader);
         $twig->addFilter(
             new Twig_SimpleFilter(
@@ -280,6 +272,7 @@ class VpnPortalService extends Service
                     if (strlen($string) > $length) {
                         $string = sprintf('%s...', substr($string, 0, $length));
                     }
+
                     return $string;
                 }
             )

@@ -2,59 +2,56 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-use fkooman\Http\Exception\HttpException;
-use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\Ini\IniReader;
 use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
 use fkooman\VpnPortal\VpnCertServiceClient;
 use fkooman\Rest\Plugin\Mellon\MellonAuthentication;
 use Guzzle\Http\Client;
+use fkooman\Rest\ExceptionHandler;
+use fkooman\Rest\PluginRegistry;
+use fkooman\Rest\Plugin\ReferrerCheck\ReferrerCheckPlugin;
 
-set_error_handler(
-    function ($errno, $errstr, $errfile, $errline) {
-        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-    }
+ExceptionHandler::register();
+
+$iniReader = IniReader::fromFile(
+    dirname(__DIR__).'/config/config.ini'
 );
 
-try {
-    $iniReader = IniReader::fromFile(
-        dirname(__DIR__).'/config/config.ini'
-    );
+$pdo = new PDO(
+    $iniReader->v('PdoStorage', 'dsn'),
+    $iniReader->v('PdoStorage', 'username', false),
+    $iniReader->v('PdoStorage', 'password', false)
+);
 
-    $pdo = new PDO(
-        $iniReader->v('PdoStorage', 'dsn'),
-        $iniReader->v('PdoStorage', 'username', false),
-        $iniReader->v('PdoStorage', 'password', false)
-    );
+// Database
+$pdoStorage = new PdoStorage($pdo);
 
-    // Database
-    $pdoStorage = new PdoStorage($pdo);
+// Authentication
+$mellonAuthentication = new MellonAuthentication(
+    $iniReader->v('Authentication', 'mellonAttribute')
+);
 
-    // Authentication
-    $mellonAuthentication = new MellonAuthentication(
-        $iniReader->v('Authentication', 'mellonAttribute')
-    );
+// VPN Certificate Service Configuration
+$serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
+$serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
+$servicePass = $iniReader->v('VpnCertService', 'servicePass');
 
-    // VPN Certificate Service Configuration
-    $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
-    $serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
-    $servicePass = $iniReader->v('VpnCertService', 'servicePass');
+$client = new Client();
+$client->setDefaultOption(
+    'auth',
+    array($serviceAuth, $servicePass)
+);
 
-    $client = new Client();
-    $client->setDefaultOption(
-        'auth',
-        array($serviceAuth, $servicePass)
-    );
+$vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
 
-    $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
-    $vpnPortalService = new VpnPortalService(
-        $pdoStorage,
-        $vpnCertServiceClient
-    );
-    $vpnPortalService->registerOnMatchPlugin($mellonAuthentication);
-    $vpnPortalService->run()->sendResponse();
-} catch (Exception $e) {
-    error_log($e->getMessage());
-    VpnPortalService::handleException($e)->sendResponse();
-}
+$pluginRegistry = new PluginRegistry();
+$pluginRegistry->registerDefaultPlugin($mellonAuthentication);
+$pluginRegistry->registerDefaultPlugin(new ReferrerCheckPlugin());
+
+$service = new VpnPortalService(
+    $pdoStorage,
+    $vpnCertServiceClient
+);
+$service->setPluginRegistry($pluginRegistry);
+$service->run()->send();
