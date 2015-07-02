@@ -2,7 +2,9 @@ Alias /vpn-user-portal /usr/share/vpn-user-portal/web
 
 <Directory /usr/share/vpn-user-portal/web>
     AllowOverride none
-    Require local
+  
+    Require local 
+    #Require all granted
 
     RewriteEngine on
     RewriteBase /vpn-user-portal
@@ -18,7 +20,4 @@ Alias /vpn-user-portal /usr/share/vpn-user-portal/web
 
     # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
     Header set X-Frame-Options DENY
-
-    # HSTS: https://developer.mozilla.org/en-US/docs/Security/HTTP_Strict_Transport_Security
-    #Header set Strict-Transport-Security max-age=604800
 </Directory>

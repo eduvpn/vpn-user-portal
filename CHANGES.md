@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0
+- update `fkooman/rest`
+
 ## 0.3.3
 - update `fkooman/rest`
 

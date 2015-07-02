@@ -15,6 +15,9 @@
     "license": "Apache-2.0",
     "name": "fkooman/vpn-user-portal",
     "require": {
+        "ext-pcre": "*",
+        "ext-pdo": "*",
+        "ext-zip": "*",
         "fkooman/ini": "~0.2.0",
         "fkooman/rest": "~0.9.0",
         "fkooman/rest-plugin-mellon": "~0.4.0",

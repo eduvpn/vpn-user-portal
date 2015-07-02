@@ -13,7 +13,6 @@ $loader->registerNamespaces(
     array(
         'fkooman\\VpnPortal' => $baseDir.'/src',
         'fkooman\\Rest' => $vendorDir,
-        'fkooman\\Rest\\Plugin\\Mellon' => $vendorDir,
         'fkooman\\Json' => $vendorDir,
         'fkooman\\Http' => $vendorDir,
         'fkooman\\Ini' => $vendorDir,
