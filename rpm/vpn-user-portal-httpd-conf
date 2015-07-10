@@ -13,7 +13,7 @@ Alias /vpn-user-portal /usr/share/vpn-user-portal/web
 
     # Use the following to test vpn-user-portal without needing to configure
     # mod_mellon.
-    #RequestHeader set MELLON_NAME_ID foo
+    #RequestHeader set MELLON-NAME-ID foo
 
     # CSP: https://developer.mozilla.org/en-US/docs/Security/CSP
     Header set Content-Security-Policy "default-src 'self'"
