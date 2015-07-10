@@ -3,6 +3,7 @@
 ## 0.4.1
 - fix ZIP download
 - update dependencies
+- expose ZIP file download in UI
 
 ## 0.4.0
 - update `fkooman/rest`
