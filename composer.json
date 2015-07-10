@@ -21,7 +21,7 @@
         "fkooman/ini": "~0.2.0",
         "fkooman/rest": "~0.9.0",
         "fkooman/rest-plugin-mellon": "~0.4.0",
-        "guzzle/guzzle": "~3.9",
+        "guzzlehttp/guzzle": "~5.3",
         "php": ">=5.3.3",
         "twig/twig": "~1.15"
     }

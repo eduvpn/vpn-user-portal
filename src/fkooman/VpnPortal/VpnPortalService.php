@@ -130,7 +130,7 @@ class VpnPortalService extends Service
         );
     }
 
-    public function getOvpnConfig($userId, $configName)
+    public function getConfigData($userId, $configName)
     {
         $this->validateConfigName($configName);
         if (!$this->pdoStorage->isExistingConfiguration($userId, $configName)) {
@@ -142,18 +142,23 @@ class VpnPortalService extends Service
         }
 
         $this->pdoStorage->activateConfiguration($userId, $configName);
+
+        return $vpnConfig['config'];
+    }
+
+    public function getOvpnConfig($userId, $configName)
+    {
+        $configData = $this->getConfigData($userId, $configName);
         $response = new Response(201, 'application/x-openvpn-profile');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
-        $response->setBody($vpnConfig['config']);
+        $response->setBody($configData);
 
         return $response;
     }
 
     public function getZipConfig($userId, $configName)
     {
-        $response = $this->getOvpnConfig($userId, $configName);
-        $configData = $response->getContent();
-
+        $configData = $this->getConfigData($userId, $configName);
         $inlineTypeFileName = array(
             'ca' => 'ca.crt',
             'cert' => 'client.crt',

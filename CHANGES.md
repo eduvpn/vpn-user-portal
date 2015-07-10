@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+- fix ZIP download
+- update dependencies
+
 ## 0.4.0
 - update `fkooman/rest`
 

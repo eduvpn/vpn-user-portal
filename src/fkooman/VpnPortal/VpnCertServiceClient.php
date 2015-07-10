@@ -2,11 +2,11 @@
 
 namespace fkooman\VpnPortal;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 
 class VpnCertServiceClient
 {
-    /** @var Guzzle\Http\Client */
+    /** @var \GuzzleHttp\Client */
     private $client;
 
     /** @var string */
@@ -23,10 +23,12 @@ class VpnCertServiceClient
         $vpnConfigName = sprintf('%s_%s', $userId, $configName);
         $requestUri = sprintf('%s/config/', $this->vpnCertServiceUri);
 
-        return $this->client->post($requestUri)
-            ->setPostField('commonName', $vpnConfigName)
-            ->send()
-            ->getBody();
+        return $this->client->post(
+            $requestUri,
+            array(
+                'body' => array('commonName' => $vpnConfigName),
+            )
+        )->getBody();
     }
 
     public function revokeConfiguration($userId, $configName)
@@ -34,8 +36,6 @@ class VpnCertServiceClient
         $vpnConfigName = sprintf('%s_%s', $userId, $configName);
         $requestUri = sprintf('%s/config/%s', $this->vpnCertServiceUri, $vpnConfigName);
 
-        return $this->client->delete($requestUri)
-            ->send()
-            ->getBody();
+        return $this->client->delete($requestUri)->getBody();
     }
 }

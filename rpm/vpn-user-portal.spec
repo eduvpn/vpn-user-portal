@@ -15,7 +15,7 @@ Source2:    vpn-user-portal-autoload.php
 
 BuildArch:  noarch
 
-Requires:   php(language) >=  5.3.3
+Requires:   php(language) >= 5.3.3
 Requires:   php-pcre
 Requires:   php-pdo
 Requires:   php-zip
@@ -32,8 +32,8 @@ Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.5.0
 Requires:   php-pear(pear.twig-project.org/Twig) >= 1.15
 Requires:   php-pear(pear.twig-project.org/Twig) < 2.0
 
-Requires:   php-composer(guzzle/guzzle) >= 3.9
-Requires:   php-composer(guzzle/guzzle) < 4.0
+Requires:   php-composer(guzzlehttp/guzzle) >= 5.3
+Requires:   php-composer(guzzlehttp/guzzle) < 6.0
 Requires:   php-pear(pear.symfony.com/ClassLoader) >= 2.3.9
 Requires:   php-pear(pear.symfony.com/ClassLoader) < 3.0
 

@@ -7,7 +7,7 @@ use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
 use fkooman\VpnPortal\VpnCertServiceClient;
 use fkooman\Rest\Plugin\Mellon\MellonAuthentication;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 use fkooman\Rest\ExceptionHandler;
 use fkooman\Rest\PluginRegistry;
 use fkooman\Rest\Plugin\ReferrerCheck\ReferrerCheckPlugin;
@@ -37,10 +37,12 @@ $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
 $serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
 $servicePass = $iniReader->v('VpnCertService', 'servicePass');
 
-$client = new Client();
-$client->setDefaultOption(
-    'auth',
-    array($serviceAuth, $servicePass)
+$client = new Client(
+    array(
+        'defaults' => array(
+            'auth' => array($serviceAuth, $servicePass),
+        ),
+    )
 );
 
 $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);

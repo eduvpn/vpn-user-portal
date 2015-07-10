@@ -16,8 +16,9 @@ $loader->registerNamespaces(
         'fkooman\\Json' => $vendorDir,
         'fkooman\\Http' => $vendorDir,
         'fkooman\\Ini' => $vendorDir,
-        'Guzzle' => $vendorDir,
-        'Symfony\\Component\\EventDispatcher' => $vendorDir,
+        'GuzzleHttp\\Stream' => $vendorDir,
+        'GuzzleHttp' => $vendorDir,
+        'React\\Promise' => $vendorDir,
     )
 );
 $loader->registerPrefixes(
@@ -27,3 +28,5 @@ $loader->registerPrefixes(
 );
 
 $loader->register();
+
+require_once $vendorDir.'/React/Promise/functions_include.php';
