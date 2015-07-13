@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.3
+- update dependencies
+
 ## 0.4.2
 - fix example httpd config to use `MELLON-NAME-ID` instead of `MELLON_NAME_ID`
 
