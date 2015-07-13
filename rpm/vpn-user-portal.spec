@@ -22,16 +22,14 @@ Requires:   php-zip
 
 Requires:   httpd
 
-Requires:   php-composer(fkooman/ini) >= 0.2.0
-Requires:   php-composer(fkooman/ini) < 0.3.0
+Requires:   php-composer(fkooman/ini) >= 1.0.0
+Requires:   php-composer(fkooman/ini) < 2.0.0
 Requires:   php-composer(fkooman/rest) >= 0.9.0
 Requires:   php-composer(fkooman/rest) < 0.10.0
 Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.4.0
 Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.5.0
-
 Requires:   php-pear(pear.twig-project.org/Twig) >= 1.15
 Requires:   php-pear(pear.twig-project.org/Twig) < 2.0
-
 Requires:   php-composer(guzzlehttp/guzzle) >= 5.3
 Requires:   php-composer(guzzlehttp/guzzle) < 6.0
 Requires:   php-pear(pear.symfony.com/ClassLoader) >= 2.3.9

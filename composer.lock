@@ -4,29 +4,30 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d106979f091900c18d2be3ce417741f4",
+    "hash": "85d14b12be3013378efa0f6787cb0c42",
     "packages": [
         {
             "name": "fkooman/ini",
-            "version": "0.2.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-ini.git",
-                "reference": "53bef8aaa28862b68b553f742ee3ecf54394f121"
+                "reference": "b380a88e42ce2184e822cc8b89223cd777c484be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-ini/zipball/53bef8aaa28862b68b553f742ee3ecf54394f121",
-                "reference": "53bef8aaa28862b68b553f742ee3ecf54394f121",
+                "url": "https://api.github.com/repos/fkooman/php-lib-ini/zipball/b380a88e42ce2184e822cc8b89223cd777c484be",
+                "reference": "b380a88e42ce2184e822cc8b89223cd777c484be",
                 "shasum": ""
             },
             "require": {
+                "ext-spl": "*",
                 "php": ">=5.3.3"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "fkooman\\Ini": "src/"
+                    "fkooman\\Ini\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -41,29 +42,31 @@
                 }
             ],
             "description": "Handle INI configuration files",
-            "time": "2014-10-23 15:33:28"
+            "time": "2015-07-13 12:06:01"
         },
         {
             "name": "fkooman/json",
-            "version": "0.6.0",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-json.git",
-                "reference": "556209cf34cdf55f90eefffd778f93a3e9d5bb2d"
+                "reference": "f24b7ee1890b29358402defcd9581a4e969e40d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-json/zipball/556209cf34cdf55f90eefffd778f93a3e9d5bb2d",
-                "reference": "556209cf34cdf55f90eefffd778f93a3e9d5bb2d",
+                "url": "https://api.github.com/repos/fkooman/php-lib-json/zipball/f24b7ee1890b29358402defcd9581a4e969e40d7",
+                "reference": "f24b7ee1890b29358402defcd9581a4e969e40d7",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
+                "ext-spl": "*",
                 "php": ">=5.3.3"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "fkooman\\Json": "src/"
+                    "fkooman\\Json\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -78,25 +81,28 @@
                 }
             ],
             "description": "PHP library to encode and decode JSON",
-            "time": "2014-10-22 12:49:20"
+            "time": "2015-07-13 11:58:01"
         },
         {
             "name": "fkooman/rest",
-            "version": "0.9.0",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest.git",
-                "reference": "a37d259a4552955b034c34f2cf6e6532a313fe40"
+                "reference": "ede6f39c51f7445ea9b22138853e2e98b1babe82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/a37d259a4552955b034c34f2cf6e6532a313fe40",
-                "reference": "a37d259a4552955b034c34f2cf6e6532a313fe40",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/ede6f39c51f7445ea9b22138853e2e98b1babe82",
+                "reference": "ede6f39c51f7445ea9b22138853e2e98b1babe82",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "fkooman/json": "~0.6.0",
+                "ext-pcre": "*",
+                "ext-session": "*",
+                "ext-spl": "*",
+                "fkooman/json": "^1.0.0",
                 "php": ">=5.3.3"
             },
             "suggest": {
@@ -125,7 +131,7 @@
                 }
             ],
             "description": "Simple PHP library for writing REST services.",
-            "time": "2015-06-28 11:43:47"
+            "time": "2015-07-13 12:18:54"
         },
         {
             "name": "fkooman/rest-plugin-mellon",
