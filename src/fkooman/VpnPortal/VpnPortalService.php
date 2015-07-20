@@ -8,7 +8,7 @@ use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\Exception\NotFoundException;
 use fkooman\Rest\Service;
-use fkooman\Rest\Plugin\Mellon\MellonUserInfo;
+use fkooman\Rest\Plugin\Authentication\Mellon\MellonUserInfo;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_SimpleFilter;
@@ -29,9 +29,6 @@ class VpnPortalService extends Service
         $this->pdoStorage = $pdoStorage;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
 
-        // in PHP 5.3 we cannot use $this from a closure
-        $compatThis = &$this;
-
         $this->get(
             '/',
             function () {
@@ -42,40 +39,40 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/',
-            function (MellonUserInfo $u) use ($compatThis) {
-                return $compatThis->getConfigurations($u->getUserId());
+            function (MellonUserInfo $u) {
+                return $this->getConfigurations($u->getUserId());
             }
         );
 
         /* GET */
         $this->get(
             '/config/:configName',
-            function (MellonUserInfo $u, $configName) use ($compatThis) {
-                return $compatThis->getConfig($u->getUserId(), $configName);
+            function (MellonUserInfo $u, $configName) {
+                return $this->getConfig($u->getUserId(), $configName);
             }
         );
 
         /* GET */
         $this->get(
             '/config/:configName/ovpn',
-            function (MellonUserInfo $u, $configName) use ($compatThis) {
-                return $compatThis->getOvpnConfig($u->getUserId(), $configName);
+            function (MellonUserInfo $u, $configName) {
+                return $this->getOvpnConfig($u->getUserId(), $configName);
             }
         );
 
         /* GET */
         $this->get(
             '/config/:configName/zip',
-            function (MellonUserInfo $u, $configName) use ($compatThis) {
-                return $compatThis->getZipConfig($u->getUserId(), $configName);
+            function (MellonUserInfo $u, $configName) {
+                return $this->getZipConfig($u->getUserId(), $configName);
             }
         );
 
         /* POST */
         $this->post(
             '/config/',
-            function (Request $request, MellonUserInfo $u) use ($compatThis) {
-                return $compatThis->postConfig(
+            function (Request $request, MellonUserInfo $u) {
+                return $this->postConfig(
                     $u->getUserId(),
                     $request->getPostParameter('name'),
                     $request->getHeader('Referer')
@@ -86,8 +83,8 @@ class VpnPortalService extends Service
         /* DELETE */
         $this->delete(
             '/config/:configName',
-            function (Request $request, MellonUserInfo $u, $configName) use ($compatThis) {
-                return $compatThis->deleteConfig(
+            function (Request $request, MellonUserInfo $u, $configName) {
+                return $this->deleteConfig(
                     $u->getUserId(),
                     $configName,
                     $request->getHeader('Referer')

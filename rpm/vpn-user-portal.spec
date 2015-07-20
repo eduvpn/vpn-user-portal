@@ -24,10 +24,13 @@ Requires:   httpd
 
 Requires:   php-composer(fkooman/ini) >= 1.0.0
 Requires:   php-composer(fkooman/ini) < 2.0.0
-Requires:   php-composer(fkooman/rest) >= 0.9.0
-Requires:   php-composer(fkooman/rest) < 0.10.0
-Requires:   php-composer(fkooman/rest-plugin-mellon) >= 0.4.0
-Requires:   php-composer(fkooman/rest-plugin-mellon) < 0.5.0
+Requires:   php-composer(fkooman/rest) >= 1.0.0
+Requires:   php-composer(fkooman/rest) < 2.0.0
+Requires:   php-composer(fkooman/rest-plugin-authentication) >= 1.0.0
+Requires:   php-composer(fkooman/rest-plugin-authentication) < 2.0.0
+Requires:   php-composer(fkooman/rest-plugin-authentication-mellon) >= 1.0.0
+Requires:   php-composer(fkooman/rest-plugin-authentication-mellon) < 2.0.0
+
 Requires:   php-pear(pear.twig-project.org/Twig) >= 1.15
 Requires:   php-pear(pear.twig-project.org/Twig) < 2.0
 Requires:   php-composer(guzzlehttp/guzzle) >= 5.3

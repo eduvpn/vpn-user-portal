@@ -19,10 +19,11 @@
         "ext-pdo": "*",
         "ext-zip": "*",
         "fkooman/ini": "^1.0.0",
-        "fkooman/rest": "~0.9.0",
-        "fkooman/rest-plugin-mellon": "~0.4.0",
+        "fkooman/rest": "^1.0.0",
+        "fkooman/rest-plugin-authentication": "^1.0.0",
+        "fkooman/rest-plugin-authentication-mellon": "^1.0.0",
         "guzzlehttp/guzzle": "~5.3",
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "twig/twig": "~1.15"
     }
 }
