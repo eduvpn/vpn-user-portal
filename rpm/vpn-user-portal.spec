@@ -2,7 +2,7 @@
 %global github_name      vpn-user-portal
 
 Name:       vpn-user-portal
-Version:    0.4.3
+Version:    1.0.0
 Release:    1%{?dist}
 Summary:    Portal to manage OpenVPN client configurations
 
@@ -15,7 +15,7 @@ Source2:    vpn-user-portal-autoload.php
 
 BuildArch:  noarch
 
-Requires:   php(language) >= 5.3.3
+Requires:   php(language) >= 5.4
 Requires:   php-pcre
 Requires:   php-pdo
 Requires:   php-zip
@@ -99,38 +99,5 @@ fi
 %license COPYING
 
 %changelog
-* Mon Jul 13 2015 François Kooman <fkooman@tuxed.net> - 0.4.3-1
-- update to 0.4.3
-
-* Fri Jul 10 2015 François Kooman <fkooman@tuxed.net> - 0.4.2-1
-- update to 0.4.2
-
-* Fri Jul 10 2015 François Kooman <fkooman@tuxed.net> - 0.4.1-1
-- update to 0.4.1
-
-* Thu Jul 02 2015 François Kooman <fkooman@tuxed.net> - 0.4.0-1
-- update to 0.4.0
-
-* Fri May 15 2015 François Kooman <fkooman@tuxed.net> - 0.3.3-1
-- update to 0.3.3
-
-* Mon Apr 13 2015 François Kooman <fkooman@tuxed.net> - 0.3.2-1
-- update to 0.3.2
-
-* Sat Apr 11 2015 François Kooman <fkooman@tuxed.net> - 0.3.1-1
-- update to 0.3.1
-
-* Sun Mar 15 2015 François Kooman <fkooman@tuxed.net> - 0.3.0-1
-- update to 0.3.0
-
-* Mon Feb 09 2015 François Kooman <fkooman@tuxed.net> - 0.2.8-1
-- update to 0.2.8
-
-* Wed Jan 28 2015 François Kooman <fkooman@tuxed.net> - 0.2.7-1
-- update to 0.2.7
-
-* Wed Jan 28 2015 François Kooman <fkooman@tuxed.net> - 0.2.6-1
-- update to 0.2.6
-
-* Wed Jan 28 2015 François Kooman <fkooman@tuxed.net> - 0.2.5-1
-- update to 0.2.5
+* Mon Jul 20 2015 François Kooman <fkooman@tuxed.net> - 1.0.0-1
+- update to 1.0.0

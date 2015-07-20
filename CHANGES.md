@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.0
+- update dependencies and API
+
 ## 0.4.3
 - update dependencies
 
