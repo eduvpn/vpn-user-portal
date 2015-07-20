@@ -20,7 +20,6 @@
         "ext-zip": "*",
         "fkooman/ini": "^1.0.0",
         "fkooman/rest": "^1.0.0",
-        "fkooman/rest-plugin-authentication": "^1.0.0",
         "fkooman/rest-plugin-authentication-mellon": "^1.0.0",
         "guzzlehttp/guzzle": "~5.3",
         "php": ">=5.4",

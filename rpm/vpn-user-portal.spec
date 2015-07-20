@@ -26,8 +26,6 @@ Requires:   php-composer(fkooman/ini) >= 1.0.0
 Requires:   php-composer(fkooman/ini) < 2.0.0
 Requires:   php-composer(fkooman/rest) >= 1.0.0
 Requires:   php-composer(fkooman/rest) < 2.0.0
-Requires:   php-composer(fkooman/rest-plugin-authentication) >= 1.0.0
-Requires:   php-composer(fkooman/rest-plugin-authentication) < 2.0.0
 Requires:   php-composer(fkooman/rest-plugin-authentication-mellon) >= 1.0.0
 Requires:   php-composer(fkooman/rest-plugin-authentication-mellon) < 2.0.0
 
