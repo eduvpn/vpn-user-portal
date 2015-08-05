@@ -15,6 +15,7 @@ $loader->registerNamespaces(
         'fkooman\\Rest' => $vendorDir,
         'fkooman\\Json' => $vendorDir,
         'fkooman\\Http' => $vendorDir,
+        'fkooman\\Tpl' => $vendorDir,
         'fkooman\\Ini' => $vendorDir,
         'GuzzleHttp\\Stream' => $vendorDir,
         'GuzzleHttp' => $vendorDir,

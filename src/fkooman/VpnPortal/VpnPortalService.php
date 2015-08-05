@@ -9,24 +9,26 @@ use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\Exception\NotFoundException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonUserInfo;
-use Twig_Loader_Filesystem;
-use Twig_Environment;
-use Twig_SimpleFilter;
+use fkooman\Tpl\TemplateManagerInterface;
 use ZipArchive;
 
 class VpnPortalService extends Service
 {
-    /** @var fkooman\VpnPortal\PdoStorage */
-    private $pdoStorage;
+    /** @var PdoStorage */
+    private $db;
 
-    /** @var fkooman\VpnPortal\VpnCertServiceClient */
+    /** @var \fkooman\Tpl\TemplateManagerInterface */
+    private $templateManager;
+
+    /** @var VpnCertServiceClient */
     private $vpnCertServiceClient;
 
-    public function __construct(PdoStorage $pdoStorage, VpnCertServiceClient $vpnCertServiceClient)
+    public function __construct(PdoStorage $db, TemplateManagerInterface $templateManager, VpnCertServiceClient $vpnCertServiceClient)
     {
         parent::__construct();
 
-        $this->pdoStorage = $pdoStorage;
+        $this->db = $db;
+        $this->templateManager = $templateManager;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
 
         $this->get(
@@ -95,11 +97,10 @@ class VpnPortalService extends Service
 
     public function getConfigurations($userId)
     {
-        $vpnConfigurations = $this->pdoStorage->getConfigurations($userId);
-        $twig = $this->getTwigEnvironment();
+        $vpnConfigurations = $this->db->getConfigurations($userId);
 
-        return $twig->render(
-            'vpnPortal.twig',
+        return $this->templateManager->render(
+            'vpnPortal',
             array(
                 'vpnConfigurations' => $vpnConfigurations,
             )
@@ -109,18 +110,16 @@ class VpnPortalService extends Service
     public function getConfig($userId, $configName)
     {
         $this->validateConfigName($configName);
-        if (!$this->pdoStorage->isExistingConfiguration($userId, $configName)) {
+        if (!$this->db->isExistingConfiguration($userId, $configName)) {
             throw new NotFoundException('configuration not found');
         }
-        $vpnConfig = $this->pdoStorage->getConfiguration($userId, $configName);
+        $vpnConfig = $this->db->getConfiguration($userId, $configName);
         if (PdoStorage::STATUS_READY != $vpnConfig['status']) {
             throw new NotFoundException('configuration already downloaded');
         }
 
-        $twig = $this->getTwigEnvironment();
-
-        return $twig->render(
-            'vpnConfigDownload.twig',
+        return $this->templateManager->render(
+            'vpnConfigDownload',
             array(
                 'configName' => $configName,
             )
@@ -130,15 +129,15 @@ class VpnPortalService extends Service
     public function getConfigData($userId, $configName)
     {
         $this->validateConfigName($configName);
-        if (!$this->pdoStorage->isExistingConfiguration($userId, $configName)) {
+        if (!$this->db->isExistingConfiguration($userId, $configName)) {
             throw new NotFoundException('configuration not found');
         }
-        $vpnConfig = $this->pdoStorage->getConfiguration($userId, $configName);
+        $vpnConfig = $this->db->getConfiguration($userId, $configName);
         if (PdoStorage::STATUS_READY != $vpnConfig['status']) {
             throw new NotFoundException('configuration already downloaded');
         }
 
-        $this->pdoStorage->activateConfiguration($userId, $configName);
+        $this->db->activateConfiguration($userId, $configName);
 
         return $vpnConfig['config'];
     }
@@ -212,11 +211,11 @@ class VpnPortalService extends Service
     public function postConfig($userId, $configName, $returnUri)
     {
         $this->validateConfigName($configName);
-        if ($this->pdoStorage->isExistingConfiguration($userId, $configName)) {
+        if ($this->db->isExistingConfiguration($userId, $configName)) {
             throw new BadRequestException('configuration with this name already exists for this user');
         }
         $vpnConfig = $this->vpnCertServiceClient->addConfiguration($userId, $configName);
-        $this->pdoStorage->addConfiguration($userId, $configName, $vpnConfig);
+        $this->db->addConfiguration($userId, $configName, $vpnConfig);
 
         return new RedirectResponse($returnUri);
     }
@@ -225,7 +224,7 @@ class VpnPortalService extends Service
     {
         $this->validateConfigName($configName);
         $this->vpnCertServiceClient->revokeConfiguration($userId, $configName);
-        $this->pdoStorage->revokeConfiguration($userId, $configName);
+        $this->db->revokeConfiguration($userId, $configName);
 
         return new RedirectResponse($returnUri);
     }
@@ -241,45 +240,9 @@ class VpnPortalService extends Service
         if (32 < strlen($configName)) {
             throw new BadRequestException('name too long, maximum 32 characters');
         }
-        // FIXME: be less restrictive in supported characters...
+        // XXX: be less restrictive in supported characters...
         if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
             throw new BadRequestException('invalid characters in name');
         }
-    }
-
-    private function getTwigEnvironment()
-    {
-        // configTemplateDir is where templates are placed to override the
-        // default template
-        $configTemplateDir = dirname(dirname(dirname(__DIR__))).'/config/views';
-        $defaultTemplateDir = dirname(dirname(dirname(__DIR__))).'/views';
-
-        $templateDirs = array();
-
-        // the template directory actually needs to exist, otherwise the
-        // Twig_Loader_Filesystem class will throw an exception when loading
-        // templates, the actual template does not need to exist though...
-        if (false !== is_dir($configTemplateDir)) {
-            $templateDirs[] = $configTemplateDir;
-        }
-        $templateDirs[] = $defaultTemplateDir;
-
-        $loader = new Twig_Loader_Filesystem($templateDirs);
-
-        $twig = new Twig_Environment($loader);
-        $twig->addFilter(
-            new Twig_SimpleFilter(
-                'truncate',
-                function ($string, $length) {
-                    if (strlen($string) > $length) {
-                        $string = sprintf('%s...', substr($string, 0, $length));
-                    }
-
-                    return $string;
-                }
-            )
-        );
-
-        return $twig;
     }
 }

@@ -7,6 +7,7 @@ use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
 use fkooman\VpnPortal\VpnCertServiceClient;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
+use fkooman\Tpl\TwigTemplateManager;
 use GuzzleHttp\Client;
 
 $iniReader = IniReader::fromFile(
@@ -40,10 +41,19 @@ $client = new Client(
     )
 );
 
+$templateManager = new TwigTemplateManager(
+    array(
+        dirname(__DIR__).'/views',
+        dirname(__DIR__).'/config/views',
+    ),
+    null
+);
+
 $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
 
 $service = new VpnPortalService(
     $pdoStorage,
+    $templateManager,
     $vpnCertServiceClient
 );
 $service->getPluginRegistry()->registerDefaultPlugin($mellonAuthentication);

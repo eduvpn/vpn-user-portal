@@ -21,8 +21,8 @@
         "fkooman/ini": "^1.0.0",
         "fkooman/rest": "^1.0.0",
         "fkooman/rest-plugin-authentication-mellon": "^1.0.0",
+        "fkooman/tpl": "^1.0",
         "guzzlehttp/guzzle": "~5.3",
-        "php": ">=5.4",
-        "twig/twig": "~1.15"
+        "php": ">=5.4"
     }
 }
