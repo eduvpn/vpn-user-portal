@@ -7,7 +7,7 @@ use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
 use fkooman\VpnPortal\VpnCertServiceClient;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
-use fkooman\Tpl\TwigTemplateManager;
+use fkooman\Tpl\Twig\TwigTemplateManager;
 use GuzzleHttp\Client;
 
 $iniReader = IniReader::fromFile(
