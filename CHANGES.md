@@ -1,6 +1,8 @@
 # Changelog
 
 ## 1.0.2 (...)
+- update config download page to mention NetworkManager and OpenWrt as examples 
+  use cases for the ZIP file
 - rename the files in the ZIP export to also include the name of the config to
   allow for example multiple copies in `$HOME/.cert` on Linux
 
