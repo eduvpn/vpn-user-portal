@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2 (...)
+- rename the files in the ZIP export to also include the name of the config to
+  allow for example multiple copies in `$HOME/.cert` on Linux
+
 ## 1.0.1 (2015-08-10)
 - use `fkooman/tpl-twig` instead of included template management
 

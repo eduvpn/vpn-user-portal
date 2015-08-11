@@ -156,10 +156,10 @@ class VpnPortalService extends Service
     {
         $configData = $this->getConfigData($userId, $configName);
         $inlineTypeFileName = array(
-            'ca' => 'ca.crt',
-            'cert' => 'client.crt',
-            'key' => 'client.key',
-            'tls-auth' => 'ta.key',
+            'ca' => sprintf('ca_%s.crt', $configName),
+            'cert' => sprintf('client_%s.crt', $configName),
+            'key' => sprintf('client_%s.key', $configName),
+            'tls-auth' => sprintf('ta_%s.key', $configName),
         );
 
         $zipName = tempnam(sys_get_temp_dir(), 'vup_');
@@ -187,11 +187,11 @@ class VpnPortalService extends Service
         $configData = str_replace(
             array(
                 'key-direction 1',
-                'tls-auth ta.key',
+                sprintf('tls-auth ta_%s.key', $configName),
             ),
             array(
                 '',
-                'tls-auth ta.key 1',
+                sprintf('tls-auth ta_%s.key 1', $configName),
             ),
             $configData
         );
