@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.2 (...)
+## 1.0.2 (2015-08-20)
 - update config download page to mention NetworkManager and OpenWrt as examples 
   use cases for the ZIP file
 - rename the files in the ZIP export to also include the name of the config to
