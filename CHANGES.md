@@ -6,6 +6,7 @@
 - **BREAKING** modify configuration file to support multiple authentication 
   backends, needs reconfiguring. See `config/config.ini.example`.
 - support both Basic and Mellon authentication now
+- add script to generate password hash for BasicAuthentication configuration
 
 ## 1.0.2 (2015-08-20)
 - update config download page to mention NetworkManager and OpenWrt as examples 
