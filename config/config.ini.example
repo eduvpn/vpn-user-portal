@@ -1,6 +1,15 @@
-[Authentication]
-mellonAttribute = 'MELLON_NAME_ID'
-;mellonAttribute = 'MELLON_eduPersonTargetedID'
+authMethod = BasicAuthentication
+;authMethod = MellonAuthentication
+
+[BasicAuthentication]
+; foo:bar
+foo = "$2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq"
+; bar:baz
+bar = "$2y$10$KLzVp/YwKAhI0asdeUHJmOARFglUZc4ccWTPJKqQEIxYXbtmLkBlm"
+
+[MellonAuthentication]
+attribute = 'MELLON_NAME_ID'
+;attribute = 'MELLON_eduPersonTargetedID'
 
 [VpnCertService]
 serviceUri  = 'http://localhost/vpn-cert-service/api.php'

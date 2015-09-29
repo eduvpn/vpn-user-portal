@@ -6,7 +6,9 @@ use fkooman\Ini\IniReader;
 use fkooman\VpnPortal\PdoStorage;
 use fkooman\VpnPortal\VpnPortalService;
 use fkooman\VpnPortal\VpnCertServiceClient;
+use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
+use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
 use fkooman\Tpl\Twig\TwigTemplateManager;
 use GuzzleHttp\Client;
 
@@ -24,9 +26,29 @@ $pdo = new PDO(
 $pdoStorage = new PdoStorage($pdo);
 
 // Authentication
-$mellonAuthentication = new MellonAuthentication(
-    $iniReader->v('Authentication', 'mellonAttribute')
-);
+$authMethod = $iniReader->v('authMethod');
+switch ($authMethod) {
+    case 'MellonAuthentication':
+        $auth = new MellonAuthentication(
+            $iniReader->v('MellonAuthentication', 'attribute')
+        );
+        break;
+    case 'BasicAuthentication':
+        $auth = new BasicAuthentication(
+            function ($userId) use ($iniReader) {
+                $userList = $iniReader->v('BasicAuthentication');
+                if (!array_key_exists($userId, $userList)) {
+                    return false;
+                }
+
+                return $userList[$userId];
+            },
+            array('realm' => 'VPN Portal')
+        );
+        break;
+    default:
+        throw new RuntimeException('unsupported authentication mechanism');
+}
 
 // VPN Certificate Service Configuration
 $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
@@ -56,5 +78,8 @@ $service = new VpnPortalService(
     $templateManager,
     $vpnCertServiceClient
 );
-$service->getPluginRegistry()->registerDefaultPlugin($mellonAuthentication);
+
+$authenticationPlugin = new AuthenticationPlugin();
+$authenticationPlugin->register($auth, 'user');
+$service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
 $service->run()->send();

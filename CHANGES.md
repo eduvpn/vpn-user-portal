@@ -3,6 +3,9 @@
 ## 1.0.3 (...)
 - update Service class to support multiple authentication backends by
   default
+- **BREAKING** modify configuration file to support multiple authentication 
+  backends, needs reconfiguring. See `config/config.ini.example`.
+- support both Basic and Mellon authentication now
 
 ## 1.0.2 (2015-08-20)
 - update config download page to mention NetworkManager and OpenWrt as examples 
