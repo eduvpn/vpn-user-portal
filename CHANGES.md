@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3 (...)
+- update Service class to support multiple authentication backends by
+  default
+
 ## 1.0.2 (2015-08-20)
 - update config download page to mention NetworkManager and OpenWrt as examples 
   use cases for the ZIP file

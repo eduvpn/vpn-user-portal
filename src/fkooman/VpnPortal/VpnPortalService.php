@@ -8,7 +8,7 @@ use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\Exception\NotFoundException;
 use fkooman\Rest\Service;
-use fkooman\Rest\Plugin\Authentication\Mellon\MellonUserInfo;
+use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Tpl\TemplateManagerInterface;
 use ZipArchive;
 
@@ -41,57 +41,87 @@ class VpnPortalService extends Service
         /* GET */
         $this->get(
             '/config/',
-            function (MellonUserInfo $u) {
+            function (UserInfoInterface $u) {
                 return $this->getConfigurations($u->getUserId());
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         /* GET */
         $this->get(
             '/config/:configName',
-            function (MellonUserInfo $u, $configName) {
+            function (UserInfoInterface $u, $configName) {
                 return $this->getConfig($u->getUserId(), $configName);
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         /* GET */
         $this->get(
             '/config/:configName/ovpn',
-            function (MellonUserInfo $u, $configName) {
+            function (UserInfoInterface $u, $configName) {
                 return $this->getOvpnConfig($u->getUserId(), $configName);
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         /* GET */
         $this->get(
             '/config/:configName/zip',
-            function (MellonUserInfo $u, $configName) {
+            function (UserInfoInterface $u, $configName) {
                 return $this->getZipConfig($u->getUserId(), $configName);
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         /* POST */
         $this->post(
             '/config/',
-            function (Request $request, MellonUserInfo $u) {
+            function (Request $request, UserInfoInterface $u) {
                 return $this->postConfig(
                     $u->getUserId(),
                     $request->getPostParameter('name'),
                     $request->getHeader('Referer')
                 );
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         /* DELETE */
         $this->delete(
             '/config/:configName',
-            function (Request $request, MellonUserInfo $u, $configName) {
+            function (Request $request, UserInfoInterface $u, $configName) {
                 return $this->deleteConfig(
                     $u->getUserId(),
                     $configName,
                     $request->getHeader('Referer')
                 );
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
     }
 
