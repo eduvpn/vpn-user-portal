@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.3 (...)
+## 1.0.3 (2015-09-29)
 - update Service class to support multiple authentication backends by
   default
 - **BREAKING** modify configuration file to support multiple authentication 
