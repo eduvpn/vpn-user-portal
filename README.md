@@ -8,6 +8,10 @@ mechanisms currently supported are:
 * SAML (using Apache mod_mellon)
 * Basic Authentication
 
+# Screenshots
+![Landing Page](https://raw.githubusercontent.com/eduVPN/vpn-user-portal/master/screenshots/01.png "Landing Page")
+![Download Page](https://raw.githubusercontent.com/eduVPN/vpn-user-portal/master/screenshots/02.png "Download Page")
+
 # Installation
 It is recommended that you install the software using the RPM package from the
 [COPR repository](https://copr.fedoraproject.org/coprs/fkooman/vpn-management/).
