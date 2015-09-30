@@ -3,7 +3,7 @@
 namespace fkooman\VpnPortal;
 
 use PDO;
-use fkooman\VpnPortal\Exception\PdoStorageException;
+use RuntimeException;
 
 class PdoStorage
 {
@@ -78,7 +78,7 @@ class PdoStorage
         $stmt->execute();
 
         if (1 !== $stmt->rowCount()) {
-            throw new PdoStorageException('unable to activate configuration');
+            throw new RuntimeException('unable to activate configuration');
         }
     }
 
@@ -113,7 +113,7 @@ class PdoStorage
         $stmt->execute();
 
         if (1 !== $stmt->rowCount()) {
-            throw new PdoStorageException('unable to add configuration');
+            throw new RuntimeException('unable to add configuration');
         }
     }
 
@@ -131,7 +131,7 @@ class PdoStorage
         $stmt->execute();
 
         if (1 !== $stmt->rowCount()) {
-            throw new PdoStorageException('unable to revoke configuration');
+            throw new RuntimeException('unable to revoke configuration');
         }
     }
 
