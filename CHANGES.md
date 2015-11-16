@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.4 (...)
+## 1.0.4 (2015-11-16)
 - fix file download in IE (issue #7)
 - add a new recommended client for Android
 - rework and cleanup the templates a bit
