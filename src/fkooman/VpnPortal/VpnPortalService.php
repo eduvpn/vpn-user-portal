@@ -124,6 +124,26 @@ class VpnPortalService extends Service
                 ),
             )
         );
+
+        $this->get(
+            '/docs/',
+            function () {
+                return $this->templateManager->render(
+                    'vpnDocs',
+                    array()
+                );
+            }
+        );
+
+        $this->get(
+            '/docs/windows',
+            function () {
+                return $this->templateManager->render(
+                    'vpnDocsWindows',
+                    array()
+                );
+            }
+        );
     }
 
     public function getConfigurations($userId)
