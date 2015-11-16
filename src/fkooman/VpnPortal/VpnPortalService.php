@@ -11,6 +11,7 @@ use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Tpl\TemplateManagerInterface;
 use ZipArchive;
+use DomainException;
 
 class VpnPortalService extends Service
 {
@@ -175,7 +176,7 @@ class VpnPortalService extends Service
     public function getOvpnConfig($userId, $configName)
     {
         $configData = $this->getConfigData($userId, $configName);
-        $response = new Response(201, 'application/x-openvpn-profile');
+        $response = new Response(200, 'application/x-openvpn-profile');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
         $response->setBody($configData);
 
