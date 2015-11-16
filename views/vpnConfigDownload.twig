@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VPN Portal</title>
-  <link rel="stylesheet" type="text/css" href="../css/normalize.css">
-  <link rel="stylesheet" type="text/css" href="../css/default.css">
-</head>
-
+{% include 'head.twig' %}
 <body>
     <div id="container">
-        <a class="header" href="../"><h1>VPN Portal</h1></a>
+        {% include 'header.twig' %}
         <p>
             To get the VPN working you need to perform two steps:
             <ol>
@@ -46,10 +39,7 @@
             <button class="simple" type="submit">&lt; Back</button>
         </form>
 
-        <div class="footer">
-            VPN Config
-        </div>
-
+        {% include 'footer.twig' %}
     </div> <!-- /container -->
 </body>
 </html>

@@ -11,6 +11,7 @@ use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
 use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
 use fkooman\Tpl\Twig\TwigTemplateManager;
 use GuzzleHttp\Client;
+use fkooman\Http\Request;
 
 $iniReader = IniReader::fromFile(
     dirname(__DIR__).'/config/config.ini'
@@ -63,12 +64,19 @@ $client = new Client(
     )
 );
 
+$request = new Request($_SERVER);
+
 $templateManager = new TwigTemplateManager(
     array(
         dirname(__DIR__).'/views',
         dirname(__DIR__).'/config/views',
     ),
-    null
+    $iniReader->v('templateCache', false, null)
+);
+$templateManager->setDefault(
+    array(
+        'rootFolder' => $request->getUrl()->getRoot(),
+    )
 );
 
 $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
@@ -82,4 +90,4 @@ $service = new VpnPortalService(
 $authenticationPlugin = new AuthenticationPlugin();
 $authenticationPlugin->register($auth, 'user');
 $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
-$service->run()->send();
+$service->run($request)->send();
