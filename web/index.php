@@ -13,81 +13,86 @@ use fkooman\Tpl\Twig\TwigTemplateManager;
 use GuzzleHttp\Client;
 use fkooman\Http\Request;
 
-$iniReader = IniReader::fromFile(
-    dirname(__DIR__).'/config/config.ini'
-);
+try {
+    $iniReader = IniReader::fromFile(
+        dirname(__DIR__).'/config/config.ini'
+    );
 
-$pdo = new PDO(
-    $iniReader->v('PdoStorage', 'dsn'),
-    $iniReader->v('PdoStorage', 'username', false),
-    $iniReader->v('PdoStorage', 'password', false)
-);
+    $pdo = new PDO(
+        $iniReader->v('PdoStorage', 'dsn'),
+        $iniReader->v('PdoStorage', 'username', false),
+        $iniReader->v('PdoStorage', 'password', false)
+    );
 
-// Database
-$pdoStorage = new PdoStorage($pdo);
+    // Database
+    $pdoStorage = new PdoStorage($pdo);
 
-// Authentication
-$authMethod = $iniReader->v('authMethod');
-switch ($authMethod) {
-    case 'MellonAuthentication':
-        $auth = new MellonAuthentication(
-            $iniReader->v('MellonAuthentication', 'attribute')
-        );
-        break;
-    case 'BasicAuthentication':
-        $auth = new BasicAuthentication(
-            function ($userId) use ($iniReader) {
-                $userList = $iniReader->v('BasicAuthentication');
-                if (!array_key_exists($userId, $userList)) {
-                    return false;
-                }
+    // Authentication
+    $authMethod = $iniReader->v('authMethod');
+    switch ($authMethod) {
+        case 'MellonAuthentication':
+            $auth = new MellonAuthentication(
+                $iniReader->v('MellonAuthentication', 'attribute')
+            );
+            break;
+        case 'BasicAuthentication':
+            $auth = new BasicAuthentication(
+                function ($userId) use ($iniReader) {
+                    $userList = $iniReader->v('BasicAuthentication');
+                    if (!array_key_exists($userId, $userList)) {
+                        return false;
+                    }
 
-                return $userList[$userId];
-            },
-            array('realm' => 'VPN Portal')
-        );
-        break;
-    default:
-        throw new RuntimeException('unsupported authentication mechanism');
-}
+                    return $userList[$userId];
+                },
+                array('realm' => 'VPN Portal')
+            );
+            break;
+        default:
+            throw new RuntimeException('unsupported authentication mechanism');
+    }
 
-// VPN Certificate Service Configuration
-$serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
-$serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
-$servicePass = $iniReader->v('VpnCertService', 'servicePass');
+    // VPN Certificate Service Configuration
+    $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
+    $serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
+    $servicePass = $iniReader->v('VpnCertService', 'servicePass');
 
-$client = new Client(
-    array(
-        'defaults' => array(
-            'auth' => array($serviceAuth, $servicePass),
+    $client = new Client(
+        array(
+            'defaults' => array(
+                'auth' => array($serviceAuth, $servicePass),
+            ),
+        )
+    );
+
+    $request = new Request($_SERVER);
+
+    $templateManager = new TwigTemplateManager(
+        array(
+            dirname(__DIR__).'/views',
+            dirname(__DIR__).'/config/views',
         ),
-    )
-);
+        $iniReader->v('templateCache', false, null)
+    );
+    $templateManager->setDefault(
+        array(
+            'rootFolder' => $request->getUrl()->getRoot(),
+        )
+    );
 
-$request = new Request($_SERVER);
+    $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
 
-$templateManager = new TwigTemplateManager(
-    array(
-        dirname(__DIR__).'/views',
-        dirname(__DIR__).'/config/views',
-    ),
-    $iniReader->v('templateCache', false, null)
-);
-$templateManager->setDefault(
-    array(
-        'rootFolder' => $request->getUrl()->getRoot(),
-    )
-);
+    $service = new VpnPortalService(
+        $pdoStorage,
+        $templateManager,
+        $vpnCertServiceClient
+    );
 
-$vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
-
-$service = new VpnPortalService(
-    $pdoStorage,
-    $templateManager,
-    $vpnCertServiceClient
-);
-
-$authenticationPlugin = new AuthenticationPlugin();
-$authenticationPlugin->register($auth, 'user');
-$service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
-$service->run($request)->send();
+    $authenticationPlugin = new AuthenticationPlugin();
+    $authenticationPlugin->register($auth, 'user');
+    $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
+    $service->run($request)->send();
+} catch (Exception $e) {
+    error_log($e->getMessage());
+    die(sprintf('ERROR: %s', $e->getMessage()));
+}

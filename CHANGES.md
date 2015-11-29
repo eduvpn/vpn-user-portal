@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.5 (2015-11-29)
+- update dependencies
+
 ## 1.0.4 (2015-11-16)
 - fix file download in IE (issue #7)
 - add a new recommended client for Android
