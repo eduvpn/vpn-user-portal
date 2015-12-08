@@ -32,6 +32,13 @@ class VpnPortalService extends Service
         $this->templateManager = $templateManager;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
 
+        $this->get(
+            '/config/',
+            function (Request $request) {
+                return new RedirectResponse($request->getUrl()->getRootUrl(), 301);
+            }
+        );
+
         /* GET */
         $this->get(
             '/',
