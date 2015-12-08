@@ -23,15 +23,34 @@ table {
     width: 100%;
 }
 
-th {
-    font-weight: bold;
+th, td {
+    padding: 0.3em;
 }
 
-td.right {
+table ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+table li {
+    padding: 0;
+}
+
+table.border {
+    border: 1px solid #ddd;
+    margin: 1em 0;
+}
+
+.textright {
     text-align: right;
 }
 
-td {
+thead {
+    background-color: #eee;
+}
+
+th {
     padding: 0.3em;
 }
 
