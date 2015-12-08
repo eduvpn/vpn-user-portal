@@ -27,8 +27,11 @@ th {
     font-weight: bold;
 }
 
-td {
+td.right {
     text-align: right;
+}
+
+td {
     padding: 0.3em;
 }
 
