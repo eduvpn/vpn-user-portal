@@ -1,5 +1,11 @@
 # Changelog
 
+## x.x.x (...)
+- remove the `/config/` sub folder
+- remove the embedded documentation, does not belong here
+- add page to show when user is blocked
+- cleanup templates
+
 ## 1.0.5 (2015-11-29)
 - update dependencies
 

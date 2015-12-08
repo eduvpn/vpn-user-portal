@@ -32,16 +32,9 @@ class VpnPortalService extends Service
         $this->templateManager = $templateManager;
         $this->vpnCertServiceClient = $vpnCertServiceClient;
 
-        $this->get(
-            '/',
-            function () {
-                return new RedirectResponse('config/');
-            }
-        );
-
         /* GET */
         $this->get(
-            '/config/',
+            '/',
             function (UserInfoInterface $u) {
                 return $this->getConfigurations($u->getUserId());
             },
@@ -54,7 +47,7 @@ class VpnPortalService extends Service
 
         /* GET */
         $this->get(
-            '/config/:configName',
+            '/:configName',
             function (UserInfoInterface $u, $configName) {
                 return $this->getConfig($u->getUserId(), $configName);
             },
@@ -67,7 +60,7 @@ class VpnPortalService extends Service
 
         /* GET */
         $this->get(
-            '/config/:configName/ovpn',
+            '/:configName/ovpn',
             function (UserInfoInterface $u, $configName) {
                 return $this->getOvpnConfig($u->getUserId(), $configName);
             },
@@ -80,7 +73,7 @@ class VpnPortalService extends Service
 
         /* GET */
         $this->get(
-            '/config/:configName/zip',
+            '/:configName/zip',
             function (UserInfoInterface $u, $configName) {
                 return $this->getZipConfig($u->getUserId(), $configName);
             },
@@ -93,7 +86,7 @@ class VpnPortalService extends Service
 
         /* POST */
         $this->post(
-            '/config/',
+            '/',
             function (Request $request, UserInfoInterface $u) {
                 return $this->postConfig(
                     $u->getUserId(),
@@ -110,7 +103,7 @@ class VpnPortalService extends Service
 
         /* DELETE */
         $this->delete(
-            '/config/:configName',
+            '/:configName',
             function (Request $request, UserInfoInterface $u, $configName) {
                 return $this->deleteConfig(
                     $u->getUserId(),
@@ -123,26 +116,6 @@ class VpnPortalService extends Service
                     'activate' => array('user'),
                 ),
             )
-        );
-
-        $this->get(
-            '/docs/',
-            function () {
-                return $this->templateManager->render(
-                    'vpnDocs',
-                    array()
-                );
-            }
-        );
-
-        $this->get(
-            '/docs/windows',
-            function () {
-                return $this->templateManager->render(
-                    'vpnDocsWindows',
-                    array()
-                );
-            }
         );
     }
 

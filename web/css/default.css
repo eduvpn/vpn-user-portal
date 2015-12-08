@@ -4,12 +4,9 @@ body {
 
 div#container {
     max-width: 600px;
+    padding: 0.4em;
     margin: 0 auto;
     line-height: 1.4;
-}
-
-h1 {
-    border-bottom: 1px solid #000;
 }
 
 a.header {
@@ -20,22 +17,6 @@ a.header {
 a {
     text-decoration: underline;
     color: #000;
-}
-
-code, pre {
-    font-family: monospace;
-    font-size: 120%;
-}
-
-code { 
-    background-color: #d1def9;
-}
-
-pre {
-    background-color: #f9e5d1;
-    white-space: pre-wrap;
-    border: 1px solid #e9d5c1;
-    padding: 0.5em;
 }
 
 table {
@@ -83,14 +64,23 @@ p.warn a {
     color: #000;
 }
 
+p.note {
+    font-size: 85%;
+    color: #888;
+}
+
+p.note a {
+    color: #888;
+}
+
 input[type=text] {
-    padding: 0.5em;
+    padding: 0.4em;
     border: 1px solid #d5d5d5;
     line-height: 1.4;
 }
 
 button {
-    padding: 0.5em;
+    padding: 0.4em;
     border: 1px solid #052;
     color: #fff; 
     background: #063;
@@ -108,20 +98,10 @@ button.simple {
     color: #000;
 }
 
-p.note {
-    font-size: 85%;
-    color: #888;
-}
-
-p.note a {
-    color: #888;
-}
-
 div.footer {
     margin-top: 1em;
-    border-top: 1px solid #888;
     padding: 0.5em;
-    text-align: right;
+    text-align: center;
     font-size: 85%;
     color: #888;
 }
