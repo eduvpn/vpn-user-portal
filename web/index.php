@@ -45,12 +45,24 @@ try {
 
                     return $userList[$userId];
                 },
-                array('realm' => 'VPN Portal')
+                array('realm' => 'VPN User Portal')
             );
             break;
         default:
             throw new RuntimeException('unsupported authentication mechanism');
     }
+
+    $apiAuth = new BasicAuthentication(
+        function ($userId) use ($iniReader) {
+            $userList = $iniReader->v('ApiAuthentication');
+            if (!array_key_exists($userId, $userList)) {
+                return false;
+            }
+
+            return $userList[$userId];
+        },
+        array('realm' => 'VPN User Portal API')
+    );
 
     // VPN Certificate Service Configuration
     $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
@@ -90,6 +102,7 @@ try {
 
     $authenticationPlugin = new AuthenticationPlugin();
     $authenticationPlugin->register($auth, 'user');
+    $authenticationPlugin->register($apiAuth, 'api');
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     $service->run($request)->send();
 } catch (Exception $e) {

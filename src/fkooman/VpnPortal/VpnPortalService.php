@@ -4,6 +4,7 @@ namespace fkooman\VpnPortal;
 
 use fkooman\Http\Request;
 use fkooman\Http\Response;
+use fkooman\Http\JsonResponse;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\Exception\NotFoundException;
@@ -121,6 +122,43 @@ class VpnPortalService extends Service
             array(
                 'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
                     'activate' => array('user'),
+                ),
+            )
+        );
+
+        // API for vpn-admin-portal
+        $this->post(
+            '/api/revoke',
+            function (Request $request) {
+                $userId = $request->getPostParameter('user_id');
+                $configName = $request->getPostParameter('config_name');
+
+                // XXX: validate user_id
+                $this->validateConfigName($configName);
+                $this->vpnCertServiceClient->revokeConfiguration($userId, $configName);
+                $this->db->revokeConfiguration($userId, $configName);
+
+                return new JsonResponse();
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('api'),
+                ),
+            )
+        );
+
+        $this->get(
+            '/api/configurations',
+            function (Request $request) {
+                $allConfigurations = $this->db->getAllConfigurations();
+                $response = new JsonResponse();
+                $response->setBody($allConfigurations);
+
+                return $response;
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('api'),
                 ),
             )
         );

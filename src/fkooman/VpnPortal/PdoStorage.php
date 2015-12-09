@@ -29,6 +29,24 @@ class PdoStorage
         $this->prefix = $prefix;
     }
 
+    public function getAllConfigurations()
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT user_id, name, status FROM %s ORDER BY status, name',
+                $this->prefix.'config'
+            )
+        );
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // FIXME: returns empty array when no configurations or still false?
+        if (false !== $result) {
+            return $result;
+        }
+
+        return;
+    }
+
     public function getConfigurations($userId)
     {
         $stmt = $this->db->prepare(
