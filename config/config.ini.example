@@ -2,8 +2,8 @@ authMethod = BasicAuthentication
 ;authMethod = MellonAuthentication
 
 [ApiAuthentication]
-; consumer:s3cr3t
-consumer = "$2y$10$QAmpESWTDujaLOlZ/FUwBO6EnmP797QPmz8bYRf9UCRyVmI494Vd2"
+; admin:s3cr3t
+admin = "$2y$10$QAmpESWTDujaLOlZ/FUwBO6EnmP797QPmz8bYRf9UCRyVmI494Vd2"
 
 [BasicAuthentication]
 ; foo:bar
