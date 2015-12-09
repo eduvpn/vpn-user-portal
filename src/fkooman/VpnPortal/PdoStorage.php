@@ -31,9 +31,10 @@ class PdoStorage
 
     public function getAllConfigurations()
     {
+        // get all active configuratoins
         $stmt = $this->db->prepare(
             sprintf(
-                'SELECT user_id, name, status FROM %s ORDER BY status, name',
+                'SELECT user_id, name, status FROM %s WHERE status != 30 ORDER BY user_id',
                 $this->prefix.'config'
             )
         );
