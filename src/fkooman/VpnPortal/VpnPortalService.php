@@ -4,7 +4,6 @@ namespace fkooman\VpnPortal;
 
 use fkooman\Http\Request;
 use fkooman\Http\Response;
-use fkooman\Http\JsonResponse;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\Exception\NotFoundException;
@@ -125,43 +124,6 @@ class VpnPortalService extends Service
                 ),
             )
         );
-
-        // API for vpn-admin-portal
-        $this->post(
-            '/api/revoke',
-            function (Request $request) {
-                $userId = $request->getPostParameter('user_id');
-                $configName = $request->getPostParameter('config_name');
-
-                // XXX: validate user_id
-                $this->validateConfigName($configName);
-                $this->vpnCertServiceClient->revokeConfiguration($userId, $configName);
-                $this->db->revokeConfiguration($userId, $configName);
-
-                return new JsonResponse();
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('api'),
-                ),
-            )
-        );
-
-        $this->get(
-            '/api/configurations',
-            function (Request $request) {
-                $allConfigurations = $this->db->getAllConfigurations();
-                $response = new JsonResponse();
-                $response->setBody($allConfigurations);
-
-                return $response;
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('api'),
-                ),
-            )
-        );
     }
 
     public function getConfigurations($userId)
@@ -178,7 +140,7 @@ class VpnPortalService extends Service
 
     public function getConfig($userId, $configName)
     {
-        $this->validateConfigName($configName);
+        Utils::validateConfigName($configName);
         if (!$this->db->isExistingConfiguration($userId, $configName)) {
             throw new NotFoundException('configuration not found');
         }
@@ -197,7 +159,7 @@ class VpnPortalService extends Service
 
     public function getConfigData($userId, $configName)
     {
-        $this->validateConfigName($configName);
+        Utils::validateConfigName($configName);
         if (!$this->db->isExistingConfiguration($userId, $configName)) {
             throw new NotFoundException('configuration not found');
         }
@@ -279,7 +241,7 @@ class VpnPortalService extends Service
 
     public function postConfig($userId, $configName, $returnUri)
     {
-        $this->validateConfigName($configName);
+        Utils::validateConfigName($configName);
         if ($this->db->isExistingConfiguration($userId, $configName)) {
             throw new BadRequestException('configuration with this name already exists for this user');
         }
@@ -291,27 +253,10 @@ class VpnPortalService extends Service
 
     public function deleteConfig($userId, $configName, $returnUri)
     {
-        $this->validateConfigName($configName);
+        Utils::validateConfigName($configName);
         $this->vpnCertServiceClient->revokeConfiguration($userId, $configName);
         $this->db->revokeConfiguration($userId, $configName);
 
         return new RedirectResponse($returnUri);
-    }
-
-    private function validateConfigName($configName)
-    {
-        if (null === $configName) {
-            throw new BadRequestException('missing parameter');
-        }
-        if (!is_string($configName)) {
-            throw new BadRequestException('malformed parameter');
-        }
-        if (32 < strlen($configName)) {
-            throw new BadRequestException('name too long, maximum 32 characters');
-        }
-        // XXX: be less restrictive in supported characters...
-        if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
-            throw new BadRequestException('invalid characters in name');
-        }
     }
 }

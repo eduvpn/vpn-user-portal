@@ -1,6 +1,6 @@
 # Changelog
 
-## x.x.x (...)
+## 2.0.0 (...)
 - **BREAKING** add API calls for integration with `vpn-manage-portal`, 
   configuration file needs to be updated with new `[ApiAuthentication]` 
   section
