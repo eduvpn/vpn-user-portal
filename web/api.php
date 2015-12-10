@@ -84,6 +84,47 @@ try {
         }
     );
 
+    // get user list
+    $service->get(
+        '/users',
+        function (Request $request) use ($db) {
+            $userList = array();
+            $users = $db->getUsers();
+            $blockedUsers = $db->getBlockedUsers();
+
+            foreach ($users as $user) {
+                $userList[] = array('user_id' => $user, 'is_blocked' => in_array($user, $blockedUsers));
+            }
+
+            $response = new JsonResponse();
+            $response->setBody(
+                array('items' => $userList)
+            );
+
+            return $response;
+        }
+    );
+
+    $service->post(
+        '/blockUser',
+        function (Request $request) use ($db) {
+            $userId = $request->getPostParameter('user_id');
+            $db->blockUser($userId);
+
+            return new JsonResponse();
+        }
+    );
+
+    $service->post(
+        '/unblockUser',
+        function (Request $request) use ($db) {
+            $userId = $request->getPostParameter('user_id');
+            $db->unblockUser($userId);
+
+            return new JsonResponse();
+        }
+    );
+
     $authenticationPlugin = new AuthenticationPlugin();
     $authenticationPlugin->register($apiAuth, 'api');
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);

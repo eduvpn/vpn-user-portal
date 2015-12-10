@@ -29,6 +29,73 @@ class PdoStorage
         $this->prefix = $prefix;
     }
 
+    public function getUsers()
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT DISTINCT(user_id) FROM %s ORDER BY user_id',
+                $this->prefix.'config'
+            )
+        );
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        // FIXME: returns empty array when no configurations or still false?
+        if (false !== $result) {
+            return $result;
+        }
+
+        return;
+    }
+
+    public function getBlockedUsers()
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT user_id FROM %s ORDER BY user_id',
+                $this->prefix.'blocked_users'
+            )
+        );
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        // FIXME: returns empty array when no configurations or still false?
+        if (false !== $result) {
+            return $result;
+        }
+
+        return;
+    }
+
+    public function blockUser($userId)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'INSERT INTO %s (user_id) VALUES(:user_id)',
+                $this->prefix.'blocked_users'
+            )
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+        if (1 !== $stmt->rowCount()) {
+            throw new RuntimeException('unable to block user');
+        }
+    }
+
+    public function unblockUser($userId)
+    {
+        // get all active configuratoins
+        $stmt = $this->db->prepare(
+            sprintf(
+                'DELETE FROM %s WHERE user_id = :user_id',
+                $this->prefix.'blocked_users'
+            )
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+        if (1 !== $stmt->rowCount()) {
+            throw new RuntimeException('unable to unblock user');
+        }
+    }
+
     public function getAllConfigurations()
     {
         // get all active configuratoins
@@ -167,6 +234,13 @@ class PdoStorage
             )',
             $prefix.'config'
         );
+        $query[] = sprintf(
+            'CREATE TABLE IF NOT EXISTS %s (
+                user_id VARCHAR(255) NOT NULL,
+                UNIQUE (user_id)
+            )',
+            $prefix.'blocked_users'
+        );
 
         return $query;
     }
@@ -178,7 +252,7 @@ class PdoStorage
             $this->db->query($q);
         }
 
-        $tables = array('config');
+        $tables = array('config', 'blocked_users');
         foreach ($tables as $t) {
             // make sure the tables are empty
             $this->db->query(
