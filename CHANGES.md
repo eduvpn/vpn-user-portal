@@ -6,10 +6,11 @@
 - **BREAKING** add API calls for integration with `vpn-manage-portal`, 
   configuration file needs to be updated with new `[ApiAuthentication]` 
   section
-- remove the `/config/` sub folder
+- remove the `/config/` sub folder, but keep 301 redirect to '/'
 - remove the embedded documentation, does not belong here
 - add page to show when user is blocked
 - cleanup templates
+- cleanup authentication
 
 ## 1.0.5 (2015-11-29)
 - update dependencies

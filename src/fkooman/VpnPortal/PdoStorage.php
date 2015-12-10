@@ -65,6 +65,20 @@ class PdoStorage
         return;
     }
 
+    public function isBlocked($userId)
+    {
+        $stmt = $this->db->prepare(
+            sprintf(
+                'SELECT user_id FROM %s WHERE user_id = :user_id',
+                $this->prefix.'blocked_users'
+            )
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return false !== $stmt->fetch();
+    }
+
     public function blockUser($userId)
     {
         $stmt = $this->db->prepare(

@@ -5,50 +5,57 @@
 <body>
     <div id="container">
         {% include 'header.twig' %}
-        <p>Welcome to the VPN portal. Here you can manage your VPN configurations.</p>
 
-        <h2>New</h2>
-        <p>Enter a name, e.g. &quot;Phone&quot;, for the configuration in the box below and click
-           &quot;<em>Create</em>&quot;. Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
-        </p>
+        {% if isBlocked %}
+            {% include 'blocked.twig' %}
 
-        <form class="center" method="post">
-            <input type="text" name="name" placeholder="Name..." required pattern="[a-zA-Z0-9-_.@]+">
-            <button type="submit">Create</button>
-        </form>
+        {% else %} 
+            <p>Welcome to the VPN portal. Here you can manage your VPN configurations.</p>
 
-        {% if vpnConfigurations %} <!-- existing configurations -->
-        <h2>Existing</h2>
-        <p>If you lost your device or no longer use the VPN you can click &quot;<em>Revoke</em>&quot;.</p>
-        <table>
-            <tbody>
-            {% for config in vpnConfigurations %}
-                <tr>
-                    <th>
-                        {{ config.name|e }}
-                    </th>
-                    <td class="textright">
-                    {% if config.status == 30 %} <!-- revoked -->
-                            <button disabled="disabled">Download</button>
-                            <button disabled="disabled">Revoke</button>
-                    {% elseif config.status == 20 %} <!-- active -->
-                            <button disabled="disabled">Download</button>
-                            <form class="simple" method="post" action="{{ config.name|e }}">
-                                <input type="hidden" name="_METHOD" value="DELETE">
-                                <button class="simple" type="submit">Revoke</button>
-                            </form>
-                    {% else %}
-                            <form class="simple" method="get" action="{{ config.name|e }}">
-                                <button type="submit">Download</button>
-                            </form>
-                            <button disabled="disabled">Revoke</button>
-                    {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% endif %} <!-- /existing configurations -->
+            <h2>New</h2>
+            <p>Enter a name, e.g. &quot;Phone&quot;, for the configuration in the box below and click
+               &quot;<em>Create</em>&quot;. Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
+            </p>
+
+            <form class="center" method="post">
+                <input type="text" name="name" placeholder="Name..." required pattern="[a-zA-Z0-9-_.@]+">
+                <button type="submit">Create</button>
+            </form>
+
+            {% if vpnConfigurations %} <!-- existing configurations -->
+            <h2>Existing</h2>
+            <p>If you lost your device or no longer use the VPN you can click &quot;<em>Revoke</em>&quot;.</p>
+            <table>
+                <tbody>
+                {% for config in vpnConfigurations %}
+                    <tr>
+                        <th>
+                            {{ config.name|e }}
+                        </th>
+                        <td class="textright">
+                            {% if config.status == 30 %} <!-- revoked -->
+                                    <button disabled="disabled">Download</button>
+                                    <button disabled="disabled">Revoke</button>
+                            {% elseif config.status == 20 %} <!-- active -->
+                                    <button disabled="disabled">Download</button>
+                                    <form class="simple" method="post" action="{{ config.name|e }}">
+                                        <input type="hidden" name="_METHOD" value="DELETE">
+                                        <button class="simple" type="submit">Revoke</button>
+                                    </form>
+                            {% else %}
+                                    <form class="simple" method="get" action="{{ config.name|e }}">
+                                        <button type="submit">Download</button>
+                                    </form>
+                                    <button disabled="disabled">Revoke</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% endif %} <!-- /existing configurations -->
+        {% endif %}
         {% include 'footer.twig' %}
     </div> <!-- /container -->
 </body>

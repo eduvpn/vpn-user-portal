@@ -44,12 +44,7 @@ class VpnPortalService extends Service
             '/',
             function (UserInfoInterface $u) {
                 return $this->getConfigurations($u->getUserId());
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            }
         );
 
         /* GET */
@@ -57,12 +52,7 @@ class VpnPortalService extends Service
             '/:configName',
             function (UserInfoInterface $u, $configName) {
                 return $this->getConfig($u->getUserId(), $configName);
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            }
         );
 
         /* GET */
@@ -70,12 +60,7 @@ class VpnPortalService extends Service
             '/:configName/ovpn',
             function (UserInfoInterface $u, $configName) {
                 return $this->getOvpnConfig($u->getUserId(), $configName);
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            }
         );
 
         /* GET */
@@ -83,12 +68,7 @@ class VpnPortalService extends Service
             '/:configName/zip',
             function (UserInfoInterface $u, $configName) {
                 return $this->getZipConfig($u->getUserId(), $configName);
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            }
         );
 
         /* POST */
@@ -100,12 +80,7 @@ class VpnPortalService extends Service
                     $request->getPostParameter('name'),
                     $request->getHeader('Referer')
                 );
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            }
         );
 
         /* DELETE */
@@ -117,12 +92,7 @@ class VpnPortalService extends Service
                     $configName,
                     $request->getHeader('Referer')
                 );
-            },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            }
         );
     }
 
@@ -134,12 +104,14 @@ class VpnPortalService extends Service
             'vpnPortal',
             array(
                 'vpnConfigurations' => $vpnConfigurations,
+                'isBlocked' => $this->isBlocked($userId),
             )
         );
     }
 
     public function getConfig($userId, $configName)
     {
+        $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
         if (!$this->db->isExistingConfiguration($userId, $configName)) {
             throw new NotFoundException('configuration not found');
@@ -157,7 +129,7 @@ class VpnPortalService extends Service
         );
     }
 
-    public function getConfigData($userId, $configName)
+    private function getConfigData($userId, $configName)
     {
         Utils::validateConfigName($configName);
         if (!$this->db->isExistingConfiguration($userId, $configName)) {
@@ -175,6 +147,7 @@ class VpnPortalService extends Service
 
     public function getOvpnConfig($userId, $configName)
     {
+        $this->requireNotBlocked($userId);
         $configData = $this->getConfigData($userId, $configName);
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
@@ -185,6 +158,7 @@ class VpnPortalService extends Service
 
     public function getZipConfig($userId, $configName)
     {
+        $this->requireNotBlocked($userId);
         $configData = $this->getConfigData($userId, $configName);
         $inlineTypeFileName = array(
             'ca' => sprintf('ca_%s.crt', $configName),
@@ -241,6 +215,7 @@ class VpnPortalService extends Service
 
     public function postConfig($userId, $configName, $returnUri)
     {
+        $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
         if ($this->db->isExistingConfiguration($userId, $configName)) {
             throw new BadRequestException('configuration with this name already exists for this user');
@@ -253,6 +228,7 @@ class VpnPortalService extends Service
 
     public function deleteConfig($userId, $configName, $returnUri)
     {
+        $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
         $this->vpnCertServiceClient->revokeConfiguration($userId, $configName);
         $this->db->revokeConfiguration($userId, $configName);
@@ -270,5 +246,17 @@ class VpnPortalService extends Service
         $response->setHeader('X-Frame-Options', 'DENY');
 
         return $response;
+    }
+
+    private function isBlocked($userId)
+    {
+        return $this->db->isBlocked($userId);
+    }
+
+    private function requireNotBlocked($userId)
+    {
+        if ($this->isBlocked($userId)) {
+            throw new ForbiddenException('user_blocked', 'the user was blocked by the administrator');
+        }
     }
 }
