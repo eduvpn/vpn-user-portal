@@ -6,6 +6,7 @@ use fkooman\Http\Request;
 use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
+use fkooman\Http\Exception\ForbiddenException;
 use fkooman\Http\Exception\NotFoundException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
