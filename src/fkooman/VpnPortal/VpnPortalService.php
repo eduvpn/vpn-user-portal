@@ -259,4 +259,16 @@ class VpnPortalService extends Service
 
         return new RedirectResponse($returnUri);
     }
+
+    public function run(Request $request = null)
+    {
+        $response = parent::run($request);
+
+        # CSP: https://developer.mozilla.org/en-US/docs/Security/CSP
+        $response->setHeader('Content-Security-Policy', "default-src 'self'");
+        # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
+        $response->setHeader('X-Frame-Options', 'DENY');
+
+        return $response;
+    }
 }
