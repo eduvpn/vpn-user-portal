@@ -3,9 +3,9 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
 use fkooman\Ini\IniReader;
-use fkooman\VpnPortal\PdoStorage;
-use fkooman\VpnPortal\VpnPortalService;
-use fkooman\VpnPortal\VpnCertServiceClient;
+use fkooman\VPN\UserPortal\PdoStorage;
+use fkooman\VPN\UserPortal\VpnPortalService;
+use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
 use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
@@ -52,10 +52,10 @@ try {
             throw new RuntimeException('unsupported authentication mechanism');
     }
 
-    // VPN Certificate Service Configuration
-    $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
-    $serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
-    $servicePass = $iniReader->v('VpnCertService', 'servicePass');
+    // VPN Config API Configuration
+    $serviceUri = $iniReader->v('VpnConfigApi', 'serviceUri');
+    $serviceAuth = $iniReader->v('VpnConfigApi', 'serviceUser');
+    $servicePass = $iniReader->v('VpnConfigApi', 'servicePass');
 
     $client = new Client(
         array(
@@ -80,12 +80,12 @@ try {
         )
     );
 
-    $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
+    $VpnConfigApiClient = new VpnConfigApiClient($client, $serviceUri);
 
     $service = new VpnPortalService(
         $pdoStorage,
         $templateManager,
-        $vpnCertServiceClient
+        $VpnConfigApiClient
     );
 
     $authenticationPlugin = new AuthenticationPlugin();

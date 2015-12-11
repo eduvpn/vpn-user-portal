@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8609180efcd9e60fd8ed8265daff236b",
-    "content-hash": "f930d58bf036ed4871290eb5ddc32efe",
+    "hash": "4588a731fd5bdcb32d82a2a1dfc9095a",
+    "content-hash": "9216cbaaef1166f96be8b8c6728e0c07",
     "packages": [
         {
             "name": "fkooman/http",
@@ -688,6 +688,7 @@
     "platform": {
         "ext-pcre": "*",
         "ext-pdo": "*",
+        "ext-spl": "*",
         "ext-zip": "*",
         "php": ">=5.4"
     },

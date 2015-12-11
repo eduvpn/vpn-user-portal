@@ -1,9 +1,11 @@
 # Changelog
 
 ## 2.0.0 (...)
+- update README
+- move classes in new sub folder
 - **BREAKING** add ability to block users, requires DB update (add 
   `blocked_users` table)
-- **BREAKING** add API calls for integration with `vpn-manage-portal`, 
+- **BREAKING** add API calls for integration with `vpn-admin-portal`, 
   configuration file needs to be updated with new `[ApiAuthentication]` 
   section
 - remove the `/config/` sub folder, but keep 301 redirect to '/'

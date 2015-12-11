@@ -1,6 +1,6 @@
 <?php
 
-namespace fkooman\VpnPortal;
+namespace fkooman\VPN\UserPortal;
 
 use fkooman\Http\Request;
 use fkooman\Http\Response;
@@ -22,16 +22,16 @@ class VpnPortalService extends Service
     /** @var \fkooman\Tpl\TemplateManagerInterface */
     private $templateManager;
 
-    /** @var VpnCertServiceClient */
-    private $vpnCertServiceClient;
+    /** @var VpnConfigApiClient */
+    private $VpnConfigApiClient;
 
-    public function __construct(PdoStorage $db, TemplateManagerInterface $templateManager, VpnCertServiceClient $vpnCertServiceClient)
+    public function __construct(PdoStorage $db, TemplateManagerInterface $templateManager, VpnConfigApiClient $VpnConfigApiClient)
     {
         parent::__construct();
 
         $this->db = $db;
         $this->templateManager = $templateManager;
-        $this->vpnCertServiceClient = $vpnCertServiceClient;
+        $this->VpnConfigApiClient = $VpnConfigApiClient;
 
         $this->get(
             '/config/',
@@ -221,7 +221,7 @@ class VpnPortalService extends Service
         if ($this->db->isExistingConfiguration($userId, $configName)) {
             throw new BadRequestException('configuration with this name already exists for this user');
         }
-        $vpnConfig = $this->vpnCertServiceClient->addConfiguration($userId, $configName);
+        $vpnConfig = $this->VpnConfigApiClient->addConfiguration($userId, $configName);
         $this->db->addConfiguration($userId, $configName, $vpnConfig);
 
         return new RedirectResponse($returnUri);
@@ -231,7 +231,7 @@ class VpnPortalService extends Service
     {
         $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
-        $this->vpnCertServiceClient->revokeConfiguration($userId, $configName);
+        $this->VpnConfigApiClient->revokeConfiguration($userId, $configName);
         $this->db->revokeConfiguration($userId, $configName);
 
         return new RedirectResponse($returnUri);

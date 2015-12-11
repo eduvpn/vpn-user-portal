@@ -1,6 +1,6 @@
 # Introduction
 This project provides a user interface for managing OpenVPN configurations 
-using the vpn-cert-service software.
+using the `vpn-user-portal` software.
 
 It can be used by both users in a browser as well as APIs. The authentication
 mechanisms currently supported are:
@@ -8,60 +8,66 @@ mechanisms currently supported are:
 * SAML (using Apache mod_mellon)
 * Basic Authentication
 
-# Installation
-It is recommended that you install the software using the RPM package from the
-[COPR repository](https://copr.fedoraproject.org/coprs/fkooman/vpn-management/).
+# Production
 
-The RPM spec files can be found [here](https://github.com/eduVPN/specs).
+See the [documentation](https://github.com/eduVPN/documentation) repository.
 
-# Configuration
-The software can be configured in `/etc/vpn-user-portal`. After installing the
-RPM package an example `config.ini` is placed there. Please modify it as 
-required. 
+# Development
 
-If you want to use the portal from other locations than `localhost`, also 
-modify the Apache configuration file in `/etc/httpd.conf/vpn-user-portal.conf`.
+## Installation
 
-## Basic Authentication
-If you want to use Basic Authentication you can use the included 
-`vpn-user-portal-password-hash` application to generate a hash for your 
-secret, e.g.:
+    $ cd /var/www
+    $ sudo mkdir vpn-user-portal
+    $ sudo chown fkooman.fkooman vpn-user-portal
+    $ git clone https://github.com/eduVPN/vpn-user-portal.git
+    $ cd vpn-user-portal
+    $ /path/to/composer.phar install
+    $ mkdir -p data
+    $ sudo chown -R apache.apache data
+    $ sudo semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/vpn-user-portal/data(/.*)?'
+    $ sudo restorecon -R /var/www/vpn-user-portal/data
+    $ cp config/config.ini.example config/config.ini
 
-    $ vpn-user-portal-password-hash mys3cr3t
-    $2y$10$QgAv7FZ4cCUBMHf.gXfLEOa3TezSLUl0rwTYMK2eVqqigK.yMeuwG
-    $ 
+## Configuration
+Modify `config/config.ini`.
 
-## SAML
+Now you can run the init script to initialize the DB:
+
+    $ sudo -u apache bin/init
+
+To update the password for API access, or `BasicAuthentication`, use this 
+command to generate a new hash:
+
+    $ php -r "require_once 'vendor/autoload.php'; echo password_hash('s3cr3t', PASSWORD_DEFAULT) . PHP_EOL;"
+
+### Apache 
+
+The following configuration can be used in Apache, place it in 
+`/etc/httpd/conf.d/vpn-user-portal.conf`:
+
+    Alias /vpn-user-portal /var/www/vpn-user-portal/web
+
+    <Directory /var/www/vpn-user-portal/web>
+        AllowOverride none
+      
+        #Require local 
+        Require all granted
+
+        RewriteEngine on
+        RewriteBase /vpn-user-portal
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+
+        # For MellonAuthentication
+        # Use the following to test vpn-user-portal without needing to configure
+        # mod_mellon.
+        #RequestHeader set MELLON-NAME-ID foo
+
+        # For BasicAuthentication
+        SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+    </Directory>
+
+### SAML
 See the 
 [fkooman/rest-plugin-authentication-mellon](https://github.com/fkooman/php-lib-rest-plugin-authentication-mellon/) 
-documentation for more information. 
-
-# Use
-You can use the software in a browser by going to 
-[http://localhost/vpn-user-portal/](http://localhost/vpn-user-portal/) and 
-authenticating.
-
-# API Use
-You can use this software both in a browser, or through an "API". Using "API"
-using the SAML authentication is not so useful, so we limit the description
-here for Basic authentication.
-
-## Create a configuration
-To create a configuration, authenticate with a user and password and specify
-the name of the configuration, e.g:
-
-    $ curl -u foo:bar -d 'name=phone' http://localhost/vpn-user-portal/config/
-
-## Retrieve a configuration
-To retrieve the configuration:
-
-    $ curl -u foo:bar http://localhost/vpn-user-portal/config/phone/ovpn > phone.ovpn
-
-You can also instead retrieve a ZIP version of the configuration with the 
-configuration and certificate/key files seperate:
-
-    $ curl -u foo:bar http://localhost/vpn-user-portal/config/phone/zip > phone.zip
-
-The generated configurations can also be found using the web portal when you
-authenticate with the same user.
-
+documentation for more information.

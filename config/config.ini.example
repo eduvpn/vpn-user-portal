@@ -1,10 +1,6 @@
 authMethod = BasicAuthentication
 ;authMethod = MellonAuthentication
 
-[ApiAuthentication]
-; admin:s3cr3t
-admin = "$2y$10$QAmpESWTDujaLOlZ/FUwBO6EnmP797QPmz8bYRf9UCRyVmI494Vd2"
-
 [BasicAuthentication]
 ; foo:bar
 foo = "$2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq"
@@ -15,8 +11,12 @@ bar = "$2y$10$KLzVp/YwKAhI0asdeUHJmOARFglUZc4ccWTPJKqQEIxYXbtmLkBlm"
 attribute = 'MELLON_NAME_ID'
 ;attribute = 'MELLON_eduPersonTargetedID'
 
-[VpnCertService]
-serviceUri  = 'http://localhost/vpn-cert-service/api.php'
+[ApiAuthentication]
+; admin:s3cr3t
+admin = "$2y$10$QAmpESWTDujaLOlZ/FUwBO6EnmP797QPmz8bYRf9UCRyVmI494Vd2"
+
+[VpnConfigApi]
+serviceUri  = 'http://localhost/vpn-config-api/api.php'
 serviceUser = 'admin'
 servicePass = 's3cr3t'
 

@@ -8,21 +8,24 @@
     ],
     "autoload": {
         "psr-0": {
-            "fkooman\\VpnPortal\\": "src/"
+            "fkooman\\VPN\\UserPortal\\": "src/"
         }
     },
-    "description": "Portal to manage OpenVPN client configurations written in PHP",
+    "description": "VPN User Portal",
     "license": "Apache-2.0",
-    "name": "fkooman/vpn-user-portal",
+    "name": "eduVPN/vpn-user-portal",
     "require": {
         "ext-pcre": "*",
         "ext-pdo": "*",
+        "ext-spl": "*",
         "ext-zip": "*",
+        "fkooman/http": "^1.0.0",
         "fkooman/ini": "^1.0.0",
         "fkooman/rest": "^1.0.0",
         "fkooman/rest-plugin-authentication": "^2.0.0",
         "fkooman/rest-plugin-authentication-basic": "^2.0.0",
         "fkooman/rest-plugin-authentication-mellon": "^2.0.0",
+        "fkooman/tpl": "^2.0.0",
         "fkooman/tpl-twig": "^1.0.0",
         "guzzlehttp/guzzle": "~5.3",
         "php": ">=5.4"

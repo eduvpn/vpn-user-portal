@@ -1,6 +1,6 @@
 <?php
 
-namespace fkooman\VpnPortal;
+namespace fkooman\VPN\UserPortal;
 
 use PDO;
 use RuntimeException;

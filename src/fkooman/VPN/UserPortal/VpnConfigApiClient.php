@@ -1,27 +1,27 @@
 <?php
 
-namespace fkooman\VpnPortal;
+namespace fkooman\VPN\UserPortal;
 
 use GuzzleHttp\Client;
 
-class VpnCertServiceClient
+class VpnConfigApiClient
 {
     /** @var \GuzzleHttp\Client */
     private $client;
 
     /** @var string */
-    private $vpnCertServiceUri;
+    private $vpnConfigApiUri;
 
-    public function __construct(Client $client, $vpnCertServiceUri)
+    public function __construct(Client $client, $vpnConfigApiUri)
     {
         $this->client = $client;
-        $this->vpnCertServiceUri = $vpnCertServiceUri;
+        $this->vpnConfigApiUri = $vpnConfigApiUri;
     }
 
     public function addConfiguration($userId, $configName)
     {
         $vpnConfigName = sprintf('%s_%s', $userId, $configName);
-        $requestUri = sprintf('%s/config/', $this->vpnCertServiceUri);
+        $requestUri = sprintf('%s/config/', $this->vpnConfigApiUri);
 
         return $this->client->post(
             $requestUri,
@@ -34,7 +34,7 @@ class VpnCertServiceClient
     public function revokeConfiguration($userId, $configName)
     {
         $vpnConfigName = sprintf('%s_%s', $userId, $configName);
-        $requestUri = sprintf('%s/config/%s', $this->vpnCertServiceUri, $vpnConfigName);
+        $requestUri = sprintf('%s/config/%s', $this->vpnConfigApiUri, $vpnConfigName);
 
         return $this->client->delete($requestUri)->getBody();
     }

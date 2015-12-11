@@ -3,14 +3,14 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
 use fkooman\Ini\IniReader;
-use fkooman\VpnPortal\PdoStorage;
-use fkooman\VpnPortal\VpnCertServiceClient;
+use fkooman\VPN\UserPortal\PdoStorage;
+use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
 use GuzzleHttp\Client;
 use fkooman\Http\Request;
 use fkooman\Rest\Service;
-use fkooman\VpnPortal\Utils;
+use fkooman\VPN\UserPortal\Utils;
 use fkooman\Http\JsonResponse;
 
 try {
@@ -39,10 +39,10 @@ try {
         array('realm' => 'VPN User Portal API')
     );
 
-    // VPN Certificate Service Configuration
-    $serviceUri = $iniReader->v('VpnCertService', 'serviceUri');
-    $serviceAuth = $iniReader->v('VpnCertService', 'serviceUser');
-    $servicePass = $iniReader->v('VpnCertService', 'servicePass');
+    // VPN Config API Configuration
+    $serviceUri = $iniReader->v('VpnConfigApi', 'serviceUri');
+    $serviceAuth = $iniReader->v('VpnConfigApi', 'serviceUser');
+    $servicePass = $iniReader->v('VpnConfigApi', 'servicePass');
 
     $client = new Client(
         array(
@@ -54,19 +54,19 @@ try {
 
     $request = new Request($_SERVER);
 
-    $vpnCertServiceClient = new VpnCertServiceClient($client, $serviceUri);
+    $VpnConfigApiClient = new VpnConfigApiClient($client, $serviceUri);
 
     $service = new Service();
 
     $service->post(
         '/revoke',
-        function (Request $request) use ($vpnCertServiceClient, $db) {
+        function (Request $request) use ($VpnConfigApiClient, $db) {
             $userId = $request->getPostParameter('user_id');
             $configName = $request->getPostParameter('config_name');
 
             // XXX: validate user_id
             Utils::validateConfigName($configName);
-            $vpnCertServiceClient->revokeConfiguration($userId, $configName);
+            $VpnConfigApiClient->revokeConfiguration($userId, $configName);
             $db->revokeConfiguration($userId, $configName);
 
             return new JsonResponse();
