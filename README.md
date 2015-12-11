@@ -1,3 +1,5 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/eduVPN/vpn-user-portal/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/eduVPN/vpn-user-portal/?branch=master)
+
 # Introduction
 This project provides a user interface for managing OpenVPN configurations 
 using the `vpn-user-portal` software.
