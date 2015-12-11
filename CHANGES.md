@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (...)
+## 2.0.0 (2015-12-11)
 - update README
 - move classes in new sub folder
 - **BREAKING** add ability to block users, requires DB update (add 
