@@ -1,6 +1,8 @@
 # Changelog
 
 ## 2.0.0 (2015-12-11)
+- **BREAKING** change the config category `[VpnCertService]` to 
+  `[VpnConfigApi]`
 - update README
 - move classes in new sub folder
 - **BREAKING** add ability to block users, requires DB update (add 
