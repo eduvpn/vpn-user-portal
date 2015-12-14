@@ -79,7 +79,7 @@ class VpnPortalService extends Service
                 return $this->postConfig(
                     $u->getUserId(),
                     $request->getPostParameter('name'),
-                    $request->getHeader('Referer')
+                    $request->getUrl()->getRootUrl()
                 );
             }
         );
@@ -91,7 +91,7 @@ class VpnPortalService extends Service
                 return $this->deleteConfig(
                     $u->getUserId(),
                     $configName,
-                    $request->getHeader('Referer')
+                    $request->getUrl()->getRootUrl()
                 );
             }
         );
@@ -224,7 +224,9 @@ class VpnPortalService extends Service
         $vpnConfig = $this->VpnConfigApiClient->addConfiguration($userId, $configName);
         $this->db->addConfiguration($userId, $configName, $vpnConfig);
 
-        return new RedirectResponse($returnUri);
+        return new RedirectResponse(
+            sprintf('%s/%s', $returnUri, $configName)
+        );
     }
 
     public function deleteConfig($userId, $configName, $returnUri)
