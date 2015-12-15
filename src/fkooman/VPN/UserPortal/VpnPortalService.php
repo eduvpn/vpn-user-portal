@@ -164,10 +164,10 @@ class VpnPortalService extends Service
         $this->requireNotBlocked($userId);
         $configData = $this->getConfigData($userId, $configName);
         $inlineTypeFileName = array(
-            'ca' => sprintf('ca_%s.crt', $configName),
-            'cert' => sprintf('client_%s.crt', $configName),
-            'key' => sprintf('client_%s.key', $configName),
-            'tls-auth' => sprintf('ta_%s.key', $configName),
+            'ca' => sprintf('%s_ca.crt', $configName),
+            'cert' => sprintf('%s_client.crt', $configName),
+            'key' => sprintf('%s_client.key', $configName),
+            'tls-auth' => sprintf('%s_ta.key', $configName),
         );
 
         $zipName = tempnam(sys_get_temp_dir(), 'vup_');
