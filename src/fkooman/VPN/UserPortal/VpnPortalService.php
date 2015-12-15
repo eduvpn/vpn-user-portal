@@ -195,11 +195,11 @@ class VpnPortalService extends Service
         $configData = str_replace(
             array(
                 'key-direction 1',
-                sprintf('tls-auth ta_%s.key', $configName),
+                sprintf('tls-auth %s_ta.key', $configName),
             ),
             array(
                 '',
-                sprintf('tls-auth ta_%s.key 1', $configName),
+                sprintf('tls-auth %s_ta.key 1', $configName),
             ),
             $configData
         );

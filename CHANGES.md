@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.1 (...)
+- fix ZIP `key-direction`
+
 ## 3.0.0 (2015-12-15)
 - no longer store the retrieved configuration in the database, but immediately 
   send it to the client (removed the `config` column from DB, see 
