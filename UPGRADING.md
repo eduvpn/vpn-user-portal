@@ -3,7 +3,7 @@
 ## 2.x.x to 3.x.x
 The database changed. In order to update the database:
 
-    $ sudo -u apache /var/lib/vpn-user-portal/configurations.sqlite
+    $ sudo -u apache sqlite3 /var/lib/vpn-user-portal/configurations.sqlite
 
 Copy/paste the following:
 
@@ -23,6 +23,6 @@ Now, transfer all the old data to the new table:
 Drop the old table, and rename the newly created one back to the old name:
 
     DROP TABLE config;
-    ALTER TABLE new_config RENAME TO config
+    ALTER TABLE new_config RENAME TO config;
 
 That should be all! 
