@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1 (2015-12-15)
+- when creating a new configuration, immediately redirect to download
+  page
+- do not use HTTP referer anymore for redirects
+- update dependencies
+
 ## 2.0.0 (2015-12-11)
 - **BREAKING** change the config category `[VpnCertService]` to 
   `[VpnConfigApi]`
