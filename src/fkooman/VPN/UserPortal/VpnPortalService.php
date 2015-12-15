@@ -205,7 +205,7 @@ class VpnPortalService extends Service
         $z->addFromString(sprintf('%s.ovpn', $configName), $configData);
         $z->close();
 
-        $response = new Response(201, 'application/zip');
+        $response = new Response(200, 'application/zip');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
         $response->setBody(file_get_contents($zipName));
 
