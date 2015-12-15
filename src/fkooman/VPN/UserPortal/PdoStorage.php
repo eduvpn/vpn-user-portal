@@ -198,18 +198,17 @@ class PdoStorage
         return false !== $result;
     }
 
-    public function addConfiguration($userId, $name, $configData)
+    public function addConfiguration($userId, $name)
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'INSERT INTO %s (user_id, name, status, config) VALUES(:user_id, :name, :status, :config)',
+                'INSERT INTO %s (user_id, name, status) VALUES(:user_id, :name, :status)',
                 $this->prefix.'config'
             )
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
         $stmt->bindValue(':status', self::STATUS_READY, PDO::PARAM_INT);
-        $stmt->bindValue(':config', $configData, PDO::PARAM_LOB);
         $stmt->execute();
 
         if (1 !== $stmt->rowCount()) {
@@ -243,7 +242,6 @@ class PdoStorage
                 user_id VARCHAR(255) NOT NULL,
                 name VARCHAR(255) NOT NULL,
                 status INTEGER NOT NULL,
-                config BLOB DEFAULT NULL,
                 UNIQUE (user_id, name)
             )',
             $prefix.'config'

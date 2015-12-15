@@ -136,6 +136,7 @@ class VpnPortalService extends Service
         if (!$this->db->isExistingConfiguration($userId, $configName)) {
             throw new NotFoundException('configuration not found');
         }
+
         $vpnConfig = $this->db->getConfiguration($userId, $configName);
         if (PdoStorage::STATUS_READY != $vpnConfig['status']) {
             throw new NotFoundException('configuration already downloaded');
@@ -143,7 +144,8 @@ class VpnPortalService extends Service
 
         $this->db->activateConfiguration($userId, $configName);
 
-        return $vpnConfig['config'];
+        // make call to vpn-config-api to retrieve the configuration
+        return $this->VpnConfigApiClient->addConfiguration($userId, $configName);
     }
 
     public function getOvpnConfig($userId, $configName)
@@ -221,8 +223,7 @@ class VpnPortalService extends Service
         if ($this->db->isExistingConfiguration($userId, $configName)) {
             throw new BadRequestException('configuration with this name already exists for this user');
         }
-        $vpnConfig = $this->VpnConfigApiClient->addConfiguration($userId, $configName);
-        $this->db->addConfiguration($userId, $configName, $vpnConfig);
+        $this->db->addConfiguration($userId, $configName);
 
         return new RedirectResponse(
             sprintf('%s/%s', $returnUri, $configName)
