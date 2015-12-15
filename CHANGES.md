@@ -8,6 +8,8 @@
 - store the configuration creation/revocation time (add column `created_at` and
   `revoked_at` to DB, see `UPGRADING.md`)
 - sort display by status, creation time (no longer alphabetic)
+- **NOTE**: all configurations that were created, but not yet downloaded will 
+  be unavailable and marked as revoked, see `UPGRADING.md`
 
 ## 2.0.1 (2015-12-15)
 - when creating a new configuration, immediately redirect to download
