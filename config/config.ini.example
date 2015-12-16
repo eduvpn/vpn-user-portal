@@ -4,8 +4,6 @@ authMethod = BasicAuthentication
 [BasicAuthentication]
 ; foo:bar
 foo = "$2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq"
-; bar:baz
-bar = "$2y$10$KLzVp/YwKAhI0asdeUHJmOARFglUZc4ccWTPJKqQEIxYXbtmLkBlm"
 
 [MellonAuthentication]
 attribute = 'MELLON_NAME_ID'
