@@ -3,7 +3,7 @@
 <html lang="en">
 {% include 'head.twig' %}
 <body>
-    <div id="container">
+    <div class="container">
         {% include 'header.twig' %}
 
         {% if isBlocked %}
@@ -13,45 +13,45 @@
             <p>Welcome to the VPN portal. Here you can manage your VPN configurations.</p>
 
             <h2>New</h2>
-            <p>Enter a name, e.g. &quot;Phone&quot;, for the configuration in the box below and click
-               &quot;<em>Create</em>&quot;. Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
+            <p>Enter a name, e.g. <em>Phone</em>, for the configuration in the box below and click
+              <em>Create</em>. Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
             </p>
 
-            <form class="center" method="post">
-                <input type="text" name="name" placeholder="Name..." required pattern="[a-zA-Z0-9-_.@]+">
-                <button type="submit">Create</button>
+            <form class="form-inline text-center" method="post">
+                <input type="text" class="form-control" name="name" placeholder="Name..." required pattern="[a-zA-Z0-9-_.@]+">
+                <button type="submit" class="btn btn-primary">Create</button>
             </form>
 
             {% if vpnConfigurations %} <!-- existing configurations -->
             <h2>Existing</h2>
-            <p>If you lost your device or no longer use the VPN you can click &quot;<em>Revoke</em>&quot;.</p>
-            <table>
+            <p>If you lost your device or no longer use the VPN you can click <em>Revoke</em>.</p>
+            <table class="table table-striped">
                 <tbody>
                 {% for config in vpnConfigurations %}
                     <tr>
                         {% if config.status == 20 %} <!-- active -->
                             <td><span title="Created at {{config.created_at|e|date('Y-m-d H:i:s') }} ({{ date()|date('T') }})">{{ config.name|e }}</span></td>
-                            <td class="textright">
-                                <button disabled="disabled">Download</button>
-                                <form class="simple" method="post" action="{{ config.name|e }}">
+                            <td class="text-right">
+                                <form class="form-inline" method="post" action="{{ config.name|e }}">
+                                    <button class="btn btn-success" disabled="disabled">Download</button>
                                     <input type="hidden" name="_METHOD" value="DELETE">
-                                    <button class="simple" type="submit">Revoke</button>
+                                    <button class="btn btn-warning" type="submit">Revoke</button>
                                 </form>
                             </td>
 
                         {% elseif config.status == 10 %} <!-- new -->
                             <td><span title="Created at {{config.created_at|e|date('Y-m-d H:i:s') }} ({{ date()|date('T') }})">{{ config.name|e }}</span></td>
-                            <td class="textright">
-                                <form class="simple" method="get" action="{{ config.name|e }}">
-                                    <button type="submit">Download</button>
+                            <td class="text-right">
+                                <form class="form-inline" method="get" action="{{ config.name|e }}">
+                                    <button class="btn btn-success" type="submit">Download</button>
+                                    <button class="btn btn-warning" disabled="disabled">Revoke</button>
                                 </form>
-                                <button disabled="disabled">Revoke</button>
                             </td>
                         {% else %}
-                            <td><span class="" title="Revoked at {{config.revoked_at|e|date('Y-m-d H:i:s') }} ({{ date()|date('T') }})">{{ config.name|e }}</span></td>
-                            <td class="textright">
-                                <button disabled="disabled">Download</button>
-                                <button disabled="disabled">Revoke</button>
+                            <td><span title="Revoked at {{config.revoked_at|e|date('Y-m-d H:i:s') }} ({{ date()|date('T') }})">{{ config.name|e }}</span></td>
+                            <td class="text-right">
+                                <button class="btn btn-success" disabled="disabled">Download</button>
+                                <button class="btn btn-warning" disabled="disabled">Revoke</button>
                             </td>
                         {% endif %}
                     </tr>

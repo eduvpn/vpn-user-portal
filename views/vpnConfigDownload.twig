@@ -3,16 +3,19 @@
 <html lang="en">
 {% include 'head.twig' %}
 <body>
-    <div id="container">
+    <div class="container">
         {% include 'header.twig' %}
         <p>
             To get the VPN working you need to perform two steps:
-            <ol>
-                <li>Download the OpenVPN application for your device</li>
-                <li>Download the configuration file and import it in the application</li>
-            </ol>
+        </p>
+
+        <ol>
+            <li>Download the OpenVPN application for your device</li>
+            <li>Download the configuration file and import it in the application</li>
+        </ol>
 
         <h2>Application</h2>
+        <p>Choose the application for your device or platform from the list below:</p>
         <ul>
             <li>Google Android (<a href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a> or <a href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a>)</li>
             <li>Apple iOS (<a href="https://itunes.apple.com/us/app/openvpn-connect/id590379981">OpenVPN Connect</a>)</li>
@@ -21,23 +24,27 @@
         </ul>
 
         <h2>Configuration</h2>
-        <p>You can download the configuration &quot;<strong>{{ configName|e }}</strong>&quot; and import it in your OpenVPN client.</p>
+        <p>You can download the configuration <em>{{ configName|e }}</em> and import it in your OpenVPN client.</p>
 
-        <p class="warn">You can only download a configuration once. Create a new one for your other devices!</p>
-
-        <form class="center" method="GET" action="{{ configName|e}}/ovpn">
-            <button type="submit">Download</button>
-        </form>
-
-        <p class="note">
+        <div class="alert alert-warning" role="alert">You can only download a configuration once. <strong>Create a new one for your other devices</strong>!</div>
+    
+        <p>
+            <form class="text-center" method="GET" action="{{ configName|e}}/ovpn">
+                <button class="btn btn-success" type="submit">Download Configuration</button>
+            </form>
+        </p>
+    
+        <div class="alert alert-success" role="alert">
             Advanced users can download a <a href="{{ configName|e }}/zip">ZIP</a> file with 
             the configuration, certificates and keys in separate files. For example for use
             with <a href="https://wiki.gnome.org/Projects/NetworkManager">NetworkManager</a> or <a href="https://openwrt.org">OpenWrt</a>.
-        </p>
+        </div>
 
-        <form class="simple" method="GET" action="{{ rootFolder|e }}">
-            <button class="simple" type="submit">&lt; Back</button>
-        </form>
+        <p>
+            <form method="GET" action="{{ rootFolder|e }}">
+                <button class="btn btn-default" type="submit">&lt; Back</button>
+            </form> 
+        </p>
 
         {% include 'footer.twig' %}
     </div> <!-- /container -->
