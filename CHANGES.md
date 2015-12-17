@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.2 (2015-12-17)
+- use bootstrap for UI
+
 ## 3.0.1 (2015-12-16)
 - fix ZIP `key-direction`
 
