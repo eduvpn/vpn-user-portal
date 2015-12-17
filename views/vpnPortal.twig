@@ -48,7 +48,7 @@
                                 </form>
                             </td>
                         {% else %}
-                            <td><span title="Revoked at {{config.revoked_at|e|date('Y-m-d H:i:s') }} ({{ date()|date('T') }})">{{ config.name|e }}</span></td>
+                            <td><span class="text-muted" title="Revoked at {{config.revoked_at|e|date('Y-m-d H:i:s') }} ({{ date()|date('T') }})">{{ config.name|e }}</span></td>
                             <td class="text-right">
                                 <button class="btn btn-success" disabled="disabled">Download</button>
                                 <button class="btn btn-warning" disabled="disabled">Revoke</button>
