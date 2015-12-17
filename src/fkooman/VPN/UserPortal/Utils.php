@@ -2,6 +2,8 @@
 
 namespace fkooman\VPN\UserPortal;
 
+use fkooman\Http\Exception\BadRequestException;
+
 class Utils
 {
     public static function validateConfigName($configName)
