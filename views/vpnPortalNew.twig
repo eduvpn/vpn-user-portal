@@ -33,6 +33,20 @@
                   <span id="helpBlock" class="help-block">Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
                 </div>
               </div>
+
+              {% if advanced %}
+              <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-5">
+                  <div class="checkbox">
+                    <label>
+                      <input name="option_zip" type="checkbox"> ZIP
+                    </label>
+                    <span id="helpBlock" class="help-block">Download a ZIP file instead, containing separate certificate/key files.</span>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
               <div class="form-group">
                 <div class="col-sm-offset-1 col-sm-5">
                   <button type="submit" class="btn btn-primary">Download</button>

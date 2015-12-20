@@ -51,6 +51,7 @@ class VpnPortalService extends Service
                 return $this->templateManager->render(
                     'vpnPortalNew',
                     array(
+                        'advanced' => (bool) $request->getUrl()->getQueryParameter('advanced'),
                         'isBlocked' => $this->isBlocked($u->getUserId()),
                     )
                 );
@@ -61,8 +62,9 @@ class VpnPortalService extends Service
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
+                $optionZip = (bool) $request->getPostParameter('option_zip');
 
-                return $this->getConfig($u->getUserId(), $configName);
+                return $this->getConfig($u->getUserId(), $configName, $optionZip);
             }
         );
 
@@ -120,7 +122,7 @@ class VpnPortalService extends Service
         );
     }
 
-    public function getConfig($userId, $configName)
+    public function getConfig($userId, $configName, $returnZip = true)
     {
         $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
@@ -136,9 +138,18 @@ class VpnPortalService extends Service
         # get config from API
         $configData = $this->VpnConfigApiClient->addConfiguration($userId, $configName);
 
-        $response = new Response(200, 'application/x-openvpn-profile');
-        $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
-        $response->setBody($configData);
+        if ($returnZip) {
+            // return Zipped OpenVPN config file with separate certificates
+            $configData = Utils::configToZip($configName, $configData);
+            $response = new Response(200, 'application/zip');
+            $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
+            $response->setBody($configData);
+        } else {
+            // return OpenVPN config file
+            $response = new Response(200, 'application/x-openvpn-profile');
+            $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
+            $response->setBody($configData);
+        }
 
         return $response;
     }

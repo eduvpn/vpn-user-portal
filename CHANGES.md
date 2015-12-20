@@ -2,8 +2,9 @@
 
 ## 4.0.0 (...)
 - completely new UI design
-- get rid of ZIP support for now, may be back before final 4.0.0.
 - get rid of `READY` state, see [UPGRADING.md].
+- introduce advanced form download, disabled by default, only enabling ZIP 
+  download for now
 
 ## 3.0.2 (2015-12-17)
 - use bootstrap for UI
