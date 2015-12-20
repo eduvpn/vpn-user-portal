@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    <div class="container">
+        {% include 'header.twig' %}
+
+        {% if isBlocked %}
+
+            {% include 'blocked.twig' %}
+
+        {% else %} 
+
+            <ul class="nav nav-pills">
+              <li role="presentation"><a href="new">New</a></li>
+              <li role="presentation"><a href="active">Active</a></li>
+              <li role="presentation"><a href="revoked">Revoked</a></li>
+              <li role="presentation" class="active"><a href="documentation">Documentation</a></li>
+            </ul>
+
+            <h2>Documentation</h2>
+
+            <h3>Client</h3>
+
+            <p>Choose the application for your device or platform from the list below and install it.</p>
+
+            <ul>
+                <li>Google Android (<a href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a> or <a href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a>)</li>
+                <li>Apple iOS (<a href="https://itunes.apple.com/us/app/openvpn-connect/id590379981">OpenVPN Connect</a>)</li>
+                <li>Windows (<a href="https://openvpn.net/index.php/open-source/downloads.html">OpenVPN Community Download</a>)</li>
+                <li>OS X (<a href="https://code.google.com/p/tunnelblick/">tunnelblick</a>)</li>
+            </ul>
+
+            <h3>Configuration</h3>
+            <p>
+                Once downloaded and installed the application you can <em>import</em> a configuration. You can download a configuration <a href="new">here</a>.
+            </p>
+        {% endif %}
+
+        {% include 'footer.twig' %}
+    </div> <!-- /container -->
+</body>
+</html>

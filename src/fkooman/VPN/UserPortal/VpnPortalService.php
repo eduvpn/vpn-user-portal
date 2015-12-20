@@ -5,14 +5,11 @@ namespace fkooman\VPN\UserPortal;
 use fkooman\Http\Request;
 use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
-use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\Exception\ForbiddenException;
 use fkooman\Http\Exception\NotFoundException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Tpl\TemplateManagerInterface;
-use ZipArchive;
-use DomainException;
 
 class VpnPortalService extends Service
 {
@@ -33,6 +30,7 @@ class VpnPortalService extends Service
         $this->templateManager = $templateManager;
         $this->VpnConfigApiClient = $VpnConfigApiClient;
 
+        /* REDIRECTS **/
         $this->get(
             '/config/',
             function (Request $request) {
@@ -40,73 +38,85 @@ class VpnPortalService extends Service
             }
         );
 
-        /* GET */
         $this->get(
             '/',
-            function (UserInfoInterface $u) {
-                return $this->getConfigurations($u->getUserId());
+            function (Request $request, UserInfoInterface $u) {
+                return new RedirectResponse($request->getUrl()->getRootUrl().'new', 302);
             }
         );
 
-        /* GET */
         $this->get(
-            '/:configName',
-            function (UserInfoInterface $u, $configName) {
+            '/new',
+            function (Request $request, UserInfoInterface $u) {
+                return $this->templateManager->render(
+                    'vpnPortalNew',
+                    array(
+                        'isBlocked' => $this->isBlocked($u->getUserId()),
+                    )
+                );
+            }
+        );
+
+        $this->post(
+            '/new',
+            function (Request $request, UserInfoInterface $u) {
+                $configName = $request->getPostParameter('name');
+
                 return $this->getConfig($u->getUserId(), $configName);
             }
         );
 
-        /* GET */
         $this->get(
-            '/:configName/ovpn',
-            function (UserInfoInterface $u, $configName) {
-                return $this->getOvpnConfig($u->getUserId(), $configName);
-            }
-        );
-
-        /* GET */
-        $this->get(
-            '/:configName/zip',
-            function (UserInfoInterface $u, $configName) {
-                return $this->getZipConfig($u->getUserId(), $configName);
-            }
-        );
-
-        /* POST */
-        $this->post(
-            '/',
+            '/active',
             function (Request $request, UserInfoInterface $u) {
-                return $this->postConfig(
-                    $u->getUserId(),
-                    $request->getPostParameter('name'),
-                    $request->getUrl()->getRootUrl()
+                $vpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_ACTIVE);
+
+                return $this->templateManager->render(
+                    'vpnPortalActive',
+                    array(
+                        'vpnConfigurations' => $vpnConfigurations,
+                        'isBlocked' => $this->isBlocked($u->getUserId()),
+                    )
                 );
             }
         );
 
-        /* DELETE */
-        $this->delete(
-            '/:configName',
-            function (Request $request, UserInfoInterface $u, $configName) {
-                return $this->deleteConfig(
-                    $u->getUserId(),
-                    $configName,
-                    $request->getUrl()->getRootUrl()
+        $this->get(
+            '/revoked',
+            function (Request $request, UserInfoInterface $u) {
+                $vpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_REVOKED);
+
+                return $this->templateManager->render(
+                    'vpnPortalRevoked',
+                    array(
+                        'vpnConfigurations' => $vpnConfigurations,
+                        'isBlocked' => $this->isBlocked($u->getUserId()),
+                    )
                 );
             }
         );
-    }
 
-    public function getConfigurations($userId)
-    {
-        $vpnConfigurations = $this->db->getConfigurations($userId);
+        $this->post(
+            '/revoke',
+            function (Request $request, UserInfoInterface $u) {
+                $configName = $request->getPostParameter('name');
 
-        return $this->templateManager->render(
-            'vpnPortal',
-            array(
-                'vpnConfigurations' => $vpnConfigurations,
-                'isBlocked' => $this->isBlocked($userId),
-            )
+                $this->revokeConfig($u->getUserId(), $configName);
+
+                return new RedirectResponse($request->getUrl()->getRootUrl().'revoked', 302);
+            }
+        );
+
+        $this->get(
+            '/documentation',
+            function (Request $request, UserInfoInterface $u) {
+                return $this->templateManager->render(
+                    'vpnPortalDocumentation',
+                    array(
+                        'isBlocked' => $this->isBlocked($u->getUserId()),
+                    )
+                );
+            }
         );
     }
 
@@ -114,44 +124,18 @@ class VpnPortalService extends Service
     {
         $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
-        if (!$this->db->isExistingConfiguration($userId, $configName)) {
-            throw new NotFoundException('configuration not found');
-        }
-        $vpnConfig = $this->db->getConfiguration($userId, $configName);
-        if (PdoStorage::STATUS_READY != $vpnConfig['status']) {
-            throw new NotFoundException('configuration already downloaded');
+
+        # make sure config does not exist yet
+        if ($this->db->isExistingConfiguration($userId, $configName)) {
+            throw new NotFoundException('configuration already exists with this name');
         }
 
-        return $this->templateManager->render(
-            'vpnConfigDownload',
-            array(
-                'configName' => $configName,
-            )
-        );
-    }
+        # add configuration
+        $this->db->addConfiguration($userId, $configName);
 
-    private function getConfigData($userId, $configName)
-    {
-        Utils::validateConfigName($configName);
-        if (!$this->db->isExistingConfiguration($userId, $configName)) {
-            throw new NotFoundException('configuration not found');
-        }
+        # get config from API
+        $configData = $this->VpnConfigApiClient->addConfiguration($userId, $configName);
 
-        $vpnConfig = $this->db->getConfiguration($userId, $configName);
-        if (PdoStorage::STATUS_READY != $vpnConfig['status']) {
-            throw new NotFoundException('configuration already downloaded');
-        }
-
-        $this->db->activateConfiguration($userId, $configName);
-
-        // make call to vpn-config-api to retrieve the configuration
-        return $this->VpnConfigApiClient->addConfiguration($userId, $configName);
-    }
-
-    public function getOvpnConfig($userId, $configName)
-    {
-        $this->requireNotBlocked($userId);
-        $configData = $this->getConfigData($userId, $configName);
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
         $response->setBody($configData);
@@ -159,81 +143,16 @@ class VpnPortalService extends Service
         return $response;
     }
 
-    public function getZipConfig($userId, $configName)
-    {
-        $this->requireNotBlocked($userId);
-        $configData = $this->getConfigData($userId, $configName);
-        $inlineTypeFileName = array(
-            'ca' => sprintf('%s_ca.crt', $configName),
-            'cert' => sprintf('%s_client.crt', $configName),
-            'key' => sprintf('%s_client.key', $configName),
-            'tls-auth' => sprintf('%s_ta.key', $configName),
-        );
-
-        $zipName = tempnam(sys_get_temp_dir(), 'vup_');
-        $z = new ZipArchive();
-        $z->open($zipName, ZipArchive::CREATE);
-
-        foreach (array('cert', 'ca', 'key', 'tls-auth') as $inlineType) {
-            $pattern = sprintf('/\<%s\>(.*)\<\/%s\>/msU', $inlineType, $inlineType);
-            if (1 !== preg_match($pattern, $configData, $matches)) {
-                throw new DomainException('inline type not found');
-            }
-            $configData = preg_replace(
-                $pattern,
-                sprintf(
-                    '%s %s',
-                    $inlineType,
-                    $inlineTypeFileName[$inlineType]
-                ),
-                $configData
-            );
-            $z->addFromString($inlineTypeFileName[$inlineType], trim($matches[1]));
-        }
-        // remove "key-direction X" and add it to tls-auth line as last
-        // parameter (hack to make NetworkManager import work)
-        $configData = str_replace(
-            array(
-                'key-direction 1',
-                sprintf('tls-auth %s_ta.key', $configName),
-            ),
-            array(
-                '',
-                sprintf('tls-auth %s_ta.key 1', $configName),
-            ),
-            $configData
-        );
-
-        $z->addFromString(sprintf('%s.ovpn', $configName), $configData);
-        $z->close();
-
-        $response = new Response(200, 'application/zip');
-        $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
-        $response->setBody(file_get_contents($zipName));
-
-        unlink($zipName);
-
-        return $response;
-    }
-
-    public function postConfig($userId, $configName, $returnUri)
+    public function revokeConfig($userId, $configName)
     {
         $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
-        if ($this->db->isExistingConfiguration($userId, $configName)) {
-            throw new BadRequestException('configuration with this name already exists for this user');
+
+        # make sure config does exists
+        if (!$this->db->isExistingConfiguration($userId, $configName)) {
+            throw new NotFoundException('configuration with this name does not exist');
         }
-        $this->db->addConfiguration($userId, $configName);
 
-        return new RedirectResponse(
-            sprintf('%s/%s', $returnUri, $configName)
-        );
-    }
-
-    public function deleteConfig($userId, $configName, $returnUri)
-    {
-        $this->requireNotBlocked($userId);
-        Utils::validateConfigName($configName);
         $this->VpnConfigApiClient->revokeConfiguration($userId, $configName);
         $this->db->revokeConfiguration($userId, $configName);
 

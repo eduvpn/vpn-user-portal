@@ -13,9 +13,6 @@ class PdoStorage
     /** @var string */
     private $prefix;
 
-    /** ready for download */
-    const STATUS_READY = 10;
-
     /** already downloaded */
     const STATUS_ACTIVE = 20;
 
@@ -115,7 +112,7 @@ class PdoStorage
         // get all active configuratoins
         $stmt = $this->db->prepare(
             sprintf(
-                'SELECT user_id, name, status, created_at, revoked_at FROM %s WHERE status != 30 ORDER BY user_id',
+                'SELECT user_id, name, status, created_at, revoked_at FROM %s WHERE status != 30 ORDER BY user_id, created_at DESC',
                 $this->prefix.'config'
             )
         );
@@ -129,15 +126,16 @@ class PdoStorage
         return;
     }
 
-    public function getConfigurations($userId)
+    public function getConfigurations($userId, $status = self::STATUS_ACTIVE)
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'SELECT name, status, created_at, revoked_at FROM %s WHERE user_id = :user_id ORDER BY status, created_at DESC',
+                'SELECT name, status, created_at, revoked_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY created_at DESC, revoked_at DESC',
                 $this->prefix.'config'
             )
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':status', $status, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // FIXME: returns empty array when no configurations or still false?
@@ -146,39 +144,6 @@ class PdoStorage
         }
 
         return;
-    }
-
-    public function getConfiguration($userId, $name)
-    {
-        $stmt = $this->db->prepare(
-            sprintf(
-                'SELECT name, status, created_at, revoked_at FROM %s WHERE user_id = :user_id AND name = :name',
-                $this->prefix.'config'
-            )
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function activateConfiguration($userId, $name)
-    {
-        $stmt = $this->db->prepare(
-            sprintf(
-                'UPDATE %s SET status = :status WHERE user_id = :user_id AND name = :name',
-                $this->prefix.'config'
-            )
-        );
-        $stmt->bindValue(':status', self::STATUS_ACTIVE, PDO::PARAM_INT);
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-        $stmt->execute();
-
-        if (1 !== $stmt->rowCount()) {
-            throw new RuntimeException('unable to activate configuration');
-        }
     }
 
     public function isExistingConfiguration($userId, $name)
@@ -207,7 +172,7 @@ class PdoStorage
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-        $stmt->bindValue(':status', self::STATUS_READY, PDO::PARAM_INT);
+        $stmt->bindValue(':status', self::STATUS_ACTIVE, PDO::PARAM_INT);
         $stmt->bindValue(':created_at', time(), PDO::PARAM_INT);
         $stmt->execute();
 

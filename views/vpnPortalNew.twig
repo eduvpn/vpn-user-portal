@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    <div class="container">
+        {% include 'header.twig' %}
+
+        {% if isBlocked %}
+
+            {% include 'blocked.twig' %}
+
+        {% else %} 
+
+            <ul class="nav nav-pills">
+              <li role="presentation" class="active"><a href="new">New</a></li>
+              <li role="presentation"><a href="active">Active</a></li>
+              <li role="presentation"><a href="revoked">Revoked</a></li>
+              <li role="presentation"><a href="documentation">Documentation</a></li>
+            </ul>
+
+            <h2>New</h2>
+            <p>
+                Here you can create a new configuration for your VPN client. Enter a name, e.g. <em>Phone</em>, in the box below and click
+              <em>Download</em>. See <a href="documentation">documentation</a> for more information.
+            </p>
+
+            <form class="form-horizontal" method="post">
+              <div class="form-group">
+                <label for="inputName" class="col-sm-1 control-label">Name</label>
+                <div class="col-sm-5">
+                  <input type="text" name="name" class="form-control" id="inputName" placeholder="Name" required pattern="[a-zA-Z0-9-_.@]+">
+                  <span id="helpBlock" class="help-block">Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-5">
+                  <button type="submit" class="btn btn-primary">Download</button>
+                </div>
+              </div>
+            </form>
+
+        {% endif %}
+
+        {% include 'footer.twig' %}
+    </div> <!-- /container -->
+</body>
+</html>

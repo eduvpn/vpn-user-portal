@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    <div class="container">
+        {% include 'header.twig' %}
+
+        {% if isBlocked %}
+
+            {% include 'blocked.twig' %}
+
+        {% else %} 
+
+            <ul class="nav nav-pills">
+              <li role="presentation"><a href="new">New</a></li>
+              <li role="presentation" class="active"><a href="active">Active</a></li>
+              <li role="presentation"><a href="revoked">Revoked</a></li>
+              <li role="presentation"><a href="documentation">Documentation</a></li>
+            </ul>
+
+            <h2>Active</h2>
+                <p>
+                    This page lists your active VPN configurations. You can <em>revoke</em> them here if you no longer use it, or lost your device.
+                </p>
+
+                {% if vpnConfigurations is empty %}
+
+                    <div class="alert alert-info" role="alert">
+                        You currently have no active configurations. You can create one <a href="new">here</a>.
+                    </div>                    
+            
+                {% else %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th></th></tr>
+                        </head>
+                        <tbody>
+                            {% for config in vpnConfigurations %}
+                                <tr>
+                                    <td>{{ config.name|e }}</td>
+                                    <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
+                                    <td class="text-right">
+                                        <form class="form-inline" method="post" action="revoke">
+                                            <input type="hidden" name="name" value="{{ config.name|e }}">
+                                            <button class="btn btn-warning" type="submit">Revoke</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+        {% endif %}
+
+        {% include 'footer.twig' %}
+    </div> <!-- /container -->
+</body>
+</html>
