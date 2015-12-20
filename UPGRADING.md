@@ -1,5 +1,23 @@
 # Upgrading
 
+## 3.x.x to 4.x.x
+The database changed!
+
+The state `READY` is no longer supported in the database, so all configurations
+in this state should be removed. The ready state means that configurations were
+'created' in the user portal, but not yet downloaded and activated in the 
+CA. This does not make sense, and thus we got rid of that state. If 
+configurations where is this state, the user can simply create a new one with
+the same name.
+
+Connect to the database:
+
+    $ sudo -u apache sqlite3 /var/lib/vpn-user-portal/configurations.sqlite
+
+Perform the following query:
+
+    DELETE FROM config WHERE state = 10;
+
 ## 2.x.x to 3.x.x
 The database changed!
 

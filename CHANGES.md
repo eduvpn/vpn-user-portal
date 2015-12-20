@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.0 (...)
+- completely new UI design
+- get rid of ZIP support for now, may be back before final 4.0.0.
+- get rid of `READY` state, see [UPGRADING.md].
+
 ## 3.0.2 (2015-12-17)
 - use bootstrap for UI
 
@@ -9,13 +14,13 @@
 ## 3.0.0 (2015-12-15)
 - no longer store the retrieved configuration in the database, but immediately 
   send it to the client (removed the `config` column from DB, see 
-  `UPGRADING.md`)
+  [UPGRADING.md])
 - rename the files in the ZIP to allow for better sorting in directory listings
 - store the configuration creation/revocation time (add column `created_at` and
-  `revoked_at` to DB, see `UPGRADING.md`)
+  `revoked_at` to DB, see [UPGRADING.md])
 - sort display by status, creation time (no longer alphabetic)
 - **NOTE**: all configurations that were created, but not yet downloaded will 
-  be unavailable and marked as revoked, see `UPGRADING.md`
+  be unavailable and marked as revoked, see [UPGRADING.md]
 
 ## 2.0.1 (2015-12-15)
 - when creating a new configuration, immediately redirect to download
