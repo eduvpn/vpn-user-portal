@@ -4,20 +4,25 @@
 {% include 'head.twig' %}
 <body>
     <div class="container">
-        {% include 'header.twig' %}
+        <div class="header clearfix">
+
+            {% include 'header.twig' %}
+
+            {% if not isBlocked %}
+                <ul class="nav nav-pills">
+                  <li role="presentation"><a href="new">New</a></li>
+                  <li role="presentation"><a href="active">Active</a></li>
+                  <li role="presentation"><a href="revoked">Revoked</a></li>
+                  <li role="presentation" class="active"><a href="documentation">Documentation</a></li>
+                </ul>
+            {% endif %}
+        </div>
 
         {% if isBlocked %}
 
             {% include 'blocked.twig' %}
 
         {% else %} 
-
-            <ul class="nav nav-pills">
-              <li role="presentation"><a href="new">New</a></li>
-              <li role="presentation"><a href="active">Active</a></li>
-              <li role="presentation"><a href="revoked">Revoked</a></li>
-              <li role="presentation" class="active"><a href="documentation">Documentation</a></li>
-            </ul>
 
             <h2>Documentation</h2>
 

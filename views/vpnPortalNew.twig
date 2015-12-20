@@ -4,21 +4,25 @@
 {% include 'head.twig' %}
 <body>
     <div class="container">
-        {% include 'header.twig' %}
+        <div class="header clearfix">
+
+            {% include 'header.twig' %}
+
+            {% if not isBlocked %}
+                <ul class="nav nav-pills">
+                  <li role="presentation" class="active"><a href="new">New</a></li>
+                  <li role="presentation"><a href="active">Active</a></li>
+                  <li role="presentation"><a href="revoked">Revoked</a></li>
+                  <li role="presentation"><a href="documentation">Documentation</a></li>
+                </ul>
+            {% endif %}
+        </div>
 
         {% if isBlocked %}
 
             {% include 'blocked.twig' %}
 
         {% else %} 
-
-            <ul class="nav nav-pills">
-              <li role="presentation" class="active"><a href="new">New</a></li>
-              <li role="presentation"><a href="active">Active</a></li>
-              <li role="presentation"><a href="revoked">Revoked</a></li>
-              <li role="presentation"><a href="documentation">Documentation</a></li>
-            </ul>
-
             <h2>New</h2>
             <p>
                 Here you can create a new configuration for your VPN client. Enter a name, e.g. <em>Phone</em>, in the box below and click
