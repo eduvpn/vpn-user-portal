@@ -31,10 +31,10 @@
                     </div>                    
             
                 {% else %}
-                    <table class="table table-striped">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th></th></tr>
-                        </head>
+                        </thead>
                         <tbody>
                             {% for config in vpnConfigurations %}
                                 <tr>

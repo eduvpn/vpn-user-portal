@@ -166,8 +166,6 @@ class VpnPortalService extends Service
 
         $this->VpnConfigApiClient->revokeConfiguration($userId, $configName);
         $this->db->revokeConfiguration($userId, $configName);
-
-        return new RedirectResponse($returnUri);
     }
 
     public function run(Request $request = null)
