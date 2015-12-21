@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.0.0 (...)
+## 4.0.0 (2015-12-21)
 - completely new UI design
 - get rid of `READY` state, see [UPGRADING.md].
 - introduce advanced form download, disabled by default, only enabling ZIP 
