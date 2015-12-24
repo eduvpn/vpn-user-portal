@@ -13,7 +13,7 @@ use fkooman\Tpl\Twig\TwigTemplateManager;
 use GuzzleHttp\Client;
 use fkooman\Http\Request;
 use fkooman\Http\Exception\InternalServerErrorException;
-use fkooman\VPN\Config\SimpleError;
+use fkooman\VPN\UserPortal\SimpleError;
 
 SimpleError::register();
 

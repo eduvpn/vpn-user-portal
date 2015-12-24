@@ -13,7 +13,7 @@ use fkooman\Rest\Service;
 use fkooman\VPN\UserPortal\Utils;
 use fkooman\Http\JsonResponse;
 use fkooman\Http\Exception\InternalServerErrorException;
-use fkooman\VPN\Config\SimpleError;
+use fkooman\VPN\UserPortal\SimpleError;
 
 SimpleError::register();
 
