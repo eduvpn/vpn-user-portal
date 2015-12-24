@@ -13,8 +13,9 @@ use fkooman\Rest\Service;
 use fkooman\VPN\UserPortal\Utils;
 use fkooman\Http\JsonResponse;
 use fkooman\Http\Exception\InternalServerErrorException;
+use fkooman\VPN\Config\SimpleError;
 
-set_error_handler(array('fkooman\Rest\Service', 'handleErrors'));
+SimpleError::register();
 
 try {
     $iniReader = IniReader::fromFile(

@@ -13,8 +13,9 @@ use fkooman\Tpl\Twig\TwigTemplateManager;
 use GuzzleHttp\Client;
 use fkooman\Http\Request;
 use fkooman\Http\Exception\InternalServerErrorException;
+use fkooman\VPN\Config\SimpleError;
 
-set_error_handler(array('fkooman\Rest\Service', 'handleErrors'));
+SimpleError::register();
 
 try {
     $iniReader = IniReader::fromFile(
