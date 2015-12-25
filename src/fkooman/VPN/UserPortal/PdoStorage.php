@@ -130,7 +130,7 @@ class PdoStorage
     {
         $stmt = $this->db->prepare(
             sprintf(
-                'SELECT name, status, created_at, revoked_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY created_at DESC, revoked_at DESC',
+                'SELECT user_id, name, status, created_at, revoked_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY created_at DESC, revoked_at DESC',
                 $this->prefix.'config'
             )
         );
