@@ -80,9 +80,15 @@ try {
     $service->get(
         '/configurations',
         function (Request $request) use ($db) {
-            $allConfigurations = $db->getAllConfigurations();
+            // XXX: validate filterByUser
+            $filterByUser = $request->getUrl()->getQueryParameter('filterByUser');
+            if (is_null($filterByUser)) {
+                $vpnConfigurations = $db->getAllConfigurations();
+            } else {
+                $vpnConfigurations = $db->getConfigurations($filterByUser);
+            }
             $response = new JsonResponse();
-            $response->setBody($allConfigurations);
+            $response->setBody($vpnConfigurations);
 
             return $response;
         }
