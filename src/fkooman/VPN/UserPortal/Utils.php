@@ -35,35 +35,32 @@ class Utils
         $zipName = tempnam(sys_get_temp_dir(), 'vup_');
         $z = new ZipArchive();
         $z->open($zipName, ZipArchive::CREATE);
+
         foreach (array('cert', 'ca', 'key', 'tls-auth') as $inlineType) {
+
+            // replace the inline rules with actual file names
+            $configData = str_replace(
+                sprintf('%s [inline]', $inlineType),
+                sprintf('%s %s', $inlineType, $inlineTypeFileName[$inlineType]),
+                $configData
+            );
+
+            // remove the inline blocks
             $pattern = sprintf('/\<%s\>(.*)\<\/%s\>/msU', $inlineType, $inlineType);
             if (1 !== preg_match($pattern, $configData, $matches)) {
                 throw new DomainException('inline type not found');
             }
             $configData = preg_replace(
                 $pattern,
-                sprintf(
-                    '%s %s',
-                    $inlineType,
-                    $inlineTypeFileName[$inlineType]
-                ),
+                '',
                 $configData
             );
+
+            // add the file to the zip
             $z->addFromString($inlineTypeFileName[$inlineType], trim($matches[1]));
         }
-        // remove "key-direction X" and add it to tls-auth line as last
-        // parameter (hack to make NetworkManager import work)
-        $configData = str_replace(
-            array(
-                'key-direction 1',
-                sprintf('tls-auth %s_ta.key', $configName),
-            ),
-            array(
-                '',
-                sprintf('tls-auth %s_ta.key 1', $configName),
-            ),
-            $configData
-        );
+
+        // add the ovpn config to the ZIP
         $z->addFromString(sprintf('%s.ovpn', $configName), $configData);
         $z->close();
         $zipData = file_get_contents($zipName);
