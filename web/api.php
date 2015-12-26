@@ -33,7 +33,7 @@ try {
     $db = new PdoStorage($pdo);
 
     $apiAuth = new BasicAuthentication(
-        function ($userId) use ($iniReader) {
+        function ($userId) use ($reader) {
             $userList = $reader->v('ApiAuthentication');
             if (!array_key_exists($userId, $userList)) {
                 return false;
