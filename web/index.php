@@ -89,7 +89,7 @@ try {
     // VPN Server API Configuration
     $serviceUri = $reader->v('VpnServerApi', 'serviceUri');
     $client = new Client();
-    $vpnServerApiClient = new VpnServerApiClient($client, $serviceUrl);
+    $vpnServerApiClient = new VpnServerApiClient($client, $serviceUri);
 
     $service = new VpnPortalService(
         $pdoStorage,
