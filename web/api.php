@@ -2,7 +2,6 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-use fkooman\Ini\IniReader;
 use fkooman\VPN\UserPortal\PdoStorage;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
@@ -14,18 +13,20 @@ use fkooman\VPN\UserPortal\Utils;
 use fkooman\Http\JsonResponse;
 use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\VPN\UserPortal\SimpleError;
+use fkooman\Config\Reader;
+use fkooman\Config\YamlFile;
 
 SimpleError::register();
 
 try {
-    $iniReader = IniReader::fromFile(
-        dirname(__DIR__).'/config/config.ini'
+    $reader = new Reader(
+        new YamlFile(dirname(__DIR__).'/config/config.yaml')
     );
 
     $pdo = new PDO(
-        $iniReader->v('PdoStorage', 'dsn'),
-        $iniReader->v('PdoStorage', 'username', false),
-        $iniReader->v('PdoStorage', 'password', false)
+        $reader->v('PdoStorage', 'dsn'),
+        $reader->v('PdoStorage', 'username', false),
+        $reader->v('PdoStorage', 'password', false)
     );
 
     // Database
@@ -33,7 +34,7 @@ try {
 
     $apiAuth = new BasicAuthentication(
         function ($userId) use ($iniReader) {
-            $userList = $iniReader->v('ApiAuthentication');
+            $userList = $reader->v('ApiAuthentication');
             if (!array_key_exists($userId, $userList)) {
                 return false;
             }
@@ -44,9 +45,9 @@ try {
     );
 
     // VPN Config API Configuration
-    $serviceUri = $iniReader->v('VpnConfigApi', 'serviceUri');
-    $serviceAuth = $iniReader->v('VpnConfigApi', 'serviceUser');
-    $servicePass = $iniReader->v('VpnConfigApi', 'servicePass');
+    $serviceUri = $reader->v('VpnConfigApi', 'serviceUri');
+    $serviceAuth = $reader->v('VpnConfigApi', 'serviceUser');
+    $servicePass = $reader->v('VpnConfigApi', 'servicePass');
 
     $client = new Client(
         array(

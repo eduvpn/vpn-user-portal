@@ -1,0 +1,22 @@
+authMethod: BasicAuthentication
+#authMethod: MellonAuthentication
+
+BasicAuthentication:
+    foo: $2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq
+
+MellonAuthentication:
+    attribute: MELLON_NAME_ID
+    #attribute: MELLON_eduPersonTargetedID
+
+ApiAuthentication:
+    admin: $2y$10$QAmpESWTDujaLOlZ/FUwBO6EnmP797QPmz8bYRf9UCRyVmI494Vd2
+
+VpnConfigApi:
+    serviceUri: 'http://localhost/vpn-config-api/api.php'
+    serviceUser: admin
+    servicePass: s3cr3t
+
+PdoStorage:
+    dsn: 'sqlite:/var/lib/vpn-user-portal/configurations.sqlite'
+    #username: foo
+    #password: bar

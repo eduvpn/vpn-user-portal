@@ -2,7 +2,6 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-use fkooman\Ini\IniReader;
 use fkooman\VPN\UserPortal\PdoStorage;
 use fkooman\VPN\UserPortal\VpnPortalService;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
@@ -14,35 +13,37 @@ use GuzzleHttp\Client;
 use fkooman\Http\Request;
 use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\VPN\UserPortal\SimpleError;
+use fkooman\Config\Reader;
+use fkooman\Config\YamlFile;
 
 SimpleError::register();
 
 try {
-    $iniReader = IniReader::fromFile(
-        dirname(__DIR__).'/config/config.ini'
+    $reader = new Reader(
+        new YamlFile(dirname(__DIR__).'/config/config.yaml')
     );
 
     $pdo = new PDO(
-        $iniReader->v('PdoStorage', 'dsn'),
-        $iniReader->v('PdoStorage', 'username', false),
-        $iniReader->v('PdoStorage', 'password', false)
+        $reader->v('PdoStorage', 'dsn'),
+        $reader->v('PdoStorage', 'username', false),
+        $reader->v('PdoStorage', 'password', false)
     );
 
     // Database
     $pdoStorage = new PdoStorage($pdo);
 
     // Authentication
-    $authMethod = $iniReader->v('authMethod');
+    $authMethod = $reader->v('authMethod');
     switch ($authMethod) {
         case 'MellonAuthentication':
             $auth = new MellonAuthentication(
-                $iniReader->v('MellonAuthentication', 'attribute')
+                $reader->v('MellonAuthentication', 'attribute')
             );
             break;
         case 'BasicAuthentication':
             $auth = new BasicAuthentication(
                 function ($userId) use ($iniReader) {
-                    $userList = $iniReader->v('BasicAuthentication');
+                    $userList = $reader->v('BasicAuthentication');
                     if (!array_key_exists($userId, $userList)) {
                         return false;
                     }
@@ -57,9 +58,9 @@ try {
     }
 
     // VPN Config API Configuration
-    $serviceUri = $iniReader->v('VpnConfigApi', 'serviceUri');
-    $serviceAuth = $iniReader->v('VpnConfigApi', 'serviceUser');
-    $servicePass = $iniReader->v('VpnConfigApi', 'servicePass');
+    $serviceUri = $reader->v('VpnConfigApi', 'serviceUri');
+    $serviceAuth = $reader->v('VpnConfigApi', 'serviceUser');
+    $servicePass = $reader->v('VpnConfigApi', 'servicePass');
 
     $client = new Client(
         array(
@@ -76,7 +77,7 @@ try {
             dirname(__DIR__).'/views',
             dirname(__DIR__).'/config/views',
         ),
-        $iniReader->v('templateCache', false, null)
+        $reader->v('templateCache', false, null)
     );
     $templateManager->setDefault(
         array(
