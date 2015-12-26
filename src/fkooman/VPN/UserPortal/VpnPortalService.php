@@ -21,15 +21,16 @@ class VpnPortalService extends Service
     private $templateManager;
 
     /** @var VpnConfigApiClient */
-    private $VpnConfigApiClient;
+    private $vpnConfigApiClient;
 
-    public function __construct(PdoStorage $db, TemplateManagerInterface $templateManager, VpnConfigApiClient $VpnConfigApiClient)
+    public function __construct(PdoStorage $db, TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
     {
         parent::__construct();
 
         $this->db = $db;
         $this->templateManager = $templateManager;
-        $this->VpnConfigApiClient = $VpnConfigApiClient;
+        $this->vpnConfigApiClient = $vpnConfigApiClient;
+        $this->vpnServerApiClient = $vpnServerApiClient;
 
         /* REDIRECTS **/
         $this->get(
@@ -137,7 +138,7 @@ class VpnPortalService extends Service
         $this->db->addConfiguration($userId, $configName);
 
         # get config from API
-        $configData = $this->VpnConfigApiClient->addConfiguration($userId, $configName);
+        $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
 
         if ($returnZip) {
             // return Zipped OpenVPN config file with separate certificates
@@ -165,8 +166,11 @@ class VpnPortalService extends Service
             throw new NotFoundException('configuration with this name does not exist');
         }
 
-        $this->VpnConfigApiClient->revokeConfiguration($userId, $configName);
+        $this->vpnConfigApiClient->revokeConfiguration($userId, $configName);
         $this->db->revokeConfiguration($userId, $configName);
+
+        // trigger a CRL reload in the servers
+        $this->vpnServerApiClient->postRefreshCrl();
     }
 
     public function run(Request $request = null)

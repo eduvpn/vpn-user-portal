@@ -16,6 +16,9 @@ VpnConfigApi:
     serviceUser: admin
     servicePass: s3cr3t
 
+VpnServerApi:
+    serviceUri: 'http://localhost/vpn-server-api/api.php'
+
 PdoStorage:
     dsn: 'sqlite:/var/lib/vpn-user-portal/configurations.sqlite'
     #username: foo

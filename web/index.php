@@ -5,6 +5,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 use fkooman\VPN\UserPortal\PdoStorage;
 use fkooman\VPN\UserPortal\VpnPortalService;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
+use fkooman\VPN\UserPortal\VpnServerApiClient;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
 use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
@@ -57,19 +58,6 @@ try {
             throw new RuntimeException('unsupported authentication mechanism');
     }
 
-    // VPN Config API Configuration
-    $serviceUri = $reader->v('VpnConfigApi', 'serviceUri');
-    $serviceAuth = $reader->v('VpnConfigApi', 'serviceUser');
-    $servicePass = $reader->v('VpnConfigApi', 'servicePass');
-
-    $client = new Client(
-        array(
-            'defaults' => array(
-                'auth' => array($serviceAuth, $servicePass),
-            ),
-        )
-    );
-
     $request = new Request($_SERVER);
 
     $templateManager = new TwigTemplateManager(
@@ -85,12 +73,29 @@ try {
         )
     );
 
-    $VpnConfigApiClient = new VpnConfigApiClient($client, $serviceUri);
+    // VPN Config API Configuration
+    $serviceUri = $reader->v('VpnConfigApi', 'serviceUri');
+    $serviceAuth = $reader->v('VpnConfigApi', 'serviceUser');
+    $servicePass = $reader->v('VpnConfigApi', 'servicePass');
+    $client = new Client(
+        array(
+            'defaults' => array(
+                'auth' => array($serviceAuth, $servicePass),
+            ),
+        )
+    );
+    $vpnConfigApiClient = new VpnConfigApiClient($client, $serviceUri);
+
+    // VPN Server API Configuration
+    $serviceUri = $reader->v('VpnServerApi', 'serviceUri');
+    $client = new Client();
+    $vpnServerApiClient = new VpnServerApiClient($client, $serviceUrl);
 
     $service = new VpnPortalService(
         $pdoStorage,
         $templateManager,
-        $VpnConfigApiClient
+        $vpnConfigApiClient,
+        $vpnServerApiClient
     );
 
     $authenticationPlugin = new AuthenticationPlugin();
