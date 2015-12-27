@@ -26,14 +26,14 @@
 
             <h2>Revoked</h2>
                 <p>
-                    This page lists your revoked VPN configurations for archival purposes. You can revoke configurations <a href="active">here</a>.
+                    This page lists your revoked VPN configurations for archival purposes. You can revoke configurations <a href="active">here</a>. Revocation can <em>NOT</em> be undone.
                 </p>
 
                 {% if vpnConfigurations is empty %}
 
-                    <div class="alert alert-info" role="alert">
-                        You currently have no revoked configurations. You can revoke configurations <a href="active">here</a>.
-                    </div>                    
+                    <p class="well">
+                        You currently have no revoked configurations.
+                    </p>                    
             
                 {% else %}
                     <table class="table table-striped">

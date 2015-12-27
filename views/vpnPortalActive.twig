@@ -27,28 +27,28 @@
             <h2>Active</h2>
                 <p>
                     This page lists your active VPN configurations. You can 
-                    <em>revoke</em> them here if you no longer use it, or lost 
-                    your device. The <em>blocked</em> column indicates whether 
-                    your configuration is blocked by an administrator.
+                    <em>revoke</em> them if you no longer use them. You can
+                    also see if your configuration is currently disabled by
+                    an administrator.
                 </p>
 
                 {% if vpnConfigurations is empty %}
 
-                    <div class="alert alert-info" role="alert">
-                        You currently have no active configurations. You can create one <a href="new">here</a>.
-                    </div>                    
+                    <p class="well">
+                        You currently have no active configurations &#x1f61e; You can create a configuration <a href="new">here</a>.
+                    </p>                    
             
                 {% else %}
                     <table class="table table-striped">
                         <thead>
-                            <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th>Blocked</th><th></th></tr>
+                            <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th>Disabled</th><th></th></tr>
                         </thead>
                         <tbody>
                             {% for config in vpnConfigurations %}
                                 <tr>
                                     <td>{{ config.name|e }}</td>
                                     <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
-                                    <td>N/A</td>
+                                    <td>{% if config.disabled %}<strong class="text-danger">Yes</span>{% else %}<strong class="text-success">No</span>{% endif %}</td>
                                     <td class="text-right">
                                         <form class="form-inline" method="post" action="revoke">
                                             <input type="hidden" name="name" value="{{ config.name|e }}">

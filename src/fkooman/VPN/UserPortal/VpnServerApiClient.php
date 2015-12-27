@@ -74,9 +74,12 @@ class VpnServerApiClient
         )->getBody();
     }
 
-    public function getDisabledCommonNames()
+    public function getDisabledCommonNames($userId = null)
     {
         $requestUri = sprintf('%s/disabledCommonNames', $this->vpnServerApiUri);
+        if (!is_null($userId)) {
+            $requestUri = sprintf('%s/disabledCommonNames?filterByUser=%s', $this->vpnServerApiUri, $userId);
+        }
 
         return $this->client->get($requestUri)->json();
     }
