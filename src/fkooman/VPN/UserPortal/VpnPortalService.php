@@ -122,6 +122,16 @@ class VpnPortalService extends Service
         );
 
         $this->get(
+            '/whoami',
+            function (Request $request, UserInfoInterface $u) {
+                $response = new Response(200, 'text/plain');
+                $response->setBody($u->getUserId());
+
+                return $response;
+            }
+        );
+
+        $this->get(
             '/documentation',
             function (Request $request, UserInfoInterface $u) {
                 return $this->templateManager->render(
