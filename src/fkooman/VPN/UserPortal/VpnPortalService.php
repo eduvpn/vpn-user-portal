@@ -74,11 +74,11 @@ class VpnPortalService extends Service
             '/active',
             function (Request $request, UserInfoInterface $u) {
                 $vpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_ACTIVE);
-                $disabledCommonNames = $this->vpnServerApiClient->getDisabledCommonNames($u->getUserId());
+                $disabledCommonNames = $this->vpnServerApiClient->getCcdDisable($u->getUserId());
 
                 foreach ($vpnConfigurations as $key => $vpnConfiguration) {
                     $commonName = sprintf('%s_%s', $vpnConfiguration['user_id'], $vpnConfiguration['name']);
-                    if (in_array($commonName, $disabledCommonNames['items'])) {
+                    if (in_array($commonName, $disabledCommonNames['disabled'])) {
                         $vpnConfigurations[$key]['disabled'] = true;
                     } else {
                         $vpnConfigurations[$key]['disabled'] = false;

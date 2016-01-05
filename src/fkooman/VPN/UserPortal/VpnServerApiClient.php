@@ -32,23 +32,30 @@ class VpnServerApiClient
         $this->vpnServerApiUri = $vpnServerApiUri;
     }
 
-    public function getConnections()
+    public function getStatus()
     {
-        $requestUri = sprintf('%s/connections', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/status', $this->vpnServerApiUri);
 
         return $this->client->get($requestUri)->json();
     }
 
-    public function getServers()
+    public function getLoadStats()
     {
-        $requestUri = sprintf('%s/servers', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/load-stats', $this->vpnServerApiUri);
 
         return $this->client->get($requestUri)->json();
     }
 
-    public function disableCommonName($commonName)
+    public function getVersion()
     {
-        $requestUri = sprintf('%s/disableCommonName', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/version', $this->vpnServerApiUri);
+
+        return $this->client->get($requestUri)->json();
+    }
+
+    public function postCcdDisable($commonName)
+    {
+        $requestUri = sprintf('%s/ccd/disable', $this->vpnServerApiUri);
 
         return $this->client->post(
             $requestUri,
@@ -57,34 +64,27 @@ class VpnServerApiClient
                     'common_name' => $commonName,
                 ),
             )
-        )->getBody();
+        )->json();
     }
 
-    public function enableCommonName($commonName)
+    public function deleteCcdDisable($commonName)
     {
-        $requestUri = sprintf('%s/enableCommonName', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/ccd/disable?common_name=%s', $this->vpnServerApiUri, $commonName);
 
-        return $this->client->post(
-            $requestUri,
-            array(
-                'body' => array(
-                    'common_name' => $commonName,
-                ),
-            )
-        )->getBody();
+        return $this->client->delete($requestUri)->json();
     }
 
-    public function getDisabledCommonNames($userId = null)
+    public function getCcdDisable($userId = null)
     {
-        $requestUri = sprintf('%s/disabledCommonNames', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/ccd/disable', $this->vpnServerApiUri);
         if (!is_null($userId)) {
-            $requestUri = sprintf('%s/disabledCommonNames?filterByUser=%s', $this->vpnServerApiUri, $userId);
+            $requestUri = sprintf('%s/ccd/disable?user_id=%s', $this->vpnServerApiUri, $userId);
         }
 
         return $this->client->get($requestUri)->json();
     }
 
-    public function postKillClient($id, $commonName)
+    public function postKill($commonName)
     {
         $requestUri = sprintf('%s/kill', $this->vpnServerApiUri);
 
@@ -92,17 +92,16 @@ class VpnServerApiClient
             $requestUri,
             array(
                 'body' => array(
-                    'id' => $id,
                     'common_name' => $commonName,
                 ),
             )
-        )->getBody();
+        )->json();
     }
 
-    public function postRefreshCrl()
+    public function postCrlFetch()
     {
-        $requestUri = sprintf('%s/refreshCrl', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/crl/fetch', $this->vpnServerApiUri);
 
-        return $this->client->post($requestUri)->getBody();
+        return $this->client->post($requestUri)->json();
     }
 }
