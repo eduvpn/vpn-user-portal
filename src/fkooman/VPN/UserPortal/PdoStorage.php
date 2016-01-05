@@ -4,6 +4,7 @@ namespace fkooman\VPN\UserPortal;
 
 use PDO;
 use RuntimeException;
+use InvalidArgumentException;
 
 class PdoStorage
 {
@@ -128,17 +129,26 @@ class PdoStorage
 
     public function getConfigurations($userId, $status = self::STATUS_ACTIVE)
     {
-        $stmt = $this->db->prepare(
-            sprintf(
-                'SELECT user_id, name, status, created_at, revoked_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY created_at DESC, revoked_at DESC',
-                $this->prefix.'config'
-            )
-        );
+        switch($status) {
+            case self::STATUS_ACTIVE:
+                $query = sprintf('SELECT user_id, name, created_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY created_at DESC, name',
+                    $this->prefix.'config'
+                );
+                break;
+            case self::STATUS_REVOKED:
+                $query = sprintf('SELECT user_id, name, created_at, revoked_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY revoked_at DESC, name',
+                    $this->prefix.'config'
+                );
+                break;
+            default:
+                throw new InvalidArgumentException('invalid status');
+        }
+
+        $stmt = $this->db->prepare($query);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':status', $status, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // FIXME: returns empty array when no configurations or still false?
         if (false !== $result) {
             return $result;
         }
