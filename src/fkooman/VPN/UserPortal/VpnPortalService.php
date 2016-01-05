@@ -190,7 +190,7 @@ class VpnPortalService extends Service
         $this->db->revokeConfiguration($userId, $configName);
 
         // trigger a CRL reload in the servers
-        $this->vpnServerApiClient->postRefreshCrl();
+        $this->vpnServerApiClient->postCrlFetch();
     }
 
     public function run(Request $request = null)
