@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    <div class="container">
+        <div class="header clearfix">
+
+            {% include 'header.twig' %}
+
+        </div>
+
+        {% if isBlocked %}
+
+            {% include 'blocked.twig' %}
+
+        {% else %} 
+
+            <h2>Confirm</h2>
+            <p>Are you sure you want to revoke <em>{{ configName|e }}</em>? This can <strong>NOT</strong> be undone!</p>
+            <form method="post">
+                <input type="hidden" name="name" value="{{ configName|e }}">
+                <button class="btn btn-danger" name="confirm" type="submit" value="yes">Yes</button>
+                <button class="btn btn-success" name="confirm" type="submit" value="no">No</button>
+            </form>    
+        {% endif %}
+
+        {% include 'footer.twig' %}
+    </div> <!-- /container -->
+</body>
+</html>

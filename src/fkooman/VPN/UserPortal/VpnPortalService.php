@@ -114,10 +114,28 @@ class VpnPortalService extends Service
             '/revoke',
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
+                $formConfirm = $request->getPostParameter('confirm');
 
-                $this->revokeConfig($u->getUserId(), $configName);
+                if (is_null($formConfirm)) {
+                    // ask for confirmation
+                    return $this->templateManager->render(
+                        'vpnPortalConfirmRevoke',
+                        array(
+                            'configName' => $configName,
+                            'isBlocked' => $this->isBlocked($u->getUserId()),
+                        )
+                    );
+                }
 
-                return new RedirectResponse($request->getUrl()->getRootUrl().'revoked', 302);
+                if ('yes' === $formConfirm) {
+                    // user said yes
+                    $this->revokeConfig($u->getUserId(), $configName);
+
+                    return new RedirectResponse($request->getUrl()->getRootUrl().'revoked', 302);
+                }
+
+                // user said no
+                return new RedirectResponse($request->getUrl()->getRootUrl().'active', 302);
             }
         );
 

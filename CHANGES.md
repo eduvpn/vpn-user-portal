@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.1 (2016-01-05)
+- implement confirmation dialog when revoking a configuration
+
 ## 5.0.0 (2016-01-05)
 - update to work with new vpn-server-api
 - many minor UI improvements

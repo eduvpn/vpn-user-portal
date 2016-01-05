@@ -129,7 +129,7 @@ class PdoStorage
 
     public function getConfigurations($userId, $status = self::STATUS_ACTIVE)
     {
-        switch($status) {
+        switch ($status) {
             case self::STATUS_ACTIVE:
                 $query = sprintf('SELECT user_id, name, created_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY created_at DESC, name',
                     $this->prefix.'config'
