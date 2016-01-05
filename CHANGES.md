@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.0.0 (2016-01-05)
+- update to work with new vpn-server-api
+- many minor UI improvements
+- update documentation section
+- implement "whoami" to find out the user ID
+- also refresh CRL when the user revokes a configuration
+- switch configuration to YAML from ini
+
 ## 4.0.0 (2015-12-21)
 - completely new UI design
 - get rid of `READY` state, see [UPGRADING.md].
