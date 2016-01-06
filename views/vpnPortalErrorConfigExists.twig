@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    <div class="container">
+        <div class="header clearfix">
+
+            {% include 'header.twig' %}
+
+        </div>
+
+        {% if isBlocked %}
+
+            {% include 'blocked.twig' %}
+
+        {% else %} 
+
+            <h2>Error</h2>
+            <p>You tried to create a configuration with name <em>{{ configName|e }}</em>, but it already exists!</p>
+            <p><a href="new">Try again</a></p> 
+
+        {% endif %}
+
+        {% include 'footer.twig' %}
+    </div> <!-- /container -->
+</body>
+</html>

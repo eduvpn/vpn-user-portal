@@ -7,7 +7,6 @@ use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\ForbiddenException;
 use fkooman\Http\Exception\NotFoundException;
-use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Tpl\TemplateManagerInterface;
@@ -169,7 +168,13 @@ class VpnPortalService extends Service
 
         # make sure config does not exist yet
         if ($this->db->isExistingConfiguration($userId, $configName)) {
-            throw new BadRequestException('configuration already exists with this name');
+            return $this->templateManager->render(
+                'vpnPortalErrorConfigExists',
+                array(
+                    'isBlocked' => $this->isBlocked($userId),
+                    'configName' => $configName,
+                )
+            );
         }
 
         # add configuration
