@@ -8,6 +8,14 @@
 
             {% include 'header.twig' %}
 
+            {% if not isBlocked %}
+                <ul class="nav nav-pills">
+                  <li role="presentation" class="active"><a href="new">New</a></li>
+                  <li role="presentation"><a href="active">Active</a></li>
+                  <li role="presentation"><a href="revoked">Revoked</a></li>
+                  <li role="presentation"><a href="documentation">Documentation</a></li>
+                </ul>
+            {% endif %}
         </div>
 
         {% if isBlocked %}
@@ -17,8 +25,16 @@
         {% else %} 
 
             <h2>Error</h2>
-            <p>You tried to create a configuration with name <em>{{ configName|e }}</em>, but it already exists!</p>
-            <p><a href="new">Try again</a></p> 
+            <p class="text-danger">
+                You tried to create a configuration with name <em>{{ configName|e }}</em>, but it was already used before!
+            </p>
+            <p>
+                You can only use a name once, check your <a href="active">Active</a> and <a href="revoked">Revoked</a> configurations to see which names were already used.
+            </p>
+
+            <p>
+                Go back, or click <a href="new">here</a>.
+            </p> 
 
         {% endif %}
 

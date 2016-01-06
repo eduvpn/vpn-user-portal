@@ -3,6 +3,7 @@
 ## 5.0.2 (...)
 - implement error page when trying to create a configuration with an 
   already existing name
+- autofocus the configuration name text box
 
 ## 5.0.1 (2016-01-05)
 - implement confirmation dialog when revoking a configuration
