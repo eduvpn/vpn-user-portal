@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.2 (...)
+## 5.0.2 (2016-01-07)
 - implement error page when trying to create a configuration with an 
   already existing name
 - autofocus the configuration name text box
