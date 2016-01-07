@@ -1,3 +1,131 @@
-.container {
+/*.container {*/
+/*    max-width: 730px;*/
+/*}*/
+
+body {
     max-width: 730px;
+    margin: 0 auto;
+    color: #444;
+    font-size: 90%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.4;
+    padding: 0.5em;
+}
+
+a {
+    color: #23527C;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+code {
+    color: #C7254E;
+    background-color: #eee;
+    padding: 0 0.3em;
+}
+
+label {
+    font-weight: bold;
+/*    margin: 0 1em 0 0.5em;*/
+/*    display: inline;*/
+    margin: 0 0 0.4em 0;
+    display: block;
+}
+
+fieldset {
+    border: 0;
+}
+
+ul li {
+    list-style: none;
+    display: inline;
+    margin: 0;
+    padding: 0.8em;
+}
+
+ul li.active {
+    border-radius: 0.3em;
+    background-color: #337AB7;
+}
+
+ul li:hover {
+    border-radius: 0.3em;
+    background-color: #eee;
+}
+
+ul li.active:hover {
+    border-radius: 0.3em;
+    background-color: #337AB7;
+}
+
+ul li.active a {
+    color: #fff;
+}
+
+/*ul li.active {*/
+/*    background-color: #eee;*/
+/*}*/
+
+button {
+    border-radius: 0.3em;
+    background-color: #337AB7;
+    padding: 0.5em;
+    border: 0;
+    color: #fff;
+    display: block;
+    margin: 0.5em 0.5em 0.5em 3em;
+}
+
+td, th {
+    padding: 0.5em 0;
+}
+
+input[type="text"], input[type="checkbox"] {
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 0.3em;
+    display: inline;
+}
+
+span.help {
+    color: #888;
+    display: block;
+    margin: 1em 0 1em 3em;
+}
+
+ul li a {
+    text-decoration: none;
+}
+   
+hr { 
+    border: 0; 
+}
+
+div.footer {
+    text-align: center;
+    font-size: 85%;
+    color: #888;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f8f8;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+th { 
+    text-align: left;
+}
+
+th {
+    border-bottom: 2px solid #ddd;
+    padding: 0 0 0.5em 0;
 }

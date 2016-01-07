@@ -3,20 +3,16 @@
 <html lang="en">
 {% include 'head.twig' %}
 <body>
-    <div class="container">
-        <div class="header clearfix">
+        {% include 'header.twig' %}
 
-            {% include 'header.twig' %}
-
-            {% if not isBlocked %}
-                <ul class="nav nav-pills">
-                  <li role="presentation" class="active"><a href="new">New</a></li>
-                  <li role="presentation"><a href="active">Active</a></li>
-                  <li role="presentation"><a href="revoked">Revoked</a></li>
-                  <li role="presentation"><a href="documentation">Documentation</a></li>
-                </ul>
-            {% endif %}
-        </div>
+        {% if not isBlocked %}
+            <ul>
+              <li class="active"><a href="new">New</a></li>
+              <li><a href="active">Active</a></li>
+              <li><a href="revoked">Revoked</a></li>
+              <li><a href="documentation">Documentation</a></li>
+            </ul>
+        {% endif %}
 
         {% if isBlocked %}
 
@@ -32,33 +28,24 @@
                 You can only download a configuration <strong>once</strong>! See the <a href="documentation">documentation</a> for more information on how to configure your VPN client.
             </p>
 
-            <form class="form-horizontal" method="post">
-              <div class="form-group">
-                <label for="inputName" class="col-sm-1 control-label">Name</label>
-                <div class="col-sm-6">
-                  <input type="text" name="name" class="form-control" id="inputName" maxlength="32" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
-                  <span id="helpBlock" class="help-block">Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
-                </div>
-              </div>
+            <form method="post">
+                <fieldset>
+                <label for="inputName">Name</label>
+                <input type="text" name="name" id="inputName" maxlength="32" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+                <span class="help">Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
 
               {% if advanced %}
-              <div class="form-group">
-                <div class="col-sm-offset-1 col-sm-6">
-                  <div class="checkbox">
                     <label>
                       <input name="option_zip" type="checkbox"> ZIP
                     </label>
-                    <span id="helpBlock" class="help-block">Download a ZIP file containing the configuration and separate certificate and key files.</span>
+                    <span class="help">Download a ZIP file containing the configuration and separate certificate and key files.</span>
                   </div>
-                </div>
-              </div>
+
               {% endif %}
 
-              <div class="form-group">
-                <div class="col-sm-offset-1 col-sm-5">
-                  <button type="submit" class="btn btn-primary">Download</button>
-                </div>
-              </div>
+          <button type="submit">Download</button>
+            
+            </fieldset>
             </form>
 
         {% endif %}
