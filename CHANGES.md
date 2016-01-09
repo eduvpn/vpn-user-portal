@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.3 (...)
+## 5.0.3 (2016-01-09)
 - sort the configuration listing descending by `created_at`, showing the newest 
   on top
 
