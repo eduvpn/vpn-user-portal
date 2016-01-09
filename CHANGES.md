@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.3 (...)
+- sort the configuration listing descending by `created_at`, showing the newest 
+  on top
+
 ## 5.0.2 (2016-01-07)
 - implement error page when trying to create a configuration with an 
   already existing name
