@@ -3,61 +3,55 @@
 <html lang="en">
 {% include 'head.twig' %}
 <body>
-    <div class="container">
-        <div class="header clearfix">
+    {% include 'header.twig' %}
 
-            {% include 'header.twig' %}
+    {% if not isBlocked %}
+        <ul>
+          <li><a href="new">New</a></li>
+          <li><a href="active">Active</a></li>
+          <li class="active"><a href="revoked">Revoked</a></li>
+          <li><a href="documentation">Documentation</a></li>
+        </ul>
+    {% endif %}
 
-            {% if not isBlocked %}
-                <ul class="nav nav-pills">
-                  <li role="presentation"><a href="new">New</a></li>
-                  <li role="presentation"><a href="active">Active</a></li>
-                  <li role="presentation" class="active"><a href="revoked">Revoked</a></li>
-                  <li role="presentation"><a href="documentation">Documentation</a></li>
-                </ul>
-            {% endif %}
-        </div>
+    {% if isBlocked %}
 
-        {% if isBlocked %}
+        {% include 'blocked.twig' %}
 
-            {% include 'blocked.twig' %}
+    {% else %} 
+        <h2>Revoked</h2>
+            <p>
+                This page lists your revoked VPN configurations for archival purposes. You can revoke configurations <a href="active">here</a>. Revocation can <em>NOT</em> be undone.
+            </p>
 
-        {% else %} 
+            {% if vpnConfigurations is empty %}
 
-            <h2>Revoked</h2>
-                <p>
-                    This page lists your revoked VPN configurations for archival purposes. You can revoke configurations <a href="active">here</a>. Revocation can <em>NOT</em> be undone.
-                </p>
-
-                {% if vpnConfigurations is empty %}
-
-                    <p class="well">
-                        You currently have no revoked configurations.
-                    </p>                    
-            
-                {% else %}
-                    <table class="table table-striped">
-                        <thead>
+                <p class="plain">
+                    You currently have no revoked configurations.
+                </p>                    
+        
+            {% else %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Created ({{ date()|date('T') }})</th>
+                            <th>Revoked ({{ date()|date('T') }})</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for config in vpnConfigurations %}
                             <tr>
-                                <th>Name</th>
-                                <th>Created ({{ date()|date('T') }})</th>
-                                <th>Revoked ({{ date()|date('T') }})</th>
+                                <td>{{ config.name|e }}</td>
+                                <td>{{ config.created_at|e|date('Y-m-d H:i:s') }}</td>
+                                <td>{{ config.revoked_at|e|date('Y-m-d H:i:s') }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for config in vpnConfigurations %}
-                                <tr>
-                                    <td>{{ config.name|e }}</td>
-                                    <td>{{ config.created_at|e|date('Y-m-d H:i:s') }}</td>
-                                    <td>{{ config.revoked_at|e|date('Y-m-d H:i:s') }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-        {% endif %} 
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+    {% endif %} 
 
-        {% include 'footer.twig' %}
-    </div> <!-- /container -->
+    {% include 'footer.twig' %}
 </body>
 </html>

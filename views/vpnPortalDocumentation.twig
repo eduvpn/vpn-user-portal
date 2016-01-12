@@ -3,80 +3,75 @@
 <html lang="en">
 {% include 'head.twig' %}
 <body>
-    <div class="container">
-        <div class="header clearfix">
+    {% include 'header.twig' %}
 
-            {% include 'header.twig' %}
+    {% if not isBlocked %}
+        <ul>
+          <li><a href="new">New</a></li>
+          <li><a href="active">Active</a></li>
+          <li><a href="revoked">Revoked</a></li>
+          <li class="active"><a href="documentation">Documentation</a></li>
+        </ul>
+    {% endif %}
 
-            {% if not isBlocked %}
-                <ul class="nav nav-pills">
-                  <li role="presentation"><a href="new">New</a></li>
-                  <li role="presentation"><a href="active">Active</a></li>
-                  <li role="presentation"><a href="revoked">Revoked</a></li>
-                  <li role="presentation" class="active"><a href="documentation">Documentation</a></li>
-                </ul>
-            {% endif %}
-        </div>
+    {% if isBlocked %}
 
-        {% if isBlocked %}
+        {% include 'blocked.twig' %}
 
-            {% include 'blocked.twig' %}
+    {% else %} 
 
-        {% else %} 
+        <h2>Documentation</h2>
 
-            <h2>Documentation</h2>
+        <h3>VPN Configuration</h3>
+        <p>
+            First, download a configuration file <a href="new">here</a>. Give it a name that you associate with the device you use it on, e.g. "Phone" or "Notebook".
+        </p>
 
-            <h3>VPN Configuration</h3>
-            <p>
-                First, download a configuration file <a href="new">here</a>. Give it a name that you associate with the device you use it on, e.g. "Phone" or "Notebook".
-            </p>
+        <h3>VPN Client</h3>
 
-            <h3>VPN Client</h3>
-
-            <h4 id="windows">Windows</h4>
-            <p>
-                Download the <a target="_blank" href="https://openvpn.net/index.php/open-source/downloads.html">OpenVPN Community client</a>.
-                Read installation and configuration instructions <a target="_blank" href="https://community.openvpn.net/openvpn/wiki/OpenVPN-GUI">here</a>.
-            </p>
-            <p>
+        <h4 id="windows">Windows</h4>
+        <p>
+            Download the <a target="_blank" href="https://openvpn.net/index.php/open-source/downloads.html">OpenVPN Community client</a>.
+            Read installation and configuration instructions <a target="_blank" href="https://community.openvpn.net/openvpn/wiki/OpenVPN-GUI">here</a>.
+        </p>
+        <p>
 Two things are important when using Windows:
-            </p>
-            <ol>
-                <li>When you download the configuration file you MUST copy it to the <code>C:\Program Files\OpenVPN\Config</code> folder;</li>
-                <li>You MUST start the OpenVPN GUI as "Administrator" by right clicking on the OpenVPN GUI icon and choosing "Run as administrator".</li>
-            </ol>
+        </p>
+        <ol>
+            <li>When you download the configuration file you MUST copy it to the <code>C:\Program Files\OpenVPN\Config</code> folder;</li>
+            <li>You MUST start the OpenVPN GUI as "Administrator" by right clicking on the OpenVPN GUI icon and choosing "Run as administrator".</li>
+        </ol>
 
-            <h4 id="osx">OS X</h4>
-            <p>
-                Download <a target="_blank" href="https://tunnelblick.net/">tunnelblick</a>. 
-                Read the <a target="_blank" href="https://tunnelblick.net/czQuick.html">Quick Start Guide</a>.
-            </p>
+        <h4 id="osx">OS X</h4>
+        <p>
+            Download <a target="_blank" href="https://tunnelblick.net/">tunnelblick</a>. 
+            Read the <a target="_blank" href="https://tunnelblick.net/czQuick.html">Quick Start Guide</a>.
+        </p>
 
-            <h4 id="android">Android</h4>
-                Install <a target="_blank" href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a>.
+        <h4 id="android">Android</h4>
+            Install <a target="_blank" href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a>.
 
-            <h4 id="ios">iOS</h4>
-            <p>
-                Install <a target="_blank" href="https://itunes.apple.com/us/app/openvpn-connect/id590379981">OpenVPN Connect</a>. 
-                A <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-ios-faq.html">FAQ</a> is available.
-            </p>
+        <h4 id="ios">iOS</h4>
+        <p>
+            Install <a target="_blank" href="https://itunes.apple.com/us/app/openvpn-connect/id590379981">OpenVPN Connect</a>. 
+            A <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-ios-faq.html">FAQ</a> is available.
+        </p>
 
-            <h3>Advanced Users</h3>
-            <p>
-                You can download a configuration as ZIP file using the 
-                <a href="new?advanced=1">advanced</a> form. This is useful if 
-                your client does not support the default "inline" configuration
-                format. The ZIP file contains the configuration file and the 
-                keys and certificates as separate files.
-            </p>
-            <p>
-                You can also use <a target="_blank" href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a>,
-                a free software client for Android >= 4.0. Also available through <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>.
-            </p>
+        <h3>Advanced Users</h3>
+        <p>
+            You can download a configuration as ZIP file using the 
+            <a href="new?advanced=1">advanced</a> form. This is useful if 
+            your client does not support the default "inline" configuration
+            format. The ZIP file contains the configuration file and the 
+            keys and certificates as separate files.
+        </p>
+        <p>
+            You can also use <a target="_blank" href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a>,
+            a free software client for Android >= 4.0. Also available through <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>.
+        </p>
 
-        {% endif %}
+    {% endif %}
 
-        {% include 'footer.twig' %}
-    </div> <!-- /container -->
+    {% include 'footer.twig' %}
 </body>
 </html>

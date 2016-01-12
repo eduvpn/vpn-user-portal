@@ -1,0 +1,172 @@
+body {
+    max-width: 48em;
+    margin: 0 auto;
+    color: #444;
+    line-height: 1.5;
+    padding: 0.5em;
+    font-family: sans-serif;
+}
+
+button, input {
+    font-family: sans-serif;
+    line-height: 1.5;
+    font-size: 100%;
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+    padding: 0.5em 0;
+}
+
+a {
+    color: #23527C;
+}
+
+p {
+    margin-top: 0;
+}
+
+p.danger {
+    background-color: #D9534F;
+    padding: 1em;
+    color: #fff;
+    border-radius: 0.2em;
+}
+
+p.danger a {
+    color: #fff;
+}
+
+p.plain {
+    background-color: #eee;
+    padding: 1em;
+    border-radius: 0.2em;
+}
+
+code {
+    color: #C7254E;
+    background-color: #eee;
+    padding: 0 0.3em;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    list-style: none;
+    margin: 0;
+    display: inline-block;
+}
+
+ul li a {
+    padding: 0.7em;
+    line-height: 2.5;
+    text-decoration: none;
+}
+
+ul li.active {
+    border-radius: 0.2em;
+    background-color: #337AB7;
+}
+
+ul li:hover {
+    border-radius: 0.2em;
+    background-color: #eee;
+}
+
+ul li.active:hover {
+    border-radius: 0.2em;
+    background-color: #2269a6;
+}
+
+ul li.active a {
+    color: #fff;
+}
+
+/** FORM **/
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+legend {
+    display: none;
+}
+
+label {
+    font-weight: bold;
+    margin: 0 0 0.2em 0;
+    display: block;
+}
+
+input[type="text"], input[type="checkbox"] {
+    margin: 0;
+    padding: 0.5em 0.7em;
+    border: 1px solid #ddd;
+    border-radius: 0.2em;
+    display: inline-block;
+}
+
+button {
+    border-radius: 0.2em;
+    background-color: #337AB7;
+    padding: 0.5em 0.7em;
+    border: 0;
+    color: #fff;
+}
+
+button:hover {
+    background-color: #2269a6;
+    cursor: pointer;
+}
+
+button.danger {
+    background-color: #c00;
+}
+
+button.danger:hover {
+    background-color: #b00;
+}
+
+span.help {
+    display: block;
+    color: #888;
+    margin: 0.2em 0 1em 1em;
+    padding: 0;
+    font-size: 85%;
+}
+
+/** TABLE **/
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 0.5em;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f8f8;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+th {
+    border-bottom: 2px solid #ddd;
+}
+
+/** FOOTER **/   
+hr { 
+    border: 0; 
+}
+
+p.footer {
+    text-align: center;
+    font-size: 85%;
+    color: #888;
+}

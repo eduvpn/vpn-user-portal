@@ -3,66 +3,60 @@
 <html lang="en">
 {% include 'head.twig' %}
 <body>
-    <div class="container">
-        <div class="header clearfix">
+    {% include 'header.twig' %}
 
-            {% include 'header.twig' %}
+    {% if not isBlocked %}
+        <ul>
+          <li><a href="new">New</a></li>
+          <li class="active"><a href="active">Active</a></li>
+          <li><a href="revoked">Revoked</a></li>
+          <li><a href="documentation">Documentation</a></li>
+        </ul>
+    {% endif %}
 
-            {% if not isBlocked %}
-                <ul class="nav nav-pills">
-                  <li role="presentation"><a href="new">New</a></li>
-                  <li role="presentation" class="active"><a href="active">Active</a></li>
-                  <li role="presentation"><a href="revoked">Revoked</a></li>
-                  <li role="presentation"><a href="documentation">Documentation</a></li>
-                </ul>
+    {% if isBlocked %}
+
+        {% include 'blocked.twig' %}
+
+    {% else %} 
+        <h2>Active</h2>
+            <p>
+                This page lists your active VPN configurations. You can 
+                <em>revoke</em> them if you no longer use them. You can
+                also see if your configuration is currently disabled by
+                an administrator.
+            </p>
+
+            {% if vpnConfigurations is empty %}
+
+                <p class="plain">
+                    You currently have no active configurations &#x1f61e; You can create a configuration <a href="new">here</a>.
+                </p>                    
+        
+            {% else %}
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th>Disabled</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        {% for config in vpnConfigurations %}
+                            <tr>
+                                <td>{{ config.name|e }}</td>
+                                <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
+                                <td>{% if config.disabled %}<span class="text-danger">Yes</span>{% else %}<span class="text-success">No</span>{% endif %}</td>
+                                <td>
+                                    <form method="post" action="revoke">
+                                        <input type="hidden" name="name" value="{{ config.name|e }}">
+                                        <button class="danger" type="submit">Revoke</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             {% endif %}
-        </div>
+    {% endif %}
 
-        {% if isBlocked %}
-
-            {% include 'blocked.twig' %}
-
-        {% else %} 
-
-            <h2>Active</h2>
-                <p>
-                    This page lists your active VPN configurations. You can 
-                    <em>revoke</em> them if you no longer use them. You can
-                    also see if your configuration is currently disabled by
-                    an administrator.
-                </p>
-
-                {% if vpnConfigurations is empty %}
-
-                    <p class="well">
-                        You currently have no active configurations &#x1f61e; You can create a configuration <a href="new">here</a>.
-                    </p>                    
-            
-                {% else %}
-                    <table>
-                        <thead>
-                            <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th>Disabled</th><th></th></tr>
-                        </thead>
-                        <tbody>
-                            {% for config in vpnConfigurations %}
-                                <tr>
-                                    <td>{{ config.name|e }}</td>
-                                    <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
-                                    <td>{% if config.disabled %}<strong class="text-danger">Yes</span>{% else %}<strong class="text-success">No</span>{% endif %}</td>
-                                    <td class="text-right">
-                                        <form class="form-inline" method="post" action="revoke">
-                                            <input type="hidden" name="name" value="{{ config.name|e }}">
-                                            <button class="btn btn-warning" type="submit">Revoke</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-        {% endif %}
-
-        {% include 'footer.twig' %}
-    </div> <!-- /container -->
+    {% include 'footer.twig' %}
 </body>
 </html>

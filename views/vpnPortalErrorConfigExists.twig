@@ -3,42 +3,37 @@
 <html lang="en">
 {% include 'head.twig' %}
 <body>
-    <div class="container">
-        <div class="header clearfix">
+    {% include 'header.twig' %}
 
-            {% include 'header.twig' %}
+    {% if not isBlocked %}
+        <ul>
+          <li class="active"><a href="new">New</a></li>
+          <li><a href="active">Active</a></li>
+          <li><a href="revoked">Revoked</a></li>
+          <li><a href="documentation">Documentation</a></li>
+        </ul>
+    {% endif %}
 
-            {% if not isBlocked %}
-                <ul class="nav nav-pills">
-                  <li role="presentation" class="active"><a href="new">New</a></li>
-                  <li role="presentation"><a href="active">Active</a></li>
-                  <li role="presentation"><a href="revoked">Revoked</a></li>
-                  <li role="presentation"><a href="documentation">Documentation</a></li>
-                </ul>
-            {% endif %}
-        </div>
+    {% if isBlocked %}
 
-        {% if isBlocked %}
+        {% include 'blocked.twig' %}
 
-            {% include 'blocked.twig' %}
+    {% else %} 
 
-        {% else %} 
+        <h2>Error</h2>
+        <p class="danger">
+            You tried to create a configuration with name <em>{{ configName|e }}</em>, but it was already used before!
+        </p>
+        <p>
+            You can only use a name once, check your <a href="active">Active</a> and <a href="revoked">Revoked</a> configurations to see which names were already used.
+        </p>
 
-            <h2>Error</h2>
-            <p class="text-danger">
-                You tried to create a configuration with name <em>{{ configName|e }}</em>, but it was already used before!
-            </p>
-            <p>
-                You can only use a name once, check your <a href="active">Active</a> and <a href="revoked">Revoked</a> configurations to see which names were already used.
-            </p>
+        <p>
+            Use your browser's back button, or click <a href="new">here</a>.
+        </p> 
 
-            <p>
-                Go back, or click <a href="new">here</a>.
-            </p> 
+    {% endif %}
 
-        {% endif %}
-
-        {% include 'footer.twig' %}
-    </div> <!-- /container -->
+    {% include 'footer.twig' %}
 </body>
 </html>

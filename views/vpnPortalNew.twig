@@ -29,7 +29,8 @@
             </p>
 
             <form method="post">
-                <fieldset>
+            <fieldset>
+                <legend>New</legend>
                 <label for="inputName">Name</label>
                 <input type="text" name="name" id="inputName" maxlength="32" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
                 <span class="help">Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
@@ -39,11 +40,10 @@
                       <input name="option_zip" type="checkbox"> ZIP
                     </label>
                     <span class="help">Download a ZIP file containing the configuration and separate certificate and key files.</span>
-                  </div>
 
               {% endif %}
 
-          <button type="submit">Download</button>
+                <button type="submit">Download</button>
             
             </fieldset>
             </form>
@@ -51,6 +51,5 @@
         {% endif %}
 
         {% include 'footer.twig' %}
-    </div> <!-- /container -->
 </body>
 </html>
