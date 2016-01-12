@@ -113,7 +113,7 @@ class PdoStorage
         // get all active configuratoins
         $stmt = $this->db->prepare(
             sprintf(
-                'SELECT user_id, name, status, created_at, revoked_at FROM %s WHERE status != 30 ORDER BY user_id, created_at DESC',
+                'SELECT user_id, name, status, created_at FROM %s WHERE status != 30 ORDER BY created_at DESC',
                 $this->prefix.'config'
             )
         );
@@ -131,12 +131,12 @@ class PdoStorage
     {
         switch ($status) {
             case self::STATUS_ACTIVE:
-                $query = sprintf('SELECT user_id, name, created_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY created_at DESC, name',
+                $query = sprintf('SELECT user_id, name, created_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY created_at DESC',
                     $this->prefix.'config'
                 );
                 break;
             case self::STATUS_REVOKED:
-                $query = sprintf('SELECT user_id, name, created_at, revoked_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY revoked_at DESC, name',
+                $query = sprintf('SELECT user_id, name, created_at, revoked_at FROM %s WHERE user_id = :user_id AND status = :status ORDER BY revoked_at DESC',
                     $this->prefix.'config'
                 );
                 break;
