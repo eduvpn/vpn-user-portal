@@ -1,14 +1,15 @@
 body {
-    max-width: 48em;
+    max-width: 50em;
     margin: 0 auto;
     color: #444;
-    line-height: 1.5;
     padding: 0.5em;
+}
+
+body, button, input {
     font-family: sans-serif;
 }
 
-button, input {
-    font-family: sans-serif;
+button, input, code, body {
     line-height: 1.5;
     font-size: 100%;
 }

@@ -5,6 +5,15 @@
 <body>
     {% include 'header.twig' %}
 
+    {% if not isBlocked %}
+        <ul class="mainMenu">
+          <li><a href="new">New</a></li>
+          <li class="active"><a href="active">Active</a></li>
+          <li><a href="revoked">Revoked</a></li>
+          <li><a href="documentation">Documentation</a></li>
+        </ul>
+    {% endif %}
+
     {% if isBlocked %}
 
         {% include 'blocked.twig' %}

@@ -3,53 +3,54 @@
 <html lang="en">
 {% include 'head.twig' %}
 <body>
-        {% include 'header.twig' %}
+    {% include 'header.twig' %}
 
-        {% if not isBlocked %}
-        <ul class="mainMenu">
-              <li class="active"><a href="new">New</a></li>
-              <li><a href="active">Active</a></li>
-              <li><a href="revoked">Revoked</a></li>
-              <li><a href="documentation">Documentation</a></li>
-            </ul>
-        {% endif %}
+    {% if not isBlocked %}
+    <ul class="mainMenu">
+          <li class="active"><a href="new">New</a></li>
+          <li><a href="active">Active</a></li>
+          <li><a href="revoked">Revoked</a></li>
+          <li><a href="documentation">Documentation</a></li>
+        </ul>
+    {% endif %}
 
-        {% if isBlocked %}
+    {% if isBlocked %}
 
-            {% include 'blocked.twig' %}
+        {% include 'blocked.twig' %}
 
-        {% else %} 
-            <h2>New</h2>
-            <p>
-                Here you can create a new configuration for your VPN client. Enter a name, e.g. <em>Phone</em>, in the box below and click
-              <em>Download</em>. Switch to {% if advanced %}<a href="?advanced=0">Simple</a>{% else %}<a href="?advanced=1">Advanced</a>{% endif %} mode.
-            </p>
-            <p>
-                You can only download a configuration <strong>once</strong>! See the <a href="documentation">documentation</a> for more information on how to configure your VPN client.
-            </p>
+    {% else %} 
+        <h2>New</h2>
+        <p>
+            Here you can create a new configuration for your VPN client. Enter a name, e.g. <em>Phone</em>, in the box below and click
+          <em>Download</em>. Switch to {% if advanced %}<a href="?advanced=0">Simple</a>{% else %}<a href="?advanced=1">Advanced</a>{% endif %} mode.
+        </p>
+        <p>
+            You can only download a configuration <strong>once</strong>! See the <a href="documentation">documentation</a> for more information on how to configure your VPN client.
+        </p>
 
-            <form method="post">
-            <fieldset>
-                <legend>New</legend>
-                <label for="inputName">Name</label>
-                <input type="text" name="name" id="inputName" maxlength="32" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
-                <span class="help">Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
+        <form method="post">
+        <fieldset>
+            <legend>New</legend>
+            <label for="inputName">Name</label>
+            <input type="text" name="name" id="inputName" maxlength="32" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+            <span class="help">Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
 
-              {% if advanced %}
-                    <label>
-                      <input name="option_zip" type="checkbox"> ZIP
-                    </label>
-                    <span class="help">Download a ZIP file containing the configuration and separate certificate and key files.</span>
+          {% if advanced %}
+                <label>
+                  <input name="option_zip" type="checkbox"> ZIP
+                </label>
+                <span class="help">Download a ZIP file containing the configuration and separate certificate and key files.</span>
 
-              {% endif %}
+          {% endif %}
 
-                <button type="submit">Download</button>
-            
-            </fieldset>
-            </form>
+            <button type="submit">Download</button>
+        
+        </fieldset>
+        </form>
 
-        {% endif %}
+    {% endif %}
 
-        {% include 'footer.twig' %}
+    {% include 'footer.twig' %}
+
 </body>
 </html>
