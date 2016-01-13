@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.5 (2016-01-13)
+- sync CSS with vpn-admin-portal
+- "No" in confirm revocation is now green
+
 ## 5.0.4 (2016-01-13)
 - remove boostrap for simple custom CSS
 
