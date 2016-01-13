@@ -11,7 +11,7 @@ body, button, input {
 
 button, input, code, body {
     line-height: 1.5;
-    font-size: 100%;
+    font-size: 90%;
 }
 
 h1, h2, h3, h4 {
@@ -57,6 +57,15 @@ code {
 ul {
     margin: 0;
     padding: 0;
+}
+
+/** Info **/
+dl {
+    margin: 0;
+}
+
+dt {
+    font-weight: bold;
 }
 
 /** IP LIST **/
@@ -154,6 +163,14 @@ button.warning:hover {
     background-color: #db860e;
 }
 
+button.success {
+    background-color: #449d44;
+}
+
+button.success:hover {
+    background-color: #338c33;
+}
+
 span.help {
     display: block;
     color: #888;
@@ -171,6 +188,7 @@ table {
 td, th {
     padding: 0.5em;
     text-align: left;
+    vertical-align: top;
 }
 
 tr:nth-child(even) {
