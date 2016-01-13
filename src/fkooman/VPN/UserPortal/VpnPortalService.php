@@ -7,6 +7,7 @@ use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\ForbiddenException;
 use fkooman\Http\Exception\NotFoundException;
+use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Tpl\TemplateManagerInterface;
@@ -54,6 +55,7 @@ class VpnPortalService extends Service
                     array(
                         'advanced' => (bool) $request->getUrl()->getQueryParameter('advanced'),
                         'isBlocked' => $this->isBlocked($u->getUserId()),
+                        'cnLength' => 63 - strlen($u->getUserId()),
                     )
                 );
             }
@@ -165,6 +167,14 @@ class VpnPortalService extends Service
     {
         $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
+
+        // userId + configName length cannot be longer than 64 as the
+        // certificate CN cannot be longer than 64
+        if (64 < strlen($userId) + strlen($configName) + 1) {
+            throw new BadRequestException(
+                sprintf('commonName length MUST not exceed %d', 63 - strlen($userId))
+            );
+        }
 
         # make sure config does not exist yet
         if ($this->db->isExistingConfiguration($userId, $configName)) {

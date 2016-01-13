@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.6 (2016-01-13)
+- BUGFIX: strlen($userId_$name) MUST have length <64
+
 ## 5.0.5 (2016-01-13)
 - sync CSS with vpn-admin-portal
 - "No" in confirm revocation is now green

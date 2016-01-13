@@ -32,7 +32,7 @@
         <fieldset>
             <legend>New</legend>
             <label for="inputName">Name</label>
-            <input type="text" name="name" id="inputName" maxlength="32" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+            <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
             <span class="help">Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
 
           {% if advanced %}
