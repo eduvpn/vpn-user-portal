@@ -18,6 +18,10 @@ h1, h2, h3, h4 {
     padding: 0.5em 0;
 }
 
+.text-right {
+    text-align: right;
+}
+
 a {
     color: #23527C;
 }
@@ -49,43 +53,58 @@ code {
     padding: 0 0.3em;
 }
 
-ul {
+ul.ipList {
     margin: 0;
     padding: 0;
 }
 
-ul li {
+ul.ipList li {
+    list-style: none;
+    display: inline-block;
+}
+    
+/** MENU **/
+ul.mainMenu {
+    margin: 0;
+    padding: 0;
+}
+
+ul.mainMenu li {
     list-style: none;
     margin: 0;
     display: inline-block;
 }
 
-ul li a {
+ul.mainMenu li a {
     padding: 0.7em;
     line-height: 2.5;
     text-decoration: none;
 }
 
-ul li.active {
+ul.mainMenu li.active {
     border-radius: 0.2em;
     background-color: #337AB7;
 }
 
-ul li:hover {
+ul.mainMenu li:hover {
     border-radius: 0.2em;
     background-color: #eee;
 }
 
-ul li.active:hover {
+ul.mainMenu li.active:hover {
     border-radius: 0.2em;
     background-color: #2269a6;
 }
 
-ul li.active a {
+ul.mainMenu li.active a {
     color: #fff;
 }
 
 /** FORM **/
+form.inline {
+    display: inline;
+}
+
 fieldset {
     border: 0;
     margin: 0;
@@ -129,6 +148,14 @@ button.danger {
 
 button.danger:hover {
     background-color: #b00;
+}
+
+button.warning {
+    background-color: #EC971F;
+}
+
+button.warning:hover {
+    background-color: #db860e;
 }
 
 span.help {
