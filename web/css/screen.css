@@ -54,22 +54,17 @@ code {
     padding: 0 0.3em;
 }
 
-ul.ipList {
+ul {
     margin: 0;
     padding: 0;
 }
 
+/** IP LIST **/
 ul.ipList li {
     list-style: none;
-    display: inline-block;
 }
     
 /** MENU **/
-ul.mainMenu {
-    margin: 0;
-    padding: 0;
-}
-
 ul.mainMenu li {
     list-style: none;
     margin: 0;
