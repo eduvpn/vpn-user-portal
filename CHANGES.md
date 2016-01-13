@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.4 (2016-01-13)
+- remove boostrap for simple custom CSS
+
 ## 5.0.3 (2016-01-09)
 - sort the configuration listing descending by `created_at`, showing the newest 
   on top
