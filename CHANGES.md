@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.0.7 (...)
+- add link to OpenVPN Connect for Android FAQ
+
 ## 5.0.6 (2016-01-13)
 - BUGFIX: strlen($userId_$name) MUST have length <64
 

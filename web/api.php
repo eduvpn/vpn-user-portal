@@ -68,7 +68,7 @@ try {
         function (Request $request) use ($VpnConfigApiClient, $db) {
             $userId = $request->getPostParameter('user_id');
             $configName = $request->getPostParameter('config_name');
-
+            // XXX: maximum length is 64 of both!
             // XXX: validate user_id
             Utils::validateConfigName($configName);
             $VpnConfigApiClient->revokeConfiguration($userId, $configName);
