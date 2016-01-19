@@ -5,11 +5,11 @@ body {
     padding: 0.5em;
 }
 
-body, button, input {
+body, button, input, option {
     font-family: sans-serif;
 }
 
-button, input, code, body {
+button, input, code, option, body {
     line-height: 1.5;
     font-size: 90%;
 }
@@ -24,7 +24,7 @@ h1, h2, h3, h4 {
 }
 
 a {
-    color: #23527C;
+    color: #257;
 }
 
 p {
@@ -32,7 +32,7 @@ p {
 }
 
 p.danger {
-    background-color: #D9534F;
+    background-color: #d54;
     padding: 1em;
     color: #fff;
     border-radius: 0.2em;
@@ -49,7 +49,7 @@ p.plain {
 }
 
 code {
-    color: #C7254E;
+    color: #c24;
     background-color: #eee;
     padding: 0 0.3em;
 }
@@ -88,7 +88,7 @@ ul.mainMenu li a {
 
 ul.mainMenu li.active {
     border-radius: 0.2em;
-    background-color: #337AB7;
+    background-color: #37b;
 }
 
 ul.mainMenu li:hover {
@@ -98,7 +98,7 @@ ul.mainMenu li:hover {
 
 ul.mainMenu li.active:hover {
     border-radius: 0.2em;
-    background-color: #2269a6;
+    background-color: #26a;
 }
 
 ul.mainMenu li.active a {
@@ -112,7 +112,7 @@ form.inline {
 
 fieldset {
     border: 0;
-    margin: 0;
+    margin: 1em 0;
     padding: 0;
 }
 
@@ -126,7 +126,7 @@ label {
     display: block;
 }
 
-input[type="text"], input[type="checkbox"] {
+input[type="text"], input[type="checkbox"], select {
     margin: 0;
     padding: 0.5em 0.7em;
     border: 1px solid #ddd;
@@ -136,14 +136,14 @@ input[type="text"], input[type="checkbox"] {
 
 button {
     border-radius: 0.2em;
-    background-color: #337AB7;
+    background-color: #37b;
     padding: 0.5em 0.7em;
     border: 0;
     color: #fff;
 }
 
 button:hover {
-    background-color: #2269a6;
+    background-color: #26a;
     cursor: pointer;
 }
 
@@ -156,19 +156,19 @@ button.danger:hover {
 }
 
 button.warning {
-    background-color: #EC971F;
+    background-color: #e91;
 }
 
 button.warning:hover {
-    background-color: #db860e;
+    background-color: #d80;
 }
 
 button.success {
-    background-color: #449d44;
+    background-color: #494;
 }
 
 button.success:hover {
-    background-color: #338c33;
+    background-color: #383;
 }
 
 span.help {
