@@ -48,6 +48,17 @@ p.plain {
     border-radius: 0.2em;
 }
 
+p.warning {
+    background-color: #e91;
+    padding: 1em;
+    border-radius: 0.2em;
+    color: #fff;
+}
+
+p.warning a {
+    color: #fff;
+}
+
 code {
     color: #c24;
     background-color: #eee;
