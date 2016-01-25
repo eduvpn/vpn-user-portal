@@ -1,17 +1,17 @@
 body {
-    max-width: 55em;
+    max-width: 50em;
     margin: 0 auto;
     color: #444;
     padding: 0.5em;
 }
 
-body, button, input, option {
+body, button, input {
     font-family: sans-serif;
 }
 
-button, input, code, option, body {
+button, input, code, body {
     line-height: 1.5;
-    font-size: 90%;
+    font-size: 100%;
 }
 
 h1, h2, h3, h4 {
@@ -54,11 +54,6 @@ code {
     padding: 0 0.3em;
 }
 
-ul {
-    margin: 0;
-    padding: 0;
-}
-
 /** Info **/
 dl {
     margin: 0;
@@ -69,11 +64,21 @@ dt {
 }
 
 /** IP LIST **/
+ul.ipList {
+    margin: 0;
+    padding: 0;
+}
+
 ul.ipList li {
     list-style: none;
 }
     
 /** MENU **/
+ul.mainMenu {
+    margin: 0;
+    padding: 0;
+}
+
 ul.mainMenu li {
     list-style: none;
     margin: 0;
@@ -126,7 +131,7 @@ label {
     display: block;
 }
 
-input[type="text"], input[type="checkbox"], select {
+input[type="text"], input[type="checkbox"] {
     margin: 0;
     padding: 0.5em 0.7em;
     border: 1px solid #ddd;
@@ -171,6 +176,15 @@ button.success:hover {
     background-color: #383;
 }
 
+button.plain {
+    background-color: #eee;
+    color: #000;
+}
+
+button.plain:hover {
+    background-color: #ddd;
+}
+
 span.help {
     display: block;
     color: #888;
@@ -201,7 +215,7 @@ th {
     border-bottom: 2px solid #ddd;
 }
 
-/** FOOTER **/   
+/** FOOTER **/
 hr { 
     border: 0; 
 }
@@ -209,5 +223,9 @@ hr {
 p.footer {
     text-align: center;
     font-size: 85%;
+    color: #888;
+}
+
+p.footer a {
     color: #888;
 }
