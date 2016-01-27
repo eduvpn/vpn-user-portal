@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.8 (...)
+## 5.0.8 (2016-01-27)
 - update documentation
 - remove some redundant text from 'Revoke' tab
 
