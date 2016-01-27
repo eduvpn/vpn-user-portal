@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.8 (...)
+- update documentation
+- remove some redundant text from 'Revoke' tab
+
 ## 5.0.7 (2016-01-27)
 - add link to OpenVPN Connect for Android FAQ
 - add section on Privacy
