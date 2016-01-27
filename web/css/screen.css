@@ -1,5 +1,5 @@
 body {
-    max-width: 50em;
+    max-width: 55em;
     margin: 0 auto;
     color: #444;
     padding: 0.5em;
@@ -46,17 +46,6 @@ p.plain {
     background-color: #eee;
     padding: 1em;
     border-radius: 0.2em;
-}
-
-p.warning {
-    background-color: #e91;
-    padding: 1em;
-    border-radius: 0.2em;
-    color: #fff;
-}
-
-p.warning a {
-    color: #fff;
 }
 
 code {

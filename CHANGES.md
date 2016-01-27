@@ -1,7 +1,9 @@
 # Changelog
 
-## 5.0.7 (...)
+## 5.0.7 (2016-01-27)
 - add link to OpenVPN Connect for Android FAQ
+- add section on Privacy
+- update CSS
 
 ## 5.0.6 (2016-01-13)
 - BUGFIX: strlen($userId_$name) MUST have length <64
