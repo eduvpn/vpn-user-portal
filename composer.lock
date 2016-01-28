@@ -131,16 +131,16 @@
         },
         {
             "name": "fkooman/rest",
-            "version": "1.0.6",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest.git",
-                "reference": "17930fcdd581743528448d37d3f9c70c0fb0e63f"
+                "reference": "6c2b5ba40609a63b71f0846a1c88ee6531916ecd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/17930fcdd581743528448d37d3f9c70c0fb0e63f",
-                "reference": "17930fcdd581743528448d37d3f9c70c0fb0e63f",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest/zipball/6c2b5ba40609a63b71f0846a1c88ee6531916ecd",
+                "reference": "6c2b5ba40609a63b71f0846a1c88ee6531916ecd",
                 "shasum": ""
             },
             "require": {
@@ -170,20 +170,20 @@
                 }
             ],
             "description": "Simple PHP library for writing REST services.",
-            "time": "2015-12-24 23:27:13"
+            "time": "2016-01-25 14:07:35"
         },
         {
             "name": "fkooman/rest-plugin-authentication",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication.git",
-                "reference": "262fbdba24cf1c5b02016dafc65e9fff37fa6cd0"
+                "reference": "75fa6432b738a348fd576f352e18c616e423b5f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication/zipball/262fbdba24cf1c5b02016dafc65e9fff37fa6cd0",
-                "reference": "262fbdba24cf1c5b02016dafc65e9fff37fa6cd0",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication/zipball/75fa6432b738a348fd576f352e18c616e423b5f5",
+                "reference": "75fa6432b738a348fd576f352e18c616e423b5f5",
                 "shasum": ""
             },
             "require": {
@@ -217,7 +217,7 @@
                 }
             ],
             "description": "Authentication plugin for fkooman/rest",
-            "time": "2015-11-19 12:28:26"
+            "time": "2016-01-21 19:55:11"
         },
         {
             "name": "fkooman/rest-plugin-authentication-basic",
@@ -620,16 +620,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.1",
+            "version": "v2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "ac84cbb98b68a6abbc9f5149eb96ccc7b07b8966"
+                "reference": "34c8a4b51e751e7ea869b8262f883d008a2b81b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/ac84cbb98b68a6abbc9f5149eb96ccc7b07b8966",
-                "reference": "ac84cbb98b68a6abbc9f5149eb96ccc7b07b8966",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/34c8a4b51e751e7ea869b8262f883d008a2b81b8",
+                "reference": "34c8a4b51e751e7ea869b8262f883d008a2b81b8",
                 "shasum": ""
             },
             "require": {
@@ -665,20 +665,20 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2015-12-26 13:37:56"
+            "time": "2016-01-13 10:28:07"
         },
         {
             "name": "twig/twig",
-            "version": "v1.23.1",
+            "version": "v1.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6"
+                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
-                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
+                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
                 "shasum": ""
             },
             "require": {
@@ -691,7 +691,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.23-dev"
+                    "dev-master": "1.24-dev"
                 }
             },
             "autoload": {
@@ -726,7 +726,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-11-05 12:49:06"
+            "time": "2016-01-25 21:22:18"
         }
     ],
     "packages-dev": [],
