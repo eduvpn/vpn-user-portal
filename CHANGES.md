@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.1.0 (...)
+- merge the 'Active' and 'Revoked' tab together, add some more documentation 
+  on the various states.
+
 ## 5.0.8 (2016-01-27)
 - update documentation
 - remove some redundant text from 'Revoke' tab

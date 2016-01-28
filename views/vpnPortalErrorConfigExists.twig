@@ -8,8 +8,7 @@
     {% if not isBlocked %}
         <ul class="mainMenu">
           <li class="active"><a href="new">New</a></li>
-          <li><a href="active">Active</a></li>
-          <li><a href="revoked">Revoked</a></li>
+          <li><a href="configurations">Configurations</a></li>
           <li><a href="documentation">Documentation</a></li>
         </ul>
     {% endif %}
@@ -25,11 +24,11 @@
             You tried to create a configuration with name <em>{{ configName|e }}</em>, but it was already used before!
         </p>
         <p>
-            You can only use a name once, check your <a href="active">Active</a> and <a href="revoked">Revoked</a> configurations to see which names were already used.
+            You can only use a name once, check your <a href="configurations">Configurations</a> to see which names were already used.
         </p>
 
         <p>
-            Use your browser's back button, or click <a href="new">here</a>.
+            Use your browser's back button, or click <a href="new">here</a> to try again.
         </p> 
 
     {% endif %}

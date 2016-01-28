@@ -11,7 +11,7 @@ body, button, input {
 
 button, input, code, body {
     line-height: 1.5;
-    font-size: 100%;
+    font-size: 1em;
 }
 
 h1, h2, h3, h4 {
@@ -49,6 +49,7 @@ p.plain {
 }
 
 code {
+    font-family: monospace, monospace;
     color: #c24;
     background-color: #eee;
     padding: 0 0.3em;
