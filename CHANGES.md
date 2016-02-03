@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.1 (2016-02-03)
+- update iOS documentation
+
 ## 5.1.0 (2016-02-03)
 - merge the 'Active' and 'Revoked' tab together and have an "Active", 
   "Disabled" and "Revoked" table
