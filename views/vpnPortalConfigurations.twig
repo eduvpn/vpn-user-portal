@@ -20,67 +20,86 @@
     {% else %} 
         <h2>Configurations</h2>
         <p>
-            This page lists the status of your configurations. See the <a href="documentation#state">Documentation</a> for more information on the status.
+            This page lists your VPN configurations. Create a new configuration <a href="new">here</a>.
         </p>
 
-        <h3>Active</h3>
-            {% if activeVpnConfigurations is empty %}
+        {% if activeVpnConfigurations is empty %}
+            <p class="plain">
+                You currently have no active configurations &#x1f61e; <a href="new">Create</a> a configuration!
+            </p>                    
+        {% endif %}
 
-                <p class="plain">
-                    You currently have no active configurations &#x1f61e; You can create a configuration <a href="new">here</a>.
-                </p>                    
-        
-            {% else %}
-                <table>
-                    <thead>
-                        <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th>Disabled</th><th></th></tr>
-                    </thead>
-                    <tbody>
-                        {% for config in activeVpnConfigurations %}
-                            <tr>
-                                <td>{{ config.name|e }}</td>
-                                <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
-                                <td>{% if config.disabled %}<span class="text-danger">Yes</span>{% else %}<span class="text-success">No</span>{% endif %}</td>
-                                <td class="text-right">
-                                    <form method="post" action="revoke">
-                                        <input type="hidden" name="name" value="{{ config.name|e }}">
-                                        <button class="danger" type="submit">Revoke</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
+        {% if activeVpnConfigurations is not empty %}
+            <h3>Active</h3>
+            <p>This is a list of <em>active</em> configurations you created. They can be used to connect to the VPN server. You can <em>revoke</em> the configuration if you will never use it again.</p>
 
-        <h3>Revoked</h3>
-            {% if revokedVpnConfigurations is empty %}
-
-                <p class="plain">
-                    You currently have no revoked configurations.
-                </p>                    
-        
-            {% else %}
-                <table>
-                    <thead>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th></th></tr>
+                </thead>
+                <tbody>
+                    {% for config in activeVpnConfigurations %}
                         <tr>
-                            <th>Name</th>
-                            <th>Created ({{ date()|date('T') }})</th>
-                            <th>Revoked ({{ date()|date('T') }})</th>
+                            <td>{{ config.name|e }}</td>
+                            <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
+                            <td class="text-right">
+                                <form method="post" action="revoke">
+                                    <input type="hidden" name="name" value="{{ config.name|e }}">
+                                    <button class="danger" type="submit">Revoke</button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for config in revokedVpnConfigurations %}
-                            <tr>
-                                <td>{{ config.name|e }}</td>
-                                <td>{{ config.created_at|e|date('Y-m-d H:i:s') }}</td>
-                                <td>{{ config.revoked_at|e|date('Y-m-d H:i:s') }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
 
+        {% if disabledVpnConfigurations is not empty %}
+            <h3>Disabled</h3>
+            <p>This is a list of <em>disabled</em> configurations. They are (temporary) disabled by an administrator. Contact support for more information. You can <em>revoke</em> the configuration if you will never use it again.</p>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th></th></tr>
+                </thead>
+                <tbody>
+                    {% for config in disabledVpnConfigurations %}
+                        <tr>
+                            <td>{{ config.name|e }}</td>
+                            <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
+                            <td class="text-right">
+                                <form method="post" action="revoke">
+                                    <input type="hidden" name="name" value="{{ config.name|e }}">
+                                    <button class="danger" type="submit">Revoke</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% if revokedVpnConfigurations is not empty %}
+            <h3>Revoked</h3>
+            <p>This is a list of <em>revoked</em> configurations. They are permanently disabled and can no longer be used.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Created ({{ date()|date('T') }})</th>
+                        <th>Revoked ({{ date()|date('T') }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for config in revokedVpnConfigurations %}
+                        <tr>
+                            <td>{{ config.name|e }}</td>
+                            <td>{{ config.created_at|e|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ config.revoked_at|e|date('Y-m-d H:i:s') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
 
     {% endif %}
 

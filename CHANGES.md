@@ -1,8 +1,8 @@
 # Changelog
 
-## 5.1.0 (...)
-- merge the 'Active' and 'Revoked' tab together, add some more documentation 
-  on the various states.
+## 5.1.0 (2016-02-03)
+- merge the 'Active' and 'Revoked' tab together and have an "Active", 
+  "Disabled" and "Revoked" table
 
 ## 5.0.8 (2016-01-27)
 - update documentation

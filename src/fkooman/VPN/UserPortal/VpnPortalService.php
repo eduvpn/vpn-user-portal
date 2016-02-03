@@ -75,23 +75,23 @@ class VpnPortalService extends Service
             '/configurations',
             function (Request $request, UserInfoInterface $u) {
                 $activeVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_ACTIVE);
+                $revokedVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_REVOKED);
                 $disabledCommonNames = $this->vpnServerApiClient->getCcdDisable($u->getUserId());
+                $disabledVpnConfigurations = array();
 
                 foreach ($activeVpnConfigurations as $key => $vpnConfiguration) {
                     $commonName = sprintf('%s_%s', $vpnConfiguration['user_id'], $vpnConfiguration['name']);
                     if (in_array($commonName, $disabledCommonNames['disabled'])) {
-                        $activeVpnConfigurations[$key]['disabled'] = true;
-                    } else {
-                        $activeVpnConfigurations[$key]['disabled'] = false;
+                        $disabledVpnConfigurations[] = $activeVpnConfigurations[$key];
+                        unset($activeVpnConfigurations[$key]);
                     }
                 }
-
-                $revokedVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_REVOKED);
 
                 return $this->templateManager->render(
                     'vpnPortalConfigurations',
                     array(
                         'activeVpnConfigurations' => $activeVpnConfigurations,
+                        'disabledVpnConfigurations' => $disabledVpnConfigurations,
                         'revokedVpnConfigurations' => $revokedVpnConfigurations,
                         'isBlocked' => $this->isBlocked($u->getUserId()),
                     )
