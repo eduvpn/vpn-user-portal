@@ -129,8 +129,8 @@ label {
     display: block;
 }
 
-input[type="text"], input[type="checkbox"] {
-    margin: 0;
+input[type="text"], input[type="password"], input[type="checkbox"] {
+    margin: 0 0 1em 0;
     padding: 0.5em 0.7em;
     border: 1px solid #ddd;
     border-radius: 0.2em;
