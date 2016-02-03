@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.1.2 (2016-02-03)
+- update CSS
+
 ## 5.1.1 (2016-02-03)
 - update iOS documentation
 
