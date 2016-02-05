@@ -64,59 +64,6 @@ try {
     $service = new Service();
 
     $service->post(
-        '/revoke',
-        function (Request $request) use ($VpnConfigApiClient, $db) {
-            $userId = $request->getPostParameter('user_id');
-            $configName = $request->getPostParameter('config_name');
-            // XXX: maximum length is 64 of both!
-            // XXX: validate user_id
-            Utils::validateConfigName($configName);
-            $VpnConfigApiClient->revokeConfiguration($userId, $configName);
-            $db->revokeConfiguration($userId, $configName);
-
-            return new JsonResponse();
-        }
-    );
-
-    $service->get(
-        '/configurations',
-        function (Request $request) use ($db) {
-            // XXX: validate filterByUser
-            $filterByUser = $request->getUrl()->getQueryParameter('filterByUser');
-            if (is_null($filterByUser)) {
-                $vpnConfigurations = $db->getAllConfigurations();
-            } else {
-                $vpnConfigurations = $db->getConfigurations($filterByUser);
-            }
-            $response = new JsonResponse();
-            $response->setBody($vpnConfigurations);
-
-            return $response;
-        }
-    );
-
-    // get user list
-    $service->get(
-        '/users',
-        function (Request $request) use ($db) {
-            $userList = array();
-            $users = $db->getUsers();
-            $blockedUsers = $db->getBlockedUsers();
-
-            foreach ($users as $user) {
-                $userList[] = array('user_id' => $user, 'is_blocked' => in_array($user, $blockedUsers));
-            }
-
-            $response = new JsonResponse();
-            $response->setBody(
-                array('items' => $userList)
-            );
-
-            return $response;
-        }
-    );
-
-    $service->post(
         '/blockUser',
         function (Request $request) use ($db) {
             $userId = $request->getPostParameter('user_id');

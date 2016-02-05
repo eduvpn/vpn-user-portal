@@ -75,7 +75,6 @@ class VpnPortalService extends Service
             '/configurations',
             function (Request $request, UserInfoInterface $u) {
                 $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
-                //error_log($certList);
                 $disabledCommonNames = $this->vpnServerApiClient->getCcdDisable($u->getUserId());
 
                 $activeVpnConfigurations = array();
@@ -83,10 +82,7 @@ class VpnPortalService extends Service
                 $disabledVpnConfigurations = array();
                 $expiredVpnConfigurations = array();
 
-                // XXX: do something if the user does not exist?! i.e. if there
-                // are no configurations!
-                // XXX: possibly change the API?
-                foreach ($certList['items'][$u->getUserId()] as $c) {
+                foreach ($certList['items'] as $c) {
                     if ('E' === $c['state']) {
                         $expiredVpnConfigurations[] = $c;
                     } elseif ('R' === $c['state']) {
@@ -100,21 +96,6 @@ class VpnPortalService extends Service
                         }
                     }
                 }
-
-                #$activeVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_ACTIVE);
-                #$revokedVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_REVOKED);
-#                $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
-
-#                $disabledCommonNames = $this->vpnServerApiClient->getCcdDisable($u->getUserId());
-#                $disabledVpnConfigurations = array();
-
-#                foreach ($activeVpnConfigurations as $key => $vpnConfiguration) {
-#                    $commonName = sprintf('%s_%s', $vpnConfiguration['user_id'], $vpnConfiguration['name']);
-#                    if (in_array($commonName, $disabledCommonNames['disabled'])) {
-#                        $disabledVpnConfigurations[] = $activeVpnConfigurations[$key];
-#                        unset($activeVpnConfigurations[$key]);
-#                    }
-#                }
 
                 return $this->templateManager->render(
                     'vpnPortalConfigurations',
@@ -192,18 +173,18 @@ class VpnPortalService extends Service
         }
 
         # make sure config does not exist yet
-        if ($this->db->isExistingConfiguration($userId, $configName)) {
-            return $this->templateManager->render(
-                'vpnPortalErrorConfigExists',
-                array(
-                    'isBlocked' => $this->isBlocked($userId),
-                    'configName' => $configName,
-                )
-            );
-        }
+#        if ($this->db->isExistingConfiguration($userId, $configName)) {
+#            return $this->templateManager->render(
+#                'vpnPortalErrorConfigExists',
+#                array(
+#                    'isBlocked' => $this->isBlocked($userId),
+#                    'configName' => $configName,
+#                )
+#            );
+#        }
 
         # add configuration
-        $this->db->addConfiguration($userId, $configName);
+        #$this->db->addConfiguration($userId, $configName);
 
         # get config from API
         $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
@@ -229,13 +210,13 @@ class VpnPortalService extends Service
         $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
 
-        # make sure config does exists
-        if (!$this->db->isExistingConfiguration($userId, $configName)) {
-            throw new NotFoundException('configuration with this name does not exist');
-        }
+#        # make sure config does exists
+#        if (!$this->db->isExistingConfiguration($userId, $configName)) {
+#            throw new NotFoundException('configuration with this name does not exist');
+#        }
 
         $this->vpnConfigApiClient->revokeConfiguration($userId, $configName);
-        $this->db->revokeConfiguration($userId, $configName);
+#        $this->db->revokeConfiguration($userId, $configName);
 
         // trigger a CRL reload in the servers
         $this->vpnServerApiClient->postCrlFetch();
