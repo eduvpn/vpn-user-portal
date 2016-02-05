@@ -35,13 +35,13 @@
 
             <table>
                 <thead>
-                    <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th></th></tr>
+                    <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
                 </thead>
                 <tbody>
                     {% for config in activeVpnConfigurations %}
                         <tr>
                             <td>{{ config.name|e }}</td>
-                            <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
                             <td class="text-right">
                                 <form method="post" action="revoke">
                                     <input type="hidden" name="name" value="{{ config.name|e }}">
@@ -59,13 +59,13 @@
             <p>This is a list of <em>disabled</em> configurations. They are (temporary) disabled by an administrator. Contact support for more information. You can <em>revoke</em> the configuration if you will never use it again.</p>
             <table>
                 <thead>
-                    <tr><th>Name</th><th>Created ({{ date()|date('T') }})</th><th></th></tr>
+                    <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
                 </thead>
                 <tbody>
                     {% for config in disabledVpnConfigurations %}
                         <tr>
                             <td>{{ config.name|e }}</td>
-                            <td>{{config.created_at|e|date('Y-m-d H:i:s') }}</td>
+                            <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
                             <td class="text-right">
                                 <form method="post" action="revoke">
                                     <input type="hidden" name="name" value="{{ config.name|e }}">
@@ -85,7 +85,7 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Created ({{ date()|date('T') }})</th>
+<!--                        <th>Created ({{ date()|date('T') }})</th>-->
                         <th>Revoked ({{ date()|date('T') }})</th>
                     </tr>
                 </thead>
@@ -93,8 +93,8 @@
                     {% for config in revokedVpnConfigurations %}
                         <tr>
                             <td>{{ config.name|e }}</td>
-                            <td>{{ config.created_at|e|date('Y-m-d H:i:s') }}</td>
-                            <td>{{ config.revoked_at|e|date('Y-m-d H:i:s') }}</td>
+{# <!--                            <td>{{ config.created_at|e|date('Y-m-d H:i:s') }}</td>--> #}
+                            <td>{{ config.rev|e|date('Y-m-d H:i:s') }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

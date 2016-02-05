@@ -38,4 +38,11 @@ class VpnConfigApiClient
 
         return $this->client->delete($requestUri)->getBody();
     }
+
+    public function getCertList($userId)
+    {
+        $requestUri = sprintf('%s/config?userId=%s', $this->vpnConfigApiUri, $userId);
+
+        return $this->client->get($requestUri)->json();
+    }
 }

@@ -74,18 +74,47 @@ class VpnPortalService extends Service
         $this->get(
             '/configurations',
             function (Request $request, UserInfoInterface $u) {
-                $activeVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_ACTIVE);
-                $revokedVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_REVOKED);
+                $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
+                //error_log($certList);
                 $disabledCommonNames = $this->vpnServerApiClient->getCcdDisable($u->getUserId());
-                $disabledVpnConfigurations = array();
 
-                foreach ($activeVpnConfigurations as $key => $vpnConfiguration) {
-                    $commonName = sprintf('%s_%s', $vpnConfiguration['user_id'], $vpnConfiguration['name']);
-                    if (in_array($commonName, $disabledCommonNames['disabled'])) {
-                        $disabledVpnConfigurations[] = $activeVpnConfigurations[$key];
-                        unset($activeVpnConfigurations[$key]);
+                $activeVpnConfigurations = array();
+                $revokedVpnConfigurations = array();
+                $disabledVpnConfigurations = array();
+                $expiredVpnConfigurations = array();
+
+                // XXX: do something if the user does not exist?! i.e. if there
+                // are no configurations!
+                // XXX: possibly change the API?
+                foreach ($certList['items'][$u->getUserId()] as $c) {
+                    if ('E' === $c['state']) {
+                        $expiredVpnConfigurations[] = $c;
+                    } elseif ('R' === $c['state']) {
+                        $revokedVpnConfigurations[] = $c;
+                    } elseif ('V' === $c['state']) {
+                        $commonName = $u->getUserId().'_'.$c['name'];
+                        if (in_array($commonName, $disabledCommonNames['disabled'])) {
+                            $disabledVpnConfigurations[] = $c;
+                        } else {
+                            $activeVpnConfigurations[] = $c;
+                        }
                     }
                 }
+
+                #$activeVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_ACTIVE);
+                #$revokedVpnConfigurations = $this->db->getConfigurations($u->getUserId(), PdoStorage::STATUS_REVOKED);
+#                $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
+
+#                $disabledCommonNames = $this->vpnServerApiClient->getCcdDisable($u->getUserId());
+#                $disabledVpnConfigurations = array();
+
+#                foreach ($activeVpnConfigurations as $key => $vpnConfiguration) {
+#                    $commonName = sprintf('%s_%s', $vpnConfiguration['user_id'], $vpnConfiguration['name']);
+#                    if (in_array($commonName, $disabledCommonNames['disabled'])) {
+#                        $disabledVpnConfigurations[] = $activeVpnConfigurations[$key];
+#                        unset($activeVpnConfigurations[$key]);
+#                    }
+#                }
 
                 return $this->templateManager->render(
                     'vpnPortalConfigurations',
@@ -93,6 +122,7 @@ class VpnPortalService extends Service
                         'activeVpnConfigurations' => $activeVpnConfigurations,
                         'disabledVpnConfigurations' => $disabledVpnConfigurations,
                         'revokedVpnConfigurations' => $revokedVpnConfigurations,
+                        'expiredVpnConfigurations' => $expiredVpnConfigurations,
                         'isBlocked' => $this->isBlocked($u->getUserId()),
                     )
                 );
