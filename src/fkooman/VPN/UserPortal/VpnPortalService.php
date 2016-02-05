@@ -6,7 +6,6 @@ use fkooman\Http\Request;
 use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\ForbiddenException;
-use fkooman\Http\Exception\NotFoundException;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
@@ -172,19 +171,20 @@ class VpnPortalService extends Service
             );
         }
 
-        # make sure config does not exist yet
-#        if ($this->db->isExistingConfiguration($userId, $configName)) {
-#            return $this->templateManager->render(
-#                'vpnPortalErrorConfigExists',
-#                array(
-#                    'isBlocked' => $this->isBlocked($userId),
-#                    'configName' => $configName,
-#                )
-#            );
-#        }
-
-        # add configuration
-        #$this->db->addConfiguration($userId, $configName);
+        // make sure the configuration does not exist yet
+        // XXX: this should be optimized a bit...
+        $certList = $this->vpnConfigApiClient->getCertList($userId);
+        foreach ($certList['items'] as $cert) {
+            if ($configName === $cert['name']) {
+                return $this->templateManager->render(
+                    'vpnPortalErrorConfigExists',
+                    array(
+                        'isBlocked' => $this->isBlocked($userId),
+                        'configName' => $configName,
+                    )
+                );
+            }
+        }
 
         # get config from API
         $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
@@ -210,13 +210,7 @@ class VpnPortalService extends Service
         $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
 
-#        # make sure config does exists
-#        if (!$this->db->isExistingConfiguration($userId, $configName)) {
-#            throw new NotFoundException('configuration with this name does not exist');
-#        }
-
         $this->vpnConfigApiClient->revokeConfiguration($userId, $configName);
-#        $this->db->revokeConfiguration($userId, $configName);
 
         // trigger a CRL reload in the servers
         $this->vpnServerApiClient->postCrlFetch();
