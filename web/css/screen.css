@@ -73,8 +73,24 @@ ul.ipList {
 ul.ipList li {
     list-style: none;
 }
-    
-/** MENU **/
+
+/** SUB MENU **/
+ul.subMenu {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+ul.subMenu li {
+    list-style: none;
+    display: inline-block;
+}
+
+ul.subMenu li + li:before {
+    content: " | ";
+}
+
+/** MAIN MENU **/
 ul.mainMenu {
     margin: 0 0 1em 0;
     padding: 0;
