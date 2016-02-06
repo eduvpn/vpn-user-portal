@@ -2,12 +2,12 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-use fkooman\VPN\UserPortal\PdoStorage;
 use fkooman\VPN\UserPortal\VpnPortalService;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
+use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
 use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
 use fkooman\Tpl\Twig\TwigTemplateManager;
 use GuzzleHttp\Client;
@@ -16,6 +16,7 @@ use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\VPN\UserPortal\SimpleError;
 use fkooman\Config\Reader;
 use fkooman\Config\YamlFile;
+use fkooman\Http\Session;
 
 SimpleError::register();
 
@@ -24,17 +25,27 @@ try {
         new YamlFile(dirname(__DIR__).'/config/config.yaml')
     );
 
-    $pdo = new PDO(
-        $reader->v('PdoStorage', 'dsn'),
-        $reader->v('PdoStorage', 'username', false),
-        $reader->v('PdoStorage', 'password', false)
-    );
+    $serverMode = $reader->v('serverMode', false, 'production');
 
-    // Database
-    $pdoStorage = new PdoStorage($pdo);
+    $request = new Request($_SERVER);
+
+    $templateManager = new TwigTemplateManager(
+        array(
+            dirname(__DIR__).'/views',
+            dirname(__DIR__).'/config/views',
+        ),
+        $reader->v('templateCache', false, null)
+    );
+    $templateManager->setDefault(
+        array(
+            'rootFolder' => $request->getUrl()->getRoot(),
+        )
+    );
 
     // Authentication
     $authMethod = $reader->v('authMethod');
+    $templateManager->addDefault(array('authMethod' => $authMethod));
+
     switch ($authMethod) {
         case 'MellonAuthentication':
             $auth = new MellonAuthentication(
@@ -54,24 +65,30 @@ try {
                 array('realm' => 'VPN User Portal')
             );
             break;
+        case 'FormAuthentication':
+            $session = new Session(
+                'vpn-user-portal',
+                array(
+                    'secure' => 'development' !== $serverMode,
+                )
+            );
+            $auth = new FormAuthentication(
+                function ($userId) use ($reader) {
+                    $userList = $reader->v('FormAuthentication');
+                    if (null === $userList || !array_key_exists($userId, $userList)) {
+                        return false;
+                    }
+
+                    return $userList[$userId];
+                },
+                $templateManager,
+                $session
+            );
+            break;
+
         default:
             throw new RuntimeException('unsupported authentication mechanism');
     }
-
-    $request = new Request($_SERVER);
-
-    $templateManager = new TwigTemplateManager(
-        array(
-            dirname(__DIR__).'/views',
-            dirname(__DIR__).'/config/views',
-        ),
-        $reader->v('templateCache', false, null)
-    );
-    $templateManager->setDefault(
-        array(
-            'rootFolder' => $request->getUrl()->getRoot(),
-        )
-    );
 
     // VPN Config API Configuration
     $serviceUri = $reader->v('VpnConfigApi', 'serviceUri');
@@ -100,7 +117,6 @@ try {
     $vpnServerApiClient = new VpnServerApiClient($client, $serviceUri);
 
     $service = new VpnPortalService(
-        $pdoStorage,
         $templateManager,
         $vpnConfigApiClient,
         $vpnServerApiClient

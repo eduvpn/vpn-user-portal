@@ -5,103 +5,93 @@
 <body>
     {% include 'header.twig' %}
 
-    {% if not isBlocked %}
-        <ul class="mainMenu">
-          <li><a href="new">New</a></li>
-          <li class="active"><a href="configurations">Configurations</a></li>
-          <li><a href="documentation">Documentation</a></li>
-        </ul>
+    <ul class="mainMenu">
+      <li><a href="new">New</a></li>
+      <li class="active"><a href="configurations">Configurations</a></li>
+      <li><a href="documentation">Documentation</a></li>
+    </ul>
+
+    <h2>Configurations</h2>
+    <p>
+        This page lists your VPN configurations. Create a new configuration <a href="new">here</a>.
+    </p>
+
+    {% if activeVpnConfigurations is empty %}
+        <p class="plain">
+            You currently have no active configurations &#x1f61e; <a href="new">Create</a> a configuration!
+        </p>                    
     {% endif %}
 
-    {% if isBlocked %}
+    {% if activeVpnConfigurations is not empty %}
+        <h3>Active</h3>
+        <p>This is a list of <em>active</em> configurations you created. They can be used to connect to the VPN server. You can <em>revoke</em> the configuration if you will never use it again.</p>
 
-        {% include 'blocked.twig' %}
-
-    {% else %} 
-        <h2>Configurations</h2>
-        <p>
-            This page lists your VPN configurations. Create a new configuration <a href="new">here</a>.
-        </p>
-
-        {% if activeVpnConfigurations is empty %}
-            <p class="plain">
-                You currently have no active configurations &#x1f61e; <a href="new">Create</a> a configuration!
-            </p>                    
-        {% endif %}
-
-        {% if activeVpnConfigurations is not empty %}
-            <h3>Active</h3>
-            <p>This is a list of <em>active</em> configurations you created. They can be used to connect to the VPN server. You can <em>revoke</em> the configuration if you will never use it again.</p>
-
-            <table>
-                <thead>
-                    <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
-                </thead>
-                <tbody>
-                    {% for config in activeVpnConfigurations %}
-                        <tr>
-                            <td>{{ config.name|e }}</td>
-                            <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
-                            <td class="text-right">
-                                <form method="post" action="revoke">
-                                    <input type="hidden" name="name" value="{{ config.name|e }}">
-                                    <button class="danger" type="submit">Revoke</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-
-        {% if disabledVpnConfigurations is not empty %}
-            <h3>Disabled</h3>
-            <p>This is a list of <em>disabled</em> configurations. They are (temporary) disabled by an administrator. Contact support for more information. You can <em>revoke</em> the configuration if you will never use it again.</p>
-            <table>
-                <thead>
-                    <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
-                </thead>
-                <tbody>
-                    {% for config in disabledVpnConfigurations %}
-                        <tr>
-                            <td>{{ config.name|e }}</td>
-                            <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
-                            <td class="text-right">
-                                <form method="post" action="revoke">
-                                    <input type="hidden" name="name" value="{{ config.name|e }}">
-                                    <button class="danger" type="submit">Revoke</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-
-        {% if revokedVpnConfigurations is not empty %}
-            <h3>Revoked</h3>
-            <p>This is a list of <em>revoked</em> configurations. They are permanently disabled and can no longer be used.</p>
-            <table>
-                <thead>
+        <table>
+            <thead>
+                <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for config in activeVpnConfigurations %}
                     <tr>
-                        <th>Name</th>
-<!--                        <th>Created ({{ date()|date('T') }})</th>-->
-                        <th>Revoked ({{ date()|date('T') }})</th>
+                        <td>{{ config.name|e }}</td>
+                        <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
+                        <td class="text-right">
+                            <form method="post" action="revoke">
+                                <input type="hidden" name="name" value="{{ config.name|e }}">
+                                <button class="danger" type="submit">Revoke</button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for config in revokedVpnConfigurations %}
-                        <tr>
-                            <td>{{ config.name|e }}</td>
-{# <!--                            <td>{{ config.created_at|e|date('Y-m-d H:i:s') }}</td>--> #}
-                            <td>{{ config.rev|e|date('Y-m-d H:i:s') }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
+
+    {% if disabledVpnConfigurations is not empty %}
+        <h3>Disabled</h3>
+        <p>This is a list of <em>disabled</em> configurations. They are (temporary) disabled by an administrator. Contact support for more information. You can <em>revoke</em> the configuration if you will never use it again.</p>
+        <table>
+            <thead>
+                <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for config in disabledVpnConfigurations %}
+                    <tr>
+                        <td>{{ config.name|e }}</td>
+                        <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
+                        <td class="text-right">
+                            <form method="post" action="revoke">
+                                <input type="hidden" name="name" value="{{ config.name|e }}">
+                                <button class="danger" type="submit">Revoke</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if revokedVpnConfigurations is not empty %}
+        <h3>Revoked</h3>
+        <p>This is a list of <em>revoked</em> configurations. They are permanently disabled and can no longer be used.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Revoked ({{ date()|date('T') }})</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for config in revokedVpnConfigurations %}
+                    <tr>
+                        <td>{{ config.name|e }}</td>
+                        <td>{{ config.rev|e|date('Y-m-d H:i:s') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
 
     {% include 'footer.twig' %}
 </body>

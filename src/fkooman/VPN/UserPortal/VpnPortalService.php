@@ -5,7 +5,6 @@ namespace fkooman\VPN\UserPortal;
 use fkooman\Http\Request;
 use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
-use fkooman\Http\Exception\ForbiddenException;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
@@ -13,20 +12,16 @@ use fkooman\Tpl\TemplateManagerInterface;
 
 class VpnPortalService extends Service
 {
-    /** @var PdoStorage */
-    private $db;
-
     /** @var \fkooman\Tpl\TemplateManagerInterface */
     private $templateManager;
 
     /** @var VpnConfigApiClient */
     private $vpnConfigApiClient;
 
-    public function __construct(PdoStorage $db, TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
     {
         parent::__construct();
 
-        $this->db = $db;
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
@@ -53,7 +48,6 @@ class VpnPortalService extends Service
                     'vpnPortalNew',
                     array(
                         'advanced' => (bool) $request->getUrl()->getQueryParameter('advanced'),
-                        'isBlocked' => $this->isBlocked($u->getUserId()),
                         'cnLength' => 63 - strlen($u->getUserId()),
                     )
                 );
@@ -103,7 +97,6 @@ class VpnPortalService extends Service
                         'disabledVpnConfigurations' => $disabledVpnConfigurations,
                         'revokedVpnConfigurations' => $revokedVpnConfigurations,
                         'expiredVpnConfigurations' => $expiredVpnConfigurations,
-                        'isBlocked' => $this->isBlocked($u->getUserId()),
                     )
                 );
             }
@@ -121,7 +114,6 @@ class VpnPortalService extends Service
                         'vpnPortalConfirmRevoke',
                         array(
                             'configName' => $configName,
-                            'isBlocked' => $this->isBlocked($u->getUserId()),
                         )
                     );
                 }
@@ -151,7 +143,6 @@ class VpnPortalService extends Service
                 return $this->templateManager->render(
                     'vpnPortalDocumentation',
                     array(
-                        'isBlocked' => $this->isBlocked($u->getUserId()),
                     )
                 );
             }
@@ -160,7 +151,6 @@ class VpnPortalService extends Service
 
     public function getConfig($userId, $configName, $returnZip = true)
     {
-        $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
 
         // userId + configName length cannot be longer than 64 as the
@@ -179,7 +169,6 @@ class VpnPortalService extends Service
                 return $this->templateManager->render(
                     'vpnPortalErrorConfigExists',
                     array(
-                        'isBlocked' => $this->isBlocked($userId),
                         'configName' => $configName,
                     )
                 );
@@ -207,7 +196,6 @@ class VpnPortalService extends Service
 
     public function revokeConfig($userId, $configName)
     {
-        $this->requireNotBlocked($userId);
         Utils::validateConfigName($configName);
 
         $this->vpnConfigApiClient->revokeConfiguration($userId, $configName);
@@ -226,17 +214,5 @@ class VpnPortalService extends Service
         $response->setHeader('X-Frame-Options', 'DENY');
 
         return $response;
-    }
-
-    private function isBlocked($userId)
-    {
-        return $this->db->isBlocked($userId);
-    }
-
-    private function requireNotBlocked($userId)
-    {
-        if ($this->isBlocked($userId)) {
-            throw new ForbiddenException('user_blocked', 'the user was blocked by the administrator');
-        }
     }
 }

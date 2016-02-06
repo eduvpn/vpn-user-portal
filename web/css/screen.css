@@ -88,8 +88,10 @@ ul.mainMenu li {
 
 ul.mainMenu li a {
     padding: 0.7em;
+    margin: 0.2em 0;
     text-decoration: none;
     border-radius: 0.2em;
+    display: inline-block;
 }
 
 ul.mainMenu li.active a {
@@ -213,17 +215,30 @@ th {
     border-bottom: 2px solid #ddd;
 }
 
-/** FOOTER **/
+/** FOOTER & SIGN OUT **/
 hr { 
     border: 0; 
 }
 
-p.footer {
+p.footer, form.footer {
     text-align: center;
     font-size: 90%;
     color: #888;
+    margin: 0;
 }
 
 p.footer a {
     color: #888;
+}
+
+form.footer button {
+    color: #888;
+    border: 0;
+    background-color: #fff;
+    text-decoration: underline;
+}
+
+form.footer fieldset {
+    margin: 0;
+    padding: 0;
 }

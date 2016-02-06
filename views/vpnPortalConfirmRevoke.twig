@@ -5,29 +5,20 @@
 <body>
     {% include 'header.twig' %}
 
-    {% if not isBlocked %}
-        <ul class="mainMenu">
-          <li><a href="new">New</a></li>
-          <li class="active"><a href="configurations">Configurations</a></li>
-          <li><a href="documentation">Documentation</a></li>
-        </ul>
-    {% endif %}
+    <ul class="mainMenu">
+      <li><a href="new">New</a></li>
+      <li class="active"><a href="configurations">Configurations</a></li>
+      <li><a href="documentation">Documentation</a></li>
+    </ul>
 
-    {% if isBlocked %}
+    <h2>Confirm</h2>
+    <p>Are you sure you want to revoke <em>{{ configName|e }}</em>? This can <strong>NOT</strong> be undone!</p>
 
-        {% include 'blocked.twig' %}
-
-    {% else %} 
-
-        <h2>Confirm</h2>
-        <p>Are you sure you want to revoke <em>{{ configName|e }}</em>? This can <strong>NOT</strong> be undone!</p>
-
-        <form method="post">
-            <input type="hidden" name="name" value="{{ configName|e }}">
-            <button class="danger" name="confirm" type="submit" value="yes">Yes</button>
-            <button class="success" name="confirm" type="submit" value="no">No</button>
-        </form>    
-    {% endif %}
+    <form method="post">
+        <input type="hidden" name="name" value="{{ configName|e }}">
+        <button class="danger" name="confirm" type="submit" value="yes">Yes</button>
+        <button class="success" name="confirm" type="submit" value="no">No</button>
+    </form>    
 
     {% include 'footer.twig' %}
 </body>

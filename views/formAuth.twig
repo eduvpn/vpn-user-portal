@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <h2>Sign In</h2>
+
+    <p>
+        Please sign in with your username and password.
+    </p>
+
+    {% if _auth_form_invalid_credentials %}
+        <p class="danger">
+            The credentials you provided are not correct. Please try again!
+        </p>
+    {% endif %}
+
+    <form class="auth" method="post" action="{{ rootFolder|e }}_auth/form/verify">
+        <fieldset>
+            <legend>Sign In</legend>
+
+            {% if _auth_form_invalid_credentials %}
+                <input type="text"     name="userName" placeholder="Username" value="{{ _auth_form_invalid_user_name|e }}" required>
+                <input type="password" name="userPass" placeholder="Password" autofocus required>
+            {% else %}
+                <input type="text"     name="userName" placeholder="Username" autofocus required>
+                <input type="password" name="userPass" placeholder="Password" required>
+            {% endif %} 
+            <button class="info" type="submit">Sign in</button>
+
+        </fieldset>
+    </form>
+
+    {% include 'footer.twig' %}
+</body>
+</html>

@@ -2,3 +2,17 @@
 <p class="footer">
     VPN User Portal
 </p>
+
+{% if authMethod == 'FormAuthentication' %}
+    {# if login_hint is set it means the sign in page is shown, do not show 
+       the Sign Out form #}
+    {% if login_hint is not defined %}
+        {# for FormAuthentication we need a POST form #}
+        <form class="footer" method="post" action="_auth/form/logout">
+            <fieldset>
+                <legend>Sign Out</legend>
+                <button type="submit">Sign Out</button>
+            </fieldset>
+        </form>
+    {% endif %} 
+{% endif %}

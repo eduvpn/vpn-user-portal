@@ -5,33 +5,23 @@
 <body>
     {% include 'header.twig' %}
 
-    {% if not isBlocked %}
-        <ul class="mainMenu">
-          <li class="active"><a href="new">New</a></li>
-          <li><a href="configurations">Configurations</a></li>
-          <li><a href="documentation">Documentation</a></li>
-        </ul>
-    {% endif %}
+    <ul class="mainMenu">
+      <li class="active"><a href="new">New</a></li>
+      <li><a href="configurations">Configurations</a></li>
+      <li><a href="documentation">Documentation</a></li>
+    </ul>
 
-    {% if isBlocked %}
+    <h2>Error</h2>
+    <p class="danger">
+        You tried to create a configuration with name <em>{{ configName|e }}</em>, but it was already used before!
+    </p>
+    <p>
+        You can only use a name once, check your <a href="configurations">Configurations</a> to see which names were already used.
+    </p>
 
-        {% include 'blocked.twig' %}
-
-    {% else %} 
-
-        <h2>Error</h2>
-        <p class="danger">
-            You tried to create a configuration with name <em>{{ configName|e }}</em>, but it was already used before!
-        </p>
-        <p>
-            You can only use a name once, check your <a href="configurations">Configurations</a> to see which names were already used.
-        </p>
-
-        <p>
-            Use your browser's back button, or click <a href="new">here</a> to try again.
-        </p> 
-
-    {% endif %}
+    <p>
+        Use your browser's back button, or click <a href="new">here</a> to try again.
+    </p> 
 
     {% include 'footer.twig' %}
 </body>
