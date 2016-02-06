@@ -16,9 +16,9 @@
  */
 namespace fkooman\VPN\UserPortal;
 
+use DomainException;
 use fkooman\Http\Exception\BadRequestException;
 use ZipArchive;
-use DomainException;
 
 class Utils
 {

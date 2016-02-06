@@ -16,22 +16,22 @@
  */
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-use fkooman\VPN\UserPortal\VpnPortalModule;
-use fkooman\Rest\Service;
-use fkooman\VPN\UserPortal\VpnConfigApiClient;
-use fkooman\VPN\UserPortal\VpnServerApiClient;
-use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
-use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
-use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
-use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
-use fkooman\Tpl\Twig\TwigTemplateManager;
-use GuzzleHttp\Client;
-use fkooman\Http\Request;
-use fkooman\Http\Exception\InternalServerErrorException;
-use fkooman\VPN\UserPortal\SimpleError;
 use fkooman\Config\Reader;
 use fkooman\Config\YamlFile;
+use fkooman\Http\Exception\InternalServerErrorException;
+use fkooman\Http\Request;
 use fkooman\Http\Session;
+use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
+use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
+use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
+use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
+use fkooman\Rest\Service;
+use fkooman\Tpl\Twig\TwigTemplateManager;
+use fkooman\VPN\UserPortal\SimpleError;
+use fkooman\VPN\UserPortal\VpnConfigApiClient;
+use fkooman\VPN\UserPortal\VpnPortalModule;
+use fkooman\VPN\UserPortal\VpnServerApiClient;
+use GuzzleHttp\Client;
 
 SimpleError::register();
 

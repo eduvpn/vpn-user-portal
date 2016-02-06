@@ -16,13 +16,13 @@
  */
 namespace fkooman\VPN\UserPortal;
 
+use fkooman\Http\Exception\BadRequestException;
+use fkooman\Http\RedirectResponse;
 use fkooman\Http\Request;
 use fkooman\Http\Response;
-use fkooman\Http\RedirectResponse;
-use fkooman\Http\Exception\BadRequestException;
+use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
-use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Tpl\TemplateManagerInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
@@ -79,7 +79,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $configName = $request->getPostParameter('name');
                 $optionZip = (bool) $request->getPostParameter('option_zip');
 
-                return $service->getConfig($u->getUserId(), $configName, $optionZip);
+                return $this->getConfig($u->getUserId(), $configName, $optionZip);
             }
         );
 
