@@ -27,13 +27,10 @@ use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
 use fkooman\Rest\Service;
 use fkooman\Tpl\Twig\TwigTemplateManager;
-use fkooman\VPN\UserPortal\SimpleError;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnPortalModule;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
 use GuzzleHttp\Client;
-
-SimpleError::register();
 
 try {
     $config = new Reader(
@@ -142,7 +139,12 @@ try {
     $authenticationPlugin = new AuthenticationPlugin();
     $authenticationPlugin->register($auth, 'user');
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
-    $service->run($request)->send();
+    $response = $service->run($request);
+    # CSP: https://developer.mozilla.org/en-US/docs/Security/CSP
+    $response->setHeader('Content-Security-Policy', "default-src 'self'");
+    # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
+    $response->setHeader('X-Frame-Options', 'DENY');
+    $response->send();
 } catch (Exception $e) {
     // internal server error
     error_log($e->__toString());
