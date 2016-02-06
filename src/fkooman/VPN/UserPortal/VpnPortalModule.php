@@ -1,5 +1,19 @@
 <?php
-
+/**
+ * Copyright 2016 François Kooman <fkooman@tuxed.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 namespace fkooman\VPN\UserPortal;
 
 use fkooman\Http\Request;
@@ -7,10 +21,11 @@ use fkooman\Http\Response;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Rest\Service;
+use fkooman\Rest\ServiceModuleInterface;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Tpl\TemplateManagerInterface;
 
-class VpnPortalService extends Service
+class VpnPortalModule implements ServiceModuleInterface
 {
     /** @var \fkooman\Tpl\TemplateManagerInterface */
     private $templateManager;
@@ -18,30 +33,34 @@ class VpnPortalService extends Service
     /** @var VpnConfigApiClient */
     private $vpnConfigApiClient;
 
+    /** @var VpnServerApiClient */
+    private $vpnServerApiClient;
+
     public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
     {
-        parent::__construct();
-
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
+    }
 
+    public function init(Service $service)
+    {
         /* REDIRECTS **/
-        $this->get(
+        $service->get(
             '/config/',
             function (Request $request) {
                 return new RedirectResponse($request->getUrl()->getRootUrl(), 301);
             }
         );
 
-        $this->get(
+        $service->get(
             '/',
             function (Request $request, UserInfoInterface $u) {
                 return new RedirectResponse($request->getUrl()->getRootUrl().'new', 302);
             }
         );
 
-        $this->get(
+        $service->get(
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 return $this->templateManager->render(
@@ -54,17 +73,17 @@ class VpnPortalService extends Service
             }
         );
 
-        $this->post(
+        $service->post(
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
                 $optionZip = (bool) $request->getPostParameter('option_zip');
 
-                return $this->getConfig($u->getUserId(), $configName, $optionZip);
+                return $service->getConfig($u->getUserId(), $configName, $optionZip);
             }
         );
 
-        $this->get(
+        $service->get(
             '/configurations',
             function (Request $request, UserInfoInterface $u) {
                 $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
@@ -102,7 +121,7 @@ class VpnPortalService extends Service
             }
         );
 
-        $this->post(
+        $service->post(
             '/revoke',
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
@@ -127,7 +146,7 @@ class VpnPortalService extends Service
             }
         );
 
-        $this->get(
+        $service->get(
             '/whoami',
             function (Request $request, UserInfoInterface $u) {
                 $response = new Response(200, 'text/plain');
@@ -137,7 +156,7 @@ class VpnPortalService extends Service
             }
         );
 
-        $this->get(
+        $service->get(
             '/documentation',
             function (Request $request, UserInfoInterface $u) {
                 return $this->templateManager->render(
@@ -202,17 +221,5 @@ class VpnPortalService extends Service
 
         // trigger a CRL reload in the servers
         $this->vpnServerApiClient->postCrlFetch();
-    }
-
-    public function run(Request $request = null)
-    {
-        $response = parent::run($request);
-
-        # CSP: https://developer.mozilla.org/en-US/docs/Security/CSP
-        $response->setHeader('Content-Security-Policy', "default-src 'self'");
-        # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-        $response->setHeader('X-Frame-Options', 'DENY');
-
-        return $response;
     }
 }

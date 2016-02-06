@@ -1,8 +1,23 @@
 <?php
-
+/**
+ * Copyright 2016 François Kooman <fkooman@tuxed.net>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-use fkooman\VPN\UserPortal\VpnPortalService;
+use fkooman\VPN\UserPortal\VpnPortalModule;
+use fkooman\Rest\Service;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
@@ -21,11 +36,11 @@ use fkooman\Http\Session;
 SimpleError::register();
 
 try {
-    $reader = new Reader(
+    $config = new Reader(
         new YamlFile(dirname(__DIR__).'/config/config.yaml')
     );
 
-    $serverMode = $reader->v('serverMode', false, 'production');
+    $serverMode = $config->v('serverMode', false, 'production');
 
     $request = new Request($_SERVER);
 
@@ -34,7 +49,7 @@ try {
             dirname(__DIR__).'/views',
             dirname(__DIR__).'/config/views',
         ),
-        $reader->v('templateCache', false, null)
+        $config->v('templateCache', false, null)
     );
     $templateManager->setDefault(
         array(
@@ -43,19 +58,19 @@ try {
     );
 
     // Authentication
-    $authMethod = $reader->v('authMethod');
+    $authMethod = $config->v('authMethod');
     $templateManager->addDefault(array('authMethod' => $authMethod));
 
     switch ($authMethod) {
         case 'MellonAuthentication':
             $auth = new MellonAuthentication(
-                $reader->v('MellonAuthentication', 'attribute')
+                $config->v('MellonAuthentication', 'attribute')
             );
             break;
         case 'BasicAuthentication':
             $auth = new BasicAuthentication(
-                function ($userId) use ($reader) {
-                    $userList = $reader->v('BasicAuthentication');
+                function ($userId) use ($config) {
+                    $userList = $config->v('BasicAuthentication');
                     if (!array_key_exists($userId, $userList)) {
                         return false;
                     }
@@ -73,8 +88,8 @@ try {
                 )
             );
             $auth = new FormAuthentication(
-                function ($userId) use ($reader) {
-                    $userList = $reader->v('FormAuthentication');
+                function ($userId) use ($config) {
+                    $userList = $config->v('FormAuthentication');
                     if (null === $userList || !array_key_exists($userId, $userList)) {
                         return false;
                     }
@@ -91,9 +106,9 @@ try {
     }
 
     // VPN Config API Configuration
-    $serviceUri = $reader->v('VpnConfigApi', 'serviceUri');
-    $serviceAuth = $reader->v('VpnConfigApi', 'serviceUser');
-    $servicePass = $reader->v('VpnConfigApi', 'servicePass');
+    $serviceUri = $config->v('VpnConfigApi', 'serviceUri');
+    $serviceAuth = $config->v('VpnConfigApi', 'serviceUser');
+    $servicePass = $config->v('VpnConfigApi', 'servicePass');
     $client = new Client(
         array(
             'defaults' => array(
@@ -104,9 +119,9 @@ try {
     $vpnConfigApiClient = new VpnConfigApiClient($client, $serviceUri);
 
     // VPN Server API Configuration
-    $serviceUri = $reader->v('VpnServerApi', 'serviceUri');
-    $serviceAuth = $reader->v('VpnServerApi', 'serviceUser');
-    $servicePass = $reader->v('VpnServerApi', 'servicePass');
+    $serviceUri = $config->v('VpnServerApi', 'serviceUri');
+    $serviceAuth = $config->v('VpnServerApi', 'serviceUser');
+    $servicePass = $config->v('VpnServerApi', 'servicePass');
     $client = new Client(
         array(
             'defaults' => array(
@@ -116,12 +131,14 @@ try {
     );
     $vpnServerApiClient = new VpnServerApiClient($client, $serviceUri);
 
-    $service = new VpnPortalService(
+    $vpnPortalModule = new VpnPortalModule(
         $templateManager,
         $vpnConfigApiClient,
         $vpnServerApiClient
     );
 
+    $service = new Service();
+    $service->addModule($vpnPortalModule);
     $authenticationPlugin = new AuthenticationPlugin();
     $authenticationPlugin->register($auth, 'user');
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
