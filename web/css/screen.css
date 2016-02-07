@@ -202,7 +202,7 @@ button.plain:hover {
 }
 
 span.help {
-    display: block;
+    display: inline-block;
     color: #888;
     margin: 0.2em 0 1em 1em;
     padding: 0;

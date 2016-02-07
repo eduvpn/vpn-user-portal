@@ -50,14 +50,24 @@ class VpnPortalModule implements ServiceModuleInterface
             '/config/',
             function (Request $request) {
                 return new RedirectResponse($request->getUrl()->getRootUrl(), 301);
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'enabled' => false,
+                ),
+            )
         );
 
         $service->get(
             '/',
-            function (Request $request, UserInfoInterface $u) {
+            function (Request $request) {
                 return new RedirectResponse($request->getUrl()->getRootUrl().'new', 302);
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'enabled' => false,
+                ),
+            )
         );
 
         $service->get(
@@ -70,17 +80,28 @@ class VpnPortalModule implements ServiceModuleInterface
                         'cnLength' => 63 - strlen($u->getUserId()),
                     )
                 );
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         $service->post(
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
-                $optionZip = (bool) $request->getPostParameter('option_zip');
+                $type = $request->getPostParameter('type');
+                $optionZip = 'zip' === $type;
 
                 return $this->getConfig($u->getUserId(), $configName, $optionZip);
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         $service->get(
@@ -118,7 +139,12 @@ class VpnPortalModule implements ServiceModuleInterface
                         'expiredVpnConfigurations' => $expiredVpnConfigurations,
                     )
                 );
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         $service->post(
@@ -143,7 +169,12 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 return new RedirectResponse($request->getUrl()->getRootUrl().'configurations', 302);
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         $service->get(
@@ -153,7 +184,12 @@ class VpnPortalModule implements ServiceModuleInterface
                 $response->setBody($u->getUserId());
 
                 return $response;
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
 
         $service->get(
@@ -164,11 +200,16 @@ class VpnPortalModule implements ServiceModuleInterface
                     array(
                     )
                 );
-            }
+            },
+            array(
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('user'),
+                ),
+            )
         );
     }
 
-    public function getConfig($userId, $configName, $returnZip = true)
+    private function getConfig($userId, $configName, $returnZip = true)
     {
         Utils::validateConfigName($configName);
 
@@ -213,7 +254,7 @@ class VpnPortalModule implements ServiceModuleInterface
         return $response;
     }
 
-    public function revokeConfig($userId, $configName)
+    private function revokeConfig($userId, $configName)
     {
         Utils::validateConfigName($configName);
 
