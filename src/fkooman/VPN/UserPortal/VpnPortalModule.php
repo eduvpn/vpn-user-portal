@@ -45,17 +45,25 @@ class VpnPortalModule implements ServiceModuleInterface
 
     public function init(Service $service)
     {
+        $noAuth = array(
+            'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                'enabled' => false,
+            ),
+        );
+
+        $userAuth = array(
+            'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                'activate' => array('user'),
+            ),
+        );
+
         /* REDIRECTS **/
         $service->get(
             '/config/',
             function (Request $request) {
                 return new RedirectResponse($request->getUrl()->getRootUrl(), 301);
             },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'enabled' => false,
-                ),
-            )
+            $noAuth
         );
 
         $service->get(
@@ -63,11 +71,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request) {
                 return new RedirectResponse($request->getUrl()->getRootUrl().'new', 302);
             },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'enabled' => false,
-                ),
-            )
+            $noAuth
         );
 
         $service->get(
@@ -81,11 +85,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     )
                 );
             },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            $userAuth
         );
 
         $service->post(
@@ -97,11 +97,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 return $this->getConfig($u->getUserId(), $configName, $optionZip);
             },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            $userAuth
         );
 
         $service->get(
@@ -140,11 +136,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     )
                 );
             },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            $userAuth
         );
 
         $service->post(
@@ -170,11 +162,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 return new RedirectResponse($request->getUrl()->getRootUrl().'configurations', 302);
             },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            $userAuth
         );
 
         $service->get(
@@ -185,11 +173,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 return $response;
             },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            $userAuth
         );
 
         $service->get(
@@ -201,11 +185,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     )
                 );
             },
-            array(
-                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                    'activate' => array('user'),
-                ),
-            )
+            $userAuth
         );
     }
 
