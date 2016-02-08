@@ -67,13 +67,6 @@
 
     <h3>Advanced Users</h3>
     <p>
-        You can download a configuration as ZIP file using the 
-        <a href="new?advanced=1">advanced</a> form. This is useful if 
-        your client does not support the default "inline" configuration
-        format. The ZIP file contains the configuration file and the 
-        keys and certificates as separate files.
-    </p>
-    <p>
         You can also use <a target="_blank" href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a>,
         a free software client for Android >= 4.0. Also available through <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>.
     </p>
@@ -83,6 +76,10 @@
         <a href="new?advanced=1">here</a>. Extract the ZIP file in 
         <code>$HOME/.cert</code> and import the OVPN file in 
         NetworkManager.
+    </p>
+    <p>
+        The portal also has an <a href="api">API</a> where you can register
+        an API key to be used for non-web applications.
     </p>
 
     {% include 'footer.twig' %}

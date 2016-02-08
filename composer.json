@@ -16,10 +16,12 @@
     "name": "eduVPN/vpn-user-portal",
     "require": {
         "ext-pcre": "*",
+        "ext-pdo": "*",
         "ext-spl": "*",
         "ext-zip": "*",
         "fkooman/config": "^1.0.0",
         "fkooman/http": "^1.0.0",
+        "fkooman/io": "^1.0.0",
         "fkooman/rest": "^1.0.0",
         "fkooman/rest-plugin-authentication": "^2.0.0",
         "fkooman/rest-plugin-authentication-basic": "^2.0.0",

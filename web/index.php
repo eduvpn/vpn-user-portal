@@ -27,6 +27,8 @@ use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
 use fkooman\Rest\Service;
 use fkooman\Tpl\Twig\TwigTemplateManager;
+use fkooman\VPN\UserPortal\ApiDb;
+use fkooman\VPN\UserPortal\VpnApiModule;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnPortalModule;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
@@ -51,6 +53,7 @@ try {
     $templateManager->setDefault(
         array(
             'rootFolder' => $request->getUrl()->getRoot(),
+            'rootUrl' => $request->getUrl()->getRootUrl(),
         )
     );
 
@@ -134,10 +137,36 @@ try {
         $vpnServerApiClient
     );
 
+    $db = new PDO(
+        $config->v('ApiDb', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),
+        $config->v('ApiDb', 'username', false),
+        $config->v('ApiDb', 'password', false)
+    );
+    $apiDb = new ApiDb($db);
+
+    $vpnApiModule = new VpnApiModule(
+        $templateManager,
+        $apiDb,
+        $vpnConfigApiClient
+    );
+
+    $apiAuth = new BasicAuthentication(
+        function ($userName) use ($apiDb) {
+            if (false === $userInfo = $apiDb->getHashForUserName($userName)) {
+                return false;
+            }
+
+            return $userInfo['user_pass_hash'];
+        },
+        array('realm' => 'VPN User API')
+    );
+
     $service = new Service();
     $service->addModule($vpnPortalModule);
+    $service->addModule($vpnApiModule);
     $authenticationPlugin = new AuthenticationPlugin();
     $authenticationPlugin->register($auth, 'user');
+    $authenticationPlugin->register($apiAuth, 'api');
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     $response = $service->run($request);
     # CSP: https://developer.mozilla.org/en-US/docs/Security/CSP

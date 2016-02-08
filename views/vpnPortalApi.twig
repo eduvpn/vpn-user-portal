@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="mainMenu">
+      <li><a href="new">New</a></li>
+      <li><a href="configurations">Configurations</a></li>
+      <li class="active"><a href="api">API</a></li>
+      <li><a href="documentation">Documentation</a></li>
+
+    </ul>
+
+    <h2>API</h2>
+    <p>
+Manage your API key.
+    </p>
+
+    {% if userName %}
+        <h3>Details</h3>
+
+        <p>
+        An API key is currently active. The user is <code>{{ userName|e }}</code>.
+        </p>
+
+        {% if userPass %}
+            <p class="plain">
+The secret is <code>{{ userPass|e  }}</code>. Store the secret somewhere, as it 
+will not be shown again. If you lose it you will have to generate a new API 
+user and secret.
+            </p>
+        {% endif %}
+
+        <form method="post" action="api">
+            <input type="hidden" name="_METHOD" value="DELETE">
+            <button class="danger" type="submit">Delete</button>
+        </form>
+
+        <h3>Usage</h3>
+        <p>
+        You can use the API to generate a configuration on your device without
+        requiring the use of a web browser.
+        </p>
+
+        <blockquote>
+            <code>$ curl -o Test.ovpn -u {{ userName|e }}:<strong>&lt;SECRET&gt;</strong> -d 'name=Test' {{ rootUrl|e }}api/config</code>
+        </blockquote>    
+        <p>
+        This will download a configuration with name <code>Test</code> and store it in the file <code>Test.ovpn</code>.
+        </p>
+    {% else %}
+
+        <form method="post" action="api">
+            <button type="submit">Generate</button>
+        </form>
+
+    {% endif %}
+
+    {% include 'footer.twig' %}
+
+</body>
+</html>
