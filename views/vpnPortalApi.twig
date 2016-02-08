@@ -14,9 +14,6 @@
     </ul>
 
     <h2>API</h2>
-    <p>
-Manage your API key.
-    </p>
 
     {% if userName %}
         <h3>Details</h3>
@@ -51,6 +48,11 @@ user and secret.
         This will download a configuration with name <code>Test</code> and store it in the file <code>Test.ovpn</code>.
         </p>
     {% else %}
+
+        <p>
+Currently there is no API key registered. Use "Generate" to generate an API 
+user and secret.
+        </p>
 
         <form method="post" action="api">
             <button type="submit">Generate</button>
