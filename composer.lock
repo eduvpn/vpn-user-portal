@@ -4,9 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "72f2e6cbb68640144fdce349c7a28dff",
-    "content-hash": "d4213de694869f3e73f1afca5e4339dd",
+    "hash": "38bea77441c5052d5730b0bf95ed3825",
+    "content-hash": "ee3979325355e97e171b72299ff2490e",
     "packages": [
+        {
+            "name": "endroid/qrcode",
+            "version": "1.5.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/endroid/QrCode.git",
+                "reference": "7b32cc5e4bd2f5e5191382926b18001b7cd78695"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/endroid/QrCode/zipball/7b32cc5e4bd2f5e5191382926b18001b7cd78695",
+                "reference": "7b32cc5e4bd2f5e5191382926b18001b7cd78695",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Endroid\\QrCode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen van den Enden",
+                    "email": "info@endroid.nl",
+                    "homepage": "http://endroid.nl/"
+                }
+            ],
+            "description": "Endroid QR Code",
+            "homepage": "https://github.com/endroid/QrCode",
+            "keywords": [
+                "code",
+                "endroid",
+                "qr",
+                "qrcode"
+            ],
+            "time": "2016-01-01 19:08:49"
+        },
         {
             "name": "fkooman/config",
             "version": "1.0.0",

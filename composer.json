@@ -15,6 +15,7 @@
     "license": "Apache-2.0",
     "name": "eduVPN/vpn-user-portal",
     "require": {
+        "endroid/qrcode": "^1.5",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",

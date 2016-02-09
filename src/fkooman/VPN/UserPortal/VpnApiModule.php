@@ -24,6 +24,7 @@ use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
 use fkooman\Tpl\TemplateManagerInterface;
+use Endroid\QrCode\QrCode;
 
 class VpnApiModule implements ServiceModuleInterface
 {
@@ -75,7 +76,7 @@ class VpnApiModule implements ServiceModuleInterface
         $service->post(
             '/api',
             function (Request $request, UserInfoInterface $userInfo) {
-                return $this->addKey($userInfo);
+                return $this->addKey($request, $userInfo);
             },
             $userAuth
         );
@@ -103,7 +104,7 @@ class VpnApiModule implements ServiceModuleInterface
         );
     }
 
-    private function getApiPage(UserInfoInterface $userInfo, $userPass = null)
+    private function getApiPage(UserInfoInterface $userInfo, $userPass = null, $qrCode = null)
     {
         $result = $this->apiDb->getUserNameForUserId($userInfo->getUserId());
 
@@ -112,18 +113,29 @@ class VpnApiModule implements ServiceModuleInterface
             array(
                 'userName' => $result['user_name'],
                 'userPass' => $userPass,
+                'qrCode' => $qrCode,
             )
         );
     }
 
-    private function addKey(UserInfoInterface $userInfo)
+    private function addKey(Request $request, UserInfoInterface $userInfo)
     {
         $userName = $this->io->getRandom(8);
         $userPass = $this->io->getRandom(8);
         $userPassHash = password_hash($userPass, PASSWORD_DEFAULT);
         $this->apiDb->addKey($userInfo->getUserId(), $userName, $userPassHash);
 
-        return $this->getApiPage($userInfo, $userPass);
+        $qrUrl = sprintf(
+            '%sapi/config?userName=%s&userPass=%s',
+            $request->getUrl()->getRootUrl(),
+            $userName,
+            $userPass
+        );
+
+        $qrCode = new QrCode();
+        $q = $qrCode->setText($qrUrl)->getDataUri();
+
+        return $this->getApiPage($userInfo, $userPass, $q);
     }
 
     private function deleteKey(UserInfoInterface $userInfo)
