@@ -145,7 +145,7 @@ try {
         $apiDb
     );
     $vpnPortalModule->setCompanionAppUrl(
-        $config->v('companionAppUrl', false, 'https://example.org/app.apk')
+        $config->v('companionAppUrl', false)
     );
 
     $vpnApiModule = new VpnApiModule(
