@@ -170,6 +170,7 @@ try {
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     $response = $service->run($request);
     # CSP: https://developer.mozilla.org/en-US/docs/Security/CSP
+    # img-src 'self' data: is apparently unsafe! XXX
     $response->setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self' data:");
     # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
     $response->setHeader('X-Frame-Options', 'DENY');
