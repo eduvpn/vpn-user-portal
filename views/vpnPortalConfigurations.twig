@@ -24,7 +24,7 @@
 
     {% if activeVpnConfigurations is not empty %}
         <h3>Active</h3>
-        <p>This is a list of <em>active</em> configurations you created. They can be used to connect to the VPN server. You can <em>revoke</em> the configuration if you will never use it again.</p>
+        <p>This is a list of <em>active</em> configurations. They can be used to connect to the VPN server. You can <em>revoke</em> the configuration if you will never use it again.</p>
 
         <table>
             <thead>
@@ -92,6 +92,26 @@
         </table>
     {% endif %}
 
+    {% if expiredVpnConfigurations is not empty %}
+        <h3>Expired</h3>
+        <p>This is a list of <em>expired</em> configurations. They can no longer be used.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Expired ({{ date()|date('T') }})</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for config in expiredVpnConfigurations %}
+                    <tr>
+                        <td>{{ config.name|e }}</td>
+                        <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
     {% include 'footer.twig' %}
 </body>
