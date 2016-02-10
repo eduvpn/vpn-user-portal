@@ -16,47 +16,54 @@
     <h2>API</h2>
 
     {% if userName %}
-        <h3>Details</h3>
-
+        {% if not userPass %}
+        <dl>
+            <dt>ID</dt><dd><code>{{ userName|e }}</code></dd>
+            <dt>Secret</dt><dd><code>&lt;secret&gt;</code></dd>
+        </dl>
         <p>
-        An API key is currently active. The user is <code>{{ userName|e }}</code>.
+If you do not remember the <em>Secret</em> you can delete this ID and generate
+a new one.
         </p>
 
-        {% if userPass %}
-            <p class="plain">
-The secret is <code>{{ userPass|e  }}</code>. Store the secret somewhere, as it 
-will not be shown again. If you lose it you will have to generate a new API 
-user and secret.
-                <img src="{{ qrCode|e }}">
-            </p>
+        {% else %}
+        <dl>
+            <dt>ID</dt><dd>{{ userName|e }}</dd>
+            <dt>Secret</dt><dd>{{ userPass|e }}</dd>
+            <dt>QR</dt><dd><img src="{{ qrCode|e }}"></dd>
+        </dl>
+
         {% endif %}
 
         <form method="post" action="api">
-            <input type="hidden" name="_METHOD" value="DELETE">
-            <button class="danger" type="submit">Delete</button>
+            <fieldset>
+                <legend>Delete ID</legend>
+                <input type="hidden" name="_METHOD" value="DELETE">
+                <button class="danger" type="submit">Delete</button>
+            </fieldset>
         </form>
 
-        <h3>Usage</h3>
+        <h3>Documentation</h3>
         <p>
-        You can use the API to generate a configuration on your device without
-        requiring the use of a web browser.
+Currently one API call is available, to generate a new configuration using the
+API credentials, replace <code>&lt;id&gt;</code> and <code>&lt;secret&gt;</code>
+with the actual ID and Secret.
         </p>
 
         <blockquote>
-            <code>$ curl -o Test.ovpn -u {{ userName|e }}:<strong>&lt;SECRET&gt;</strong> -d 'name=Test' {{ rootUrl|e }}api/config</code>
-        </blockquote>    
-        <p>
-        This will download a configuration with name <code>Test</code> and store it in the file <code>Test.ovpn</code>.
-        </p>
+            <code>$ curl -o Test.ovpn -u &lt;id&gt;:&lt;secret&gt; -d 'name=Test' {{ rootUrl|e }}api/config</code>
+        </blockquote>
     {% else %}
 
         <p>
-Currently there is no API key registered. Use "Generate" to generate an API 
-user and secret.
+No API key active.
         </p>
 
         <form method="post" action="api">
-            <button type="submit">Generate</button>
+            <fieldset>
+                <legend>Generate API Key</legend>
+                <button type="submit">Generate</button>
+            </fieldset>
         </form>
 
     {% endif %}
