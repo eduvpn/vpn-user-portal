@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="mainMenu">
+      <li class="active"><a href="new">New</a></li>
+      <li><a href="configurations">Configurations</a></li>
+      <li><a href="documentation">Documentation</a></li>
+    </ul>
+
+    <h2>New</h2>
+    <p>
+You can use the companion <a href="{{ companionAppUrl|e }}">App</a> for your mobile 
+device to easily import a VPN configuration.
+    </p>
+    <p>
+Scan the QR code from the app and then click "Import" on your mobile device:
+    </p>
+
+    <img src="{{ qrCode|e }}" width="228" height="228">
+
+    {% include 'footer.twig' %}
+</body>
+</html>

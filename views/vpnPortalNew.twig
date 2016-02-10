@@ -24,6 +24,8 @@ Create a new VPN configuration.
                 <span class="help">Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
 
             <button type="submit" name="type" value="ovpn">Download</button>
+            <button type="submit" class="plain" name="type" value="app" title="Use companion App">App</button>
+
             {% if advanced %}
                 <button class="plain" type="submit" name="type" value="zip">Download (ZIP)</button>
             {% endif %}

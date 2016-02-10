@@ -95,6 +95,18 @@ class VpnPortalModule implements ServiceModuleInterface
                 $type = $request->getPostParameter('type');
                 $optionZip = 'zip' === $type;
 
+                // XXX we must also perform the verify steps that are done by
+                // getConfig here! (duplicate name check etc.)
+                if ('app' === $type) {
+                    return new RedirectResponse(
+                        sprintf(
+                            '%sapp?configName=%s',
+                            $request->getUrl()->getRootUrl(),
+                            $configName
+                        )
+                    );
+                }
+
                 return $this->getConfig($u->getUserId(), $configName, $optionZip);
             },
             $userAuth
