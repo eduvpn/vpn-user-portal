@@ -28,9 +28,9 @@ a new one.
 
         {% else %}
         <dl>
-            <dt>ID</dt><dd>{{ userName|e }}</dd>
-            <dt>Secret</dt><dd>{{ userPass|e }}</dd>
-            <dt>QR</dt><dd><img src="{{ qrCode|e }}"></dd>
+            <dt>ID</dt><dd><code>{{ userName|e }}</code></dd>
+            <dt>Secret</dt><dd><code>{{ userPass|e }}</code></dd>
+            <dt>QR</dt><dd><img src="{{ qrCode|e }}" width="228" height="228"></dd>
         </dl>
 
         {% endif %}
