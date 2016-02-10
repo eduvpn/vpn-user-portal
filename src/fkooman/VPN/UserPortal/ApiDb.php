@@ -76,9 +76,7 @@ class ApiDb
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        if (1 !== $stmt->rowCount()) {
-            throw new RuntimeException('unable to delete');
-        }
+        return 1 === $stmt->rowCount();
     }
 
     public function getUserNameForUserId($userId)

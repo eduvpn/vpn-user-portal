@@ -131,18 +131,22 @@ try {
     );
     $vpnServerApiClient = new VpnServerApiClient($client, $serviceUri);
 
-    $vpnPortalModule = new VpnPortalModule(
-        $templateManager,
-        $vpnConfigApiClient,
-        $vpnServerApiClient
-    );
-
     $db = new PDO(
         $config->v('ApiDb', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),
         $config->v('ApiDb', 'username', false),
         $config->v('ApiDb', 'password', false)
     );
     $apiDb = new ApiDb($db);
+
+    $vpnPortalModule = new VpnPortalModule(
+        $templateManager,
+        $vpnConfigApiClient,
+        $vpnServerApiClient,
+        $apiDb
+    );
+    $vpnPortalModule->setCompanionAppUrl(
+        $config->v('companionAppUrl', false, 'https://example.org/app.apk')
+    );
 
     $vpnApiModule = new VpnApiModule(
         $templateManager,

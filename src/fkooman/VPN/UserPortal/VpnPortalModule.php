@@ -16,6 +16,7 @@
  */
 namespace fkooman\VPN\UserPortal;
 
+use Endroid\QrCode\QrCode;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Request;
@@ -24,6 +25,7 @@ use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
 use fkooman\Tpl\TemplateManagerInterface;
+use fkooman\IO\IO;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -36,11 +38,31 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var VpnServerApiClient */
     private $vpnServerApiClient;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
+    /** @var ApiDb */
+    private $apiDb;
+
+    /** @var fkooman\IO\IO */
+    private $io;
+
+    /** @var string */
+    private $companionAppUrl;
+
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, ApiDb $apiDb, IO $io = null)
     {
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
+        $this->apiDb = $apiDb;
+        if (is_null($io)) {
+            $io = new IO();
+        }
+        $this->io = $io;
+        $this->companionAppUrl = null;
+    }
+
+    public function setCompanionAppUrl($companionAppUrl)
+    {
+        $this->companionAppUrl = $companionAppUrl;
     }
 
     public function init(Service $service)
@@ -93,21 +115,8 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
                 $type = $request->getPostParameter('type');
-                $optionZip = 'zip' === $type;
 
-                // XXX we must also perform the verify steps that are done by
-                // getConfig here! (duplicate name check etc.)
-                if ('app' === $type) {
-                    return new RedirectResponse(
-                        sprintf(
-                            '%sapp?configName=%s',
-                            $request->getUrl()->getRootUrl(),
-                            $configName
-                        )
-                    );
-                }
-
-                return $this->getConfig($u->getUserId(), $configName, $optionZip);
+                return $this->getConfig($request, $u->getUserId(), $configName, $type);
             },
             $userAuth
         );
@@ -201,7 +210,7 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    private function getConfig($userId, $configName, $returnZip = true)
+    private function getConfig(Request $request, $userId, $configName, $type)
     {
         Utils::validateConfigName($configName);
 
@@ -227,20 +236,46 @@ class VpnPortalModule implements ServiceModuleInterface
             }
         }
 
-        # get config from API
-        $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
+        switch ($type) {
+            case 'zip':
+                // return a ZIP file    
+                $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
+                $configData = Utils::configToZip($configName, $configData);
+                $response = new Response(200, 'application/zip');
+                $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
+                $response->setBody($configData);
+                break;
+            case 'ovpn':
+                // return an OVPN file
+                $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
+                $response = new Response(200, 'application/x-openvpn-profile');
+                $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
+                $response->setBody($configData);
+                break;
+            case 'app':
+                // show a QR code for use in App
+                $apiCredentials = $this->generateApiCredentials($userId);
+                $qrUrl = sprintf(
+                    '%sapi/config?userName=%s&userPass=%s&configName=%s',
+                    $request->getUrl()->getRootUrl(),
+                    $apiCredentials['userName'],
+                    $apiCredentials['userPass'],
+                    $configName
+                );
 
-        if ($returnZip) {
-            // return Zipped OpenVPN config file with separate certificates
-            $configData = Utils::configToZip($configName, $configData);
-            $response = new Response(200, 'application/zip');
-            $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
-            $response->setBody($configData);
-        } else {
-            // return OpenVPN config file
-            $response = new Response(200, 'application/x-openvpn-profile');
-            $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
-            $response->setBody($configData);
+                $qrCode = new QrCode();
+                $qrData = $qrCode->setText($qrUrl)->getDataUri();
+
+                return $this->templateManager->render(
+                    'vpnPortalApp',
+                    array(
+                        'qrCode' => $qrData,
+                        'companionAppUrl' => $this->companionAppUrl,
+                    )
+                );
+
+            default:
+                throw new BadRequestException('invalid type');
         }
 
         return $response;
@@ -254,5 +289,22 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // trigger a CRL reload in the servers
         $this->vpnServerApiClient->postCrlFetch();
+    }
+
+    private function generateApiCredentials($userId)
+    {
+        // delete API credentials if they exist for this user
+        $this->apiDb->deleteKey($userId);
+
+        // generate new credentials
+        $userName = $this->io->getRandom(8);
+        $userPass = $this->io->getRandom(8);
+        $userPassHash = password_hash($userPass, PASSWORD_DEFAULT);
+        $this->apiDb->addKey($userId, $userName, $userPassHash);
+
+        return array(
+            'userName' => $userName,
+            'userPass' => $userPass,
+        );
     }
 }
