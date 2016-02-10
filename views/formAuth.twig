@@ -22,11 +22,15 @@
             <legend>Sign In</legend>
 
             {% if _auth_form_invalid_credentials %}
-                <input type="text"     name="userName" placeholder="Username" value="{{ _auth_form_invalid_user_name|e }}" required>
-                <input type="password" name="userPass" placeholder="Password" autofocus required>
+                <label for="userName">Username</label>
+                <input type="text"     id="userName" name="userName" placeholder="Username" value="{{ _auth_form_invalid_user_name|e }}" required>
+                <label for="userPass">Password</label>
+                <input type="password" id="userPass"name="userPass" placeholder="Password" autofocus required>
             {% else %}
-                <input type="text"     name="userName" placeholder="Username" autofocus required>
-                <input type="password" name="userPass" placeholder="Password" required>
+                <label for="userName">Username</label>
+                <input type="text"     id="userName" name="userName" placeholder="Username" autofocus required>
+                <label for="userPass">Password</label>
+                <input type="password" id="userPass" name="userPass" placeholder="Password" required>
             {% endif %} 
             <button class="info" type="submit">Sign in</button>
 
