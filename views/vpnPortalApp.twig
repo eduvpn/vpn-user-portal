@@ -12,16 +12,10 @@
     </ul>
 
     <h2>New</h2>
-        <p>
-You can use the VPN App for your mobile device to easily import a VPN 
+    <p>
+You can use the {% if companionAppUrl %}<a target="_blank" href="{{ companionAppUrl|e }}">VPN App</a>{% else %}VPN App{% endif %} for your mobile device to easily import a VPN 
 configuration.
-        </p>
-
-    {% if companionAppUrl %}
-        <p>
-<a target="_blank" href="{{ companionAppUrl|e }}">Download</a> the VPN App.
-        </p>
-    {% endif %}
+    </p>
 
     <p class="plain">
 Scan the QR code and click "Import"!

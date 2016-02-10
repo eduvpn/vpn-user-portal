@@ -201,14 +201,6 @@ button.plain:hover {
     background-color: #ddd;
 }
 
-span.help {
-    display: inline-block;
-    color: #888;
-    margin: 0.2em 0 1em 1em;
-    padding: 0;
-    font-size: 90%;
-}
-
 /** TABLE **/
 table {
     width: 100%;

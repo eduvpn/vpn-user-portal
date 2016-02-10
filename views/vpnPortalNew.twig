@@ -13,7 +13,7 @@
 
     <h2>New</h2>
     <p>
-Create a new VPN configuration.
+Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
     </p>
 
     <form method="post">
@@ -21,10 +21,8 @@ Create a new VPN configuration.
             <legend>New</legend>
             <label for="inputName">Name</label>
             <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
-                <span class="help">Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.</span>
-
             <button type="submit" name="type" value="ovpn">Download</button>
-            <button type="submit" class="plain" name="type" value="app" title="Use VPN App">App</button>
+            <button type="submit" class="plain" name="type" value="app" title="Use VPN App">Use App</button>
             {% if advanced %}
                 <button class="plain" type="submit" name="type" value="zip">Download (ZIP)</button>
             {% endif %}
