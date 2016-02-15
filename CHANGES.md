@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.2.1 (2016-02-16)
+- make init script executable
+
 ## 5.2.0 (2016-02-15)
 - remove API that was used by vpn-admin-portal as vpn-admin-portal talks to 
   vpn-config-api now
