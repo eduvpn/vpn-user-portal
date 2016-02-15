@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.2.0 (2016-02-15)
+- remove API that was used by vpn-admin-portal as vpn-admin-portal talks to 
+  vpn-config-api now
+- add new API for consumers that also works when using SAML authentication
+- implement a QR code option to enroll using an Android app (Advanced)
+- cleanup the UI a lot
+- show configurations split up by active, disabled, revoked and expired
+- use new vpn-config-api for retrieving configurations
+- support Form authentication next to Basic authentication
+- implement logout support for Form authentication
+- major refactoring of code
+
 ## 5.1.2 (2016-02-03)
 - update CSS
 
