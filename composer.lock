@@ -4,58 +4,50 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "38bea77441c5052d5730b0bf95ed3825",
-    "content-hash": "ee3979325355e97e171b72299ff2490e",
+    "hash": "9323c383933b29c99841bf16b5ab0dda",
+    "content-hash": "d3ae23864a439f559e197729a5a2afe0",
     "packages": [
         {
-            "name": "endroid/qrcode",
-            "version": "1.5.7",
+            "name": "bacon/bacon-qr-code",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/endroid/QrCode.git",
-                "reference": "7b32cc5e4bd2f5e5191382926b18001b7cd78695"
+                "url": "https://github.com/Bacon/BaconQrCode.git",
+                "reference": "031a2ce68c5794064b49d11775b2daf45c96e21c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/QrCode/zipball/7b32cc5e4bd2f5e5191382926b18001b7cd78695",
-                "reference": "7b32cc5e4bd2f5e5191382926b18001b7cd78695",
+                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/031a2ce68c5794064b49d11775b2daf45c96e21c",
+                "reference": "031a2ce68c5794064b49d11775b2daf45c96e21c",
                 "shasum": ""
             },
             "require": {
-                "ext-gd": "*",
-                "php": ">=5.3.0"
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-gd": "to generate QR code images"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
             "autoload": {
-                "psr-4": {
-                    "Endroid\\QrCode\\": "src/"
+                "psr-0": {
+                    "BaconQrCode": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
-                    "name": "Jeroen van den Enden",
-                    "email": "info@endroid.nl",
-                    "homepage": "http://endroid.nl/"
+                    "name": "Ben Scholzen 'DASPRiD'",
+                    "email": "mail@dasprids.de",
+                    "homepage": "http://www.dasprids.de",
+                    "role": "Developer"
                 }
             ],
-            "description": "Endroid QR Code",
-            "homepage": "https://github.com/endroid/QrCode",
-            "keywords": [
-                "code",
-                "endroid",
-                "qr",
-                "qrcode"
-            ],
-            "time": "2016-01-01 19:08:49"
+            "description": "BaconQrCode is a QR code generator for PHP.",
+            "homepage": "https://github.com/Bacon/BaconQrCode",
+            "time": "2016-01-09 22:55:35"
         },
         {
             "name": "fkooman/config",

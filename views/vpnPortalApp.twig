@@ -21,7 +21,7 @@ configuration.
 Scan the QR code and click "Import"!
     </p>
 
-    <img src="{{ qrCode|e }}" width="228" height="228">
+    <img src="data:image/png;base64,{{ qrCode|e }}" width="256" height="256">
 
     {% include 'footer.twig' %}
 </body>

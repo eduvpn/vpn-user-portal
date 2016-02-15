@@ -16,7 +16,8 @@
  */
 namespace fkooman\VPN\UserPortal;
 
-use Endroid\QrCode\QrCode;
+use BaconQrCode\Renderer\Image\Png;
+use BaconQrCode\Writer;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Request;
@@ -263,8 +264,11 @@ class VpnPortalModule implements ServiceModuleInterface
                     $configName
                 );
 
-                $qrCode = new QrCode();
-                $qrData = $qrCode->setText($qrUrl)->getDataUri();
+                $renderer = new Png();
+                $renderer->setHeight(256);
+                $renderer->setWidth(256);
+                $writer = new Writer($renderer);
+                $qrData = base64_encode($writer->writeString($qrUrl));
 
                 return $this->templateManager->render(
                     'vpnPortalApp',
