@@ -29,4 +29,4 @@ VpnServerApi:
     servicePass: s3cr3t
 
 ApiDb:
-    dsn = 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
+    dsn: 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
