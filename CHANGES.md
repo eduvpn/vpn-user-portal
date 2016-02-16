@@ -1,6 +1,10 @@
 # Changelog
 
-## 5.2.1 (2016-02-16)
+## 5.2.2 (2016-02-16)
+- fix API URL, for working with SAML it needs to explicity include
+  `index.php` in the URL
+
+## 5.2.1 (2016-02-15)
 - make init script executable
 - fix config template
 
