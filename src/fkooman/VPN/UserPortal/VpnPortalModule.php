@@ -293,6 +293,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // trigger a CRL reload in the servers
         $this->vpnServerApiClient->postCrlFetch();
+
+        // disconnect the client
+        $this->vpnServerApiClient->postKill(sprintf('%s_%s', $userId, $configName));
     }
 
     private function generateApiCredentials($userId)

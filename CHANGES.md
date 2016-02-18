@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.2.3 (2016-02-18)
+- also terminate a connection when the user revokes a configuration
+
 ## 5.2.2 (2016-02-16)
 - fix API URL, for working with SAML it needs to explicity include
   `index.php` in the URL
