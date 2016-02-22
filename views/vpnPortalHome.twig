@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="mainMenu">
+      <li class="active"><a href="home">Home</a></li>
+      <li><a href="new">New</a></li>
+      <li><a href="configurations">Configurations</a></li>
+      <li><a href="documentation">Documentation</a></li>
+    </ul>
+
+    <h2>Home</h2>
+    <p>
+Welcome to the VPN Portal. Here you can find out how to connect to the VPN.
+    </p>
+    <p>
+Connecting to the VPN consists of three steps:
+    </p>
+    <ol>
+        <li>Download and install the <a href="documentation#app">VPN application</a> for your smart phone or computer;</li>
+        <li>Download a <a href="new">configuration</a> for the VPN client;</li>
+        <li><a href="documentation#app">Load</a> the VPN configuration in the VPN application;</li>
+    </ol>
+    <p>
+Once these steps are completed you should be able to connect to the VPN!
+    </p>
+
+    {% include 'footer.twig' %}
+</body>
+</html>

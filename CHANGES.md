@@ -1,5 +1,8 @@
 # Changelog
 
+## 5.3.0 (...)
+- add "Home" page
+
 ## 5.2.3 (2016-02-18)
 - also terminate a connection when the user revokes a configuration
 
