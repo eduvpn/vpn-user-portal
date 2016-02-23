@@ -67,19 +67,6 @@ try {
                 $config->v('MellonAuthentication', 'attribute')
             );
             break;
-        case 'BasicAuthentication':
-            $auth = new BasicAuthentication(
-                function ($userId) use ($config) {
-                    $userList = $config->v('BasicAuthentication');
-                    if (!array_key_exists($userId, $userList)) {
-                        return false;
-                    }
-
-                    return $userList[$userId];
-                },
-                array('realm' => 'VPN User Portal')
-            );
-            break;
         case 'FormAuthentication':
             $session = new Session(
                 'vpn-user-portal',

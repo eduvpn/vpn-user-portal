@@ -2,7 +2,6 @@ serverMode: production
 #serverMode: development
 
 authMethod: FormAuthentication
-#authMethod: BasicAuthentication
 #authMethod: MellonAuthentication
 
 # URL to VPN Companion App
@@ -11,20 +10,17 @@ companionAppUrl: https://example.org/companion.apk
 FormAuthentication:
     foo: $2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq
 
-BasicAuthentication:
-    foo: $2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq
-
 MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
 VpnConfigApi:
-    serviceUri: 'http://localhost/vpn-config-api/api.php'
+    serviceUri: 'http://localhost:8008/api.php'
     serviceUser: admin
     servicePass: s3cr3t
 
 VpnServerApi:
-    serviceUri: 'http://localhost/vpn-server-api/api.php'
+    serviceUri: 'http://localhost:8009/api.php'
     serviceUser: admin
     servicePass: s3cr3t
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.1 (2016-02-23)
+- remove BasicAuthentication for users
+- update config template
+
 ## 5.3.0 (2016-02-22)
 - add "Home" page
 
