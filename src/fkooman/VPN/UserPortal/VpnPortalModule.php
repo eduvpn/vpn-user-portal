@@ -269,7 +269,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 // show a QR code for use in App
                 $apiCredentials = $this->generateApiCredentials($userId);
                 $qrUrl = sprintf(
-                    '%sindex.php/api/config?userName=%s&userPass=%s&configName=%s',
+                    '%sapi/config?userName=%s&userPass=%s&configName=%s',
                     $request->getUrl()->getRootUrl(),
                     $apiCredentials['userName'],
                     $apiCredentials['userPass'],
