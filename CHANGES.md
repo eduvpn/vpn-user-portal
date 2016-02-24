@@ -1,7 +1,8 @@
 # Changelog
 
-## 5.3.2 (...)
+## 5.3.2 (2016-02-24)
 - no longer need to put `index.php` in the QR code
+- add `templateCache` to config example
 
 ## 5.3.1 (2016-02-23)
 - remove BasicAuthentication for users
