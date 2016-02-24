@@ -7,6 +7,8 @@ authMethod: FormAuthentication
 # URL to VPN Companion App
 companionAppUrl: https://example.org/companion.apk
 
+#templateCache: /var/lib/vpn-user-portal/tpl
+
 FormAuthentication:
     foo: $2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq
 
