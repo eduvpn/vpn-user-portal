@@ -92,31 +92,29 @@ try {
             throw new RuntimeException('unsupported authentication mechanism');
     }
 
-    // VPN Config API Configuration
-    $serviceUri = $config->v('VpnConfigApi', 'serviceUri');
-    $serviceAuth = $config->v('VpnConfigApi', 'serviceUser');
-    $servicePass = $config->v('VpnConfigApi', 'servicePass');
-    $client = new Client(
-        array(
-            'defaults' => array(
-                'auth' => array($serviceAuth, $servicePass),
-            ),
-        )
+    // vpn-config-api
+    $vpnConfigApiClient = new VpnConfigApiClient(
+        new Client([
+            'defaults' => [
+                'headers' => [
+                    'Authorization' => sprintf('Bearer %s', $config->v('ConfigApi', 'Secret')),
+                ],
+            ],
+        ]),
+        $config->v('ConfigApi', 'Uri')
     );
-    $vpnConfigApiClient = new VpnConfigApiClient($client, $serviceUri);
 
-    // VPN Server API Configuration
-    $serviceUri = $config->v('VpnServerApi', 'serviceUri');
-    $serviceAuth = $config->v('VpnServerApi', 'serviceUser');
-    $servicePass = $config->v('VpnServerApi', 'servicePass');
-    $client = new Client(
-        array(
-            'defaults' => array(
-                'auth' => array($serviceAuth, $servicePass),
-            ),
-        )
+    // vpn-server-api
+    $vpnServerApiClient = new VpnServerApiClient(
+        new Client([
+            'defaults' => [
+                'headers' => [
+                    'Authorization' => sprintf('Bearer %s', $config->v('ServerApi', 'Secret')),
+                ],
+            ],
+        ]),
+        $config->v('ServerApi', 'Uri')
     );
-    $vpnServerApiClient = new VpnServerApiClient($client, $serviceUri);
 
     $db = new PDO(
         $config->v('ApiDb', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),

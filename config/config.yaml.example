@@ -16,15 +16,15 @@ MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
-VpnConfigApi:
-    serviceUri: 'http://localhost:8008/api.php'
-    serviceUser: admin
-    servicePass: s3cr3t
-
-VpnServerApi:
-    serviceUri: 'http://localhost:8009/api.php'
-    serviceUser: admin
-    servicePass: s3cr3t
-
 ApiDb:
     dsn: 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
+
+# vpn-config-api
+ConfigApi:
+    Uri: 'http://localhost:8008/api.php'
+    Secret: 11223344556677889900
+
+# vpn-server-api
+ServerApi:
+    Uri: 'http://localhost:8009/api.php'
+    Secret: 11223344556677889900

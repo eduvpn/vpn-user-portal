@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.0.0 (...)
+- switch to Bearer authentication towards backends to improve
+  performance (**BREAKING CONFIG**)
+
 ## 5.3.2 (2016-02-24)
 - no longer need to put `index.php` in the QR code
 - add `templateCache` to config example
