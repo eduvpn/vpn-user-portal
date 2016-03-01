@@ -87,7 +87,6 @@ try {
                 $session
             );
             break;
-
         default:
             throw new RuntimeException('unsupported authentication mechanism');
     }
@@ -97,11 +96,11 @@ try {
         new Client([
             'defaults' => [
                 'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $config->v('ConfigApi', 'Secret')),
+                    'Authorization' => sprintf('Bearer %s', $config->v('remoteCredentials', 'vpn-config-api', 'token')),
                 ],
             ],
         ]),
-        $config->v('ConfigApi', 'Uri')
+        $config->v('remoteCredentials', 'vpn-config-api', 'uri')
     );
 
     // vpn-server-api
@@ -109,11 +108,11 @@ try {
         new Client([
             'defaults' => [
                 'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $config->v('ServerApi', 'Secret')),
+                    'Authorization' => sprintf('Bearer %s', $config->v('remoteCredentials', 'vpn-server-api', 'token')),
                 ],
             ],
         ]),
-        $config->v('ServerApi', 'Uri')
+        $config->v('remoteCredentials', 'vpn-server-api', 'uri')
     );
 
     $db = new PDO(

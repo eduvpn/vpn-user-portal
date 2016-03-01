@@ -14,49 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace fkooman\VPN\UserPortal;
 
 use GuzzleHttp\Client;
 
-class VpnConfigApiClient
+class VpnConfigApiClient extends VpnApiClient
 {
-    /** @var \GuzzleHttp\Client */
-    private $client;
-
     /** @var string */
     private $vpnConfigApiUri;
 
     public function __construct(Client $client, $vpnConfigApiUri)
     {
-        $this->client = $client;
+        parent::__construct($client);
         $this->vpnConfigApiUri = $vpnConfigApiUri;
     }
 
     public function addConfiguration($userId, $configName)
     {
         $vpnConfigName = sprintf('%s_%s', $userId, $configName);
-        $requestUri = sprintf('%s/config/', $this->vpnConfigApiUri);
+        $requestUri = sprintf('%s/certificate/', $this->vpnConfigApiUri);
 
-        return $this->client->post(
+        return $this->exec(
+            'POST',
             $requestUri,
-            array(
-                'body' => array('commonName' => $vpnConfigName),
-            )
-        )->getBody();
+            [
+                'body' => [
+                    'common_name' => $vpnConfigName,
+                    'cert_type' => 'client',
+                ],
+            ]
+        );
     }
 
     public function revokeConfiguration($userId, $configName)
     {
         $vpnConfigName = sprintf('%s_%s', $userId, $configName);
-        $requestUri = sprintf('%s/config/%s', $this->vpnConfigApiUri, $vpnConfigName);
+        $requestUri = sprintf('%s/certificate/%s', $this->vpnConfigApiUri, $vpnConfigName);
 
-        return $this->client->delete($requestUri)->getBody();
+        return $this->exec('DELETE', $requestUri);
     }
 
     public function getCertList($userId)
     {
-        $requestUri = sprintf('%s/config?userId=%s', $this->vpnConfigApiUri, $userId);
+        $requestUri = sprintf('%s/certificate/%s', $this->vpnConfigApiUri, $userId);
 
-        return $this->client->get($requestUri)->json();
+        return $this->exec('GET', $requestUri);
     }
 }

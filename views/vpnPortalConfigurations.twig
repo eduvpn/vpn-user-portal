@@ -29,12 +29,13 @@
 
         <table>
             <thead>
-                <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
+                <tr><th>Name</th><th>Pool</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
             </thead>
             <tbody>
                 {% for config in activeVpnConfigurations %}
                     <tr>
                         <td>{{ config.name|e }}</td>
+                        <td>{{ config.pool|e }}</td>
                         <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
                         <td class="text-right">
                             <form method="post" action="revoke">
@@ -53,12 +54,13 @@
         <p>This is a list of <em>disabled</em> configurations. They are (temporary) disabled by an administrator. Contact support for more information. You can <em>revoke</em> the configuration if you will never use it again.</p>
         <table>
             <thead>
-                <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
+                <tr><th>Name</th><th>Pool</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
             </thead>
             <tbody>
                 {% for config in disabledVpnConfigurations %}
                     <tr>
                         <td>{{ config.name|e }}</td>
+                        <td>{{ config.pool|e }}</td>
                         <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
                         <td class="text-right">
                             <form method="post" action="revoke">

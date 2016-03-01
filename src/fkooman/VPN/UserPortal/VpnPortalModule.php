@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace fkooman\VPN\UserPortal;
 
 use BaconQrCode\Renderer\Image\Png;
@@ -138,7 +139,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/configurations',
             function (Request $request, UserInfoInterface $u) {
                 $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
-                $disabledCommonNames = $this->vpnServerApiClient->getCcdDisable($u->getUserId());
+                $configList = $this->vpnServerApiClient->getConfig($u->getUserId());
 
                 $activeVpnConfigurations = array();
                 $revokedVpnConfigurations = array();
@@ -152,7 +153,16 @@ class VpnPortalModule implements ServiceModuleInterface
                         $revokedVpnConfigurations[] = $c;
                     } elseif ('V' === $c['state']) {
                         $commonName = $u->getUserId().'_'.$c['name'];
-                        if (in_array($commonName, $disabledCommonNames['disabled'])) {
+                        $c['pool'] = 'default';
+                        $c['disable'] = false;
+                        if (array_key_exists($commonName, $configList['items'])) {
+                            if ($configList['items'][$commonName]['disable']) {
+                                $c['disable'] = true;
+                            }
+                            $c['pool'] = $configList['items'][$commonName]['pool'];
+                        }
+
+                        if ($c['disable']) {
                             $disabledVpnConfigurations[] = $c;
                         } else {
                             $activeVpnConfigurations[] = $c;
@@ -253,6 +263,7 @@ class VpnPortalModule implements ServiceModuleInterface
             case 'zip':
                 // return a ZIP file    
                 $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
+                $configData = $this->templateManager->render('client', $configData['certificate']);
                 $configData = Utils::configToZip($configName, $configData);
                 $response = new Response(200, 'application/zip');
                 $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
@@ -261,6 +272,7 @@ class VpnPortalModule implements ServiceModuleInterface
             case 'ovpn':
                 // return an OVPN file
                 $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
+                $configData = $this->templateManager->render('client', $configData['certificate']);
                 $response = new Response(200, 'application/x-openvpn-profile');
                 $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
                 $response->setBody($configData);

@@ -14,94 +14,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace fkooman\VPN\UserPortal;
 
 use GuzzleHttp\Client;
 
-class VpnServerApiClient
+class VpnServerApiClient extends VpnApiClient
 {
-    /** @var \GuzzleHttp\Client */
-    private $client;
-
     /** @var string */
     private $vpnServerApiUri;
 
     public function __construct(Client $client, $vpnServerApiUri)
     {
-        $this->client = $client;
+        parent::__construct($client);
         $this->vpnServerApiUri = $vpnServerApiUri;
     }
 
-    public function getStatus()
+    public function getConfig($userId)
     {
-        $requestUri = sprintf('%s/status', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/config/?user_id=%s', $this->vpnServerApiUri, $userId);
 
-        return $this->client->get($requestUri)->json();
-    }
-
-    public function getLoadStats()
-    {
-        $requestUri = sprintf('%s/load-stats', $this->vpnServerApiUri);
-
-        return $this->client->get($requestUri)->json();
-    }
-
-    public function getVersion()
-    {
-        $requestUri = sprintf('%s/version', $this->vpnServerApiUri);
-
-        return $this->client->get($requestUri)->json();
-    }
-
-    public function postCcdDisable($commonName)
-    {
-        $requestUri = sprintf('%s/ccd/disable', $this->vpnServerApiUri);
-
-        return $this->client->post(
-            $requestUri,
-            array(
-                'body' => array(
-                    'common_name' => $commonName,
-                ),
-            )
-        )->json();
-    }
-
-    public function deleteCcdDisable($commonName)
-    {
-        $requestUri = sprintf('%s/ccd/disable?common_name=%s', $this->vpnServerApiUri, $commonName);
-
-        return $this->client->delete($requestUri)->json();
-    }
-
-    public function getCcdDisable($userId = null)
-    {
-        $requestUri = sprintf('%s/ccd/disable', $this->vpnServerApiUri);
-        if (!is_null($userId)) {
-            $requestUri = sprintf('%s/ccd/disable?user_id=%s', $this->vpnServerApiUri, $userId);
-        }
-
-        return $this->client->get($requestUri)->json();
+        return $this->exec('GET', $requestUri);
     }
 
     public function postKill($commonName)
     {
-        $requestUri = sprintf('%s/kill', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/openvpn/kill', $this->vpnServerApiUri);
 
-        return $this->client->post(
+        return $this->exec(
+            'POST',
             $requestUri,
-            array(
-                'body' => array(
+            [
+                'body' => [
                     'common_name' => $commonName,
-                ),
-            )
-        )->json();
+                ],
+            ]
+        );
     }
 
     public function postCrlFetch()
     {
-        $requestUri = sprintf('%s/crl/fetch', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/ca/crl/fetch', $this->vpnServerApiUri);
 
-        return $this->client->post($requestUri)->json();
+        return $this->exec('POST', $requestUri);
     }
 }

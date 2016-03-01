@@ -19,12 +19,13 @@ MellonAuthentication:
 ApiDb:
     dsn: 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
 
-# vpn-config-api
-ConfigApi:
-    Uri: 'http://localhost:8008/api.php'
-    Secret: 11223344556677889900
+# API credentials for access to remote services
+remoteCredentials:
+    # required to fetch the CRL
+    vpn-config-api:
+        uri: 'http://localhost:8008/api.php'
+        token: abcdef
+    vpn-server-api:
+        uri: 'http://localhost:8009/api.php'
+        token: uvwxyz
 
-# vpn-server-api
-ServerApi:
-    Uri: 'http://localhost:8009/api.php'
-    Secret: 11223344556677889900
