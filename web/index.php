@@ -96,11 +96,11 @@ try {
         new Client([
             'defaults' => [
                 'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $config->v('remoteCredentials', 'vpn-config-api', 'token')),
+                    'Authorization' => sprintf('Bearer %s', $config->v('remoteApi', 'vpn-config-api', 'token')),
                 ],
             ],
         ]),
-        $config->v('remoteCredentials', 'vpn-config-api', 'uri')
+        $config->v('remoteApi', 'vpn-config-api', 'uri')
     );
 
     // vpn-server-api
@@ -108,11 +108,11 @@ try {
         new Client([
             'defaults' => [
                 'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $config->v('remoteCredentials', 'vpn-server-api', 'token')),
+                    'Authorization' => sprintf('Bearer %s', $config->v('remoteApi', 'vpn-server-api', 'token')),
                 ],
             ],
         ]),
-        $config->v('remoteCredentials', 'vpn-server-api', 'uri')
+        $config->v('remoteApi', 'vpn-server-api', 'uri')
     );
 
     $db = new PDO(

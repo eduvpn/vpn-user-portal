@@ -20,7 +20,7 @@ ApiDb:
     dsn: 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
 
 # API credentials for access to remote services
-remoteCredentials:
+remoteApi:
     # required to fetch the CRL
     vpn-config-api:
         uri: 'http://localhost:8008/api.php'
