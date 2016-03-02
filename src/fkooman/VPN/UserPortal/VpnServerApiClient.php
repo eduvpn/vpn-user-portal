@@ -58,4 +58,11 @@ class VpnServerApiClient extends VpnApiClient
 
         return $this->exec('POST', $requestUri);
     }
+
+    public function getInfo()
+    {
+        $requestUri = sprintf('%s/info', $this->vpnServerApiUri);
+
+        return $this->exec('GET', $requestUri);
+    }
 }

@@ -140,6 +140,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, UserInfoInterface $u) {
                 $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
                 $configList = $this->vpnServerApiClient->getConfig($u->getUserId());
+                $serverInfo = $this->vpnServerApiClient->getInfo();
 
                 $activeVpnConfigurations = array();
                 $revokedVpnConfigurations = array();
@@ -153,13 +154,13 @@ class VpnPortalModule implements ServiceModuleInterface
                         $revokedVpnConfigurations[] = $c;
                     } elseif ('V' === $c['state']) {
                         $commonName = $u->getUserId().'_'.$c['name'];
-                        $c['pool'] = 'default';
+                        $c['pool'] = $serverInfo['ip']['v4']['pools']['default']['name'];
                         $c['disable'] = false;
                         if (array_key_exists($commonName, $configList['items'])) {
                             if ($configList['items'][$commonName]['disable']) {
                                 $c['disable'] = true;
                             }
-                            $c['pool'] = $configList['items'][$commonName]['pool'];
+                            $c['pool'] = $serverInfo['ip']['v4']['pools'][$configList['items'][$commonName]['pool']]['name'];
                         }
 
                         if ($c['disable']) {
@@ -177,6 +178,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         'disabledVpnConfigurations' => $disabledVpnConfigurations,
                         'revokedVpnConfigurations' => $revokedVpnConfigurations,
                         'expiredVpnConfigurations' => $expiredVpnConfigurations,
+                        'serverInfo' => $serverInfo,
                     )
                 );
             },
