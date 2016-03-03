@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.0 (2016-03-03)
+- update to new API of vpn-ca-api and vpn-server-api
+- display the pool a CN is part of
+- configuration file is now generated in the user portal
+- better error display
+
 ## 5.4.0 (2016-02-24)
 - switch to Bearer authentication towards backends to improve
   performance (**BREAKING CONFIG**)
