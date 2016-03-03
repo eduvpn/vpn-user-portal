@@ -91,16 +91,16 @@ try {
             throw new RuntimeException('unsupported authentication mechanism');
     }
 
-    // vpn-config-api
+    // vpn-ca-api
     $vpnConfigApiClient = new VpnConfigApiClient(
         new Client([
             'defaults' => [
                 'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $config->v('remoteApi', 'vpn-config-api', 'token')),
+                    'Authorization' => sprintf('Bearer %s', $config->v('remoteApi', 'vpn-ca-api', 'token')),
                 ],
             ],
         ]),
-        $config->v('remoteApi', 'vpn-config-api', 'uri')
+        $config->v('remoteApi', 'vpn-ca-api', 'uri')
     );
 
     // vpn-server-api

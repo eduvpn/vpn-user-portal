@@ -21,8 +21,7 @@ ApiDb:
 
 # API credentials for access to remote services
 remoteApi:
-    # required to fetch the CRL
-    vpn-config-api:
+    vpn-ca-api:
         uri: 'http://localhost:8008/api.php'
         token: abcdef
     vpn-server-api:
