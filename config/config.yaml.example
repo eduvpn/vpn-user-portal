@@ -27,4 +27,3 @@ remoteApi:
     vpn-server-api:
         uri: 'http://localhost:8009/api.php'
         token: uvwxyz
-
