@@ -27,9 +27,9 @@ try {
     );
 
     $db = new PDO(
-        $reader->v('ApiDb', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),
-        $reader->v('ApiDb', 'username', false),
-        $reader->v('ApiDb', 'password', false)
+        $reader->v('api', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),
+        $reader->v('api', 'username', false),
+        $reader->v('api', 'password', false)
     );
 
     $apiDb = new ApiDb($db);
