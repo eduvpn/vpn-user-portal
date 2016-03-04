@@ -13,7 +13,7 @@
     },
     "description": "VPN User Portal",
     "license": "Apache-2.0",
-    "name": "eduVPN/vpn-user-portal",
+    "name": "eduvpn/vpn-user-portal",
     "require": {
         "bacon/bacon-qr-code": "^1.0",
         "ext-pcre": "*",
