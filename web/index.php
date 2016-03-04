@@ -116,9 +116,9 @@ try {
     );
 
     $db = new PDO(
-        $config->v('ApiDb', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),
-        $config->v('ApiDb', 'username', false),
-        $config->v('ApiDb', 'password', false)
+        $config->v('api', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),
+        $config->v('api', 'username', false),
+        $config->v('api', 'password', false)
     );
     $apiDb = new ApiDb($db);
 

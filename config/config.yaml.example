@@ -16,8 +16,10 @@ MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
-ApiDb:
+api:
     dsn: 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
+    #username: foo
+    #password: bar
 
 # API credentials for access to remote services
 remoteApi:

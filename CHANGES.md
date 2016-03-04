@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.0.0 (2016-03-03)
+## 6.0.0 (2016-03-04)
 - update to new API of vpn-ca-api and vpn-server-api
 - display the pool a CN is part of
 - configuration file is now generated in the user portal

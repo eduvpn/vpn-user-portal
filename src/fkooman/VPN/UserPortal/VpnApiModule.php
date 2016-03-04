@@ -134,11 +134,16 @@ class VpnApiModule implements ServiceModuleInterface
 
     private function addConfig(UserInfoInterface $userInfo, $configName)
     {
+        // XXX check if config exists first
         $result = $this->apiDb->getUserIdForUserName($userInfo->getUserId());
 
         $configData = $this->vpnConfigApiClient->addConfiguration($result['user_id'], $configName);
+        $configFile = $this->templateManager->render(
+            'client',
+            $configData['certificate']
+        );
         $response = new Response(200, 'application/x-openvpn-profile');
-        $response->setBody($configData);
+        $response->setBody($configFile);
 
         return $response;
     }
