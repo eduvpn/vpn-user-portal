@@ -160,7 +160,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             if ($configList['items'][$commonName]['disable']) {
                                 $c['disable'] = true;
                             }
-                            $c['pool'] = $serverInfo['ip']['v4']['pools'][$configList['items'][$commonName]['pool']]['name'];
+                            $c['pool'] = $serverInfo['pools'][$configList['items'][$commonName]['pool']]['name'];
                         }
 
                         if ($c['disable']) {

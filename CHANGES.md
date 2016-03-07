@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.1.0 (2016-03-07)
+- support new info API
+
 ## 6.0.1 (2016-03-04)
 - fix init script
 
