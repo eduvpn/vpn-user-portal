@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.1.1 (2016-03-07)
+- small fix in default pool
+
 ## 6.1.0 (2016-03-07)
 - support new info API
 
