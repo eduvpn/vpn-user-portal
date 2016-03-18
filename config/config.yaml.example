@@ -10,7 +10,7 @@ companionAppUrl: https://example.org/companion.apk
 #templateCache: /var/lib/vpn-user-portal/tpl
 
 FormAuthentication:
-    foo: $2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq
+    #foo: $2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq
 
 MellonAuthentication:
     attribute: MELLON_NAME_ID

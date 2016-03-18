@@ -19,10 +19,17 @@ See the [documentation](https://github.com/eduvpn/documentation) repository.
     $ cp config/config.yaml.example config/config.yaml
 
 Set the `serverMode` to `development` and point `ApiDb/dsn` to a writable
-file.
+file, for example `$PWD/data`:
     
     $ mkdir data
     $ php bin/init
+
+Add a user, in this case `foo` with password `bar`:
+
+    $ php bin/add-user foo bar
+
+Start the server:
+
     $ php -S localhost:8082 -t web/
 
 # License

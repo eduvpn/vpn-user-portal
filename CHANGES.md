@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.1.2 (2016-03-18)
+- remove the default user from the configuration file
+- add an `add-user` script to easily add users
+- update documentation
+
 ## 6.1.1 (2016-03-07)
 - small fix in default pool
 
