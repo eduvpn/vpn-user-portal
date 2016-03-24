@@ -20,7 +20,6 @@ namespace fkooman\VPN\UserPortal;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Request;
 use fkooman\Http\Response;
-use fkooman\IO\IO;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
@@ -37,18 +36,11 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var VpnConfigApiClient */
     private $vpnConfigApiClient;
 
-    /** @var fkooman\IO\IO */
-    private $io;
-
-    public function __construct(TemplateManagerInterface $templateManager, ApiDb $apiDb, VpnConfigApiClient $vpnConfigApiClient, IO $io = null)
+    public function __construct(TemplateManagerInterface $templateManager, ApiDb $apiDb, VpnConfigApiClient $vpnConfigApiClient)
     {
         $this->templateManager = $templateManager;
         $this->apiDb = $apiDb;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
-        if (is_null($io)) {
-            $io = new IO();
-        }
-        $this->io = $io;
     }
 
     public function init(Service $service)
@@ -119,8 +111,8 @@ class VpnApiModule implements ServiceModuleInterface
 
     private function addKey(Request $request, UserInfoInterface $userInfo)
     {
-        $userName = $this->io->getRandom(8);
-        $userPass = $this->io->getRandom(8);
+        $userName = bin2hex(random_bytes(8));
+        $userPass = bin2hex(random_bytes(8));
         $userPassHash = password_hash($userPass, PASSWORD_DEFAULT);
         $this->apiDb->addKey($userInfo->getUserId(), $userName, $userPassHash);
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.1.3 (2016-03-24)
+- remove `fkooman/io` dependency and use `paragonie/random_compat` 
+  instead for random number generation
+
 ## 6.1.2 (2016-03-18)
 - remove the default user from the configuration file
 - add an `add-user` script to easily add users

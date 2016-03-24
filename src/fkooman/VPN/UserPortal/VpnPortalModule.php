@@ -27,7 +27,6 @@ use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
 use fkooman\Tpl\TemplateManagerInterface;
-use fkooman\IO\IO;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -43,22 +42,15 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var ApiDb */
     private $apiDb;
 
-    /** @var fkooman\IO\IO */
-    private $io;
-
     /** @var string */
     private $companionAppUrl;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, ApiDb $apiDb, IO $io = null)
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, ApiDb $apiDb)
     {
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
         $this->apiDb = $apiDb;
-        if (is_null($io)) {
-            $io = new IO();
-        }
-        $this->io = $io;
         $this->companionAppUrl = null;
     }
 
@@ -330,8 +322,8 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->apiDb->deleteKey($userId);
 
         // generate new credentials
-        $userName = $this->io->getRandom(8);
-        $userPass = $this->io->getRandom(8);
+        $userName = bin2hex(random_bytes(8));
+        $userPass = bin2hex(random_bytes(8));
         $userPassHash = password_hash($userPass, PASSWORD_DEFAULT);
         $this->apiDb->addKey($userId, $userName, $userPassHash);
 
