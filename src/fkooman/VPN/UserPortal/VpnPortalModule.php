@@ -274,27 +274,38 @@ class VpnPortalModule implements ServiceModuleInterface
             case 'app':
                 // show a QR code for use in App
                 $apiCredentials = $this->generateApiCredentials($userId);
-                $qrUrl = sprintf(
-                    '%sapi/config?userName=%s&userPass=%s&configName=%s',
-                    $request->getUrl()->getRootUrl(),
+
+                $redirectUri = sprintf(
+                    'vpn://import?userName=%s&userPass=%s&configName=%s',
                     $apiCredentials['userName'],
                     $apiCredentials['userPass'],
                     $configName
                 );
 
-                $renderer = new Png();
-                $renderer->setHeight(256);
-                $renderer->setWidth(256);
-                $writer = new Writer($renderer);
-                $qrData = base64_encode($writer->writeString($qrUrl));
+                $response = new RedirectResponse($redirectUri, 302);
+                break;
 
-                return $this->templateManager->render(
-                    'vpnPortalApp',
-                    array(
-                        'qrCode' => $qrData,
-                        'companionAppUrl' => $this->companionAppUrl,
-                    )
-                );
+#                $qrUrl = sprintf(
+#                    '%sapi/config?userName=%s&userPass=%s&configName=%s',
+#                    $request->getUrl()->getRootUrl(),
+#                    $apiCredentials['userName'],
+#                    $apiCredentials['userPass'],
+#                    $configName
+#                );
+
+#                $renderer = new Png();
+#                $renderer->setHeight(256);
+#                $renderer->setWidth(256);
+#                $writer = new Writer($renderer);
+#                $qrData = base64_encode($writer->writeString($qrUrl));
+
+#                return $this->templateManager->render(
+#                    'vpnPortalApp',
+#                    array(
+#                        'qrCode' => $qrData,
+#                        'companionAppUrl' => $this->companionAppUrl,
+#                    )
+#                );
 
             default:
                 throw new BadRequestException('invalid type');
