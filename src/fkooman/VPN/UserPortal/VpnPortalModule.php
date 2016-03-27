@@ -17,8 +17,6 @@
 
 namespace fkooman\VPN\UserPortal;
 
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Writer;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Request;
@@ -39,24 +37,11 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var VpnServerApiClient */
     private $vpnServerApiClient;
 
-    /** @var ApiDb */
-    private $apiDb;
-
-    /** @var string */
-    private $companionAppUrl;
-
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, ApiDb $apiDb)
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
     {
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
-        $this->apiDb = $apiDb;
-        $this->companionAppUrl = null;
-    }
-
-    public function setCompanionAppUrl($companionAppUrl)
-    {
-        $this->companionAppUrl = $companionAppUrl;
     }
 
     public function init(Service $service)
@@ -272,7 +257,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $response->setBody($configData);
                 break;
             case 'app':
-                // show a QR code for use in App
+                // Open the special App URL vpn://import
                 $apiCredentials = $this->generateApiCredentials($userId);
 
                 $redirectUri = sprintf(
@@ -284,28 +269,6 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $response = new RedirectResponse($redirectUri, 302);
                 break;
-
-#                $qrUrl = sprintf(
-#                    '%sapi/config?userName=%s&userPass=%s&configName=%s',
-#                    $request->getUrl()->getRootUrl(),
-#                    $apiCredentials['userName'],
-#                    $apiCredentials['userPass'],
-#                    $configName
-#                );
-
-#                $renderer = new Png();
-#                $renderer->setHeight(256);
-#                $renderer->setWidth(256);
-#                $writer = new Writer($renderer);
-#                $qrData = base64_encode($writer->writeString($qrUrl));
-
-#                return $this->templateManager->render(
-#                    'vpnPortalApp',
-#                    array(
-#                        'qrCode' => $qrData,
-#                        'companionAppUrl' => $this->companionAppUrl,
-#                    )
-#                );
 
             default:
                 throw new BadRequestException('invalid type');
@@ -325,22 +288,5 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // disconnect the client
         $this->vpnServerApiClient->postKill(sprintf('%s_%s', $userId, $configName));
-    }
-
-    private function generateApiCredentials($userId)
-    {
-        // delete API credentials if they exist for this user
-        $this->apiDb->deleteKey($userId);
-
-        // generate new credentials
-        $userName = bin2hex(random_bytes(8));
-        $userPass = bin2hex(random_bytes(8));
-        $userPassHash = password_hash($userPass, PASSWORD_DEFAULT);
-        $this->apiDb->addKey($userId, $userName, $userPassHash);
-
-        return array(
-            'userName' => $userName,
-            'userPass' => $userPass,
-        );
     }
 }

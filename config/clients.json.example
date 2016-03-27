@@ -1,0 +1,8 @@
+{
+    "vpn-companion": {
+        "redirect_uri": "vpn://import/callback",
+        "response_type": "code",
+        "scope": "config",
+        "secret": null
+    }
+}

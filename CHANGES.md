@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.0.0 (...)
+- replace complete API with OAuth 2.0 API
+- remove QR code
+
 ## 6.1.3 (2016-03-24)
 - remove `fkooman/io` dependency and use `paragonie/random_compat` 
   instead for random number generation

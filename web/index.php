@@ -21,18 +21,25 @@ use fkooman\Config\YamlFile;
 use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\Http\Request;
 use fkooman\Http\Session;
+use fkooman\OAuth\OAuthModule;
+use fkooman\OAuth\Storage\NullApprovalStorage;
+use fkooman\OAuth\Storage\JsonClientStorage;
+use fkooman\OAuth\Storage\NoResourceServerStorage;
+use fkooman\OAuth\Storage\PdoAccessTokenStorage;
+use fkooman\OAuth\Storage\PdoAuthorizationCodeStorage;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
-use fkooman\Rest\Plugin\Authentication\Basic\BasicAuthentication;
+use fkooman\Rest\Plugin\Authentication\Bearer\BearerAuthentication;
 use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
 use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
 use fkooman\Rest\Service;
 use fkooman\Tpl\Twig\TwigTemplateManager;
-use fkooman\VPN\UserPortal\ApiDb;
+use fkooman\VPN\UserPortal\DbTokenValidator;
 use fkooman\VPN\UserPortal\VpnApiModule;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnPortalModule;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
 use GuzzleHttp\Client;
+use fkooman\OAuth\Auth\UnauthenticatedClientAuthentication;
 
 try {
     $config = new Reader(
@@ -120,46 +127,51 @@ try {
         $config->v('api', 'username', false),
         $config->v('api', 'password', false)
     );
-    $apiDb = new ApiDb($db);
 
     $vpnPortalModule = new VpnPortalModule(
         $templateManager,
         $vpnConfigApiClient,
-        $vpnServerApiClient,
-        $apiDb
-    );
-    $vpnPortalModule->setCompanionAppUrl(
-        $config->v('companionAppUrl', false)
+        $vpnServerApiClient
     );
 
     $vpnApiModule = new VpnApiModule(
         $templateManager,
-        $apiDb,
         $vpnConfigApiClient
     );
 
-    $apiAuth = new BasicAuthentication(
-        function ($userName) use ($apiDb) {
-            if (false === $userInfo = $apiDb->getHashForUserName($userName)) {
-                return false;
-            }
+    $oauthModule = new OAuthModule(
+        $templateManager,
+        new JsonClientStorage(dirname(__DIR__).'/config/clients.json'),
+        new NoResourceServerStorage(),
+        new NullApprovalStorage(),
+        new PdoAuthorizationCodeStorage($db),
+        new PdoAccessTokenStorage($db),
+        [
+            'disable_token_endpoint' => false,
+            'disable_introspect_endpoint' => true, // no need for introspection
+            'route_prefix' => '/_oauth',
+        ]
+    );
 
-            return $userInfo['user_pass_hash'];
-        },
-        array('realm' => 'VPN User API')
+    $apiAuth = new BearerAuthentication(
+        new DbTokenValidator($db),
+        array(
+            'realm' => 'VPN User API',
+        )
     );
 
     $service = new Service();
     $service->addModule($vpnPortalModule);
     $service->addModule($vpnApiModule);
+    $service->addModule($oauthModule);
+
     $authenticationPlugin = new AuthenticationPlugin();
     $authenticationPlugin->register($auth, 'user');
+    $authenticationPlugin->register(new UnauthenticatedClientAuthentication(), 'client');
     $authenticationPlugin->register($apiAuth, 'api');
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     $response = $service->run($request);
-    # CSP: https://developer.mozilla.org/en-US/docs/Security/CSP
-    # img-src 'self' data: is apparently unsafe! XXX
-    $response->setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self' data:");
+    $response->setHeader('Content-Security-Policy', "default-src 'self'");
     # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
     $response->setHeader('X-Frame-Options', 'DENY');
     $response->send();

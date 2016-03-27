@@ -17,7 +17,6 @@
 
 namespace fkooman\VPN\UserPortal;
 
-use fkooman\Http\RedirectResponse;
 use fkooman\Http\Request;
 use fkooman\Http\Response;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
@@ -30,59 +29,17 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \fkooman\Tpl\TemplateManagerInterface */
     private $templateManager;
 
-    /** @var ApiDb */
-    private $apiDb;
-
     /** @var VpnConfigApiClient */
     private $vpnConfigApiClient;
 
-    public function __construct(TemplateManagerInterface $templateManager, ApiDb $apiDb, VpnConfigApiClient $vpnConfigApiClient)
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient)
     {
         $this->templateManager = $templateManager;
-        $this->apiDb = $apiDb;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
     }
 
     public function init(Service $service)
     {
-        $userAuth = array(
-            'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                'activate' => array('user'),
-            ),
-        );
-
-        $apiAuth = array(
-            'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                'activate' => array('api'),
-            ),
-        );
-
-        $service->get(
-            '/api',
-            function (Request $request, UserInfoInterface $userInfo) {
-                return $this->getApiPage($userInfo);
-            },
-            $userAuth
-        );
-
-        $service->post(
-            '/api',
-            function (Request $request, UserInfoInterface $userInfo) {
-                return $this->addKey($request, $userInfo);
-            },
-            $userAuth
-        );
-
-        $service->delete(
-            '/api',
-            function (Request $request, UserInfoInterface $userInfo) {
-                $this->deleteKey($userInfo);
-
-                return new RedirectResponse($request->getUrl()->getRootUrl().'api');
-            },
-            $userAuth
-        );
-
         // Add a configuration
         $service->post(
             '/api/config',
@@ -92,44 +49,17 @@ class VpnApiModule implements ServiceModuleInterface
 
                 return $this->addConfig($userInfo, $configName);
             },
-            $apiAuth
-        );
-    }
-
-    private function getApiPage(UserInfoInterface $userInfo, $userPass = null)
-    {
-        $result = $this->apiDb->getUserNameForUserId($userInfo->getUserId());
-
-        return $this->templateManager->render(
-            'vpnPortalApi',
             array(
-                'userName' => $result['user_name'],
-                'userPass' => $userPass,
+                'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
+                    'activate' => array('api'),
+                ),
             )
         );
     }
 
-    private function addKey(Request $request, UserInfoInterface $userInfo)
-    {
-        $userName = bin2hex(random_bytes(8));
-        $userPass = bin2hex(random_bytes(8));
-        $userPassHash = password_hash($userPass, PASSWORD_DEFAULT);
-        $this->apiDb->addKey($userInfo->getUserId(), $userName, $userPassHash);
-
-        return $this->getApiPage($userInfo, $userPass);
-    }
-
-    private function deleteKey(UserInfoInterface $userInfo)
-    {
-        $this->apiDb->deleteKey($userInfo->getUserId());
-    }
-
     private function addConfig(UserInfoInterface $userInfo, $configName)
     {
-        // XXX check if config exists first
-        $result = $this->apiDb->getUserIdForUserName($userInfo->getUserId());
-
-        $configData = $this->vpnConfigApiClient->addConfiguration($result['user_id'], $configName);
+        $configData = $this->vpnConfigApiClient->addConfiguration($userInfo->getUserId(), $configName);
         $configFile = $this->templateManager->render(
             'client',
             $configData['certificate']

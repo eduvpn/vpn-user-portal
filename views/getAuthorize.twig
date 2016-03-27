@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <p>An application wants to act on your behalf.</p>
+
+    <dl>
+        <dt>Application</dt><dd>{{ client_id|e }}</dd>
+        <dt>Permissions</dt><dd>{{ scope|e }}</dd>
+    </dl>
+
+    <form method="post" action="{{ request_url|e }}">
+        <button class="danger" type="submit" name="approval" value="no">Reject</button>
+        <button class="success"  type="submit" name="approval" value="yes" autofocus>Approve</button>
+    </form>
+
+    {% include 'footer.twig' %}
+</body>
+</html>

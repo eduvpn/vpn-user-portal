@@ -19,7 +19,8 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 
 use fkooman\Config\Reader;
 use fkooman\Config\YamlFile;
-use fkooman\VPN\UserPortal\ApiDb;
+use fkooman\OAuth\Storage\PdoAccessTokenStorage;
+use fkooman\OAuth\Storage\PdoAuthorizationCodeStorage;
 
 try {
     $reader = new Reader(
@@ -32,8 +33,11 @@ try {
         $reader->v('api', 'password', false)
     );
 
-    $apiDb = new ApiDb($db);
-    $apiDb->initDatabase();
+    $authorizationCodeStorage = new PdoAuthorizationCodeStorage($db);
+    $authorizationCodeStorage->initDatabase();
+
+    $accessTokenStorage = new PdoAccessTokenStorage($db);
+    $accessTokenStorage->initDatabase();
 } catch (Exception $e) {
     echo $e->getMessage().PHP_EOL;
     exit(1);

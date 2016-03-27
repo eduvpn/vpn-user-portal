@@ -4,51 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dc727ba36e585122580cc4bfbcad70c5",
-    "content-hash": "078cef94694f1a6355f34b73835f0d26",
+    "hash": "454df03407e1be068dd3b10402c3cd6c",
+    "content-hash": "4ca22aebb1726f8de4021dcb94d02b43",
     "packages": [
-        {
-            "name": "bacon/bacon-qr-code",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Bacon/BaconQrCode.git",
-                "reference": "031a2ce68c5794064b49d11775b2daf45c96e21c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/031a2ce68c5794064b49d11775b2daf45c96e21c",
-                "reference": "031a2ce68c5794064b49d11775b2daf45c96e21c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "suggest": {
-                "ext-gd": "to generate QR code images"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "BaconQrCode": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Ben Scholzen 'DASPRiD'",
-                    "email": "mail@dasprids.de",
-                    "homepage": "http://www.dasprids.de",
-                    "role": "Developer"
-                }
-            ],
-            "description": "BaconQrCode is a QR code generator for PHP.",
-            "homepage": "https://github.com/Bacon/BaconQrCode",
-            "time": "2016-01-09 22:55:35"
-        },
         {
             "name": "fkooman/config",
             "version": "1.0.0",
@@ -90,23 +48,23 @@
         },
         {
             "name": "fkooman/http",
-            "version": "1.6.0",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-http.git",
-                "reference": "ada6f0debe78eaed04f6dcb4ee9a7e3576322d3b"
+                "reference": "079ee82d777dc462f59d9d8344eba469182b08ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-http/zipball/ada6f0debe78eaed04f6dcb4ee9a7e3576322d3b",
-                "reference": "ada6f0debe78eaed04f6dcb4ee9a7e3576322d3b",
+                "url": "https://api.github.com/repos/fkooman/php-lib-http/zipball/079ee82d777dc462f59d9d8344eba469182b08ed",
+                "reference": "079ee82d777dc462f59d9d8344eba469182b08ed",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "ext-session": "*",
                 "ext-spl": "*",
-                "fkooman/json": "^1.0.0",
+                "fkooman/json": "^2.0.0",
                 "php": ">=5.3.0"
             },
             "suggest": {
@@ -130,26 +88,68 @@
                 }
             ],
             "description": "Simple PHP library for dealing with HTTP requests and responses.",
-            "time": "2016-02-22 00:05:41"
+            "time": "2016-03-25 14:11:53"
         },
         {
-            "name": "fkooman/json",
-            "version": "1.0.0",
+            "name": "fkooman/io",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fkooman/php-lib-json.git",
-                "reference": "f24b7ee1890b29358402defcd9581a4e969e40d7"
+                "url": "https://github.com/fkooman/php-lib-io.git",
+                "reference": "6bb59459bf43a6c7b9e42ddd0c04f78757a62fc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-json/zipball/f24b7ee1890b29358402defcd9581a4e969e40d7",
-                "reference": "f24b7ee1890b29358402defcd9581a4e969e40d7",
+                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/6bb59459bf43a6c7b9e42ddd0c04f78757a62fc1",
+                "reference": "6bb59459bf43a6c7b9e42ddd0c04f78757a62fc1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-date": "*",
+                "ext-spl": "*",
+                "paragonie/random_compat": "^1.0",
+                "php": ">= 5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "fkooman\\IO\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "François Kooman",
+                    "email": "fkooman@tuxed.net"
+                }
+            ],
+            "description": "Simple IO library",
+            "time": "2016-03-25 17:34:39"
+        },
+        {
+            "name": "fkooman/json",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fkooman/php-lib-json.git",
+                "reference": "af0016d4a1d660f945ad4a10772cbdacb698a3ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fkooman/php-lib-json/zipball/af0016d4a1d660f945ad4a10772cbdacb698a3ac",
+                "reference": "af0016d4a1d660f945ad4a10772cbdacb698a3ac",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "ext-iconv": "*"
             },
             "type": "library",
             "autoload": {
@@ -169,7 +169,57 @@
                 }
             ],
             "description": "PHP library to encode and decode JSON",
-            "time": "2015-07-13 11:58:01"
+            "time": "2016-03-25 13:54:00"
+        },
+        {
+            "name": "fkooman/oauth",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fkooman/php-lib-oauth.git",
+                "reference": "4a23a2d204e73a3a59f6c0f6495edc7abc28e466"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fkooman/php-lib-oauth/zipball/4a23a2d204e73a3a59f6c0f6495edc7abc28e466",
+                "reference": "4a23a2d204e73a3a59f6c0f6495edc7abc28e466",
+                "shasum": ""
+            },
+            "require": {
+                "ext-filter": "*",
+                "ext-pcre": "*",
+                "ext-pdo": "*",
+                "ext-spl": "*",
+                "fkooman/http": "^1.1.0",
+                "fkooman/io": "^1.0.2",
+                "fkooman/json": "^2.0.0",
+                "fkooman/rest": "^1.0.0",
+                "fkooman/rest-plugin-authentication": "^2.0.0",
+                "fkooman/tpl": "^2.0.0",
+                "php": ">= 5.4"
+            },
+            "require-dev": {
+                "fkooman/base64": "^1.0.0",
+                "fkooman/rest-plugin-authentication-basic": "^2.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "fkooman\\OAuth\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "François Kooman",
+                    "email": "fkooman@tuxed.net"
+                }
+            ],
+            "description": "OAuth 2.0 Server Library",
+            "time": "2016-03-27 17:50:41"
         },
         {
             "name": "fkooman/rest",
@@ -302,17 +352,60 @@
             "time": "2015-11-19 12:30:58"
         },
         {
-            "name": "fkooman/rest-plugin-authentication-form",
-            "version": "3.0.2",
+            "name": "fkooman/rest-plugin-authentication-bearer",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-form.git",
-                "reference": "cd13d0871af58891355ece42e1cd05d62feb64de"
+                "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-bearer.git",
+                "reference": "08c97721f98d4a74a021325da6b543934cb23bb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-form/zipball/cd13d0871af58891355ece42e1cd05d62feb64de",
-                "reference": "cd13d0871af58891355ece42e1cd05d62feb64de",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-bearer/zipball/08c97721f98d4a74a021325da6b543934cb23bb4",
+                "reference": "08c97721f98d4a74a021325da6b543934cb23bb4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "ext-spl": "*",
+                "fkooman/http": "^1.3.1",
+                "fkooman/rest": "^1.0.0",
+                "fkooman/rest-plugin-authentication": "^2.0.0",
+                "guzzlehttp/guzzle": "~5.3",
+                "php": ">= 5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "fkooman\\Rest\\Plugin\\Authentication\\Bearer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "François Kooman",
+                    "email": "fkooman@tuxed.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Bearer (OAuth) Authentication plugin for fkooman/rest-plugin-authentication",
+            "time": "2016-02-26 17:37:24"
+        },
+        {
+            "name": "fkooman/rest-plugin-authentication-form",
+            "version": "3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-form.git",
+                "reference": "69771491e3913df3ae629c0678b7e817f922ba0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-form/zipball/69771491e3913df3ae629c0678b7e817f922ba0d",
+                "reference": "69771491e3913df3ae629c0678b7e817f922ba0d",
                 "shasum": ""
             },
             "require": {
@@ -326,7 +419,7 @@
                 "php": ">=5.4"
             },
             "require-dev": {
-                "fkooman/json": "^1.0.0"
+                "fkooman/json": "^2.0.0"
             },
             "type": "library",
             "autoload": {
@@ -346,7 +439,7 @@
                 }
             ],
             "description": "HTML Form Authentication plugin for fkooman/rest-plugin-authentication",
-            "time": "2016-03-07 19:57:45"
+            "time": "2016-03-25 14:15:00"
         },
         {
             "name": "fkooman/rest-plugin-authentication-mellon",
@@ -757,16 +850,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.3",
+            "version": "v2.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "2a4ee40acb880c56f29fb1b8886e7ffe94f3b995"
+                "reference": "584e52cb8f788a887553ba82db6caacb1d6260bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/2a4ee40acb880c56f29fb1b8886e7ffe94f3b995",
-                "reference": "2a4ee40acb880c56f29fb1b8886e7ffe94f3b995",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/584e52cb8f788a887553ba82db6caacb1d6260bb",
+                "reference": "584e52cb8f788a887553ba82db6caacb1d6260bb",
                 "shasum": ""
             },
             "require": {
@@ -802,7 +895,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-23 07:41:20"
+            "time": "2016-03-04 07:54:35"
         },
         {
             "name": "twig/twig",
@@ -869,7 +962,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fkooman/oauth": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

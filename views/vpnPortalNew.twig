@@ -24,7 +24,6 @@ Choose a unique name for your configuration, e.g. "Phone". Allowed characters ar
             <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
             <button type="submit" name="type" value="ovpn">Download</button>
             {% if advanced %}
-                <button type="submit" class="plain" name="type" value="app" title="Use VPN App">Use App</button>
                 <button class="plain" type="submit" name="type" value="zip">Download (ZIP)</button>
             {% endif %}
         </fieldset>
