@@ -1,6 +1,6 @@
 # Changelog
 
-## 7.0.0 (...)
+## 7.0.0 (2016-03-30)
 - replace complete API with OAuth 2.0 API
 - remove QR code
 - add Account page for listing user ID, applications that have tokens
