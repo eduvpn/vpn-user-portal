@@ -1,8 +1,8 @@
 {
     "vpn-companion": {
         "redirect_uri": "vpn://import/callback",
-        "response_type": "code",
-        "scope": "config",
+        "response_type": "token",
+        "scope": "create_config",
         "secret": null
     }
 }

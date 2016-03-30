@@ -37,11 +37,15 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var VpnServerApiClient */
     private $vpnServerApiClient;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
+    /** @var UserTokens */
+    private $userTokens;
+
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens)
     {
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
+        $this->userTokens = $userTokens;
     }
 
     public function init(Service $service)
@@ -189,15 +193,28 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->get(
-            '/whoami',
+            '/account',
             function (Request $request, UserInfoInterface $u) {
-                $response = new Response(200, 'text/plain');
-                $response->setBody($u->getUserId());
-
-                return $response;
+                return $this->templateManager->render(
+                    'vpnPortalAccount',
+                    array(
+                        'userId' => $u->getUserId(),
+                        'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
+                    )
+                );
             },
             $userAuth
         );
+
+        $service->post(
+            '/deleteTokens',
+            function (Request $request, UserInfoInterface $u) {
+                $this->userTokens->deleteUserAccessTokens($u->getUserId(), $request->getPostParameter('client_id'));
+
+                return new RedirectResponse($request->getUrl()->getRootUrl().'account', 302);
+            },
+            $userAuth
+        );            
 
         $service->get(
             '/documentation',

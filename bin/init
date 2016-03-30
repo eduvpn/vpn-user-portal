@@ -20,7 +20,6 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 use fkooman\Config\Reader;
 use fkooman\Config\YamlFile;
 use fkooman\OAuth\Storage\PdoAccessTokenStorage;
-use fkooman\OAuth\Storage\PdoAuthorizationCodeStorage;
 
 try {
     $reader = new Reader(
@@ -32,9 +31,6 @@ try {
         $reader->v('api', 'username', false),
         $reader->v('api', 'password', false)
     );
-
-    $authorizationCodeStorage = new PdoAuthorizationCodeStorage($db);
-    $authorizationCodeStorage->initDatabase();
 
     $accessTokenStorage = new PdoAccessTokenStorage($db);
     $accessTokenStorage->initDatabase();

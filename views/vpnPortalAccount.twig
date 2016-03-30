@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="mainMenu">
+      <li><a href="home">Home</a></li>
+      <li><a href="new">New</a></li>
+      <li><a href="configurations">Configurations</a></li>
+      <li class="active"><a href="account">Account</a></li>
+      <li><a href="documentation">Documentation</a></li>
+    </ul>
+
+    <h2>Account</h2>
+
+    <h3>User</h3>
+    <p>Your user ID is <em>{{ userId|e }}</em>.</p>
+
+    <h3>Groups</h3>
+    <p>You are not a member of any groups.</p>
+
+    <h3>Applications</h3>
+    {% if userTokens is empty %}
+        <p>You do not have any applications that are allowed to access your account.</p>
+    {% else %}
+        <p>The following applications have access to your account. You can revoke their permission here.</p>
+        <table>
+            <thead>
+                <tr><th>Application</th><th>Permissions</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for token in userTokens %}
+                    <tr>
+                        <td>{{ token.client_id|e }}</td>
+                        <td>{{ token.scope|e }}</td>
+                        <td class="text-right">
+                            <form method="post" action="deleteTokens">
+                                <input type="hidden" name="client_id" value="{{ token.client_id|e }}">
+                                <button class="danger" type="submit">Revoke</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% include 'footer.twig' %}
+
+</body>
+</html>

@@ -3,6 +3,9 @@
 ## 7.0.0 (...)
 - replace complete API with OAuth 2.0 API
 - remove QR code
+- add Account page for listing user ID, applications that have tokens
+  and group membership
+- remove `whoami` endpoint, now available on account page
 
 ## 6.1.3 (2016-03-24)
 - remove `fkooman/io` dependency and use `paragonie/random_compat` 

@@ -26,7 +26,7 @@ use fkooman\OAuth\Storage\NullApprovalStorage;
 use fkooman\OAuth\Storage\JsonClientStorage;
 use fkooman\OAuth\Storage\NoResourceServerStorage;
 use fkooman\OAuth\Storage\PdoAccessTokenStorage;
-use fkooman\OAuth\Storage\PdoAuthorizationCodeStorage;
+use fkooman\OAuth\Storage\NullAuthorizationCodeStorage;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\Bearer\BearerAuthentication;
 use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
@@ -35,6 +35,7 @@ use fkooman\Rest\Service;
 use fkooman\Tpl\Twig\TwigTemplateManager;
 use fkooman\VPN\UserPortal\DbTokenValidator;
 use fkooman\VPN\UserPortal\VpnApiModule;
+use fkooman\VPN\UserPortal\UserTokens;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnPortalModule;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
@@ -131,7 +132,8 @@ try {
     $vpnPortalModule = new VpnPortalModule(
         $templateManager,
         $vpnConfigApiClient,
-        $vpnServerApiClient
+        $vpnServerApiClient,
+        new UserTokens($db)
     );
 
     $vpnApiModule = new VpnApiModule(
@@ -144,7 +146,7 @@ try {
         new JsonClientStorage(dirname(__DIR__).'/config/clients.json'),
         new NoResourceServerStorage(),
         new NullApprovalStorage(),
-        new PdoAuthorizationCodeStorage($db),
+        new NullAuthorizationCodeStorage($db),
         new PdoAccessTokenStorage($db),
         [
             'disable_token_endpoint' => false,
