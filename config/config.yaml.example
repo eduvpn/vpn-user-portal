@@ -4,9 +4,6 @@ serverMode: production
 authMethod: FormAuthentication
 #authMethod: MellonAuthentication
 
-# URL to VPN Companion App
-companionAppUrl: https://example.org/companion.apk
-
 #templateCache: /var/lib/vpn-user-portal/tpl
 
 FormAuthentication:
