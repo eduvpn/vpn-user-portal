@@ -135,13 +135,11 @@ class VpnPortalModule implements ServiceModuleInterface
                         $revokedVpnConfigurations[] = $c;
                     } elseif ('V' === $c['state']) {
                         $commonName = $u->getUserId().'_'.$c['name'];
-                        $c['pool'] = $serverInfo['pools']['default']['name'];
                         $c['disable'] = false;
                         if (array_key_exists($commonName, $configList['items'])) {
                             if ($configList['items'][$commonName]['disable']) {
                                 $c['disable'] = true;
                             }
-                            $c['pool'] = $serverInfo['pools'][$configList['items'][$commonName]['pool']]['name'];
                         }
 
                         if ($c['disable']) {
