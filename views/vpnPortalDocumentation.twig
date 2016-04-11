@@ -13,71 +13,89 @@
       <li class="active"><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>Documentation</h2>
+    <h2>{% trans "Documentation" %}</h2>
 
-    <h3>VPN Configuration</h3>
+    <h3>{% trans "VPN Configuration" %}</h3>
     <p>
+        {% trans %}
         In order to get the VPN working you need to download a VPN 
         configuration <a href="new">here</a>. Next you download a VPN 
         client application, see below. The final step is to load the 
         configuration file in the VPN client application. How this is done
         depends on the application you use. Follow the documentation links
         if you do not know how.
+        {% endtrans %}
     </p>
 
-    <h3 id="app">VPN Application</h3>
+    <h3 id="app">{% trans "VPN Application" %}</h3>
 
     <h4 id="windows">Windows</h4>
     <p>
+        {% trans %}
         Download the <a target="_blank" href="https://openvpn.net/index.php/open-source/downloads.html">OpenVPN Community client</a>.
         Read installation and configuration instructions 
         <a target="_blank" href="https://community.openvpn.net/openvpn/wiki/OpenVPN-GUI">here</a>.
         The configuration file <strong>MUST</strong> be copied to the 
         <code>C:\Program Files\OpenVPN\Config</code> folder before starting the OpenVPN client.
+        {% endtrans %}
     </p>
 
     <h4 id="osx">OS X</h4>
     <p>
+        {% trans %}
         Download <a target="_blank" href="https://tunnelblick.net/">tunnelblick</a>. 
         Read the <a target="_blank" href="https://tunnelblick.net/czQuick.html">Quick Start Guide</a>.
+        {% endtrans %}
     </p>
 
     <h4 id="android">Android</h4>
+        {% trans %}        
         Install <a target="_blank" href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a>.
         A <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-android-faq.html">FAQ</a> is available.
+        {% endtrans %}
 
     <h4 id="ios">iOS</h4>
     <p>
+        {% trans %}
         Install <a target="_blank" href="https://itunes.apple.com/us/app/openvpn-connect/id590379981">OpenVPN Connect</a>. 
         A <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-ios-faq.html">FAQ</a> is available. Make sure "<em>Force AES-CBC ciphersuites</em>" is <strong>disabled</strong> in the VPN settings.
+        {% endtrans %}
     </p>
 
-    <h3>Privacy</h3>
+    <h3>{% trans "Privacy" %}</h3>
     <p>
+        {% trans %}
         Using a VPN service is not a magic solution to remain private when 
         using the Internet, nor should you use this service under the 
         assumption you can never be traced back. This is not only true for 
         this VPN service, but for all of them.
+        {% endtrans %}
     </p>
     <p>
+        {% trans %}
         If you want to obtain a higher degree of privacy you should be 
         using software like the <a href="https://www.torproject.org/">Tor Browser</a>, or in some 
         cases <a href="https://tails.boum.org/">Tails</a>. Even then, 
         caution is required. Please read all accompanying documentation 
         and warnings there!
+        {% endtrans %}
     </p>
 
-    <h3>Advanced Users</h3>
+    <h3>{% trans "Advanced Users" %}</h3>
     <p>
+        {% trans %}
         You can also use <a target="_blank" href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a>,
         a free software client for Android >= 4.0. Also available through <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>.
+        {% endtrans %}
     </p>
     <p>
+        {% trans %}
         On Linux using NetworkManager >= 1.2 the import of the OVPN file
         works without problems. For older versions, select the ZIP download
         <a href="new?advanced=1">here</a>. Extract the ZIP file in 
         <code>$HOME/.cert</code> and import the OVPN file in 
         NetworkManager.
+        {% endtrans %}
     </p>
 
     {% include 'footer.twig' %}

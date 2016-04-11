@@ -84,6 +84,7 @@ msgstr ""
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:51
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:51
 #: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:51
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:57
 msgid "Documentation"
 msgstr ""
 
@@ -294,4 +295,104 @@ msgstr ""
 
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:92
 msgid "Download (ZIP)"
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:62
+msgid "VPN Configuration"
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:67
+msgid ""
+"In order to get the VPN working you need to download a VPN \n"
+"        configuration <a href=\"new\">here</a>. Next you download a VPN \n"
+"        client application, see below. The final step is to load the \n"
+"        configuration file in the VPN client application. How this is done\n"
+"        depends on the application you use. Follow the documentation links\n"
+"        if you do not know how."
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:78
+msgid "VPN Application"
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:85
+msgid ""
+"Download the <a target=\"_blank\" href=\"https://openvpn.net/index.php/open-"
+"source/downloads.html\">OpenVPN Community client</a>.\n"
+"        Read installation and configuration instructions \n"
+"        <a target=\"_blank\" href=\"https://community.openvpn.net/openvpn/"
+"wiki/OpenVPN-GUI\">here</a>.\n"
+"        The configuration file <strong>MUST</strong> be copied to the \n"
+"        <code>C:\\Program Files\\OpenVPN\\Config</code> folder before "
+"starting the OpenVPN client."
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:97
+msgid ""
+"Download <a target=\"_blank\" href=\"https://tunnelblick.net/\">tunnelblick</"
+"a>. \n"
+"        Read the <a target=\"_blank\" href=\"https://tunnelblick.net/czQuick."
+"html\">Quick Start Guide</a>."
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:105
+msgid ""
+"Install <a target=\"_blank\" href=\"https://play.google.com/store/apps/"
+"details?id=net.openvpn.openvpn\">OpenVPN Connect</a>.\n"
+"        A <a target=\"_blank\" href=\"https://docs.openvpn.net/docs/openvpn-"
+"connect/openvpn-connect-android-faq.html\">FAQ</a> is available."
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:113
+msgid ""
+"Install <a target=\"_blank\" href=\"https://itunes.apple.com/us/app/openvpn-"
+"connect/id590379981\">OpenVPN Connect</a>. \n"
+"        A <a target=\"_blank\" href=\"https://docs.openvpn.net/docs/openvpn-"
+"connect/openvpn-connect-ios-faq.html\">FAQ</a> is available. Make sure "
+"\"<em>Force AES-CBC ciphersuites</em>\" is <strong>disabled</strong> in the "
+"VPN settings."
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:120
+msgid "Privacy"
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:125
+msgid ""
+"Using a VPN service is not a magic solution to remain private when \n"
+"        using the Internet, nor should you use this service under the \n"
+"        assumption you can never be traced back. This is not only true for \n"
+"        this VPN service, but for all of them."
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:134
+msgid ""
+"If you want to obtain a higher degree of privacy you should be \n"
+"        using software like the <a href=\"https://www.torproject.org/\">Tor "
+"Browser</a>, or in some \n"
+"        cases <a href=\"https://tails.boum.org/\">Tails</a>. Even then, \n"
+"        caution is required. Please read all accompanying documentation \n"
+"        and warnings there!"
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:144
+msgid "Advanced Users"
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:149
+msgid ""
+"You can also use <a target=\"_blank\" href=\"https://play.google.com/store/"
+"apps/details?id=de.blinkt.openvpn\">OpenVPN for Android</a>,\n"
+"        a free software client for Android >= 4.0. Also available through <a "
+"target=\"_blank\" href=\"https://f-droid.org/repository/browse/?fdid=de."
+"blinkt.openvpn\">F-Droid</a>."
+msgstr ""
+
+#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:156
+msgid ""
+"On Linux using NetworkManager >= 1.2 the import of the OVPN file\n"
+"        works without problems. For older versions, select the ZIP download\n"
+"        <a href=\"new?advanced=1\">here</a>. Extract the ZIP file in \n"
+"        <code>$HOME/.cert</code> and import the OVPN file in \n"
+"        NetworkManager."
 msgstr ""
