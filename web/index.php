@@ -65,6 +65,9 @@ try {
         )
     );
 
+    $activeLang = 'en_US';
+    $templateManager->setI18n('VpnUserPortal', $activeLang, dirname(__DIR__) . '/locale');
+
     // Authentication
     $authMethod = $config->v('authMethod');
     $templateManager->addDefault(array('authMethod' => $authMethod));

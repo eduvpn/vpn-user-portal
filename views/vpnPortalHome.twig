@@ -5,12 +5,13 @@
 <body>
     {% include 'header.twig' %}
 
+
     <ul class="mainMenu">
-      <li class="active"><a href="home">Home</a></li>
-      <li><a href="new">New</a></li>
-      <li><a href="configurations">Configurations</a></li>
-      <li><a href="account">Account</a></li>
-      <li><a href="documentation">Documentation</a></li>
+      <li class="active"><a href="home">{% trans "Home" %}</a></li>
+      <li><a href="new">{% trans "New" %}</a></li>
+      <li><a href="configurations">{% trans "Configurations" %}</a></li>
+      <li><a href="account">{% trans "Account" %}</a></li>
+      <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
     <h2>Home</h2>

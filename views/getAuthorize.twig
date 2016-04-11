@@ -5,16 +5,16 @@
 <body>
     {% include 'header.twig' %}
 
-    <p>An application wants to act on your behalf.</p>
+    <p>{% trans "An application wants to act on your behalf." %}</p>
 
     <dl>
-        <dt>Application</dt><dd>{{ client_id|e }}</dd>
-        <dt>Permissions</dt><dd>{{ scope|e }}</dd>
+        <dt>{% trans "Application" %}</dt><dd>{{ client_id|e }}</dd>
+        <dt>{% trans "Permissions" %}</dt><dd>{{ scope|e }}</dd>
     </dl>
 
     <form method="post" action="{{ request_url|e }}">
-        <button class="danger" type="submit" name="approval" value="no">Reject</button>
-        <button class="success"  type="submit" name="approval" value="yes" autofocus>Approve</button>
+        <button class="danger" type="submit" name="approval" value="no">{% trans "Reject" %}</button>
+        <button class="success"  type="submit" name="approval" value="yes" autofocus>{% trans "Approve" %}</button>
     </form>
 
     {% include 'footer.twig' %}

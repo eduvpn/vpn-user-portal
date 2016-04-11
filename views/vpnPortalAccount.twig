@@ -6,29 +6,26 @@
     {% include 'header.twig' %}
 
     <ul class="mainMenu">
-      <li><a href="home">Home</a></li>
-      <li><a href="new">New</a></li>
-      <li><a href="configurations">Configurations</a></li>
-      <li class="active"><a href="account">Account</a></li>
-      <li><a href="documentation">Documentation</a></li>
+      <li><a href="home">{% trans "Home" %}</a></li>
+      <li><a href="new">{% trans "New" %}</a></li>
+      <li><a href="configurations">{% trans "Configurations" %}</a></li>
+      <li class="active"><a href="account">{% trans "Account" %}</a></li>
+      <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>Account</h2>
+    <h2>{% trans "Account" %}</h2>
 
-    <h3>User</h3>
+    <h3>{% trans "User" %}</h3>
     <p>Your user ID is <em>{{ userId|e }}</em>.</p>
 
-<!--    <h3>Groups</h3>-->
-<!--    <p>You are not a member of any groups.</p>-->
-
-    <h3>Applications</h3>
+    <h3>{% trans "Applications" %}</h3>
     {% if userTokens is empty %}
-        <p>You do not have any applications that are allowed to access your account.</p>
+        <p>{% trans "You do not have any applications that are allowed to access your account." %}</p>
     {% else %}
-        <p>The following applications have access to your account. You can revoke their permission here.</p>
+        <p>{% trans "The following applications have access to your account. You can revoke their permission here." %}</p>
         <table>
             <thead>
-                <tr><th>Application</th><th>Permissions</th><th></th></tr>
+                <tr><th>{% trans "Application" %}</th><th>{% trans "Permissions" %}</th><th></th></tr>
             </thead>
             <tbody>
                 {% for token in userTokens %}
@@ -38,7 +35,7 @@
                         <td class="text-right">
                             <form method="post" action="deleteTokens">
                                 <input type="hidden" name="client_id" value="{{ token.client_id|e }}">
-                                <button class="danger" type="submit">Revoke</button>
+                                <button class="danger" type="submit">{% trans "Revoke" %}</button>
                             </form>
                         </td>
                     </tr>

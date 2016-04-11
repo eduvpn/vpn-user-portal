@@ -6,26 +6,26 @@
     {% include 'header.twig' %}
 
     <ul class="mainMenu">
-      <li><a href="home">Home</a></li>
-      <li class="active"><a href="new">New</a></li>
-      <li><a href="configurations">Configurations</a></li>
-      <li><a href="account">Account</a></li>
-      <li><a href="documentation">Documentation</a></li>
+      <li><a href="home">{% trans "Home" %}</a></li>
+      <li class="active"><a href="new">{% trans "New" %}</a></li>
+      <li><a href="configurations">{% trans "Configurations" %}</a></li>
+      <li><a href="account">{% trans "Account" %}</a></li>
+      <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>New</h2>
+    <h2>{% trans "New" %}</h2>
     <p>
 Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
     </p>
 
     <form method="post">
         <fieldset>
-            <legend>New</legend>
-            <label for="inputName">Name</label>
+            <legend>{% trans "New" %}</legend>
+            <label for="inputName">{% trans "Name" %}</label>
             <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="Name" autofocus required pattern="[a-zA-Z0-9-_.@]+">
-            <button type="submit" name="type" value="ovpn">Download</button>
+            <button type="submit" name="type" value="ovpn">{% trans "Download" %}</button>
             {% if advanced %}
-                <button class="plain" type="submit" name="type" value="zip">Download (ZIP)</button>
+                <button class="plain" type="submit" name="type" value="zip">{% trans "Download (ZIP)" %}</button>
             {% endif %}
         </fieldset>
     </form>
