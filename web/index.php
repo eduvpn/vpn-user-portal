@@ -65,8 +65,24 @@ try {
         )
     );
 
-    $activeLang = 'en_US';
-    $templateManager->setI18n('VpnUserPortal', $activeLang, dirname(__DIR__) . '/locale');
+    $session = new Session(
+        'vpn-user-portal',
+        array(
+            'secure' => 'development' !== $serverMode,
+        )
+    );
+
+    $requestLang = $request->getUrl()->getQueryParameter('lang');
+    if (!is_null($requestLang)) {
+        $session->set('activeLanguage', $requestLang);
+    }
+
+    $activeLanguage = $session->get('activeLanguage');
+    if (is_null($activeLanguage)) {
+        $activeLanguage = 'en_US';
+    }
+
+    $templateManager->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
     // Authentication
     $authMethod = $config->v('authMethod');
@@ -79,12 +95,6 @@ try {
             );
             break;
         case 'FormAuthentication':
-            $session = new Session(
-                'vpn-user-portal',
-                array(
-                    'secure' => 'development' !== $serverMode,
-                )
-            );
             $auth = new FormAuthentication(
                 function ($userId) use ($config) {
                     $userList = $config->v('FormAuthentication');
