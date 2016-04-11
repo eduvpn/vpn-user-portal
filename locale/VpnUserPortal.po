@@ -34,7 +34,8 @@ msgstr ""
 
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:35
 #: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:35
-#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:36
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:35
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:57
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:35
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:35
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:35
@@ -44,7 +45,7 @@ msgstr ""
 
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:39
 #: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:39
-#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:40
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:39
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:39
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:39
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:39
@@ -56,7 +57,7 @@ msgstr ""
 
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:43
 #: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:43
-#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:44
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:43
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:43
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:43
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:57
@@ -67,7 +68,7 @@ msgstr ""
 
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:47
 #: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:47
-#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:48
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:47
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:47
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:57
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:47
@@ -78,7 +79,7 @@ msgstr ""
 
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:51
 #: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:51
-#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:52
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:51
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:51
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:51
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:51
@@ -127,6 +128,36 @@ msgstr ""
 
 #: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:81
 msgid "No"
+msgstr ""
+
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:62
+msgid ""
+"Welcome to the VPN Portal. Here you can find out how to connect to the VPN."
+msgstr ""
+
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:68
+msgid "Connecting to the VPN consists of three steps:"
+msgstr ""
+
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:74
+msgid ""
+"Download and install the <a href=\"documentation#app\">VPN application</a> "
+"for your smart phone or computer;"
+msgstr ""
+
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:78
+msgid "Download a <a href=\"new\">configuration</a> for the VPN client;"
+msgstr ""
+
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:82
+msgid ""
+"<a href=\"documentation#app\">Load</a> the VPN configuration in the VPN "
+"application;"
+msgstr ""
+
+#: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:88
+msgid ""
+"Once these steps are completed you should be able to connect to the VPN!"
 msgstr ""
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:34
