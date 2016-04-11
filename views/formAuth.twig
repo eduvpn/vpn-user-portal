@@ -23,14 +23,14 @@
 
             {% if _auth_form_invalid_credentials %}
                 <label for="userName">{% trans "Username" %}</label>
-                <input type="text"     id="userName" name="userName" placeholder="Username" value="{{ _auth_form_invalid_user_name|e }}" required>
+                <input type="text"     id="userName" name="userName" placeholder="{% trans 'Username' %}" value="{{ _auth_form_invalid_user_name|e }}" required>
                 <label for="userPass">{% trans "Password" %}</label>
-                <input type="password" id="userPass"name="userPass" placeholder="Password" autofocus required>
+                <input type="password" id="userPass"name="userPass" placeholder="{% trans 'Password' %}" autofocus required>
             {% else %}
                 <label for="userName">{% trans "Username" %}</label>
-                <input type="text"     id="userName" name="userName" placeholder="Username" autofocus required>
+                <input type="text"     id="userName" name="userName" placeholder="{% trans 'Username' %}" autofocus required>
                 <label for="userPass">{% trans "Password" %}</label>
-                <input type="password" id="userPass" name="userPass" placeholder="Password" required>
+                <input type="password" id="userPass" name="userPass" placeholder="{% trans 'Password' %}" required>
             {% endif %} 
             <button class="info" type="submit">{% trans "Sign In" %}</button>
 

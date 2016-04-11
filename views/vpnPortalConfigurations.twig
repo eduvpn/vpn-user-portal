@@ -13,24 +13,30 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>Configurations</h2>
+    <h2>{% trans "Configurations" %}</h2>
     <p>
-        This page lists your VPN configurations. Create a new configuration <a href="new">here</a>.
+        {% trans %}
+            This page lists your VPN configurations. Create a new configuration <a href="new">here</a>.
+        {% endtrans %}
     </p>
 
     {% if activeVpnConfigurations is empty %}
         <p class="plain">
-            You currently have no active configurations &#x1f61e; <a href="new">Create</a> a configuration!
+            {% trans %}
+            You currently have no active configurations &#x1f61e; <a href="new">Create a configuration</a>!
+            {% endtrans %}
         </p>                    
     {% endif %}
 
     {% if activeVpnConfigurations is not empty %}
-        <h3>Active</h3>
-        <p>This is a list of <em>active</em> configurations. They can be used to connect to the VPN server. You can <em>revoke</em> the configuration if you will never use it again.</p>
+        <h3>{% trans "Active" %}</h3>
+        <p>
+{% trans "This is a list of <em>active</em> configurations. They can be used to connect to the VPN server. You can <em>revoke</em> the configuration if you will never use it again." %}
+        </p>
 
         <table>
             <thead>
-                <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
+                <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th></th></tr>
             </thead>
             <tbody>
                 {% for config in activeVpnConfigurations %}
@@ -40,7 +46,7 @@
                         <td class="text-right">
                             <form method="post" action="revoke">
                                 <input type="hidden" name="name" value="{{ config.name|e }}">
-                                <button class="danger" type="submit">Revoke</button>
+                                <button class="danger" type="submit">{% trans "Revoke" %}</button>
                             </form>
                         </td>
                     </tr>
@@ -50,11 +56,13 @@
     {% endif %}
 
     {% if disabledVpnConfigurations is not empty %}
-        <h3>Disabled</h3>
-        <p>This is a list of <em>disabled</em> configurations. They are (temporary) disabled by an administrator. Contact support for more information. You can <em>revoke</em> the configuration if you will never use it again.</p>
+        <h3>{% trans "Disabled" %}</h3>
+        <p>
+        {% trans "This is a list of <em>disabled</em> configurations. They are (temporary) disabled by an administrator. Contact support for more information. You can <em>revoke</em> the configuration if you will never use it again." %}
+        </p>
         <table>
             <thead>
-                <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr>
+                <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th></th></tr>
             </thead>
             <tbody>
                 {% for config in disabledVpnConfigurations %}
@@ -64,7 +72,7 @@
                         <td class="text-right">
                             <form method="post" action="revoke">
                                 <input type="hidden" name="name" value="{{ config.name|e }}">
-                                <button class="danger" type="submit">Revoke</button>
+                                <button class="danger" type="submit">{% trans "Revoke" %}</button>
                             </form>
                         </td>
                     </tr>
@@ -74,13 +82,15 @@
     {% endif %}
 
     {% if revokedVpnConfigurations is not empty %}
-        <h3>Revoked</h3>
-        <p>This is a list of <em>revoked</em> configurations. They are permanently disabled and can no longer be used.</p>
+        <h3>{% trans "Revoked" %}</h3>
+        <p>
+        {% trans "This is a list of <em>revoked</em> configurations. They are permanently disabled and can no longer be used." %}
+        </p>
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Revoked ({{ date()|date('T') }})</th>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Revoked" %} ({{ date()|date('T') }})</th>
                 </tr>
             </thead>
             <tbody>
@@ -95,13 +105,15 @@
     {% endif %}
 
     {% if expiredVpnConfigurations is not empty %}
-        <h3>Expired</h3>
-        <p>This is a list of <em>expired</em> configurations. They can no longer be used.</p>
+        <h3>{% trans "Expired" %}</h3>
+        <p>
+        {% trans "This is a list of <em>expired</em> configurations. They can no longer be used." %}
+        </p>
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Expired ({{ date()|date('T') }})</th>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Expired" %} ({{ date()|date('T') }})</th>
                 </tr>
             </thead>
             <tbody>

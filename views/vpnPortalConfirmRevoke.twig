@@ -13,13 +13,18 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>Confirm</h2>
-    <p>Are you sure you want to revoke <em>{{ configName|e }}</em>? This can <strong>NOT</strong> be undone!</p>
+    <h2>{% trans "Confirm" %}</h2>
+    <p>
+    {% set configName = configName|e %}
+    {% trans %}
+    Are you sure you want to revoke <em>{{ configName }}</em>? This can <strong>NOT</strong> be undone!
+    {% endtrans %}
+    </p>
 
     <form method="post">
         <input type="hidden" name="name" value="{{ configName|e }}">
-        <button class="danger" name="confirm" type="submit" value="yes">Yes</button>
-        <button class="success" name="confirm" type="submit" value="no">No</button>
+        <button class="danger" name="confirm" type="submit" value="yes">{% trans "Yes" %}</button>
+        <button class="success" name="confirm" type="submit" value="no">{% trans "No" %}</button>
     </form>    
 
     {% include 'footer.twig' %}

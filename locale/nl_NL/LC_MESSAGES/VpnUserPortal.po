@@ -15,7 +15,7 @@ msgstr ""
 
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:34
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:65
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:102
+#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:113
 msgid "Sign In"
 msgstr "Inloggen"
 
@@ -28,12 +28,16 @@ msgid "The credentials you provided are not correct. Please try again!"
 msgstr "De inloggegevens zijn niet correct. Probeer opnieuw!"
 
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:73
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:88
+#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:77
+#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:93
+#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:97
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:81
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:93
+#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:83
+#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:87
+#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:101
+#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:105
 msgid "Password"
 msgstr "Wachtwoord"
 
@@ -60,7 +64,7 @@ msgstr "Home"
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:39
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:39
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:57
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:67
+#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:71
 #: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:39
 msgid "New"
 msgstr "Nieuw"
@@ -70,6 +74,7 @@ msgstr "Nieuw"
 #: /tmp/cache/40/4076c40a33073e1f0a11536e207f29028cc27390bd273ea5a9b7f7b3ff993636.php:44
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:43
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:43
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:57
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:43
 #: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:43
 msgid "Configurations"
@@ -96,22 +101,66 @@ msgstr "Account"
 msgid "Documentation"
 msgstr "Documentatie"
 
+#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:57
+msgid "Error"
+msgstr "Fout"
+
+#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:65
+msgid ""
+"You tried to create a configuration with name <em>%configName%</em>, but it "
+"was already used before!"
+msgstr ""
+"Je probeerde een configuratie aan te maken met de naam <em>%configName%</"
+"em>, maar deze is al in gebruik!"
+
+#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:72
+msgid ""
+"You can only use a name once, check your configurations to see which names "
+"were already used."
+msgstr ""
+"Je kan een naam maar een keer gebruiken, bekijk je configuraties om te zien "
+"welke namen al in gebruik zijn."
+
+#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:79
+msgid "Use your browser's back button to try again."
+msgstr "Gebruik de terugknop in je browser om opnieuw te proberen."
+
 #: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:42
 #: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:46
 msgid "Sign Out"
 msgstr "Uitloggen"
+
+#: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:57
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:65
+msgid ""
+"Are you sure you want to revoke <em>%configName%</em>? This can <strong>NOT</"
+"strong> be undone!"
+msgstr ""
+"Weet je zeker dat je <em>%configName%</em> wilt intrekken? Dit kan "
+"<strong>NIET</strong> ongedaan gemaakt worden!"
+
+#: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:77
+msgid "Yes"
+msgstr "Ja"
+
+#: /tmp/cache/fa/fa17e2d8a9926e52868568567be7a0d36ba49d56fd5df80415c0268d50a7de0c.php:81
+msgid "No"
+msgstr "Nee"
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:34
 msgid "An application wants to act on your behalf."
 msgstr "Een applicatie wil je account gebruiken uit jouw naam."
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:40
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:90
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:96
 msgid "Application"
 msgstr "Applicatie"
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:46
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:92
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:98
 msgid "Permissions"
 msgstr "Permissies"
 
@@ -127,16 +176,20 @@ msgstr "Toestaan"
 msgid "User"
 msgstr "Gebruiker"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:71
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:70
+msgid "Your user ID is <em>%userId%</em>."
+msgstr "Je gebruikersidentiteit is <em>%userId%</em>."
+
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:77
 msgid "Applications"
 msgstr "Applicaties"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:78
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:84
 msgid ""
 "You do not have any applications that are allowed to access your account."
 msgstr "Je hebt geen applicaties toestemming gegeven tot je account."
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:84
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:90
 msgid ""
 "The following applications have access to your account. You can revoke their "
 "permission here."
@@ -144,18 +197,131 @@ msgstr ""
 "De volgende applicaties hebben toegang tot je account. Je kan deze permissie "
 "hier intrekken."
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:119
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:125
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:129
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:194
 msgid "Revoke"
 msgstr "Intrekken"
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:71
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:62
+msgid ""
+"This page lists your VPN configurations. Create a new configuration <a href="
+"\"new\">here</a>."
+msgstr ""
+"Deze pagina laat je VPN-configuraties zien. Maak <a href=\"new\">hier</a> "
+"een nieuwe configuratie."
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:73
+msgid ""
+"You currently have no active configurations &#x1f61e; <a href=\"new\">Create "
+"a configuration</a>!"
+msgstr ""
+"Je hebt momenteel geen actieve configuraties &#x1f61e; <a href=\"new\">Maak "
+"een configuratie</a>!"
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:85
+msgid "Active"
+msgstr "Actief"
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:90
+msgid ""
+"This is a list of <em>active</em> configurations. They can be used to "
+"connect to the VPN server. You can <em>revoke</em> the configuration if you "
+"will never use it again."
+msgstr ""
+"Dit is een lijst van <em>actieve</em> configuraties. Ze kunnen gebruiken "
+"worden om met de VPN-server te verbinden. Je kunt ze <em>intrekken</em> als "
+"je deze nooit meer gaat gebruiken."
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:98
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:163
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:229
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:286
+#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:75
+#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:81
 msgid "Name"
 msgstr "Naam"
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:79
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:100
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:165
+msgid "Expires"
+msgstr "Verloopt"
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:151
+msgid "Disabled"
+msgstr "Gedeactiveerd"
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:156
+msgid ""
+"This is a list of <em>disabled</em> configurations. They are (temporary) "
+"disabled by an administrator. Contact support for more information. You can "
+"<em>revoke</em> the configuration if you will never use it again."
+msgstr ""
+"Dit is een lijst van <em>gedeactiveerde</em> configuraties. Ze zijn "
+"(tijdelijk) gedeactiveerd door een beheerder. Neem contact op met de "
+"helpdesk voor meer ondersteuning. Je kan de configuraties <em>intrekken</em> "
+"als je ze nooit meer gaat gebruiken."
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:216
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:233
+msgid "Revoked"
+msgstr "Ingetrokken"
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:221
+msgid ""
+"This is a list of <em>revoked</em> configurations. They are permanently "
+"disabled and can no longer be used."
+msgstr ""
+"Dit is een lijst van <em>ingetrokken</em> configuraties. Ze zijn permanent "
+"gedeactiveerd en kunnen niet meer gebruikt worden."
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:273
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:290
+msgid "Expired"
+msgstr "Verlopen"
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:278
+msgid ""
+"This is a list of <em>expired</em> configurations. They can no longer be "
+"used."
+msgstr ""
+"Dit is een lijst van <em>verlopen</em> configuraties. Ze kunnen niet meer "
+"gebruikt worden."
+
+#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:63
+msgid ""
+"Choose a unique name for your configuration, e.g. \"Phone\". Allowed "
+"characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-"
+"</code>, <code>_</code>, <code>.</code>, <code>@</code>."
+msgstr ""
+"Kies een unieke naam voor de configuratie, bijvoorbeeld \"Telefoon\". "
+"Toegestane tekens zijn <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, "
+"<code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>."
+
+#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:85
 msgid "Download"
 msgstr "Downloaden"
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:86
+#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:92
 msgid "Download (ZIP)"
 msgstr "Downloaden (ZIP)"
+
+#~ msgid "This page lists your VPN configurations. Create a new configuration"
+#~ msgstr ""
+#~ "Deze pagina laat je VPN configuraties zien. Maak een nieuwe configuratie"
+
+#~ msgid "here"
+#~ msgstr "hier"
+
+#~ msgid "You currently have no active configurations &#x1f61e;"
+#~ msgstr "Je hebt op dit moment geen actieve configuraties &#x1f61e;"
+
+#~ msgid "Create a configuration"
+#~ msgstr "Maak een configuratie aan"
+
+#~ msgid ""
+#~ "Are you sure you want to revoke <em>%configName%</em>? This can "
+#~ "<strong>NOT</strong> be undone!\""
+#~ msgstr ""
+#~ "Weet je zeker dat je <em>%configName%</em> wilt intrekken? Dit kan "
+#~ "<strong>NIET</strong> ongedaan gemaakt worden!"

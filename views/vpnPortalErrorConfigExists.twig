@@ -13,16 +13,19 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>Error</h2>
+    <h2>{% trans "Error" %}</h2>
     <p class="danger">
-        You tried to create a configuration with name <em>{{ configName|e }}</em>, but it was already used before!
+        {% set configName = configName|e %}
+        {% trans %}
+            You tried to create a configuration with name <em>{{ configName }}</em>, but it was already used before!
+        {% endtrans %}
     </p>
     <p>
-        You can only use a name once, check your <a href="configurations">Configurations</a> to see which names were already used.
+        {% trans "You can only use a name once, check your configurations to see which names were already used." %}
     </p>
 
     <p>
-        Use your browser's back button, or click <a href="new">here</a> to try again.
+        {% trans "Use your browser's back button to try again." %}
     </p> 
 
     {% include 'footer.twig' %}

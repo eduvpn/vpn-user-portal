@@ -16,7 +16,12 @@
     <h2>{% trans "Account" %}</h2>
 
     <h3>{% trans "User" %}</h3>
-    <p>Your user ID is <em>{{ userId|e }}</em>.</p>
+    <p>
+    {% set userId = userId|e %}
+    {% trans %}
+    Your user ID is <em>{{ userId }}</em>.
+    {% endtrans %}
+    </p>
 
     <h3>{% trans "Applications" %}</h3>
     {% if userTokens is empty %}
