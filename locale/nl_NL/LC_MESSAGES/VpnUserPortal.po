@@ -191,7 +191,7 @@ msgstr ""
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:34
 msgid "An application wants to act on your behalf."
-msgstr "Een applicatie wil je account gebruiken uit jouw naam."
+msgstr "Een applicatie wil je account gebruiken in jouw naam."
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:40
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:96
@@ -226,15 +226,15 @@ msgstr "Applicaties"
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:84
 msgid ""
 "You do not have any applications that are allowed to access your account."
-msgstr "Je hebt geen applicaties toestemming gegeven tot je account."
+msgstr "Je hebt geen applicaties toegang gegeven tot je account."
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:90
 msgid ""
 "The following applications have access to your account. You can revoke their "
 "permission here."
 msgstr ""
-"De volgende applicaties hebben toegang tot je account. Je kan deze permissie "
-"hier intrekken."
+"De volgende applicaties hebben toegang tot je account. Je kan deze "
+"toestemming hier intrekken."
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:125
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:129
