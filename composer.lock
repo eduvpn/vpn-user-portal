@@ -396,16 +396,16 @@
         },
         {
             "name": "fkooman/rest-plugin-authentication-form",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-form.git",
-                "reference": "69771491e3913df3ae629c0678b7e817f922ba0d"
+                "reference": "be285cf0577d0597104aaaab697f833a15ea99ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-form/zipball/69771491e3913df3ae629c0678b7e817f922ba0d",
-                "reference": "69771491e3913df3ae629c0678b7e817f922ba0d",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-form/zipball/be285cf0577d0597104aaaab697f833a15ea99ec",
+                "reference": "be285cf0577d0597104aaaab697f833a15ea99ec",
                 "shasum": ""
             },
             "require": {
@@ -439,7 +439,7 @@
                 }
             ],
             "description": "HTML Form Authentication plugin for fkooman/rest-plugin-authentication",
-            "time": "2016-03-25 14:15:00"
+            "time": "2016-04-12 09:27:26"
         },
         {
             "name": "fkooman/rest-plugin-authentication-mellon",

@@ -72,16 +72,15 @@ try {
         )
     );
 
+    // determine the language preference if set
     $requestLang = $request->getUrl()->getQueryParameter('lang');
     if (!is_null($requestLang)) {
         $session->set('activeLanguage', $requestLang);
     }
-
     $activeLanguage = $session->get('activeLanguage');
     if (is_null($activeLanguage)) {
         $activeLanguage = 'en_US';
     }
-
     $templateManager->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
     // Authentication
