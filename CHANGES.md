@@ -1,5 +1,10 @@
 # Changelog
 
+## 8.0.0 (2016-04-13)
+- remove all 'pool' information from the UI
+- add `nl_NL` translation
+- update dependencies
+
 ## 7.0.0 (2016-03-30)
 - replace complete API with OAuth 2.0 API
 - remove QR code
