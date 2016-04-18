@@ -40,12 +40,16 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var UserTokens */
     private $userTokens;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens)
+    /** @var array */
+    private $remoteConfig;
+
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, array $remoteConfig)
     {
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
         $this->userTokens = $userTokens;
+        $this->remoteConfig = $remoteConfig;
     }
 
     public function init(Service $service)
@@ -212,7 +216,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 return new RedirectResponse($request->getUrl()->getRootUrl().'account', 302);
             },
             $userAuth
-        );            
+        );
 
         $service->get(
             '/documentation',
@@ -253,38 +257,27 @@ class VpnPortalModule implements ServiceModuleInterface
             }
         }
 
+        $certData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
+
+        $remoteEntities = ['remote' => $this->remoteConfig];
+
+        $clientConfig = new ClientConfig();
+        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge($certData['certificate'], $remoteEntities)));
+
         switch ($type) {
             case 'zip':
                 // return a ZIP file    
-                $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
-                $configData = $this->templateManager->render('client', $configData['certificate']);
-                $configData = Utils::configToZip($configName, $configData);
+                $vpnConfigZip = Utils::configToZip($configName, $vpnConfig);
                 $response = new Response(200, 'application/zip');
                 $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.zip"', $configName));
-                $response->setBody($configData);
+                $response->setBody($vpnConfigZip);
                 break;
             case 'ovpn':
                 // return an OVPN file
-                $configData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
-                $configData = $this->templateManager->render('client', $configData['certificate']);
                 $response = new Response(200, 'application/x-openvpn-profile');
                 $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
-                $response->setBody($configData);
+                $response->setBody($vpnConfig);
                 break;
-            case 'app':
-                // Open the special App URL vpn://import
-                $apiCredentials = $this->generateApiCredentials($userId);
-
-                $redirectUri = sprintf(
-                    'vpn://import?userName=%s&userPass=%s&configName=%s',
-                    $apiCredentials['userName'],
-                    $apiCredentials['userPass'],
-                    $configName
-                );
-
-                $response = new RedirectResponse($redirectUri, 302);
-                break;
-
             default:
                 throw new BadRequestException('invalid type');
         }

@@ -145,7 +145,8 @@ try {
         $templateManager,
         $vpnConfigApiClient,
         $vpnServerApiClient,
-        new UserTokens($db)
+        new UserTokens($db),
+        $config->v('remoteConfig')
     );
 
     $vpnApiModule = new VpnApiModule(

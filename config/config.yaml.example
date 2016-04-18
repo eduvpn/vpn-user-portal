@@ -13,6 +13,30 @@ MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
+# The servers a client will attempt to connect to, in order of preference
+remoteConfig:
+    # UDP/1194
+    #- host: vpn.example
+    #  port: '1194'
+    #  proto: udp6
+    - host: vpn.example
+      port: '1194'
+      proto: udp
+    # TCP/1194
+    #- host: vpn.example
+    #  port: '1194'
+    #  proto: tcp6
+    - host: vpn.example
+      port: '1194'
+      proto: tcp
+    # TCP/443
+    #- host: vpn.example
+    #  port: '443'
+    #  proto: tcp6
+    - host: vpn.example
+      port: '443'
+      proto: tcp
+
 api:
     dsn: 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
     #username: foo
