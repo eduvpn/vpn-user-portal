@@ -13,7 +13,9 @@ MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
-# The servers a client will attempt to connect to, in order of preference
+# The servers a client will attempt to connect to, in order of preference, 
+# these will be part of the generated client configuration, changing the values
+# here will only affect new configuration downloads!
 remoteConfig:
     # UDP/1194
     #- host: vpn.example
