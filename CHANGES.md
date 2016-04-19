@@ -1,5 +1,10 @@
 # Changelog
 
+## 8.1.0 (2016-04-19)
+- no longer use Twig template for client configuration
+- allow configuring remote hosts in `config/config.yaml`
+- sync crypto config with server
+
 ## 8.0.0 (2016-04-13)
 - remove all 'pool' information from the UI
 - add `nl_NL` translation
