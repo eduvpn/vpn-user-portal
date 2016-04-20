@@ -1,5 +1,10 @@
 # Changelog
 
+## 8.1.1 (2016-04-20)
+- update default VPN server list to also include udp/1195 and udp/1196
+- randomize the remote list in the generated client config to get some 
+  rudimentary load balancing
+
 ## 8.1.0 (2016-04-19)
 - no longer use Twig template for client configuration
 - allow configuring remote hosts in `config/config.yaml`

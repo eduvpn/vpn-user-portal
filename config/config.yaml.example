@@ -14,15 +14,17 @@ MellonAuthentication:
     #attribute: MELLON_eduPersonTargetedID
 
 remoteConfig:
-    # UDP/1194
+    # UDP
     - host: vpn.example
       port: '1194'
       proto: udp
-    # TCP/1194
     - host: vpn.example
-      port: '1194'
-      proto: tcp
-    # TCP/443
+      port: '1195'
+      proto: udp
+    - host: vpn.example
+      port: '1196'
+      proto: udp
+    # TCP
     - host: vpn.example
       port: '443'
       proto: tcp

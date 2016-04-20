@@ -42,8 +42,28 @@ class ClientConfig
             }
         }
 
-        $remoteEntries = [];
+        // we want to put the UDP entries first, randomize them and then 
+        // add the TCP entries afterwards so we have a nice fallthrough to
+        // eventual TCP but still get "load balancing"
+        $udpRemotes = [];
+        $tcpRemotes = [];
         foreach ($clientConfig['remote'] as $remoteEntry) {
+            if ('udp' === $remoteEntry['proto'] || 'udp6' === $remoteEntry['proto']) {
+                $udpRemotes[] = $remoteEntry;
+            }
+            if ('tcp' === $remoteEntry['proto'] || 'tcp6' === $remoteEntry['proto']) {
+                $tcpRemotes[] = $remoteEntry;
+            }
+            // ignore other protocols
+        }
+
+        shuffle($udpRemotes);
+        shuffle($tcpRemotes);
+
+        $mergedRemotes = array_merge($udpRemotes, $tcpRemotes);
+
+        $remoteEntries = [];
+        foreach ($mergedRemotes as $remoteEntry) {
             $remoteEntries[] = sprintf('remote %s %d %s', $remoteEntry['host'], intval($remoteEntry['port']), $remoteEntry['proto']);
         }
 
