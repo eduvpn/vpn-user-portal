@@ -97,6 +97,8 @@ class ClientConfig
             # wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
 
+            'auth-user-pass',
+
             # remote
             implode(PHP_EOL, $remoteEntries),
 
