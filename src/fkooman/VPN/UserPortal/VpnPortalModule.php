@@ -288,8 +288,10 @@ class VpnPortalModule implements ServiceModuleInterface
                 self::validateOtpSecret($otpSecret);
 
                 $httpHost = $request->getUrl()->getHost();
-                // strip port
-                $httpHost = substr($httpHost, 0, strpos($httpHost, ':'));
+                if (false !== strpos($httpHost, ':')) {
+                    // strip port
+                    $httpHost = substr($httpHost, 0, strpos($httpHost, ':'));
+                }
 
                 $otpAuthUrl = sprintf(
                     'otpauth://totp/%s:%s?secret=%s&issuer=%s',
