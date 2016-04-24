@@ -18,6 +18,7 @@
 namespace fkooman\VPN\UserPortal;
 
 use GuzzleHttp\Client;
+use fkooman\Json\Json;
 
 class VpnServerApiClient extends VpnApiClient
 {
@@ -35,6 +36,29 @@ class VpnServerApiClient extends VpnApiClient
         $requestUri = sprintf('%s/config/common_names/?user_id=%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec('GET', $requestUri);
+    }
+
+    public function getUserInfo($userId)
+    {
+        $requestUri = sprintf('%s/config/users/%s', $this->vpnServerApiUri, $userId);
+
+        return $this->exec(
+            'GET',
+            $requestUri
+        );
+    }
+
+    public function setOtpSecret($userId, $otpSecret)
+    {
+        $requestUri = sprintf('%s/config/users/%s', $this->vpnServerApiUri, $userId);
+
+        return $this->exec(
+            'PUT',
+            $requestUri,
+            [
+                'body' => Json::encode(['otp_secret' => $otpSecret]),
+            ]
+        );
     }
 
     public function postKill($commonName)

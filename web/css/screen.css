@@ -48,6 +48,14 @@ p.plain {
     border-radius: 0.2em;
 }
 
+span.success {
+    color: #494;
+}
+
+span.warning {
+    color: #e91;
+}
+
 code {
     font-family: monospace, monospace;
     color: #c24;

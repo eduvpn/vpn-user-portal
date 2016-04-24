@@ -25,6 +25,11 @@ use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
 use fkooman\Tpl\TemplateManagerInterface;
+use BaconQrCode\Renderer\Image\Png;
+use BaconQrCode\Writer;
+use Otp\GoogleAuthenticator;
+use Otp\Otp;
+use Base32\Base32;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -83,6 +88,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $noAuth
         );
 
+        /* PAGES */
         $service->get(
             '/home',
             function (Request $request, UserInfoInterface $u) {
@@ -197,9 +203,12 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             function (Request $request, UserInfoInterface $u) {
+                $userInfo = $this->vpnServerApiClient->getUserInfo($u->getUserId());
+
                 return $this->templateManager->render(
                     'vpnPortalAccount',
                     array(
+                        'otpEnabled' => $userInfo['otp_secret'],
                         'userId' => $u->getUserId(),
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
                     )
@@ -226,6 +235,80 @@ class VpnPortalModule implements ServiceModuleInterface
                     array(
                     )
                 );
+            },
+            $userAuth
+        );
+
+        $service->get(
+            '/otp',
+            function (Request $request, UserInfoInterface $u) {
+                $otpSecret = GoogleAuthenticator::generateRandom();
+
+                return $this->templateManager->render(
+                    'vpnPortalOtp',
+                    array(
+                        'secret' => $otpSecret,
+                    )
+                );
+            },
+            $userAuth
+        );
+
+        $service->post(
+            '/otp',
+            function (Request $request, UserInfoInterface $u) {
+                $otpSecret = $request->getPostParameter('otp_secret');
+                self::validateOtpSecret($otpSecret);
+                $otpKey = $request->getPostParameter('otp_key');
+                self::validateOtpKey($otpKey);
+
+                $otp = new Otp();
+                if ($otp->checkTotp(Base32::decode($otpSecret), $otpKey)) {
+                    // we do not keep log of the used keys here
+                    // XXX is that acceptable?
+
+                    // store the secret in the vpn-server-api instance
+                    $this->vpnServerApiClient->setOtpSecret($u->getUserId(), $otpSecret);
+
+                    return new RedirectResponse($request->getUrl()->getRootUrl().'account', 302);
+                }
+
+                return $this->templateManager->render(
+                    'vpnPortalErrorOtpEnroll',
+                    []
+                );
+            },
+            $userAuth
+        );
+
+        $service->get(
+            '/otp-qr-code',
+            function (Request $request, UserInfoInterface $u) {
+                $otpSecret = $request->getUrl()->getQueryParameter('otp_secret');
+                self::validateOtpSecret($otpSecret);
+
+                $httpHost = $request->getUrl()->getHost();
+                // strip port
+                $httpHost = substr($httpHost, 0, strpos($httpHost, ':'));
+
+                $otpAuthUrl = sprintf(
+                    'otpauth://totp/%s:%s?secret=%s&issuer=%s',
+                    $httpHost,
+                    $u->getUserId(),
+                    $otpSecret,
+                    $httpHost
+                );
+
+                $renderer = new Png();
+                $renderer->setHeight(256);
+                $renderer->setWidth(256);
+                $writer = new Writer($renderer);
+                $qrCode = $writer->writeString($otpAuthUrl);
+
+                $response = new Response(200, 'image/png');
+                $response->setBody($qrCode);
+
+                return $response;
             },
             $userAuth
         );
@@ -296,5 +379,19 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // disconnect the client
         $this->vpnServerApiClient->postKill(sprintf('%s_%s', $userId, $configName));
+    }
+
+    public static function validateOtpSecret($otpSecret)
+    {
+        if (0 === preg_match('/^[A-Z0-9]{16}$/', $otpSecret)) {
+            throw new BadRequestException('invalid OTP secret format');
+        }
+    }
+
+    public static function validateOtpKey($otpKey)
+    {
+        if (0 === preg_match('/^[0-9]{6}$/', $otpKey)) {
+            throw new BadRequestException('invalid OTP key format');
+        }
     }
 }

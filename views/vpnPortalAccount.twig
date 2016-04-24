@@ -49,6 +49,19 @@
         </table>
     {% endif %}
 
+    <h3>{% trans "Two-factor Authentication" %}</h3>
+    <p>
+        {% trans '<a href="documentation#2fa">Two-factor authentication</a> (2FA) may be required by some VPN servers.' %}
+    </p>
+    <p>
+        {% if otpEnabled %}
+            {% trans '2FA is currently <em>enabled</em>.' %}
+        {% else %}
+            {% trans '2FA is currently <em>disabled</em>. <a href="otp">Enable</a> 2FA.' %}
+        {% endif %}
+    </p>
+
+
     {% include 'footer.twig' %}
 
 </body>

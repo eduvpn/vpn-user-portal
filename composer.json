@@ -15,6 +15,8 @@
     "license": "Apache-2.0",
     "name": "eduvpn/vpn-user-portal",
     "require": {
+        "bacon/bacon-qr-code": "^1.0",
+        "christian-riesen/otp": "^1.0",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
