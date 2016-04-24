@@ -32,7 +32,7 @@ class VpnServerApiClient extends VpnApiClient
 
     public function getConfig($userId)
     {
-        $requestUri = sprintf('%s/config/?user_id=%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/config/common_names/?user_id=%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec('GET', $requestUri);
     }
