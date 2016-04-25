@@ -455,7 +455,7 @@ msgstr "Gebruiker"
 
 #: /tmp/cache/e8/e8dcb097b873170ae7c0e53f0fe8379d6663ad9b0802adfd9364671f4172551c.php:70
 msgid "Your user ID is <em>%userId%</em>."
-msgstr "Je gebruikersidentiteit is <em>%userId%</em>."
+msgstr "De gebruikersidentiteit is <em>%userId%</em>."
 
 #: /tmp/cache/e8/e8dcb097b873170ae7c0e53f0fe8379d6663ad9b0802adfd9364671f4172551c.php:77
 msgid "Applications"
@@ -464,23 +464,23 @@ msgstr "Applicaties"
 #: /tmp/cache/e8/e8dcb097b873170ae7c0e53f0fe8379d6663ad9b0802adfd9364671f4172551c.php:84
 msgid ""
 "You do not have any applications that are allowed to access your account."
-msgstr "Je hebt geen applicaties toegang gegeven tot je account."
+msgstr "Er zijn geen applicaties die toegang hebben tot dit account."
 
 #: /tmp/cache/e8/e8dcb097b873170ae7c0e53f0fe8379d6663ad9b0802adfd9364671f4172551c.php:90
 msgid ""
 "The following applications have access to your account. You can revoke their "
 "permission here."
 msgstr ""
-"De volgende applicaties hebben toegang tot je account. Je kan deze "
-"toestemming hier intrekken."
+"De volgende applicaties hebben toegang tot je account. De toestemming kan "
+"hier ingetrokken worden."
 
 #: /tmp/cache/e8/e8dcb097b873170ae7c0e53f0fe8379d6663ad9b0802adfd9364671f4172551c.php:149
 msgid ""
 "<a href=\"documentation#2fa\">Two-factor authentication</a> (2FA) may be "
 "required by some VPN servers."
 msgstr ""
-"<a href=\"documentation#2fa\">Twee-factor autenticatie</a> (2FA) kan vereist "
-"zijn door sommige VPN servers."
+"<a href=\"documentation#2fa\">Twee-factor authenticatie</a> (2FA) kan "
+"vereist zijn door sommige VPN servers."
 
 #: /tmp/cache/e8/e8dcb097b873170ae7c0e53f0fe8379d6663ad9b0802adfd9364671f4172551c.php:158
 msgid "2FA is currently <em>enabled</em>."
