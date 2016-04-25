@@ -28,7 +28,7 @@
         <label for="otp_key">OTP</label>
         <input type="text" id="otp_key" name="otp_key" maxlength="6" pattern="[0-9]{6}" autofocus=>
         <input type="hidden" name="otp_secret" value="{{ secret|e }}"> 
-        <button>Validate</button>
+        <button>{% trans "Validate" %}</button>
     </form>
 
     {% include 'footer.twig' %}
