@@ -85,11 +85,11 @@
     </p>
     <p>
         After downloading a configuration, installing it in your VPN client,
-        and then trying to connect to a VPN server requiring 2FA, you will be 
-        asked for a username and password. The username MUST contain 
+        and trying to connect to a VPN server requiring 2FA, you will be 
+        asked for a username and password. The username must be 
         <code>totp</code>. The password field needs to contain the OTP. 
-        Do <strong>not</strong> allow your VPN client to save the credentials as that
-        will not work on the next connection attempt.
+        It does not make sense to save the password in the client, as it will be 
+        different on every connection attempt.
     </p>
     <p>
         For safety reasons it is currently <strong>not</strong> possible to 
