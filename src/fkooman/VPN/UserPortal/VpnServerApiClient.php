@@ -33,7 +33,7 @@ class VpnServerApiClient extends VpnApiClient
 
     public function getConfig($userId)
     {
-        $requestUri = sprintf('%s/config/common_names/?user_id=%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/config/common_names?user_id=%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec('GET', $requestUri);
     }
@@ -50,7 +50,7 @@ class VpnServerApiClient extends VpnApiClient
 
     public function setOtpSecret($userId, $otpSecret)
     {
-        $requestUri = sprintf('%s/config/users/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/config/users/%s/otp_secret', $this->vpnServerApiUri, $userId);
 
         return $this->exec(
             'PUT',
