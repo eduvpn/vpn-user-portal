@@ -99,6 +99,11 @@ class ClientConfig
 
             'auth-user-pass',
 
+            # allow the server to dictate the reneg-sec, by default it will be
+            # 3600 seconds, but when 2FA is enable we'd like to increase this
+            # to e.g. 8 hours to avoid asking for the OTP every hour
+            'reneg-sec 0',
+
             # remote
             implode(PHP_EOL, $remoteEntries),
 
