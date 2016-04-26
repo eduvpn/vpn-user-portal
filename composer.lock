@@ -239,16 +239,16 @@
         },
         {
             "name": "fkooman/io",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-io.git",
-                "reference": "6bb59459bf43a6c7b9e42ddd0c04f78757a62fc1"
+                "reference": "1ed0e1c0282f373f6555c19cb563f2aaa1b0d6f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/6bb59459bf43a6c7b9e42ddd0c04f78757a62fc1",
-                "reference": "6bb59459bf43a6c7b9e42ddd0c04f78757a62fc1",
+                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/1ed0e1c0282f373f6555c19cb563f2aaa1b0d6f1",
+                "reference": "1ed0e1c0282f373f6555c19cb563f2aaa1b0d6f1",
                 "shasum": ""
             },
             "require": {
@@ -274,7 +274,7 @@
                 }
             ],
             "description": "Simple IO library",
-            "time": "2016-03-25 17:34:39"
+            "time": "2016-04-25 21:27:53"
         },
         {
             "name": "fkooman/json",
