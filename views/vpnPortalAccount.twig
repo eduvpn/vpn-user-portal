@@ -15,52 +15,40 @@
 
     <h2>{% trans "Account" %}</h2>
 
-    <h3>{% trans "User" %}</h3>
     <p>
-    {% set userId = userId|e %}
     {% trans %}
-    Your user ID is <em>{{ userId }}</em>.
+        On this page you can find your account details. See the 
+        <a href="documentation">Documentation</a> for more information.
     {% endtrans %}
-    </p>
+    <dl>
+        <dt>{% trans "User ID" %}</dt>
+        <dd>{{ userId|e }}</dd>
 
-    <h3>{% trans "Applications" %}</h3>
-    {% if userTokens is empty %}
-        <p>{% trans "You do not have any applications that are allowed to access your account." %}</p>
-    {% else %}
-        <p>{% trans "The following applications have access to your account. You can revoke their permission here." %}</p>
-        <table>
-            <thead>
-                <tr><th>{% trans "Application" %}</th><th>{% trans "Permissions" %}</th><th></th></tr>
-            </thead>
-            <tbody>
-                {% for token in userTokens %}
-                    <tr>
-                        <td>{{ token.client_id|e }}</td>
-                        <td>{{ token.scope|e }}</td>
-                        <td class="text-right">
-                            <form method="post" action="deleteTokens">
-                                <input type="hidden" name="client_id" value="{{ token.client_id|e }}">
-                                <button class="danger" type="submit">{% trans "Revoke" %}</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
-    <h3>{% trans "Two-factor Authentication" %}</h3>
-    <p>
-        {% trans '<a href="documentation#2fa">Two-factor authentication</a> (2FA) may be required by some VPN servers.' %}
-    </p>
-    <p>
+        <dt>{% trans "Two-factor Authentication" %}</dt>
+        <dd>
         {% if otpEnabled %}
-            {% trans '2FA is currently <em>enabled</em>.' %}
+            {% trans "Enabled" %}
         {% else %}
-            {% trans '2FA is currently <em>disabled</em>. <a href="otp">Enable</a> 2FA.' %}
+            {% trans "Disabled" %} (<a href="otp">{% trans "Enable" %}</a>)
         {% endif %}
-    </p>
+        </dd>
+    </dl>
 
+<!--        <dt>{% trans "Applications" %}</dt>-->
+<!--        <dd>-->
+<!--            {% if userTokens is empty %}-->
+<!--                {% trans "None" %}-->
+<!--            {% else %}-->
+<!--                {% for token in userTokens %}-->
+<!--                    {{ token.client_id|e }}-->
+<!--                    {{ token.scope|e }}-->
+<!--                    <form method="post" action="deleteTokens">-->
+<!--                        <input type="hidden" name="client_id" value="{{ token.client_id|e }}">-->
+<!--                        <button class="danger" type="submit">{% trans "Revoke" %}</button>-->
+<!--                    </form>-->
+<!--                {% endfor %}-->
+<!--            {% endif %}-->
+<!--        </dd>-->
 
     {% include 'footer.twig' %}
 
