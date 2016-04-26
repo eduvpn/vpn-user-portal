@@ -104,9 +104,13 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/new',
             function (Request $request, UserInfoInterface $u) {
+                $serverInfo = $this->vpnServerApiClient->getInfo();
+                $userInfo = $this->vpnServerApiClient->getUserInfo($u->getUserId());
+
                 return $this->templateManager->render(
                     'vpnPortalNew',
                     array(
+                        'tfaRequired' => $serverInfo['tfa'] && !$userInfo['otp_secret'],
                         'advanced' => (bool) $request->getUrl()->getQueryParameter('advanced'),
                         'cnLength' => 63 - strlen($u->getUserId()),
                     )
@@ -243,10 +247,12 @@ class VpnPortalModule implements ServiceModuleInterface
             '/otp',
             function (Request $request, UserInfoInterface $u) {
                 $otpSecret = GoogleAuthenticator::generateRandom();
+                $serverInfo = $this->vpnServerApiClient->getInfo();
 
                 return $this->templateManager->render(
                     'vpnPortalOtp',
                     array(
+                        'tfa' => $serverInfo['tfa'],
                         'secret' => $otpSecret,
                     )
                 );
@@ -346,8 +352,10 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $remoteEntities = ['remote' => $this->remoteConfig];
 
+        $serverInfo = $this->vpnServerApiClient->getInfo();
+
         $clientConfig = new ClientConfig();
-        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge($certData['certificate'], $remoteEntities)));
+        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['tfa' => $serverInfo['tfa']], $certData['certificate'], $remoteEntities)));
 
         switch ($type) {
             case 'zip':

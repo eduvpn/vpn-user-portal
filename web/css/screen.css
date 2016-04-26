@@ -31,6 +31,17 @@ p {
     margin-top: 0;
 }
 
+p.warning {
+    background-color: #e91;
+    padding: 1em;
+    color: #fff;
+    border-radius: 0.2em;
+}
+
+p.warning a {
+    color: #fff;
+}
+
 p.danger {
     background-color: #d54;
     padding: 1em;
@@ -228,7 +239,7 @@ tr:nth-child(even) {
     border-bottom: 1px solid #ccc;
 }
 
-th {
+thead th {
     border-bottom: 2px solid #ddd;
 }
 

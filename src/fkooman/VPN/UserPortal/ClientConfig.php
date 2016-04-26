@@ -32,6 +32,7 @@ class ClientConfig
             'key',
             'ta',
             'remote',
+            'tfa',
         ];
 
         // XXX verify the parameters and types
@@ -67,6 +68,11 @@ class ClientConfig
             $remoteEntries[] = sprintf('remote %s %d %s', $remoteEntry['host'], intval($remoteEntry['port']), $remoteEntry['proto']);
         }
 
+        $twoFactorEntries = [];
+        if ($clientConfig['tfa']) {
+            $twoFactorEntries[] = 'auth-user-pass';
+        }
+
         return [
             sprintf('# OpenVPN Client Configuration for %s', $clientConfig['cn']),
 
@@ -97,7 +103,8 @@ class ClientConfig
             # wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
 
-            'auth-user-pass',
+            # 2FA
+            implode(PHP_EOL, $twoFactorEntries),
 
             # allow the server to dictate the reneg-sec, by default it will be
             # 3600 seconds, but when 2FA is enable we'd like to increase this

@@ -15,6 +15,12 @@
 
     <h2>{% trans "New" %}</h2>
 
+    {% if tfaRequired %}
+    <p class="warning">
+        {% trans 'Connecting to the VPN-server requires two-factor authentication. Set this up <a href="otp">here</a> first!' %}
+    </p>
+    {% endif %}
+
     <p>
     {% trans %}
 Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.

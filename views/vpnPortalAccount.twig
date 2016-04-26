@@ -15,40 +15,49 @@
 
     <h2>{% trans "Account" %}</h2>
 
-    <p>
-    {% trans %}
-        On this page you can find your account details. See the 
-        <a href="documentation">Documentation</a> for more information.
-    {% endtrans %}
     <dl>
         <dt>{% trans "User ID" %}</dt>
-        <dd>{{ userId|e }}</dd>
+        <dd><code>{{ userId|e }}</code></dd>
 
         <dt>{% trans "Two-factor Authentication" %}</dt>
         <dd>
-        {% if otpEnabled %}
-            {% trans "Enabled" %}
-        {% else %}
-            {% trans "Disabled" %} (<a href="otp">{% trans "Enable" %}</a>)
-        {% endif %}
+            {% if otpEnabled %}
+                {% trans "Enrolled" %}
+            {% else %}
+                <a href="otp">{% trans "Enroll" %}</a>
+            {% endif %}
         </dd>
     </dl>
 
-<!--        <dt>{% trans "Applications" %}</dt>-->
-<!--        <dd>-->
-<!--            {% if userTokens is empty %}-->
-<!--                {% trans "None" %}-->
-<!--            {% else %}-->
-<!--                {% for token in userTokens %}-->
-<!--                    {{ token.client_id|e }}-->
-<!--                    {{ token.scope|e }}-->
-<!--                    <form method="post" action="deleteTokens">-->
-<!--                        <input type="hidden" name="client_id" value="{{ token.client_id|e }}">-->
-<!--                        <button class="danger" type="submit">{% trans "Revoke" %}</button>-->
-<!--                    </form>-->
-<!--                {% endfor %}-->
-<!--            {% endif %}-->
-<!--        </dd>-->
+    <h3>{% trans "Applications" %}</h3>
+    {% if userTokens is empty %}
+        <p>
+            {% trans "No external applications can currently manage your account." %}
+        </p>
+    {% else %}
+        <p>
+            {% trans "Some external applications can manage your account. You can revoke their permission." %}
+        </p>
+
+        <table>
+            <thead>
+                <tr><th>Application</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for token in userTokens %}
+                    <tr>
+                        <td>{{ token.client_id|e }}</td>
+                        <td class="text-right">
+                            <form method="post" action="deleteTokens">
+                                <input type="hidden" name="client_id" value="{{ token.client_id|e }}">
+                                <button class="warning" type="submit">{% trans "Revoke" %}</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
     {% include 'footer.twig' %}
 
