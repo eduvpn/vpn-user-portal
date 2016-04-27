@@ -1,5 +1,11 @@
 # Changelog
 
+## 8.2.0 (2016-04-27)
+- update to new API
+- implement 2FA enrollment
+- fix auto capitalization for iOS 
+- lots of translation updates
+
 ## 8.1.1 (2016-04-20)
 - update default VPN server list to also include udp/1195 and udp/1196
 - randomize the remote list in the generated client config to get some 
