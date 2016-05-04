@@ -62,6 +62,7 @@ try {
         array(
             'rootFolder' => $request->getUrl()->getRoot(),
             'rootUrl' => $request->getUrl()->getRootUrl(),
+            'requestUrl' => $request->getUrl()->toString(),
         )
     );
 
@@ -72,11 +73,6 @@ try {
         )
     );
 
-    // determine the language preference if set
-    $requestLang = $request->getUrl()->getQueryParameter('lang');
-    if (!is_null($requestLang)) {
-        $session->set('activeLanguage', $requestLang);
-    }
     $activeLanguage = $session->get('activeLanguage');
     if (is_null($activeLanguage)) {
         $activeLanguage = 'en_US';
@@ -146,6 +142,7 @@ try {
         $vpnConfigApiClient,
         $vpnServerApiClient,
         new UserTokens($db),
+        $session,
         $config->v('remoteConfig')
     );
 

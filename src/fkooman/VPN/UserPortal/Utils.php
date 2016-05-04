@@ -40,6 +40,14 @@ class Utils
         }
     }
 
+    public static function validateLanguage($language)
+    {
+        $supportedLanguages = ['en_US', 'nl_NL'];
+        if (!in_array($language, $supportedLanguages)) {
+            throw new BadRequestException('unsupported language');
+        }
+    }
+
     public static function configToZip($configName, $configData)
     {
         $defaultCertKeyFileNames = array(

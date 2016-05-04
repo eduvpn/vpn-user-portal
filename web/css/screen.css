@@ -260,6 +260,15 @@ p.footer a {
     color: #888;
 }
 
+form.setLanguage {
+    float: right;
+    padding: 1em 0;
+}
+
+form.setLanguage button {
+    padding: 0.1em;
+}
+
 form.footer button {
     color: #888;
     border: 0;

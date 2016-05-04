@@ -30,6 +30,7 @@ use BaconQrCode\Writer;
 use Otp\GoogleAuthenticator;
 use Otp\Otp;
 use Base32\Base32;
+use fkooman\Http\Session;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -48,12 +49,16 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var array */
     private $remoteConfig;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, array $remoteConfig)
+    /** @var \fkooman\Http\Session */
+    private $session;
+
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, Session $session, array $remoteConfig)
     {
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
         $this->userTokens = $userTokens;
+        $this->session = $session;
         $this->remoteConfig = $remoteConfig;
     }
 
@@ -217,6 +222,18 @@ class VpnPortalModule implements ServiceModuleInterface
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
                     )
                 );
+            },
+            $userAuth
+        );
+
+        $service->post(
+            '/setLanguage',
+            function (Request $request, UserInfoInterface $u) {
+                $requestLang = $request->getPostParameter('language');
+                Utils::validateLanguage($requestLang);
+                $this->session->set('activeLanguage', $requestLang);
+                // redirect
+                return new RedirectResponse($request->getPostParameter('redirect_to'));
             },
             $userAuth
         );
