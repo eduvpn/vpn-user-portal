@@ -190,7 +190,7 @@ try {
     # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
     $response->setHeader('X-Frame-Options', 'DENY');
     $response->setHeader('X-Content-Type-Options', 'nosniff');
-    $response->setHeader('X-Xss-Protection', '"1; mode=block"');
+    $response->setHeader('X-Xss-Protection', '1; mode=block');
     $response->send();
 } catch (Exception $e) {
     // internal server error
