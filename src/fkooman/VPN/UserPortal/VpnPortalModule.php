@@ -228,14 +228,14 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/setLanguage',
-            function (Request $request, UserInfoInterface $u) {
+            function (Request $request) {
                 $requestLang = $request->getPostParameter('language');
                 Utils::validateLanguage($requestLang);
                 $this->session->set('activeLanguage', $requestLang);
                 // redirect
                 return new RedirectResponse($request->getPostParameter('redirect_to'));
             },
-            $userAuth
+            $noAuth
         );
 
         $service->post(
