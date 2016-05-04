@@ -1,4 +1,4 @@
-<form class="setLanguage" method="post" action="setLanguage">
+<form class="setLanguage" method="post" action="{{ rootFolder|e }}setLanguage">
     <button class="plain" type="submit" name="language" value="en_US" title="English">EN</button>
     <button class="plain" type="submit" name="language" value="nl_NL" title="Dutch">NL</button>
     <input type="hidden" name="redirect_to" value="{{ requestUrl|e }}">
