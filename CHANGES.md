@@ -1,5 +1,9 @@
 # Changelog
 
+## 8.2.1 (2016-05-04)
+- add some additional HTTP security headers
+- update translation 
+
 ## 8.2.0 (2016-04-27)
 - update to new API
 - implement 2FA enrollment
