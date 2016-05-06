@@ -1,5 +1,9 @@
 # Changelog
 
+## 8.3.0 (2016-05-06)
+- new UI to change languages
+- also allow changing languages when query parameters are present 
+
 ## 8.2.1 (2016-05-04)
 - add some additional HTTP security headers
 - update translation 
