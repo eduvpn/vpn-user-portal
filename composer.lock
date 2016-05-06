@@ -51,16 +51,16 @@
         },
         {
             "name": "christian-riesen/base32",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristianRiesen/base32.git",
-                "reference": "fde061a370b0a97fdcd33d9d5f7b1b70ce1f79d4"
+                "reference": "0a31e50c0fa9b1692d077c86ac188eecdcbaf7fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristianRiesen/base32/zipball/fde061a370b0a97fdcd33d9d5f7b1b70ce1f79d4",
-                "reference": "fde061a370b0a97fdcd33d9d5f7b1b70ce1f79d4",
+                "url": "https://api.github.com/repos/ChristianRiesen/base32/zipball/0a31e50c0fa9b1692d077c86ac188eecdcbaf7fa",
+                "reference": "0a31e50c0fa9b1692d077c86ac188eecdcbaf7fa",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +101,7 @@
                 "encode",
                 "rfc4648"
             ],
-            "time": "2016-04-07 07:45:31"
+            "time": "2016-05-05 11:49:03"
         },
         {
             "name": "christian-riesen/otp",
@@ -156,16 +156,16 @@
         },
         {
             "name": "fkooman/config",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-config.git",
-                "reference": "961f2cb63bab8916c921a7b29a7eb3e22b5bcda1"
+                "reference": "a93d481c46fdd3ece1699d22340d53b769da4902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-config/zipball/961f2cb63bab8916c921a7b29a7eb3e22b5bcda1",
-                "reference": "961f2cb63bab8916c921a7b29a7eb3e22b5bcda1",
+                "url": "https://api.github.com/repos/fkooman/php-lib-config/zipball/a93d481c46fdd3ece1699d22340d53b769da4902",
+                "reference": "a93d481c46fdd3ece1699d22340d53b769da4902",
                 "shasum": ""
             },
             "require": {
@@ -191,7 +191,7 @@
                 }
             ],
             "description": "Read and write configuration files",
-            "time": "2015-11-09 18:12:16"
+            "time": "2016-04-27 10:00:40"
         },
         {
             "name": "fkooman/http",
@@ -239,23 +239,23 @@
         },
         {
             "name": "fkooman/io",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-io.git",
-                "reference": "1ed0e1c0282f373f6555c19cb563f2aaa1b0d6f1"
+                "reference": "0a7cd120cb067fdfcd9b146fd03ffc2cb7fdc465"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/1ed0e1c0282f373f6555c19cb563f2aaa1b0d6f1",
-                "reference": "1ed0e1c0282f373f6555c19cb563f2aaa1b0d6f1",
+                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/0a7cd120cb067fdfcd9b146fd03ffc2cb7fdc465",
+                "reference": "0a7cd120cb067fdfcd9b146fd03ffc2cb7fdc465",
                 "shasum": ""
             },
             "require": {
                 "ext-date": "*",
                 "ext-spl": "*",
                 "paragonie/random_compat": "^1.0",
-                "php": ">= 5.3.3"
+                "php": ">= 5.4"
             },
             "type": "library",
             "autoload": {
@@ -274,7 +274,7 @@
                 }
             ],
             "description": "Simple IO library",
-            "time": "2016-04-25 21:27:53"
+            "time": "2016-04-27 12:48:25"
         },
         {
             "name": "fkooman/json",
@@ -955,16 +955,16 @@
         },
         {
             "name": "react/promise",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/promise.git",
-                "reference": "f942da7b505d1a294284ab343d05df42d02ad6d9"
+                "reference": "8025426794f1944de806618671d4fa476dc7626f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/promise/zipball/f942da7b505d1a294284ab343d05df42d02ad6d9",
-                "reference": "f942da7b505d1a294284ab343d05df42d02ad6d9",
+                "url": "https://api.github.com/repos/reactphp/promise/zipball/8025426794f1944de806618671d4fa476dc7626f",
+                "reference": "8025426794f1944de806618671d4fa476dc7626f",
                 "shasum": ""
             },
             "require": {
@@ -995,20 +995,20 @@
                 }
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-            "time": "2016-03-31 13:10:33"
+            "time": "2016-05-03 17:50:52"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.4",
+            "version": "v2.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "584e52cb8f788a887553ba82db6caacb1d6260bb"
+                "reference": "e4fbcc65f90909c999ac3b4dfa699ee6563a9940"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/584e52cb8f788a887553ba82db6caacb1d6260bb",
-                "reference": "584e52cb8f788a887553ba82db6caacb1d6260bb",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/e4fbcc65f90909c999ac3b4dfa699ee6563a9940",
+                "reference": "e4fbcc65f90909c999ac3b4dfa699ee6563a9940",
                 "shasum": ""
             },
             "require": {
@@ -1044,7 +1044,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-04 07:54:35"
+            "time": "2016-03-29 19:00:15"
         },
         {
             "name": "twig/extensions",
