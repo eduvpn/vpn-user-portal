@@ -1,5 +1,9 @@
 # Changelog
 
+## 8.3.1 (2016-05-10)
+- fix remote API
+- do not allow empty OTP code when enrolling
+
 ## 8.3.0 (2016-05-06)
 - new UI to change languages
 - also allow changing languages when query parameters are present 
