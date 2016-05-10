@@ -170,7 +170,7 @@ msgid "Download (ZIP)"
 msgstr ""
 
 #: /tmp/cache/f2/f2a04261027035639cae072159a8fb500694503a3eb7fc454a634b93d70546b8.php:23
-#: /tmp/cache/e3/e3c0459f7f449c304e3ed5505ca2bf6a197eab4de02764943d90221fb22c91ab.php:20
+#: /tmp/cache/e3/e3c0459f7f449c304e3ed5505ca2bf6a197eab4de02764943d90221fb22c91ab.php:31
 #: /tmp/cache/8e/8e07030ae48ce9be81347c2f8048bf69bdb5d95f95e128fc46d3ff315ea56112.php:24
 msgid "VPN User Portal"
 msgstr ""
@@ -323,8 +323,9 @@ msgid ""
 "Currently, <a href=\"https://en.wikipedia.org/wiki/Time-based_One-"
 "time_Password_Algorithm\">TOTP</a> is used to secure access to the VPN "
 "server. You can use \n"
-"        <a href=\"https://fedorahosted.org/freeotp/\">FreeOTP</a> on your "
-"mobile device."
+"        <a href=\"https://fedorahosted.org/freeotp/\">FreeOTP</a> or <a href="
+"\"https://en.wikipedia.org/wiki/Google_Authenticator\">Google Authenticator</"
+"a> on your mobile device. We recommend FreeOTP."
 msgstr ""
 
 #: /tmp/cache/99/990961c16c06b9baa5f027145ca1ea57dc8ac4833afb58be42f64328102207ab.php:145
@@ -350,7 +351,9 @@ msgid "Please note"
 msgstr ""
 
 #: /tmp/cache/99/990961c16c06b9baa5f027145ca1ea57dc8ac4833afb58be42f64328102207ab.php:168
-msgid "It is currently not possible to deactivate 2FA once it is activated;"
+msgid ""
+"It is currently not possible, as a user, to disable 2FA for your account "
+"once it is activated;"
 msgstr ""
 
 #: /tmp/cache/99/990961c16c06b9baa5f027145ca1ea57dc8ac4833afb58be42f64328102207ab.php:172

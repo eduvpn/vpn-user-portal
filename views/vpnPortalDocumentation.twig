@@ -74,7 +74,7 @@
     <p>
         {% trans %}
         Currently, <a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm">TOTP</a> is used to secure access to the VPN server. You can use 
-        <a href="https://fedorahosted.org/freeotp/">FreeOTP</a> on your mobile device.
+        <a href="https://fedorahosted.org/freeotp/">FreeOTP</a> or <a href="https://en.wikipedia.org/wiki/Google_Authenticator">Google Authenticator</a> on your mobile device. We recommend FreeOTP.
         {% endtrans %}
     </p>
     <ul>
@@ -100,7 +100,7 @@
 
     <p>{% trans "Please note" %}:</p>
     <ul>
-        <li>{% trans "It is currently not possible to deactivate 2FA once it is activated;" %}</li>
+        <li>{% trans "It is currently not possible, as a user, to disable 2FA for your account once it is activated;" %}</li>
         <li>{% trans "Not all servers will require 2FA, so enrolling for 2FA will not always have an effect." %}</li>
         <li>{% trans "Do not allow the client to remember the password, it will not work as the OTP key will be different on every connection attempt." %}</li>
     </ul>
