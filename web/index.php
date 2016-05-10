@@ -147,8 +147,9 @@ try {
     );
 
     $vpnApiModule = new VpnApiModule(
-        $templateManager,
-        $vpnConfigApiClient
+        $vpnConfigApiClient,
+        $vpnServerApiClient,
+        $config->v('remoteConfig')
     );
 
     $oauthModule = new OAuthModule(

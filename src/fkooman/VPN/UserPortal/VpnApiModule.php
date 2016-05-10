@@ -22,20 +22,23 @@ use fkooman\Http\Response;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
-use fkooman\Tpl\TemplateManagerInterface;
 
 class VpnApiModule implements ServiceModuleInterface
 {
-    /** @var \fkooman\Tpl\TemplateManagerInterface */
-    private $templateManager;
-
     /** @var VpnConfigApiClient */
     private $vpnConfigApiClient;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient)
+    /** @var VpnServerApiClient */
+    private $vpnServerApiClient;
+
+    /** @var array */
+    private $remoteConfig;
+
+    public function __construct(VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, array $remoteConfig)
     {
-        $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
+        $this->vpnServerApiClient = $vpnServerApiClient;
+        $this->remoteConfig = $remoteConfig;
     }
 
     public function init(Service $service)
@@ -59,13 +62,14 @@ class VpnApiModule implements ServiceModuleInterface
 
     private function addConfig(UserInfoInterface $userInfo, $configName)
     {
-        $configData = $this->vpnConfigApiClient->addConfiguration($userInfo->getUserId(), $configName);
-        $configFile = $this->templateManager->render(
-            'client',
-            $configData['certificate']
-        );
+        $certData = $this->vpnConfigApiClient->addConfiguration($userInfo->getUserId(), $configName);
+        $remoteEntities = ['remote' => $this->remoteConfig];
+        $serverInfo = $this->vpnServerApiClient->getInfo();
+        $clientConfig = new ClientConfig();
+        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['tfa' => $serverInfo['tfa']], $certData['certificate'], $remoteEntities)));
+
         $response = new Response(200, 'application/x-openvpn-profile');
-        $response->setBody($configFile);
+        $response->setBody($vpnConfig);
 
         return $response;
     }
