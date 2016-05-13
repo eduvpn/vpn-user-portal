@@ -46,20 +46,16 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var UserTokens */
     private $userTokens;
 
-    /** @var array */
-    private $remoteConfig;
-
     /** @var \fkooman\Http\Session */
     private $session;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, Session $session, array $remoteConfig)
+    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, Session $session)
     {
         $this->templateManager = $templateManager;
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
         $this->userTokens = $userTokens;
         $this->session = $session;
-        $this->remoteConfig = $remoteConfig;
     }
 
     public function init(Service $service)
@@ -110,12 +106,13 @@ class VpnPortalModule implements ServiceModuleInterface
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $serverInfo = $this->vpnServerApiClient->getInfo();
+                $serverInfo = $serverInfo['items'][0];
                 $userInfo = $this->vpnServerApiClient->getUserInfo($u->getUserId());
 
                 return $this->templateManager->render(
                     'vpnPortalNew',
                     array(
-                        'tfaRequired' => $serverInfo['tfa'] && !$userInfo['otp_secret'],
+                        'tfaRequired' => $serverInfo['twoFactor'] && !$userInfo['otp_secret'],
                         'advanced' => (bool) $request->getUrl()->getQueryParameter('advanced'),
                         'cnLength' => 63 - strlen($u->getUserId()),
                     )
@@ -367,12 +364,12 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $certData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
 
-        $remoteEntities = ['remote' => $this->remoteConfig];
-
         $serverInfo = $this->vpnServerApiClient->getInfo();
+        $serverInfo = $serverInfo['items'][0];
+        $remoteEntities = ['remote' => $serverInfo['connectInfo']];
 
         $clientConfig = new ClientConfig();
-        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['tfa' => $serverInfo['tfa']], $certData['certificate'], $remoteEntities)));
+        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverInfo['twoFactor']], $certData['certificate'], $remoteEntities)));
 
         switch ($type) {
             case 'zip':

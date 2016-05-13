@@ -142,14 +142,12 @@ try {
         $vpnConfigApiClient,
         $vpnServerApiClient,
         new UserTokens($db),
-        $session,
-        $config->v('remoteConfig')
+        $session
     );
 
     $vpnApiModule = new VpnApiModule(
         $vpnConfigApiClient,
-        $vpnServerApiClient,
-        $config->v('remoteConfig')
+        $vpnServerApiClient
     );
 
     $oauthModule = new OAuthModule(

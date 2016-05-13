@@ -13,22 +13,6 @@ MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
-remoteConfig:
-    # UDP
-    - host: vpn.example
-      port: '1194'
-      proto: udp
-    - host: vpn.example
-      port: '1195'
-      proto: udp
-    - host: vpn.example
-      port: '1196'
-      proto: udp
-    # TCP
-    - host: vpn.example
-      port: '443'
-      proto: tcp
-
 api:
     dsn: 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
     #username: foo

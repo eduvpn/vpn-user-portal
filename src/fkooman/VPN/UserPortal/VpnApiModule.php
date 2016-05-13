@@ -31,14 +31,10 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var VpnServerApiClient */
     private $vpnServerApiClient;
 
-    /** @var array */
-    private $remoteConfig;
-
-    public function __construct(VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, array $remoteConfig)
+    public function __construct(VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
     {
         $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
-        $this->remoteConfig = $remoteConfig;
     }
 
     public function init(Service $service)
@@ -63,10 +59,12 @@ class VpnApiModule implements ServiceModuleInterface
     private function addConfig(UserInfoInterface $userInfo, $configName)
     {
         $certData = $this->vpnConfigApiClient->addConfiguration($userInfo->getUserId(), $configName);
-        $remoteEntities = ['remote' => $this->remoteConfig];
         $serverInfo = $this->vpnServerApiClient->getInfo();
+        $serverInfo = $serverInfo['items'][0];
+        $remoteEntities = ['remote' => $serverInfo['connectInfo']];
+
         $clientConfig = new ClientConfig();
-        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['tfa' => $serverInfo['tfa']], $certData['certificate'], $remoteEntities)));
+        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverInfo['twoFactor']], $certData['certificate'], $remoteEntities)));
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->setBody($vpnConfig);

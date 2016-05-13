@@ -32,7 +32,7 @@ class ClientConfig
             'key',
             'ta',
             'remote',
-            'tfa',
+            'twoFactor',
         ];
 
         // XXX verify the parameters and types
@@ -69,7 +69,7 @@ class ClientConfig
         }
 
         $twoFactorEntries = [];
-        if ($clientConfig['tfa']) {
+        if ($clientConfig['twoFactor']) {
             $twoFactorEntries[] = 'auth-user-pass';
         }
 
