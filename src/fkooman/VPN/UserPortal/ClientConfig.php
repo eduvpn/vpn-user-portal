@@ -86,8 +86,9 @@ class ClientConfig
             'persist-tun',
             'remote-cert-tls server',
 
-            # disable compression, but allow server to override using push
-            'comp-lzo no',
+            # adaptive compression, allow server to override using push, it 
+            # cannot be no here because that would confuse NetworkManager
+            'comp-lzo',
 
             'verb 3',
 
