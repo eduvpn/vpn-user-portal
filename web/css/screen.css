@@ -160,10 +160,18 @@ legend {
     display: none;
 }
 
+label.radio {
+    font-weight: normal;
+}
+
 label {
     font-weight: bold;
     margin: 0 0 0.2em 0;
     display: block;
+}
+
+select {
+    margin: 0 0 0.5em 0;
 }
 
 input[type="text"], input[type="password"] {

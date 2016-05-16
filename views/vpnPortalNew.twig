@@ -15,12 +15,6 @@
 
     <h2>{% trans "New" %}</h2>
 
-    {% if tfaRequired %}
-    <p class="warning">
-        {% trans 'Connecting to the VPN-server requires two-factor authentication. Set this up <a href="otp">here</a> first!' %}
-    </p>
-    {% endif %}
-
     <p>
     {% trans %}
 Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
@@ -30,6 +24,14 @@ Choose a unique name for your configuration, e.g. "Phone". Allowed characters ar
     <form method="post">
         <fieldset>
             <legend>{% trans "New" %}</legend>
+            {% if serverInfo|length > 1 %}
+                <label for="poolName">{% trans "Pool" %}</label>
+                <select id="poolName" name="poolName">
+                    {% for pool in serverInfo %}
+                        <option value="{{ pool.name|e }}">{{ pool.name|e }} {% if pool.twoFactor %}&#128272;{% endif %}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
             <label for="inputName">{% trans "Name" %}</label>
             <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
             <button type="submit">{% trans "Download" %}</button>

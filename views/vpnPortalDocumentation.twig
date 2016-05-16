@@ -128,13 +128,14 @@
     <p>
         {% trans %}
         You can also use <a target="_blank" href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a>,
-        a free software client for Android >= 4.0. Also available through <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>.
+        a free software client for Android ICS (4.0) or later. Also available through <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>.
         {% endtrans %}
     </p>
     <p>
         {% trans %}
-        On Linux using NetworkManager >= 1.2 the import of the OVPN file
-        works without problems.
+        Importing the configuration on NetworkManager 1.2 or higher on Linux 
+        works. However, on Ubuntu 16.04 there is 
+        an <a href="https://bugs.launchpad.net/ubuntu/+source/network-manager/+bug/1211110">issue</a> with DNS. A workaround is described <a href="https://bugs.launchpad.net/ubuntu/+source/network-manager/+bug/1211110/comments/11">here</a>.
         {% endtrans %}
     </p>
 

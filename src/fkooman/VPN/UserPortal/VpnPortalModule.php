@@ -106,13 +106,13 @@ class VpnPortalModule implements ServiceModuleInterface
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $serverInfo = $this->vpnServerApiClient->getInfo();
-                $serverInfo = $serverInfo['items'][0];
+                //$serverInfo = $serverInfo['items'][0];
                 $userInfo = $this->vpnServerApiClient->getUserInfo($u->getUserId());
 
                 return $this->templateManager->render(
                     'vpnPortalNew',
                     array(
-                        'tfaRequired' => $serverInfo['twoFactor'] && !$userInfo['otp_secret'],
+                        'serverInfo' => $serverInfo['items'],
                         'cnLength' => 63 - strlen($u->getUserId()),
                     )
                 );
@@ -135,7 +135,6 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, UserInfoInterface $u) {
                 $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
                 $configList = $this->vpnServerApiClient->getConfig($u->getUserId());
-                $serverInfo = $this->vpnServerApiClient->getInfo();
 
                 $activeVpnConfigurations = array();
                 $revokedVpnConfigurations = array();
@@ -171,7 +170,6 @@ class VpnPortalModule implements ServiceModuleInterface
                         'disabledVpnConfigurations' => $disabledVpnConfigurations,
                         'revokedVpnConfigurations' => $revokedVpnConfigurations,
                         'expiredVpnConfigurations' => $expiredVpnConfigurations,
-                        'serverInfo' => $serverInfo,
                     )
                 );
             },
@@ -259,12 +257,10 @@ class VpnPortalModule implements ServiceModuleInterface
             '/otp',
             function (Request $request, UserInfoInterface $u) {
                 $otpSecret = GoogleAuthenticator::generateRandom();
-                $serverInfo = $this->vpnServerApiClient->getInfo();
 
                 return $this->templateManager->render(
                     'vpnPortalOtp',
                     array(
-                        'tfa' => $serverInfo['tfa'],
                         'secret' => $otpSecret,
                     )
                 );
@@ -361,13 +357,26 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         $certData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
-
         $serverInfo = $this->vpnServerApiClient->getInfo();
-        $serverInfo = $serverInfo['items'][0];
-        $remoteEntities = ['remote' => $serverInfo['connectInfo']];
+        $poolName = $request->getPostParameter('poolName');
+
+        if(is_null($poolName)) {
+            $serverPool = $serverInfo['items'][0];
+        } else {
+            foreach($serverInfo['items'] as $pool) {
+                if($poolName === $pool['name']) {
+                    $serverPool = $pool;
+                }
+            }
+            // XXX do something if name does not exists
+        }
+
+        // XXX if 2FA is required, we should warn the user to first enroll!
+
+        $remoteEntities = ['remote' => $serverPool['connectInfo']];
 
         $clientConfig = new ClientConfig();
-        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverInfo['twoFactor']], $certData['certificate'], $remoteEntities)));
+        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverPool['twoFactor']], $certData['certificate'], $remoteEntities)));
 
         // return an OVPN file
         $response = new Response(200, 'application/x-openvpn-profile');

@@ -29,12 +29,8 @@
         </dd>
     </dl>
 
+    {% if userTokens is not empty %}
     <h3>{% trans "Applications" %}</h3>
-    {% if userTokens is empty %}
-        <p>
-            {% trans "No external applications can currently manage your account." %}
-        </p>
-    {% else %}
         <p>
             {% trans "Some external applications can manage your account. You can revoke their permission." %}
         </p>

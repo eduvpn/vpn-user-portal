@@ -19,12 +19,6 @@
         {% trans "Here you can enroll for two-factor authentication (2FA)." %}
         {% trans 'See the <a href="documentation#2fa">documentation</a> for more information.' %}
     </p>
-
-    {% if not tfa %}
-        <p class="warning">
-            {% trans "2FA is currently not enabled on the VPN-servers, you can enroll, but it will not (yet) be used!" %}
-        </p>
-    {% endif %}
         
     <dl>
         <dt>{% trans "Secret" %}</dt>
