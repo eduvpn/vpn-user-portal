@@ -112,7 +112,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 return $this->templateManager->render(
                     'vpnPortalNew',
                     array(
-                        'serverInfo' => $serverInfo['items'],
+                        'serverInfo' => $serverInfo['data'],
                         'cnLength' => 63 - strlen($u->getUserId()),
                     )
                 );
@@ -149,8 +149,8 @@ class VpnPortalModule implements ServiceModuleInterface
                     } elseif ('V' === $c['state']) {
                         $commonName = $u->getUserId().'_'.$c['name'];
                         $c['disable'] = false;
-                        if (array_key_exists($commonName, $configList['items'])) {
-                            if ($configList['items'][$commonName]['disable']) {
+                        if (array_key_exists($commonName, $configList['data'])) {
+                            if ($configList['data'][$commonName]['disable']) {
                                 $c['disable'] = true;
                             }
                         }
@@ -360,11 +360,11 @@ class VpnPortalModule implements ServiceModuleInterface
         $serverInfo = $this->vpnServerApiClient->getInfo();
         $poolName = $request->getPostParameter('poolName');
 
-        if(is_null($poolName)) {
-            $serverPool = $serverInfo['items'][0];
+        if (is_null($poolName)) {
+            $serverPool = $serverInfo['data'][0];
         } else {
-            foreach($serverInfo['items'] as $pool) {
-                if($poolName === $pool['name']) {
+            foreach ($serverInfo['data'] as $pool) {
+                if ($poolName === $pool['name']) {
                     $serverPool = $pool;
                 }
             }
@@ -372,8 +372,16 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         // XXX if 2FA is required, we should warn the user to first enroll!
+        $remoteEntities = [];
+        foreach ($serverPool['instances'] as $instance) {
+            $remoteEntities[] = [
+                'port' => $instance['port'],
+                'proto' => $instance['proto'],
+                'host' => $serverPool['hostName'],
+            ];
+        }
 
-        $remoteEntities = ['remote' => $serverPool['connectInfo']];
+        $remoteEntities = ['remote' => $remoteEntities];
 
         $clientConfig = new ClientConfig();
         $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverPool['twoFactor']], $certData['certificate'], $remoteEntities)));
