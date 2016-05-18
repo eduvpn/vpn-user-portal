@@ -65,7 +65,15 @@ class ClientConfig
 
         $remoteEntries = [];
         foreach ($mergedRemotes as $remoteEntry) {
-            $remoteEntries[] = sprintf('remote %s %d %s', $remoteEntry['host'], intval($remoteEntry['port']), $remoteEntry['proto']);
+            $host = $remoteEntry['host'];
+            $proto = $remoteEntry['proto'];
+            if ('tcp' === $proto) {
+                $port = 443;
+            } else {
+                $port = intval($remoteEntry['port']);
+            }
+
+            $remoteEntries[] = sprintf('remote %s %d %s', $host, $port, $proto);
         }
 
         $twoFactorEntries = [];
