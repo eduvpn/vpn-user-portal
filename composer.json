@@ -20,7 +20,6 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
-        "ext-zip": "*",
         "fkooman/config": "^1.0.0",
         "fkooman/http": "^1.0.0",
         "fkooman/oauth": "^5.1.0",
