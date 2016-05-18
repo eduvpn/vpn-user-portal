@@ -1,5 +1,11 @@
 # Changelog
 
+## 9.0.0 (2016-05-18)
+- remove ZIP download
+- update to new vpn-server-api API
+- update documentation
+- implement "Pool" chooser if more than one pool is available
+
 ## 8.3.1 (2016-05-10)
 - fix remote API
 - do not allow empty OTP code when enrolling
