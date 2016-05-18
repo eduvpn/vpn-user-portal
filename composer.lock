@@ -500,16 +500,16 @@
         },
         {
             "name": "fkooman/rest-plugin-authentication-bearer",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-bearer.git",
-                "reference": "08c97721f98d4a74a021325da6b543934cb23bb4"
+                "reference": "8f6a956823225ccc84b3903d3f9b5a4583fe6fbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-bearer/zipball/08c97721f98d4a74a021325da6b543934cb23bb4",
-                "reference": "08c97721f98d4a74a021325da6b543934cb23bb4",
+                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-bearer/zipball/8f6a956823225ccc84b3903d3f9b5a4583fe6fbf",
+                "reference": "8f6a956823225ccc84b3903d3f9b5a4583fe6fbf",
                 "shasum": ""
             },
             "require": {
@@ -539,7 +539,7 @@
                 }
             ],
             "description": "Bearer (OAuth) Authentication plugin for fkooman/rest-plugin-authentication",
-            "time": "2016-02-26 17:37:24"
+            "time": "2016-05-18 11:47:41"
         },
         {
             "name": "fkooman/rest-plugin-authentication-form",
