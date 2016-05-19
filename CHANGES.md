@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.0.1 (2016-05-19)
+- fix OAuth API
+
 ## 9.0.0 (2016-05-18)
 - remove ZIP download
 - update to new vpn-server-api API

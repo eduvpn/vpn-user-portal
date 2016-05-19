@@ -60,8 +60,17 @@ class VpnApiModule implements ServiceModuleInterface
     {
         $certData = $this->vpnConfigApiClient->addConfiguration($userInfo->getUserId(), $configName);
         $serverInfo = $this->vpnServerApiClient->getInfo();
-        $serverInfo = $serverInfo['items'][0];
-        $remoteEntities = ['remote' => $serverInfo['connectInfo']];
+        $serverInfo = $serverInfo['data'][0];
+
+        $remoteEntities = [];
+        foreach ($serverInfo['instances'] as $instance) {
+            $remoteEntities[] = [
+                'port' => $instance['port'],
+                'proto' => $instance['proto'],
+                'host' => $serverInfo['hostName'],
+            ];
+        }
+        $remoteEntities = ['remote' => $remoteEntities];
 
         $clientConfig = new ClientConfig();
         $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverInfo['twoFactor']], $certData['certificate'], $remoteEntities)));
