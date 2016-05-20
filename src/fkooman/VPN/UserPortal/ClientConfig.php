@@ -61,7 +61,29 @@ class ClientConfig
         shuffle($udpRemotes);
         shuffle($tcpRemotes);
 
-        $mergedRemotes = array_merge($udpRemotes, $tcpRemotes);
+        // crazy ahead
+        if (2 < count($udpRemotes)) {
+            // if there are > 2 UDP entries
+            if (1 < count($tcpRemotes)) {
+                // and > 1 TCP entry
+                $mergedRemotes = array_merge(
+                    array_slice($udpRemotes, 0, 2),
+                    array_slice($tcpRemotes, 0, 1),
+                    array_slice($udpRemotes, 2),
+                    array_slice($tcpRemotes, 1)
+                );
+            } else {
+                // <= 1 TCP entry
+                $mergedRemotes = array_merge(
+                    array_slice($udpRemotes, 0, 2),
+                    $tcpRemotes,
+                    array_slice($udpRemotes, 2)
+                );
+            }
+        } else {
+            // <= 2 UDP entries
+            $mergedRemotes = array_merge($udpRemotes, $tcpRemotes);
+        }
 
         $remoteEntries = [];
         foreach ($mergedRemotes as $remoteEntry) {
