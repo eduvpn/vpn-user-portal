@@ -1,8 +1,7 @@
 # Changelog
 
-## 9.0.2 (...)
-- better deal with many UDP instances, first list 2 UDP instances, then TCP and then 
-  the rest of the UDP instances if there are any
+## 9.0.2 (2016-05-23)
+- update way in which the `remote` line in the config is sorted
 
 ## 9.0.1 (2016-05-19)
 - fix OAuth API
