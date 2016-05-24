@@ -30,7 +30,7 @@ msgstr "Home"
 #: /tmp/cache/58/58e221814487933eef6f96530fc5737bb955748427c5252e4d15b03acbcb80c4.php:39
 #: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:39
 #: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:57
-#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:71
+#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:85
 #: /tmp/cache/ca/caba71bd50bdff37ba7b5fcb6a8807c777ecca1711b52c0269af60d2536b437f.php:39
 #: /tmp/cache/26/261f4f9015c149ad5157379f515ec2dc6b99f80ad5ac2e77b250ac27e6a6a09a.php:39
 #: /tmp/cache/99/990961c16c06b9baa5f027145ca1ea57dc8ac4833afb58be42f64328102207ab.php:39
@@ -164,7 +164,15 @@ msgstr ""
 "Probeer het <a href=\"otp\">hier</a> opnieuw, of ga terug naar de <a href="
 "\"account\">Accountpagina</a>."
 
-#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:63
+#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:68
+msgid ""
+"You do not have access to a VPN profile. You may need to request access to "
+"be able to create a new VPN configuration."
+msgstr ""
+"Geen VPN-profiel beschikbaar voor het downloaden van een configuratie. Dit "
+"account heeft mogelijk onvoldoende rechten."
+
+#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:77
 msgid ""
 "Choose a unique name for your configuration, e.g. \"Phone\". Allowed "
 "characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-"
@@ -174,12 +182,12 @@ msgstr ""
 "Geaccepteerde tekens zijn <code>a-z</code>, <code>A-Z</code>, <code>0-9</"
 "code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>."
 
-#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:78
+#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:92
 msgid "Profile"
 msgstr "Profiel"
 
-#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:113
-#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:119
+#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:127
+#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:133
 #: /tmp/cache/cb/cb3d518901e76968699e6f793560a7ecbf7f1fa0be004e6c2be20333a43653e8.php:98
 #: /tmp/cache/cb/cb3d518901e76968699e6f793560a7ecbf7f1fa0be004e6c2be20333a43653e8.php:163
 #: /tmp/cache/cb/cb3d518901e76968699e6f793560a7ecbf7f1fa0be004e6c2be20333a43653e8.php:229
@@ -187,7 +195,7 @@ msgstr "Profiel"
 msgid "Name"
 msgstr "Naam"
 
-#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:123
+#: /tmp/cache/22/2292a582937858280834006d7d8ae0c6a007d52535fd173b8c99e9a728e88540.php:137
 msgid "Download"
 msgstr "Downloaden"
 
