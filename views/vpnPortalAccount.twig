@@ -27,6 +27,17 @@
                 <a href="otp">{% trans "Enroll" %}</a>
             {% endif %}
         </dd>
+
+        {% if groupMembership is not empty %}
+            <dt>{% trans "Group Membership" %}</dt>
+            <dd>
+                <ul>
+                    {% for group in groupMembership %}
+                        <li>{{ group|e }}</li>
+                    {% endfor %}
+                </ul>
+            </dd>
+        {% endif %}
     </dl>
 
     {% if userTokens is not empty %}

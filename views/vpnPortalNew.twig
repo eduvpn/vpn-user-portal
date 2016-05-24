@@ -24,13 +24,15 @@ Choose a unique name for your configuration, e.g. "Phone". Allowed characters ar
     <form method="post">
         <fieldset>
             <legend>{% trans "New" %}</legend>
-            {% if serverInfo|length > 1 %}
-                <label for="poolName">{% trans "Pool" %}</label>
-                <select id="poolName" name="poolName">
-                    {% for pool in serverInfo %}
-                        <option value="{{ pool.name|e }}">{{ pool.name|e }} {% if pool.twoFactor %}&#128272;{% endif %}</option>
+            {% if poolList|length > 1 %}
+                <label for="poolId">{% trans "Profile" %}</label>
+                <select id="poolId" name="poolId">
+                    {% for pool in poolList %}
+                        <option value="{{ pool.id|e }}">{{ pool.name|e }} {% if pool.twoFactor %}&#128272;{% endif %}</option>
                     {% endfor %}
                 </select>
+            {% else %}
+                <input type="hidden" name="poolId" value="{{ poolList[0].id|e }}">
             {% endif %}
             <label for="inputName">{% trans "Name" %}</label>
             <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">

@@ -80,7 +80,13 @@ dl {
 }
 
 dt {
+    margin: 1em 0 0 0;
     font-weight: bold;
+}
+
+dl ul {
+    margin: 0;
+    padding: 0 1em;
 }
 
 /** IP LIST **/

@@ -106,13 +106,24 @@ class VpnPortalModule implements ServiceModuleInterface
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $serverInfo = $this->vpnServerApiClient->getInfo();
-                //$serverInfo = $serverInfo['items'][0];
-                $userInfo = $this->vpnServerApiClient->getUserInfo($u->getUserId());
+                $groupInfo = $this->vpnServerApiClient->getGroupInfo($u->getUserId());
+                $memberOf = $groupInfo['data']['memberOf'];
+
+                $poolList = [];
+                foreach ($serverInfo['data'] as $server) {
+                    if ($server['enableAcl']) {
+                        // ACL enabled
+                        if (!in_array($server['id'], $memberOf)) {
+                            continue;
+                        }
+                    }
+                    $poolList[] = ['id' => $server['id'], 'name' => $server['name'], 'twoFactor' => $server['twoFactor']];
+                }
 
                 return $this->templateManager->render(
                     'vpnPortalNew',
                     array(
-                        'serverInfo' => $serverInfo['data'],
+                        'poolList' => $poolList,
                         'cnLength' => 63 - strlen($u->getUserId()),
                     )
                 );
@@ -206,6 +217,17 @@ class VpnPortalModule implements ServiceModuleInterface
             '/account',
             function (Request $request, UserInfoInterface $u) {
                 $userInfo = $this->vpnServerApiClient->getUserInfo($u->getUserId());
+                $groupInfo = $this->vpnServerApiClient->getGroupInfo($u->getUserId());
+                $serverInfo = $this->vpnServerApiClient->getInfo();
+
+                $memberOf = $groupInfo['data']['memberOf'];
+                $groupMembership = [];
+
+                foreach ($serverInfo['data'] as $pool) {
+                    if (in_array($pool['id'], $memberOf)) {
+                        $groupMembership[] = $pool['name'];
+                    }
+                }
 
                 return $this->templateManager->render(
                     'vpnPortalAccount',
@@ -213,6 +235,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         'otpEnabled' => $userInfo['otp_secret'],
                         'userId' => $u->getUserId(),
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
+                        'groupMembership' => $groupMembership,
                     )
                 );
             },

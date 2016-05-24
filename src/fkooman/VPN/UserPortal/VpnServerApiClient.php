@@ -48,6 +48,16 @@ class VpnServerApiClient extends VpnApiClient
         );
     }
 
+    public function getGroupInfo($userId)
+    {
+        $requestUri = sprintf('%s/info/users/%s', $this->vpnServerApiUri, $userId);
+
+        return $this->exec(
+            'GET',
+            $requestUri
+        );
+    }
+
     public function setOtpSecret($userId, $otpSecret)
     {
         $requestUri = sprintf('%s/config/users/%s/otp_secret', $this->vpnServerApiUri, $userId);
