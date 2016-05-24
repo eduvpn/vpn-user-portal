@@ -38,6 +38,27 @@ class Utils
         }
     }
 
+    public static function validateString($input)
+    {
+        if (!is_string($input)) {
+            throw new BadRequestException('parameter must be string');
+        }
+        if (0 >= strlen($input)) {
+            throw new BadRequestException('parameter must be non-empty string');
+        }
+    }
+
+    public static function validatePoolId($poolId)
+    {
+        self::validateString($poolId);
+        $matchPattern = '/^[a-zA-Z0-9]+$/';
+        if (1 !== preg_match($matchPattern, $poolId)) {
+            throw new BadRequestException(
+                sprintf('parameter must match pattern "%s"', $matchPattern)
+            );
+        }
+    }
+
     public static function validateLanguage($language)
     {
         $supportedLanguages = ['en_US', 'nl_NL'];

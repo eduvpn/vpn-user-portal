@@ -135,8 +135,9 @@ class VpnPortalModule implements ServiceModuleInterface
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
+                $poolId = $request->getPostParameter('poolId');
 
-                return $this->getConfig($request, $u->getUserId(), $configName);
+                return $this->getConfig($request, $u->getUserId(), $configName, $poolId);
             },
             $userAuth
         );
@@ -353,9 +354,10 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    private function getConfig(Request $request, $userId, $configName)
+    private function getConfig(Request $request, $userId, $configName, $poolId)
     {
         Utils::validateConfigName($configName);
+        Utils::validatePoolId($poolId);
 
         // userId + configName length cannot be longer than 64 as the
         // certificate CN cannot be longer than 64
@@ -381,20 +383,16 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $certData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
         $serverInfo = $this->vpnServerApiClient->getInfo();
-        $poolName = $request->getPostParameter('poolName');
 
-        if (is_null($poolName)) {
-            $serverPool = $serverInfo['data'][0];
-        } else {
-            foreach ($serverInfo['data'] as $pool) {
-                if ($poolName === $pool['name']) {
-                    $serverPool = $pool;
-                }
+        foreach ($serverInfo['data'] as $pool) {
+            if ($poolId === $pool['id']) {
+                $serverPool = $pool;
             }
-            // XXX do something if name does not exists
         }
+        // XXX do something if name does not exists
 
         // XXX if 2FA is required, we should warn the user to first enroll!
+
         $remoteEntities = [];
         foreach ($serverPool['instances'] as $instance) {
             $remoteEntities[] = [
