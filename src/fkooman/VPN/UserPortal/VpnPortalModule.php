@@ -161,7 +161,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     } elseif ('V' === $c['state']) {
                         $commonName = $u->getUserId().'_'.$c['name'];
                         $c['disable'] = false;
-                        if (array_key_exists($commonName, $disabledCommonNames['data']['common_names'])) {
+                        if (in_array($commonName, $disabledCommonNames['data']['common_names'])) {
                             $c['disable'] = true;
                         }
 
