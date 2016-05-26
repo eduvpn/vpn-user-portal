@@ -239,16 +239,16 @@
         },
         {
             "name": "fkooman/io",
-            "version": "1.2.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-io.git",
-                "reference": "0a7cd120cb067fdfcd9b146fd03ffc2cb7fdc465"
+                "reference": "e478f37798af631ad49c3154420c24c6bbe0484c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/0a7cd120cb067fdfcd9b146fd03ffc2cb7fdc465",
-                "reference": "0a7cd120cb067fdfcd9b146fd03ffc2cb7fdc465",
+                "url": "https://api.github.com/repos/fkooman/php-lib-io/zipball/e478f37798af631ad49c3154420c24c6bbe0484c",
+                "reference": "e478f37798af631ad49c3154420c24c6bbe0484c",
                 "shasum": ""
             },
             "require": {
@@ -274,7 +274,7 @@
                 }
             ],
             "description": "Simple IO library",
-            "time": "2016-04-27 12:48:25"
+            "time": "2016-05-25 14:27:49"
         },
         {
             "name": "fkooman/json",
@@ -320,16 +320,16 @@
         },
         {
             "name": "fkooman/oauth",
-            "version": "5.1.0",
+            "version": "5.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-oauth.git",
-                "reference": "49ac56eac8a0f45476ef88b4f6aabdcbcbbce708"
+                "reference": "413f510ad55dea7c0f64543561cbfc04ee44bd81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-oauth/zipball/49ac56eac8a0f45476ef88b4f6aabdcbcbbce708",
-                "reference": "49ac56eac8a0f45476ef88b4f6aabdcbcbbce708",
+                "url": "https://api.github.com/repos/fkooman/php-lib-oauth/zipball/413f510ad55dea7c0f64543561cbfc04ee44bd81",
+                "reference": "413f510ad55dea7c0f64543561cbfc04ee44bd81",
                 "shasum": ""
             },
             "require": {
@@ -338,7 +338,7 @@
                 "ext-pdo": "*",
                 "ext-spl": "*",
                 "fkooman/http": "^1.1.0",
-                "fkooman/io": "^1.0.2",
+                "fkooman/io": "^2.0",
                 "fkooman/json": "^2.0.0",
                 "fkooman/rest": "^1.0.0",
                 "fkooman/rest-plugin-authentication": "^2.0.0",
@@ -366,7 +366,7 @@
                 }
             ],
             "description": "OAuth 2.0 Server Library",
-            "time": "2016-03-30 13:42:27"
+            "time": "2016-05-25 14:30:46"
         },
         {
             "name": "fkooman/rest",

@@ -31,20 +31,33 @@ class VpnServerApiClient extends VpnApiClient
         $this->vpnServerApiUri = $vpnServerApiUri;
     }
 
-    public function getConfig($userId)
+    public function getDisabledCommonNames()
     {
-        $requestUri = sprintf('%s/config/common_names?user_id=%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/common_names/disabled', $this->vpnServerApiUri);
 
         return $this->exec('GET', $requestUri);
     }
 
-    public function getUserInfo($userId)
+    public function getOtpSecret($userId)
     {
-        $requestUri = sprintf('%s/config/users/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/users/otp_secrets/%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec(
             'GET',
             $requestUri
+        );
+    }
+
+    public function setOtpSecret($userId, $otpSecret)
+    {
+        $requestUri = sprintf('%s/users/otp_secrets/%s', $this->vpnServerApiUri, $userId);
+
+        return $this->exec(
+            'POST',
+            $requestUri,
+            [
+                'body' => ['otp_secret' => $otpSecret],
+            ]
         );
     }
 
@@ -58,20 +71,7 @@ class VpnServerApiClient extends VpnApiClient
         );
     }
 
-    public function setOtpSecret($userId, $otpSecret)
-    {
-        $requestUri = sprintf('%s/config/users/%s/otp_secret', $this->vpnServerApiUri, $userId);
-
-        return $this->exec(
-            'PUT',
-            $requestUri,
-            [
-                'body' => Json::encode(['otp_secret' => $otpSecret]),
-            ]
-        );
-    }
-
-    public function postKill($commonName)
+    public function killCommonName($commonName)
     {
         $requestUri = sprintf('%s/openvpn/kill', $this->vpnServerApiUri);
 
@@ -86,14 +86,14 @@ class VpnServerApiClient extends VpnApiClient
         );
     }
 
-    public function postCrlFetch()
+    public function triggerCrlReload()
     {
         $requestUri = sprintf('%s/ca/crl/fetch', $this->vpnServerApiUri);
 
         return $this->exec('POST', $requestUri);
     }
 
-    public function getInfo()
+    public function getServerInfo()
     {
         $requestUri = sprintf('%s/info/server', $this->vpnServerApiUri);
 
