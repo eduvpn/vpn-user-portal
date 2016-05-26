@@ -18,7 +18,6 @@
 namespace fkooman\VPN\UserPortal;
 
 use GuzzleHttp\Client;
-use fkooman\Json\Json;
 
 class VpnServerApiClient extends VpnApiClient
 {
@@ -35,17 +34,14 @@ class VpnServerApiClient extends VpnApiClient
     {
         $requestUri = sprintf('%s/common_names/disabled', $this->vpnServerApiUri);
 
-        return $this->exec('GET', $requestUri);
+        return $this->exec('GET', $requestUri)['data']['common_names'];
     }
 
     public function getOtpSecret($userId)
     {
         $requestUri = sprintf('%s/users/otp_secrets/%s', $this->vpnServerApiUri, $userId);
 
-        return $this->exec(
-            'GET',
-            $requestUri
-        );
+        return $this->exec('GET', $requestUri)['data']['otp_secret'];
     }
 
     public function setOtpSecret($userId, $otpSecret)
@@ -58,17 +54,17 @@ class VpnServerApiClient extends VpnApiClient
             [
                 'body' => ['otp_secret' => $otpSecret],
             ]
-        );
+        )['data']['ok'];
     }
 
-    public function getGroupInfo($userId)
+    public function getUserGroups($userId)
     {
-        $requestUri = sprintf('%s/info/users/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/users/groups/%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec(
             'GET',
             $requestUri
-        );
+        )['data']['groups'];
     }
 
     public function killCommonName($commonName)
@@ -83,20 +79,20 @@ class VpnServerApiClient extends VpnApiClient
                     'common_name' => $commonName,
                 ],
             ]
-        );
+        )['data']['ok'];
     }
 
     public function triggerCrlReload()
     {
         $requestUri = sprintf('%s/ca/crl/fetch', $this->vpnServerApiUri);
 
-        return $this->exec('POST', $requestUri);
+        return $this->exec('POST', $requestUri)['data']['ok'];
     }
 
-    public function getServerInfo()
+    public function getServerPools()
     {
         $requestUri = sprintf('%s/info/server', $this->vpnServerApiUri);
 
-        return $this->exec('GET', $requestUri);
+        return $this->exec('GET', $requestUri)['data']['pools'];
     }
 }

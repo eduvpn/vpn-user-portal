@@ -105,19 +105,18 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/new',
             function (Request $request, UserInfoInterface $u) {
-                $serverInfo = $this->vpnServerApiClient->getServerInfo();
-                $groupInfo = $this->vpnServerApiClient->getGroupInfo($u->getUserId());
-                $memberOf = $groupInfo['data']['memberOf'];
+                $serverPools = $this->vpnServerApiClient->getServerPools();
+                $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
 
                 $poolList = [];
-                foreach ($serverInfo['data'] as $server) {
-                    if ($server['enableAcl']) {
+                foreach ($serverPools as $pool) {
+                    if ($pool['enableAcl']) {
                         // ACL enabled
-                        if (!in_array($server['id'], $memberOf)) {
+                        if (!in_array($pool['id'], $userGroups)) {
                             continue;
                         }
                     }
-                    $poolList[] = ['id' => $server['id'], 'name' => $server['name'], 'twoFactor' => $server['twoFactor']];
+                    $poolList[] = ['id' => $pool['id'], 'name' => $pool['name'], 'twoFactor' => $pool['twoFactor']];
                 }
 
                 return $this->templateManager->render(
@@ -161,7 +160,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     } elseif ('V' === $c['state']) {
                         $commonName = $u->getUserId().'_'.$c['name'];
                         $c['disable'] = false;
-                        if (in_array($commonName, $disabledCommonNames['data']['common_names'])) {
+                        if (in_array($commonName, $disabledCommonNames)) {
                             $c['disable'] = true;
                         }
 
@@ -216,15 +215,12 @@ class VpnPortalModule implements ServiceModuleInterface
             '/account',
             function (Request $request, UserInfoInterface $u) {
                 $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
+                $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
+                $serverPools = $this->vpnServerApiClient->getServerPools();
 
-                $groupInfo = $this->vpnServerApiClient->getGroupInfo($u->getUserId());
-                $serverInfo = $this->vpnServerApiClient->getServerInfo();
-
-                $memberOf = $groupInfo['data']['memberOf'];
                 $groupMembership = [];
-
-                foreach ($serverInfo['data'] as $pool) {
-                    if (in_array($pool['id'], $memberOf)) {
+                foreach ($serverPools as $pool) {
+                    if (in_array($pool['id'], $userGroups)) {
                         $groupMembership[] = $pool['name'];
                     }
                 }
@@ -232,7 +228,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 return $this->templateManager->render(
                     'vpnPortalAccount',
                     array(
-                        'otpEnabled' => $otpSecret['data']['otp_secret'],
+                        'otpEnabled' => $otpSecret,
                         'userId' => $u->getUserId(),
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
                         'groupMembership' => $groupMembership,
@@ -381,9 +377,9 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         $certData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
-        $serverInfo = $this->vpnServerApiClient->getServerInfo();
+        $serverPools = $this->vpnServerApiClient->getServerPools();
 
-        foreach ($serverInfo['data'] as $pool) {
+        foreach ($serverPools as $pool) {
             if ($poolId === $pool['id']) {
                 $serverPool = $pool;
             }
