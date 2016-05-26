@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.1.0 (2016-05-26)
+- update for new API
+
 ## 9.0.2 (2016-05-23)
 - update way in which the `remote` line in the config is sorted
 
