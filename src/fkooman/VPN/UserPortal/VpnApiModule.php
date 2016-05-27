@@ -59,8 +59,8 @@ class VpnApiModule implements ServiceModuleInterface
     private function addConfig(UserInfoInterface $userInfo, $configName)
     {
         $certData = $this->vpnConfigApiClient->addConfiguration($userInfo->getUserId(), $configName);
-        $serverInfo = $this->vpnServerApiClient->getInfo();
-        $serverInfo = $serverInfo['data'][0];
+        $serverPools = $this->vpnServerApiClient->getServerPools();
+        $serverInfo = $serverPools[0];
 
         $remoteEntities = [];
         foreach ($serverInfo['instances'] as $instance) {

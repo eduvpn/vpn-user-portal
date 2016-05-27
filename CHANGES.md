@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.1.1 (2016-05-27)
+- fix API
+
 ## 9.1.0 (2016-05-26)
 - update for new API
 
