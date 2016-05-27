@@ -2,6 +2,7 @@
 
 ## 9.1.1 (2016-05-27)
 - fix API
+- better error handling when somehow a non exiting pool is used
 
 ## 9.1.0 (2016-05-26)
 - update for new API

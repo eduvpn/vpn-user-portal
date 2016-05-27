@@ -379,12 +379,15 @@ class VpnPortalModule implements ServiceModuleInterface
         $certData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
         $serverPools = $this->vpnServerApiClient->getServerPools();
 
+        $serverPool = null;
         foreach ($serverPools as $pool) {
             if ($poolId === $pool['id']) {
                 $serverPool = $pool;
             }
         }
-        // XXX do something if name does not exists
+        if (is_null($serverPool)) {
+            throw new BadRequestException('chosen pool does not exist');
+        }
 
         // XXX if 2FA is required, we should warn the user to first enroll!
 
