@@ -26,3 +26,11 @@ remoteApi:
     vpn-server-api:
         uri: 'http://localhost:8009/api.php'
         token: uvwxyz
+
+# Voot API group support
+enableVoot: false
+Voot:
+    clientId: my_client_id
+    clientSecret: my_client_secret
+    authorizationEndpoint: https://authz.surfconext.nl/oauth/authorize
+    tokenEndpoint: https://authz.surfconext.nl/oauth/token

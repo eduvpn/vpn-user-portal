@@ -41,6 +41,10 @@ use fkooman\VPN\UserPortal\VpnPortalModule;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
 use GuzzleHttp\Client;
 use fkooman\OAuth\Auth\UnauthenticatedClientAuthentication;
+use fkooman\OAuth\Client\OAuth2Client;
+use fkooman\OAuth\Client\Provider;
+use fkooman\OAuth\Client\GuzzleHttpClient;
+use fkooman\VPN\UserPortal\VootModule;
 
 try {
     $config = new Reader(
@@ -164,6 +168,24 @@ try {
         ]
     );
 
+    $enableVoot = $config->v('enableVoot', false, false);
+    if ($enableVoot) {
+        $oauthClient = new OAuth2Client(
+            new Provider(
+                $config->v('Voot', 'clientId'),
+                $config->v('Voot', 'clientSecret'),
+                $config->v('Voot', 'authorizationEndpoint'),
+                $config->v('Voot', 'tokenEndpoint')
+            ),
+            new GuzzleHttpClient()
+        );
+        $vootModule = new VootModule(
+            $oauthClient,
+            $vpnServerApiClient,
+            $session
+        );
+    }
+
     $apiAuth = new BearerAuthentication(
         new DbTokenValidator($db),
         array(
@@ -175,6 +197,9 @@ try {
     $service->addModule($vpnPortalModule);
     $service->addModule($vpnApiModule);
     $service->addModule($oauthModule);
+    if ($enableVoot) {
+        $service->addModule($vootModule);
+    }
 
     $authenticationPlugin = new AuthenticationPlugin();
     $authenticationPlugin->register($auth, 'user');

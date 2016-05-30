@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.2.0 (...)
+- add SURFconext Voot support (optional)
+
 ## 9.1.1 (2016-05-27)
 - fix API
 - better error handling when somehow a non exiting pool is used

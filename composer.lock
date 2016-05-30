@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cec7be552baf4c849f543bea49e2753b",
-    "content-hash": "35ec95f98a48709f470ca05f4d15413b",
+    "hash": "28ad9b5af96dcbcb50c233045e3d0744",
+    "content-hash": "0d7292cff7bb5ee7fd00569f8f474e14",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -367,6 +367,44 @@
             ],
             "description": "OAuth 2.0 Server Library",
             "time": "2016-05-25 14:30:46"
+        },
+        {
+            "name": "fkooman/oauth2-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fkooman/php-oauth2-client.git",
+                "reference": "e717e9a0046d860dde8dff2323602166820c98a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/e717e9a0046d860dde8dff2323602166820c98a3",
+                "reference": "e717e9a0046d860dde8dff2323602166820c98a3",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^5.3",
+                "paragonie/random_compat": "^1.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "fkooman\\OAuth\\Client\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "François Kooman",
+                    "email": "fkooman@tuxed.net"
+                }
+            ],
+            "description": "Very simple OAuth 2.0 client",
+            "time": "2016-05-30 08:23:45"
         },
         {
             "name": "fkooman/rest",
@@ -1100,16 +1138,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.24.0",
+            "version": "v1.24.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8"
+                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
-                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3566d311a92aae4deec6e48682dc5a4528c4a512",
+                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512",
                 "shasum": ""
             },
             "require": {
@@ -1157,13 +1195,15 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-01-25 21:22:18"
+            "time": "2016-05-30 09:11:59"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fkooman/oauth2-client": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
