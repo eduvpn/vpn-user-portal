@@ -1,7 +1,7 @@
 # Changelog
 
-## 9.2.0 (...)
-- add SURFconext Voot support (optional)
+## 9.2.0 (2016-06-07)
+- add optional SURFconext Voot support
 
 ## 9.1.1 (2016-05-27)
 - fix API
