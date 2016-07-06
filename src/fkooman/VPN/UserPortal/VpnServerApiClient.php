@@ -95,9 +95,9 @@ class VpnServerApiClient extends VpnApiClient
         )['data']['ok'];
     }
 
-    public function triggerCrlReload()
+    public function disableCommonName($commonName)
     {
-        $requestUri = sprintf('%s/ca/crl/fetch', $this->vpnServerApiUri);
+        $requestUri = sprintf('%s/common_names/disabled/%s', $this->vpnServerApiUri, $commonName);
 
         return $this->exec('POST', $requestUri)['data']['ok'];
     }

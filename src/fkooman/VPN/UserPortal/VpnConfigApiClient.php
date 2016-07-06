@@ -47,14 +47,6 @@ class VpnConfigApiClient extends VpnApiClient
         );
     }
 
-    public function revokeConfiguration($userId, $configName)
-    {
-        $vpnConfigName = sprintf('%s_%s', $userId, $configName);
-        $requestUri = sprintf('%s/certificate/%s', $this->vpnConfigApiUri, $vpnConfigName);
-
-        return $this->exec('DELETE', $requestUri);
-    }
-
     public function getCertList($userId)
     {
         $requestUri = sprintf('%s/certificate/%s', $this->vpnConfigApiUri, $userId);

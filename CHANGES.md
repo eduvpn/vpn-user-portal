@@ -1,5 +1,9 @@
 # Changelog
 
+## 9.3.0 (...)
+- no longer offer to revoke configurations, only disable as we phase out 
+  revocation completely
+
 ## 9.2.0 (2016-06-07)
 - add optional SURFconext Voot support
 

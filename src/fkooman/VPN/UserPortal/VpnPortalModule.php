@@ -148,15 +148,12 @@ class VpnPortalModule implements ServiceModuleInterface
                 $disabledCommonNames = $this->vpnServerApiClient->getDisabledCommonNames();
 
                 $activeVpnConfigurations = array();
-                $revokedVpnConfigurations = array();
                 $disabledVpnConfigurations = array();
                 $expiredVpnConfigurations = array();
 
                 foreach ($certList['items'] as $c) {
                     if ('E' === $c['state']) {
                         $expiredVpnConfigurations[] = $c;
-                    } elseif ('R' === $c['state']) {
-                        $revokedVpnConfigurations[] = $c;
                     } elseif ('V' === $c['state']) {
                         $commonName = $u->getUserId().'_'.$c['name'];
                         $c['disable'] = false;
@@ -177,7 +174,6 @@ class VpnPortalModule implements ServiceModuleInterface
                     array(
                         'activeVpnConfigurations' => $activeVpnConfigurations,
                         'disabledVpnConfigurations' => $disabledVpnConfigurations,
-                        'revokedVpnConfigurations' => $revokedVpnConfigurations,
                         'expiredVpnConfigurations' => $expiredVpnConfigurations,
                     )
                 );
@@ -186,7 +182,7 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/revoke',
+            '/disable',
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
                 $formConfirm = $request->getPostParameter('confirm');
@@ -194,7 +190,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 if (is_null($formConfirm)) {
                     // ask for confirmation
                     return $this->templateManager->render(
-                        'vpnPortalConfirmRevoke',
+                        'vpnPortalConfirmDisable',
                         array(
                             'configName' => $configName,
                         )
@@ -203,7 +199,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 if ('yes' === $formConfirm) {
                     // user said yes
-                    $this->revokeConfig($u->getUserId(), $configName);
+                    $this->disableConfig($u->getUserId(), $configName);
                 }
 
                 return new RedirectResponse($request->getUrl()->getRootUrl().'configurations', 302);
@@ -413,14 +409,11 @@ class VpnPortalModule implements ServiceModuleInterface
         return $response;
     }
 
-    private function revokeConfig($userId, $configName)
+    private function disableConfig($userId, $configName)
     {
         Utils::validateConfigName($configName);
 
-        $this->vpnConfigApiClient->revokeConfiguration($userId, $configName);
-
-        // trigger a CRL reload in the servers
-        $this->vpnServerApiClient->triggerCrlReload();
+        $this->vpnServerApiClient->disableCommonName($userId . '_' . $configName);
 
         // disconnect the client
         $this->vpnServerApiClient->killCommonName(sprintf('%s_%s', $userId, $configName));
