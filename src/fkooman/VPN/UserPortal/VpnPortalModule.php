@@ -149,11 +149,14 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $activeVpnConfigurations = array();
                 $disabledVpnConfigurations = array();
+                $revokedVpnConfigurations = array();
                 $expiredVpnConfigurations = array();
 
                 foreach ($certList['items'] as $c) {
                     if ('E' === $c['state']) {
                         $expiredVpnConfigurations[] = $c;
+                    } elseif ('R' === $c['state']) {
+                        $revokedVpnConfigurations[] = $c;
                     } elseif ('V' === $c['state']) {
                         $commonName = $u->getUserId().'_'.$c['name'];
                         $c['disable'] = false;
@@ -174,6 +177,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     array(
                         'activeVpnConfigurations' => $activeVpnConfigurations,
                         'disabledVpnConfigurations' => $disabledVpnConfigurations,
+                        'revokedVpnConfigurations' => $revokedVpnConfigurations,
                         'expiredVpnConfigurations' => $expiredVpnConfigurations,
                     )
                 );
@@ -413,7 +417,7 @@ class VpnPortalModule implements ServiceModuleInterface
     {
         Utils::validateConfigName($configName);
 
-        $this->vpnServerApiClient->disableCommonName($userId . '_' . $configName);
+        $this->vpnServerApiClient->disableCommonName($userId.'_'.$configName);
 
         // disconnect the client
         $this->vpnServerApiClient->killCommonName(sprintf('%s_%s', $userId, $configName));

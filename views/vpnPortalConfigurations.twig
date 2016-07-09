@@ -75,6 +75,29 @@
         </table>
     {% endif %}
 
+    {% if revokedVpnConfigurations is not empty %}
+        <h3>{% trans "Revoked" %}</h3>
+        <p>
+        {% trans "This is a list of <em>revoked</em> configurations. They are permanently disabled and can no longer be used." %}
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Revoked" %} ({{ date()|date('T') }})</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for config in revokedVpnConfigurations %}
+                    <tr>
+                        <td>{{ config.name|e }}</td>
+                        <td>{{ config.rev|e|date('Y-m-d H:i:s') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
     {% if expiredVpnConfigurations is not empty %}
         <h3>{% trans "Expired" %}</h3>
         <p>
