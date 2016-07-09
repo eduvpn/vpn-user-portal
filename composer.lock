@@ -195,23 +195,23 @@
         },
         {
             "name": "fkooman/http",
-            "version": "1.6.2",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-http.git",
-                "reference": "079ee82d777dc462f59d9d8344eba469182b08ed"
+                "reference": "d132f317aea49d9900719ee46fe26c4e1ff78116"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-http/zipball/079ee82d777dc462f59d9d8344eba469182b08ed",
-                "reference": "079ee82d777dc462f59d9d8344eba469182b08ed",
+                "url": "https://api.github.com/repos/fkooman/php-lib-http/zipball/d132f317aea49d9900719ee46fe26c4e1ff78116",
+                "reference": "d132f317aea49d9900719ee46fe26c4e1ff78116",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-session": "*",
                 "ext-spl": "*",
-                "fkooman/json": "^2.0.0",
                 "php": ">=5.3.0"
             },
             "suggest": {
@@ -235,7 +235,7 @@
                 }
             ],
             "description": "Simple PHP library for dealing with HTTP requests and responses.",
-            "time": "2016-03-25 14:11:53"
+            "time": "2016-06-07 09:32:22"
         },
         {
             "name": "fkooman/io",
@@ -1037,16 +1037,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.7",
+            "version": "v2.8.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "815fabf3f48c7d1df345a69d1ad1a88f59757b34"
+                "reference": "dba4bb5846798cd12f32e2d8f3f35d77045773c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/815fabf3f48c7d1df345a69d1ad1a88f59757b34",
-                "reference": "815fabf3f48c7d1df345a69d1ad1a88f59757b34",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/dba4bb5846798cd12f32e2d8f3f35d77045773c8",
+                "reference": "dba4bb5846798cd12f32e2d8f3f35d77045773c8",
                 "shasum": ""
             },
             "require": {
@@ -1082,7 +1082,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-06 11:11:27"
+            "time": "2016-06-29 05:29:29"
         },
         {
             "name": "twig/extensions",
