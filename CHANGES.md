@@ -1,6 +1,6 @@
 # Changelog
 
-## 9.3.0 (...)
+## 9.3.0 (2016-07-09)
 - no longer offer to revoke configurations, only disable as we phase out 
   revocation completely
 
