@@ -191,6 +191,7 @@ msgstr "Profiel"
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:98
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:163
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:217
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:274
 msgid "Name"
 msgstr "Naam"
 
@@ -497,10 +498,23 @@ msgstr ""
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:204
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:221
+msgid "Revoked"
+msgstr "Ingetrokken"
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:209
+msgid ""
+"This is a list of <em>revoked</em> configurations. They are permanently "
+"disabled and can no longer be used."
+msgstr ""
+"Dit is een lijst van <em>ingetrokken</em> configuraties. Ze zijn permanent "
+"gedeactiveerd en kunnen niet meer gebruikt worden."
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:261
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:278
 msgid "Expired"
 msgstr "Verlopen"
 
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:209
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:266
 msgid ""
 "This is a list of <em>expired</em> configurations. They can no longer be "
 "used."
@@ -521,8 +535,8 @@ msgid "Enroll"
 msgstr "Inschakelen"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:98
-msgid "Group Membership"
-msgstr "Groeplidmaatschap"
+msgid "Group Membership(s)"
+msgstr "Groeplidmaatschap(pen)"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:129
 msgid "Applications"
@@ -559,39 +573,3 @@ msgstr "Ja"
 #: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:81
 msgid "No"
 msgstr "Nee"
-
-#~ msgid ""
-#~ "This is a list of <em>active</em> configurations. They can be used to "
-#~ "connect to the VPN server. You can <em>revoke</em> the configuration if "
-#~ "you will never use it again."
-#~ msgstr ""
-#~ "Dit is een lijst van <em>actieve</em> configuraties. Ze kunnen gebruiken "
-#~ "worden om met de VPN-server te verbinden. Ze kunnen <em>ingetrokken</em> "
-#~ "worden als deze nooit meer gebruikt gaan worden."
-
-#~ msgid ""
-#~ "This is a list of <em>disabled</em> configurations. They are (temporary) "
-#~ "disabled by an administrator. Contact support for more information. You "
-#~ "can <em>revoke</em> the configuration if you will never use it again."
-#~ msgstr ""
-#~ "Dit is een lijst van <em>gedeactiveerde</em> configuraties. Ze zijn "
-#~ "(tijdelijk) gedeactiveerd door een beheerder. Neem contact op met de "
-#~ "helpdesk voor meer informatie. De configuraties kunnen ook "
-#~ "<em>ingetrokken</em> worden."
-
-#~ msgid "Revoked"
-#~ msgstr "Ingetrokken"
-
-#~ msgid ""
-#~ "This is a list of <em>revoked</em> configurations. They are permanently "
-#~ "disabled and can no longer be used."
-#~ msgstr ""
-#~ "Dit is een lijst van <em>ingetrokken</em> configuraties. Ze zijn "
-#~ "permanent gedeactiveerd en kunnen niet meer gebruikt worden."
-
-#~ msgid ""
-#~ "Are you sure you want to revoke <em>%configName%</em>? This can "
-#~ "<strong>NOT</strong> be undone!"
-#~ msgstr ""
-#~ "De configuratie <em>%configName%</em> wordt ingetrokken. Dit kan "
-#~ "<strong>NIET</strong> ongedaan gemaakt worden! Doorgaan?"

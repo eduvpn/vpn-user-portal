@@ -161,6 +161,7 @@ msgstr ""
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:98
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:163
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:217
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:274
 msgid "Name"
 msgstr ""
 
@@ -448,10 +449,21 @@ msgstr ""
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:204
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:221
-msgid "Expired"
+msgid "Revoked"
 msgstr ""
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:209
+msgid ""
+"This is a list of <em>revoked</em> configurations. They are permanently "
+"disabled and can no longer be used."
+msgstr ""
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:261
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:278
+msgid "Expired"
+msgstr ""
+
+#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:266
 msgid ""
 "This is a list of <em>expired</em> configurations. They can no longer be "
 "used."
@@ -470,7 +482,7 @@ msgid "Enroll"
 msgstr ""
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:98
-msgid "Group Membership"
+msgid "Group Membership(s)"
 msgstr ""
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:129
