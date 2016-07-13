@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.3.2 (...)
+- work with new group handling in vpn-server-api
+
 ## 9.3.1 (2016-07-09)
 - again show the revoked configurations in the user portal, although
   configurations can no longer be revoked, we do not want them to 

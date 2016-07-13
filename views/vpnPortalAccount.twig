@@ -28,12 +28,12 @@
             {% endif %}
         </dd>
 
-        {% if groupMembership is not empty %}
+        {% if userGroups is not empty %}
             <dt>{% trans "Group Membership(s)" %}</dt>
             <dd>
                 <ul>
-                    {% for group in groupMembership %}
-                        <li>{{ group|e }}</li>
+                    {% for group in userGroups %}
+                        <li title="{{ group.id|e }}">{{ group.displayName|e }}</li>
                     {% endfor %}
                 </ul>
             </dd>
