@@ -1,6 +1,6 @@
 # Changelog
 
-## 9.3.2 (...)
+## 9.3.2 (2016-07-14)
 - work with new group handling in vpn-server-api
 
 ## 9.3.1 (2016-07-09)
