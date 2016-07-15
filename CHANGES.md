@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.3.3 (2016-07-15)
+- fix ACL check for new page
+
 ## 9.3.2 (2016-07-14)
 - work with new group handling in vpn-server-api
 

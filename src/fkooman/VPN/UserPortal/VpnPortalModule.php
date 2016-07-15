@@ -110,13 +110,13 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $poolList = [];
                 foreach ($serverPools as $pool) {
+                    // ACL enabled?
                     if ($pool['enableAcl']) {
-                        // ACL enabled
-                        if (!in_array($pool['id'], $userGroups)) {
-                            continue;
+                        // is the user member of the aclGroupList?
+                        if (self::isMember($userGroups, $pool['aclGroupList'])) {
+                            $poolList[] = ['id' => $pool['id'], 'name' => $pool['name'], 'twoFactor' => $pool['twoFactor']];
                         }
                     }
-                    $poolList[] = ['id' => $pool['id'], 'name' => $pool['name'], 'twoFactor' => $pool['twoFactor']];
                 }
 
                 return $this->templateManager->render(
@@ -217,13 +217,6 @@ class VpnPortalModule implements ServiceModuleInterface
                 $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
                 $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
                 $serverPools = $this->vpnServerApiClient->getServerPools();
-
-#                $groupMembership = [];
-#                foreach ($serverPools as $pool) {
-#                    if (in_array($pool['id'], $userGroups)) {
-#                        $groupMembership[] = $pool['name'];
-#                    }
-#                }
 
                 return $this->templateManager->render(
                     'vpnPortalAccount',
@@ -435,5 +428,18 @@ class VpnPortalModule implements ServiceModuleInterface
         if (0 === preg_match('/^[0-9]{6}$/', $otpKey)) {
             throw new BadRequestException('invalid OTP key format');
         }
+    }
+
+    private static function isMember(array $userGroups, array $aclGroupList)
+    {
+        // if any of the groups in userGroups is part of aclGroupList return
+        // true, otherwise false
+        foreach ($userGroups as $userGroup) {
+            if (in_array($userGroup['id'], $aclGroupList)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
