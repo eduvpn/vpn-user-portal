@@ -113,10 +113,12 @@ class VpnPortalModule implements ServiceModuleInterface
                     // ACL enabled?
                     if ($pool['enableAcl']) {
                         // is the user member of the aclGroupList?
-                        if (self::isMember($userGroups, $pool['aclGroupList'])) {
-                            $poolList[] = ['id' => $pool['id'], 'name' => $pool['name'], 'twoFactor' => $pool['twoFactor']];
+                        if (!self::isMember($userGroups, $pool['aclGroupList'])) {
+                            continue;
                         }
                     }
+
+                    $poolList[] = ['id' => $pool['id'], 'name' => $pool['name'], 'twoFactor' => $pool['twoFactor']];
                 }
 
                 return $this->templateManager->render(

@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.3.4 (2016-07-15)
+- small fix for ACL check when ACL is not enabled
+
 ## 9.3.3 (2016-07-15)
 - fix ACL check for new page
 
