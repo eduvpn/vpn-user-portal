@@ -40,7 +40,11 @@
                 </select>
 
                 {% for tfa in requiresTwoFactor %}
-                    <p class="warning">The <strong>{{ tfa|e }}</strong> profile requires you to enroll for two-factor authentication. Enroll <a href="otp">here</a>.</p>
+                    <p class="warning">
+{% trans %}
+The <strong>{{ tfa }}</strong> profile requires you to enroll for two-factor authentication. Enroll <a href="otp">here</a>.
+{% endtrans %}
+                    </p>
                 {% endfor %}
 
                 <label for="inputName">{% trans "Name" %}</label>
