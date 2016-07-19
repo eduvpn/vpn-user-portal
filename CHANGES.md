@@ -1,5 +1,9 @@
 # Changelog
 
+## 9.3.5 (...)
+- only show two factor enrollment when there is at least one pool that 
+  requires 2FA
+
 ## 9.3.4 (2016-07-15)
 - small fix for ACL check when ACL is not enabled
 

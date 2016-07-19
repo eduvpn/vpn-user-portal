@@ -220,9 +220,18 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
                 $serverPools = $this->vpnServerApiClient->getServerPools();
 
+                // check if any of the server pools have 2FA enabled
+                $showTwoFactor = false;
+                foreach ($serverPools as $pool) {
+                    if ($pool['twoFactor']) {
+                        $showTwoFactor = true;
+                    }
+                }
+
                 return $this->templateManager->render(
                     'vpnPortalAccount',
                     array(
+                        'showTwoFactor' => $showTwoFactor,
                         'otpEnabled' => $otpSecret,
                         'userId' => $u->getUserId(),
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),

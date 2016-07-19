@@ -19,6 +19,7 @@
         <dt>{% trans "User ID" %}</dt>
         <dd><code>{{ userId|e }}</code></dd>
 
+        {% if showTwoFactor %}
         <dt>{% trans "Two-factor Authentication" %}</dt>
         <dd>
             {% if otpEnabled %}
@@ -27,6 +28,7 @@
                 <a href="otp">{% trans "Enroll" %}</a>
             {% endif %}
         </dd>
+        {% endif %}
 
         {% if userGroups is not empty %}
             <dt>{% trans "Group Membership(s)" %}</dt>
