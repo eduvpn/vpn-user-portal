@@ -1,6 +1,6 @@
 # Changelog
 
-## 9.3.6 (...)
+## 9.3.6 (2016-07-19)
 - simplify configuration display
 
 ## 9.3.5 (2016-07-19)
