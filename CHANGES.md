@@ -1,6 +1,6 @@
 # Changelog
 
-## 9.3.5 (...)
+## 9.3.5 (2016-07-19)
 - only show two factor enrollment when there is at least one pool that 
   requires 2FA
 - always show drop down for profile selection
