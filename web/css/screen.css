@@ -91,6 +91,11 @@ span.label-disabled {
     color: white;
 }
 
+span.label-error {
+    background-color: darkred;
+    color: white;
+}
+
 code {
     font-family: monospace, monospace;
     color: #c24;
@@ -210,6 +215,16 @@ input[type="text"], input[type="password"] {
     border: 1px solid #ddd;
     border-radius: 0.2em;
     display: block;
+}
+
+button.small {
+    font-size: 85%;
+    font-weight: bold;
+    border-radius: 0.2em;
+    padding: 0.3em 0.5em;
+    background-color: gray;
+    color: white;
+    line-height: 1em;
 }
 
 button {

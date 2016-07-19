@@ -1,5 +1,8 @@
 # Changelog
 
+## 9.3.6 (...)
+- simplify configuration display
+
 ## 9.3.5 (2016-07-19)
 - only show two factor enrollment when there is at least one pool that 
   requires 2FA

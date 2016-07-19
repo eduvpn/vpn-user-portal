@@ -42,6 +42,13 @@
                             <span class="label label-warning">{% trans "Disabled" %}</span>
                         {% elseif 'V' == config.state %}
                             <span class="label label-success">{% trans "Active" %}</span>
+
+                            <form method="post" class="inline" action="disable">
+                                <input type="hidden" name="name" value="{{ config.name|e }}">
+                                <button class="small danger" type="submit">{% trans "Disable" %}</button>
+                            </form>
+
+<!--                            <span class="label label-error">{% trans "Disable" %}</span>-->
                         {% elseif 'R' == config.state %}
                             <span class="label">{% trans "Revoked" %}</span>
                         {% elseif 'E' == config.state %}
