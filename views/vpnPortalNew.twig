@@ -32,16 +32,17 @@
         <form method="post">
             <fieldset>
                 <legend>{% trans "New" %}</legend>
-                {% if poolList|length > 1 %}
-                    <label for="poolId">{% trans "Profile" %}</label>
-                    <select id="poolId" name="poolId">
-                        {% for pool in poolList %}
-                            <option value="{{ pool.id|e }}">{{ pool.name|e }} {% if pool.twoFactor %}&#128272;{% endif %}</option>
-                        {% endfor %}
-                    </select>
-                {% else %}
-                    <input type="hidden" name="poolId" value="{{ poolList[0].id|e }}">
-                {% endif %}
+                <label for="poolId">{% trans "Profile" %}</label>
+                <select id="poolId" name="poolId">
+                    {% for pool in poolList %}
+                        <option value="{{ pool.id|e }}">{{ pool.name|e }} {% if pool.twoFactor %}&#128272;{% endif %}</option>
+                    {% endfor %}
+                </select>
+
+                {% for tfa in requiresTwoFactor %}
+                    <p class="warning">The <strong>{{ tfa|e }}</strong> profile requires you to enroll for two-factor authentication. Enroll <a href="otp">here</a>.</p>
+                {% endfor %}
+
                 <label for="inputName">{% trans "Name" %}</label>
                 <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
                 <button type="submit">{% trans "Download" %}</button>

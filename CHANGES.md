@@ -3,6 +3,9 @@
 ## 9.3.5 (...)
 - only show two factor enrollment when there is at least one pool that 
   requires 2FA
+- always show drop down for profile selection
+- warn if two factor enrollment is not done when profiles exist that 
+  require 2FA
 
 ## 9.3.4 (2016-07-15)
 - small fix for ACL check when ACL is not enabled

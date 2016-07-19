@@ -107,14 +107,23 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, UserInfoInterface $u) {
                 $serverPools = $this->vpnServerApiClient->getServerPools();
                 $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
+                $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
 
                 $poolList = [];
+                $requiresTwoFactor = [];
+
                 foreach ($serverPools as $pool) {
                     // ACL enabled?
                     if ($pool['enableAcl']) {
                         // is the user member of the aclGroupList?
                         if (!self::isMember($userGroups, $pool['aclGroupList'])) {
                             continue;
+                        }
+                    }
+                    // any of them requires 2FA and we are not enrolled?
+                    if(!$otpSecret) {
+                        if($pool['twoFactor']) {
+                            $requiresTwoFactor[] = $pool['name'];
                         }
                     }
 
@@ -125,6 +134,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     'vpnPortalNew',
                     array(
                         'poolList' => $poolList,
+                        'requiresTwoFactor' => $requiresTwoFactor,
                         'cnLength' => 63 - strlen($u->getUserId()),
                     )
                 );
