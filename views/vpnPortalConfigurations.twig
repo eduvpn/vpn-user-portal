@@ -26,7 +26,7 @@
     {% if configs is not empty %}
         <table class="horizontal">
             <thead>
-                <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr> 
+                <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th></th></tr> 
             </thead>
             <tbody>
             {% for config in configs %}
@@ -39,13 +39,13 @@
                     <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
                     <td class="text-right">
                         {% if 'D' == config.state %}
-                            <span class="label label-warning">Disabled</span>
+                            <span class="label label-warning">{% trans "Disabled" %}</span>
                         {% elseif 'V' == config.state %}
-                            <span class="label label-success">Active</span>
+                            <span class="label label-success">{% trans "Active" %}</span>
                         {% elseif 'R' == config.state %}
-                            <span class="label">Revoked</span>
+                            <span class="label">{% trans "Revoked" %}</span>
                         {% elseif 'E' == config.state %}
-                            <span class="label label-disabled">Expired</span>
+                            <span class="label label-disabled">{% trans "Expired" %}</span>
                         {% endif %}
                     </td>
                 </tr>
