@@ -8,7 +8,7 @@
        the Sign Out form #}
     {% if login_hint is not defined %}
         {# for FormAuthentication we need a POST form #}
-        <form class="footer" method="post" action="_auth/form/logout">
+        <form class="footer" method="post" action="{{ rootFolder|e}}_auth/form/logout">
             <fieldset>
                 <legend>{% trans "Sign Out" %}</legend>
                 <button type="submit">{% trans "Sign Out" %}</button>
