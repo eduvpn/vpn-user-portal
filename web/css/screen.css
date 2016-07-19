@@ -67,6 +67,30 @@ span.warning {
     color: #e91;
 }
 
+span.label {
+    font-size: 85%;
+    font-weight: bold;
+    border-radius: 0.2em;
+    padding: 0.3em 0.5em;
+    background-color: gray;
+    color: white;
+}
+
+span.label-success {
+    background-color: green;
+    color: white;
+}
+
+span.label-warning {
+    background-color: orange;
+    color: white;
+}
+
+span.label-disabled {
+    background-color: lightgray;
+    color: white;
+}
+
 code {
     font-family: monospace, monospace;
     color: #c24;

@@ -14,109 +14,42 @@
     </ul>
 
     <h2>{% trans "Configurations" %}</h2>
-    <p>
-        {% trans %}
-            This page lists your VPN configurations. Create a new configuration <a href="new">here</a>.
-        {% endtrans %}
-    </p>
 
-    {% if activeVpnConfigurations is empty %}
+    {% if configs is empty %}
         <p class="plain">
             {% trans %}
-            You currently have no active configurations &#x1f61e; <a href="new">Create a configuration</a>!
+                You currently have no configurations.
             {% endtrans %}
         </p>                    
     {% endif %}
 
-    {% if activeVpnConfigurations is not empty %}
-        <h3>{% trans "Active" %}</h3>
-        <p>
-{% trans "This is a list of <em>active</em> configurations. They can be used to connect to the VPN server. You can <em>disable</em> the configuration if you do not use it anymore." %}
-        </p>
-
-        <table>
+    {% if configs is not empty %}
+        <table class="horizontal">
             <thead>
-                <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th></th></tr>
+                <tr><th>Name</th><th>Expires ({{ date()|date('T') }})</th><th></th></tr> 
             </thead>
             <tbody>
-                {% for config in activeVpnConfigurations %}
-                    <tr>
-                        <td>{{ config.name|e }}</td>
-                        <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
-                        <td class="text-right">
-                            <form method="post" action="disable">
-                                <input type="hidden" name="name" value="{{ config.name|e }}">
-                                <button class="danger" type="submit">{% trans "Disable" %}</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
-    {% if disabledVpnConfigurations is not empty %}
-        <h3>{% trans "Disabled" %}</h3>
-        <p>
-        {% trans "This is a list of <em>disabled</em> configurations. Contact support for more information if you did not disable them yourself." %}
-        </p>
-        <table>
-            <thead>
-                <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th></tr>
-            </thead>
-            <tbody>
-                {% for config in disabledVpnConfigurations %}
-                    <tr>
-                        <td>{{ config.name|e }}</td>
-                        <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
-    {% if revokedVpnConfigurations is not empty %}
-        <h3>{% trans "Revoked" %}</h3>
-        <p>
-        {% trans "This is a list of <em>revoked</em> configurations. They are permanently disabled and can no longer be used." %}
-        </p>
-        <table>
-            <thead>
+            {% for config in configs %}
                 <tr>
-                    <th>{% trans "Name" %}</th>
-                    <th>{% trans "Revoked" %} ({{ date()|date('T') }})</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for config in revokedVpnConfigurations %}
-                    <tr>
+                    {% if 'E' == config.state or 'R' == config.state %}
                         <td>{{ config.name|e }}</td>
-                        <td>{{ config.rev|e|date('Y-m-d H:i:s') }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
-    {% if expiredVpnConfigurations is not empty %}
-        <h3>{% trans "Expired" %}</h3>
-        <p>
-        {% trans "This is a list of <em>expired</em> configurations. They can no longer be used." %}
-        </p>
-        <table>
-            <thead>
-                <tr>
-                    <th>{% trans "Name" %}</th>
-                    <th>{% trans "Expired" %} ({{ date()|date('T') }})</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for config in expiredVpnConfigurations %}
-                    <tr>
+                    {% else %}
                         <td>{{ config.name|e }}</td>
-                        <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
-                    </tr>
-                {% endfor %}
+                    {% endif %}
+                    <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
+                    <td class="text-right">
+                        {% if 'D' == config.state %}
+                            <span class="label label-warning">Disabled</span>
+                        {% elseif 'V' == config.state %}
+                            <span class="label label-success">Active</span>
+                        {% elseif 'R' == config.state %}
+                            <span class="label">Revoked</span>
+                        {% elseif 'E' == config.state %}
+                            <span class="label label-disabled">Expired</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     {% endif %}

@@ -159,38 +159,43 @@ class VpnPortalModule implements ServiceModuleInterface
                 $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
                 $disabledCommonNames = $this->vpnServerApiClient->getDisabledCommonNames();
 
-                $activeVpnConfigurations = array();
-                $disabledVpnConfigurations = array();
-                $revokedVpnConfigurations = array();
-                $expiredVpnConfigurations = array();
+                $validConfigs = [];
+                $revokedConfigs = [];
+                $expiredConfigs = [];
+                $disabledConfigs = [];
 
                 foreach ($certList['items'] as $c) {
-                    if ('E' === $c['state']) {
-                        $expiredVpnConfigurations[] = $c;
-                    } elseif ('R' === $c['state']) {
-                        $revokedVpnConfigurations[] = $c;
-                    } elseif ('V' === $c['state']) {
-                        $commonName = $u->getUserId().'_'.$c['name'];
-                        $c['disable'] = false;
+                    $commonName = $c['user_id'].'_'.$c['name'];
+                    // only if state is valid it makes sense to show disable
+                    if ('V' === $c['state']) {
                         if (in_array($commonName, $disabledCommonNames)) {
-                            $c['disable'] = true;
-                        }
-
-                        if ($c['disable']) {
-                            $disabledVpnConfigurations[] = $c;
-                        } else {
-                            $activeVpnConfigurations[] = $c;
+                            $c['state'] = 'D';
                         }
                     }
+
+                    switch ($c['state']) {
+                        case 'V':
+                            $validConfigs[] = $c;
+                            break;
+                        case 'R':
+                            $revokedConfigs[] = $c;
+                            break;
+                        case 'E':
+                            $expiredConfigs[] = $c;
+                            break;
+                        default:
+                            // must be disabled
+                            $disabledConfigs[] = $c;
+                    }
                 }
+
+                $configs = array_merge($validConfigs, $disabledConfigs, $revokedConfigs, $expiredConfigs);
 
                 return $this->templateManager->render(
                     'vpnPortalConfigurations',
                     array(
-                        'activeVpnConfigurations' => $activeVpnConfigurations,
-                        'disabledVpnConfigurations' => $disabledVpnConfigurations,
-                        'revokedVpnConfigurations' => $revokedVpnConfigurations,
-                        'expiredVpnConfigurations' => $expiredVpnConfigurations,
+                        'userId' => $u->getUserId(),
+                        'configs' => $configs,
                     )
                 );
             },
