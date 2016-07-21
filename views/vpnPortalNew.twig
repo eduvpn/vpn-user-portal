@@ -21,6 +21,12 @@
         </p>
     {% endif %}
 
+    <p>
+    {% trans %}
+    Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
+    {% endtrans %}
+    </p>
+
     {% for tfa in requiresTwoFactor %}
         <p class="warning">
             {% trans %}
@@ -28,12 +34,6 @@
             {% endtrans %}
         </p>
     {% endfor %}
-
-    <p class="success">
-    {% trans %}
-    Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
-    {% endtrans %}
-    </p>
 
     <form method="post">
         <fieldset>

@@ -19,15 +19,11 @@
 
         <dt>{% trans "Language" %}</dt>
         <dd>
-
-    <form class="setLanguage" method="post" action="{{ rootFolder|e }}setLanguage">
-        <fieldset>
-            <button class="plain" type="submit" name="language" value="en_US" title="English">English</button>
-            <button class="plain" type="submit" name="language" value="nl_NL" title="Nederlands">Nederlands</button>
-            <input type="hidden" name="redirect_to" value="{{ requestUrl|e }}">
-        </fieldset>
-    </form>
-
+            <form class="setLanguage" method="post" action="{{ rootFolder|e }}setLanguage">
+                <button class="plain" type="submit" name="language" value="en_US" title="English">English</button>
+                <button class="plain" type="submit" name="language" value="nl_NL" title="Nederlands">Nederlands</button>
+                <input type="hidden" name="redirect_to" value="{{ requestUrl|e }}">
+            </form>
         </dd>
 
         {% if showTwoFactor %}
