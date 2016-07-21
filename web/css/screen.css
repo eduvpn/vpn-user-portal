@@ -31,6 +31,17 @@ p {
     margin-top: 0;
 }
 
+p.success {
+    background-color: green;
+    padding: 1em;
+    color: #fff;
+    border-radius: 0.2em;
+}
+
+p.success a {
+    color: #fff;
+}
+
 p.warning {
     background-color: #e91;
     padding: 1em;
@@ -109,7 +120,7 @@ dl {
 }
 
 dt {
-    margin: 1em 0 0 0;
+    margin: 1em 0 0.5em 0;
     font-weight: bold;
 }
 
@@ -311,15 +322,6 @@ p.footer, form.footer {
 
 p.footer a {
     color: #888;
-}
-
-form.setLanguage {
-    float: right;
-    padding: 1em 0;
-}
-
-form.setLanguage button {
-    padding: 0.1em;
 }
 
 form.footer button {

@@ -13,11 +13,18 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>{% trans "Account" %}</h2>
-
     <dl>
         <dt>{% trans "User ID" %}</dt>
         <dd><code>{{ userId|e }}</code></dd>
+
+        <dt>{% trans "Language" %}</dt>
+        <dd>
+            <form method="post" action="{{ rootFolder|e }}setLanguage">
+                <button class="plain" type="submit" name="language" value="en_US" title="English">English</button>
+                <button class="plain" type="submit" name="language" value="nl_NL" title="Nederlands">Nederlands</button>
+                <input type="hidden" name="redirect_to" value="{{ requestUrl|e }}">
+            </form>        
+        </dd>
 
         {% if showTwoFactor %}
         <dt>{% trans "Two-factor Authentication" %}</dt>
