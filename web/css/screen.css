@@ -71,8 +71,11 @@ span.error, span.error a {
 }
 
 ul.menu {
-    padding: 0;
+    background: url('../img/vpn.svg') no-repeat;
+    background-position: 0px center;
+    background-size: 2em;
     margin-bottom: 2em;
+    padding: 0.7em 3em;
 }
 
 ul.menu li {
