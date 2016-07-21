@@ -1,289 +1,118 @@
 body {
-    max-width: 55em;
+    max-width: 50em;
     margin: 0 auto;
-    color: #444;
-    padding: 0.5em;
-    font-family: sans-serif;
+    color: #222;
+    line-height: 1.4em;
     font-size: 0.9em;
-    line-height: 1.5;
-}
-
-button, input {
-    font-family: inherit;
-    line-height: inherit;
-    font-size: 100%;
-}
-
-h1, h2, h3, h4 {
-    margin: 0;
-    padding: 0.5em 0;
-}
-
-.text-right {
-    text-align: right;
+    padding: 0.3em;
+    text-align: justify;
 }
 
 a {
-    color: #257;
-}
-
-p {
-    margin-top: 0;
-}
-
-p.warning {
-    background-color: #e91;
-    padding: 1em;
-    color: #fff;
-    border-radius: 0.2em;
-}
-
-p.warning a {
-    color: #fff;
-}
-
-p.danger {
-    background-color: #d54;
-    padding: 1em;
-    color: #fff;
-    border-radius: 0.2em;
-}
-
-p.danger a {
-    color: #fff;
-}
-
-p.plain {
-    background-color: #eee;
-    padding: 1em;
-    border-radius: 0.2em;
-}
-
-span.success {
-    color: #494;
-}
-
-span.warning {
-    color: #e91;
-}
-
-span.label {
-    font-size: 85%;
-    font-weight: bold;
-    border-radius: 0.2em;
-    padding: 0.3em 0.5em;
-    background-color: gray;
-    color: white;
-}
-
-span.label-success {
-    background-color: green;
-    color: white;
-}
-
-span.label-warning {
-    background-color: orange;
-    color: white;
-}
-
-span.label-disabled {
-    background-color: lightgray;
-    color: white;
-}
-
-span.label-error {
-    background-color: darkred;
-    color: white;
-}
-
-code {
-    font-family: monospace, monospace;
-    color: #c24;
-    background-color: #eee;
-    padding: 0 0.3em;
-}
-
-/** INFO **/
-dl {
-    margin: 0 0 1em 0;
+    color: #222;
 }
 
 dt {
-    margin: 1em 0 0 0;
+    margin: 0.5em;
     font-weight: bold;
-}
-
-dl ul {
-    margin: 0;
-    padding: 0 1em;
-}
-
-/** IP LIST **/
-ul.ipList {
-    margin: 0;
-    padding: 0;
-}
-
-ul.ipList li {
-    list-style: none;
-}
-
-/** SUB MENU **/
-ul.subMenu {
-    margin: 0;
-    padding: 0;
-    display: inline;
-}
-
-ul.subMenu li {
-    list-style: none;
-    display: inline-block;
-}
-
-ul.subMenu li + li:before {
-    content: " | ";
-}
-
-/** MAIN MENU **/
-ul.mainMenu {
-    margin: 0 0 1em 0;
-    padding: 0;
-}
-
-ul.mainMenu li {
-    list-style: none;
-    margin: 0;
-    display: inline-block;
-}
-
-ul.mainMenu li a {
-    padding: 0.7em;
-    margin: 0.2em 0;
-    text-decoration: none;
-    border-radius: 0.2em;
-    display: inline-block;
-}
-
-ul.mainMenu li.active a {
-    background-color: #37b;
-}
-
-ul.mainMenu li:hover a {
-    background-color: #eee;
-}
-
-ul.mainMenu li.active:hover a {
-    background-color: #26a;
-}
-
-ul.mainMenu li.active a {
-    color: #fff;
-}
-
-/** FORM **/
-form.inline {
-    display: inline;
 }
 
 fieldset {
     border: 0;
-    margin: 1em 0;
-    padding: 0;
+    padding: 0.5em 0 0 0;
 }
 
-legend {
-    display: none;
-}
-
-label.radio {
-    font-weight: normal;
-}
-
-label {
-    font-weight: bold;
-    margin: 0 0 0.2em 0;
-    display: block;
-}
-
-select {
-    margin: 0 0 0.5em 0;
-}
-
-input[type="text"], input[type="password"] {
-    margin: 0 0 0.5em 0;
-    padding: 0.5em 0.7em;
-    border: 1px solid #ddd;
-    border-radius: 0.2em;
-    display: block;
-}
-
-button.small {
-    font-size: 85%;
-    font-weight: bold;
-    border-radius: 0.2em;
-    padding: 0.3em 0.5em;
-    background-color: gray;
-    color: white;
-    line-height: 1em;
-}
-
-button {
-    border-radius: 0.2em;
-    background-color: #37b;
-    padding: 0.5em 0.7em;
-    border: 0;
-    color: #fff;
-}
-
-button:hover {
-    background-color: #26a;
-    cursor: pointer;
-}
-
-button.danger {
-    background-color: #c00;
-}
-
-button.danger:hover {
-    background-color: #b00;
-}
-
-button.warning {
-    background-color: #e91;
-}
-
-button.warning:hover {
-    background-color: #d80;
-}
-
-button.success {
-    background-color: #494;
-}
-
-button.success:hover {
-    background-color: #383;
-}
-
-button.plain {
-    background-color: #eee;
-    color: #000;
-}
-
-button.plain:hover {
+code {
     background-color: #ddd;
 }
 
-/** TABLE **/
+p.success, p.warning, p.error {
+    padding: 1em;
+}
+
+p.success code, p.warning code, p.error code {
+    color: #222;
+}
+
+p.success, p.success a {
+    color: #fff;
+    background-color: green;
+}
+
+span.success, span.success a {
+    color: green;
+}
+
+p.warning, p.warning a {
+    color: #fff;
+    background-color: orange;
+}
+
+span.warning, span.warning a {
+    color: orange;
+}
+
+p.error, p.error a {
+    color: #fff;
+    background-color: red;
+}
+
+span.error, span.error a {
+    color: red;
+}
+
+th {
+    text-align: left;
+}
+
+ul.menu {
+    padding: 0;
+    margin-bottom: 2em;
+}
+
+ul.menu li {
+    display: inline-block;
+    font-weight: bold;
+    padding: 0.7em;
+}
+
+ul.menu li.active {
+    border: 1px solid #222;
+}
+
+ul.menu a {
+    text-decoration: none;
+    color: #222;
+}
+
+input[type="text"], input[type="password"], select {
+    border: 1px solid #222;
+    line-height: 1.4em;
+    background-color: inherit;
+    padding: 0.5em;
+    margin: 0.5em 0;
+}
+
+button {
+    border: 1px solid #222;
+    background-color: inherit;
+    padding: 0.5em;
+    line-height: 1.4em;
+    color: #222;
+    font-weight: bold;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 1em;
 }
 
-td, th {
-    padding: 0.5em;
-    text-align: left;
-    vertical-align: top;
+tr {
+    height: 3.5em;
+}
+
+thead th {
+    border-bottom: 2px solid #ddd;
 }
 
 tr:nth-child(even) {
@@ -292,44 +121,26 @@ tr:nth-child(even) {
     border-bottom: 1px solid #ccc;
 }
 
-thead th {
-    border-bottom: 2px solid #ddd;
+label {
+    font-weight: bold;
+    display: block;
 }
 
-/** FOOTER & SIGN OUT **/
+form.simple button {
+    border: 0;
+    background-color: inherit;
+    text-decoration: none;
+}
+
+form.simple button:hover {
+    background-color: inherit;
+}
+
 hr {
-    border: 0;
-    margin-bottom: 1em;
+    display: none;
 }
 
-p.footer, form.footer {
+div.footer {
+    margin-top: 2em;
     text-align: center;
-    font-size: 90%;
-    color: #888;
-    margin: 0;
-}
-
-p.footer a {
-    color: #888;
-}
-
-form.setLanguage {
-    float: right;
-    padding: 1em 0;
-}
-
-form.setLanguage button {
-    padding: 0.1em;
-}
-
-form.footer button {
-    color: #888;
-    border: 0;
-    background-color: #fff;
-    text-decoration: underline;
-}
-
-form.footer fieldset {
-    margin: 0;
-    padding: 0;
 }

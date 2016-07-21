@@ -5,15 +5,13 @@
 <body>
     {% include 'header.twig' %}
 
-    <ul class="mainMenu">
+    <ul class="menu">
       <li><a href="home">{% trans "Home" %}</a></li>
       <li><a href="new">{% trans "New" %}</a></li>
       <li><a href="configurations">{% trans "Configurations" %}</a></li>
       <li class="active"><a href="account">{% trans "Account" %}</a></li>
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
-
-    <h2>{% trans "Two-factor Authentication" %}</h2>
 
     <p>
         {% trans "Here you can enroll for two-factor authentication (2FA)." %}
@@ -32,10 +30,14 @@
     </p>
 
     <form method="post" action="otp">
-        <label for="otp_key">OTP</label>
-        <input type="text" id="otp_key" name="otp_key" maxlength="6" required pattern="[0-9]{6}" autofocus>
-        <input type="hidden" name="otp_secret" value="{{ secret|e }}"> 
-        <button>{% trans "Validate" %}</button>
+        <fieldset>
+            <label for="otp_key">OTP</label>
+            <input type="text" id="otp_key" name="otp_key" maxlength="6" required pattern="[0-9]{6}" autofocus>
+            <input type="hidden" name="otp_secret" value="{{ secret|e }}"> 
+        </fieldset>
+        <fieldset>
+            <button>{% trans "Validate" %}</button>
+        <fieldset>
     </form>
 
     {% include 'footer.twig' %}

@@ -1,18 +1,15 @@
 <hr>
-<p class="footer">
-    {% trans "VPN User Portal" %}
-</p>
-
-{% if authMethod == 'FormAuthentication' %}
-    {# if login_hint is set it means the sign in page is shown, do not show 
-       the Sign Out form #}
-    {% if login_hint is not defined %}
-        {# for FormAuthentication we need a POST form #}
-        <form class="footer" method="post" action="{{ rootFolder|e}}_auth/form/logout">
-            <fieldset>
-                <legend>{% trans "Sign Out" %}</legend>
-                <button type="submit">{% trans "Sign Out" %}</button>
-            </fieldset>
-        </form>
-    {% endif %} 
-{% endif %}
+<div class="footer">
+    {% if authMethod == 'FormAuthentication' %}
+        {# if login_hint is set it means the sign in page is shown, do not show 
+           the Sign Out form #}
+        {% if login_hint is not defined %}
+            {# for FormAuthentication we need a POST form #}
+            <form class="simple" method="post" action="{{ rootFolder|e}}_auth/form/logout">
+                <fieldset>
+                    <button type="submit">{% trans "Sign Out" %}</button>
+                </fieldset>
+            </form>
+        {% endif %} 
+    {% endif %}
+</div>

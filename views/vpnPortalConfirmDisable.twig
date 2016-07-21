@@ -5,7 +5,7 @@
 <body>
     {% include 'header.twig' %}
 
-    <ul class="mainMenu">
+    <ul class="menu">
       <li><a href="home">{% trans "Home" %}</a></li>
       <li><a href="new">{% trans "New" %}</a></li>
       <li class="active"><a href="configurations">{% trans "Configurations" %}</a></li>
@@ -13,7 +13,6 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>{% trans "Confirm" %}</h2>
     <p>
     {% set configName = configName|e %}
     {% trans %}
@@ -23,8 +22,8 @@
 
     <form method="post">
         <input type="hidden" name="name" value="{{ configName|e }}">
-        <button class="danger" name="confirm" type="submit" value="yes">{% trans "Yes" %}</button>
-        <button class="success" name="confirm" type="submit" value="no">{% trans "No" %}</button>
+        <button name="confirm" type="submit" value="yes">{% trans "Yes" %}</button>
+        <button name="confirm" type="submit" value="no">{% trans "No" %}</button>
     </form>    
 
     {% include 'footer.twig' %}

@@ -5,15 +5,13 @@
 <body>
     {% include 'header.twig' %}
 
-    <ul class="mainMenu">
+    <ul class="menu">
       <li><a href="home">{% trans "Home" %}</a></li>
       <li><a href="new">{% trans "New" %}</a></li>
       <li class="active"><a href="configurations">{% trans "Configurations" %}</a></li>
       <li><a href="account">{% trans "Account" %}</a></li>
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
-
-    <h2>{% trans "Configurations" %}</h2>
 
     {% if configs is empty %}
         <p class="plain">
@@ -26,7 +24,7 @@
     {% if configs is not empty %}
         <table class="horizontal">
             <thead>
-                <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th></th></tr> 
+                <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th class="text-right">{% trans "Status" %}</th><th></th></tr> 
             </thead>
             <tbody>
             {% for config in configs %}
@@ -39,22 +37,25 @@
                     <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
                     <td class="text-right">
                         {% if 'D' == config.state %}
-                            <span class="label label-warning">{% trans "Disabled" %}</span>
+                            <span class="warning">{% trans "Disabled" %}</span>
                         {% elseif 'V' == config.state %}
-                            <span class="label label-success">{% trans "Active" %}</span>
-
-                            <form method="post" class="inline" action="disable">
-                                <input type="hidden" name="name" value="{{ config.name|e }}">
-                                <button class="small danger" type="submit">{% trans "Disable" %}</button>
-                            </form>
-
-<!--                            <span class="label label-error">{% trans "Disable" %}</span>-->
+                            <span class="success">{% trans "Active" %}</span>
                         {% elseif 'R' == config.state %}
-                            <span class="label">{% trans "Revoked" %}</span>
+                            <span class="red">{% trans "Revoked" %}</span>
                         {% elseif 'E' == config.state %}
-                            <span class="label label-disabled">{% trans "Expired" %}</span>
+                            <span>{% trans "Expired" %}</span>
                         {% endif %}
                     </td>
+                    {% if 'V' == config.state %}
+                    <td class="text-right">
+                        <form method="post" class="inline" action="disable">
+                            <input type="hidden" name="name" value="{{ config.name|e }}">
+                            <button type="submit">{% trans "Disable" %}</button>
+                        </form>
+                    </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
