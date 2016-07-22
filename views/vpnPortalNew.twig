@@ -40,7 +40,7 @@
             <label for="poolId">{% trans "Profile" %}</label>
             <select id="poolId" name="poolId">
                 {% for pool in poolList %}
-                    <option value="{{ pool.id|e }}">{{ pool.name|e }} {% if pool.twoFactor %}&#128272;{% endif %}</option>
+                    <option value="{{ pool.id|e }}">{{ pool.name|e }}</option>
                 {% endfor %}
             </select>
             <label for="inputName">{% trans "Name" %}</label>
