@@ -365,23 +365,29 @@ msgid ""
 "comments/11\">here</a>."
 msgstr ""
 
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:34
+#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:35
+msgid "Approval"
+msgstr "Toestemming"
+
+#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:41
 msgid "An application wants to act on your behalf."
 msgstr "Een applicatie wil dit account gebruiken."
 
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:40
+#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:47
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:157
 msgid "Application"
 msgstr "Applicatie"
 
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:46
+#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:53
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:159
 msgid "Permissions"
 msgstr "Permissies"
 
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:58
+#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:65
 msgid "Reject"
 msgstr "Afwijzen"
 
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:62
+#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:69
 msgid "Approve"
 msgstr "Toestaan"
 
@@ -391,8 +397,8 @@ msgid "VPN User Portal"
 msgstr "VPN-Gebruikersportal"
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:58
-msgid "You currently have no configurations."
-msgstr "Er zijn op dit moment geen configuraties."
+msgid "There are currently no configurations. <a href=\"new\">Create</a> one."
+msgstr "Er zijn momenteel geen configuraties. <a href=\"new\">Maak</a> er een."
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:75
 msgid "Expires"
@@ -442,19 +448,11 @@ msgstr "Inschakelen"
 msgid "Group Membership(s)"
 msgstr "Groeplidmaatschap(pen)"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:146
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:149
 msgid "Applications"
 msgstr "Applicaties"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:151
-msgid ""
-"Some external applications can manage your account. You can revoke their "
-"permission."
-msgstr ""
-"Sommige externe applicaties kunnen dit account beheren. De toestemming kan "
-"hier ingetrokken worden."
-
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:179
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:186
 msgid "Revoke"
 msgstr "Intrekken"
 
@@ -473,3 +471,13 @@ msgstr "Ja"
 #: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:73
 msgid "No"
 msgstr "Nee"
+
+#~ msgid "You currently have no configurations."
+#~ msgstr "Er zijn op dit moment geen configuraties."
+
+#~ msgid ""
+#~ "Some external applications can manage your account. You can revoke their "
+#~ "permission."
+#~ msgstr ""
+#~ "Sommige externe applicaties kunnen dit account beheren. De toestemming "
+#~ "kan hier ingetrokken worden."
