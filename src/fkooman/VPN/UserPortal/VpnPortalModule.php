@@ -84,24 +84,12 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/',
             function (Request $request) {
-                return new RedirectResponse($request->getUrl()->getRootUrl().'home', 302);
+                return new RedirectResponse($request->getUrl()->getRootUrl().'new', 302);
             },
             $noAuth
         );
 
         /* PAGES */
-        $service->get(
-            '/home',
-            function (Request $request, UserInfoInterface $u) {
-                return $this->templateManager->render(
-                    'vpnPortalHome',
-                    array(
-                    )
-                );
-            },
-            $userAuth
-        );
-
         $service->get(
             '/new',
             function (Request $request, UserInfoInterface $u) {
