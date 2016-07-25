@@ -15,41 +15,44 @@
     {% if poolList|length == 0 %}
         <p class="warning">
         {% trans %}
-    You do not have access to a VPN profile. You may need to request access to be able to create a new VPN configuration.
+    This account does not have the required permissions to create a new VPN configurations for any of the 
+    available profiles.
         {% endtrans %}
         </p>
     {% endif %}
 
-    <p>
-    {% trans %}
-    Choose a unique name for your configuration, e.g. "Phone". Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
-    {% endtrans %}
-    </p>
-
-    {% for tfa in requiresTwoFactor %}
-        <p class="warning">
-            {% trans %}
-            The <strong>{{ tfa }}</strong> profile requires two-factor authentication. Enroll <a href="otp">here</a>.
-            {% endtrans %}
+    {% if poolList|length > 0 %}
+        <p>
+        {% trans %}
+        Create a new VPN configuration by choosing a unique name for your configuration, e.g. <em>Phone</em>. Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
+        {% endtrans %}
         </p>
-    {% endfor %}
 
-    <form method="post">
-        <fieldset>
-            <label for="poolId">{% trans "Profile" %}</label>
-            <select id="poolId" name="poolId">
-                {% for pool in poolList %}
-                    <option value="{{ pool.id|e }}">{{ pool.name|e }}</option>
-                {% endfor %}
-            </select>
-            <label for="inputName">{% trans "Name" %}</label>
-            <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
-        </fieldset>
-        <fieldset>
-            <button type="submit">{% trans "Download" %}</button>
-        </fieldset>
-    </form>
-    
+        {% for tfa in requiresTwoFactor %}
+            <p class="warning">
+                {% trans %}
+                The <strong>{{ tfa }}</strong> profile requires two-factor authentication. Enroll <a href="otp">here</a>.
+                {% endtrans %}
+            </p>
+        {% endfor %}
+
+        <form method="post">
+            <fieldset>
+                <label for="poolId">{% trans "Profile" %}</label>
+                <select id="poolId" name="poolId">
+                    {% for pool in poolList %}
+                        <option value="{{ pool.id|e }}">{{ pool.name|e }}</option>
+                    {% endfor %}
+                </select>
+                <label for="inputName">{% trans "Name" %}</label>
+                <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+            </fieldset>
+            <fieldset>
+                <button type="submit">{% trans "Download" %}</button>
+            </fieldset>
+        </form>
+    {% endif %}
+
     {% include 'footer.twig' %}
 </body>
 </html>

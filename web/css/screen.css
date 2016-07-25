@@ -21,6 +21,10 @@ dt {
     font-weight: bold;
 }
 
+.text-right {
+    text-align: right;
+}
+
 fieldset {
     border: 0;
     margin: 0;
@@ -36,11 +40,11 @@ code {
     padding: 0 0.2em;
 }
 
-p.success, p.warning, p.error {
+p.success, p.warning, p.error, p.block {
     padding: 1em;
 }
 
-p.success code, p.warning code, p.error code {
+p.success code, p.warning code, p.error code, p.block code {
     color: #222;
 }
 
@@ -59,6 +63,11 @@ p.error, p.error a {
     background-color: red;
 }
 
+p.block, p.block a {
+    color: #555;
+    background-color: #eee;
+}
+
 span.success, span.success a {
     color: green;
 }
@@ -72,12 +81,8 @@ span.error, span.error a {
 }
 
 ul.menu {
-/*    background: url('../img/vpn.svg') no-repeat;*/
-/*    background-position: 0px center;*/
-/*    background-size: 2em;*/
     margin-bottom: 2em;
     padding: 0;
-/*/*    padding: 0.7em;*/*/
 }
 
 ul.menu li {
