@@ -94,7 +94,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $serverPools = $this->vpnServerApiClient->getServerPools();
-                $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
+                $userGroups = $this->getUserGroups($u);
                 $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
 
                 $poolList = [];
@@ -109,8 +109,8 @@ class VpnPortalModule implements ServiceModuleInterface
                         }
                     }
                     // any of them requires 2FA and we are not enrolled?
-                    if(!$otpSecret) {
-                        if($pool['twoFactor']) {
+                    if (!$otpSecret) {
+                        if ($pool['twoFactor']) {
                             $requiresTwoFactor[] = $pool['name'];
                         }
                     }
@@ -220,7 +220,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/account',
             function (Request $request, UserInfoInterface $u) {
                 $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
-                $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
+                $userGroups = $this->getUserGroups($u);
                 $serverPools = $this->vpnServerApiClient->getServerPools();
 
                 // check if any of the server pools have 2FA enabled
@@ -463,5 +463,19 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return false;
+    }
+
+    private function getUserGroups(UserInfoInterface $userInfo)
+    {
+        // check if the session has the group data
+        $userGroups = $this->session->get('_user_groups');
+        if (!is_null($userGroups)) {
+            return $userGroups;
+        }
+
+        $userGroups = $this->vpnServerApiClient->getUserGroups($userInfo->getUserId());
+        $this->session->set('_user_groups', $userGroups);
+
+        return $userGroups;
     }
 }
