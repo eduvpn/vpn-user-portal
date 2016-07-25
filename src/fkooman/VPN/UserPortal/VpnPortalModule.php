@@ -226,6 +226,14 @@ class VpnPortalModule implements ServiceModuleInterface
                 // check if any of the server pools have 2FA enabled
                 $showTwoFactor = false;
                 foreach ($serverPools as $pool) {
+                    // ACL enabled?
+                    if ($pool['enableAcl']) {
+                        // is the user member of the aclGroupList?
+                        if (!self::isMember($userGroups, $pool['aclGroupList'])) {
+                            continue;
+                        }
+                    }
+
                     if ($pool['twoFactor']) {
                         $showTwoFactor = true;
                     }

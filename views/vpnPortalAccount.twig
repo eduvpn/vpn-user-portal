@@ -49,19 +49,20 @@
     </dl>
 
     {% if userTokens is not empty %}
-    <h3>{% trans "Applications" %}</h3>
-        <p>
-            {% trans "Some external applications can manage your account. You can revoke their permission." %}
-        </p>
+
+    <dl>
+        <dt>{% trans "Applications" %}</dt>
+        <dd>
 
         <table>
             <thead>
-                <tr><th>Application</th><th></th></tr>
+                <tr><th>{% trans "Application" %}</th><th>{% trans "Permissions" %}</th><th></th></tr>
             </thead>
             <tbody>
                 {% for token in userTokens %}
                     <tr>
                         <td>{{ token.client_id|e }}</td>
+                        <td>{{ token.scope|e }}</td>
                         <td class="text-right">
                             <form method="post" action="deleteTokens">
                                 <input type="hidden" name="client_id" value="{{ token.client_id|e }}">
@@ -72,6 +73,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        </dd>
     {% endif %}
 
     {% include 'footer.twig' %}
