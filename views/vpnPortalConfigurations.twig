@@ -36,7 +36,7 @@
                     <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
                     <td class="text-right">
                         {% if 'D' == config.state %}
-                            <span class="warning">{% trans "Disabled" %}</span>
+                            <span class="error">{% trans "Disabled" %}</span>
                         {% elseif 'V' == config.state %}
                             <span class="success">{% trans "Active" %}</span>
                         {% elseif 'R' == config.state %}
