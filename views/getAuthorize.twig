@@ -5,6 +5,10 @@
 <body>
     {% include 'header.twig' %}
 
+    <ul class="menu">
+        <li class="active"><a href="">{% trans "Approval" %}</a>
+    </ul>
+
     <p>{% trans "An application wants to act on your behalf." %}</p>
 
     <dl>
@@ -14,7 +18,7 @@
 
     <form method="post" action="{{ request_url|e }}">
         <button class="danger" type="submit" name="approval" value="no">{% trans "Reject" %}</button>
-        <button class="success"  type="submit" name="approval" value="yes" autofocus>{% trans "Approve" %}</button>
+        <button class="success"  type="submit" name="approval" value="yes">{% trans "Approve" %}</button>
     </form>
 
     {% include 'footer.twig' %}
