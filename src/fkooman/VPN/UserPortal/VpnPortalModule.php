@@ -420,9 +420,17 @@ class VpnPortalModule implements ServiceModuleInterface
         $clientConfig = new ClientConfig();
         $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverPool['twoFactor']], $certData['certificate'], $remoteEntities)));
 
+        $httpHost = $request->getUrl()->getHost();
+        if (false !== strpos($httpHost, ':')) {
+            // strip port
+            $httpHost = substr($httpHost, 0, strpos($httpHost, ':'));
+        }
+
+        $configFileName = sprintf('%s_%s_%s', $httpHost, date('Ymd'), $configName);
+
         // return an OVPN file
         $response = new Response(200, 'application/x-openvpn-profile');
-        $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configName));
+        $response->setHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configFileName));
         $response->setBody($vpnConfig);
 
         return $response;
