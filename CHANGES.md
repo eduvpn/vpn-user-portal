@@ -1,5 +1,9 @@
 # Changelog
 
+## 9.4.1 (2016-07-26)
+- make orange of warning boxes a bit less hard
+- change language switcher to drop down box
+
 ## 9.4.0 (2016-07-26)
 - implement group membership caching (in user session)
 - automatically obtain access token for Voot group API when enabled
