@@ -1,5 +1,11 @@
 # Changelog
 
+## 9.4.0 (2016-07-26)
+- implement group membership caching (in user session)
+- automatically obtain access token for Voot group API when enabled
+- completely redo CSS
+- add date and instance name to name of downloaded configuration file
+
 ## 9.3.6 (2016-07-19)
 - simplify configuration display
 
