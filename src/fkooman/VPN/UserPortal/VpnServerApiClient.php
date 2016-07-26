@@ -57,6 +57,16 @@ class VpnServerApiClient extends VpnApiClient
         )['data']['ok'];
     }
 
+    public function hasVootToken($userId)
+    {
+        $requestUri = sprintf('%s/users/voot_tokens/%s', $this->vpnServerApiUri, $userId);
+
+        return $this->exec(
+            'GET',
+            $requestUri
+        )['data']['voot_token'];
+    }
+
     public function setVootToken($userId, $vootToken)
     {
         $requestUri = sprintf('%s/users/voot_tokens/%s', $this->vpnServerApiUri, $userId);

@@ -17,20 +17,20 @@
 
 namespace fkooman\VPN\UserPortal;
 
+use BaconQrCode\Renderer\Image\Png;
+use BaconQrCode\Writer;
+use Base32\Base32;
 use fkooman\Http\Exception\BadRequestException;
 use fkooman\Http\RedirectResponse;
 use fkooman\Http\Request;
 use fkooman\Http\Response;
+use fkooman\Http\Session;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
 use fkooman\Tpl\TemplateManagerInterface;
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Writer;
 use Otp\GoogleAuthenticator;
 use Otp\Otp;
-use Base32\Base32;
-use fkooman\Http\Session;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -49,6 +49,9 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \fkooman\Http\Session */
     private $session;
 
+    /** @var bool */
+    private $useVoot;
+
     public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, Session $session)
     {
         $this->templateManager = $templateManager;
@@ -56,6 +59,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->vpnServerApiClient = $vpnServerApiClient;
         $this->userTokens = $userTokens;
         $this->session = $session;
+        $this->useVoot = false;
     }
 
     public function init(Service $service)
@@ -94,7 +98,13 @@ class VpnPortalModule implements ServiceModuleInterface
             '/new',
             function (Request $request, UserInfoInterface $u) {
                 $serverPools = $this->vpnServerApiClient->getServerPools();
-                $userGroups = $this->getUserGroups($u);
+                $userGroups = $this->getUserGroups($request, $u);
+                if (false === $userGroups) {
+                    // Voot returns false if user did not yet approve obtaining
+                    // groups on the users behalve at Voot endpoint
+                    return new RedirectResponse($request->getUrl()->getRootUrl().'_voot/authorize', 302);
+                }
+
                 $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
 
                 $poolList = [];
@@ -220,7 +230,12 @@ class VpnPortalModule implements ServiceModuleInterface
             '/account',
             function (Request $request, UserInfoInterface $u) {
                 $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
-                $userGroups = $this->getUserGroups($u);
+                $userGroups = $this->getUserGroups($request, $u);
+                if (false === $userGroups) {
+                    // Voot returns false if user did not yet approve obtaining
+                    // groups on the users behalve at Voot endpoint
+                    return new RedirectResponse($request->getUrl()->getRootUrl().'_voot/authorize', 302);
+                }
                 $serverPools = $this->vpnServerApiClient->getServerPools();
 
                 // check if any of the server pools have 2FA enabled
@@ -364,6 +379,11 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
+    public function setUseVoot($useVoot)
+    {
+        $this->useVoot = (bool) $useVoot;
+    }
+
     private function getConfig(Request $request, $userId, $configName, $poolId)
     {
         Utils::validateConfigName($configName);
@@ -473,12 +493,20 @@ class VpnPortalModule implements ServiceModuleInterface
         return false;
     }
 
-    private function getUserGroups(UserInfoInterface $userInfo)
+    private function getUserGroups(Request $request, UserInfoInterface $userInfo)
     {
         // check if the session has the group data
         $userGroups = $this->session->get('_user_groups');
         if (!is_null($userGroups)) {
             return $userGroups;
+        }
+
+        // check if Voot is used
+        if ($this->useVoot) {
+            // check if the user is already enrolled
+            if (!$this->vpnServerApiClient->hasVootToken($userInfo->getUserId())) {
+                return false;
+            }
         }
 
         $userGroups = $this->vpnServerApiClient->getUserGroups($userInfo->getUserId());

@@ -141,14 +141,6 @@ try {
         $config->v('api', 'password', false)
     );
 
-    $vpnPortalModule = new VpnPortalModule(
-        $templateManager,
-        $vpnConfigApiClient,
-        $vpnServerApiClient,
-        new UserTokens($db),
-        $session
-    );
-
     $vpnApiModule = new VpnApiModule(
         $vpnConfigApiClient,
         $vpnServerApiClient
@@ -185,6 +177,15 @@ try {
             $session
         );
     }
+
+    $vpnPortalModule = new VpnPortalModule(
+        $templateManager,
+        $vpnConfigApiClient,
+        $vpnServerApiClient,
+        new UserTokens($db),
+        $session
+    );
+    $vpnPortalModule->setUseVoot($enableVoot);
 
     $apiAuth = new BearerAuthentication(
         new DbTokenValidator($db),
