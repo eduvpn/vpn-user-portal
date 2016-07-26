@@ -55,7 +55,7 @@ p.success, p.success a {
 
 p.warning, p.warning a {
     color: #fff;
-    background-color: orange;
+    background-color: #df7f0c;
 }
 
 p.error, p.error a {
@@ -73,7 +73,7 @@ span.success, span.success a {
 }
 
 span.warning, span.warning a {
-    color: orange;
+    color: #df7f0c;
 }
 
 span.error, span.error a {
