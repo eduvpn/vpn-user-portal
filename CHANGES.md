@@ -1,5 +1,12 @@
 # Changelog
 
+## 9.4.3 (2016-07-27)
+- update default fonts
+- remove separator between language selection and logout
+- update translations
+- update normalize.css
+- update documentation page
+
 ## 9.4.2 (2016-07-27)
 - move the language changer to the footer again
 - reduce form size in footer
