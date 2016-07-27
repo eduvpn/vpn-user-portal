@@ -148,7 +148,19 @@ msgstr "Naam"
 msgid "Download"
 msgstr "Downloaden"
 
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:38
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:32
+msgid "English"
+msgstr "Engels"
+
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:40
+msgid "Dutch"
+msgstr "Nederlands"
+
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:49
+msgid "Switch"
+msgstr "Wisselen"
+
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:73
 msgid "Sign Out"
 msgstr "Uitloggen"
 
@@ -203,12 +215,12 @@ msgid "An application wants to act on your behalf."
 msgstr "Een applicatie wil dit account gebruiken."
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:47
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:173
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:139
 msgid "Application"
 msgstr "Applicatie"
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:53
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:175
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:141
 msgid "Permissions"
 msgstr "Permissies"
 
@@ -261,35 +273,27 @@ msgstr "Uitschakelen"
 msgid "User ID"
 msgstr "Gebruikers-ID"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:63
-msgid "Language"
-msgstr "Taal"
-
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:90
-msgid "Switch"
-msgstr "Wisselen"
-
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:100
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:66
 msgid "Two-factor Authentication"
 msgstr "Twee-factor authenticatie"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:108
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:74
 msgid "Enrolled"
 msgstr "Ingeschakeld"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:114
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:80
 msgid "Enroll"
 msgstr "Inschakelen"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:129
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:95
 msgid "Group Membership(s)"
 msgstr "Groeplidmaatschap(pen)"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:165
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:131
 msgid "Applications"
 msgstr "Applicaties"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:202
+#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:168
 msgid "Revoke"
 msgstr "Intrekken"
 
@@ -308,3 +312,6 @@ msgstr "Ja"
 #: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:73
 msgid "No"
 msgstr "Nee"
+
+#~ msgid "Language"
+#~ msgstr "Taal"
