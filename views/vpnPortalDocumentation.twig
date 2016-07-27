@@ -12,67 +12,59 @@
       <li class="active"><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>VPN Configuration</h2>
-    <p>
-        In order to get the VPN working you need to download a VPN 
-        configuration <a href="new">here</a>. Next you download a VPN 
-        client application, see below. The final step is to load the 
-        configuration file in the VPN client application. How this is done
-        depends on the application you use. Follow the documentation links
-        if you do not know how.
-    </p>
+    <h2>Getting Started</h2>
+    <ol>
+        <li>Choose and download a VPN application from the list below;</li>
+        <li>Load the configuration file, obtained <a href="new">here</a> in the
+            application.</li>
+    </ol>
 
-    <h2 id="app">VPN Application</h2>
-
-    <h3 id="windows">Windows</h3>
+    <h2>Application</h2>
+    <h3>Windows</h3>
     <p>
         Download the <a target="_blank" href="https://openvpn.net/index.php/open-source/downloads.html">OpenVPN Community client</a>.
         Read installation and configuration instructions 
         <a target="_blank" href="https://community.openvpn.net/openvpn/wiki/OpenVPN-GUI">here</a>.
-        The configuration file <strong>MUST</strong> be copied to the 
+        The downloaded configuration file must be copied to the 
         <code>C:\Program Files\OpenVPN\Config</code> folder before starting the OpenVPN client.
     </p>
 
-    <h3 id="osx">OS X</h3>
+    <h3>macOS</h3>
     <p>
         Download <a target="_blank" href="https://tunnelblick.net/">tunnelblick</a>. 
         Read the <a target="_blank" href="https://tunnelblick.net/czQuick.html">Quick Start Guide</a>.
     </p>
 
-    <h3 id="android">Android</h3>
-        Install <a target="_blank" href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a>.
-        A <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-android-faq.html">FAQ</a> is available.
+    <h3>Android</h3>
+        Install <a target="_blank" href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a>, 
+        also available via <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>. 
+        The proprietary <a target="_blank" href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a> can also be used. See the OpenVPN Connect <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-android-faq.html">FAQ</a>.
 
-    <h3 id="ios">iOS</h3>
+    <h3>iOS</h3>
     <p>
         Install <a target="_blank" href="https://itunes.apple.com/us/app/openvpn-connect/id590379981">OpenVPN Connect</a>. 
         A <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-ios-faq.html">FAQ</a> is available.
     </p>
      
-    <h2>Privacy</h2>
+    <h3>Linux</h3>
     <p>
-        Using a VPN service is not a magic solution to remain private when 
-        using the Internet, nor should you use this service under the 
-        assumption you can never be traced back. This is not only true for 
-        this VPN service, but for all of them.
-    </p>
-    <p>
-        If you want to obtain a higher degree of privacy you should be 
-        using software like the <a href="https://www.torproject.org/">Tor Browser</a>, or in some 
-        cases <a href="https://tails.boum.org/">Tails</a>. Even then, 
-        caution is required. Please read all accompanying documentation 
-        and warnings there!
+        Importing the configuration in NetworkManager >= 1.2 works. This version of NetworkManager is available in <a target="_blank" href="https://getfedora.org/">Fedora</a> >= 24 and <a target="_blank" href="http://www.ubuntu.com/desktop">Ubuntu</a> >= 16.04 LTS. On Ubuntu there is an <a target="_blank" href="https://bugs.launchpad.net/ubuntu/+source/network-manager/+bug/1211110">issue</a> with DNS. A workaround is described <a target="_blank" href="https://bugs.launchpad.net/ubuntu/+source/network-manager/+bug/1211110/comments/11">here</a>.
     </p>
 
-    <h2>Advanced Users</h2>
+    <h2>Privacy and Trust</h2>
     <p>
-        You can also use <a target="_blank" href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a>,
-        a free software client for Android ICS (4.0) or later. Also available through <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>.
+        Using a VPN service is not a magical solution to remain secure and 
+        private when using the Internet, nor should you use this service under 
+        the assumption you can never be traced back. This is not only true for 
+        this VPN service, but for all of them. Better safe than sorry!
     </p>
     <p>
-        Importing the configuration on NetworkManager 1.2 or higher on Linux 
-        works. However, on Ubuntu 16.04 there is 
-        an <a href="https://bugs.launchpad.net/ubuntu/+source/network-manager/+bug/1211110">issue</a> with DNS. A workaround is described <a href="https://bugs.launchpad.net/ubuntu/+source/network-manager/+bug/1211110/comments/11">here</a>.
+        If you want to obtain a higher degree of security and privacy you 
+        should be using software like the 
+        <a target="_blank" href="https://www.torproject.org/">Tor Browser</a>, 
+        or in some situations <a target="_blank" href="https://tails.boum.org/">Tails</a>. 
+        Even then, caution is required. Please make sure you read all 
+        accompanying documentation and warnings there!
     </p>
 
     {% include 'footer.twig' %}
