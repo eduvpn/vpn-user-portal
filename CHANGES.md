@@ -1,5 +1,9 @@
 # Changelog
 
+## 9.4.2 (2016-07-27)
+- move the language changer to the footer again
+- reduce form size in footer
+
 ## 9.4.1 (2016-07-26)
 - make orange of warning boxes a bit less hard
 - change language switcher to drop down box
