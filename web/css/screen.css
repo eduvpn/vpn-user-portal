@@ -120,12 +120,6 @@ thead th {
     border-bottom: 2px solid #ddd;
 }
 
-tr:nth-child(even) {
-    background-color: #f8f8f8;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-}
-
 label {
     font-weight: bold;
     display: block;
@@ -137,6 +131,12 @@ hr {
 }
 
 div.footer {
-    margin-top: 2em;
+    margin-top: 3em;
     text-align: center;
+    font-size: 75%;
+}
+
+div.footer form {
+    display: inline-block;
+    margin: 0 1em;
 }

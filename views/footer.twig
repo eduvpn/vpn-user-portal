@@ -1,14 +1,24 @@
 <hr>
 <div class="footer">
+    <form method="post" action="{{ rootFolder|e }}setLanguage">
+        <select name="language">
+            <option value="en_US" {% if "en_US" == activeLanguage %} selected="selected" {% endif %}>English</option>
+            <option value="nl_NL" {% if "nl_NL" == activeLanguage %} selected="selected" {% endif %}>Nederlands</option>
+        </select>
+        <input type="hidden" name="redirect_to" value="{{ requestUrl|e }}">
+        <button>{% trans "Switch" %}</button>
+    </form>
+
     {% if authMethod == 'FormAuthentication' %}
         {# if login_hint is set it means the sign in page is shown, do not show 
            the Sign Out form #}
         {% if login_hint is not defined %}
             {# for FormAuthentication we need a POST form #}
+    
+            &#x7c;
+
             <form class="simple" method="post" action="{{ rootFolder|e}}_auth/form/logout">
-                <fieldset>
                     <button type="submit">{% trans "Sign Out" %}</button>
-                </fieldset>
             </form>
         {% endif %} 
     {% endif %}

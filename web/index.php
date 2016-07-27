@@ -81,6 +81,12 @@ try {
     if (is_null($activeLanguage)) {
         $activeLanguage = 'en_US';
     }
+    $templateManager->addDefault(
+        [
+            'activeLanguage' => $activeLanguage,
+        ]
+    );
+
     $templateManager->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
     // Authentication

@@ -16,18 +16,6 @@
         <dt>{% trans "User ID" %}</dt>
         <dd><code>{{ userId|e }}</code></dd>
 
-        <dt>{% trans "Language" %}</dt>
-        <dd>
-            <form method="post" action="{{ rootFolder|e }}setLanguage">
-                <select name="language">
-                    <option value="en_US" {% if "en_US" == activeLanguage %} selected="selected" {% endif %}>English</option>
-                    <option value="nl_NL" {% if "nl_NL" == activeLanguage %} selected="selected" {% endif %}>Nederlands</option>
-                </select>
-                <input type="hidden" name="redirect_to" value="{{ requestUrl|e }}">
-                <button>{% trans "Switch" %}</button>
-            </form>
-        </dd>
-
         {% if showTwoFactor %}
         <dt>{% trans "Two-factor Authentication" %}</dt>
         <dd>

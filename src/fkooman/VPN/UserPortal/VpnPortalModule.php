@@ -262,7 +262,6 @@ class VpnPortalModule implements ServiceModuleInterface
                         'userId' => $u->getUserId(),
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
                         'userGroups' => $userGroups,
-                        'activeLanguage' => $this->session->get('activeLanguage'),
                     )
                 );
             },
