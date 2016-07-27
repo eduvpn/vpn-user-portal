@@ -14,9 +14,6 @@
            the Sign Out form #}
         {% if login_hint is not defined %}
             {# for FormAuthentication we need a POST form #}
-    
-            &#x7c;
-
             <form class="simple" method="post" action="{{ rootFolder|e}}_auth/form/logout">
                     <button type="submit">{% trans "Sign Out" %}</button>
             </form>
