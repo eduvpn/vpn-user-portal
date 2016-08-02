@@ -36,17 +36,8 @@ fieldset button {
     margin-top: 1em;
 }
 
-code {
-    background-color: #ddd;
-    padding: 0 0.2em;
-}
-
 p.success, p.warning, p.error, p.block {
     padding: 1em;
-}
-
-p.success code, p.warning code, p.error code, p.block code {
-    color: #222;
 }
 
 p.success, p.success a {
