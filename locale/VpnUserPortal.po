@@ -76,14 +76,12 @@ msgstr ""
 
 #: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:58
 msgid ""
-"Setting up Two-factor authentication failed because the entered code does "
+"Setting up two-factor authentication failed because the entered code does "
 "not match the expected value."
 msgstr ""
 
 #: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:65
-msgid ""
-"You can try again <a href=\"otp\">here</a>, or go back to your <a href="
-"\"account\">Account</a> page."
+msgid "<a href=\"otp\">Try</a> again."
 msgstr ""
 
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:58
@@ -133,7 +131,7 @@ msgstr ""
 msgid "Switch"
 msgstr ""
 
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:73
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:69
 msgid "Sign Out"
 msgstr ""
 
@@ -158,18 +156,12 @@ msgstr ""
 
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:61
 msgid ""
-"You tried to create a configuration with name <em>%configName%</em>, but it "
-"was already used before!"
+"Configuration with name <em>%configName%</em> is already in use! You can "
+"only use a name once."
 msgstr ""
 
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:68
-msgid ""
-"You can only use a name once, check your configurations to see which names "
-"were already used."
-msgstr ""
-
-#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:75
-msgid "Use your browser's back button to try again."
+msgid "<a href=\"new\">Try</a> again."
 msgstr ""
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:35
