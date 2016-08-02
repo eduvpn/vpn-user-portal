@@ -81,6 +81,10 @@ span.error, span.error a {
     color: red;
 }
 
+ul.simple {
+    padding: 0 1em;
+}
+
 ul.menu {
     margin-bottom: 2em;
     padding: 0;
