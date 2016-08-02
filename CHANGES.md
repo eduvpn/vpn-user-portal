@@ -1,5 +1,10 @@
 # Changelog
 
+## 9.4.4 (2016-08-02)
+- update style a bit
+- add new text to documentation page
+- update text, and translation
+
 ## 9.4.3 (2016-07-27)
 - update default fonts
 - remove separator between language selection and logout
