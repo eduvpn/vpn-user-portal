@@ -16,16 +16,14 @@
     <p class="error">
         {% set configName = configName|e %}
         {% trans %}
-            You tried to create a configuration with name <em>{{ configName }}</em>, but it was already used before!
+            Configuration with name <em>{{ configName }}</em> is already in use! You can only use a name once.
         {% endtrans %}
     </p>
     <p>
-        {% trans "You can only use a name once, check your configurations to see which names were already used." %}
+        {% trans %}
+            <a href="new">Try</a> again.
+        {% endtrans %}
     </p>
-
-    <p>
-        {% trans "Use your browser's back button to try again." %}
-    </p> 
 
     {% include 'footer.twig' %}
 </body>

@@ -15,12 +15,14 @@
     <h3>{% trans "Error" %}</h3>
     <p class="error">
         {% trans %}
-            Setting up Two-factor authentication failed because the entered code does not match the expected value.
+            Setting up two-factor authentication failed because the entered code does not match the expected value.
         {% endtrans %}
     </p>
 
     <p>
-        {% trans 'You can try again <a href="otp">here</a>, or go back to your <a href="account">Account</a> page.' %}
+        {% trans %}
+            <a href="otp">Try</a> again.
+        {% endtrans %}
     </p>
 
     {% include 'footer.twig' %}
