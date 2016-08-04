@@ -124,14 +124,22 @@ msgid "English"
 msgstr ""
 
 #: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:40
+msgid "French"
+msgstr ""
+
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:48
+msgid "German"
+msgstr ""
+
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:56
 msgid "Dutch"
 msgstr ""
 
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:49
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:65
 msgid "Switch"
 msgstr ""
 
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:69
+#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:85
 msgid "Sign Out"
 msgstr ""
 

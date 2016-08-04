@@ -3,6 +3,8 @@
     <form method="post" action="{{ rootFolder|e }}setLanguage">
         <select name="language">
             <option value="en_US" {% if "en_US" == activeLanguage %} selected="selected" {% endif %}>{% trans "English" %}</option>
+            <option value="fr_FR" {% if "fr_FR" == activeLanguage %} selected="selected" {% endif %}>{% trans "French" %}</option>
+            <option value="de_DE" {% if "de_DE" == activeLanguage %} selected="selected" {% endif %}>{% trans "German" %}</option>   
             <option value="nl_NL" {% if "nl_NL" == activeLanguage %} selected="selected" {% endif %}>{% trans "Dutch" %}</option>
         </select>
         <input type="hidden" name="redirect_to" value="{{ requestUrl|e }}">
