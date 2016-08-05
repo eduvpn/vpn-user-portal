@@ -15,22 +15,26 @@ msgstr ""
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:35
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:112
 msgid "Sign In"
-msgstr ""
+msgstr "Se connecter"
 
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:42
 msgid "Please sign in with your username and password."
 msgstr ""
+"Veuillez vous connecter à l'aide votre nom d'utilisateur et votre mot de "
+"passe."
 
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:53
 msgid "The credentials you provided are not correct. Please try again!"
 msgstr ""
+"Les informations d'identification que vous avez saisies ne sont pas "
+"correctes. Veuillez réessayer !"
 
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:70
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:74
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:90
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:94
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:80
 #: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:84
@@ -70,7 +74,7 @@ msgstr "Configurations"
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:43
 #: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:43
 msgid "Account"
-msgstr ""
+msgstr "Compte"
 
 #: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:47
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:47
@@ -81,22 +85,25 @@ msgstr ""
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:47
 #: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:47
 msgid "Documentation"
-msgstr ""
+msgstr "Documentation"
 
 #: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:53
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:53
 msgid "Error"
 msgstr "Erreur"
 
+# Améliorer
 #: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:58
 msgid ""
 "Setting up two-factor authentication failed because the entered code does "
 "not match the expected value."
 msgstr ""
+"La configuration de l'authentification à deux facteurs a échoué, car le code "
+"saisi ne correspond pas à la valeur prévue."
 
 #: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:65
 msgid "<a href=\"otp\">Try</a> again."
-msgstr ""
+msgstr "Veuillez <a href=\"otp\">réessayez</a>"
 
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:58
 msgid ""
@@ -104,6 +111,8 @@ msgid ""
 "configurations for any of the \n"
 "    available profiles."
 msgstr ""
+"Ce compte n'a pas la permission requise de créer une nouvelle configuration "
+"VPN pour aucun des profils disponibles."
 
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:73
 msgid ""
@@ -112,12 +121,18 @@ msgid ""
 "<code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</"
 "code>, <code>@</code>."
 msgstr ""
+"Créez une nouvelle configuration VPN en choisissant un nom pour votre "
+"configuration, par exemple <em>Téléphone</em>. Les caractères autorisés sont "
+"<code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, "
+"<code>_</code>, <code>.</code>, <code>@</code>."
 
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:86
 msgid ""
 "The <strong>%tfa%</strong> profile requires two-factor authentication. "
 "Enroll <a href=\"otp\">here</a>."
 msgstr ""
+"Ce <strong>%tfa%</strong> profil nécessite une authentification à deux "
+"facteurs. Veuillez vous inscrire <a href=\"otp\">ici</a>."
 
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:101
 msgid "Profile"
@@ -131,7 +146,7 @@ msgstr "Nom"
 
 #: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:136
 msgid "Download"
-msgstr ""
+msgstr "Télécharger"
 
 #: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:32
 msgid "English"
@@ -151,19 +166,20 @@ msgstr "Néerlandais"
 
 #: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:65
 msgid "Switch"
-msgstr ""
+msgstr "Changer"
 
 #: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:85
 msgid "Sign Out"
-msgstr ""
+msgstr "Se déconnecter"
 
 #: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:54
 msgid "Here you can enroll for two-factor authentication (2FA)."
 msgstr ""
+"Vous pouvez vous inscrire pour l'authentification à deux facteurs (2FA) ici."
 
 #: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:61
 msgid "Secret"
-msgstr ""
+msgstr "Secret"
 
 #: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:77
 msgid ""
@@ -171,6 +187,9 @@ msgid ""
 "Confirm the successful configuration by entering a 6 digit OTP generated by "
 "the application below."
 msgstr ""
+"Veuillez scanner le QR Code en utilisant votre application 2FA ou importez "
+"le secret manuellement. Confirmez la configuration en entrant les 6 chiffres "
+"OTP générés par l'application ci-dessous."
 
 #: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:93
 msgid "Validate"
@@ -181,14 +200,16 @@ msgid ""
 "Configuration with name <em>%configName%</em> is already in use! You can "
 "only use a name once."
 msgstr ""
+"La  configuration <em>%configName%</em>est déjà en cours d'utilisation ! Une "
+"configuration ne peut être utilisée qu'une seule fois."
 
 #: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:68
 msgid "<a href=\"new\">Try</a> again."
-msgstr "<a href=\"new\">Réessayer</a>"
+msgstr "<a href=\"new\">Réessayez</a>"
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:35
 msgid "Approval"
-msgstr ""
+msgstr "Autorisation"
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:41
 msgid "An application wants to act on your behalf."
@@ -197,41 +218,43 @@ msgstr ""
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:47
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:139
 msgid "Application"
-msgstr ""
+msgstr "Application"
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:53
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:141
 msgid "Permissions"
-msgstr ""
+msgstr "Permissions"
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:65
 msgid "Reject"
-msgstr ""
+msgstr "Refuser"
 
 #: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:69
 msgid "Approve"
-msgstr ""
+msgstr "Accepter"
 
 #: /tmp/cache/39/39866eeb755bdc6b051ca9f0803dedb835ee616793001013416b04ca887dac0a.php:20
 #: /tmp/cache/f7/f7d540d8e16b0873676b45909acc333d5b639109e73ed1071d78cbb63bfe9c8f.php:24
 msgid "VPN User Portal"
-msgstr ""
+msgstr "Portail d'utilisateur VPN"
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:58
 msgid "There are currently no configurations. <a href=\"new\">Create</a> one."
 msgstr ""
+"Il n'y a pour l'instant aucune configuration. En <a href=\"new\">créer</a> "
+"une nouvelle."
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:75
 msgid "Expires"
-msgstr ""
+msgstr "Expire"
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:79
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:115
 msgid "Disabled"
-msgstr ""
+msgstr "Désactivé"
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:122
 msgid "Active"
@@ -239,49 +262,51 @@ msgstr "Actif"
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:129
 msgid "Revoked"
-msgstr ""
+msgstr "Annulé"
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:136
 msgid "Expired"
-msgstr ""
+msgstr "Expiré"
 
 #: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:154
 msgid "Disable"
-msgstr ""
+msgstr "Désactiver"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:54
 msgid "User ID"
-msgstr ""
+msgstr "Identifiant"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:66
 msgid "Two-factor Authentication"
-msgstr ""
+msgstr "Authentification à deux facteurs"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:74
 msgid "Enrolled"
-msgstr ""
+msgstr "Inscrit"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:80
 msgid "Enroll"
-msgstr ""
+msgstr "S'inscrire"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:95
 msgid "Group Membership(s)"
-msgstr ""
+msgstr "Adhésion au(x) groupe(s)"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:131
 msgid "Applications"
-msgstr ""
+msgstr "Applications"
 
 #: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:168
 msgid "Revoke"
-msgstr ""
+msgstr "Annuler"
 
 #: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:57
 msgid ""
 "Are you sure you want to disable <em>%configName%</em>? Only an "
 "administrator can undo this!"
 msgstr ""
+"Êtes-vous sûr de vouloir désactiver <em>%configName%</em> ? Seul un "
+"administrateur peut annuler cette action !"
 
 #: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:69
 msgid "Yes"
