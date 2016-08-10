@@ -23,7 +23,7 @@ use fkooman\Http\Request;
 use fkooman\Http\Session;
 use fkooman\OAuth\OAuthModule;
 use fkooman\OAuth\Storage\NullApprovalStorage;
-use fkooman\OAuth\Storage\JsonClientStorage;
+use fkooman\OAuth\Storage\ArrayClientStorage;
 use fkooman\OAuth\Storage\NoResourceServerStorage;
 use fkooman\OAuth\Storage\PdoAccessTokenStorage;
 use fkooman\OAuth\Storage\NullAuthorizationCodeStorage;
@@ -47,20 +47,36 @@ use fkooman\OAuth\Client\GuzzleHttpClient;
 use fkooman\VPN\UserPortal\VootModule;
 
 try {
+    // XXX use SERVER_NAME instead of requestHost
+
+    $request = new Request($_SERVER);
+    $serverName = $request->getUrl()->getHost();
+
     $config = new Reader(
-        new YamlFile(dirname(__DIR__).'/config/config.yaml')
+        new YamlFile(
+            [
+                sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $serverName),
+                sprintf('%s/config/config.yaml', dirname(__DIR__)),
+            ]
+        )
     );
 
     $serverMode = $config->v('serverMode', false, 'production');
+    $dataDir = $config->v('dataDir', true);
 
-    $request = new Request($_SERVER);
+    $templateCache = null;
+    if('production' === $serverMode) {
+        // enable template cache when running in production mode
+        $templateCache = sprintf('%s/%s/tpl', $dataDir, $serverName);
+    }
 
     $templateManager = new TwigTemplateManager(
         array(
             dirname(__DIR__).'/views',
             dirname(__DIR__).'/config/views',
+            dirname(__DIR__).sprintf('/config/%s/views', $serverName),
         ),
-        $config->v('templateCache', false, null)
+        $templateCache
     );
     $templateManager->setDefault(
         array(
@@ -141,11 +157,8 @@ try {
         $config->v('remoteApi', 'vpn-server-api', 'uri')
     );
 
-    $db = new PDO(
-        $config->v('api', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),
-        $config->v('api', 'username', false),
-        $config->v('api', 'password', false)
-    );
+    $accessTokens = sprintf('sqlite://%s/%s/access_tokens.sqlite', $dataDir, $serverName);
+    $accessTokensDb = new PDO($accessTokens);
 
     $vpnApiModule = new VpnApiModule(
         $vpnConfigApiClient,
@@ -154,13 +167,13 @@ try {
 
     $oauthModule = new OAuthModule(
         $templateManager,
-        new JsonClientStorage(dirname(__DIR__).'/config/clients.json'),
+        new ArrayClientStorage($config->v('apiClients', false, [])),
         new NoResourceServerStorage(),
         new NullApprovalStorage(),
-        new NullAuthorizationCodeStorage($db),
-        new PdoAccessTokenStorage($db),
+        new NullAuthorizationCodeStorage(),
+        new PdoAccessTokenStorage($accessTokensDb),
         [
-            'disable_token_endpoint' => false,
+            'disable_token_endpoint' => true,   // no need for token endpoint
             'disable_introspect_endpoint' => true, // no need for introspection
             'route_prefix' => '/_oauth',
         ]
@@ -188,13 +201,13 @@ try {
         $templateManager,
         $vpnConfigApiClient,
         $vpnServerApiClient,
-        new UserTokens($db),
+        new UserTokens($accessTokensDb),
         $session
     );
     $vpnPortalModule->setUseVoot($enableVoot);
 
     $apiAuth = new BearerAuthentication(
-        new DbTokenValidator($db),
+        new DbTokenValidator($accessTokensDb),
         array(
             'realm' => 'VPN User API',
         )

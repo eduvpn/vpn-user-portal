@@ -22,19 +22,25 @@ use fkooman\Config\YamlFile;
 use fkooman\OAuth\Storage\PdoAccessTokenStorage;
 
 try {
+    // XXX enforce specifying instance, better error handling
+    $serverName = $argv[1];
+
     $reader = new Reader(
-        new YamlFile(dirname(__DIR__).'/config/config.yaml')
+        new YamlFile(
+            [
+                sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $serverName),
+                sprintf('%s/config/config.yaml', dirname(__DIR__)),
+            ]
+        )
     );
-
-    $db = new PDO(
-        $reader->v('api', 'dsn', false, sprintf('sqlite://%s/data/api.sqlite', dirname(__DIR__))),
-        $reader->v('api', 'username', false),
-        $reader->v('api', 'password', false)
-    );
-
-    $accessTokenStorage = new PdoAccessTokenStorage($db);
+    $dataDir = $reader->v('dataDir', true);
+    $dbPath = sprintf('%s/%s/access_tokens.sqlite', $dataDir, $serverName);
+    // XXX check if dir exists first, fail if not exists and not able to create
+    @mkdir(dirname($dbPath), 0700, true);
+    $dsn = sprintf('sqlite://%s', $dbPath);
+    $accessTokenStorage = new PdoAccessTokenStorage(new PDO($dsn));
     $accessTokenStorage->initDatabase();
 } catch (Exception $e) {
-    echo $e->getMessage().PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
 }

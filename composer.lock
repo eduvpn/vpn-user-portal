@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2644520ef8a1da1216bfdd1ff6e32ed2",
-    "content-hash": "9cbcc8c77840c2bb2b3a9b4cebe9c981",
+    "hash": "f3f4bc9dfbff55f9bee84d1b7f882092",
+    "content-hash": "37e27b8d656edaf6e1abeff37089acc6",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -156,21 +156,21 @@
         },
         {
             "name": "fkooman/config",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-config.git",
-                "reference": "b7ef9f6c7c3e40a8a9d62a471a49f8ee9338ac4d"
+                "reference": "92eb45e9c32b9fc41d25824dc47d9462b990085c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-config/zipball/b7ef9f6c7c3e40a8a9d62a471a49f8ee9338ac4d",
-                "reference": "b7ef9f6c7c3e40a8a9d62a471a49f8ee9338ac4d",
+                "url": "https://api.github.com/repos/fkooman/php-lib-config/zipball/92eb45e9c32b9fc41d25824dc47d9462b990085c",
+                "reference": "92eb45e9c32b9fc41d25824dc47d9462b990085c",
                 "shasum": ""
             },
             "require": {
                 "ext-spl": "*",
-                "php": ">=5.3.3",
+                "php": ">=5.4",
                 "symfony/yaml": "^2.7"
             },
             "type": "library",
@@ -191,7 +191,7 @@
                 }
             ],
             "description": "Read and write configuration files",
-            "time": "2016-05-19 06:59:02"
+            "time": "2016-08-10 08:27:32"
         },
         {
             "name": "fkooman/http",
@@ -320,16 +320,16 @@
         },
         {
             "name": "fkooman/oauth",
-            "version": "5.1.1",
+            "version": "5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-oauth.git",
-                "reference": "413f510ad55dea7c0f64543561cbfc04ee44bd81"
+                "reference": "1878a89f196c5ac6d4e450018f1b5470b3b7991b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-oauth/zipball/413f510ad55dea7c0f64543561cbfc04ee44bd81",
-                "reference": "413f510ad55dea7c0f64543561cbfc04ee44bd81",
+                "url": "https://api.github.com/repos/fkooman/php-lib-oauth/zipball/1878a89f196c5ac6d4e450018f1b5470b3b7991b",
+                "reference": "1878a89f196c5ac6d4e450018f1b5470b3b7991b",
                 "shasum": ""
             },
             "require": {
@@ -366,7 +366,7 @@
                 }
             ],
             "description": "OAuth 2.0 Server Library",
-            "time": "2016-05-25 14:30:46"
+            "time": "2016-08-10 09:51:23"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -703,16 +703,16 @@
         },
         {
             "name": "fkooman/tpl-twig",
-            "version": "1.3.2",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-lib-tpl-twig.git",
-                "reference": "6e2187ef357d75f9f446b382f110cd7d7d290fc8"
+                "reference": "5d425719e270d6ffa0218eeb9081bcab99ac81d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-tpl-twig/zipball/6e2187ef357d75f9f446b382f110cd7d7d290fc8",
-                "reference": "6e2187ef357d75f9f446b382f110cd7d7d290fc8",
+                "url": "https://api.github.com/repos/fkooman/php-lib-tpl-twig/zipball/5d425719e270d6ffa0218eeb9081bcab99ac81d0",
+                "reference": "5d425719e270d6ffa0218eeb9081bcab99ac81d0",
                 "shasum": ""
             },
             "require": {
@@ -740,7 +740,7 @@
                 }
             ],
             "description": "Twig for Simple Template Abstraction Library",
-            "time": "2016-04-11 11:53:32"
+            "time": "2016-08-10 08:43:01"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1031,16 +1031,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.8",
+            "version": "v2.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "dba4bb5846798cd12f32e2d8f3f35d77045773c8"
+                "reference": "0ceab136f43ed9d3e97b3eea32a7855dc50c121d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/dba4bb5846798cd12f32e2d8f3f35d77045773c8",
-                "reference": "dba4bb5846798cd12f32e2d8f3f35d77045773c8",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/0ceab136f43ed9d3e97b3eea32a7855dc50c121d",
+                "reference": "0ceab136f43ed9d3e97b3eea32a7855dc50c121d",
                 "shasum": ""
             },
             "require": {
@@ -1076,7 +1076,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29 05:29:29"
+            "time": "2016-07-17 09:06:15"
         },
         {
             "name": "twig/extensions",

@@ -4,7 +4,7 @@ serverMode: production
 authMethod: FormAuthentication
 #authMethod: MellonAuthentication
 
-#templateCache: /var/lib/vpn-user-portal/tpl
+dataDir: /var/lib/vpn-user-portal
 
 FormAuthentication:
     #foo: $2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq
@@ -13,10 +13,12 @@ MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
-api:
-    dsn: 'sqlite:/var/lib/vpn-user-portal/api.sqlite'
-    #username: foo
-    #password: bar
+# The OAuth clients registered for using the configuration API
+#apiClients:
+#    vpn-companion:
+#        redirect_uri: 'vpn://import/callback'
+#        response_type: token
+#        scope: create_config
 
 # API credentials for access to remote services
 remoteApi:
