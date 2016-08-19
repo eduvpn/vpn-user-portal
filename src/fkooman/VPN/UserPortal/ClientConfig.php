@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace fkooman\VPN\UserPortal;
 
 use RuntimeException;
@@ -116,48 +115,48 @@ class ClientConfig
             'persist-tun',
             'remote-cert-tls server',
 
-            # adaptive compression, allow server to override using push, it
-            # cannot be no here because that would confuse NetworkManager
+            // adaptive compression, allow server to override using push, it
+            // cannot be no here because that would confuse NetworkManager
             'comp-lzo',
 
             'verb 3',
 
-            #redirect-gateway
+            //redirect-gateway
 
-            # do not pull route/DNS information from server
-            #route-nopull
+            // do not pull route/DNS information from server
+            //route-nopull
 
-            # tell the server more about this client (version, OS)
+            // tell the server more about this client (version, OS)
             'push-peer-info',
 
-            # REMOTES
-            # wait this long (seconds) before trying the next server in the list
+            // REMOTES
+            // wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
 
-            # 2FA
+            // 2FA
             implode(PHP_EOL, $twoFactorEntries),
 
-            # allow the server to dictate the reneg-sec, by default it will be
-            # 3600 seconds, but when 2FA is enable we'd like to increase this
-            # to e.g. 8 hours to avoid asking for the OTP every hour
+            // allow the server to dictate the reneg-sec, by default it will be
+            // 3600 seconds, but when 2FA is enable we'd like to increase this
+            // to e.g. 8 hours to avoid asking for the OTP every hour
             'reneg-sec 0',
 
-            # remote
+            // remote
             implode(PHP_EOL, $remoteEntries),
 
-            # CRYPTO (DATA CHANNEL)
+            // CRYPTO (DATA CHANNEL)
             'auth SHA256',
             'cipher AES-256-CBC',
 
-            # CRYPTO (CONTROL CHANNEL)
-            # @see RFC 7525
-            # @see https://bettercrypto.org
-            # @see https://community.openvpn.net/openvpn/wiki/Hardening
+            // CRYPTO (CONTROL CHANNEL)
+            // @see RFC 7525
+            // @see https://bettercrypto.org
+            // @see https://community.openvpn.net/openvpn/wiki/Hardening
             'tls-version-min 1.2',
 
-            # To work with default configuration in iOS OpenVPN with
-            # "Force AES-CBC ciphersuites" enabled, we need to accept an
-            # additional cipher "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
+            // To work with default configuration in iOS OpenVPN with
+            // "Force AES-CBC ciphersuites" enabled, we need to accept an
+            // additional cipher "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
             'tls-cipher TLS-DHE-RSA-WITH-AES-128-GCM-SHA256:TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-256-CBC-SHA',
 
             sprintf('<ca>%s</ca>', PHP_EOL.$clientConfig['ca'].PHP_EOL),
