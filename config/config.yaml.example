@@ -23,10 +23,10 @@ MellonAuthentication:
 # API credentials for access to remote services
 remoteApi:
     vpn-ca-api:
-        uri: 'http://localhost:8008/api.php'
+        uri: 'http://vpn.example:8008/api.php'
         token: abcdef
     vpn-server-api:
-        uri: 'http://localhost:8009/api.php'
+        uri: 'http://vpn.example:8009/api.php'
         token: uvwxyz
 
 # Voot API group support
