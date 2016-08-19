@@ -21,12 +21,16 @@ use fkooman\Config\YamlFile;
 use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\Http\Request;
 use fkooman\Http\Session;
+use fkooman\OAuth\Auth\UnauthenticatedClientAuthentication;
+use fkooman\OAuth\Client\GuzzleHttpClient;
+use fkooman\OAuth\Client\OAuth2Client;
+use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\OAuthModule;
-use fkooman\OAuth\Storage\NullApprovalStorage;
 use fkooman\OAuth\Storage\ArrayClientStorage;
 use fkooman\OAuth\Storage\NoResourceServerStorage;
-use fkooman\OAuth\Storage\PdoAccessTokenStorage;
+use fkooman\OAuth\Storage\NullApprovalStorage;
 use fkooman\OAuth\Storage\NullAuthorizationCodeStorage;
+use fkooman\OAuth\Storage\PdoAccessTokenStorage;
 use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
 use fkooman\Rest\Plugin\Authentication\Bearer\BearerAuthentication;
 use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
@@ -34,47 +38,46 @@ use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
 use fkooman\Rest\Service;
 use fkooman\Tpl\Twig\TwigTemplateManager;
 use fkooman\VPN\UserPortal\DbTokenValidator;
-use fkooman\VPN\UserPortal\VpnApiModule;
 use fkooman\VPN\UserPortal\UserTokens;
+use fkooman\VPN\UserPortal\VootModule;
+use fkooman\VPN\UserPortal\VpnApiModule;
 use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnPortalModule;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
 use GuzzleHttp\Client;
-use fkooman\OAuth\Auth\UnauthenticatedClientAuthentication;
-use fkooman\OAuth\Client\OAuth2Client;
-use fkooman\OAuth\Client\Provider;
-use fkooman\OAuth\Client\GuzzleHttpClient;
-use fkooman\VPN\UserPortal\VootModule;
 
 try {
-    // XXX use SERVER_NAME instead of requestHost
-
     $request = new Request($_SERVER);
-    $serverName = $request->getUrl()->getHost();
+
+    $hostPort = sprintf(
+        '%s:%d',
+        $request->getUrl()->getHost(),
+        $request->getUrl()->getPort()
+    );
 
     $config = new Reader(
         new YamlFile(
             [
-                sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $serverName),
+                sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $hostPort),
                 sprintf('%s/config/config.yaml', dirname(__DIR__)),
             ]
         )
     );
 
     $serverMode = $config->v('serverMode', false, 'production');
-    $dataDir = $config->v('dataDir', true);
+    $dataDir = $config->v('dataDir');
 
     $templateCache = null;
-    if('production' === $serverMode) {
+    if ('production' === $serverMode) {
         // enable template cache when running in production mode
-        $templateCache = sprintf('%s/%s/tpl', $dataDir, $serverName);
+        $templateCache = sprintf('%s/%s/tpl', $dataDir, $hostPort);
     }
 
     $templateManager = new TwigTemplateManager(
         array(
             dirname(__DIR__).'/views',
             dirname(__DIR__).'/config/views',
-            dirname(__DIR__).sprintf('/config/%s/views', $serverName),
+            dirname(__DIR__).sprintf('/config/%s/views', $hostPort),
         ),
         $templateCache
     );
@@ -157,8 +160,18 @@ try {
         $config->v('remoteApi', 'vpn-server-api', 'uri')
     );
 
-    $accessTokens = sprintf('sqlite://%s/%s/access_tokens.sqlite', $dataDir, $serverName);
-    $accessTokensDb = new PDO($accessTokens);
+    // check whether OAuth tokens DB exists, if not create it
+    $dbFile = sprintf('%s/%s/access_tokens.sqlite', $dataDir, $hostPort);
+    $initDb = false;
+    if (!file_exists($dbFile)) {
+        @mkdir(dirname($dbFile), 0700, true);
+        $initDb = true;
+    }
+    $accessTokensDb = new PDO(sprintf('sqlite://%s', $dbFile));
+    $pdoAccessTokenStorage = new PdoAccessTokenStorage($accessTokensDb);
+    if ($initDb) {
+        $pdoAccessTokenStorage->initDatabase();
+    }
 
     $vpnApiModule = new VpnApiModule(
         $vpnConfigApiClient,
@@ -171,7 +184,7 @@ try {
         new NoResourceServerStorage(),
         new NullApprovalStorage(),
         new NullAuthorizationCodeStorage(),
-        new PdoAccessTokenStorage($accessTokensDb),
+        $pdoAccessTokenStorage,
         [
             'disable_token_endpoint' => true,   // no need for token endpoint
             'disable_introspect_endpoint' => true, // no need for introspection
@@ -228,7 +241,7 @@ try {
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     $response = $service->run($request);
     $response->setHeader('Content-Security-Policy', "default-src 'self'");
-    # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
+    // X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
     $response->setHeader('X-Frame-Options', 'DENY');
     $response->setHeader('X-Content-Type-Options', 'nosniff');
     $response->setHeader('X-Xss-Protection', '1; mode=block');

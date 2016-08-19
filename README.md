@@ -22,7 +22,6 @@ Set the `serverMode` to `development` and point `ApiDb/dsn` to a writable
 file, for example `$PWD/data`:
     
     $ mkdir data
-    $ php bin/init
 
 Add a user, in this case `foo` with password `bar`:
 

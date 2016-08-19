@@ -1,5 +1,4 @@
 /vendor
 /data
 /config/*.yaml
-/config/*.json
 /config/views
