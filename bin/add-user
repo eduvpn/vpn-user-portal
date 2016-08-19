@@ -19,19 +19,61 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 
 use fkooman\Config\YamlFile;
 
-try {
-    if (3 > $argc) {
-        throw new Exception(
-            sprintf('SYNTAX: %s [userName] [secret]', $argv[0])
-        );
-    }
-    $userName = $argv[1];
-    $secret = $argv[2];
-    $passwordHash = password_hash($secret, PASSWORD_DEFAULT);
-
-    $yamlFile = new YamlFile(
-        dirname(__DIR__).'/config/config.yaml'
+function showHelp(array $argv)
+{
+    return implode(
+        PHP_EOL,
+        [
+            sprintf('SYNTAX: %s [--instance domain.tld:443] --user username --pass password', $argv[0]),
+            '',
+            '--instance domain.tld:443  the instance to add the user to, defaults to',
+            '                           "one-instance" configuration if not specified',
+            '--user username            the user name',
+            '--pass password            the plain text password',
+            '',
+        ]
     );
+}
+
+try {
+    $instanceId = null;
+    $userName = null;
+    $userPass = null;
+
+    for ($i = 1; $i < $argc; ++$i) {
+        if ('--instance' === $argv[$i] || '-i' === $argv[$i]) {
+            if (array_key_exists($i + 1, $argv)) {
+                $instanceId = $argv[$i + 1];
+                ++$i;
+            }
+        }
+        if ('--user' === $argv[$i] || '-u' === $argv[$i]) {
+            if (array_key_exists($i + 1, $argv)) {
+                $userName = $argv[$i + 1];
+                ++$i;
+            }
+        }
+        if ('--pass' === $argv[$i] || '-p' === $argv[$i]) {
+            if (array_key_exists($i + 1, $argv)) {
+                $userPass = $argv[$i + 1];
+                ++$i;
+            }
+        }
+    }
+
+    if (is_null($userName) || is_null($userPass)) {
+        echo showHelp($argv);
+        exit(1);
+    }
+
+    $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
+
+    $configFile = sprintf('%s/config/config.yaml', dirname(__DIR__));
+    if (!is_null($instanceId)) {
+        $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId);
+    }
+
+    $yamlFile = new YamlFile($configFile);
     $configData = $yamlFile->readConfig();
     $configData['FormAuthentication'][$userName] = $passwordHash;
 
