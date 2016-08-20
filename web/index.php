@@ -49,38 +49,33 @@ use GuzzleHttp\Client;
 try {
     $request = new Request($_SERVER);
 
-    $hostPort = sprintf(
-        '%s:%d',
-        $request->getUrl()->getHost(),
-        $request->getUrl()->getPort()
-    );
+    // read the main configuration file
+    $configReader = new Reader(new YamlFile(sprintf('%s/config/config.yaml', dirname(__DIR__))));
+    $dataDir = $configReader->v('dataDir');
+    $serverMode = $configReader->v('serverMode', false, 'production');
 
-    $config = new Reader(
-        new YamlFile(
-            [
-                sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $hostPort),
-                sprintf('%s/config/config.yaml', dirname(__DIR__)),
-            ]
-        )
-    );
+    $templateDirs = [
+        sprintf('%s/views', dirname(__DIR__)),
+        sprintf('%s/config/views', dirname(__DIR__)),
+    ];
 
-    $serverMode = $config->v('serverMode', false, 'production');
-    $dataDir = $config->v('dataDir');
+    // if in multi instance configuration, read the instance specific
+    // configuration file and add instance specific template directory as well
+    if ($configReader->v('multiInstance', false, false)) {
+        $instanceId = $request->getUrl()->getHost();
+        $configReader = new Reader(new YamlFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId)));
+        $dataDir = sprintf('%s/%s', $dataDir, $instanceId);
+        $templateDirs[] = sprintf('%s/config/%s/views', dirname(__DIR__), $instanceId);
+    }
 
     $templateCache = null;
     if ('production' === $serverMode) {
         // enable template cache when running in production mode
-        $templateCache = sprintf('%s/%s/tpl', $dataDir, $hostPort);
+        $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
-    $templateManager = new TwigTemplateManager(
-        array(
-            dirname(__DIR__).'/views',
-            dirname(__DIR__).'/config/views',
-            dirname(__DIR__).sprintf('/config/%s/views', $hostPort),
-        ),
-        $templateCache
-    );
+    $templateManager = new TwigTemplateManager($templateDirs, $templateCache);
+//    $templateManager->addFilter(TwigFilters::sizeToHuman());
     $templateManager->setDefault(
         array(
             'rootFolder' => $request->getUrl()->getRoot(),
@@ -105,23 +100,22 @@ try {
             'activeLanguage' => $activeLanguage,
         ]
     );
-
     $templateManager->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
     // Authentication
-    $authMethod = $config->v('authMethod');
+    $authMethod = $configReader->v('authMethod');
     $templateManager->addDefault(array('authMethod' => $authMethod));
 
     switch ($authMethod) {
         case 'MellonAuthentication':
             $auth = new MellonAuthentication(
-                $config->v('MellonAuthentication', 'attribute')
+                $configReader->v('MellonAuthentication', 'attribute')
             );
             break;
         case 'FormAuthentication':
             $auth = new FormAuthentication(
-                function ($userId) use ($config) {
-                    $userList = $config->v('FormAuthentication');
+                function ($userId) use ($configReader) {
+                    $userList = $configReader->v('FormAuthentication');
                     if (null === $userList || !array_key_exists($userId, $userList)) {
                         return false;
                     }
@@ -141,11 +135,11 @@ try {
         new Client([
             'defaults' => [
                 'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $config->v('remoteApi', 'vpn-ca-api', 'token')),
+                    'Authorization' => sprintf('Bearer %s', $configReader->v('remoteApi', 'vpn-ca-api', 'token')),
                 ],
             ],
         ]),
-        $config->v('remoteApi', 'vpn-ca-api', 'uri')
+        $configReader->v('remoteApi', 'vpn-ca-api', 'uri')
     );
 
     // vpn-server-api
@@ -153,15 +147,15 @@ try {
         new Client([
             'defaults' => [
                 'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $config->v('remoteApi', 'vpn-server-api', 'token')),
+                    'Authorization' => sprintf('Bearer %s', $configReader->v('remoteApi', 'vpn-server-api', 'token')),
                 ],
             ],
         ]),
-        $config->v('remoteApi', 'vpn-server-api', 'uri')
+        $configReader->v('remoteApi', 'vpn-server-api', 'uri')
     );
 
     // check whether OAuth tokens DB exists, if not create it
-    $dbFile = sprintf('%s/%s/access_tokens.sqlite', $dataDir, $hostPort);
+    $dbFile = sprintf('%s/access_tokens.sqlite', $dataDir);
     $initDb = false;
     if (!file_exists($dbFile)) {
         @mkdir(dirname($dbFile), 0700, true);
@@ -180,7 +174,7 @@ try {
 
     $oauthModule = new OAuthModule(
         $templateManager,
-        new ArrayClientStorage($config->v('apiClients', false, [])),
+        new ArrayClientStorage($configReader->v('apiClients', false, [])),
         new NoResourceServerStorage(),
         new NullApprovalStorage(),
         new NullAuthorizationCodeStorage(),
@@ -192,14 +186,14 @@ try {
         ]
     );
 
-    $enableVoot = $config->v('enableVoot', false, false);
+    $enableVoot = $configReader->v('enableVoot', false, false);
     if ($enableVoot) {
         $oauthClient = new OAuth2Client(
             new Provider(
-                $config->v('Voot', 'clientId'),
-                $config->v('Voot', 'clientSecret'),
-                $config->v('Voot', 'authorizationEndpoint'),
-                $config->v('Voot', 'tokenEndpoint')
+                $configReader->v('Voot', 'clientId'),
+                $configReader->v('Voot', 'clientSecret'),
+                $configReader->v('Voot', 'authorizationEndpoint'),
+                $configReader->v('Voot', 'tokenEndpoint')
             ),
             new GuzzleHttpClient()
         );

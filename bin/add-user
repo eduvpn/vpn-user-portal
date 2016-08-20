@@ -18,16 +18,17 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
 use fkooman\Config\YamlFile;
+use fkooman\Config\Reader;
 
 function showHelp(array $argv)
 {
     return implode(
         PHP_EOL,
         [
-            sprintf('SYNTAX: %s [--instance domain.tld:443] --user username --pass password', $argv[0]),
+            sprintf('SYNTAX: %s [--instance domain.tld] --user username --pass password', $argv[0]),
             '',
-            '--instance domain.tld:443  the instance to add the user to, defaults to',
-            '                           "one-instance" configuration if not specified',
+            '--instance domain.tld      the instance to add the user to in case of multi',
+            '                           instance deploy',
             '--user username            the user name',
             '--pass password            the plain text password',
             '',
@@ -59,26 +60,34 @@ try {
                 ++$i;
             }
         }
+        if ('--help' === $argv[$i] || '-h' === $argv[$i]) {
+            echo showHelp($argv);
+            exit(0);
+        }
     }
 
     if (is_null($userName) || is_null($userPass)) {
-        echo showHelp($argv);
-        exit(1);
+        throw new RuntimeException('--user and --pass must be specified, see --help');
     }
-
-    $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
 
     $configFile = sprintf('%s/config/config.yaml', dirname(__DIR__));
-    if (!is_null($instanceId)) {
+    $yamlFile = new YamlFile($configFile);
+    $configReader = new Reader($yamlFile);
+
+    if ($configReader->v('multiInstance', false, false)) {
+        // we have a multi instance deploy, load appropriate configuration
+        if (is_null($instanceId)) {
+            throw new RuntimeException('multi instance configuration, instance must be specified');
+        }
         $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId);
+        $yamlFile = new YamlFile($configFile);
     }
 
-    $yamlFile = new YamlFile($configFile);
     $configData = $yamlFile->readConfig();
+    $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
     $configData['FormAuthentication'][$userName] = $passwordHash;
-
     $yamlFile->writeConfig($configData);
 } catch (Exception $e) {
-    echo $e->getMessage().PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
 }

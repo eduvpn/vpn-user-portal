@@ -1,10 +1,21 @@
-serverMode: production
+#
+# VPN User Portal Configuration
+#
+
+# the mode in which to operate (default: production)
 #serverMode: development
+
+dataDir: /var/lib/vpn-user-portal
+
+# enable multi instance (default: false)
+#multiInstance: true
+
+##########################
+# Instance Configuration #
+##########################
 
 authMethod: FormAuthentication
 #authMethod: MellonAuthentication
-
-dataDir: /var/lib/vpn-user-portal
 
 FormAuthentication:
     #foo: $2y$10$sWzE0MjAP13srnNI/Pg8SuBM6LVmq8/hnznJwkQRF00Obe321PqGq
@@ -23,10 +34,10 @@ MellonAuthentication:
 # API credentials for access to remote services
 remoteApi:
     vpn-ca-api:
-        uri: 'http://vpn.example:8008/api.php'
+        uri: 'http://localhost:8008/api.php'
         token: abcdef
     vpn-server-api:
-        uri: 'http://vpn.example:8009/api.php'
+        uri: 'http://localhost:8009/api.php'
         token: uvwxyz
 
 # Voot API group support
