@@ -2,3 +2,5 @@
 /data
 /config/*.yaml
 /config/views
+/config/*/*.yaml
+/config/*/views
