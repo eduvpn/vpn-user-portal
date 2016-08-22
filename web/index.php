@@ -75,7 +75,6 @@ try {
     }
 
     $templateManager = new TwigTemplateManager($templateDirs, $templateCache);
-//    $templateManager->addFilter(TwigFilters::sizeToHuman());
     $templateManager->setDefault(
         array(
             'rootFolder' => $request->getUrl()->getRoot(),
