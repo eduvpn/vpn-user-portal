@@ -1,5 +1,6 @@
 body {
     font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 90%;
     max-width: 55em;
     margin: 0em auto;
     color: #555;
@@ -126,6 +127,7 @@ hr {
 }
 
 div.footer {
+    font-size: 80%;
     margin-top: 3em;
     text-align: center;
 }
