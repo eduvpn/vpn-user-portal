@@ -4,7 +4,6 @@ body {
     margin: 0em auto;
     color: #555;
     line-height: 1.4;
-    font-size: 0.9em;
     padding: 0.3em;
     text-align: justify;
 }
@@ -129,7 +128,6 @@ hr {
 div.footer {
     margin-top: 3em;
     text-align: center;
-    font-size: 75%;
 }
 
 div.footer form {
