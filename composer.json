@@ -23,7 +23,7 @@
         "fkooman/config": "^1.1.0",
         "fkooman/http": "^2.0",
         "fkooman/oauth": "^6.0",
-        "fkooman/oauth2-client": "^1.0",
+        "fkooman/oauth2-client": "^2.0",
         "fkooman/rest": "^2.0",
         "fkooman/rest-plugin-authentication": "^3.0",
         "fkooman/rest-plugin-authentication-basic": "^3.0",

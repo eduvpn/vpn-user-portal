@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "33cb228294675a37fa563507cb620f5b",
-    "content-hash": "154805fc366164d5ed28ac37af0946f8",
+    "hash": "5677d3fea7843988336e6bcb0ea40cd3",
+    "content-hash": "18edc7f8a319561c9e7eb0806bd1b066",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -370,20 +370,22 @@
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "1.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "34ddd9fcebf44cb5c34bf53d9d1158bb5c9ffcc5"
+                "reference": "2315fce9098b8dd5b19165bbc26eb5140109c97b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/34ddd9fcebf44cb5c34bf53d9d1158bb5c9ffcc5",
-                "reference": "34ddd9fcebf44cb5c34bf53d9d1158bb5c9ffcc5",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/2315fce9098b8dd5b19165bbc26eb5140109c97b",
+                "reference": "2315fce9098b8dd5b19165bbc26eb5140109c97b",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^5.3",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-spl": "*",
                 "paragonie/random_compat": "^1.0",
                 "php": ">=5.4.0"
             },
@@ -404,7 +406,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2016-06-04 10:01:08"
+            "time": "2016-08-30 10:14:59"
         },
         {
             "name": "fkooman/rest",

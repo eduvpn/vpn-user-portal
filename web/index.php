@@ -22,7 +22,7 @@ use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\Http\Request;
 use fkooman\Http\Session;
 use fkooman\OAuth\Auth\UnauthenticatedClientAuthentication;
-use fkooman\OAuth\Client\GuzzleHttpClient;
+use fkooman\OAuth\Client\CurlHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\OAuthModule;
@@ -194,7 +194,7 @@ try {
                 $configReader->v('Voot', 'authorizationEndpoint'),
                 $configReader->v('Voot', 'tokenEndpoint')
             ),
-            new GuzzleHttpClient()
+            new CurlHttpClient()
         );
         $vootModule = new VootModule(
             $oauthClient,
