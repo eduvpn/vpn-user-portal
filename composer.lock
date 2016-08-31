@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5677d3fea7843988336e6bcb0ea40cd3",
-    "content-hash": "18edc7f8a319561c9e7eb0806bd1b066",
+    "hash": "f2d6721e62469f06386dc58eb07f35c5",
+    "content-hash": "429c23ea2755e7779b4a8d615918d0d4",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -105,29 +105,37 @@
         },
         {
             "name": "christian-riesen/otp",
-            "version": "1.4.3",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristianRiesen/otp.git",
-                "reference": "20a539ce6280eb029030f4e7caefd5709a75e1ad"
+                "reference": "b441f8338c0375df3e288225acefb943c0b3cb05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristianRiesen/otp/zipball/20a539ce6280eb029030f4e7caefd5709a75e1ad",
-                "reference": "20a539ce6280eb029030f4e7caefd5709a75e1ad",
+                "url": "https://api.github.com/repos/ChristianRiesen/otp/zipball/b441f8338c0375df3e288225acefb943c0b3cb05",
+                "reference": "b441f8338c0375df3e288225acefb943c0b3cb05",
                 "shasum": ""
             },
             "require": {
-                "christian-riesen/base32": ">=1.0",
-                "php": ">=5.3.0"
+                "christian-riesen/base32": "^1.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
             },
             "suggest": {
                 "paragonie/random_compat": "Optional polyfill for a more secure random generator for pre PHP7 versions"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Otp": "src"
+                "psr-4": {
+                    "Otp\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -152,7 +160,7 @@
                 "rfc6238",
                 "totp"
             ],
-            "time": "2015-10-08 08:17:59"
+            "time": "2016-06-10 14:47:22"
         },
         {
             "name": "fkooman/config",
