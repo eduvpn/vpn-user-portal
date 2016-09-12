@@ -81,7 +81,7 @@ class VpnServerApiClient extends VpnApiClient
 
     public function getUserGroups($userId)
     {
-        $requestUri = sprintf('%s/users/groups/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/groups/%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec(
             'GET',

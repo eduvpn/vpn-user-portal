@@ -109,7 +109,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $poolList = [];
                 $requiresTwoFactor = [];
 
-                foreach ($serverPools as $pool) {
+                foreach ($serverPools as $poolId => $pool) {
                     // ACL enabled?
                     if ($pool['enableAcl']) {
                         // is the user member of the aclGroupList?
@@ -124,7 +124,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         }
                     }
 
-                    $poolList[] = ['id' => $pool['id'], 'name' => $pool['name'], 'twoFactor' => $pool['twoFactor']];
+                    $poolList[] = ['id' => $poolId, 'name' => $pool['displayName'], 'twoFactor' => $pool['twoFactor']];
                 }
 
                 return $this->templateManager->render(
