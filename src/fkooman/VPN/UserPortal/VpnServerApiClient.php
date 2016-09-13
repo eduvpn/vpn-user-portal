@@ -38,27 +38,27 @@ class VpnServerApiClient extends VpnApiClient
 
     public function getOtpSecret($userId)
     {
-        $requestUri = sprintf('%s/users/otp_secrets/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/users/has_otp_secret?user_id=%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec('GET', $requestUri)['data']['otp_secret'];
     }
 
     public function setOtpSecret($userId, $otpSecret)
     {
-        $requestUri = sprintf('%s/users/otp_secrets/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/users/set_otp_secret', $this->vpnServerApiUri);
 
         return $this->exec(
             'POST',
             $requestUri,
             [
-                'body' => ['otp_secret' => $otpSecret],
+                'body' => ['user_id' => $userId, 'otp_secret' => $otpSecret],
             ]
         )['data']['ok'];
     }
 
     public function hasVootToken($userId)
     {
-        $requestUri = sprintf('%s/users/voot_tokens/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/users/has_voot_tokens?user_id=%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec(
             'GET',
@@ -68,20 +68,20 @@ class VpnServerApiClient extends VpnApiClient
 
     public function setVootToken($userId, $vootToken)
     {
-        $requestUri = sprintf('%s/users/voot_tokens/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/users/set_voot_token', $this->vpnServerApiUri, $userId);
 
         return $this->exec(
             'POST',
             $requestUri,
             [
-                'body' => ['voot_token' => $vootToken],
+                'body' => ['user_id' => $userId, 'voot_token' => $vootToken],
             ]
         )['data']['ok'];
     }
 
     public function getUserGroups($userId)
     {
-        $requestUri = sprintf('%s/groups/%s', $this->vpnServerApiUri, $userId);
+        $requestUri = sprintf('%s/groups?user_id=%s', $this->vpnServerApiUri, $userId);
 
         return $this->exec(
             'GET',
@@ -106,9 +106,17 @@ class VpnServerApiClient extends VpnApiClient
 
     public function disableCommonName($commonName)
     {
-        $requestUri = sprintf('%s/common_names/disabled/%s', $this->vpnServerApiUri, $commonName);
+        $requestUri = sprintf('%s/common_names/disable', $this->vpnServerApiUri);
 
-        return $this->exec('POST', $requestUri)['data']['ok'];
+        return $this->exec(
+            'POST', 
+            $requestUri,
+            [
+                'body' => [
+                    'common_name' => $commonName
+                ]
+            ]
+        )['data']['ok'];
     }
 
     public function getServerPools()
