@@ -414,8 +414,8 @@ class VpnPortalModule implements ServiceModuleInterface
         $serverPools = $this->vpnServerApiClient->getServerPools();
 
         $serverPool = null;
-        foreach ($serverPools as $pool) {
-            if ($poolId === $pool['id']) {
+        foreach ($serverPools as $i => $pool) {
+            if ($poolId === $i) {
                 $serverPool = $pool;
             }
         }
@@ -424,17 +424,19 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         // XXX if 2FA is required, we should warn the user to first enroll!
+        // XXX fix the remote entities problem
 
         $remoteEntities = [];
-        foreach ($serverPool['instances'] as $instance) {
-            $remoteEntities[] = [
-                'port' => $instance['port'],
-                'proto' => $instance['proto'],
-                'host' => $serverPool['hostName'],
-            ];
-        }
+#        foreach ($serverPool['instances'] as $instance) {
+#            $remoteEntities[] = [
+#                'port' => $instance['port'],
+#                'proto' => $instance['proto'],
+#                'host' => $serverPool['hostName'],
+#            ];
+#        }
 
-        $remoteEntities = ['remote' => $remoteEntities];
+#        $remoteEntities = ['remote' => $remoteEntities];
+        $remoteEntities = ['remote' => []];
 
         $clientConfig = new ClientConfig();
         $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverPool['twoFactor']], $certData['certificate'], $remoteEntities)));

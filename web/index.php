@@ -145,7 +145,7 @@ try {
     $vpnServerApiClient = new VpnServerApiClient(
         new Client([
             'defaults' => [
-                'auth' => ['portal', $configReader->v('remoteApi', 'vpn-server-api', 'token')]
+                'auth' => ['vpn-user-portal', $configReader->v('remoteApi', 'vpn-server-api', 'token')]
             ],
         ]),
         $configReader->v('remoteApi', 'vpn-server-api', 'uri')
