@@ -43,13 +43,13 @@ class VpnConfigApiClient extends VpnApiClient
                     'cert_type' => 'client',
                 ],
             ]
-        );
+        )['data'];
     }
 
     public function getCertList($userId)
     {
-        $requestUri = sprintf('%s/certificate/%s', $this->vpnConfigApiUri, $userId);
+        $requestUri = sprintf('%s/certificate?user_id=%s', $this->vpnConfigApiUri, $userId);
 
-        return $this->exec('GET', $requestUri);
+        return $this->exec('GET', $requestUri)['data'];
     }
 }

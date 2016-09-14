@@ -161,7 +161,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $expiredConfigs = [];
                 $disabledConfigs = [];
 
-                foreach ($certList['items'] as $c) {
+                foreach ($certList['certificates'] as $c) {
                     $commonName = $c['user_id'].'_'.$c['name'];
                     // only if state is valid it makes sense to show disable
                     if ('V' === $c['state']) {
@@ -399,7 +399,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // make sure the configuration does not exist yet
         // XXX: this should be optimized a bit...
         $certList = $this->vpnConfigApiClient->getCertList($userId);
-        foreach ($certList['items'] as $cert) {
+        foreach ($certList['certificates'] as $cert) {
             if ($configName === $cert['name']) {
                 return $this->templateManager->render(
                     'vpnPortalErrorConfigExists',

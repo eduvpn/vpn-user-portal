@@ -133,9 +133,7 @@ try {
     $vpnConfigApiClient = new VpnConfigApiClient(
         new Client([
             'defaults' => [
-                'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $configReader->v('remoteApi', 'vpn-ca-api', 'token')),
-                ],
+                'auth' => ['vpn-user-portal', $configReader->v('remoteApi', 'vpn-ca-api', 'token')],
             ],
         ]),
         $configReader->v('remoteApi', 'vpn-ca-api', 'uri')
@@ -145,7 +143,7 @@ try {
     $vpnServerApiClient = new VpnServerApiClient(
         new Client([
             'defaults' => [
-                'auth' => ['vpn-user-portal', $configReader->v('remoteApi', 'vpn-server-api', 'token')]
+                'auth' => ['vpn-user-portal', $configReader->v('remoteApi', 'vpn-server-api', 'token')],
             ],
         ]),
         $configReader->v('remoteApi', 'vpn-server-api', 'uri')
