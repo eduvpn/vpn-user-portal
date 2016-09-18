@@ -428,7 +428,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // XXX if 2FA is required, we should warn the user to first enroll!
 
         $remoteEntities = [];
-        $processCount = $serverPool['range'];
+        $processCount = $serverPool['processCount'];
 
         for ($i = 0; $i < $processCount; ++$i) {
             if (1 === $processCount || $i !== $processCount - 1) {
