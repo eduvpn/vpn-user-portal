@@ -21,6 +21,8 @@ use fkooman\Config\YamlFile;
 use fkooman\Http\Exception\InternalServerErrorException;
 use fkooman\Http\Request;
 use fkooman\Http\Session;
+use SURFnet\VPN\Common\Api\VpnCaApiClient;
+use SURFnet\VPN\Common\Api\VpnServerApiClient;
 use fkooman\OAuth\Auth\UnauthenticatedClientAuthentication;
 use fkooman\OAuth\Client\CurlHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
@@ -41,9 +43,7 @@ use fkooman\VPN\UserPortal\DbTokenValidator;
 use fkooman\VPN\UserPortal\UserTokens;
 use fkooman\VPN\UserPortal\VootModule;
 use fkooman\VPN\UserPortal\VpnApiModule;
-use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnPortalModule;
-use fkooman\VPN\UserPortal\VpnServerApiClient;
 use GuzzleHttp\Client;
 
 try {
@@ -130,7 +130,7 @@ try {
     }
 
     // vpn-ca-api
-    $vpnConfigApiClient = new VpnConfigApiClient(
+    $vpnCaApiClient = new VpnCaApiClient(
         new Client([
             'defaults' => [
                 'auth' => ['vpn-user-portal', $configReader->v('remoteApi', 'vpn-ca-api', 'token')],
@@ -163,7 +163,7 @@ try {
     }
 
     $vpnApiModule = new VpnApiModule(
-        $vpnConfigApiClient,
+        $vpnCaApiClient,
         $vpnServerApiClient
     );
 
@@ -201,7 +201,7 @@ try {
 
     $vpnPortalModule = new VpnPortalModule(
         $templateManager,
-        $vpnConfigApiClient,
+        $vpnCaApiClient,
         $vpnServerApiClient,
         new UserTokens($accessTokensDb),
         $session

@@ -21,18 +21,20 @@ use fkooman\Http\Response;
 use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
 use fkooman\Rest\Service;
 use fkooman\Rest\ServiceModuleInterface;
+use SURFnet\VPN\Common\Api\VpnCaApiClient;
+use SURFnet\VPN\Common\Api\VpnServerApiClient;
 
 class VpnApiModule implements ServiceModuleInterface
 {
-    /** @var VpnConfigApiClient */
-    private $vpnConfigApiClient;
+    /** @var \SURFnet\VPN\Common\Api\VpnCaApiClient */
+    private $vpnCaClient;
 
-    /** @var VpnServerApiClient */
+    /** @var \SURFnet\VPN\Common\Api\VpnServerApiClient */
     private $vpnServerApiClient;
 
-    public function __construct(VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient)
+    public function __construct(VpnCaApiClient $vpnCaApiClient, VpnServerApiClient $vpnServerApiClient)
     {
-        $this->vpnConfigApiClient = $vpnConfigApiClient;
+        $this->vpnCaApiClient = $vpnCaApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
     }
 
@@ -57,7 +59,7 @@ class VpnApiModule implements ServiceModuleInterface
 
     private function addConfig(UserInfoInterface $userInfo, $configName)
     {
-        $certData = $this->vpnConfigApiClient->addConfiguration($userInfo->getUserId(), $configName);
+        $certData = $this->vpnCaApiClient->addConfiguration($userInfo->getUserId(), $configName);
         $serverPools = $this->vpnServerApiClient->getServerPools();
         $serverInfo = $serverPools[0];
 

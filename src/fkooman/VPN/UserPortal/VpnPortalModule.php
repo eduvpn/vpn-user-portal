@@ -30,16 +30,18 @@ use fkooman\Rest\ServiceModuleInterface;
 use fkooman\Tpl\TemplateManagerInterface;
 use Otp\GoogleAuthenticator;
 use Otp\Otp;
+use SURFnet\VPN\Common\Api\VpnCaApiClient;
+use SURFnet\VPN\Common\Api\VpnServerApiClient;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
     /** @var \fkooman\Tpl\TemplateManagerInterface */
     private $templateManager;
 
-    /** @var VpnConfigApiClient */
-    private $vpnConfigApiClient;
+    /** @var \SURFnet\VPN\Common\Api\VpnCaApiClient */
+    private $vpnCaApiClient;
 
-    /** @var VpnServerApiClient */
+    /** @var \SURFnet\VPN\Common\Api\VpnServerApiClient */
     private $vpnServerApiClient;
 
     /** @var UserTokens */
@@ -51,10 +53,10 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $useVoot;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, Session $session)
+    public function __construct(TemplateManagerInterface $templateManager, VpnCaApiClient $vpnCaApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, Session $session)
     {
         $this->templateManager = $templateManager;
-        $this->vpnConfigApiClient = $vpnConfigApiClient;
+        $this->vpnCaApiClient = $vpnCaApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
         $this->userTokens = $userTokens;
         $this->session = $session;
@@ -104,7 +106,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     return new RedirectResponse($request->getUrl()->getRootUrl().'_voot/authorize', 302);
                 }
 
-                $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
+                $otpSecret = $this->vpnServerApiClient->getHasOtpSecret($u->getUserId());
 
                 $poolList = [];
                 $requiresTwoFactor = [];
@@ -153,7 +155,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/configurations',
             function (Request $request, UserInfoInterface $u) {
-                $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
+                $certList = $this->vpnCaApiClient->getUserCertList($u->getUserId());
                 $disabledCommonNames = $this->vpnServerApiClient->getDisabledCommonNames();
 
                 $validConfigs = [];
@@ -228,7 +230,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             function (Request $request, UserInfoInterface $u) {
-                $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
+                $otpSecret = $this->vpnServerApiClient->getHasOtpSecret($u->getUserId());
                 $userGroups = $this->getUserGroups($request, $u);
                 if (false === $userGroups) {
                     // Voot returns false if user did not yet approve obtaining
@@ -398,7 +400,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // make sure the configuration does not exist yet
         // XXX: this should be optimized a bit...
-        $certList = $this->vpnConfigApiClient->getCertList($userId);
+        $certList = $this->vpnCaApiClient->getUserCertList($userId);
         foreach ($certList['certificates'] as $cert) {
             if ($configName === $cert['name']) {
                 return $this->templateManager->render(
@@ -410,7 +412,7 @@ class VpnPortalModule implements ServiceModuleInterface
             }
         }
 
-        $certData = $this->vpnConfigApiClient->addConfiguration($userId, $configName);
+        $certData = $this->vpnCaApiClient->addConfiguration($userId, $configName);
         $serverPools = $this->vpnServerApiClient->getServerPools();
 
         $serverPool = null;
@@ -426,7 +428,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // XXX if 2FA is required, we should warn the user to first enroll!
 
         $remoteEntities = [];
-        $processCount = $serverPool['processCount'];
+        $processCount = $serverPool['range'];
 
         for ($i = 0; $i < $processCount; ++$i) {
             if (1 === $processCount || $i !== $processCount - 1) {
