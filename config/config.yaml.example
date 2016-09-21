@@ -22,18 +22,19 @@ apiProviders:
         userPass: uvwxyz
         apiUri: 'http://127.42.101.100:8009/api.php'
 
+enableVoot: false
+#enableVoot: true
+Voot:
+    clientId: my_client_id
+    clientSecret: my_client_secret
+    authorizationEndpoint: 'https://authz.surfconext.nl/oauth/authorize'
+    tokenEndpoint: 'https://authz.surfconext.nl/oauth/token'
 
+#
+#
 # The OAuth clients registered for using the configuration API
 #apiClients:
 #    vpn-companion:
 #        redirect_uri: 'vpn://import/callback'
 #        response_type: token
 #        scope: create_config
-
-# Voot API group support
-#enableVoot: false
-#Voot:
-#    clientId: my_client_id
-#    clientSecret: my_client_secret
-#    authorizationEndpoint: https://authz.surfconext.nl/oauth/authorize
-#    tokenEndpoint: https://authz.surfconext.nl/oauth/token

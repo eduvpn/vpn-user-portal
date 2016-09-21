@@ -33,6 +33,10 @@ use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\TwigTpl;
 use SURFnet\VPN\Portal\GuzzleHttpClient;
 use SURFnet\VPN\Portal\VpnPortalModule;
+use SURFnet\VPN\Portal\VootModule;
+use fkooman\OAuth\Client\OAuth2Client;
+use fkooman\OAuth\Client\Provider;
+use fkooman\OAuth\Client\CurlHttpClient;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -144,6 +148,7 @@ try {
     );
     $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
 
+    // portal module
     $vpnPortalModule = new VpnPortalModule(
         $tpl,
         $serverClient,
@@ -151,6 +156,25 @@ try {
         $session
     );
     $service->addModule($vpnPortalModule);
+
+    // voot module
+    if ($config->v('enableVoot')) {
+        $vootModule = new VootModule(
+                new OAuth2Client(
+                new Provider(
+                    $config->v('Voot', 'clientId'),
+                    $config->v('Voot', 'clientSecret'),
+                    $config->v('Voot', 'authorizationEndpoint'),
+                    $config->v('Voot', 'tokenEndpoint')
+                ),
+                new CurlHttpClient()
+            ),
+            $serverClient,
+            $session
+        );
+        $service->addModule($vootModule);
+    }
+
     $response = $service->run($request);
     $response->send();
 } catch (Exception $e) {
