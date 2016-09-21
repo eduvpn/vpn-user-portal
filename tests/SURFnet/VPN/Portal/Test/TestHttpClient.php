@@ -71,6 +71,8 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('disable_common_name', true);
             case 'serverClient/kill_client':
                 return self::wrap('kill_client', true);
+            case 'serverClient/set_voot_token':
+                return self::wrap('set_voot_token', true);
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }

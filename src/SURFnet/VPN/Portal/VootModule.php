@@ -21,6 +21,8 @@ use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\Http\SessionInterface;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
 use fkooman\OAuth\Client\OAuth2Client;
 
 class VootModule implements ServiceModuleInterface
@@ -28,60 +30,56 @@ class VootModule implements ServiceModuleInterface
     /** @var \fkooman\OAuth\Client\OAuth2Client */
     private $oauthClient;
 
-    /** @var VpnServerApiClient */
-    private $vpnServerApiClient;
+    /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
+    private $serverClient;
 
-    /** @var \fkooman\Http\Session */
+    /** @var \SURFnet\VPN\Common\Http\SessionInterface */
     private $session;
 
-    public function __construct(OAuth2Client $oauthClient, VpnServerApiClient $vpnServerApiClient, Session $session)
+    public function __construct(OAuth2Client $oauthClient, ServerClient $serverClient, SessionInterface $session)
     {
         $this->oauthClient = $oauthClient;
-        $this->vpnServerApiClient = $vpnServerApiClient;
+        $this->serverClient = $serverClient;
         $this->session = $session;
     }
 
     public function init(Service $service)
     {
-        $userAuth = array(
-            'fkooman\Rest\Plugin\Authentication\AuthenticationPlugin' => array(
-                'activate' => array('user'),
-            ),
-        );
-
         $service->get(
             '/_voot/authorize',
-            function (Request $request, UserInfoInterface $u) {
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
                 $authorizationRequestUri = $this->oauthClient->getAuthorizationRequestUri(
                     'groups',
-                    $request->getUrl()->getRootUrl().'_voot/callback'
+                    $request->getRootUri().'_voot/callback'
                 );
 
                 $this->session->set('_voot_state', $authorizationRequestUri);
 
                 return new RedirectResponse($authorizationRequestUri);
-            },
-            $userAuth
+            }
         );
 
         $service->get(
             '/_voot/callback',
-            function (Request $request, UserInfoInterface $u) {
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
                 // obtain the access token
                 $accessToken = $this->oauthClient->getAccessToken(
                     $this->session->get('_voot_state'),
-                    $request->getUrl()->getQueryParameter('code'),
-                    $request->getUrl()->getQueryParameter('state')
+                    $request->getQueryParameter('code'),
+                    $request->getQueryParameter('state')
                 );
                 $this->session->delete('_voot_state');
 
                 // store the access token
-                $this->vpnServerApiClient->setVootToken($u->getUserId(), $accessToken->getToken());
+                $this->serverClient->setVootToken($userId, $accessToken->getToken());
 
                 // return to account page
-                return new RedirectResponse($request->getUrl()->getRootUrl().'account', 302);
-            },
-            $userAuth
+                return new RedirectResponse($request->getRootUri(), 302);
+            }
         );
     }
 }
