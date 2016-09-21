@@ -175,8 +175,7 @@ try {
         $service->addModule($vootModule);
     }
 
-    $response = $service->run($request);
-    $response->send();
+    return $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     $response = new HtmlResponse($e->getMessage(), 500);
