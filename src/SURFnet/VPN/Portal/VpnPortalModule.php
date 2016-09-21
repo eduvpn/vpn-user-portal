@@ -254,6 +254,7 @@ class VpnPortalModule implements ServiceModuleInterface
     private function getConfig($userId, $configName, $poolId)
     {
         // XXX dragons ahead!
+        // XXX why does this even work?!
 
         // userId + configName length cannot be longer than 64 as the
         // certificate CN cannot be longer than 64

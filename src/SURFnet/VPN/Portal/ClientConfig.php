@@ -69,8 +69,8 @@ class ClientConfig
         return [
             sprintf('# OpenVPN Client Configuration for %s', $clientConfig['cn']),
 
-            sprintf('# Valid From: %s', date('c', $clientConfig['valid_from'])),
-            sprintf('# Valid To: %s', date('c', $clientConfig['valid_to'])),
+            sprintf('# Valid From: %s', date('Y-m-d', $clientConfig['valid_from'])),
+            sprintf('# Valid To: %s', date('Y-m-d', $clientConfig['valid_to'])),
 
             'dev tun',
             'client',
