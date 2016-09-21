@@ -12,43 +12,41 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    {% if configs is empty %}
+    {% if userCertificateList is empty %}
         <p class="block">
             {% trans %}
                 There are currently no configurations. <a href="new">Create</a> one.
             {% endtrans %}
         </p>                    
-    {% endif %}
-
-    {% if configs is not empty %}
+    {% else %}
         <table class="horizontal">
             <thead>
                 <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th class="text-right">{% trans "Status" %}</th><th></th></tr> 
             </thead>
             <tbody>
-            {% for config in configs %}
+            {% for userCertificate in userCertificateList %}
                 <tr>
-                    {% if 'E' == config.state or 'R' == config.state %}
-                        <td>{{ config.name|e }}</td>
+                    {% if 'E' == userCertificate.state or 'R' == userCertificate.state %}
+                        <td>{{ userCertificate.name|e }}</td>
                     {% else %}
-                        <td>{{ config.name|e }}</td>
+                        <td>{{ userCertificate.name|e }}</td>
                     {% endif %}
-                    <td>{{ config.exp|e|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ userCertificate.exp|e|date('Y-m-d H:i:s') }}</td>
                     <td class="text-right">
-                        {% if 'D' == config.state %}
+                        {% if 'D' == userCertificate.state %}
                             <span class="error">{% trans "Disabled" %}</span>
-                        {% elseif 'V' == config.state %}
+                        {% elseif 'V' == userCertificate.state %}
                             <span class="success">{% trans "Active" %}</span>
-                        {% elseif 'R' == config.state %}
+                        {% elseif 'R' == userCertificate.state %}
                             <span class="red">{% trans "Revoked" %}</span>
-                        {% elseif 'E' == config.state %}
+                        {% elseif 'E' == userCertificate.state %}
                             <span>{% trans "Expired" %}</span>
                         {% endif %}
                     </td>
-                    {% if 'V' == config.state %}
+                    {% if 'V' == userCertificate.state %}
                     <td class="text-right">
-                        <form method="post" class="inline" action="disable">
-                            <input type="hidden" name="name" value="{{ config.name|e }}">
+                        <form method="post" class="inline" action="disableCertificate">
+                            <input type="hidden" name="configName" value="{{ userCertificate.name|e }}">
                             <button type="submit">{% trans "Disable" %}</button>
                         </form>
                     </td>

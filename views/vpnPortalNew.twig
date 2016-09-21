@@ -28,10 +28,10 @@
         {% endtrans %}
         </p>
 
-        {% for tfa in requiresTwoFactor %}
+        {% for otpEnabledPool in otpEnabledPools %}
             <p class="warning">
                 {% trans %}
-                The <strong>{{ tfa }}</strong> profile requires two-factor authentication. Enroll <a href="otp">here</a>.
+                The <strong>{{ otpEnabledPool }}</strong> profile requires two-factor authentication. Enroll <a href="otp">here</a>.
                 {% endtrans %}
             </p>
         {% endfor %}
@@ -41,11 +41,11 @@
                 <label for="poolId">{% trans "Profile" %}</label>
                 <select id="poolId" name="poolId">
                     {% for pool in poolList %}
-                        <option value="{{ pool.id|e }}">{{ pool.name|e }}</option>
+                        <option value="{{ pool.poolId|e }}">{{ pool.displayName|e }}</option>
                     {% endfor %}
                 </select>
-                <label for="inputName">{% trans "Name" %}</label>
-                <input type="text" name="name" id="inputName" maxlength="{{ cnLength|e }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+                <label for="configName">{% trans "Name" %}</label>
+                <input type="text" name="configName" id="configName" maxlength="{{ maxNameLength|e }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
             </fieldset>
             <fieldset>
                 <button type="submit">{% trans "Download" %}</button>

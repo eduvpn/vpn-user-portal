@@ -13,16 +13,15 @@
     </ul>
 
     <p>
-    {% set configName = configName|e %}
     {% trans %}
-    Are you sure you want to disable <em>{{ configName }}</em>? Only an administrator can undo this!
+        Are you sure you want to disable <em>{{ configName }}</em>? Only an administrator can undo this!
     {% endtrans %}
     </p>
 
-    <form method="post">
-        <input type="hidden" name="name" value="{{ configName|e }}">
-        <button name="confirm" type="submit" value="yes">{% trans "Yes" %}</button>
-        <button name="confirm" type="submit" value="no">{% trans "No" %}</button>
+    <form method="post" action="disableCertificateConfirm">
+        <input type="hidden" name="configName" value="{{ configName|e }}">
+        <button name="confirmDisable" type="submit" value="yes">{% trans "Yes" %}</button>
+        <button name="confirmDisable" type="submit" value="no">{% trans "No" %}</button>
     </form>    
 
     {% include 'footer.twig' %}

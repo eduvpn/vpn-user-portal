@@ -12,32 +12,51 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <dl>
-        <dt>{% trans "User ID" %}</dt>
-        <dd><code>{{ userId|e }}</code></dd>
+    <h2>{% trans "User ID" %}</h2>
+    <p>
+        <code>{{ userId|e }}</code>.
+    </p>
 
-        {% if showTwoFactor %}
-        <dt>{% trans "Two-factor Authentication" %}</dt>
-        <dd>
-            {% if otpEnabled %}
-                {% trans "Enrolled" %}
-            {% else %}
-                <a href="otp">{% trans "Enroll" %}</a>
-            {% endif %}
-        </dd>
+    {% if userGroups is not empty %}
+    <h2>{% trans "Group Membership" %}</h2>
+    <p>
+        {% trans "You are a member of the following groups:" %}
+        <ul>
+            {% for group in userGroups %}
+                <li title="{{ group.id|e }}">{{ group.displayName|e }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+    {% endif %}
+    
+    <h2>{% trans "Two-factor Authentication" %}</h2>
+    <p>
+        {% if hasOtpSecret %}
+            {% trans %} You are already enrolled. {% endtrans %}
+        {% else %}
+            {% trans %} You are <em>not</em> yet enrolled. Enroll <a href="otp">here</a>. {% endtrans %}
         {% endif %}
+    </p>
 
-        {% if userGroups is not empty %}
-            <dt>{% trans "Group Membership(s)" %}</dt>
-            <dd>
-                <ul class="simple">
-                    {% for group in userGroups %}
-                        <li title="{{ group.id|e }}">{{ group.displayName|e }}</li>
-                    {% endfor %}
-                </ul>
-            </dd>
-        {% endif %}
-    </dl>
+    {% if otpEnabledPools is not empty %}
+        <p>
+        {% trans %}Two-factor authentication is used by the following VPN profiles: {% endtrans %}
+        <ul>
+        {% for otpEnabledPool in otpEnabledPools %}
+            <li>{{ otpEnabledPool|e }}</li>
+        {% endfor %}
+        </ul>
+        </p>
+    {% else %}
+        <p class="warning">
+        {% trans %}
+            None of the VPN services you have access to 
+            have two-factor authentication enabled, so it will not be used when
+            connecting to the VPN.
+        {% endtrans %}
+        </p>
+    {% endif %}
+
     {% include 'footer.twig' %}
 </body>
 </html>

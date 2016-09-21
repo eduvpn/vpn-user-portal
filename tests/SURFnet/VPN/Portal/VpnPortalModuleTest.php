@@ -59,13 +59,12 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                 'vpnPortalNew' => [
                     'poolList' => [
                         [
-                            'id' => 'internet',
-                            'name' => 'Internet Access',
-                            'twoFactor' => false,
+                            'poolId' => 'internet',
+                            'displayName' => 'Internet Access',
                         ],
                     ],
-                    'requiresTwoFactor' => [],
-                    'cnLength' => 60,
+                    'otpEnabledPools' => [],
+                    'maxNameLength' => 60,
                 ],
             ],
             $this->makeRequest('GET', '/new')
@@ -80,7 +79,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                 'POST',
                 '/new',
                 [],
-                ['name' => 'MyConfig', 'poolId' => 'internet'],
+                ['configName' => 'MyConfig', 'poolId' => 'internet'],
                 true
             )->getBody()
         );
@@ -91,8 +90,8 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'vpnPortalAccount' => [
-                    'showTwoFactor' => false,
-                    'otpEnabled' => false,
+                    'otpEnabledPools' => [],
+                    'hasOtpSecret' => false,
                     'userId' => 'foo',
                     'userGroups' => [],
                 ],
@@ -106,8 +105,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'vpnPortalConfigurations' => [
-                    'userId' => 'foo',
-                    'configs' => [
+                    'userCertificateList' => [
                         [
                             'name' => 'FooConfig',
                             'user_id' => 'foo',
@@ -128,7 +126,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                     'configName' => 'DeleteXYZ',
                 ],
             ],
-            $this->makeRequest('POST', '/disable', [], ['name' => 'DeleteXYZ'])
+            $this->makeRequest('POST', '/disableCertificate', [], ['configName' => 'DeleteXYZ'])
         );
     }
 
@@ -136,7 +134,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             302,
-            $this->makeRequest('POST', '/disable', [], ['name' => 'DeleteXYZ', 'confirm' => 'yes'], true)->getStatusCode()
+            $this->makeRequest('POST', '/disableCertificateConfirm', [], ['configName' => 'DeleteXYZ', 'confirmDisable' => 'yes'], true)->getStatusCode()
         );
     }
 

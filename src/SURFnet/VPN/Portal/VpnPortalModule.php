@@ -53,14 +53,6 @@ class VpnPortalModule implements ServiceModuleInterface
 
     public function init(Service $service)
     {
-        /* REDIRECTS **/
-        $service->get(
-            '/config/',
-            function (Request $request) {
-                return new RedirectResponse($request->getRootUri(), 301);
-            }
-        );
-
         $service->get(
             '/',
             function (Request $request) {
@@ -68,34 +60,37 @@ class VpnPortalModule implements ServiceModuleInterface
             }
         );
 
-        /* PAGES */
         $service->get(
             '/new',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
+
                 $serverPools = $this->serverClient->serverPools();
                 $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
-                $userGroups = [];
+                $userGroups = $this->serverClient->userGroups($userId);
 
                 $poolList = [];
-                $requiresTwoFactor = [];
+                $otpEnabledPools = [];
 
                 foreach ($serverPools as $poolId => $poolData) {
-                    // ACL enabled?
                     if ($poolData['enableAcl']) {
                         // is the user member of the aclGroupList?
                         if (!self::isMember($userGroups, $poolData['aclGroupList'])) {
                             continue;
                         }
                     }
+
                     // any of them requires 2FA and we are not enrolled?
                     if (!$hasOtpSecret) {
                         if ($poolData['twoFactor']) {
-                            $requiresTwoFactor[] = $poolData['name'];
+                            $otpEnabledPools[] = $poolData['displayName'];
                         }
                     }
 
-                    $poolList[] = ['id' => $poolId, 'name' => $poolData['displayName'], 'twoFactor' => $poolData['twoFactor']];
+                    $poolList[] = [
+                        'poolId' => $poolId,
+                        'displayName' => $poolData['displayName'],
+                    ];
                 }
 
                 return new HtmlResponse(
@@ -103,8 +98,8 @@ class VpnPortalModule implements ServiceModuleInterface
                         'vpnPortalNew',
                         [
                             'poolList' => $poolList,
-                            'requiresTwoFactor' => $requiresTwoFactor,
-                            'cnLength' => 63 - strlen($userId),
+                            'otpEnabledPools' => $otpEnabledPools,
+                            'maxNameLength' => 63 - strlen($userId),
                         ]
                     )
                 );
@@ -116,8 +111,10 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $configName = $request->getPostParameter('name');
+                $configName = $request->getPostParameter('configName');
+                InputValidation::configName($configName);
                 $poolId = $request->getPostParameter('poolId');
+                InputValidation::poolId($poolId);
 
                 return $this->getConfig($userId, $configName, $poolId);
             }
@@ -128,47 +125,30 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $certList = $this->caClient->userCertificateList($userId);
+                $userCertificateList = $this->caClient->userCertificateList($userId);
+
+                // XXX we need a call to retrieve the disabled common names
+                // for a particular user, not for all, that seems overkill
                 $disabledCommonNames = $this->serverClient->disabledCommonNames();
 
-                $validConfigs = [];
-                $revokedConfigs = [];
-                $expiredConfigs = [];
-                $disabledConfigs = [];
-
-                foreach ($certList as $c) {
-                    $commonName = $c['user_id'].'_'.$c['name'];
-                    // only if state is valid it makes sense to show disable
-                    if ('V' === $c['state']) {
+                // check all valid certificates to see if they are disabled
+                foreach ($userCertificateList as $i => $userCertificate) {
+                    if ('V' === $userCertificate['state']) {
+                        $commonName = sprintf('%s_%s', $userCertificate['user_id'], $userCertificate['name']);
                         if (in_array($commonName, $disabledCommonNames)) {
-                            $c['state'] = 'D';
+                            $userCertificateList[$i]['state'] = 'D';
                         }
-                    }
-
-                    switch ($c['state']) {
-                        case 'V':
-                            $validConfigs[] = $c;
-                            break;
-                        case 'R':
-                            $revokedConfigs[] = $c;
-                            break;
-                        case 'E':
-                            $expiredConfigs[] = $c;
-                            break;
-                        default:
-                            // must be disabled
-                            $disabledConfigs[] = $c;
                     }
                 }
 
-                $configs = array_merge($validConfigs, $disabledConfigs, $revokedConfigs, $expiredConfigs);
+                // XXX we probably should support sorting of the certificate list
+                // and/or choose a default sorting that makes sense
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'userId' => $userId,
-                            'configs' => $configs,
+                            'userCertificateList' => $userCertificateList,
                         ]
                     )
                 );
@@ -176,27 +156,37 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/disable',
+            '/disableCertificate',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
-                $configName = $request->getPostParameter('name');
-                $formConfirm = $request->getPostParameter('confirm', false);
 
-                if (is_null($formConfirm)) {
-                    // ask for confirmation
-                    return new HtmlResponse(
-                        $this->tpl->render(
-                            'vpnPortalConfirmDisable',
-                            [
-                                'configName' => $configName,
-                            ]
-                        )
-                    );
-                }
+                $configName = $request->getPostParameter('configName');
+                InputValidation::configName($configName);
 
-                if ('yes' === $formConfirm) {
-                    // user said yes
-                    $this->disableConfig($userId, $configName);
+                return new HtmlResponse(
+                    $this->tpl->render(
+                        'vpnPortalConfirmDisable',
+                        [
+                            'configName' => $configName,
+                        ]
+                    )
+                );
+            }
+        );
+
+        $service->post(
+            '/disableCertificateConfirm',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $configName = $request->getPostParameter('configName');
+                InputValidation::configName($configName);
+                $confirmDisable = $request->getPostParameter('confirmDisable');
+                InputValidation::confirmDisable($confirmDisable);
+
+                if ('yes' === $confirmDisable) {
+                    $this->serverClient->disableCommonName(sprintf('%s_%s', $userId, $configName));
+                    $this->serverClient->killClient(sprintf('%s_%s', $userId, $configName));
                 }
 
                 return new RedirectResponse($request->getRootUri().'configurations', 302);
@@ -207,28 +197,23 @@ class VpnPortalModule implements ServiceModuleInterface
             '/account',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
-                $otpSecret = $this->serverClient->hasOtpSecret($userId);
+
+                $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
                 $userGroups = $this->serverClient->userGroups($userId);
-                if (false === $userGroups) {
-                    // Voot returns false if user did not yet approve obtaining
-                    // groups on the users behalve at Voot endpoint
-                    return new RedirectResponse($request->getRootUri().'_voot/authorize', 302);
-                }
                 $serverPools = $this->serverClient->serverPools();
 
-                // check if any of the server pools have 2FA enabled
-                $showTwoFactor = false;
-                foreach ($serverPools as $pool) {
-                    // ACL enabled?
-                    if ($pool['enableAcl']) {
+                $otpEnabledPools = [];
+                foreach ($serverPools as $poolData) {
+                    if ($poolData['enableAcl']) {
                         // is the user member of the aclGroupList?
-                        if (!self::isMember($userGroups, $pool['aclGroupList'])) {
+                        if (!self::isMember($userGroups, $poolData['aclGroupList'])) {
                             continue;
                         }
                     }
 
-                    if ($pool['twoFactor']) {
-                        $showTwoFactor = true;
+                    if ($poolData['twoFactor']) {
+                        // XXX we have to make sure displayName is always set...
+                        $otpEnabledPools[] = $poolData['displayName'];
                     }
                 }
 
@@ -236,10 +221,9 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalAccount',
                         [
-                            'showTwoFactor' => $showTwoFactor,
-                            'otpEnabled' => $otpSecret,
+                            'otpEnabledPools' => $otpEnabledPools,
+                            'hasOtpSecret' => $hasOtpSecret,
                             'userId' => $userId,
-//                            'userTokens' => $this->userTokens->getUserAccessTokens($userId),
                             'userGroups' => $userGroups,
                         ]
                     )
@@ -250,30 +234,26 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/setLanguage',
             function (Request $request) {
-                $requestLang = $request->getPostParameter('language');
-                Utils::validateLanguage($requestLang);
-                $this->session->set('activeLanguage', $requestLang);
-                // redirect
-                return new RedirectResponse($request->getPostParameter('redirect_to'));
+                $setLanguage = $request->getPostParameter('setLanguage');
+                InputValidation::setLanguage($setLanguage);
+
+                $this->session->set('activeLanguage', $setLanguage);
+
+                return new RedirectResponse($request->getHeader('HTTP_REFERER'), 302);
             }
         );
 
         $service->get(
             '/documentation',
-            function (Request $request, array $hookData) {
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalDocumentation', []
-                    )
-                );
+            function () {
+                return new HtmlResponse($this->tpl->render('vpnPortalDocumentation', []));
             }
         );
     }
 
     private function getConfig($userId, $configName, $poolId)
     {
-        Utils::validateConfigName($configName);
-        Utils::validatePoolId($poolId);
+        // XXX dragons ahead!
 
         // userId + configName length cannot be longer than 64 as the
         // certificate CN cannot be longer than 64
@@ -363,14 +343,6 @@ class VpnPortalModule implements ServiceModuleInterface
         $response->setBody($vpnConfig);
 
         return $response;
-    }
-
-    private function disableConfig($userId, $configName)
-    {
-        Utils::validateConfigName($configName);
-
-        $this->serverClient->disableCommonName(sprintf('%s_%s', $userId, $configName));
-        $this->serverClient->killClient(sprintf('%s_%s', $userId, $configName));
     }
 
     private static function isMember(array $userGroups, array $aclGroupList)
