@@ -17,13 +17,10 @@
  */
 namespace SURFnet\VPN\Portal;
 
-use fkooman\Http\Request;
-use fkooman\Http\Response;
-use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
-use fkooman\Rest\Service;
-use fkooman\Rest\ServiceModuleInterface;
-use SURFnet\VPN\Common\Api\VpnCaApiClient;
-use SURFnet\VPN\Common\Api\VpnServerApiClient;
+use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Response;
 
 class VpnApiModule implements ServiceModuleInterface
 {

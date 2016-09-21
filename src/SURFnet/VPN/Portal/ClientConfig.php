@@ -21,7 +21,7 @@ use RuntimeException;
 
 class ClientConfig
 {
-    public function get(array $clientConfig)
+    public function get(array $clientConfig, $shuffleRemoteHosts = true)
     {
         $requiredParameters = [
             'cn',
@@ -43,50 +43,13 @@ class ClientConfig
             }
         }
 
-        // we want to put the UDP entries first, randomize them and then
-        // add the TCP entries afterwards so we have a nice fallthrough to
-        // eventual TCP but still get "load balancing"
-        $udpRemotes = [];
-        $tcpRemotes = [];
-        foreach ($clientConfig['remote'] as $remoteEntry) {
-            if ('udp' === $remoteEntry['proto'] || 'udp6' === $remoteEntry['proto']) {
-                $udpRemotes[] = $remoteEntry;
-            }
-            if ('tcp' === $remoteEntry['proto'] || 'tcp6' === $remoteEntry['proto']) {
-                $tcpRemotes[] = $remoteEntry;
-            }
-            // ignore other protocols
-        }
-
-        shuffle($udpRemotes);
-        shuffle($tcpRemotes);
-
-        // crazy ahead
-        if (2 < count($udpRemotes)) {
-            // if there are > 2 UDP entries
-            if (1 < count($tcpRemotes)) {
-                // and > 1 TCP entry
-                $mergedRemotes = array_merge(
-                    array_slice($udpRemotes, 0, 2),
-                    array_slice($tcpRemotes, 0, 1),
-                    array_slice($udpRemotes, 2),
-                    array_slice($tcpRemotes, 1)
-                );
-            } else {
-                // <= 1 TCP entry
-                $mergedRemotes = array_merge(
-                    array_slice($udpRemotes, 0, 2),
-                    $tcpRemotes,
-                    array_slice($udpRemotes, 2)
-                );
-            }
-        } else {
-            // <= 2 UDP entries
-            $mergedRemotes = array_merge($udpRemotes, $tcpRemotes);
+        $remoteHosts = $clientConfig['remote'];
+        if ($shuffleRemoteHosts) {
+            $remoteHosts = self::shuffleRemoteHosts($remoteHosts);
         }
 
         $remoteEntries = [];
-        foreach ($mergedRemotes as $remoteEntry) {
+        foreach ($remoteHosts as $remoteEntry) {
             $host = $remoteEntry['host'];
             $proto = $remoteEntry['proto'];
             if ('tcp' === $proto) {
@@ -168,5 +131,52 @@ class ClientConfig
 
             sprintf('<tls-auth>%s</tls-auth>', PHP_EOL.$clientConfig['ta'].PHP_EOL),
         ];
+    }
+
+    public static function shuffleRemoteHosts(array $remoteHosts)
+    {
+        // we want to put the UDP entries first, randomize them and then
+        // add the TCP entries afterwards so we have a nice fallthrough to
+        // eventual TCP but still get "load balancing"
+        $udpRemotes = [];
+        $tcpRemotes = [];
+        foreach ($remoteHosts as $remoteEntry) {
+            if ('udp' === $remoteEntry['proto'] || 'udp6' === $remoteEntry['proto']) {
+                $udpRemotes[] = $remoteEntry;
+            }
+            if ('tcp' === $remoteEntry['proto'] || 'tcp6' === $remoteEntry['proto']) {
+                $tcpRemotes[] = $remoteEntry;
+            }
+            // ignore other protocols
+        }
+
+        shuffle($udpRemotes);
+        shuffle($tcpRemotes);
+
+        // crazy ahead
+        if (2 < count($udpRemotes)) {
+            // if there are > 2 UDP entries
+            if (1 < count($tcpRemotes)) {
+                // and > 1 TCP entry
+                $mergedRemotes = array_merge(
+                    array_slice($udpRemotes, 0, 2),
+                    array_slice($tcpRemotes, 0, 1),
+                    array_slice($udpRemotes, 2),
+                    array_slice($tcpRemotes, 1)
+                );
+            } else {
+                // <= 1 TCP entry
+                $mergedRemotes = array_merge(
+                    array_slice($udpRemotes, 0, 2),
+                    $tcpRemotes,
+                    array_slice($udpRemotes, 2)
+                );
+            }
+        } else {
+            // <= 2 UDP entries
+            $mergedRemotes = array_merge($udpRemotes, $tcpRemotes);
+        }
+
+        return $mergedRemotes;
     }
 }

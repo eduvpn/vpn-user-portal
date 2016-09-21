@@ -15,15 +15,14 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace SURFnet\VPN\Portal;
+namespace SURFnet\VPN\Portal\Test;
 
-use SURFnet\VPN\Common\Http\Response;
+use SURFnet\VPN\Common\TplInterface;
 
-class HtmlResponse extends Response
+class JsonTpl implements TplInterface
 {
-    public function __construct($responsePage, $responseCode = 200)
+    public function render($templateName, array $templateVariables)
     {
-        parent::__construct($responseCode, 'text/html');
-        $this->setBody($responsePage);
+        return json_encode([$templateName => $templateVariables]);
     }
 }

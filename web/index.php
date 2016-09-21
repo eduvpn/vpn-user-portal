@@ -27,10 +27,10 @@ use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\SecurityHeadersHook;
 use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\Session;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\TwigTpl;
-use SURFnet\VPN\Portal\HtmlResponse;
 use SURFnet\VPN\Portal\GuzzleHttpClient;
 use SURFnet\VPN\Portal\VpnPortalModule;
 

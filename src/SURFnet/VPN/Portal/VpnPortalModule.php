@@ -21,6 +21,7 @@ use SURFnet\VPN\Common\Http\SessionInterface;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\TplInterface;
@@ -286,6 +287,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // make sure the configuration does not exist yet
         // XXX: this should be optimized a bit...
         $userCertificateList = $this->caClient->userCertificateList($userId);
+
         foreach ($userCertificateList as $userCertificate) {
             if ($configName === $userCertificate['name']) {
                 return new HtmlResponse(
@@ -337,7 +339,13 @@ class VpnPortalModule implements ServiceModuleInterface
         $remoteEntities = ['remote' => $remoteEntities];
 
         $clientConfig = new ClientConfig();
-        $vpnConfig = implode(PHP_EOL, $clientConfig->get(array_merge(['twoFactor' => $serverPool['twoFactor']], $certData, $remoteEntities)));
+        $vpnConfig = implode(
+            PHP_EOL,
+            $clientConfig->get(
+                array_merge(['twoFactor' => $serverPool['twoFactor']], $certData, $remoteEntities),
+                false  // no randomizing
+            )
+        );
 
         // XXX get this from the server info, not from the current request, this is silly ;)
 

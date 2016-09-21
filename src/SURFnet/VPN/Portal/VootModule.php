@@ -17,12 +17,10 @@
  */
 namespace SURFnet\VPN\Portal;
 
-use fkooman\Http\RedirectResponse;
-use fkooman\Http\Request;
-use fkooman\Rest\Plugin\Authentication\UserInfoInterface;
-use fkooman\Rest\Service;
-use fkooman\Rest\ServiceModuleInterface;
-use fkooman\Http\Session;
+use SURFnet\VPN\Common\Http\RedirectResponse;
+use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use fkooman\OAuth\Client\OAuth2Client;
 
 class VootModule implements ServiceModuleInterface
