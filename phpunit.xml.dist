@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="vendor/autoload.php" colors="true" verbose="true">
+  <php>
+    <var name="DB_DSN" value="sqlite::memory:"/>
+    <var name="DB_USER" value=""/>
+    <var name="DB_PASSWD" value=""/>
+  </php>
+  <testsuites>
+    <testsuite name="Server">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">src</directory>
+    </whitelist>
+  </filter>
+</phpunit>
