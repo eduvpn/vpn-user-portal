@@ -116,7 +116,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $poolId = $request->getPostParameter('poolId');
                 InputValidation::poolId($poolId);
 
-                return $this->getConfig($userId, $configName, $poolId);
+                return $this->getConfig($request->getServerName(), $userId, $configName, $poolId);
             }
         );
 
@@ -251,7 +251,7 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    private function getConfig($userId, $configName, $poolId)
+    private function getConfig($serverName, $userId, $configName, $poolId)
     {
         // XXX dragons ahead!
         // XXX why does this even work?!
@@ -328,15 +328,7 @@ class VpnPortalModule implements ServiceModuleInterface
             )
         );
 
-        // XXX get this from the server info, not from the current request, this is silly ;)
-
-        $httpHost = 'FIXME';
-        if (false !== strpos($httpHost, ':')) {
-            // strip port
-            $httpHost = substr($httpHost, 0, strpos($httpHost, ':'));
-        }
-
-        $configFileName = sprintf('%s_%s_%s', $httpHost, date('Ymd'), $configName);
+        $configFileName = sprintf('%s_%s_%s', $serverName, date('Ymd'), $configName);
 
         // return an OVPN file
         $response = new Response(200, 'application/x-openvpn-profile');
