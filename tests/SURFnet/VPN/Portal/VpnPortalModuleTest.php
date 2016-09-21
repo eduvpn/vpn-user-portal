@@ -81,12 +81,66 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                 '/new',
                 [],
                 ['name' => 'MyConfig', 'poolId' => 'internet'],
-                false
-            )
+                true
+            )->getBody()
         );
     }
 
-    private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $decodeResponse = true)
+    public function testAccount()
+    {
+        $this->assertSame(
+            [
+                'vpnPortalAccount' => [
+                    'showTwoFactor' => false,
+                    'otpEnabled' => false,
+                    'userId' => 'foo',
+                    'userGroups' => [],
+                ],
+            ],
+            $this->makeRequest('GET', '/account')
+        );
+    }
+
+    public function testConfigurations()
+    {
+        $this->assertSame(
+            [
+                'vpnPortalConfigurations' => [
+                    'userId' => 'foo',
+                    'configs' => [
+                        [
+                            'name' => 'FooConfig',
+                            'user_id' => 'foo',
+                            'state' => 'V',
+                        ],
+                    ],
+                ],
+            ],
+            $this->makeRequest('GET', '/configurations')
+        );
+    }
+
+    public function testDisable()
+    {
+        $this->assertSame(
+            [
+                'vpnPortalConfirmDisable' => [
+                    'configName' => 'DeleteXYZ',
+                ],
+            ],
+            $this->makeRequest('POST', '/disable', [], ['name' => 'DeleteXYZ'])
+        );
+    }
+
+    public function testDisableConfirm()
+    {
+        $this->assertSame(
+            302,
+            $this->makeRequest('POST', '/disable', [], ['name' => 'DeleteXYZ', 'confirm' => 'yes'], true)->getStatusCode()
+        );
+    }
+
+    private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $returnResponseObj = false)
     {
         $response = $this->service->run(
             new Request(
@@ -102,11 +156,12 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $responseBody = $response->getBody();
-        if ($decodeResponse) {
-            return json_decode($responseBody, true);
+        if ($returnResponseObj) {
+            return $response;
         }
 
-        return $responseBody;
+        $responseBody = $response->getBody();
+
+        return json_decode($responseBody, true);
     }
 }

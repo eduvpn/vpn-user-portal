@@ -41,7 +41,11 @@ class TestHttpClient implements HttpClientInterface
             case 'serverClient/has_otp_secret?user_id=foo':
                 return self::wrap('has_otp_secret', false);
             case 'caClient/user_certificate_list?user_id=foo':
-                return self::wrap('user_certificate_list', []);
+                return self::wrap('user_certificate_list', [['name' => 'FooConfig', 'user_id' => 'foo', 'state' => 'V']]);
+            case 'serverClient/user_groups?user_id=foo':
+                return self::wrap('user_groups', []);
+            case 'serverClient/disabled_common_names':
+                return self::wrap('disabled_common_names', []);
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }
@@ -63,6 +67,10 @@ class TestHttpClient implements HttpClientInterface
                         'ta' => 'TAKEY',
                     ]
                 );
+            case 'serverClient/disable_common_name':
+                return self::wrap('disable_common_name', true);
+            case 'serverClient/kill_client':
+                return self::wrap('kill_client', true);
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }
