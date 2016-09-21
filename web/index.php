@@ -1,72 +1,53 @@
 <?php
 /**
- * Copyright 2016 François Kooman <fkooman@tuxed.net>.
+ *  Copyright (C) 2016 SURFnet.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__DIR__).'/vendor/autoload.php';
+require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use fkooman\Config\Reader;
-use fkooman\Config\YamlFile;
-use fkooman\Http\Exception\InternalServerErrorException;
-use fkooman\Http\Request;
-use fkooman\Http\Session;
-use SURFnet\VPN\Common\Api\VpnCaApiClient;
-use SURFnet\VPN\Common\Api\VpnServerApiClient;
-use fkooman\OAuth\Auth\UnauthenticatedClientAuthentication;
-use fkooman\OAuth\Client\CurlHttpClient;
-use fkooman\OAuth\Client\OAuth2Client;
-use fkooman\OAuth\Client\Provider;
-use fkooman\OAuth\OAuthModule;
-use fkooman\OAuth\Storage\ArrayClientStorage;
-use fkooman\OAuth\Storage\NoResourceServerStorage;
-use fkooman\OAuth\Storage\NullApprovalStorage;
-use fkooman\OAuth\Storage\NullAuthorizationCodeStorage;
-use fkooman\OAuth\Storage\PdoAccessTokenStorage;
-use fkooman\Rest\Plugin\Authentication\AuthenticationPlugin;
-use fkooman\Rest\Plugin\Authentication\Bearer\BearerAuthentication;
-use fkooman\Rest\Plugin\Authentication\Form\FormAuthentication;
-use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
-use fkooman\Rest\Service;
-use fkooman\Tpl\Twig\TwigTemplateManager;
-use fkooman\VPN\UserPortal\DbTokenValidator;
-use fkooman\VPN\UserPortal\UserTokens;
-use fkooman\VPN\UserPortal\VootModule;
-use fkooman\VPN\UserPortal\VpnApiModule;
-use fkooman\VPN\UserPortal\VpnPortalModule;
 use GuzzleHttp\Client;
+use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\HttpClient\CaClient;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\Http\FormAuthenticationHook;
+use SURFnet\VPN\Common\Http\FormAuthenticationModule;
+use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
+use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\SecurityHeadersHook;
+use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\Http\Session;
+use SURFnet\VPN\Common\Logger;
+use SURFnet\VPN\Portal\TwigTpl;
+use SURFnet\VPN\Portal\HtmlResponse;
+use SURFnet\VPN\Portal\GuzzleHttpClient;
+use SURFnet\VPN\Portal\VpnPortalModule;
+
+$logger = new Logger('vpn-user-portal');
 
 try {
-    $request = new Request($_SERVER);
+    $request = new Request($_SERVER, $_GET, $_POST);
+    $instanceId = $request->getServerName();
 
-    // read the main configuration file
-    $configReader = new Reader(new YamlFile(sprintf('%s/config/config.yaml', dirname(__DIR__))));
-    $dataDir = $configReader->v('dataDir');
-    $serverMode = $configReader->v('serverMode', false, 'production');
+    $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
+    $config = Config::fromFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId));
 
     $templateDirs = [
         sprintf('%s/views', dirname(__DIR__)),
-        sprintf('%s/config/views', dirname(__DIR__)),
+        sprintf('%s/config/%s/views', dirname(__DIR__), $instanceId),
     ];
-
-    // if in multi instance configuration, read the instance specific
-    // configuration file and add instance specific template directory as well
-    if ($configReader->v('multiInstance', false, false)) {
-        $instanceId = $request->getUrl()->getHost();
-        $configReader = new Reader(new YamlFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId)));
-        $dataDir = sprintf('%s/%s', $dataDir, $instanceId);
-        $templateDirs[] = sprintf('%s/config/%s/views', dirname(__DIR__), $instanceId);
-    }
+    $serverMode = $config->v('serverMode');
 
     $templateCache = null;
     if ('production' === $serverMode) {
@@ -74,12 +55,12 @@ try {
         $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
-    $templateManager = new TwigTemplateManager($templateDirs, $templateCache);
-    $templateManager->setDefault(
+    $tpl = new TwigTpl($templateDirs, $templateCache);
+    $tpl->setDefault(
         array(
-            'rootFolder' => $request->getUrl()->getRoot(),
-            'rootUrl' => $request->getUrl()->getRootUrl(),
-            'requestUrl' => $request->getUrl()->toString(),
+            'requestUri' => $request->getUri(),
+            'requestRoot' => $request->getRoot(),
+            'requestRootUri' => $request->getRootUri(),
         )
     );
 
@@ -94,35 +75,43 @@ try {
     if (is_null($activeLanguage)) {
         $activeLanguage = 'en_US';
     }
-    $templateManager->addDefault(
+    $tpl->addDefault(
         [
             'activeLanguage' => $activeLanguage,
         ]
     );
-    $templateManager->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
+    $tpl->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
+
+    $service = new Service();
+    $service->addAfterHook('security_headers', new SecurityHeadersHook());
 
     // Authentication
-    $authMethod = $configReader->v('authMethod');
-    $templateManager->addDefault(array('authMethod' => $authMethod));
+    $authMethod = $config->v('authMethod');
+    $tpl->addDefault(array('authMethod' => $authMethod));
 
     switch ($authMethod) {
         case 'MellonAuthentication':
-            $auth = new MellonAuthentication(
-                $configReader->v('MellonAuthentication', 'attribute')
+            $service->addBeforeHook(
+                'auth',
+                new MellonAuthenticationHook(
+                    $config->v('MellonAuthentication', 'attribute')
+                )
             );
             break;
         case 'FormAuthentication':
-            $auth = new FormAuthentication(
-                function ($userId) use ($configReader) {
-                    $userList = $configReader->v('FormAuthentication');
-                    if (null === $userList || !array_key_exists($userId, $userList)) {
-                        return false;
-                    }
-
-                    return $userList[$userId];
-                },
-                $templateManager,
-                $session
+            $service->addBeforeHook(
+                'auth',
+                new FormAuthenticationHook(
+                    $session,
+                    $tpl
+                )
+            );
+            $service->addModule(
+                new FormAuthenticationModule(
+                    $config->v('FormAuthentication'),
+                    $session,
+                    $tpl
+                )
             );
             break;
         default:
@@ -130,114 +119,42 @@ try {
     }
 
     // vpn-ca-api
-    $vpnCaApiClient = new VpnCaApiClient(
+    $guzzleCaClient = new GuzzleHttpClient(
         new Client([
             'defaults' => [
-                'auth' => ['vpn-user-portal', $configReader->v('remoteApi', 'vpn-ca-api', 'token')],
+                'auth' => [
+                    $config->v('apiProviders', 'vpn-ca-api', 'userName'),
+                    $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
+                ],
             ],
-        ]),
-        $configReader->v('remoteApi', 'vpn-ca-api', 'uri')
+        ])
     );
+    $caClient = new CaClient($guzzleCaClient, $config->v('apiProviders', 'vpn-ca-api', 'apiUri'));
 
     // vpn-server-api
-    $vpnServerApiClient = new VpnServerApiClient(
+    $guzzleServerClient = new GuzzleHttpClient(
         new Client([
             'defaults' => [
-                'auth' => ['vpn-user-portal', $configReader->v('remoteApi', 'vpn-server-api', 'token')],
+                'auth' => [
+                    $config->v('apiProviders', 'vpn-server-api', 'userName'),
+                    $config->v('apiProviders', 'vpn-server-api', 'userPass'),
+                ],
             ],
-        ]),
-        $configReader->v('remoteApi', 'vpn-server-api', 'uri')
+        ])
     );
-
-    // check whether OAuth tokens DB exists, if not create it
-    $dbFile = sprintf('%s/access_tokens.sqlite', $dataDir);
-    $initDb = false;
-    if (!file_exists($dbFile)) {
-        @mkdir(dirname($dbFile), 0700, true);
-        $initDb = true;
-    }
-    $accessTokensDb = new PDO(sprintf('sqlite://%s', $dbFile));
-    $pdoAccessTokenStorage = new PdoAccessTokenStorage($accessTokensDb);
-    if ($initDb) {
-        $pdoAccessTokenStorage->initDatabase();
-    }
-
-    $vpnApiModule = new VpnApiModule(
-        $vpnCaApiClient,
-        $vpnServerApiClient
-    );
-
-    $oauthModule = new OAuthModule(
-        $templateManager,
-        new ArrayClientStorage($configReader->v('apiClients', false, [])),
-        new NoResourceServerStorage(),
-        new NullApprovalStorage(),
-        new NullAuthorizationCodeStorage(),
-        $pdoAccessTokenStorage,
-        [
-            'disable_token_endpoint' => true,   // no need for token endpoint
-            'disable_introspect_endpoint' => true, // no need for introspection
-            'route_prefix' => '/_oauth',
-        ]
-    );
-
-    $enableVoot = $configReader->v('enableVoot', false, false);
-    if ($enableVoot) {
-        $oauthClient = new OAuth2Client(
-            new Provider(
-                $configReader->v('Voot', 'clientId'),
-                $configReader->v('Voot', 'clientSecret'),
-                $configReader->v('Voot', 'authorizationEndpoint'),
-                $configReader->v('Voot', 'tokenEndpoint')
-            ),
-            new CurlHttpClient()
-        );
-        $vootModule = new VootModule(
-            $oauthClient,
-            $vpnServerApiClient,
-            $session
-        );
-    }
+    $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
 
     $vpnPortalModule = new VpnPortalModule(
-        $templateManager,
-        $vpnCaApiClient,
-        $vpnServerApiClient,
-        new UserTokens($accessTokensDb),
+        $tpl,
+        $serverClient,
+        $caClient,
         $session
     );
-    $vpnPortalModule->setUseVoot($enableVoot);
-
-    $apiAuth = new BearerAuthentication(
-        new DbTokenValidator($accessTokensDb),
-        array(
-            'realm' => 'VPN User API',
-        )
-    );
-
-    $service = new Service();
     $service->addModule($vpnPortalModule);
-    $service->addModule($vpnApiModule);
-    $service->addModule($oauthModule);
-    if ($enableVoot) {
-        $service->addModule($vootModule);
-    }
-
-    $authenticationPlugin = new AuthenticationPlugin();
-    $authenticationPlugin->register($auth, 'user');
-    $authenticationPlugin->register(new UnauthenticatedClientAuthentication(), 'client');
-    $authenticationPlugin->register($apiAuth, 'api');
-    $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     $response = $service->run($request);
-    $response->setHeader('Content-Security-Policy', "default-src 'self'");
-    // X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-    $response->setHeader('X-Frame-Options', 'DENY');
-    $response->setHeader('X-Content-Type-Options', 'nosniff');
-    $response->setHeader('X-Xss-Protection', '1; mode=block');
     $response->send();
 } catch (Exception $e) {
-    // internal server error
-    error_log($e->__toString());
-    $e = new InternalServerErrorException($e->getMessage());
-    $e->getHtmlResponse()->send();
+    $logger->error($e->getMessage());
+    $response = new HtmlResponse($e->getMessage(), 500);
+    $response->send();
 }

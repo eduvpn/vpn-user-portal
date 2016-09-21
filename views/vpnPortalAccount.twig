@@ -38,35 +38,6 @@
             </dd>
         {% endif %}
     </dl>
-
-    {% if userTokens is not empty %}
-
-    <dl>
-        <dt>{% trans "Applications" %}</dt>
-        <dd>
-
-        <table>
-            <thead>
-                <tr><th>{% trans "Application" %}</th><th>{% trans "Permissions" %}</th><th></th></tr>
-            </thead>
-            <tbody>
-                {% for token in userTokens %}
-                    <tr>
-                        <td>{{ token.client_id|e }}</td>
-                        <td>{{ token.scope|e }}</td>
-                        <td class="text-right">
-                            <form method="post" action="deleteTokens">
-                                <input type="hidden" name="client_id" value="{{ token.client_id|e }}">
-                                <button class="warning" type="submit">{% trans "Revoke" %}</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        </dd>
-    {% endif %}
-
     {% include 'footer.twig' %}
 </body>
 </html>

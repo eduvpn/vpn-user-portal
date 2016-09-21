@@ -8,33 +8,21 @@
     ],
     "autoload": {
         "psr-0": {
-            "fkooman\\VPN\\UserPortal\\": "src/"
+            "SURFnet\\VPN\\Portal\\": "src/"
         }
     },
     "description": "VPN User Portal",
-    "license": "Apache-2.0",
+    "license": "AGPL-3.0",
     "name": "eduvpn/vpn-user-portal",
     "require": {
         "bacon/bacon-qr-code": "^1.0",
         "christian-riesen/otp": "^2.0",
         "eduvpn/common": "dev-master",
-        "ext-pcre": "*",
-        "ext-pdo": "*",
-        "ext-spl": "*",
-        "fkooman/config": "^1.1.0",
-        "fkooman/http": "^2.0",
         "fkooman/oauth": "^6.0",
         "fkooman/oauth2-client": "^2.0",
-        "fkooman/rest": "^2.0",
-        "fkooman/rest-plugin-authentication": "^3.0",
-        "fkooman/rest-plugin-authentication-basic": "^3.0",
-        "fkooman/rest-plugin-authentication-bearer": "^3.0",
-        "fkooman/rest-plugin-authentication-form": "^4.0",
-        "fkooman/rest-plugin-authentication-mellon": "^3.0",
-        "fkooman/tpl": "^2.0.0",
-        "fkooman/tpl-twig": "^1.3.3",
         "guzzlehttp/guzzle": "~5.3",
-        "paragonie/random_compat": "^1.0",
-        "php": ">=5.4"
+        "php": ">=5.4.0",
+        "twig/twig": "^1.24",
+        "twig/extensions": "^1.3"
     }
 }

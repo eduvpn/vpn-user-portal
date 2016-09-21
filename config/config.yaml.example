@@ -1,18 +1,5 @@
-#
-# VPN User Portal Configuration
-#
-
-# the mode in which to operate (default: production)
+serverMode: production
 #serverMode: development
-
-dataDir: /var/lib/vpn-user-portal
-
-# enable multi instance (default: false)
-#multiInstance: true
-
-##########################
-# Instance Configuration #
-##########################
 
 authMethod: FormAuthentication
 #authMethod: MellonAuthentication
@@ -24,6 +11,18 @@ MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
+# API providers & credentials for servers this service is connecting to
+apiProviders:
+    vpn-ca-api:
+        userName: vpn-user-portal
+        userPass: abcdef
+        apiUri: 'http://127.42.101.100:8008/api.php'
+    vpn-server-api:
+        userName: vpn-user-portal
+        userPass: uvwxyz
+        apiUri: 'http://127.42.101.100:8009/api.php'
+
+
 # The OAuth clients registered for using the configuration API
 #apiClients:
 #    vpn-companion:
@@ -31,19 +30,10 @@ MellonAuthentication:
 #        response_type: token
 #        scope: create_config
 
-# API credentials for access to remote services
-remoteApi:
-    vpn-ca-api:
-        uri: 'http://localhost:8008/api.php'
-        token: abcdef
-    vpn-server-api:
-        uri: 'http://localhost:8009/api.php'
-        token: uvwxyz
-
 # Voot API group support
-enableVoot: false
-Voot:
-    clientId: my_client_id
-    clientSecret: my_client_secret
-    authorizationEndpoint: https://authz.surfconext.nl/oauth/authorize
-    tokenEndpoint: https://authz.surfconext.nl/oauth/token
+#enableVoot: false
+#Voot:
+#    clientId: my_client_id
+#    clientSecret: my_client_secret
+#    authorizationEndpoint: https://authz.surfconext.nl/oauth/authorize
+#    tokenEndpoint: https://authz.surfconext.nl/oauth/token

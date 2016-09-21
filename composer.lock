@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b02f11fb370c1fd25790be2758d3d49d",
-    "content-hash": "4c93ac2669f3eacdf3b4d02effaed51b",
+    "hash": "14ddbd104a0a9cbdbcf8c7ca2de9e179",
+    "content-hash": "949704470874e29f066eb1d0a1fc4e22",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -168,17 +168,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "cf4f131153c4b9dd88ea95a5c072c9584a606d35"
+                "reference": "1d3207b10b9d25e24441c6606fda10d0e23dcc2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/cf4f131153c4b9dd88ea95a5c072c9584a606d35",
-                "reference": "cf4f131153c4b9dd88ea95a5c072c9584a606d35",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/1d3207b10b9d25e24441c6606fda10d0e23dcc2b",
+                "reference": "1d3207b10b9d25e24441c6606fda10d0e23dcc2b",
                 "shasum": ""
             },
             "require": {
                 "ext-hash": "*",
                 "ext-json": "*",
+                "ext-session": "*",
                 "ext-spl": "*",
                 "php": ">= 5.4.0",
                 "psr/log": "^1.0",
@@ -203,46 +204,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-09-18 15:38:56"
-        },
-        {
-            "name": "fkooman/config",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fkooman/php-lib-config.git",
-                "reference": "92eb45e9c32b9fc41d25824dc47d9462b990085c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-config/zipball/92eb45e9c32b9fc41d25824dc47d9462b990085c",
-                "reference": "92eb45e9c32b9fc41d25824dc47d9462b990085c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-spl": "*",
-                "php": ">=5.4",
-                "symfony/yaml": "^2.7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fkooman\\Config\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Read and write configuration files",
-            "time": "2016-08-10 08:27:32"
+            "time": "2016-09-21 09:04:10"
         },
         {
             "name": "fkooman/http",
@@ -551,175 +513,6 @@
             "time": "2016-08-19 09:08:52"
         },
         {
-            "name": "fkooman/rest-plugin-authentication-basic",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-basic.git",
-                "reference": "5de17de83178e9a6d324cde347ec932ccd979714"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-basic/zipball/5de17de83178e9a6d324cde347ec932ccd979714",
-                "reference": "5de17de83178e9a6d324cde347ec932ccd979714",
-                "shasum": ""
-            },
-            "require": {
-                "fkooman/rest": "^2.0.0",
-                "fkooman/rest-plugin-authentication": "^3.0.0",
-                "ircmaxell/password-compat": "~1.0",
-                "php": ">=5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fkooman\\Rest\\Plugin\\Authentication\\Basic\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Basic Authentication plugin for fkooman/rest-plugin-authentication",
-            "time": "2016-08-19 09:11:11"
-        },
-        {
-            "name": "fkooman/rest-plugin-authentication-bearer",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-bearer.git",
-                "reference": "ce3356000e1b71fae45874195a205ee28fb96148"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-bearer/zipball/ce3356000e1b71fae45874195a205ee28fb96148",
-                "reference": "ce3356000e1b71fae45874195a205ee28fb96148",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pcre": "*",
-                "ext-spl": "*",
-                "fkooman/http": "^2.0",
-                "fkooman/rest": "^2.0",
-                "fkooman/rest-plugin-authentication": "^3.0.0",
-                "guzzlehttp/guzzle": "~5.3",
-                "php": ">= 5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fkooman\\Rest\\Plugin\\Authentication\\Bearer\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Bearer (OAuth) Authentication plugin for fkooman/rest-plugin-authentication",
-            "time": "2016-08-19 09:12:26"
-        },
-        {
-            "name": "fkooman/rest-plugin-authentication-form",
-            "version": "4.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-form.git",
-                "reference": "3b986dafebc3637f56fb53569c73c12cf5a0c1b1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-form/zipball/3b986dafebc3637f56fb53569c73c12cf5a0c1b1",
-                "reference": "3b986dafebc3637f56fb53569c73c12cf5a0c1b1",
-                "shasum": ""
-            },
-            "require": {
-                "ext-filter": "*",
-                "ext-spl": "*",
-                "fkooman/http": "^2.0",
-                "fkooman/rest": "^2.0",
-                "fkooman/rest-plugin-authentication": "^3.0.0",
-                "fkooman/tpl": "^2.0.0",
-                "ircmaxell/password-compat": "~1.0",
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "fkooman/json": "^2.0.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fkooman\\Rest\\Plugin\\Authentication\\Form\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "HTML Form Authentication plugin for fkooman/rest-plugin-authentication",
-            "time": "2016-08-19 09:13:59"
-        },
-        {
-            "name": "fkooman/rest-plugin-authentication-mellon",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fkooman/php-lib-rest-plugin-authentication-mellon.git",
-                "reference": "9244fa53d8b012ce3c7795fa2ea4a5e510f0d668"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-rest-plugin-authentication-mellon/zipball/9244fa53d8b012ce3c7795fa2ea4a5e510f0d668",
-                "reference": "9244fa53d8b012ce3c7795fa2ea4a5e510f0d668",
-                "shasum": ""
-            },
-            "require": {
-                "fkooman/rest": "^2.0",
-                "fkooman/rest-plugin-authentication": "^3.0",
-                "php": ">=5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fkooman\\Rest\\Plugin\\Authentication\\Mellon\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Mellon (SAML) Authentication plugin for fkooman/rest",
-            "time": "2016-08-19 09:16:28"
-        },
-        {
             "name": "fkooman/tpl",
             "version": "2.1.0",
             "source": {
@@ -754,47 +547,6 @@
             ],
             "description": "Simple Template Abstraction Library",
             "time": "2016-02-04 10:00:40"
-        },
-        {
-            "name": "fkooman/tpl-twig",
-            "version": "1.3.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fkooman/php-lib-tpl-twig.git",
-                "reference": "5d425719e270d6ffa0218eeb9081bcab99ac81d0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-lib-tpl-twig/zipball/5d425719e270d6ffa0218eeb9081bcab99ac81d0",
-                "reference": "5d425719e270d6ffa0218eeb9081bcab99ac81d0",
-                "shasum": ""
-            },
-            "require": {
-                "ext-gettext": "*",
-                "ext-spl": "*",
-                "fkooman/tpl": "^2.1.0",
-                "php": ">= 5.4",
-                "twig/extensions": "^1.3.0",
-                "twig/twig": "^1.20"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fkooman\\Tpl\\Twig\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net"
-                }
-            ],
-            "description": "Twig for Simple Template Abstraction Library",
-            "time": "2016-08-10 08:43:01"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1041,22 +793,30 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
+                "reference": "5277094ed527a1c4477177d102fe4c53551953e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/5277094ed527a1c4477177d102fe4c53551953e0",
+                "reference": "5277094ed527a1c4477177d102fe4c53551953e0",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.3.0"
+            },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1070,12 +830,13 @@
                 }
             ],
             "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
             "keywords": [
                 "log",
                 "psr",
                 "psr-3"
             ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2016-09-19 16:02:08"
         },
         {
             "name": "react/promise",
@@ -1456,10 +1217,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-pcre": "*",
-        "ext-pdo": "*",
-        "ext-spl": "*",
-        "php": ">=5.4"
+        "php": ">=5.4.0"
     },
     "platform-dev": []
 }
