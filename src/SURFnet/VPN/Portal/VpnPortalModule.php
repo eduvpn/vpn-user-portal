@@ -116,7 +116,18 @@ class VpnPortalModule implements ServiceModuleInterface
                 $poolId = $request->getPostParameter('poolId');
                 InputValidation::poolId($poolId);
 
-                return $this->getConfig($request->getServerName(), $userId, $configName, $poolId);
+                // the CN, built of userId + '_' + configName cannot exceed
+                // a length of 64 as the CN cert is only allowed to be of
+                // length 64
+                $cnLength = strlen($userId) + strlen($configName) + 1;
+                if (64 < $cnLength) {
+                    throw new HttpException(
+                        sprintf('configName too long, limited to "%d" characters', 63 - strlen($userId)),
+                        400
+                    );
+                }
+
+                return $this->getConfig($request->getServerName(), $poolId, $userId, $configName);
             }
         );
 
@@ -251,24 +262,10 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    private function getConfig($serverName, $userId, $configName, $poolId)
+    private function getConfig($serverName, $poolId, $userId, $configName)
     {
-        // XXX dragons ahead!
-        // XXX why does this even work?!
-
-        // userId + configName length cannot be longer than 64 as the
-        // certificate CN cannot be longer than 64
-        if (64 < strlen($userId) + strlen($configName) + 1) {
-            throw new HttpException(
-                sprintf('commonName length MUST not exceed %d', 63 - strlen($userId)),
-                400
-            );
-        }
-
-        // make sure the configuration does not exist yet
-        // XXX: this should be optimized a bit...
+        // check that a certificate does not yet exist with this configName
         $userCertificateList = $this->caClient->userCertificateList($userId);
-
         foreach ($userCertificateList as $userCertificate) {
             if ($configName === $userCertificate['name']) {
                 return new HtmlResponse(
@@ -282,58 +279,22 @@ class VpnPortalModule implements ServiceModuleInterface
             }
         }
 
-        $certData = $this->caClient->addClientCertificate($userId, $configName);
-        $serverPools = $this->serverClient->serverPools();
+        // create a certificate
+        $clientCertificate = $this->caClient->addClientCertificate($userId, $configName);
 
-        $serverPool = null;
-        foreach ($serverPools as $i => $pool) {
-            if ($poolId === $i) {
-                $serverPool = $pool;
-            }
-        }
-        if (is_null($serverPool)) {
-            throw new HttpException('chosen pool does not exist', 400);
-        }
+        // obtain information about this pool to be able to construct
+        // a client configuration file
+        $poolData = $this->serverClient->serverPool($poolId);
 
-        // XXX if 2FA is required, we should warn the user to first enroll!
+        $clientConfig = ClientConfig::get($poolData, $clientCertificate, false);
 
-        $remoteEntities = [];
-        $processCount = $serverPool['processCount'];
+        // XXX consider the timezone in the data call, this will be weird
+        // when not using same timezone as user machine...
+        $clientConfigFile = sprintf('%s_%s_%s', $serverName, date('Ymd'), $configName);
 
-        // XXX fix this stuff, this should really not be here...
-        for ($i = 0; $i < $processCount; ++$i) {
-            if (1 === $processCount || $i !== $processCount - 1) {
-                $proto = 'udp';
-                $port = 1194 + $i;
-            } else {
-                $proto = 'tcp';
-                $port = 443;
-            }
-
-            $remoteEntities[] = [
-                'port' => $port,
-                'proto' => $proto,
-                'host' => $serverPool['hostName'],
-            ];
-        }
-
-        $remoteEntities = ['remote' => $remoteEntities];
-
-        $clientConfig = new ClientConfig();
-        $vpnConfig = implode(
-            PHP_EOL,
-            $clientConfig->get(
-                array_merge(['twoFactor' => $serverPool['twoFactor']], $certData, $remoteEntities),
-                false  // no randomizing
-            )
-        );
-
-        $configFileName = sprintf('%s_%s_%s', $serverName, date('Ymd'), $configName);
-
-        // return an OVPN file
         $response = new Response(200, 'application/x-openvpn-profile');
-        $response->addHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $configFileName));
-        $response->setBody($vpnConfig);
+        $response->addHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $clientConfigFile));
+        $response->setBody($clientConfig);
 
         return $response;
     }

@@ -38,6 +38,17 @@ class TestHttpClient implements HttpClientInterface
                         ],
                     ]
                 );
+            case 'serverClient/server_pool?pool_id=internet':
+                return self::wrap(
+                    'server_pool',
+                    [
+                        'enableAcl' => false,
+                        'displayName' => 'Internet Access',
+                        'twoFactor' => false,
+                        'processCount' => 4,
+                        'hostName' => 'vpn.example',
+                    ]
+                );
             case 'serverClient/has_otp_secret?user_id=foo':
                 return self::wrap('has_otp_secret', false);
             case 'caClient/user_certificate_list?user_id=foo':

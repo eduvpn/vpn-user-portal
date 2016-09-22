@@ -17,60 +17,22 @@
  */
 namespace SURFnet\VPN\Portal;
 
-use RuntimeException;
-
 class ClientConfig
 {
-    public function get(array $clientConfig, $shuffleRemoteHosts = true)
+    public static function get(array $poolConfig, array $clientCertificate, $shuffleRemoteHostList)
     {
-        $requiredParameters = [
-            'cn',
-            'valid_from',
-            'valid_to',
-            'ca',
-            'cert',
-            'key',
-            'ta',
-            'remote',
-            'twoFactor',
-        ];
+        // make a list of ports/proto to add to the configuration file
+        $hostName = $poolConfig['hostName'];
+        $processCount = $poolConfig['processCount'];
 
-        // XXX verify the parameters and types
+        $remoteProtoPortList = self::remotePortProtoList($processCount, $shuffleRemoteHostList);
 
-        foreach ($requiredParameters as $p) {
-            if (!array_key_exists($p, $clientConfig)) {
-                throw new RuntimeException(sprintf('missing parameter "%s"', $p));
-            }
-        }
+        $clientConfig = [
+            sprintf('# OpenVPN Client Configuration for %s', $clientCertificate['cn']),
 
-        $remoteHosts = $clientConfig['remote'];
-        if ($shuffleRemoteHosts) {
-            $remoteHosts = self::shuffleRemoteHosts($remoteHosts);
-        }
-
-        $remoteEntries = [];
-        foreach ($remoteHosts as $remoteEntry) {
-            $host = $remoteEntry['host'];
-            $proto = $remoteEntry['proto'];
-            if ('tcp' === $proto) {
-                $port = 443;
-            } else {
-                $port = intval($remoteEntry['port']);
-            }
-
-            $remoteEntries[] = sprintf('remote %s %d %s', $host, $port, $proto);
-        }
-
-        $twoFactorEntries = [];
-        if ($clientConfig['twoFactor']) {
-            $twoFactorEntries[] = 'auth-user-pass';
-        }
-
-        return [
-            sprintf('# OpenVPN Client Configuration for %s', $clientConfig['cn']),
-
-            sprintf('# Valid From: %s', date('Y-m-d', $clientConfig['valid_from'])),
-            sprintf('# Valid To: %s', date('Y-m-d', $clientConfig['valid_to'])),
+            // XXX fix date format to be in UTC
+            sprintf('# Valid From: %s', date('Y-m-d', $clientCertificate['valid_from'])),
+            sprintf('# Valid To: %s', date('Y-m-d', $clientCertificate['valid_to'])),
 
             'dev tun',
             'client',
@@ -79,34 +41,20 @@ class ClientConfig
             'persist-tun',
             'remote-cert-tls server',
 
-            // adaptive compression, allow server to override using push, it
-            // cannot be no here because that would confuse NetworkManager
+            // adaptive compression, allow server to override using push
             'comp-lzo',
 
             'verb 3',
-
-            //redirect-gateway
-
-            // do not pull route/DNS information from server
-            //route-nopull
-
             // tell the server more about this client (version, OS)
             'push-peer-info',
 
-            // REMOTES
             // wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
-
-            // 2FA
-            implode(PHP_EOL, $twoFactorEntries),
 
             // allow the server to dictate the reneg-sec, by default it will be
             // 3600 seconds, but when 2FA is enable we'd like to increase this
             // to e.g. 8 hours to avoid asking for the OTP every hour
             'reneg-sec 0',
-
-            // remote
-            implode(PHP_EOL, $remoteEntries),
 
             // CRYPTO (DATA CHANNEL)
             'auth SHA256',
@@ -123,60 +71,68 @@ class ClientConfig
             // additional cipher "TLS_DHE_RSA_WITH_AES_256_CBC_SHA"
             'tls-cipher TLS-DHE-RSA-WITH-AES-128-GCM-SHA256:TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-256-CBC-SHA',
 
-            sprintf('<ca>%s</ca>', PHP_EOL.$clientConfig['ca'].PHP_EOL),
-            sprintf('<cert>%s</cert>', PHP_EOL.$clientConfig['cert'].PHP_EOL),
-            sprintf('<key>%s</key>', PHP_EOL.$clientConfig['key'].PHP_EOL),
+            '<ca>',
+            $clientCertificate['ca'],
+            '</ca>',
+
+            '<cert>',
+            $clientCertificate['cert'],
+            '</cert>',
+
+            '<key>',
+            $clientCertificate['key'],
+            '</key>',
 
             'key-direction 1',
 
-            sprintf('<tls-auth>%s</tls-auth>', PHP_EOL.$clientConfig['ta'].PHP_EOL),
+            '<tls-auth>',
+            $clientCertificate['ta'],
+            '</tls-auth>',
         ];
+
+        // 2FA
+        if ($poolConfig['twoFactor']) {
+            $clientConfig[] = 'auth-user-pass';
+        }
+
+        // remote entries
+        foreach ($remoteProtoPortList as $remoteProtoPort) {
+            $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
+        }
+
+        return implode(PHP_EOL, $clientConfig);
     }
 
-    public static function shuffleRemoteHosts(array $remoteHosts)
+    public static function remotePortProtoList($processCount, $shuffleRemoteHostList)
     {
-        // we want to put the UDP entries first, randomize them and then
-        // add the TCP entries afterwards so we have a nice fallthrough to
-        // eventual TCP but still get "load balancing"
-        $udpRemotes = [];
-        $tcpRemotes = [];
-        foreach ($remoteHosts as $remoteEntry) {
-            if ('udp' === $remoteEntry['proto'] || 'udp6' === $remoteEntry['proto']) {
-                $udpRemotes[] = $remoteEntry;
-            }
-            if ('tcp' === $remoteEntry['proto'] || 'tcp6' === $remoteEntry['proto']) {
-                $tcpRemotes[] = $remoteEntry;
-            }
-            // ignore other protocols
+        // processCount can be 1, 2, 4, 8, ...
+        if (1 === $processCount) {
+            return [
+                ['proto' => 'udp', 'port' => 1194],
+            ];
         }
 
-        shuffle($udpRemotes);
-        shuffle($tcpRemotes);
-
-        // crazy ahead
-        if (2 < count($udpRemotes)) {
-            // if there are > 2 UDP entries
-            if (1 < count($tcpRemotes)) {
-                // and > 1 TCP entry
-                $mergedRemotes = array_merge(
-                    array_slice($udpRemotes, 0, 2),
-                    array_slice($tcpRemotes, 0, 1),
-                    array_slice($udpRemotes, 2),
-                    array_slice($tcpRemotes, 1)
-                );
-            } else {
-                // <= 1 TCP entry
-                $mergedRemotes = array_merge(
-                    array_slice($udpRemotes, 0, 2),
-                    $tcpRemotes,
-                    array_slice($udpRemotes, 2)
-                );
-            }
-        } else {
-            // <= 2 UDP entries
-            $mergedRemotes = array_merge($udpRemotes, $tcpRemotes);
+        if (2 === $processCount) {
+            return [
+                ['proto' => 'udp', 'port' => 1194],
+                ['proto' => 'tcp', 'port' => 443],
+            ];
         }
 
-        return $mergedRemotes;
+        $remoteHostList = [];
+        for ($i = 0; $i < $processCount - 1; ++$i) {
+            $remoteHostList[] = ['port' => 1194 + $i, 'proto' => 'udp'];
+        }
+
+        if ($shuffleRemoteHostList) {
+            shuffle($remoteHostList);
+        }
+
+        // insert TCP at position 2
+        array_splice(
+            $remoteHostList, 2, 0, [['port' => 443, 'proto' => 'tcp']]
+        );
+
+        return $remoteHostList;
     }
 }
