@@ -34,6 +34,7 @@ use SURFnet\VPN\Portal\TwigTpl;
 use SURFnet\VPN\Portal\GuzzleHttpClient;
 use SURFnet\VPN\Portal\VpnPortalModule;
 use SURFnet\VPN\Portal\VootModule;
+use SURFnet\VPN\Portal\OtpModule;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Client\CurlHttpClient;
@@ -156,6 +157,13 @@ try {
         $session
     );
     $service->addModule($vpnPortalModule);
+
+    // otp module
+    $otpModule = new OtpModule(
+        $tpl,
+        $serverClient
+    );
+    $service->addModule($otpModule);
 
     // voot module
     if ($config->v('enableVoot')) {
