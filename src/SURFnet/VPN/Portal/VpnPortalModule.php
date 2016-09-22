@@ -28,6 +28,11 @@ use SURFnet\VPN\Common\TplInterface;
 use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
+use BaconQrCode\Renderer\Image\Png;
+use BaconQrCode\Writer;
+use Base32\Base32;
+use Otp\GoogleAuthenticator;
+use Otp\Otp;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -239,6 +244,73 @@ class VpnPortalModule implements ServiceModuleInterface
                         ]
                     )
                 );
+            }
+        );
+
+        // OTP
+        $service->get(
+            '/otp',
+            function () {
+                $otpSecret = GoogleAuthenticator::generateRandom();
+
+                return new HtmlResponse(
+                    $this->tpl->render('vpnPortalOtp', ['otpSecret' => $otpSecret])
+                );
+            }
+        );
+
+        $service->post(
+            '/otp',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $otpSecret = $request->getPostParameter('otp_secret');
+                InputValidation::otpSecret($otpSecret);
+                $otpKey = $request->getPostParameter('otp_key');
+                InputValidation::otpKey($otpKey);
+
+                $otp = new Otp();
+                if ($otp->checkTotp(Base32::decode($otpSecret), $otpKey)) {
+                    // XXX we do not store this key in the log of used keys, so
+                    // it could be replayed in the small window by connecting
+                    // to the VPN with the same code
+                    $this->serverClient->setOtpSecret($userId, $otpSecret);
+
+                    return new RedirectResponse($request->getRootUri().'account', 302);
+                }
+
+                return new HtmlResponse(
+                    $this->tpl->render('vpnPortalErrorOtpEnroll', [])
+                );
+            }
+        );
+
+        $service->get(
+            '/otp-qr-code',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $otpSecret = $request->getQueryParameter('otp_secret');
+                InputValidation::otpSecret($otpSecret);
+
+                $otpAuthUrl = sprintf(
+                    'otpauth://totp/%s:%s?secret=%s&issuer=%s',
+                    $request->getServerName(),
+                    $userId,
+                    $otpSecret,
+                    $request->getServerName()
+                );
+
+                $renderer = new Png();
+                $renderer->setHeight(256);
+                $renderer->setWidth(256);
+                $writer = new Writer($renderer);
+                $qrCode = $writer->writeString($otpAuthUrl);
+
+                $response = new Response(200, 'image/png');
+                $response->setBody($qrCode);
+
+                return $response;
             }
         );
 

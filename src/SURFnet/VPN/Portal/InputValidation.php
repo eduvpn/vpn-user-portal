@@ -70,4 +70,18 @@ class InputValidation
             throw new HttpException('parameter must be non-empty string', 400);
         }
     }
+
+    public static function otpSecret($otpSecret)
+    {
+        if (0 === preg_match('/^[A-Z0-9]{16}$/', $otpSecret)) {
+            throw new HttpException('invalid OTP secret format', 400);
+        }
+    }
+
+    public static function otpKey($otpKey)
+    {
+        if (0 === preg_match('/^[0-9]{6}$/', $otpKey)) {
+            throw new HttpException('invalid OTP key format', 400);
+        }
+    }
 }
