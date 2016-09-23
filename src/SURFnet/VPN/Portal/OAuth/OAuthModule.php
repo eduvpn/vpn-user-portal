@@ -23,11 +23,15 @@ use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\TplInterface;
+use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 
-class OAuthModule
+class OAuthModule implements ServiceModuleInterface
 {
     /** @var \SURFnet\VPN\Common\TplInterface */
     private $tpl;
+
+    /** @var RandomInterface */
+    private $random;
 
     /** @var TokenStorage */
     private $tokenStorage;
@@ -35,16 +39,17 @@ class OAuthModule
     /** @var ClientConfig */
     private $clientConfig;
 
-    public function __construct(TplInterface $tpl, TokenStorage $tokenStorage, ClientConfig $clientConfig)
+    public function __construct(TplInterface $tpl, RandomInterface $random, TokenStorage $tokenStorage, ClientConfig $clientConfig)
     {
         $this->tpl = $tpl;
+        $this->random = $random;
         $this->tokenStorage = $tokenStorage;
         $this->clientConfig = $clientConfig;
     }
 
     public function init(Service $service)
     {
-        $this->get(
+        $service->get(
             '/authorize',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
@@ -65,7 +70,7 @@ class OAuthModule
             }
         );
 
-        $this->post(
+        $service->post(
             '/authorize',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
@@ -83,15 +88,13 @@ class OAuthModule
                     return new RedirectResponse($redirectUri, 302);
                 }
 
+                $accessToken = $this->random->get();
                 // store access_token
-                // XXX use random class with interface for better testing
-                $accessToken = bin2hex(random_bytes(16));
-
-                $this->db->storeAccessToken(
+                $this->tokenStorage->store(
+                    $userId,
                     $accessToken,
                     $request->getQueryParameter('client_id'),
-                    $request->getQueryParameter('scope'),
-                    $userId
+                    $request->getQueryParameter('scope')
                 );
 
                 // add state, access_token to redirect_uri
@@ -124,8 +127,12 @@ class OAuthModule
         }
 
         // check if we have a client with this clientId and redirectUri
-        if (false === $this->clientConfig->exists($clientId, $redirectUri)) {
-            throw new HttpException('client with this client_id and redirect_uri are not registered', 400);
+        if (false === $this->clientConfig->e('apiConsumers', $clientId)) {
+            throw new HttpException(sprintf('client "%s" not registered', $clientId), 400);
+        }
+        $clientRedirectUri = $this->clientConfig->v('apiConsumers', $clientId, 'redirect_uri');
+        if ($redirectUri !== $clientRedirectUri) {
+            throw new HttpException(sprintf('redirect_uri does not match expected value "%s"', $clientRedirectUri), 400);
         }
     }
 }

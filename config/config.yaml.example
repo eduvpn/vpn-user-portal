@@ -30,11 +30,7 @@ Voot:
     authorizationEndpoint: 'https://authz.surfconext.nl/oauth/authorize'
     tokenEndpoint: 'https://authz.surfconext.nl/oauth/token'
 
-#
-#
-# The OAuth clients registered for using the configuration API
-#apiClients:
-#    vpn-companion:
-#        redirect_uri: 'vpn://import/callback'
-#        response_type: token
-#        scope: create_config
+# OAuth 2.0 consumers
+apiConsumers:
+    vpn-companion:
+        redirect_uri: 'vpn://import/callback'
