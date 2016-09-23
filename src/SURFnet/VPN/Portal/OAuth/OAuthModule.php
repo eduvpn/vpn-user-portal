@@ -51,9 +51,8 @@ class OAuthModule implements ServiceModuleInterface
     {
         $service->get(
             '/authorize',
-            function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
-
+            function (Request $request) {
+                $this->validateRequest($request);
                 $this->validateClient($request);
 
                 // ask for approving this client/scope
@@ -75,11 +74,13 @@ class OAuthModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
+                $this->validateRequest($request);
                 $this->validateClient($request);
 
                 if ('no' === $request->getPostParameter('approve')) {
                     $redirectQuery = [
-                        'error' => 'XXX',       // XXX check OAuth RFC for exact error code
+                        'error' => 'access_denied',
+                        'error_description' => 'user refused authorization',
                         'state' => $request->getQueryParameter('state'),
                     ];
 
@@ -112,19 +113,36 @@ class OAuthModule implements ServiceModuleInterface
         );
     }
 
+    private function validateRequest(Request $request)
+    {
+        // we enforce that all parameter are, nothing is "OPTIONAL"
+        $clientId = $request->getQueryParameter('client_id');
+        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $clientId)) {
+            throw new HttpException('invalid client_id', 400);
+        }
+        $redirectUri = $request->getQueryParameter('redirect_uri');
+        if (false === filter_var($redirectUri, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_PATH_REQUIRED)) {
+            throw new HttpException('invalid redirect_uri', 400);
+        }
+        $responseType = $request->getQueryParameter('response_type');
+        if ('token' !== $responseType) {
+            throw new HttpException('invalid response_type', 400);
+        }
+        $scope = $request->getQueryParameter('scope');
+        $supportedScopes = ['client_config'];
+        if (!in_array($scope, $supportedScopes)) {
+            throw new HttpException('invalid scope', 400);
+        }
+        $state = $request->getQueryParameter('state');
+        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $state)) {
+            throw new HttpException('invalid state', 400);
+        }
+    }
+
     private function validateClient(Request $request)
     {
-        // all parameters are required
-        // XXX input validate the parameters
         $clientId = $request->getQueryParameter('client_id');
         $redirectUri = $request->getQueryParameter('redirect_uri');
-        $responseType = $request->getQueryParameter('response_type');
-        $scope = $request->getQueryParameter('scope');
-        $state = $request->getQueryParameter('state');
-
-        if ('token' !== $responseType) {
-            throw new HttpException('only "token" response_type supported', 400);
-        }
 
         // check if we have a client with this clientId and redirectUri
         if (false === $this->clientConfig->e('apiConsumers', $clientId)) {
