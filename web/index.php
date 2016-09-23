@@ -38,6 +38,7 @@ use SURFnet\VPN\Portal\OtpModule;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Client\CurlHttpClient;
+use SURFnet\VPN\Common\Http\ReferrerCheckHook;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -88,6 +89,7 @@ try {
     $tpl->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
     $service = new Service();
+    $service->addBeforeHook('referrer_check', new ReferrerCheckHook());
     $service->addAfterHook('security_headers', new SecurityHeadersHook());
 
     // Authentication
