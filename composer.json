@@ -22,6 +22,7 @@
         "ext-gettext": "*",
         "ext-json": "*",
         "ext-pcre": "*",
+        "ext-pdo": "*",
         "ext-spl": "*",
         "fkooman/oauth2-client": "^2.0",
         "guzzlehttp/guzzle": "~5.3",
