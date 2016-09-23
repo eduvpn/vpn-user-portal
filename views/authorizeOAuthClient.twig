@@ -14,11 +14,12 @@
     <dl>
         <dt>{% trans "Application" %}</dt><dd>{{ client_id|e }}</dd>
         <dt>{% trans "Permissions" %}</dt><dd>{{ scope|e }}</dd>
+        <dt>{% trans "Location" %}</dt><dd>{{ redirect_uri|e }}</dd>
     </dl>
 
-    <form method="post" action="{{ request_url|e }}">
-        <button class="danger" type="submit" name="approval" value="no">{% trans "Reject" %}</button>
-        <button class="success"  type="submit" name="approval" value="yes">{% trans "Approve" %}</button>
+    <form method="post">
+        <button class="danger" type="submit" name="approve" value="no">{% trans "Reject" %}</button>
+        <button class="success" type="submit" name="approve" value="yes">{% trans "Approve" %}</button>
     </form>
 
     {% include 'footer.twig' %}
