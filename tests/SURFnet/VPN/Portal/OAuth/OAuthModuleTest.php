@@ -23,6 +23,7 @@ require_once sprintf('%s/Test/TestRandom.php', __DIR__);
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Portal\OAuth\Test\JsonTpl;
 use SURFnet\VPN\Portal\OAuth\Test\TestRandom;
 use PHPUnit_Framework_TestCase;
@@ -35,7 +36,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $clientConfig = new ClientConfig(
+        $config = new Config(
             [
                 'apiConsumers' => [
                     'vpn-companion' => [
@@ -54,7 +55,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                 new JsonTpl(),
                 new TestRandom(),
                 $tokenStorage,
-                $clientConfig
+                $config
             )
         );
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
@@ -72,7 +73,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
             ],
             $this->makeRequest(
                 'GET',
-                '/authorize',
+                '/_oauth/authorize',
                 [
                     'client_id' => 'vpn-companion',
                     'redirect_uri' => 'vpn://import/callback',
@@ -88,7 +89,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
     {
         $response = $this->makeRequest(
             'POST',
-            '/authorize',
+            '/_oauth/authorize',
             [
                 'client_id' => 'vpn-companion',
                 'redirect_uri' => 'vpn://import/callback',

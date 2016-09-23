@@ -39,6 +39,9 @@ use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Client\CurlHttpClient;
 use SURFnet\VPN\Common\Http\ReferrerCheckHook;
+use SURFnet\VPN\Portal\OAuth\OAuthModule;
+use SURFnet\VPN\Portal\OAuth\Random;
+use SURFnet\VPN\Portal\OAuth\TokenStorage;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -166,6 +169,20 @@ try {
         $serverClient
     );
     $service->addModule($otpModule);
+
+    // oauth module
+    if ($config->v('enableOAuth')) {
+        $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/data/tokens.sqlite', dirname(__DIR__))));
+        $tokenStorage->init();
+
+        $oauthModule = new OAuthModule(
+            $tpl,
+            new Random(),
+            $tokenStorage,
+            $config
+        );
+        $service->addModule($oauthModule);
+    }
 
     // voot module
     if ($config->v('enableVoot')) {

@@ -24,6 +24,7 @@ use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\TplInterface;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\Config;
 
 class OAuthModule implements ServiceModuleInterface
 {
@@ -36,21 +37,21 @@ class OAuthModule implements ServiceModuleInterface
     /** @var TokenStorage */
     private $tokenStorage;
 
-    /** @var ClientConfig */
-    private $clientConfig;
+    /** @var \SURFnet\VPN\Common\Config */
+    private $config;
 
-    public function __construct(TplInterface $tpl, RandomInterface $random, TokenStorage $tokenStorage, ClientConfig $clientConfig)
+    public function __construct(TplInterface $tpl, RandomInterface $random, TokenStorage $tokenStorage, Config $config)
     {
         $this->tpl = $tpl;
         $this->random = $random;
         $this->tokenStorage = $tokenStorage;
-        $this->clientConfig = $clientConfig;
+        $this->config = $config;
     }
 
     public function init(Service $service)
     {
         $service->get(
-            '/authorize',
+            '/_oauth/authorize',
             function (Request $request) {
                 $this->validateRequest($request);
                 $this->validateClient($request);
@@ -70,7 +71,7 @@ class OAuthModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/authorize',
+            '/_oauth/authorize',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -78,11 +79,13 @@ class OAuthModule implements ServiceModuleInterface
                 $this->validateClient($request);
 
                 if ('no' === $request->getPostParameter('approve')) {
-                    $redirectQuery = [
+                    $redirectQuery = http_build_query(
+                        [
                         'error' => 'access_denied',
                         'error_description' => 'user refused authorization',
                         'state' => $request->getQueryParameter('state'),
-                    ];
+                        ]
+                    );
 
                     $redirectUri = sprintf('%s#%s', $request->getQueryParameter('redirect_uri'), $redirectQuery);
 
@@ -129,7 +132,7 @@ class OAuthModule implements ServiceModuleInterface
             throw new HttpException('invalid response_type', 400);
         }
         $scope = $request->getQueryParameter('scope');
-        $supportedScopes = ['client_config'];
+        $supportedScopes = ['create_config'];
         if (!in_array($scope, $supportedScopes)) {
             throw new HttpException('invalid scope', 400);
         }
@@ -145,10 +148,10 @@ class OAuthModule implements ServiceModuleInterface
         $redirectUri = $request->getQueryParameter('redirect_uri');
 
         // check if we have a client with this clientId and redirectUri
-        if (false === $this->clientConfig->e('apiConsumers', $clientId)) {
+        if (false === $this->config->e('apiConsumers', $clientId)) {
             throw new HttpException(sprintf('client "%s" not registered', $clientId), 400);
         }
-        $clientRedirectUri = $this->clientConfig->v('apiConsumers', $clientId, 'redirect_uri');
+        $clientRedirectUri = $this->config->v('apiConsumers', $clientId, 'redirect_uri');
         if ($redirectUri !== $clientRedirectUri) {
             throw new HttpException(sprintf('redirect_uri does not match expected value "%s"', $clientRedirectUri), 400);
         }
