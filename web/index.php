@@ -91,7 +91,7 @@ try {
     );
     $tpl->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
-    $service = new Service();
+    $service = new Service($tpl);
     $service->addBeforeHook('referrer_check', new ReferrerCheckHook());
     $service->addAfterHook('security_headers', new SecurityHeadersHook());
 
