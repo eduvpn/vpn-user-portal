@@ -172,7 +172,12 @@ try {
 
     // oauth module
     if ($config->v('enableOAuth')) {
-        $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/data/tokens.sqlite', dirname(__DIR__))));
+        if (!file_exists($dataDir)) {
+            if (false === @mkdir($dataDir, 0700, true)) {
+                throw new RuntimeException(sprintf('unable to create folder "%s"', $dataDir));
+            }
+        }
+        $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
         $tokenStorage->init();
 
         $oauthModule = new OAuthModule(
@@ -202,7 +207,7 @@ try {
         $service->addModule($vootModule);
     }
 
-    return $service->run($request)->send();
+    $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     $response = new HtmlResponse($e->getMessage(), 500);
