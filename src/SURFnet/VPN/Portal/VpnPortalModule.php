@@ -268,14 +268,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $userCertificateList = $this->caClient->userCertificateList($userId);
         foreach ($userCertificateList as $userCertificate) {
             if ($configName === $userCertificate['name']) {
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalErrorConfigExists',
-                        [
-                            'configName' => $configName,
-                        ]
-                    )
-                );
+                throw new HttpException(sprintf('a configuration with the name "%s" already exists', $configName), 400);
             }
         }
 
