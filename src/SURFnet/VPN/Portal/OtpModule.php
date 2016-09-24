@@ -22,7 +22,6 @@ use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\TplInterface;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
@@ -79,7 +78,15 @@ class OtpModule implements ServiceModuleInterface
                     return new RedirectResponse($request->getRootUri().'account', 302);
                 }
 
-                throw new HttpException('OTP code does not match expected value', 400);
+                return new HtmlResponse(
+                    $this->tpl->render(
+                        'vpnPortalOtp',
+                        [
+                            'otpSecret' => $otpSecret,
+                            'error_code' => 'invalid_otp_code',
+                        ]
+                    )
+                );
             }
         );
 
