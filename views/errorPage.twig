@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="menu">
+        <li class="active"><a href="">{% trans "Error" %}</a>
+    </ul>
+
+    <p><strong>{{ code|e }}</strong></p>
+    <p>
+        <code>
+            {{ message|e }}
+        </code>
+    </p>
+
+    {% include 'footer.twig' %}
+</body>
+</html>
