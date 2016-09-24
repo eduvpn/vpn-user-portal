@@ -1,15 +1,10 @@
 <hr>
 <div class="footer">
-    {% if authMethod == 'FormAuthentication' %}
-        {# if login_hint is set it means the sign in page is shown, do not show 
-           the Sign Out form #}
-        {% if login_hint is not defined %}
-            {# for FormAuthentication we need a POST form #}
-            <form class="simple" method="post" action="{{ requestRoot|e}}_form/auth/logout">
-                <fieldset>
-                    <button type="submit">Sign Out</button>
-                </fieldset>
-            </form>
-        {% endif %} 
+    {% if _form_auth_login_page is not defined %}
+        <form class="simple" method="post" action="{{ requestRoot|e}}_form/auth/logout">
+            <fieldset>
+                <button type="submit">Sign Out</button>
+            </fieldset>
+        </form>
     {% endif %}
 </div>
