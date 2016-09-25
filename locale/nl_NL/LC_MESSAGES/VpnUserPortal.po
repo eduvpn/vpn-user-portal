@@ -49,9 +49,32 @@ msgstr "Account"
 msgid "Documentation"
 msgstr "Documentatie"
 
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:39
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:35
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:116
+msgid "Sign In"
+msgstr "Inloggen"
+
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:42
 msgid "Please sign in with your username and password."
 msgstr "Log in met gebruikersnaam en wachtwoord."
+
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:53
+msgid "The credentials you provided are not correct. Please try again!"
+msgstr "De inloggegevens zijn niet correct. Probeer opnieuw!"
+
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:70
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:74
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:90
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:94
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:80
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:84
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:98
+#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:102
+msgid "Password"
+msgstr "Wachtwoord"
 
 #: /tmp/cache/12/123863c8d0b0cb0fb1f9150b77ee2f6aad6c785f5cddf8c57d082b4e4af41206.php:54
 msgid ""
@@ -253,18 +276,6 @@ msgstr "Profiel"
 #: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:136
 msgid "Download"
 msgstr "Downloaden"
-
-#~ msgid "Sign In"
-#~ msgstr "Inloggen"
-
-#~ msgid "The credentials you provided are not correct. Please try again!"
-#~ msgstr "De inloggegevens zijn niet correct. Probeer opnieuw!"
-
-#~ msgid "Username"
-#~ msgstr "Gebruikersnaam"
-
-#~ msgid "Password"
-#~ msgstr "Wachtwoord"
 
 #~ msgid ""
 #~ "Setting up two-factor authentication failed because the entered code does "

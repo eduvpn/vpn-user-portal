@@ -6,7 +6,7 @@
     {% include 'header.twig' %}
 
     <ul class="menu">
-        <li class="active"><a href="">Sign In</a>
+        <li class="active"><a href="">{% trans "Sign In" %}</a>
     </ul>
 
     <p>
@@ -15,27 +15,27 @@
 
     {% if _form_auth_invalid_credentials %}
         <p class="error">
-            The credentials you provided are not correct. Please try again!
+            {% trans "The credentials you provided are not correct. Please try again!" %}
         </p>
     {% endif %}
 
     <form method="post" action="{{ requestRoot|e }}_form/auth/verify">
         <fieldset>
             {% if _form_auth_invalid_credentials %}
-                <label for="userName">Username</label>
-                <input type="text"     id="userName" name="userName" autocapitalize="off" placeholder="Username" value="{{ _form_auth_invalid_credentials_user|e }}" required>
-                <label for="userPass">Password</label>
-                <input type="password" id="userPass" name="userPass" placeholder="Password" autofocus required>
+                <label for="userName">{% trans "Username" %}</label>
+                <input type="text"     id="userName" name="userName" autocapitalize="off" placeholder="{% trans 'Username' %}" value="{{ _form_auth_invalid_credentials_user|e }}" required>
+                <label for="userPass">{% trans "Password" %}</label>
+                <input type="password" id="userPass"name="userPass" placeholder="{% trans 'Password' %}" autofocus required>
             {% else %}
-                <label for="userName">Username</label>
-                <input type="text"     id="userName" name="userName" autocapitalize="off" placeholder="Username" autofocus required>
-                <label for="userPass">Password</label>
-                <input type="password" id="userPass" name="userPass" placeholder="Password" required>
+                <label for="userName">{% trans "Username" %}</label>
+                <input type="text"     id="userName" name="userName" autocapitalize="off" placeholder="{% trans 'Username' %}" autofocus required>
+                <label for="userPass">{% trans "Password" %}</label>
+                <input type="password" id="userPass" name="userPass" placeholder="{% trans 'Password' %}" required>
             {% endif %} 
         </fieldset>
         <fieldset>
             <input type="hidden" name="_form_auth_redirect_to" value="{{ _form_auth_redirect_to|e }}">
-            <button type="submit">Sign In</button>
+            <button type="submit">{% trans "Sign In" %}</button>
         </fieldset>
     </form>
 
