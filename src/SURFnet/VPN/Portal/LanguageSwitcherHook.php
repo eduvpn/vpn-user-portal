@@ -54,6 +54,7 @@ class LanguageSwitcherHook implements BeforeHookInterface
 
         $this->session->set('activeLanguage', $language);
 
+        // XXX check referrer value
         return new RedirectResponse($request->getHeader('HTTP_REFERER'), 302);
     }
 }
