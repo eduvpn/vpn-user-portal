@@ -64,12 +64,12 @@ p.error a {
 }
 
 p.block {
-    color: #eee;
-    border: 2px solid #eee;
+    color: #555;
+    border: 2px solid #555;
 }
 
 p.block a {
-    color: #eee;
+    color: #555;
 }
 
 span.success, span.success a {
