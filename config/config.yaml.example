@@ -30,6 +30,13 @@ Voot:
     authorizationEndpoint: 'https://authz.surfconext.nl/oauth/authorize'
     tokenEndpoint: 'https://authz.surfconext.nl/oauth/token'
 
+# supported languages in the UI, the first one mentioned is the default
+supportedLanguages:
+    en_US: English
+    #nl_NL: Nederlands
+    #fr_FR: Français
+    #de_DE: Deutsch
+
 enableOAuth: false
 #enableOAuth: true
 # OAuth 2.0 consumers

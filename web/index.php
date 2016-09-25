@@ -35,6 +35,7 @@ use SURFnet\VPN\Portal\GuzzleHttpClient;
 use SURFnet\VPN\Portal\VpnPortalModule;
 use SURFnet\VPN\Portal\VootModule;
 use SURFnet\VPN\Portal\OtpModule;
+use SURFnet\VPN\Portal\LanguageSwitcherHook;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Client\CurlHttpClient;
@@ -80,12 +81,15 @@ try {
         )
     );
 
+    $supportedLanguages = $config->v('supportedLanguages');
     $activeLanguage = $session->get('activeLanguage');
     if (is_null($activeLanguage)) {
-        $activeLanguage = 'en_US';
+        $activeLanguage = array_keys($supportedLanguages)[0];
     }
+
     $tpl->addDefault(
         [
+            'supportedLanguages' => $supportedLanguages,
             'activeLanguage' => $activeLanguage,
         ]
     );
@@ -94,6 +98,7 @@ try {
     $service = new Service($tpl);
     $service->addBeforeHook('referrer_check', new ReferrerCheckHook());
     $service->addAfterHook('security_headers', new SecurityHeadersHook());
+    $service->addBeforeHook('language_switcher', new LanguageSwitcherHook($session, array_keys($supportedLanguages)));
 
     // Authentication
     $authMethod = $config->v('authMethod');

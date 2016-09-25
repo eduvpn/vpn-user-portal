@@ -1,17 +1,14 @@
 <hr>
 <div class="footer">
+    {% if supportedLanguages|length > 1 %}
+        <form class="setLanguage" method="post" action="{{ requestRoot|e }}setLanguage">
+            {% for key, language in supportedLanguages %}
+            <button name="setLanguage" value="{{ key|e }}">{{ language|e }}</button>
+            {% endfor %}
+        </form>
+    {% endif %}
 
     {% if _form_auth_login_page is not defined %}
-
-        <form method="post" action="{{ requestRoot|e }}setLanguage">
-            <select name="setLanguage">
-                <option value="en_US" {% if "en_US" == activeLanguage %} selected="selected" {% endif %}>{% trans "English" %}</option>
-                <option value="nl_NL" {% if "nl_NL" == activeLanguage %} selected="selected" {% endif %}>{% trans "Dutch" %}</option>
-            </select>
-            <input type="hidden" name="redirect_to" value="{{ requestUri|e }}">
-            <button>{% trans "Switch" %}</button>
-        </form>
-
         <form class="simple" method="post" action="{{ requestRoot|e}}_form/auth/logout">
             <fieldset>
                 <button type="submit">Sign Out</button>
