@@ -10,9 +10,7 @@
 
     {% if _form_auth_login_page is not defined %}
         <form class="simple" method="post" action="{{ requestRoot|e}}_form/auth/logout">
-            <fieldset>
-                <button type="submit">Sign Out</button>
-            </fieldset>
+            <button type="submit">Sign Out</button>
         </form>
     {% endif %}
 </div>

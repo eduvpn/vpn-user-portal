@@ -45,19 +45,31 @@ p.success, p.success a {
     background-color: green;
 }
 
-p.warning, p.warning a {
-    color: #fff;
-    background-color: #df7f0c;
+p.warning {
+    color: #df7f0c;
+    border: 2px solid #df7f0c;
 }
 
-p.error, p.error a {
-    color: #fff;
-    background-color: red;
+p.warning a {
+    color: #df7f0c;
+}    
+
+p.error {
+    color: red;
+    border: 2px solid red;
 }
 
-p.block, p.block a {
-    color: #555;
-    background-color: #eee;
+p.error a {
+    color: red;
+}
+
+p.block {
+    color: #eee;
+    border: 2px solid #eee;
+}
+
+p.block a {
+    color: #eee;
 }
 
 span.success, span.success a {
@@ -127,11 +139,18 @@ hr {
 }
 
 div.footer {
-    font-size: 80%;
-    margin-top: 3em;
+    margin-top: 2em;
     text-align: center;
 }
 
 div.footer form {
-    margin: 0 1em;
+    display: inline;
+}
+
+div.footer button {
+    border: 0;
+    background-color: #fff;
+    color: #888;
+    text-decoration: underline;
+    cursor: pointer;
 }

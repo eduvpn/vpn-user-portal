@@ -23,6 +23,12 @@ use SURFnet\VPN\Common\Http\SessionInterface;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 
+/**
+ * This hook is used to be able to switch the language without requiring to be
+ * authenticated. As the language switcher is only a user preference stored in
+ * the user's session this is not a problem. This way, even the authentication
+ * page can use the language switcher.
+ */
 class LanguageSwitcherHook implements BeforeHookInterface
 {
     /** @var \SURFnet\VPN\Common\Http\SessionInterface */
@@ -54,7 +60,7 @@ class LanguageSwitcherHook implements BeforeHookInterface
 
         $this->session->set('activeLanguage', $language);
 
-        // XXX check referrer value
+        // XXX do we need to validate HTTP_REFERER here?
         return new RedirectResponse($request->getHeader('HTTP_REFERER'), 302);
     }
 }
