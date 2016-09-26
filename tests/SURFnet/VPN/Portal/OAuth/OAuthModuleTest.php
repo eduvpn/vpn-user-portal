@@ -67,7 +67,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
             [
                 'authorizeOAuthClient' => [
                     'client_id' => 'vpn-companion',
-                    'scope' => 'create_config',
+                    'scope' => 'config',
                     'redirect_uri' => 'vpn://import/callback',
                 ],
             ],
@@ -78,7 +78,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                     'client_id' => 'vpn-companion',
                     'redirect_uri' => 'vpn://import/callback',
                     'response_type' => 'token',
-                    'scope' => 'create_config',
+                    'scope' => 'config',
                     'state' => '12345',
                 ]
             )
@@ -94,7 +94,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                 'client_id' => 'vpn-companion',
                 'redirect_uri' => 'vpn://import/callback',
                 'response_type' => 'token',
-                'scope' => 'create_config',
+                'scope' => 'config',
                 'state' => '12345',
             ],
             [

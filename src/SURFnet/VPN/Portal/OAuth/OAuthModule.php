@@ -135,8 +135,7 @@ class OAuthModule implements ServiceModuleInterface
             throw new HttpException('invalid response_type', 400);
         }
         $scope = $request->getQueryParameter('scope');
-        $supportedScopes = ['create_config'];
-        if (!in_array($scope, $supportedScopes)) {
+        if ('config' !== $scope) {
             throw new HttpException('invalid scope', 400);
         }
         $state = $request->getQueryParameter('state');
