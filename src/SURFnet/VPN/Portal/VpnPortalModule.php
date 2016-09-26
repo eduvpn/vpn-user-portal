@@ -127,6 +127,9 @@ class VpnPortalModule implements ServiceModuleInterface
                     );
                 }
 
+                // XXX we have to verify the user has access to create this 
+                // config for this poolId
+
                 return $this->getConfig($request->getServerName(), $poolId, $userId, $configName);
             }
         );
