@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a9e31cb72165d6bc6b5568b55c82767c",
-    "content-hash": "feed0a5615d0f76efcb487426dba432d",
+    "hash": "235563fabfcdda325b5b552edebd1b6c",
+    "content-hash": "0e42186df7b61fca97d34c4f113d1826",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -168,17 +168,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "67580c06a74e91a5924706286d39e93f3071b9ab"
+                "reference": "b7cfad71ae1de70d11ec2dff615fa221169c1dfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/67580c06a74e91a5924706286d39e93f3071b9ab",
-                "reference": "67580c06a74e91a5924706286d39e93f3071b9ab",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/b7cfad71ae1de70d11ec2dff615fa221169c1dfb",
+                "reference": "b7cfad71ae1de70d11ec2dff615fa221169c1dfb",
                 "shasum": ""
             },
             "require": {
+                "ext-filter": "*",
                 "ext-hash": "*",
                 "ext-json": "*",
+                "ext-mbstring": "*",
                 "ext-session": "*",
                 "ext-spl": "*",
                 "php": ">= 5.4.0",
@@ -204,7 +206,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-09-26 12:15:57"
+            "time": "2016-09-26 13:11:01"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -918,6 +920,7 @@
         "ext-date": "*",
         "ext-gettext": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",

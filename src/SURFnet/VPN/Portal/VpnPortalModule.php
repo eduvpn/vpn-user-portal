@@ -99,7 +99,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         [
                             'poolList' => $poolList,
                             'otpEnabledPools' => $otpEnabledPools,
-                            'maxNameLength' => 63 - strlen($userId),
+                            'maxNameLength' => 63 - mb_strlen($userId),
                         ]
                     )
                 );
@@ -119,15 +119,15 @@ class VpnPortalModule implements ServiceModuleInterface
                 // the CN, built of userId + '_' + configName cannot exceed
                 // a length of 64 as the CN cert is only allowed to be of
                 // length 64
-                $cnLength = strlen($userId) + strlen($configName) + 1;
+                $cnLength = mb_strlen($userId) + mb_strlen($configName) + 1;
                 if (64 < $cnLength) {
                     throw new HttpException(
-                        sprintf('configName too long, limited to "%d" characters', 63 - strlen($userId)),
+                        sprintf('configName too long, limited to "%d" characters', 63 - mb_strlen($userId)),
                         400
                     );
                 }
 
-                // XXX we have to verify the user has access to create this 
+                // XXX we have to verify the user has access to create this
                 // config for this poolId
 
                 return $this->getConfig($request->getServerName(), $poolId, $userId, $configName);

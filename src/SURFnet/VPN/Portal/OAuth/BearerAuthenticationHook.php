@@ -74,18 +74,18 @@ class BearerAuthenticationHook implements BeforeHookInterface
         if (!is_string($authHeader)) {
             return false;
         }
-        if (7 >= strlen($authHeader)) {
+        if (7 >= mb_strlen($authHeader)) {
             return false;
         }
-        if (0 !== strpos($authHeader, 'Bearer ')) {
+        if (0 !== mb_strpos($authHeader, 'Bearer ')) {
             return false;
         }
-        $bearerToken = substr($authHeader, 7);
+        $bearerToken = mb_substr($authHeader, 7);
         if (!self::validateTokenSyntax($bearerToken)) {
             return false;
         }
 
-        if (false === strpos($bearerToken, '.')) {
+        if (false === mb_strpos($bearerToken, '.')) {
             return false;
         }
 

@@ -21,6 +21,7 @@
         "ext-date": "*",
         "ext-gettext": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",

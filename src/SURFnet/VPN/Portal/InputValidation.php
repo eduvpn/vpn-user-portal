@@ -25,7 +25,7 @@ class InputValidation
     {
         self::validateString($configName);
 
-        if (32 < strlen($configName)) {
+        if (32 < mb_strlen($configName)) {
             throw new HttpException('invalid configName (too long)', 400);
         }
         if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
@@ -66,7 +66,7 @@ class InputValidation
         if (!is_string($input)) {
             throw new HttpException('parameter must be string', 400);
         }
-        if (0 >= strlen($input)) {
+        if (0 >= mb_strlen($input)) {
             throw new HttpException('parameter must be non-empty string', 400);
         }
     }
