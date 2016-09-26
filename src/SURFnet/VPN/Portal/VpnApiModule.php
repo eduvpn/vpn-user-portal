@@ -24,6 +24,7 @@ use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
+use SURFnet\VPN\Common\Http\ApiResponse;
 
 class VpnApiModule implements ServiceModuleInterface
 {
@@ -41,9 +42,36 @@ class VpnApiModule implements ServiceModuleInterface
 
     public function init(Service $service)
     {
-        // Add a configuration
+        $service->get(
+            '/pool_list',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $serverPools = $this->serverClient->serverPools();
+                $userGroups = $this->serverClient->userGroups($userId);
+                $poolList = [];
+
+                foreach ($serverPools as $poolId => $poolData) {
+                    if ($poolData['enableAcl']) {
+                        // is the user member of the aclGroupList?
+                        if (!self::isMember($userGroups, $poolData['aclGroupList'])) {
+                            continue;
+                        }
+                    }
+
+                    $poolList[] = [
+                        'poolId' => $poolId,
+                        'displayName' => $poolData['displayName'],
+                        'twoFactor' => $poolData['twoFactor'],
+                    ];
+                }
+
+                return new ApiResponse('pool_list', $poolList);
+            }
+        );
+
         $service->post(
-            '/config/',
+            '/create_config',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -80,5 +108,18 @@ class VpnApiModule implements ServiceModuleInterface
         $response->setBody($clientConfig);
 
         return $response;
+    }
+
+    private static function isMember(array $userGroups, array $aclGroupList)
+    {
+        // if any of the groups in userGroups is part of aclGroupList return
+        // true, otherwise false
+        foreach ($userGroups as $userGroup) {
+            if (in_array($userGroup['id'], $aclGroupList)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
