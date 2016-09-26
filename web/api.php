@@ -38,7 +38,7 @@ try {
     $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
     $config = Config::fromFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId));
 
-    $serverMode = $config->v('serverMode');
+    // XXX make sure the api is enabled, otherwise just die here...
 
     $service = new Service();
 
