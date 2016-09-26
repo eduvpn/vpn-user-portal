@@ -38,52 +38,52 @@ try {
     $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
     $config = Config::fromFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId));
 
-    // XXX make sure the api is enabled, otherwise just die here...
-
     $service = new Service();
 
-    $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
-    $tokenStorage->init();
+    if ($config->v('enableOAuth')) {
+        $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+        $tokenStorage->init();
 
-    $service->addBeforeHook(
-        'auth',
-        new BearerAuthenticationHook(
-            $tokenStorage
-        )
-    );
+        $service->addBeforeHook(
+            'auth',
+            new BearerAuthenticationHook(
+                $tokenStorage
+            )
+        );
 
-    // vpn-ca-api
-    $guzzleCaClient = new GuzzleHttpClient(
-        new Client([
-            'defaults' => [
-                'auth' => [
-                    $config->v('apiProviders', 'vpn-ca-api', 'userName'),
-                    $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
+        // vpn-ca-api
+        $guzzleCaClient = new GuzzleHttpClient(
+            new Client([
+                'defaults' => [
+                    'auth' => [
+                        $config->v('apiProviders', 'vpn-ca-api', 'userName'),
+                        $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
+                    ],
                 ],
-            ],
-        ])
-    );
-    $caClient = new CaClient($guzzleCaClient, $config->v('apiProviders', 'vpn-ca-api', 'apiUri'));
+            ])
+        );
+        $caClient = new CaClient($guzzleCaClient, $config->v('apiProviders', 'vpn-ca-api', 'apiUri'));
 
-    // vpn-server-api
-    $guzzleServerClient = new GuzzleHttpClient(
-        new Client([
-            'defaults' => [
-                'auth' => [
-                    $config->v('apiProviders', 'vpn-server-api', 'userName'),
-                    $config->v('apiProviders', 'vpn-server-api', 'userPass'),
+        // vpn-server-api
+        $guzzleServerClient = new GuzzleHttpClient(
+            new Client([
+                'defaults' => [
+                    'auth' => [
+                        $config->v('apiProviders', 'vpn-server-api', 'userName'),
+                        $config->v('apiProviders', 'vpn-server-api', 'userPass'),
+                    ],
                 ],
-            ],
-        ])
-    );
-    $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
+            ])
+        );
+        $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
 
-    // api module
-    $vpnPortalModule = new VpnApiModule(
-        $serverClient,
-        $caClient
-    );
-    $service->addModule($vpnPortalModule);
+        // api module
+        $vpnApiModule = new VpnApiModule(
+            $serverClient,
+            $caClient
+        );
+        $service->addModule($vpnApiModule);
+    }
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
