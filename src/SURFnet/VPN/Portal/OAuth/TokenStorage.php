@@ -31,17 +31,19 @@ class TokenStorage
         $this->db = $db;
     }
 
-    public function store($userId, $accessToken, $clientId, $scope)
+    public function store($userId, $accessTokenKey, $accessToken, $clientId, $scope)
     {
         $stmt = $this->db->prepare(
             'INSERT INTO tokens (
-                user_id,
+                user_id,    
+                access_token_key,
                 access_token,
                 client_id,
                 scope
              ) 
              VALUES(
                 :user_id, 
+                :access_token_key,
                 :access_token,
                 :client_id,
                 :scope
@@ -49,6 +51,7 @@ class TokenStorage
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':access_token_key', $accessTokenKey, PDO::PARAM_STR);
         $stmt->bindValue(':access_token', $accessToken, PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
         $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
@@ -61,14 +64,36 @@ class TokenStorage
         return true;
     }
 
+    public function get($accessTokenKey)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                user_id,    
+                access_token,
+                client_id,
+                scope
+             FROM tokens
+             WHERE
+                access_token_key = :access_token_key
+            '
+        );
+
+        $stmt->bindValue(':access_token_key', $accessTokenKey, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function init()
     {
         $queryList = [
             'CREATE TABLE IF NOT EXISTS tokens (
                 user_id VARCHAR(255) NOT NULL,
+                access_token_key VARCHAR(255) NOT NULL,
                 access_token VARCHAR(255) NOT NULL,
                 client_id VARCHAR(255) NOT NULL,
-                scope VARCHAR(255) NOT NULL
+                scope VARCHAR(255) NOT NULL,
+                UNIQUE(access_token_key)
             )',
         ];
 

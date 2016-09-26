@@ -24,8 +24,8 @@ namespace SURFnet\VPN\Portal\OAuth;
  */
 class Random implements RandomInterface
 {
-    public function get()
+    public function get($len)
     {
-        return bin2hex(random_bytes(16));
+        return bin2hex(random_bytes($len));
     }
 }

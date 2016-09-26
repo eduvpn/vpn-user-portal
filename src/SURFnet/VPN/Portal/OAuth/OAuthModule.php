@@ -92,10 +92,13 @@ class OAuthModule implements ServiceModuleInterface
                     return new RedirectResponse($redirectUri, 302);
                 }
 
-                $accessToken = $this->random->get();
+                $accessTokenKey = $this->random->get(8);
+                $accessToken = $this->random->get(16);
+
                 // store access_token
                 $this->tokenStorage->store(
                     $userId,
+                    $accessTokenKey,
                     $accessToken,
                     $request->getQueryParameter('client_id'),
                     $request->getQueryParameter('scope')
@@ -104,7 +107,7 @@ class OAuthModule implements ServiceModuleInterface
                 // add state, access_token to redirect_uri
                 $redirectQuery = http_build_query(
                     [
-                        'access_token' => $accessToken,
+                        'access_token' => sprintf('%s.%s', $accessTokenKey, $accessToken),
                         'state' => $request->getQueryParameter('state'),
                     ]
                 );

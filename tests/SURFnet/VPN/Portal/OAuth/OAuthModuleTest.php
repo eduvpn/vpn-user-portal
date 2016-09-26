@@ -104,7 +104,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
-            'vpn://import/callback#access_token=access_token_abcde_12345&state=12345',
+            'vpn://import/callback#access_token=abcd1234abcd1234.wxyz1234efgh5678wxyz1234efgh5678&state=12345',
             $response->getHeader('Location')
         );
     }

@@ -111,11 +111,6 @@ msgstr ""
 "cijferige OTP-code in te vullen."
 
 #: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:89
-#: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:37
-msgid "Error"
-msgstr "Fout"
-
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:91
 msgid ""
 "The OTP key you entered does not match the expected value for this OTP "
 "secret."
@@ -123,7 +118,7 @@ msgstr ""
 "De ingevoerde OTP-code komt niet overeen met de verwachtte waarde voor deze "
 "OTP-sleutel."
 
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:118
+#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:116
 msgid "Validate"
 msgstr "Verifiëren"
 
@@ -208,6 +203,10 @@ msgstr ""
 "betekent dat twee-factor authenticatie <em>niet</em> gebruikt wordt bij het "
 "verbinden met het VPN."
 
+#: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:37
+msgid "Error"
+msgstr "Fout"
+
 #: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:49
 msgid "An error occurred."
 msgstr "Er is een fout opgetreden."
@@ -276,63 +275,3 @@ msgstr "Profiel"
 #: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:136
 msgid "Download"
 msgstr "Downloaden"
-
-#~ msgid ""
-#~ "Setting up two-factor authentication failed because the entered code does "
-#~ "not match the expected value."
-#~ msgstr ""
-#~ "Het inschakelen van twee-factor authenticatie is mislukt omdat de "
-#~ "ingevoerde code niet overeenkomt met de verwachtte waarde."
-
-#~ msgid "<a href=\"otp\">Try</a> again."
-#~ msgstr "<a href=\"otp\">Probeer</a> opnieuw."
-
-#~ msgid ""
-#~ "The <strong>%tfa%</strong> profile requires two-factor authentication. "
-#~ "Enroll <a href=\"otp\">here</a>."
-#~ msgstr ""
-#~ "Het <strong>%tfa%</strong> profiel vereist twee-factor authenticatie. "
-#~ "Schakel dat <a href=\"otp\">hier</a> in."
-
-#~ msgid "English"
-#~ msgstr "Engels"
-
-#~ msgid "French"
-#~ msgstr "Frans"
-
-#~ msgid "German"
-#~ msgstr "Duits"
-
-#~ msgid "Dutch"
-#~ msgstr "Nederlands"
-
-#~ msgid "Switch"
-#~ msgstr "Wisselen"
-
-#~ msgid "Sign Out"
-#~ msgstr "Uitloggen"
-
-#~ msgid ""
-#~ "Configuration with name <em>%configName%</em> is already in use! You can "
-#~ "only use a name once."
-#~ msgstr ""
-#~ "Configuratie met naam <em>%configName%</em> is al in gebruik. Een naam "
-#~ "kan maar één keer gebruikt worden."
-
-#~ msgid "<a href=\"new\">Try</a> again."
-#~ msgstr "<a href=\"new\">Probeer</a> opnieuw."
-
-#~ msgid "Enrolled"
-#~ msgstr "Ingeschakeld"
-
-#~ msgid "Enroll"
-#~ msgstr "Inschakelen"
-
-#~ msgid "Group Membership(s)"
-#~ msgstr "Groeplidmaatschap(pen)"
-
-#~ msgid "Applications"
-#~ msgstr "Applicaties"
-
-#~ msgid "Revoke"
-#~ msgstr "Intrekken"

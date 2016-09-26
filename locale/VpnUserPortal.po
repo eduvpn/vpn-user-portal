@@ -91,17 +91,12 @@ msgid ""
 msgstr ""
 
 #: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:89
-#: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:37
-msgid "Error"
-msgstr ""
-
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:91
 msgid ""
 "The OTP key you entered does not match the expected value for this OTP "
 "secret."
 msgstr ""
 
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:118
+#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:116
 msgid "Validate"
 msgstr ""
 
@@ -180,6 +175,10 @@ msgstr ""
 msgid ""
 "None of the VPN profiles you have access to have two-factor authentication "
 "enabled. This means it will <em>not</em> be used when connecting to the VPN."
+msgstr ""
+
+#: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:37
+msgid "Error"
 msgstr ""
 
 #: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:49

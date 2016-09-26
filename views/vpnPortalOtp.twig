@@ -29,7 +29,7 @@
 
     {% if error_code is defined %}
         {% if 'invalid_otp_code' == error_code %}
-            <p class="error"><strong>{% trans "Error" %}</strong>: {% trans "The OTP key you entered does not match the expected value for this OTP secret." %}</p>
+            <p class="error">{% trans "The OTP key you entered does not match the expected value for this OTP secret." %}</p>
         {% else %}
             <p class="error">{{ error_code|e }}</p>
         {% endif %}

@@ -18,11 +18,19 @@
 namespace SURFnet\VPN\Portal\OAuth\Test;
 
 use SURFnet\VPN\Portal\OAuth\RandomInterface;
+use RuntimeException;
 
 class TestRandom implements RandomInterface
 {
-    public function get()
+    public function get($len)
     {
-        return 'access_token_abcde_12345';
+        if (8 === $len) {
+            return 'abcd1234abcd1234';
+        }
+        if (16 === $len) {
+            return 'wxyz1234efgh5678wxyz1234efgh5678';
+        }
+
+        throw new RuntimeException('unexpected length');
     }
 }
