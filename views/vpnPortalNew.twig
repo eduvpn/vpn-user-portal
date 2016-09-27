@@ -28,20 +28,33 @@
         {% endtrans %}
         </p>
 
-        {% for otpEnabledPool in otpEnabledPools %}
-            <p class="warning">
+        {% if errorCode is defined %}
+            <p class="error">
+            {% if 'otpRequired' == errorCode %}
                 {% trans %}
-                The <strong>{{ otpEnabledPool }}</strong> profile requires two-factor authentication. Enroll <a href="otp">here</a>.
+                    You cannot download this configuration, you need to <a href="otp">enroll</a> for two-factor authentication first.
                 {% endtrans %}
+            {% elseif 'nameAlreadyUsed' == errorCode %}
+                {% trans %} 
+                    A configuration with the name "{{ configName }}" already exists. Try another name.
+                {% endtrans %}
+            {% else %}
+                {{ errorCode|e }}
+            {% endif %}
             </p>
-        {% endfor %}
+        {% endif %}
 
         <form method="post">
             <fieldset>
                 <label for="poolId">{% trans "Profile" %}</label>
                 <select id="poolId" name="poolId">
-                    {% for pool in poolList %}
-                        <option value="{{ pool.poolId|e }}">{{ pool.displayName|e }}</option>
+                    {% for key, pool in poolList %}
+                        {% if poolId is defined and key == poolId %}
+                            <option value="{{ key|e }}" selected="selected">{{ pool.displayName|e }}</option>
+                        {% else %}
+                            <option value="{{ key|e }}">{{ pool.displayName|e }}</option>
+                        {% endif %}
+
                     {% endfor %}
                 </select>
                 <label for="configName">{% trans "Name" %}</label>

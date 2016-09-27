@@ -66,39 +66,14 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $serverPools = $this->serverClient->serverPools();
-                $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
                 $userGroups = $this->serverClient->userGroups($userId);
-
-                $poolList = [];
-                $otpEnabledPools = [];
-
-                foreach ($serverPools as $poolId => $poolData) {
-                    if ($poolData['enableAcl']) {
-                        // is the user member of the aclGroupList?
-                        if (!self::isMember($userGroups, $poolData['aclGroupList'])) {
-                            continue;
-                        }
-                    }
-
-                    // any of them requires 2FA and we are not enrolled?
-                    if (!$hasOtpSecret) {
-                        if ($poolData['twoFactor']) {
-                            $otpEnabledPools[] = $poolData['displayName'];
-                        }
-                    }
-
-                    $poolList[] = [
-                        'poolId' => $poolId,
-                        'displayName' => $poolData['displayName'],
-                    ];
-                }
+                $poolList = self::getAuthorizedPoolList($serverPools, $userGroups);
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalNew',
                         [
                             'poolList' => $poolList,
-                            'otpEnabledPools' => $otpEnabledPools,
                             'maxNameLength' => 63 - mb_strlen($userId),
                         ]
                     )
@@ -127,8 +102,52 @@ class VpnPortalModule implements ServiceModuleInterface
                     );
                 }
 
-                // XXX we have to verify the user has access to create this
-                // config for this poolId
+                $serverPools = $this->serverClient->serverPools();
+                $userGroups = $this->serverClient->userGroups($userId);
+                $poolList = self::getAuthorizedPoolList($serverPools, $userGroups);
+
+                // make sure the poolId is in the list of allowed pools for this
+                // user, it would not result in the ability to use the VPN, but
+                // better prevent it early
+                if (!in_array($poolId, array_keys($poolList))) {
+                    throw new HttpException('no permission to create a configuration for this poolId', 400);
+                }
+
+                // check that a certificate does not yet exist with this configName
+                $userCertificateList = $this->caClient->userCertificateList($userId);
+                foreach ($userCertificateList as $userCertificate) {
+                    if ($configName === $userCertificate['name']) {
+                        return new HtmlResponse(
+                            $this->tpl->render(
+                                'vpnPortalNew',
+                                [
+                                    'poolId' => $poolId,
+                                    'errorCode' => 'nameAlreadyUsed',
+                                    'poolList' => $poolList,
+                                    'configName' => $configName,
+                                    'maxNameLength' => 63 - mb_strlen($userId),
+                                ]
+                            )
+                        );
+                    }
+                }
+
+                if ($poolList[$poolId]['twoFactor']) {
+                    $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
+                    if (!$hasOtpSecret) {
+                        return new HtmlResponse(
+                            $this->tpl->render(
+                                'vpnPortalNew',
+                                [
+                                    'poolId' => $poolId,
+                                    'errorCode' => 'otpRequired',
+                                    'poolList' => $poolList,
+                                    'maxNameLength' => 63 - mb_strlen($userId),
+                                ]
+                            )
+                        );
+                    }
+                }
 
                 return $this->getConfig($request->getServerName(), $poolId, $userId, $configName);
             }
@@ -255,14 +274,6 @@ class VpnPortalModule implements ServiceModuleInterface
 
     private function getConfig($serverName, $poolId, $userId, $configName)
     {
-        // check that a certificate does not yet exist with this configName
-        $userCertificateList = $this->caClient->userCertificateList($userId);
-        foreach ($userCertificateList as $userCertificate) {
-            if ($configName === $userCertificate['name']) {
-                throw new HttpException(sprintf('a configuration with the name "%s" already exists', $configName), 400);
-            }
-        }
-
         // create a certificate
         $clientCertificate = $this->caClient->addClientCertificate($userId, $configName);
 
@@ -294,5 +305,29 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return false;
+    }
+
+    /**
+     * Filter the list of pools by checking if the user is a member of the
+     * required groups in case ACLs are enabled.
+     */
+    private static function getAuthorizedPoolList(array $serverPools, array $userGroups)
+    {
+        $poolList = [];
+        foreach ($serverPools as $poolId => $poolData) {
+            if ($poolData['enableAcl']) {
+                // is the user member of the aclGroupList?
+                if (!self::isMember($userGroups, $poolData['aclGroupList'])) {
+                    continue;
+                }
+            }
+
+            $poolList[$poolId] = [
+                'displayName' => $poolData['displayName'],
+                'twoFactor' => $poolData['twoFactor'],
+            ];
+        }
+
+        return $poolList;
     }
 }
