@@ -58,12 +58,11 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
             [
                 'vpnPortalNew' => [
                     'poolList' => [
-                        [
-                            'poolId' => 'internet',
+                        'internet' => [
                             'displayName' => 'Internet Access',
+                            'twoFactor' => false,
                         ],
                     ],
-                    'otpEnabledPools' => [],
                     'maxNameLength' => 60,
                 ],
             ],
