@@ -29,30 +29,32 @@
     </p>
     {% endif %}
     
+    {% if otpEnabledPools is not empty %}
     <h2>{% trans "Two-factor Authentication" %}</h2>
     <p>
-        {% if hasOtpSecret %}
-            {% trans %} You are already enrolled. {% endtrans %}
-        {% else %}
-            {% trans %} You are <em>not</em> yet enrolled. Enroll <a href="otp">here</a>. {% endtrans %}
-        {% endif %}
+    {% trans %}Two-factor authentication is required by these VPN profiles: {% endtrans %}
+    <ul>
+    {% for otpEnabledPool in otpEnabledPools %}
+        <li>{{ otpEnabledPool|e }}</li>
+    {% endfor %}
+    </ul>
     </p>
 
-    {% if otpEnabledPools is not empty %}
-        <p>
-        {% trans %}Two-factor authentication is used by the following VPN profiles: {% endtrans %}
-        <ul>
-        {% for otpEnabledPool in otpEnabledPools %}
-            <li>{{ otpEnabledPool|e }}</li>
-        {% endfor %}
-        </ul>
-        </p>
-    {% else %}
-        <p class="warning">
-        {% trans %}
-None of the VPN profiles you have access to have two-factor authentication enabled. This means it will <em>not</em> be used when connecting to the VPN.
-        {% endtrans %}
-        </p>
+    <p>
+        {% if hasOtpSecret %}
+            <p class="success">
+            {% trans %}
+                You are enrolled!
+            {% endtrans %}
+            </p>
+        {% else %}
+            <p class="warning">
+            {% trans %}
+                You are not yet enrolled! Enroll <a href="otp">here</a>.
+            {% endtrans %}
+            </p>
+        {% endif %}
+    </p>
     {% endif %}
 
     {% include 'footer.twig' %}

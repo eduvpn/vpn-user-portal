@@ -40,9 +40,13 @@ p.success, p.warning, p.error, p.block {
     padding: 1em;
 }
 
-p.success, p.success a {
-    color: #fff;
-    background-color: green;
+p.success {
+    color: green;
+    border: 2px solid green;
+}
+
+p.success a {
+    color: green;
 }
 
 p.warning {
