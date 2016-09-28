@@ -110,8 +110,8 @@ msgid "There are currently no configurations. <a href=\"new\">Create</a> one."
 msgstr ""
 
 #: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:68
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:124
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:130
+#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:152
+#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:158
 msgid "Name"
 msgstr ""
 
@@ -147,34 +147,32 @@ msgstr ""
 msgid "User ID"
 msgstr ""
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:67
+#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:58
+msgid "Your user identity is <code>%userId%</code>."
+msgstr ""
+
+#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:68
 msgid "Group Membership"
 msgstr ""
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:72
+#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:73
 msgid "You are a member of the following groups:"
 msgstr ""
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:100
+#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:104
 msgid "Two-factor Authentication"
 msgstr ""
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:108
-msgid "You are already enrolled."
+#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:109
+msgid "Two-factor authentication is required by these VPN profiles:"
 msgstr ""
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:114
-msgid "You are <em>not</em> yet enrolled. Enroll <a href=\"otp\">here</a>."
+#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:138
+msgid "You are enrolled!"
 msgstr ""
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:128
-msgid "Two-factor authentication is used by the following VPN profiles:"
-msgstr ""
-
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:154
-msgid ""
-"None of the VPN profiles you have access to have two-factor authentication "
-"enabled. This means it will <em>not</em> be used when connecting to the VPN."
+#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:147
+msgid "You are not yet enrolled! Enroll <a href=\"otp\">here</a>."
 msgstr ""
 
 #: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:37
@@ -228,16 +226,22 @@ msgid ""
 "code>, <code>@</code>."
 msgstr ""
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:86
+#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:87
 msgid ""
-"The <strong>%otpEnabledPool%</strong> profile requires two-factor "
-"authentication. Enroll <a href=\"otp\">here</a>."
+"You cannot download this configuration, you need to <a href=\"otp\">enroll</"
+"a> for two-factor authentication first."
 msgstr ""
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:101
+#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:93
+msgid ""
+"A configuration with the name \"%configName%\" already exists. Try another "
+"name."
+msgstr ""
+
+#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:114
 msgid "Profile"
 msgstr ""
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:136
+#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:164
 msgid "Download"
 msgstr ""
