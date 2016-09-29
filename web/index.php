@@ -102,7 +102,6 @@ try {
 
     // Authentication
     $authMethod = $config->v('authMethod');
-    $tpl->addDefault(array('authMethod' => $authMethod));
 
     switch ($authMethod) {
         case 'MellonAuthentication':
@@ -114,6 +113,7 @@ try {
             );
             break;
         case 'FormAuthentication':
+            $tpl->addDefault(['_show_logout' => true]);
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
