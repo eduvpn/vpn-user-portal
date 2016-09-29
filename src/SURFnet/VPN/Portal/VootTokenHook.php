@@ -48,6 +48,9 @@ class VootTokenHook implements BeforeHookInterface
         if ('/_voot/authorize' === $request->getPathInfo()) {
             return;
         }
+        if ('/_voot/callback' === $request->getPathInfo()) {
+            return;
+        }
 
         $userId = $hookData['auth'];
         if (!$this->serverClient->hasVootToken($userId)) {
