@@ -210,16 +210,16 @@
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "2315fce9098b8dd5b19165bbc26eb5140109c97b"
+                "reference": "5dedc8cb99597f3d59018bc4f39e526de292788b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/2315fce9098b8dd5b19165bbc26eb5140109c97b",
-                "reference": "2315fce9098b8dd5b19165bbc26eb5140109c97b",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/5dedc8cb99597f3d59018bc4f39e526de292788b",
+                "reference": "5dedc8cb99597f3d59018bc4f39e526de292788b",
                 "shasum": ""
             },
             "require": {
@@ -246,7 +246,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2016-08-30 10:14:59"
+            "time": "2016-09-29 08:44:31"
         },
         {
             "name": "guzzlehttp/guzzle",
