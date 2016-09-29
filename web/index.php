@@ -17,32 +17,33 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
+use fkooman\OAuth\Client\CurlHttpClient;
+use fkooman\OAuth\Client\OAuth2Client;
+use fkooman\OAuth\Client\Provider;
 use GuzzleHttp\Client;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\FormAuthenticationHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationModule;
+use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
+use SURFnet\VPN\Common\Http\ReferrerCheckHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\SecurityHeadersHook;
 use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\Session;
 use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Portal\TwigTpl;
 use SURFnet\VPN\Portal\GuzzleHttpClient;
-use SURFnet\VPN\Portal\VpnPortalModule;
-use SURFnet\VPN\Portal\VootModule;
-use SURFnet\VPN\Portal\OtpModule;
 use SURFnet\VPN\Portal\LanguageSwitcherHook;
-use fkooman\OAuth\Client\OAuth2Client;
-use fkooman\OAuth\Client\Provider;
-use fkooman\OAuth\Client\CurlHttpClient;
-use SURFnet\VPN\Common\Http\ReferrerCheckHook;
 use SURFnet\VPN\Portal\OAuth\OAuthModule;
 use SURFnet\VPN\Portal\OAuth\Random;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
+use SURFnet\VPN\Portal\OtpModule;
+use SURFnet\VPN\Portal\TwigTpl;
+use SURFnet\VPN\Portal\VootModule;
+use SURFnet\VPN\Portal\VootTokenHook;
+use SURFnet\VPN\Portal\VpnPortalModule;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -159,6 +160,25 @@ try {
     );
     $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
 
+    // voot module
+    if ($config->v('enableVoot')) {
+        $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
+        $vootModule = new VootModule(
+                new OAuth2Client(
+                new Provider(
+                    $config->v('Voot', 'clientId'),
+                    $config->v('Voot', 'clientSecret'),
+                    $config->v('Voot', 'authorizationEndpoint'),
+                    $config->v('Voot', 'tokenEndpoint')
+                ),
+                new CurlHttpClient()
+            ),
+            $serverClient,
+            $session
+        );
+        $service->addModule($vootModule);
+    }
+
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $tpl,
@@ -192,24 +212,6 @@ try {
             $config
         );
         $service->addModule($oauthModule);
-    }
-
-    // voot module
-    if ($config->v('enableVoot')) {
-        $vootModule = new VootModule(
-                new OAuth2Client(
-                new Provider(
-                    $config->v('Voot', 'clientId'),
-                    $config->v('Voot', 'clientSecret'),
-                    $config->v('Voot', 'authorizationEndpoint'),
-                    $config->v('Voot', 'tokenEndpoint')
-                ),
-                new CurlHttpClient()
-            ),
-            $serverClient,
-            $session
-        );
-        $service->addModule($vootModule);
     }
 
     $service->run($request)->send();

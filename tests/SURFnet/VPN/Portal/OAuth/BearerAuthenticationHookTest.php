@@ -51,7 +51,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             ]
         );
         $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
-        $bearerAuthenticationHook->executeBefore($request);
+        $bearerAuthenticationHook->executeBefore($request, []);
     }
 
     public function testValidToken()
@@ -62,7 +62,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             ]
         );
         $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
-        $bearerAuthenticationHook->executeBefore($request);
+        $bearerAuthenticationHook->executeBefore($request, []);
     }
 
     /**
@@ -77,7 +77,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             ]
         );
         $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
-        $bearerAuthenticationHook->executeBefore($request);
+        $bearerAuthenticationHook->executeBefore($request, []);
     }
 
     /**
@@ -92,7 +92,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             ]
         );
         $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
-        $bearerAuthenticationHook->executeBefore($request);
+        $bearerAuthenticationHook->executeBefore($request, []);
     }
 
     /**
@@ -107,7 +107,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             ]
         );
         $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
-        $bearerAuthenticationHook->executeBefore($request);
+        $bearerAuthenticationHook->executeBefore($request, []);
     }
 
     /**
@@ -122,7 +122,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             ]
         );
         $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
-        $bearerAuthenticationHook->executeBefore($request);
+        $bearerAuthenticationHook->executeBefore($request, []);
     }
 
     private static function getRequest(array $additionalHeaders = [])

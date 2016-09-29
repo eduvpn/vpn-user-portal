@@ -43,7 +43,7 @@ class LanguageSwitcherHook implements BeforeHookInterface
         $this->supportedLanguages = $supportedLanguages;
     }
 
-    public function executeBefore(Request $request)
+    public function executeBefore(Request $request, array $hookData)
     {
         if ('POST' !== $request->getRequestMethod()) {
             return false;

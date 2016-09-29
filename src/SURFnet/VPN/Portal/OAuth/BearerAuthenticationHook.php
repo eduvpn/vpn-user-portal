@@ -35,7 +35,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
         $this->realm = $realm;
     }
 
-    public function executeBefore(Request $request)
+    public function executeBefore(Request $request, array $hookData)
     {
         $authHeader = $request->getHeader('HTTP_AUTHORIZATION', false, null);
 
