@@ -121,7 +121,7 @@ class ClientConfig
 
         $remoteHostList = [];
         for ($i = 0; $i < $processCount - 1; ++$i) {
-            $remoteHostList[] = ['port' => 1194 + $i, 'proto' => 'udp'];
+            $remoteHostList[] = ['proto' => 'udp', 'port' => 1194 + $i];
         }
 
         if ($shuffleRemoteHostList) {
@@ -130,7 +130,7 @@ class ClientConfig
 
         // insert TCP at position 2
         array_splice(
-            $remoteHostList, 2, 0, [['port' => 443, 'proto' => 'tcp']]
+            $remoteHostList, 2, 0, [['proto' => 'tcp', 'port' => 443]]
         );
 
         return $remoteHostList;
