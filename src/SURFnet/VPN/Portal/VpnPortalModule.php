@@ -75,7 +75,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $serverPools = $this->serverClient->serverPools();
-                $userGroups = $this->serverClient->userGroups($userId);
+                $userGroups = $this->cachedUserGroups($userId);
                 $poolList = self::getAuthorizedPoolList($serverPools, $userGroups);
 
                 return new HtmlResponse(
@@ -112,7 +112,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $serverPools = $this->serverClient->serverPools();
-                $userGroups = $this->serverClient->userGroups($userId);
+                $userGroups = $this->cachedUserGroups($userId);
                 $poolList = self::getAuthorizedPoolList($serverPools, $userGroups);
 
                 // make sure the poolId is in the list of allowed pools for this
@@ -241,7 +241,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
-                $userGroups = $this->serverClient->userGroups($userId);
+                $userGroups = $this->cachedUserGroups($userId);
                 $serverPools = $this->serverClient->serverPools();
 
                 $otpEnabledPools = [];
@@ -338,5 +338,17 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return $poolList;
+    }
+
+    private function cachedUserGroups($userId)
+    {
+        // cache invalidation is done by the user closing the browser, the
+        // session is bound to the duration of the browser session, so we get
+        // away with that...
+        if (!$this->session->has('_user_groups')) {
+            $this->session->set('_user_groups', $this->serverClient->userGroups($userId));
+        }
+
+        return $this->session->get('_user_groups');
     }
 }
