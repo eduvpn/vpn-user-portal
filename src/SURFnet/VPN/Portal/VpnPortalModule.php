@@ -43,12 +43,21 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\Http\SessionInterface */
     private $session;
 
+    /** @var bool */
+    private $shuffleHosts;
+
     public function __construct(TplInterface $tpl, ServerClient $serverClient, CaClient $caClient, SessionInterface $session)
     {
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
         $this->caClient = $caClient;
         $this->session = $session;
+        $this->shuffleHosts = true;
+    }
+
+    public function setShuffleHosts($shuffleHosts)
+    {
+        $this->shuffleHosts = (bool) $shuffleHosts;
     }
 
     public function init(Service $service)
@@ -281,7 +290,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // a client configuration file
         $poolData = $this->serverClient->serverPool($poolId);
 
-        $clientConfig = ClientConfig::get($poolData, $clientCertificate, false);
+        $clientConfig = ClientConfig::get($poolData, $clientCertificate, $this->shuffleHosts);
 
         // XXX consider the timezone in the data call, this will be weird
         // when not using same timezone as user machine...

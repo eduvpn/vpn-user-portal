@@ -34,10 +34,19 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\HttpClient\CaClient */
     private $caClient;
 
+    /** @var bool */
+    private $shuffleHosts;
+
     public function __construct(ServerClient $serverClient, CaClient $caClient)
     {
         $this->serverClient = $serverClient;
         $this->caClient = $caClient;
+        $this->shuffleHosts = true;
+    }
+
+    public function setShuffleHosts($shuffleHosts)
+    {
+        $this->shuffleHosts = (bool) $shuffleHosts;
     }
 
     public function init(Service $service)
@@ -102,7 +111,7 @@ class VpnApiModule implements ServiceModuleInterface
         // a client configuration file
         $poolData = $this->serverClient->serverPool($poolId);
 
-        $clientConfig = ClientConfig::get($poolData, $clientCertificate, false);
+        $clientConfig = ClientConfig::get($poolData, $clientCertificate, $this->shuffleHosts);
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->setBody($clientConfig);

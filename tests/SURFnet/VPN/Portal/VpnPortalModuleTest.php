@@ -40,15 +40,16 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
     {
         $httpClient = new TestHttpClient();
 
-        $this->service = new Service();
-        $this->service->addModule(
-            new VpnPortalModule(
-                new JsonTpl(),
-                new ServerClient($httpClient, 'serverClient'),
-                new CaClient($httpClient, 'caClient'),
-                new TestSession()
-            )
+        $vpnPortalModule = new VpnPortalModule(
+            new JsonTpl(),
+            new ServerClient($httpClient, 'serverClient'),
+            new CaClient($httpClient, 'caClient'),
+            new TestSession()
         );
+        $vpnPortalModule->setShuffleHosts(false);
+
+        $this->service = new Service();
+        $this->service->addModule($vpnPortalModule);
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
     }
 
