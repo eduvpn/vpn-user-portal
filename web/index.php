@@ -34,6 +34,7 @@ use SURFnet\VPN\Common\Http\SecurityHeadersHook;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Session;
 use SURFnet\VPN\Common\Logger;
+use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\GuzzleHttpClient;
 use SURFnet\VPN\Portal\LanguageSwitcherHook;
 use SURFnet\VPN\Portal\OAuth\OAuthModule;
@@ -159,6 +160,8 @@ try {
         ])
     );
     $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
+
+    $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
 
     // voot module
     if ($config->v('enableVoot')) {

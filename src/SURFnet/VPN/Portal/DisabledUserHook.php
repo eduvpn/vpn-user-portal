@@ -18,15 +18,15 @@
 namespace SURFnet\VPN\Portal;
 
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 
 /**
- * This hook is used to make sure a VOOT token is available for the
- * authenticated user.
+ * This hook is used to check if a user is disabled before allowing any other
+ * actions except login.
  */
-class VootTokenHook implements BeforeHookInterface
+class DisabledUserHook implements BeforeHookInterface
 {
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
@@ -43,26 +43,19 @@ class VootTokenHook implements BeforeHookInterface
         }
         $userId = $hookData['auth'];
 
-        // do not get involved in POST requests, only in simple GETs
-        if ('GET' !== $request->getRequestMethod()) {
-            return;
+        // userId is null during POST to /_form/auth/verify if using
+        // FormAuthentication, that is fine...
+        if (is_null($userId)) {
+            if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
+                return;
+            }
+
+            throw new HttpException('unable to determine user ID', 500);
         }
 
-        // but not when we already try to obtain the access token to avoid
-        // redirect loops
-        if ('/_voot/authorize' === $request->getPathInfo()) {
-            return;
+        if ($this->serverClient->isDisabledUser($userId)) {
+            // user is disabled, show a special message
+            throw new HttpException('account disabled', 403);
         }
-        if ('/_voot/callback' === $request->getPathInfo()) {
-            return;
-        }
-
-        if (!$this->serverClient->hasVootToken($userId)) {
-            $redirectUri = sprintf('%s%s', $request->getRootUri(), '_voot/authorize');
-
-            return new RedirectResponse($redirectUri, 302);
-        }
-
-        return;
     }
 }
