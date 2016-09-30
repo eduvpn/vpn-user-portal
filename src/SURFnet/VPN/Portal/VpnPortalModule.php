@@ -294,7 +294,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // XXX consider the timezone in the data call, this will be weird
         // when not using same timezone as user machine...
-        $clientConfigFile = sprintf('%s_%s_%s', $serverName, date('Ymd'), $configName);
+        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $poolId, date('Ymd'), $configName);
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->addHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $clientConfigFile));
