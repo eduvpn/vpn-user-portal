@@ -20,8 +20,8 @@
 
     <form method="post" action="disableCertificateConfirm">
         <input type="hidden" name="configName" value="{{ configName }}">
-        <button name="confirmDisable" type="submit" value="yes">{% trans "Yes" %}</button>
-        <button name="confirmDisable" type="submit" value="no">{% trans "No" %}</button>
+        <button name="confirmDisable" class="error" type="submit" value="yes">{% trans "Yes" %}</button>
+        <button name="confirmDisable" class="success" type="submit" value="no">{% trans "No" %}</button>
     </form>    
 
     {% include 'footer.twig' %}

@@ -47,7 +47,7 @@
                     <td class="text-right">
                         <form method="post" class="inline" action="disableCertificate">
                             <input type="hidden" name="configName" value="{{ userCertificate.name }}">
-                            <button type="submit">{% trans "Disable" %}</button>
+                            <button type="submit" class="error">{% trans "Disable" %}</button>
                         </form>
                     </td>
                     {% else %}
