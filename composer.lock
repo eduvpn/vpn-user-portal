@@ -168,12 +168,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "718503907ac25efe2b0f58d6c5d36a1c61218766"
+                "reference": "e9caa0bb2a8d1ac993135b6591baef69abfdba32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/718503907ac25efe2b0f58d6c5d36a1c61218766",
-                "reference": "718503907ac25efe2b0f58d6c5d36a1c61218766",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/e9caa0bb2a8d1ac993135b6591baef69abfdba32",
+                "reference": "e9caa0bb2a8d1ac993135b6591baef69abfdba32",
                 "shasum": ""
             },
             "require": {
@@ -206,7 +206,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-10-03 13:25:22"
+            "time": "2016-10-03 14:11:43"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -584,7 +584,7 @@
         },
         {
             "name": "symfony/intl",
-            "version": "v2.8.11",
+            "version": "v2.8.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/intl.git",
@@ -747,7 +747,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.11",
+            "version": "v2.8.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
