@@ -39,7 +39,7 @@
                     A configuration with the name "{{ configName }}" already exists. Try another name.
                 {% endtrans %}
             {% else %}
-                {{ errorCode|e }}
+                {{ errorCode }}
             {% endif %}
             </p>
         {% endif %}
@@ -50,15 +50,15 @@
                 <select id="poolId" name="poolId">
                     {% for key, pool in poolList %}
                         {% if poolId is defined and key == poolId %}
-                            <option value="{{ key|e }}" selected="selected">{{ pool.displayName|e }}</option>
+                            <option value="{{ key }}" selected="selected">{{ pool.displayName }}</option>
                         {% else %}
-                            <option value="{{ key|e }}">{{ pool.displayName|e }}</option>
+                            <option value="{{ key }}">{{ pool.displayName }}</option>
                         {% endif %}
 
                     {% endfor %}
                 </select>
                 <label for="configName">{% trans "Name" %}</label>
-                <input type="text" name="configName" id="configName" maxlength="{{ maxNameLength|e }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+                <input type="text" name="configName" id="configName" maxlength="{{ maxNameLength }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
             </fieldset>
             <fieldset>
                 <button type="submit">{% trans "Download" %}</button>

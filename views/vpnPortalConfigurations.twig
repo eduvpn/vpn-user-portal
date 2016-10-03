@@ -27,11 +27,11 @@
             {% for userCertificate in userCertificateList %}
                 <tr>
                     {% if 'E' == userCertificate.state or 'R' == userCertificate.state %}
-                        <td>{{ userCertificate.name|e }}</td>
+                        <td>{{ userCertificate.name }}</td>
                     {% else %}
-                        <td>{{ userCertificate.name|e }}</td>
+                        <td>{{ userCertificate.name }}</td>
                     {% endif %}
-                    <td>{{ userCertificate.exp|e|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ userCertificate.exp|date('Y-m-d H:i:s') }}</td>
                     <td class="text-right">
                         {% if 'D' == userCertificate.state %}
                             <span class="error">{% trans "Disabled" %}</span>
@@ -46,7 +46,7 @@
                     {% if 'V' == userCertificate.state %}
                     <td class="text-right">
                         <form method="post" class="inline" action="disableCertificate">
-                            <input type="hidden" name="configName" value="{{ userCertificate.name|e }}">
+                            <input type="hidden" name="configName" value="{{ userCertificate.name }}">
                             <button type="submit">{% trans "Disable" %}</button>
                         </form>
                     </td>

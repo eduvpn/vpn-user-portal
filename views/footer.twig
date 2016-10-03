@@ -1,15 +1,15 @@
 <hr>
 <div class="footer">
     {% if supportedLanguages|length > 1 %}
-        <form class="setLanguage" method="post" action="{{ requestRoot|e }}setLanguage">
+        <form class="setLanguage" method="post" action="{{ requestRoot }}setLanguage">
             {% for key, language in supportedLanguages %}
-            <button name="setLanguage" value="{{ key|e }}">{{ language|e }}</button>
+            <button name="setLanguage" value="{{ key }}">{{ language }}</button>
             {% endfor %}
         </form>
     {% endif %}
 
     {% if _show_logout is defined and _form_auth_login_page is not defined %}
-        <form class="simple" method="post" action="{{ requestRoot|e}}_form/auth/logout">
+        <form class="simple" method="post" action="{{ requestRoot }}_form/auth/logout">
             <button type="submit">Sign Out</button>
         </form>
     {% endif %}

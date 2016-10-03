@@ -18,9 +18,9 @@
         
     <dl>
         <dt>{% trans "Secret" %}</dt>
-        <dd><code>{{ otpSecret|e }}</code></dd>
+        <dd><code>{{ otpSecret }}</code></dd>
         <dt>QR</dt>
-        <dd><img src="otp-qr-code?otp_secret={{ otpSecret|e }}"></dd>
+        <dd><img src="otp-qr-code?otp_secret={{ otpSecret }}"></dd>
     </dl>
 
     <p>
@@ -31,7 +31,7 @@
         {% if 'invalid_otp_code' == error_code %}
             <p class="error">{% trans "The OTP key you entered does not match the expected value for this OTP secret." %}</p>
         {% else %}
-            <p class="error">{{ error_code|e }}</p>
+            <p class="error">{{ error_code }}</p>
         {% endif %}
     {% endif %}
 
@@ -39,7 +39,7 @@
         <fieldset>
             <label for="otp_key">OTP</label>
             <input type="text" id="otp_key" name="otp_key" maxlength="6" required pattern="[0-9]{6}" autofocus>
-            <input type="hidden" name="otp_secret" value="{{ otpSecret|e }}"> 
+            <input type="hidden" name="otp_secret" value="{{ otpSecret }}"> 
         </fieldset>
         <fieldset>
             <button>{% trans "Validate" %}</button>

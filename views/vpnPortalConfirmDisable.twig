@@ -19,7 +19,7 @@
     </p>
 
     <form method="post" action="disableCertificateConfirm">
-        <input type="hidden" name="configName" value="{{ configName|e }}">
+        <input type="hidden" name="configName" value="{{ configName }}">
         <button name="confirmDisable" type="submit" value="yes">{% trans "Yes" %}</button>
         <button name="confirmDisable" type="submit" value="no">{% trans "No" %}</button>
     </form>    

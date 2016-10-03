@@ -19,11 +19,11 @@
         </p>
     {% endif %}
 
-    <form method="post" action="{{ requestRoot|e }}_form/auth/verify">
+    <form method="post" action="{{ requestRoot }}_form/auth/verify">
         <fieldset>
             {% if _form_auth_invalid_credentials %}
                 <label for="userName">{% trans "Username" %}</label>
-                <input type="text"     id="userName" name="userName" autocapitalize="off" placeholder="{% trans 'Username' %}" value="{{ _form_auth_invalid_credentials_user|e }}" required>
+                <input type="text"     id="userName" name="userName" autocapitalize="off" placeholder="{% trans 'Username' %}" value="{{ _form_auth_invalid_credentials_user }}" required>
                 <label for="userPass">{% trans "Password" %}</label>
                 <input type="password" id="userPass"name="userPass" placeholder="{% trans 'Password' %}" autofocus required>
             {% else %}
@@ -34,7 +34,7 @@
             {% endif %} 
         </fieldset>
         <fieldset>
-            <input type="hidden" name="_form_auth_redirect_to" value="{{ _form_auth_redirect_to|e }}">
+            <input type="hidden" name="_form_auth_redirect_to" value="{{ _form_auth_redirect_to }}">
             <button type="submit">{% trans "Sign In" %}</button>
         </fieldset>
     </form>
