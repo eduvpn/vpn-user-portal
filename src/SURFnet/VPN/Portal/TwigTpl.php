@@ -69,6 +69,11 @@ class TwigTpl implements TplInterface
             $environmentOptions
         );
 
+        $loadedExtensions = $this->twig->getExtensions();
+        if (!array_key_exists('Twig_Extension_Escaper', $loadedExtensions)) {
+            throw new RuntimeException('the "Twig_Extension_Escaper" is not loaded');
+        }
+
         $this->defaultVariables = array();
     }
 
