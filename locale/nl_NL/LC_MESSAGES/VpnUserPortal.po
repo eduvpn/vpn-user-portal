@@ -13,70 +13,70 @@ msgstr ""
 "X-Generator: Poedit 1.8.8\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: /tmp/cache/4d/4d1abf9db16111f124b8a3ed557d02530a44e1a874453fdbadfbd00368e1e8f0.php:35
-#: /tmp/cache/12/123863c8d0b0cb0fb1f9150b77ee2f6aad6c785f5cddf8c57d082b4e4af41206.php:35
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:35
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:35
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:35
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:35
+#: /tmp/cache/c3/c34b26adeba563de98f5d311fc3a3dd2274b150d12b21081772551a6c43de6cc.php:35
+#: /tmp/cache/07/07dcd790066bc1cf369193f80a971e5947075f2a963481691ff1dae0ad8425a7.php:35
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:35
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:35
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:35
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:35
 msgid "New"
 msgstr "Nieuw"
 
-#: /tmp/cache/4d/4d1abf9db16111f124b8a3ed557d02530a44e1a874453fdbadfbd00368e1e8f0.php:39
-#: /tmp/cache/12/123863c8d0b0cb0fb1f9150b77ee2f6aad6c785f5cddf8c57d082b4e4af41206.php:39
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:39
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:39
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:39
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:39
+#: /tmp/cache/c3/c34b26adeba563de98f5d311fc3a3dd2274b150d12b21081772551a6c43de6cc.php:39
+#: /tmp/cache/07/07dcd790066bc1cf369193f80a971e5947075f2a963481691ff1dae0ad8425a7.php:39
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:39
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:39
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:39
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:39
 msgid "Configurations"
 msgstr "Configuraties"
 
-#: /tmp/cache/4d/4d1abf9db16111f124b8a3ed557d02530a44e1a874453fdbadfbd00368e1e8f0.php:43
-#: /tmp/cache/12/123863c8d0b0cb0fb1f9150b77ee2f6aad6c785f5cddf8c57d082b4e4af41206.php:43
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:43
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:43
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:43
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:43
+#: /tmp/cache/c3/c34b26adeba563de98f5d311fc3a3dd2274b150d12b21081772551a6c43de6cc.php:43
+#: /tmp/cache/07/07dcd790066bc1cf369193f80a971e5947075f2a963481691ff1dae0ad8425a7.php:43
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:43
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:43
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:43
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:43
 msgid "Account"
 msgstr "Account"
 
-#: /tmp/cache/4d/4d1abf9db16111f124b8a3ed557d02530a44e1a874453fdbadfbd00368e1e8f0.php:47
-#: /tmp/cache/12/123863c8d0b0cb0fb1f9150b77ee2f6aad6c785f5cddf8c57d082b4e4af41206.php:47
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:47
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:47
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:47
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:47
+#: /tmp/cache/c3/c34b26adeba563de98f5d311fc3a3dd2274b150d12b21081772551a6c43de6cc.php:47
+#: /tmp/cache/07/07dcd790066bc1cf369193f80a971e5947075f2a963481691ff1dae0ad8425a7.php:47
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:47
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:47
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:47
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:47
 msgid "Documentation"
 msgstr "Documentatie"
 
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:35
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:116
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:35
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:116
 msgid "Sign In"
 msgstr "Inloggen"
 
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:42
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:42
 msgid "Please sign in with your username and password."
 msgstr "Log in met gebruikersnaam en wachtwoord."
 
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:53
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:53
 msgid "The credentials you provided are not correct. Please try again!"
 msgstr "De inloggegevens zijn niet correct. Probeer opnieuw!"
 
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:70
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:74
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:90
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:94
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:70
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:74
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:90
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:94
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:80
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:84
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:98
-#: /tmp/cache/93/93661774a3c7a546ee2502559f536f7a7574410975417b4d558f92438ea6f6cb.php:102
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:80
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:84
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:98
+#: /tmp/cache/98/983b5b26aa1efdab4ca9b67f303e6a8f58355049b9e2f14d56f2a7c8ba932971.php:102
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: /tmp/cache/12/123863c8d0b0cb0fb1f9150b77ee2f6aad6c785f5cddf8c57d082b4e4af41206.php:54
+#: /tmp/cache/07/07dcd790066bc1cf369193f80a971e5947075f2a963481691ff1dae0ad8425a7.php:54
 msgid ""
 "Are you sure you want to disable <em>%configName%</em>? Only an "
 "administrator can undo this!"
@@ -84,23 +84,23 @@ msgstr ""
 "De configuratie <em>%configName%</em> wordt uitgeschakeld. Alleen een "
 "beheerder kan dit ongedaan maken. Doorgaan?"
 
-#: /tmp/cache/12/123863c8d0b0cb0fb1f9150b77ee2f6aad6c785f5cddf8c57d082b4e4af41206.php:66
+#: /tmp/cache/07/07dcd790066bc1cf369193f80a971e5947075f2a963481691ff1dae0ad8425a7.php:66
 msgid "Yes"
 msgstr "Ja"
 
-#: /tmp/cache/12/123863c8d0b0cb0fb1f9150b77ee2f6aad6c785f5cddf8c57d082b4e4af41206.php:70
+#: /tmp/cache/07/07dcd790066bc1cf369193f80a971e5947075f2a963481691ff1dae0ad8425a7.php:70
 msgid "No"
 msgstr "Nee"
 
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:54
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:54
 msgid "Here you can enroll for two-factor authentication (2FA)."
 msgstr "Hier kan twee-factor authenticatie (2FA) ingeschakeld worden."
 
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:61
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:61
 msgid "Secret"
 msgstr "Sleutel"
 
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:77
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:77
 msgid ""
 "Scan the QR code using your 2FA application, or import the secret manually. "
 "Confirm the successful configuration by entering a 6 digit OTP generated by "
@@ -110,7 +110,7 @@ msgstr ""
 "Bevestig de configuratie door een door de 2FA-applicatie gegenereerde 6-"
 "cijferige OTP-code in te vullen."
 
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:89
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:89
 msgid ""
 "The OTP key you entered does not match the expected value for this OTP "
 "secret."
@@ -118,125 +118,125 @@ msgstr ""
 "De ingevoerde OTP-code komt niet overeen met de verwachtte waarde voor deze "
 "OTP-sleutel."
 
-#: /tmp/cache/83/834182507bed45e13961ce13bfc1eeff16f9771323fdd318b6e8b14a7b640af7.php:116
+#: /tmp/cache/e8/e878e708ef48a23188ccccfd1a8f2727d446940e124c32d0cc376bda23b6c44e.php:116
 msgid "Validate"
 msgstr "Verifiëren"
 
-#: /tmp/cache/73/7311df9011a39f5ce66b4bbe5bbfb7061caa5c86b271da453fb649d546e81ca9.php:24
-#: /tmp/cache/9f/9f5a48a187ca01ecc811c606740f9c1f1514d1978757801cc2df53c051563a21.php:20
+#: /tmp/cache/3d/3daf3798307f5ab65c998d31be49df73e257545057b2f5a750f5b96c3e2aa98e.php:24
+#: /tmp/cache/5d/5d4153324fb1bd24da5fb06c6adc7e9277eaca8164589d2a1f124b61e98e1607.php:20
 msgid "VPN User Portal"
 msgstr "VPN-Gebruikersportal"
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:58
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:58
 msgid "There are currently no configurations. <a href=\"new\">Create</a> one."
 msgstr "Er zijn momenteel geen configuraties. <a href=\"new\">Maak</a> er een."
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:68
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:152
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:158
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:68
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:152
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:158
 msgid "Name"
 msgstr "Naam"
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:70
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:70
 msgid "Expires"
 msgstr "Verloopt"
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:74
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:74
 msgid "Status"
 msgstr "Toestand"
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:110
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:110
 msgid "Disabled"
 msgstr "Uitgeschakeld"
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:117
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:117
 msgid "Active"
 msgstr "Actief"
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:124
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:124
 msgid "Revoked"
 msgstr "Ingetrokken"
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:131
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:131
 msgid "Expired"
 msgstr "Verlopen"
 
-#: /tmp/cache/ef/ef9628d1d203caa0815a3974be81b9e15bf1a275b4c0b7b7f77e334dc9663882.php:149
+#: /tmp/cache/28/283ebc836491662f5f496cc67526db84fffcfa424548a8a5140a8128651330cf.php:149
 msgid "Disable"
 msgstr "Uitschakelen"
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:53
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:53
 msgid "User ID"
 msgstr "Gebruikers-ID"
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:58
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:58
 msgid "Your user identity is <code>%userId%</code>."
 msgstr "De gebruikersidentiteit is <code>%userId%</code>."
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:68
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:68
 msgid "Group Membership"
 msgstr "Groeplidmaatschap"
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:73
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:73
 msgid "You are a member of the following groups:"
 msgstr "Dit account is lid van de volgende groepen:"
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:104
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:104
 msgid "Two-factor Authentication"
 msgstr "Twee-factor authenticatie"
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:109
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:109
 msgid "Two-factor authentication is required by these VPN profiles:"
 msgstr ""
 "Twee-factor authenticatie (2FA) wordt vereist door de volgende VPN-profielen:"
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:138
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:138
 msgid "You are enrolled!"
 msgstr "Aangemeld voor twee-factor authenticatie!"
 
-#: /tmp/cache/26/2676271adcc6c9d0ad447b320867bbbd74f969b859b9a0c5adb56b7dbd6265cb.php:147
+#: /tmp/cache/9d/9d0a2382da1accc5b35f8516bd7c4b20c5ec02957a4c37a516c0b4bf197d3bed.php:147
 msgid "You are not yet enrolled! Enroll <a href=\"otp\">here</a>."
 msgstr ""
 "Nog niet aangemeld voor twee-factor authenticatie. Doe dat <a href=\"otp"
 "\">hier</a>."
 
-#: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:37
+#: /tmp/cache/9d/9db3be127fd920c7f49a12279b26a28b8311bbca04767be43ae0285528c0527c.php:37
 msgid "Error"
 msgstr "Fout"
 
-#: /tmp/cache/f7/f7ae8374667a705dd43222a6b822b950bd198dc1da2405f3edf1d35ebbae5e4f.php:49
+#: /tmp/cache/9d/9db3be127fd920c7f49a12279b26a28b8311bbca04767be43ae0285528c0527c.php:49
 msgid "An error occurred."
 msgstr "Er is een fout opgetreden."
 
-#: /tmp/cache/39/3932e4b40c35335b667a53b91a996a7df1a8a4935184564945123948894743fa.php:35
+#: /tmp/cache/b3/b3e9fe8fa8c7a6d289db0fbc87b6f119c9f4fc31efb78709a90d831ac5edf21e.php:35
 msgid "Approval"
 msgstr "Toestemming"
 
-#: /tmp/cache/39/3932e4b40c35335b667a53b91a996a7df1a8a4935184564945123948894743fa.php:41
+#: /tmp/cache/b3/b3e9fe8fa8c7a6d289db0fbc87b6f119c9f4fc31efb78709a90d831ac5edf21e.php:41
 msgid "An application wants to act on your behalf."
 msgstr "Een applicatie wil dit account gebruiken."
 
-#: /tmp/cache/39/3932e4b40c35335b667a53b91a996a7df1a8a4935184564945123948894743fa.php:47
+#: /tmp/cache/b3/b3e9fe8fa8c7a6d289db0fbc87b6f119c9f4fc31efb78709a90d831ac5edf21e.php:47
 msgid "Application"
 msgstr "Applicatie"
 
-#: /tmp/cache/39/3932e4b40c35335b667a53b91a996a7df1a8a4935184564945123948894743fa.php:53
+#: /tmp/cache/b3/b3e9fe8fa8c7a6d289db0fbc87b6f119c9f4fc31efb78709a90d831ac5edf21e.php:53
 msgid "Permissions"
 msgstr "Permissies"
 
-#: /tmp/cache/39/3932e4b40c35335b667a53b91a996a7df1a8a4935184564945123948894743fa.php:59
+#: /tmp/cache/b3/b3e9fe8fa8c7a6d289db0fbc87b6f119c9f4fc31efb78709a90d831ac5edf21e.php:59
 msgid "Location"
 msgstr "Locatie"
 
-#: /tmp/cache/39/3932e4b40c35335b667a53b91a996a7df1a8a4935184564945123948894743fa.php:68
+#: /tmp/cache/b3/b3e9fe8fa8c7a6d289db0fbc87b6f119c9f4fc31efb78709a90d831ac5edf21e.php:68
 msgid "Reject"
 msgstr "Afwijzen"
 
-#: /tmp/cache/39/3932e4b40c35335b667a53b91a996a7df1a8a4935184564945123948894743fa.php:72
+#: /tmp/cache/b3/b3e9fe8fa8c7a6d289db0fbc87b6f119c9f4fc31efb78709a90d831ac5edf21e.php:72
 msgid "Approve"
 msgstr "Toestaan"
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:58
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:58
 msgid ""
 "This account does not have the required permissions to create a new VPN "
 "configurations for any of the \n"
@@ -245,7 +245,7 @@ msgstr ""
 "Dit account heeft niet voldoende rechten om een VPN-configuratie aan te "
 "maken voor een van de beschikbare profielen."
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:73
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:73
 msgid ""
 "Create a new VPN configuration by choosing a unique name for your "
 "configuration, e.g. <em>Phone</em>. Allowed characters are <code>a-z</code>, "
@@ -257,7 +257,7 @@ msgstr ""
 "<code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</"
 "code>, <code>@</code>."
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:87
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:87
 msgid ""
 "You cannot download this configuration, you need to <a href=\"otp\">enroll</"
 "a> for two-factor authentication first."
@@ -265,7 +265,7 @@ msgstr ""
 "Deze configuratie kan niet gedownload worden want het vereist twee-factor "
 "authenticatie. Schakel dat <a href=\"otp\">hier</a> in."
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:93
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:93
 msgid ""
 "A configuration with the name \"%configName%\" already exists. Try another "
 "name."
@@ -273,10 +273,10 @@ msgstr ""
 "Een configuratie met de naam \"%configName%\" bestaat al. Probeer een andere "
 "naam."
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:114
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:114
 msgid "Profile"
 msgstr "Profiel"
 
-#: /tmp/cache/74/74cab3de5ab1f6ce8b3b1bb4987bb388ec5757bd7d8c45ad6dbc082870f8245e.php:164
+#: /tmp/cache/1c/1c85e7e0536dd6143238cd25a26286a8f5b543aabc0a99fa926305a51f2dd3f4.php:164
 msgid "Download"
 msgstr "Downloaden"
