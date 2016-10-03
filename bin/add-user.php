@@ -19,66 +19,29 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use SURFnet\VPN\Common\Config;
-
-function showHelp(array $argv)
-{
-    return implode(
-        PHP_EOL,
-        [
-            sprintf('SYNTAX: %s [--instance domain.tld] --user username --pass password', $argv[0]),
-            '',
-            '--instance domain.tld      the instance to add the user to in case of multi',
-            '                           instance deploy',
-            '--user username            the user name',
-            '--pass password            the plain text password',
-            '',
-        ]
-    );
-}
+use SURFnet\VPN\Common\CliParser;
 
 try {
-    $instanceId = null;
-    $userName = null;
-    $userPass = null;
+    $p = new CliParser(
+        'Add a user to the portal',
+        [
+            'instance' => ['the instance to target, e.g. vpn.example', true, true],
+            'user' => ['the username', true, true],
+            'pass' => ['the password', true, true],
+        ]
+    );
 
-    for ($i = 1; $i < $argc; ++$i) {
-        if ('--instance' === $argv[$i] || '-i' === $argv[$i]) {
-            if (array_key_exists($i + 1, $argv)) {
-                $instanceId = $argv[$i + 1];
-                ++$i;
-            }
-        }
-        if ('--user' === $argv[$i] || '-u' === $argv[$i]) {
-            if (array_key_exists($i + 1, $argv)) {
-                $userName = $argv[$i + 1];
-                ++$i;
-            }
-        }
-        if ('--pass' === $argv[$i] || '-p' === $argv[$i]) {
-            if (array_key_exists($i + 1, $argv)) {
-                $userPass = $argv[$i + 1];
-                ++$i;
-            }
-        }
-        if ('--help' === $argv[$i] || '-h' === $argv[$i]) {
-            echo showHelp($argv);
-            exit(0);
-        }
+    $opt = $p->parse($argv);
+    if ($opt->e('help')) {
+        echo $p->help();
+        exit(0);
     }
 
-    if (is_null($userName) || is_null($userPass)) {
-        throw new RuntimeException('--user and --pass must be specified, see --help');
-    }
-
-    if (is_null($instanceId)) {
-        throw new RuntimeException('instance must be specified, see --help');
-    }
-
-    $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId);
+    $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $opt->v('instance'));
     $config = Config::fromFile($configFile);
     $configData = $config->v();
-    $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
-    $configData['FormAuthentication'][$userName] = $passwordHash;
+    $passwordHash = password_hash($opt->v('pass'), PASSWORD_DEFAULT);
+    $configData['FormAuthentication'][$opt->v('user')] = $passwordHash;
     Config::toFile($configFile, $configData);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
