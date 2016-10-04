@@ -77,10 +77,9 @@ try {
     );
 
     $session = new Session(
-        'vpn-user-portal',
-        array(
-            'secure' => 'development' !== $serverMode,
-        )
+        $request->getServerName(),
+        $request->getRoot(),
+        'development' !== $serverMode
     );
 
     $supportedLanguages = $config->v('supportedLanguages');
