@@ -84,6 +84,41 @@ class TokenStorage
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getAuthorizedClients($userId)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                client_id,
+                scope
+             FROM tokens
+             WHERE
+                user_id = :user_id'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function removeClientTokens($userId, $clientId)
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM tokens
+             WHERE user_id = :user_id AND client_id = :client_id'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
+        try {
+            $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function init()
     {
         $queryList = [

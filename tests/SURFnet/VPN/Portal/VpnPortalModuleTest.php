@@ -27,9 +27,11 @@ use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Portal\Test\JsonTpl;
+use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\Test\TestHttpClient;
 use SURFnet\VPN\Portal\Test\TestSession;
 use PHPUnit_Framework_TestCase;
+use PDO;
 
 class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
 {
@@ -40,11 +42,15 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
     {
         $httpClient = new TestHttpClient();
 
+        $tokenStorage = new TokenStorage(new PDO('sqlite::memory:'));
+        $tokenStorage->init();
+
         $vpnPortalModule = new VpnPortalModule(
             new JsonTpl(),
             new ServerClient($httpClient, 'serverClient'),
             new CaClient($httpClient, 'caClient'),
-            new TestSession()
+            new TestSession(),
+            $tokenStorage
         );
         $vpnPortalModule->setShuffleHosts(false);
 
@@ -94,6 +100,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                     'hasOtpSecret' => false,
                     'userId' => 'foo',
                     'userGroups' => [],
+                    'authorizedClients' => [],
                 ],
             ],
             $this->makeRequest('GET', '/account')

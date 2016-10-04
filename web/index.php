@@ -182,12 +182,17 @@ try {
         $service->addModule($vootModule);
     }
 
+    // OAuth tokens
+    $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+    $tokenStorage->init();
+
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $tpl,
         $serverClient,
         $caClient,
-        $session
+        $session,
+        $tokenStorage
     );
     $service->addModule($vpnPortalModule);
 
@@ -205,8 +210,6 @@ try {
                 throw new RuntimeException(sprintf('unable to create folder "%s"', $dataDir));
             }
         }
-        $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
-        $tokenStorage->init();
 
         $oauthModule = new OAuthModule(
             $tpl,

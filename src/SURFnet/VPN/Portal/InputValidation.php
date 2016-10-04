@@ -84,4 +84,11 @@ class InputValidation
             throw new HttpException('invalid OTP key format', 400);
         }
     }
+
+    public static function clientId($clientId)
+    {
+        if (0 === preg_match('/^(?:[\x20-\x7E])+$/', $clientId)) {
+            throw new HttpException('invalid client_id', 400);
+        }
+    }
 }

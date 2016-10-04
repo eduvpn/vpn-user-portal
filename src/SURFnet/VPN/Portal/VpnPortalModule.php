@@ -28,6 +28,7 @@ use SURFnet\VPN\Common\TplInterface;
 use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
+use SURFnet\VPN\Portal\OAuth\TokenStorage;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -43,15 +44,19 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\Http\SessionInterface */
     private $session;
 
+    /** @var \SURFnet\VPN\Portal\OAuth\TokenStorage */
+    private $tokenStorage;
+
     /** @var bool */
     private $shuffleHosts;
 
-    public function __construct(TplInterface $tpl, ServerClient $serverClient, CaClient $caClient, SessionInterface $session)
+    public function __construct(TplInterface $tpl, ServerClient $serverClient, CaClient $caClient, SessionInterface $session, TokenStorage $tokenStorage)
     {
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
         $this->caClient = $caClient;
         $this->session = $session;
+        $this->tokenStorage = $tokenStorage;
         $this->shuffleHosts = true;
     }
 
@@ -243,6 +248,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
                 $userGroups = $this->cachedUserGroups($userId);
                 $serverPools = $this->serverClient->serverPools();
+                $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
 
                 $otpEnabledPools = [];
                 foreach ($serverPools as $poolData) {
@@ -267,9 +273,23 @@ class VpnPortalModule implements ServiceModuleInterface
                             'hasOtpSecret' => $hasOtpSecret,
                             'userId' => $userId,
                             'userGroups' => $userGroups,
+                            'authorizedClients' => $authorizedClients,
                         ]
                     )
                 );
+            }
+        );
+
+        $service->post(
+            '/removeClientAuthorization',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+                $clientId = $request->getPostParameter('client_id');
+                InputValidation::clientId($clientId);
+
+                $this->tokenStorage->removeClientTokens($userId, $clientId);
+
+                return new RedirectResponse($request->getRootUri().'account', 302);
             }
         );
 

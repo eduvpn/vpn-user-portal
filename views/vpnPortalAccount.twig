@@ -20,43 +20,72 @@
     </p>
 
     {% if userGroups is not empty %}
-    <h2>{% trans "Group Membership" %}</h2>
-    <p>
-        {% trans "You are a member of the following groups:" %}
-    </p>
-        <ul>
-            {% for group in userGroups %}
-                <li title="{{ group.id }}">{{ group.displayName }}</li>
-            {% endfor %}
-        </ul>
+        <h2>{% trans "Group Membership" %}</h2>
+        <p>
+            {% trans "You are a member of the following groups:" %}
+        </p>
+            <ul>
+                {% for group in userGroups %}
+                    <li title="{{ group.id }}">{{ group.displayName }}</li>
+                {% endfor %}
+            </ul>
     {% endif %}
     
     {% if otpEnabledPools is not empty %}
-    <h2>{% trans "Two-factor Authentication" %}</h2>
-    <p>
-    {% trans %}Two-factor authentication is required by these VPN profiles: {% endtrans %}
-    </p>
-    <ul>
-    {% for otpEnabledPool in otpEnabledPools %}
-        <li>{{ otpEnabledPool }}</li>
-    {% endfor %}
-    </ul>
+        <h2>{% trans "Two-factor Authentication" %}</h2>
+        <p>
+        {% trans %}Two-factor authentication is required by these VPN profiles: {% endtrans %}
+        </p>
+        <ul>
+        {% for otpEnabledPool in otpEnabledPools %}
+            <li>{{ otpEnabledPool }}</li>
+        {% endfor %}
+        </ul>
 
-    <p>
-        {% if hasOtpSecret %}
-            <p class="success">
+        <p>
+            {% if hasOtpSecret %}
+                <p class="success">
+                {% trans %}
+                    You are enrolled!
+                {% endtrans %}
+                </p>
+            {% else %}
+                <p class="warning">
+                {% trans %}
+                    You are not yet enrolled! Enroll <a href="otp">here</a>.
+                {% endtrans %}
+                </p>
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {% if authorizedClients is not empty %}
+        <h2>{% trans "Authorized Applications" %}</h2>
+        <p>
             {% trans %}
-                You are enrolled!
+                This is a list of applications you gave permission to access your account.
             {% endtrans %}
-            </p>
-        {% else %}
-            <p class="warning">
-            {% trans %}
-                You are not yet enrolled! Enroll <a href="otp">here</a>.
-            {% endtrans %}
-            </p>
-        {% endif %}
-    </p>
+        </p>
+
+        <table class="horizontal">
+            <thead>
+                <tr><th>{% trans "Name" %}</th><th>{% trans "Scope" %}</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for client in authorizedClients %}
+                <tr>
+                    <td>{{ client.client_id }}</td>
+                    <td><code>{{ client.scope }}</code></td>
+                    <td class="text-right">
+                        <form method="post" action="removeClientAuthorization">
+                            <input type="hidden" name="client_id" value="{{ client.client_id }}">
+                            <button class="error">{% trans "Revoke" %}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 
     {% include 'footer.twig' %}
