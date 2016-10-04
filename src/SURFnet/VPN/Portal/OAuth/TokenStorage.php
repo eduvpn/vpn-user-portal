@@ -64,6 +64,28 @@ class TokenStorage
         return true;
     }
 
+    public function getExistingToken($userId, $clientId, $scope)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                access_token_key,
+                access_token
+             FROM tokens
+             WHERE
+                user_id = :user_id AND
+                client_id = :client_id AND
+                scope = :scope'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
+        $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function get($accessTokenKey)
     {
         $stmt = $this->db->prepare(
@@ -74,8 +96,7 @@ class TokenStorage
                 scope
              FROM tokens
              WHERE
-                access_token_key = :access_token_key
-            '
+                access_token_key = :access_token_key'
         );
 
         $stmt->bindValue(':access_token_key', $accessTokenKey, PDO::PARAM_STR);

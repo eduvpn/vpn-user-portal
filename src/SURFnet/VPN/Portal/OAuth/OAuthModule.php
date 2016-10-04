@@ -92,17 +92,30 @@ class OAuthModule implements ServiceModuleInterface
                     return new RedirectResponse($redirectUri, 302);
                 }
 
-                $accessTokenKey = $this->random->get(8);
-                $accessToken = $this->random->get(16);
-
-                // store access_token
-                $this->tokenStorage->store(
+                $existingToken = $this->tokenStorage->getExistingToken(
                     $userId,
-                    $accessTokenKey,
-                    $accessToken,
                     $request->getQueryParameter('client_id'),
                     $request->getQueryParameter('scope')
                 );
+
+                if (false !== $existingToken) {
+                    // if the user already has an access_token for this client and
+                    // scope, reuse it
+                    $accessTokenKey = $existingToken['access_token_key'];
+                    $accessToken = $existingToken['access_token'];
+                } else {
+                    // generate a new one
+                    $accessTokenKey = $this->random->get(8);
+                    $accessToken = $this->random->get(16);
+                    // store it
+                    $this->tokenStorage->store(
+                        $userId,
+                        $accessTokenKey,
+                        $accessToken,
+                        $request->getQueryParameter('client_id'),
+                        $request->getQueryParameter('scope')
+                    );
+                }
 
                 // add state, access_token to redirect_uri
                 $redirectQuery = http_build_query(
