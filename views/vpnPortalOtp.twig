@@ -35,6 +35,12 @@
         {% endif %}
     {% endif %}
 
+    <p class="warning">
+        {% trans %}
+    Only an administrator can remove two-factor authentication for your account. Make sure you do not loose your secret!
+        {% endtrans %}
+    </p>
+
     <form method="post" action="otp">
         <fieldset>
             <label for="otp_key">OTP</label>

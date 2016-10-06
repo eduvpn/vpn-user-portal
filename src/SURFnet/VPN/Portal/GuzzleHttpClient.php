@@ -19,6 +19,8 @@ namespace SURFnet\VPN\Portal;
 
 use GuzzleHttp\Client;
 use SURFnet\VPN\Common\HttpClient\HttpClientInterface;
+use SURFnet\VPN\Common\HttpClient\Exception\HttpClientException;
+use GuzzleHttp\Exception\BadResponseException;
 
 class GuzzleHttpClient implements HttpClientInterface
 {
@@ -37,13 +39,19 @@ class GuzzleHttpClient implements HttpClientInterface
 
     public function post($requestUri, array $postData)
     {
-        return $this->httpClient->post(
-            $requestUri,
-            [
-                'body' => [
-                    $postData,
-                ],
-            ]
-        )->json();
+        try {
+            return $this->httpClient->post(
+                $requestUri,
+                [
+                    'body' => [
+                        $postData,
+                    ],
+                ]
+            )->json();
+        } catch (BadResponseException $e) {
+            $responseData = $e->getResponse()->json();
+
+            throw new HttpClientException($responseData['error']);
+        }
     }
 }

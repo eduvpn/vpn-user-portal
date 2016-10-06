@@ -6,7 +6,7 @@
     {% include 'header.twig' %}
 
     <ul class="menu">
-        <li class="active"><a href="">{% trans "Sign In" %}</a>
+        <li class="active"><a href="">{% trans "Sign In" %}</a></li>
     </ul>
 
     <p>
@@ -15,7 +15,7 @@
 
     {% if _form_auth_invalid_credentials %}
         <p class="error">
-            {% trans "The credentials you provided are not correct. Please try again!" %}
+            {% trans "The credentials you provided were not correct." %}
         </p>
     {% endif %}
 

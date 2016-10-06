@@ -31,32 +31,42 @@
             </ul>
     {% endif %}
     
+    <h2>{% trans "Two-factor Authentication" %}</h2>
+
+    <p>
+    {% trans %}
+        Two-factor authentication can be used to protect your account from unauthorized access.
+    {% endtrans %}
+    </p>
+
+    <p>
+        {% if hasOtpSecret %}
+            <p class="success">
+            {% trans %}
+                You are currently enrolled!
+            {% endtrans %}
+            </p>
+        {% else %}
+            <p class="block">
+            {% trans %}
+                You are not yet enrolled! Enroll <a href="otp">here</a>.
+            {% endtrans %}
+            </p>
+        {% endif %}
+    </p>
+
     {% if otpEnabledPools is not empty %}
-        <h2>{% trans "Two-factor Authentication" %}</h2>
         <p>
-        {% trans %}Two-factor authentication is required by these VPN profiles: {% endtrans %}
+        {% trans %}
+            Two-factor authentication will also be used when connecting to these VPN profiles:
+        {% endtrans %}
         </p>
+
         <ul>
         {% for otpEnabledPool in otpEnabledPools %}
             <li>{{ otpEnabledPool }}</li>
         {% endfor %}
         </ul>
-
-        <p>
-            {% if hasOtpSecret %}
-                <p class="success">
-                {% trans %}
-                    You are enrolled!
-                {% endtrans %}
-                </p>
-            {% else %}
-                <p class="warning">
-                {% trans %}
-                    You are not yet enrolled! Enroll <a href="otp">here</a>.
-                {% endtrans %}
-                </p>
-            {% endif %}
-        </p>
     {% endif %}
 
     {% if authorizedClients is not empty %}

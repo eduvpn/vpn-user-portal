@@ -44,8 +44,10 @@ use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\OtpModule;
 use SURFnet\VPN\Portal\TwigTpl;
 use SURFnet\VPN\Portal\VootModule;
+use SURFnet\VPN\Portal\TwoFactorModule;
 use SURFnet\VPN\Portal\VootTokenHook;
 use SURFnet\VPN\Portal\VpnPortalModule;
+use SURFnet\VPN\Portal\TwoFactorHook;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -163,6 +165,11 @@ try {
     $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
+    $service->addBeforehook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
+
+    // two factor module
+    $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
+    $service->addModule($twoFactorModule);
 
     // voot module
     if ($config->v('enableVoot')) {

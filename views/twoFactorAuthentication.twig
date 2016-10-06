@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="menu">
+        <li class="active"><a href="{{ _two_factor_auth_redirect_to }}">{% trans "Two-factor Verification" %}</a></li>
+    </ul>
+
+    <p>
+        {% trans "Please provide your two-factor key." %}
+    </p>
+
+    {% if _two_factor_auth_invalid_key %}
+        <p class="error">
+            {% trans "The OTP you provided was not correct." %}
+        </p>
+    {% endif %}
+
+    <form method="post" action="{{ requestRoot }}_two_factor/auth/verify">
+        <fieldset>
+                <label for="otpKey">{% trans "OTP" %}</label>
+                <input type="text" id="otpKey" name="otpKey" autocapitalize="off" maxlength="6" required pattern="[0-9]{6}" autofocus>
+        </fieldset>
+        <fieldset>
+            <input type="hidden" name="_two_factor_auth_redirect_to" value="{{ _two_factor_auth_redirect_to }}">
+            <button type="submit">{% trans "Verify" %}</button>
+        </fieldset>
+    </form>
+
+    {% include 'footer.twig' %}
+</body>
+</html>

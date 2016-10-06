@@ -27,9 +27,7 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
-use Base32\Base32;
 use Otp\GoogleAuthenticator;
-use Otp\Otp;
 
 class OtpModule implements ServiceModuleInterface
 {
@@ -50,6 +48,8 @@ class OtpModule implements ServiceModuleInterface
         $service->get(
             '/otp',
             function () {
+                // XXX we can probably do this with random_bytes so no need to
+                // depend on Otp project
                 $otpSecret = GoogleAuthenticator::generateRandom();
 
                 return new HtmlResponse(
@@ -68,25 +68,20 @@ class OtpModule implements ServiceModuleInterface
                 $otpKey = $request->getPostParameter('otp_key');
                 InputValidation::otpKey($otpKey);
 
-                $otp = new Otp();
-                if ($otp->checkTotp(Base32::decode($otpSecret), $otpKey)) {
-                    // XXX we do not store this key in the log of used keys, so
-                    // it could be replayed in the small window by connecting
-                    // to the VPN with the same code
-                    $this->serverClient->setOtpSecret($userId, $otpSecret);
-
-                    return new RedirectResponse($request->getRootUri().'account', 302);
+                if (false === $this->serverClient->setOtpSecret($userId, $otpSecret, $otpKey)) {
+                    // we were unable to set
+                    return new HtmlResponse(
+                        $this->tpl->render(
+                            'vpnPortalOtp',
+                            [
+                                'otpSecret' => $otpSecret,
+                                'error_code' => 'invalid_otp_code',
+                            ]
+                        )
+                    );
                 }
 
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalOtp',
-                        [
-                            'otpSecret' => $otpSecret,
-                            'error_code' => 'invalid_otp_code',
-                        ]
-                    )
-                );
+                return new RedirectResponse($request->getRootUri().'account', 302);
             }
         );
 
