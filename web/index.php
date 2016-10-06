@@ -36,7 +36,7 @@ use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Session;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\DisabledUserHook;
-use SURFnet\VPN\Portal\GuzzleHttpClient;
+use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
 use SURFnet\VPN\Portal\LanguageSwitcherHook;
 use SURFnet\VPN\Portal\OAuth\OAuthModule;
 use SURFnet\VPN\Portal\OAuth\Random;
