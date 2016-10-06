@@ -168,12 +168,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "5411d65e7c46701ca26676f3c71c1e984d3a3fc1"
+                "reference": "36ab70a53d52da51bcd687a57750d188f454759c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/5411d65e7c46701ca26676f3c71c1e984d3a3fc1",
-                "reference": "5411d65e7c46701ca26676f3c71c1e984d3a3fc1",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/36ab70a53d52da51bcd687a57750d188f454759c",
+                "reference": "36ab70a53d52da51bcd687a57750d188f454759c",
                 "shasum": ""
             },
             "require": {
@@ -206,7 +206,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-10-04 19:19:38"
+            "time": "2016-10-06 09:22:58"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -848,16 +848,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.26.0",
+            "version": "v1.26.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "81c2b5fd36581370c7731387f05dcdb577050513"
+                "reference": "a09d8ee17ac1cfea29ed60c83960ad685c6a898d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/81c2b5fd36581370c7731387f05dcdb577050513",
-                "reference": "81c2b5fd36581370c7731387f05dcdb577050513",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a09d8ee17ac1cfea29ed60c83960ad685c6a898d",
+                "reference": "a09d8ee17ac1cfea29ed60c83960ad685c6a898d",
                 "shasum": ""
             },
             "require": {
@@ -905,7 +905,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-10-02 16:19:13"
+            "time": "2016-10-05 18:57:41"
         }
     ],
     "packages-dev": [],

@@ -37,6 +37,17 @@ class VootTokenHook implements BeforeHookInterface
         $this->serverClient = $serverClient;
     }
 
+    /**
+     * Execute a hook before routing.
+     *
+     * @param Request $request  the HTTP request
+     * @param array   $hookData results from previously called hooks, we need
+     *                          the results from the "auth" hook
+     *
+     * @return \SURFnet\VPN\Common\Http\RedirectResponse|bool returns the RedirectResponse if there is no Voot token available yet, returns true
+     *                                                        if a Voot token is already available and returns false if this is not
+     *                                                        the time to check for a Voot token, e.g. in the process of obtaining one
+     */
     public function executeBefore(Request $request, array $hookData)
     {
         if (!array_key_exists('auth', $hookData)) {
@@ -44,26 +55,27 @@ class VootTokenHook implements BeforeHookInterface
         }
         $userId = $hookData['auth'];
 
-        // do not get involved in POST requests, only in simple GETs
+        // do not get involved in POST requests, only in GETs
         if ('GET' !== $request->getRequestMethod()) {
-            return;
+            return false;
         }
 
         // but not when we already try to obtain the access token to avoid
         // redirect loops
         if ('/_voot/authorize' === $request->getPathInfo()) {
-            return;
+            return false;
         }
         if ('/_voot/callback' === $request->getPathInfo()) {
-            return;
+            return false;
         }
 
         if (!$this->serverClient->hasVootToken($userId)) {
-            $redirectUri = sprintf('%s%s', $request->getRootUri(), '_voot/authorize');
-
-            return new RedirectResponse($redirectUri, 302);
+            return new RedirectResponse(
+                sprintf('%s_voot/authorize', $request->getRootUri()),
+                302
+            );
         }
 
-        return;
+        return true;
     }
 }
