@@ -28,6 +28,7 @@ use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\GuzzleHttpClient;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\VpnApiModule;
+use SURFnet\VPN\Common\Http\Response;
 
 $logger = new Logger('vpn-user-api');
 
