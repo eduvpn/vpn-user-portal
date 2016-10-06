@@ -89,6 +89,6 @@ try {
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     $response = new Response(500, 'application/json');
-    $response->setBody(['error' => $e->getMessage()]);
+    $response->setBody(json_encode(['error' => $e->getMessage()]));
     $response->send();
 }
