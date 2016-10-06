@@ -32,7 +32,7 @@ class TwoFactorHook implements BeforeHookInterface
     /** @var \SURFnet\VPN\Common\TplInterface */
     private $tpl;
 
-    /** @var \SURFnet\VPN\Commmon\HttpClient\ServerClient */
+    /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
     public function __construct(SessionInterface $session, TplInterface $tpl, ServerClient $serverClient)
