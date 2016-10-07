@@ -17,7 +17,6 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use GuzzleHttp\Client;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
@@ -54,27 +53,15 @@ try {
 
         // vpn-ca-api
         $guzzleCaClient = new GuzzleHttpClient(
-            new Client([
-                'defaults' => [
-                    'auth' => [
-                        $config->v('apiProviders', 'vpn-ca-api', 'userName'),
-                        $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
-                    ],
-                ],
-            ])
+            $config->v('apiProviders', 'vpn-ca-api', 'userName'),
+            $config->v('apiProviders', 'vpn-ca-api', 'userPass')
         );
         $caClient = new CaClient($guzzleCaClient, $config->v('apiProviders', 'vpn-ca-api', 'apiUri'));
 
         // vpn-server-api
         $guzzleServerClient = new GuzzleHttpClient(
-            new Client([
-                'defaults' => [
-                    'auth' => [
-                        $config->v('apiProviders', 'vpn-server-api', 'userName'),
-                        $config->v('apiProviders', 'vpn-server-api', 'userPass'),
-                    ],
-                ],
-            ])
+            $config->v('apiProviders', 'vpn-server-api', 'userName'),
+            $config->v('apiProviders', 'vpn-server-api', 'userPass')
         );
         $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
 
