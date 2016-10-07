@@ -16,7 +16,6 @@
     "name": "eduvpn/vpn-user-portal",
     "require": {
         "bacon/bacon-qr-code": "^1.0",
-        "christian-riesen/otp": "^2.0",
         "eduvpn/common": "dev-master",
         "ext-date": "*",
         "ext-gettext": "*",

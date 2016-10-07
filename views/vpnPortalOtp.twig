@@ -16,6 +16,12 @@
         {% trans "Here you can enroll for two-factor authentication (2FA)." %}
     </p>
         
+    <p class="warning">
+        {% trans %}
+    Only an administrator can remove two-factor authentication for your account. Make sure you do not lose your secret!
+        {% endtrans %}
+    </p>
+
     <dl>
         <dt>{% trans "Secret" %}</dt>
         <dd><code>{{ otpSecret }}</code></dd>
@@ -34,12 +40,6 @@
             <p class="error">{{ error_code }}</p>
         {% endif %}
     {% endif %}
-
-    <p class="warning">
-        {% trans %}
-    Only an administrator can remove two-factor authentication for your account. Make sure you do not loose your secret!
-        {% endtrans %}
-    </p>
 
     <form method="post" action="otp">
         <fieldset>

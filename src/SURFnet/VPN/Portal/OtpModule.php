@@ -27,7 +27,6 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
-use Otp\GoogleAuthenticator;
 
 class OtpModule implements ServiceModuleInterface
 {
@@ -48,12 +47,8 @@ class OtpModule implements ServiceModuleInterface
         $service->get(
             '/otp',
             function () {
-                // XXX we can probably do this with random_bytes so no need to
-                // depend on Otp project
-                $otpSecret = GoogleAuthenticator::generateRandom();
-
                 return new HtmlResponse(
-                    $this->tpl->render('vpnPortalOtp', ['otpSecret' => $otpSecret])
+                    $this->tpl->render('vpnPortalOtp', ['otpSecret' => self::generateSecret()])
                 );
             }
         );
@@ -113,5 +108,23 @@ class OtpModule implements ServiceModuleInterface
                 return $response;
             }
         );
+    }
+
+    private static function generateSecret()
+    {
+        // Insipired by https://github.com/ChristianRiesen/otp and modified a
+        // bit, MIT licensed code
+        // Generates a random BASE32 string of length 16 without padding
+        $keys = array_merge(
+            range('A', 'Z'),
+            range(2, 7)
+        );
+
+        $otpSecret = '';
+        for ($i = 0; $i < 16; ++$i) {
+            $otpSecret .= $keys[random_int(0, 31)];
+        }
+
+        return $otpSecret;
     }
 }
