@@ -43,10 +43,10 @@ use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\OtpModule;
 use SURFnet\VPN\Portal\TwigTpl;
 use SURFnet\VPN\Portal\VootModule;
-use SURFnet\VPN\Portal\TwoFactorModule;
+use SURFnet\VPN\Common\Http\TwoFactorModule;
 use SURFnet\VPN\Portal\VootTokenHook;
 use SURFnet\VPN\Portal\VpnPortalModule;
-use SURFnet\VPN\Portal\TwoFactorHook;
+use SURFnet\VPN\Common\Http\TwoFactorHook;
 
 $logger = new Logger('vpn-user-portal');
 
