@@ -42,7 +42,7 @@ try {
     $configData = $config->v();
     $passwordHash = password_hash($opt->v('pass'), PASSWORD_DEFAULT);
     $configData['FormAuthentication'][$opt->v('user')] = $passwordHash;
-    Config::toFile($configFile, $configData);
+    Config::toFile($configFile, $configData, 0640);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
