@@ -17,7 +17,7 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use fkooman\OAuth\Client\CurlHttpClient;
+use fkooman\OAuth\Client\CurlHttpClient as OAuthHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use SURFnet\VPN\Common\Config;
@@ -34,7 +34,7 @@ use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Session;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\DisabledUserHook;
-use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
+use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Portal\LanguageSwitcherHook;
 use SURFnet\VPN\Portal\OAuth\OAuthModule;
 use SURFnet\VPN\Portal\OAuth\Random;
@@ -136,18 +136,22 @@ try {
     }
 
     // vpn-ca-api
-    $guzzleCaClient = new GuzzleHttpClient(
-        $config->v('apiProviders', 'vpn-ca-api', 'userName'),
-        $config->v('apiProviders', 'vpn-ca-api', 'userPass')
+    $caClient = new CaClient(
+        new CurlHttpClient(
+            $config->v('apiProviders', 'vpn-ca-api', 'userName'),
+            $config->v('apiProviders', 'vpn-ca-api', 'userPass')
+        ),
+        $config->v('apiProviders', 'vpn-ca-api', 'apiUri')
     );
-    $caClient = new CaClient($guzzleCaClient, $config->v('apiProviders', 'vpn-ca-api', 'apiUri'));
 
     // vpn-server-api
-    $guzzleServerClient = new GuzzleHttpClient(
-        $config->v('apiProviders', 'vpn-server-api', 'userName'),
-        $config->v('apiProviders', 'vpn-server-api', 'userPass')
+    $serverClient = new ServerClient(
+        new CurlHttpClient(
+            $config->v('apiProviders', 'vpn-server-api', 'userName'),
+            $config->v('apiProviders', 'vpn-server-api', 'userPass')
+        ),
+        $config->v('apiProviders', 'vpn-server-api', 'apiUri')
     );
-    $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     $service->addBeforehook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
@@ -167,7 +171,7 @@ try {
                     $config->v('Voot', 'authorizationEndpoint'),
                     $config->v('Voot', 'tokenEndpoint')
                 ),
-                new CurlHttpClient()
+                new OAuthHttpClient()
             ),
             $serverClient,
             $session

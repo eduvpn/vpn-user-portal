@@ -24,7 +24,7 @@ use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Portal\OAuth\BearerAuthenticationHook;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
+use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\VpnApiModule;
 use SURFnet\VPN\Common\Http\Response;
@@ -52,18 +52,22 @@ try {
         );
 
         // vpn-ca-api
-        $guzzleCaClient = new GuzzleHttpClient(
-            $config->v('apiProviders', 'vpn-ca-api', 'userName'),
-            $config->v('apiProviders', 'vpn-ca-api', 'userPass')
+        $caClient = new CaClient(
+            new CurlHttpClient(
+                $config->v('apiProviders', 'vpn-ca-api', 'userName'),
+                $config->v('apiProviders', 'vpn-ca-api', 'userPass')
+            ),
+            $config->v('apiProviders', 'vpn-ca-api', 'apiUri')
         );
-        $caClient = new CaClient($guzzleCaClient, $config->v('apiProviders', 'vpn-ca-api', 'apiUri'));
 
         // vpn-server-api
-        $guzzleServerClient = new GuzzleHttpClient(
-            $config->v('apiProviders', 'vpn-server-api', 'userName'),
-            $config->v('apiProviders', 'vpn-server-api', 'userPass')
+        $serverClient = new ServerClient(
+            new CurlHttpClient(
+                $config->v('apiProviders', 'vpn-server-api', 'userName'),
+                $config->v('apiProviders', 'vpn-server-api', 'userPass')
+            ),
+            $config->v('apiProviders', 'vpn-server-api', 'apiUri')
         );
-        $serverClient = new ServerClient($guzzleServerClient, $config->v('apiProviders', 'vpn-server-api', 'apiUri'));
 
         // api module
         $vpnApiModule = new VpnApiModule(
