@@ -25,16 +25,19 @@ class TestHttpClient implements HttpClientInterface
     public function get($requestUri)
     {
         switch ($requestUri) {
-            case 'serverClient/server_pools':
+            case 'serverClient/instance_config':
                 return self::wrap(
-                    'server_pools',
+                    'instance_config',
                     [
-                        'internet' => [
-                            'enableAcl' => false,
-                            'displayName' => 'Internet Access',
-                            'twoFactor' => false,
-                            'processCount' => 4,
-                            'hostName' => 'vpn.example',
+                        'instanceNumber' => 1,
+                        'vpnPools' => [
+                            'internet' => [
+                                'enableAcl' => false,
+                                'displayName' => 'Internet Access',
+                                'twoFactor' => false,
+                                'processCount' => 4,
+                                'hostName' => 'vpn.example',
+                            ],
                         ],
                     ]
                 );

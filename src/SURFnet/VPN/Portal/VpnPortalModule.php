@@ -79,7 +79,8 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $serverPools = $this->serverClient->serverPools();
+                $instanceConfig = $this->serverClient->instanceConfig();
+                $serverPools = $instanceConfig['vpnPools'];
                 $userGroups = $this->cachedUserGroups($userId);
                 $poolList = self::getAuthorizedPoolList($serverPools, $userGroups);
 
@@ -116,7 +117,8 @@ class VpnPortalModule implements ServiceModuleInterface
                     );
                 }
 
-                $serverPools = $this->serverClient->serverPools();
+                $instanceConfig = $this->serverClient->instanceConfig();
+                $serverPools = $instanceConfig['vpnPools'];
                 $userGroups = $this->cachedUserGroups($userId);
                 $poolList = self::getAuthorizedPoolList($serverPools, $userGroups);
 
@@ -247,7 +249,8 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
                 $userGroups = $this->cachedUserGroups($userId);
-                $serverPools = $this->serverClient->serverPools();
+                $instanceConfig = $this->serverClient->instanceConfig();
+                $serverPools = $instanceConfig['vpnPools'];
                 $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
 
                 $otpEnabledPools = [];

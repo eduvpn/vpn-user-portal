@@ -56,7 +56,8 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $serverPools = $this->serverClient->serverPools();
+                $instanceConfig = $this->serverClient->instanceConfig();
+                $serverPools = $instanceConfig['vpnPools'];
                 $userGroups = $this->serverClient->userGroups($userId);
                 $poolList = [];
 
