@@ -70,9 +70,9 @@ class VpnApiModule implements ServiceModuleInterface
                     }
 
                     $poolList[] = [
-                        'poolId' => $poolId,
-                        'displayName' => $poolData['displayName'],
-                        'twoFactor' => $poolData['twoFactor'],
+                        'pool_id' => $poolId,
+                        'display_name' => $poolData['displayName'],
+                        'two_factor' => $poolData['twoFactor'],
                     ];
                 }
 
@@ -85,9 +85,9 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $configName = $request->getPostParameter('configName');
+                $configName = $request->getPostParameter('config_name');
                 InputValidation::configName($configName);
-                $poolId = $request->getPostParameter('poolId');
+                $poolId = $request->getPostParameter('pool_id');
                 InputValidation::poolId($poolId);
 
                 return $this->getConfig($request->getServerName(), $poolId, $userId, $configName);
