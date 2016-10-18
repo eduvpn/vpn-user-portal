@@ -52,7 +52,7 @@ class VpnApiModule implements ServiceModuleInterface
     public function init(Service $service)
     {
         $service->get(
-            '/pool_list',
+            '/profile_list',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -76,7 +76,7 @@ class VpnApiModule implements ServiceModuleInterface
                     ];
                 }
 
-                return new ApiResponse('pool_list', $poolList);
+                return new ApiResponse('profile_list', $poolList);
             }
         );
 
