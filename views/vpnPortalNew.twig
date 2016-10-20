@@ -12,7 +12,7 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    {% if poolList|length == 0 %}
+    {% if profileList|length == 0 %}
         <p class="warning">
         {% trans %}
     This account does not have the required permissions to create a new VPN configurations for any of the 
@@ -21,7 +21,7 @@
         </p>
     {% endif %}
 
-    {% if poolList|length > 0 %}
+    {% if profileList|length > 0 %}
         <p>
         {% trans %}
         Create a new VPN configuration by choosing a unique name for your configuration, e.g. <em>Phone</em>. Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
@@ -46,13 +46,13 @@
 
         <form method="post">
             <fieldset>
-                <label for="poolId">{% trans "Profile" %}</label>
-                <select id="poolId" name="poolId">
-                    {% for key, pool in poolList %}
-                        {% if poolId is defined and key == poolId %}
-                            <option value="{{ key }}" selected="selected">{{ pool.displayName }}</option>
+                <label for="profileId">{% trans "Profile" %}</label>
+                <select id="profileId" name="profileId">
+                    {% for key, profile in profileList %}
+                        {% if profileId is defined and key == profileId %}
+                            <option value="{{ key }}" selected="selected">{{ profile.displayName }}</option>
                         {% else %}
-                            <option value="{{ key }}">{{ pool.displayName }}</option>
+                            <option value="{{ key }}">{{ profile.displayName }}</option>
                         {% endif %}
 
                     {% endfor %}

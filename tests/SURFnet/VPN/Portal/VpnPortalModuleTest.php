@@ -64,7 +64,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'vpnPortalNew' => [
-                    'poolList' => [
+                    'profileList' => [
                         'internet' => [
                             'displayName' => 'Internet Access',
                             'twoFactor' => false,
@@ -85,7 +85,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                 'POST',
                 '/new',
                 [],
-                ['configName' => 'MyConfig', 'poolId' => 'internet'],
+                ['configName' => 'MyConfig', 'profileId' => 'internet'],
                 true
             )->getBody()
         );
@@ -96,7 +96,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'vpnPortalAccount' => [
-                    'otpEnabledPools' => [],
+                    'otpEnabledProfiles' => [],
                     'hasOtpSecret' => false,
                     'userId' => 'foo',
                     'userGroups' => [],

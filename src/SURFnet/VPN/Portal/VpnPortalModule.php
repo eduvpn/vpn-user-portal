@@ -80,15 +80,15 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $instanceConfig = $this->serverClient->instanceConfig();
-                $serverPools = $instanceConfig['vpnPools'];
+                $serverProfiles = $instanceConfig['vpnProfiles'];
                 $userGroups = $this->cachedUserGroups($userId);
-                $poolList = self::getAuthorizedPoolList($serverPools, $userGroups);
+                $profileList = self::getAuthorizedProfileList($serverProfiles, $userGroups);
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalNew',
                         [
-                            'poolList' => $poolList,
+                            'profileList' => $profileList,
                             'maxNameLength' => 63 - mb_strlen($userId),
                         ]
                     )
@@ -103,8 +103,8 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $configName = $request->getPostParameter('configName');
                 InputValidation::configName($configName);
-                $poolId = $request->getPostParameter('poolId');
-                InputValidation::poolId($poolId);
+                $profileId = $request->getPostParameter('profileId');
+                InputValidation::profileId($profileId);
 
                 // the CN, built of userId + '_' + configName cannot exceed
                 // a length of 64 as the CN cert is only allowed to be of
@@ -118,15 +118,15 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $instanceConfig = $this->serverClient->instanceConfig();
-                $serverPools = $instanceConfig['vpnPools'];
+                $serverProfiles = $instanceConfig['vpnProfiles'];
                 $userGroups = $this->cachedUserGroups($userId);
-                $poolList = self::getAuthorizedPoolList($serverPools, $userGroups);
+                $profileList = self::getAuthorizedProfileList($serverProfiles, $userGroups);
 
-                // make sure the poolId is in the list of allowed pools for this
+                // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
                 // better prevent it early
-                if (!in_array($poolId, array_keys($poolList))) {
-                    throw new HttpException('no permission to create a configuration for this poolId', 400);
+                if (!in_array($profileId, array_keys($profileList))) {
+                    throw new HttpException('no permission to create a configuration for this profileId', 400);
                 }
 
                 // check that a certificate does not yet exist with this configName
@@ -137,9 +137,9 @@ class VpnPortalModule implements ServiceModuleInterface
                             $this->tpl->render(
                                 'vpnPortalNew',
                                 [
-                                    'poolId' => $poolId,
+                                    'profileId' => $profileId,
                                     'errorCode' => 'nameAlreadyUsed',
-                                    'poolList' => $poolList,
+                                    'profileList' => $profileList,
                                     'configName' => $configName,
                                     'maxNameLength' => 63 - mb_strlen($userId),
                                 ]
@@ -148,16 +148,16 @@ class VpnPortalModule implements ServiceModuleInterface
                     }
                 }
 
-                if ($poolList[$poolId]['twoFactor']) {
+                if ($profileList[$profileId]['twoFactor']) {
                     $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
                     if (!$hasOtpSecret) {
                         return new HtmlResponse(
                             $this->tpl->render(
                                 'vpnPortalNew',
                                 [
-                                    'poolId' => $poolId,
+                                    'profileId' => $profileId,
                                     'errorCode' => 'otpRequired',
-                                    'poolList' => $poolList,
+                                    'profileList' => $profileList,
                                     'maxNameLength' => 63 - mb_strlen($userId),
                                 ]
                             )
@@ -165,7 +165,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     }
                 }
 
-                return $this->getConfig($request->getServerName(), $poolId, $userId, $configName);
+                return $this->getConfig($request->getServerName(), $profileId, $userId, $configName);
             }
         );
 
@@ -250,21 +250,21 @@ class VpnPortalModule implements ServiceModuleInterface
                 $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
                 $userGroups = $this->cachedUserGroups($userId);
                 $instanceConfig = $this->serverClient->instanceConfig();
-                $serverPools = $instanceConfig['vpnPools'];
+                $serverProfiles = $instanceConfig['vpnProfiles'];
                 $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
 
-                $otpEnabledPools = [];
-                foreach ($serverPools as $poolData) {
-                    if ($poolData['enableAcl']) {
+                $otpEnabledProfiles = [];
+                foreach ($serverProfiles as $profileData) {
+                    if ($profileData['enableAcl']) {
                         // is the user member of the aclGroupList?
-                        if (!self::isMember($userGroups, $poolData['aclGroupList'])) {
+                        if (!self::isMember($userGroups, $profileData['aclGroupList'])) {
                             continue;
                         }
                     }
 
-                    if ($poolData['twoFactor']) {
+                    if ($profileData['twoFactor']) {
                         // XXX we have to make sure displayName is always set...
-                        $otpEnabledPools[] = $poolData['displayName'];
+                        $otpEnabledProfiles[] = $profileData['displayName'];
                     }
                 }
 
@@ -272,7 +272,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalAccount',
                         [
-                            'otpEnabledPools' => $otpEnabledPools,
+                            'otpEnabledProfiles' => $otpEnabledProfiles,
                             'hasOtpSecret' => $hasOtpSecret,
                             'userId' => $userId,
                             'userGroups' => $userGroups,
@@ -304,20 +304,20 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    private function getConfig($serverName, $poolId, $userId, $configName)
+    private function getConfig($serverName, $profileId, $userId, $configName)
     {
         // create a certificate
         $clientCertificate = $this->caClient->addClientCertificate($userId, $configName);
 
-        // obtain information about this pool to be able to construct
+        // obtain information about this profile to be able to construct
         // a client configuration file
-        $poolData = $this->serverClient->serverPool($poolId);
+        $profileData = $this->serverClient->serverProfile($profileId);
 
-        $clientConfig = ClientConfig::get($poolData, $clientCertificate, $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
 
         // XXX consider the timezone in the data call, this will be weird
         // when not using same timezone as user machine...
-        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $poolId, date('Ymd'), $configName);
+        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $configName);
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->addHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $clientConfigFile));
@@ -340,27 +340,27 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * Filter the list of pools by checking if the user is a member of the
+     * Filter the list of profiles by checking if the user is a member of the
      * required groups in case ACLs are enabled.
      */
-    private static function getAuthorizedPoolList(array $serverPools, array $userGroups)
+    private static function getAuthorizedProfileList(array $serverProfiles, array $userGroups)
     {
-        $poolList = [];
-        foreach ($serverPools as $poolId => $poolData) {
-            if ($poolData['enableAcl']) {
+        $profileList = [];
+        foreach ($serverProfiles as $profileId => $profileData) {
+            if ($profileData['enableAcl']) {
                 // is the user member of the aclGroupList?
-                if (!self::isMember($userGroups, $poolData['aclGroupList'])) {
+                if (!self::isMember($userGroups, $profileData['aclGroupList'])) {
                     continue;
                 }
             }
 
-            $poolList[$poolId] = [
-                'displayName' => $poolData['displayName'],
-                'twoFactor' => $poolData['twoFactor'],
+            $profileList[$profileId] = [
+                'displayName' => $profileData['displayName'],
+                'twoFactor' => $profileData['twoFactor'],
             ];
         }
 
-        return $poolList;
+        return $profileList;
     }
 
     private function cachedUserGroups($userId)

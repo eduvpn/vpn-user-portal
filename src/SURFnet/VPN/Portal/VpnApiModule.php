@@ -57,26 +57,26 @@ class VpnApiModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $instanceConfig = $this->serverClient->instanceConfig();
-                $serverPools = $instanceConfig['vpnPools'];
+                $serverProfiles = $instanceConfig['vpnProfiles'];
                 $userGroups = $this->serverClient->userGroups($userId);
-                $poolList = [];
+                $profileList = [];
 
-                foreach ($serverPools as $poolId => $poolData) {
-                    if ($poolData['enableAcl']) {
+                foreach ($serverProfiles as $profileId => $profileData) {
+                    if ($profileData['enableAcl']) {
                         // is the user member of the aclGroupList?
-                        if (!self::isMember($userGroups, $poolData['aclGroupList'])) {
+                        if (!self::isMember($userGroups, $profileData['aclGroupList'])) {
                             continue;
                         }
                     }
 
-                    $poolList[] = [
-                        'pool_id' => $poolId,
-                        'display_name' => $poolData['displayName'],
-                        'two_factor' => $poolData['twoFactor'],
+                    $profileList[] = [
+                        'profile_id' => $profileId,
+                        'display_name' => $profileData['displayName'],
+                        'two_factor' => $profileData['twoFactor'],
                     ];
                 }
 
-                return new ApiResponse('profile_list', $poolList);
+                return new ApiResponse('profile_list', $profileList);
             }
         );
 
@@ -87,15 +87,15 @@ class VpnApiModule implements ServiceModuleInterface
 
                 $configName = $request->getPostParameter('config_name');
                 InputValidation::configName($configName);
-                $poolId = $request->getPostParameter('pool_id');
-                InputValidation::poolId($poolId);
+                $profileId = $request->getPostParameter('profile_id');
+                InputValidation::profileId($profileId);
 
-                return $this->getConfig($request->getServerName(), $poolId, $userId, $configName);
+                return $this->getConfig($request->getServerName(), $profileId, $userId, $configName);
             }
         );
     }
 
-    private function getConfig($serverName, $poolId, $userId, $configName)
+    private function getConfig($serverName, $profileId, $userId, $configName)
     {
         // check that a certificate does not yet exist with this configName
         $userCertificateList = $this->caClient->userCertificateList($userId);
@@ -108,11 +108,11 @@ class VpnApiModule implements ServiceModuleInterface
         // create a certificate
         $clientCertificate = $this->caClient->addClientCertificate($userId, $configName);
 
-        // obtain information about this pool to be able to construct
+        // obtain information about this profile to be able to construct
         // a client configuration file
-        $poolData = $this->serverClient->serverPool($poolId);
+        $profileData = $this->serverClient->serverProfile($profileId);
 
-        $clientConfig = ClientConfig::get($poolData, $clientCertificate, $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->setBody($clientConfig);

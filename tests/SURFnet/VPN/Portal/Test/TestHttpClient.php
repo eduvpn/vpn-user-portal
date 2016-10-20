@@ -30,7 +30,7 @@ class TestHttpClient implements HttpClientInterface
                     'instance_config',
                     [
                         'instanceNumber' => 1,
-                        'vpnPools' => [
+                        'vpnProfiles' => [
                             'internet' => [
                                 'enableAcl' => false,
                                 'displayName' => 'Internet Access',
@@ -41,9 +41,9 @@ class TestHttpClient implements HttpClientInterface
                         ],
                     ]
                 );
-            case 'serverClient/server_pool?pool_id=internet':
+            case 'serverClient/server_profile?profile_id=internet':
                 return self::wrap(
-                    'server_pool',
+                    'server_profile',
                     [
                         'enableAcl' => false,
                         'displayName' => 'Internet Access',

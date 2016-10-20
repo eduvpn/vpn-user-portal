@@ -19,11 +19,11 @@ namespace SURFnet\VPN\Portal;
 
 class ClientConfig
 {
-    public static function get(array $poolConfig, array $clientCertificate, $shuffleRemoteHostList)
+    public static function get(array $profileConfig, array $clientCertificate, $shuffleRemoteHostList)
     {
         // make a list of ports/proto to add to the configuration file
-        $hostName = $poolConfig['hostName'];
-        $processCount = $poolConfig['processCount'];
+        $hostName = $profileConfig['hostName'];
+        $processCount = $profileConfig['processCount'];
 
         $remoteProtoPortList = self::remotePortProtoList($processCount, $shuffleRemoteHostList);
 
@@ -91,7 +91,7 @@ class ClientConfig
         ];
 
         // 2FA
-        if ($poolConfig['twoFactor']) {
+        if ($profileConfig['twoFactor']) {
             $clientConfig[] = 'auth-user-pass';
         }
 

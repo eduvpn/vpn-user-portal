@@ -55,7 +55,7 @@
         {% endif %}
     </p>
 
-    {% if otpEnabledPools is not empty %}
+    {% if otpEnabledProfiles is not empty %}
         <p>
         {% trans %}
             Two-factor authentication will also be used when connecting to these VPN profiles:
@@ -63,8 +63,8 @@
         </p>
 
         <ul>
-        {% for otpEnabledPool in otpEnabledPools %}
-            <li>{{ otpEnabledPool }}</li>
+        {% for otpEnabledProfile in otpEnabledProfiles %}
+            <li>{{ otpEnabledProfile }}</li>
         {% endfor %}
         </ul>
     {% endif %}

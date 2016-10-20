@@ -33,12 +33,12 @@ class InputValidation
         }
     }
 
-    public static function poolId($poolId)
+    public static function profileId($profileId)
     {
-        self::validateString($poolId);
+        self::validateString($profileId);
 
-        if (1 !== preg_match('/^[a-zA-Z0-9]+$/', $poolId)) {
-            throw new HttpException('invalid poolId (invalid characters)', 400);
+        if (1 !== preg_match('/^[a-zA-Z0-9]+$/', $profileId)) {
+            throw new HttpException('invalid profileId (invalid characters)', 400);
         }
     }
 
