@@ -16,11 +16,11 @@ apiProviders:
     vpn-ca-api:
         userName: vpn-user-portal
         userPass: abcdef
-        apiUri: 'http://10.42.42.1:8008/api.php'
+        apiUri: 'http://10.42.101.101:8008/api.php'
     vpn-server-api:
         userName: vpn-user-portal
         userPass: uvwxyz
-        apiUri: 'http://10.42.42.1:8009/api.php'
+        apiUri: 'http://10.42.101.101:8009/api.php'
 
 enableVoot: false
 #enableVoot: true
