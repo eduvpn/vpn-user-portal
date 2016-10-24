@@ -93,6 +93,28 @@ class VpnApiModule implements ServiceModuleInterface
                 return $this->getConfig($request->getServerName(), $profileId, $userId, $configName);
             }
         );
+
+        $service->get(
+            '/user_messages',
+            function (Request $request, array $hookData) {
+                return new ApiResponse(
+                    'user_messages',
+                    [
+                    ]
+                );
+            }
+        );
+
+        $service->get(
+            '/system_messages',
+            function (Request $request, array $hookData) {
+                return new ApiResponse(
+                    'system_messages',
+                    [
+                    ]
+                );
+            }
+        );
     }
 
     private function getConfig($serverName, $profileId, $userId, $configName)
