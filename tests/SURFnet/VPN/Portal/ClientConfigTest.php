@@ -65,11 +65,11 @@ class ClientConfigTest extends PHPUnit_Framework_TestCase
                 ],
                 [
                     'proto' => 'tcp',
-                    'port' => 443,
+                    'port' => 1194,
                 ],
                 [
-                    'proto' => 'udp',
-                    'port' => 1196,
+                    'proto' => 'tcp',
+                    'port' => 443,
                 ],
             ],
             ClientConfig::remotePortProtoList(4, false)
@@ -90,27 +90,11 @@ class ClientConfigTest extends PHPUnit_Framework_TestCase
                 ],
                 [
                     'proto' => 'tcp',
+                    'port' => 1194,
+                ],
+                [
+                    'proto' => 'tcp',
                     'port' => 443,
-                ],
-                [
-                    'proto' => 'udp',
-                    'port' => 1196,
-                ],
-                [
-                    'proto' => 'udp',
-                    'port' => 1197,
-                ],
-                [
-                    'proto' => 'udp',
-                    'port' => 1198,
-                ],
-                [
-                    'proto' => 'udp',
-                    'port' => 1199,
-                ],
-                [
-                    'proto' => 'udp',
-                    'port' => 1200,
                 ],
             ],
             ClientConfig::remotePortProtoList(8, false)
