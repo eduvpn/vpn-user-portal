@@ -25,6 +25,7 @@ use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\ApiResponse;
+use DateTime;
 
 class VpnApiModule implements ServiceModuleInterface
 {
@@ -97,10 +98,22 @@ class VpnApiModule implements ServiceModuleInterface
         $service->get(
             '/user_messages',
             function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                // check if the user is disabled, show this then
+                $msgList = [];
+                if ($this->serverClient->isDisabledUser($userId)) {
+                    $dateTime = new DateTime();
+                    $msgList[] = [
+                        'type' => 'notification',
+                        'date' => $dateTime->format(DateTime::ATOM),
+                        'content' => 'Your account has been disabled. Please contact support.',
+                    ];
+                }
+
                 return new ApiResponse(
                     'user_messages',
-                    [
-                    ]
+                    $msgList
                 );
             }
         );
