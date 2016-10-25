@@ -26,6 +26,7 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\ApiResponse;
 use DateTime;
+use DateTimeZone;
 
 class VpnApiModule implements ServiceModuleInterface
 {
@@ -104,9 +105,10 @@ class VpnApiModule implements ServiceModuleInterface
                 $msgList = [];
                 if ($this->serverClient->isDisabledUser($userId)) {
                     $dateTime = new DateTime();
+                    $dateTime->setTimeZone(new DateTimeZone('UTC'));
                     $msgList[] = [
                         'type' => 'notification',
-                        'date' => $dateTime->format(DateTime::ATOM),
+                        'date' => $dateTime->format('Y-m-d\TH:i:s\Z'),
                         'content' => 'Your account has been disabled. Please contact support.',
                     ];
                 }
