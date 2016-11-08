@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4552511c3a2873f88edd2dd86d5dc090",
-    "content-hash": "1c8e7a6e343b9c19d11c8ba86f4fb72e",
+    "hash": "d30603de6fbf277528a47b3f4a78f918",
+    "content-hash": "dc923557057ecd34d5dc2ce966b70107",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -51,16 +51,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "467fd653e89d846548e1018154b9d574cda8bdbe"
+                "reference": "73649ee100aa589164ba0330ccbb64ef76dffc65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/467fd653e89d846548e1018154b9d574cda8bdbe",
-                "reference": "467fd653e89d846548e1018154b9d574cda8bdbe",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/73649ee100aa589164ba0330ccbb64ef76dffc65",
+                "reference": "73649ee100aa589164ba0330ccbb64ef76dffc65",
                 "shasum": ""
             },
             "require": {
@@ -75,7 +75,7 @@
                 "guzzlehttp/guzzle": "^5.3",
                 "php": ">= 5.4.0",
                 "psr/log": "^1.0",
-                "symfony/intl": "~2.3",
+                "symfony/intl": "~2.8",
                 "symfony/polyfill": "^1.2",
                 "symfony/yaml": "^2.8"
             },
@@ -96,7 +96,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-10-27 11:09:32"
+            "time": "2016-11-08 13:37:44"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -801,9 +801,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "eduvpn/common": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
