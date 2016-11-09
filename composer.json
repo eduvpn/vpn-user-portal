@@ -7,7 +7,7 @@
         }
     ],
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "SURFnet\\VPN\\Portal\\": "src/"
         }
     },
