@@ -41,5 +41,7 @@ enableOAuth: false
 #enableOAuth: true
 # OAuth 2.0 consumers
 apiConsumers:
+    nl.eduvpn.app:
+        redirect_uri: 'nl.eduvpn.app://import/callback'
     vpn-companion:
         redirect_uri: 'vpn://import/callback'
