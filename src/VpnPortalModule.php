@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Portal;
 
 use SURFnet\VPN\Common\Http\SessionInterface;
@@ -365,13 +366,16 @@ class VpnPortalModule implements ServiceModuleInterface
 
     private function cachedUserGroups($userId)
     {
-        // cache invalidation is done by the user closing the browser, the
-        // session is bound to the duration of the browser session, so we get
-        // away with that...
-        if (!$this->session->has('_user_groups')) {
-            $this->session->set('_user_groups', $this->serverClient->userGroups($userId));
+        if ($this->session->has('_cached_groups_user_id')) {
+            // does it match the current userId?
+            if ($userId === $this->session->get('_cached_groups_user_id')) {
+                return $this->session->get('_cached_groups');
+            }
         }
 
-        return $this->session->get('_user_groups');
+        $this->session->set('_cached_groups_user_id', $userId);
+        $this->session->set('_cached_groups', $this->serverClient->userGroups($userId));
+
+        return $this->session->get('_cached_groups');
     }
 }
