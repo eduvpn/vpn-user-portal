@@ -83,7 +83,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $instanceConfig = $this->serverClient->instanceConfig();
                 $serverProfiles = $instanceConfig['vpnProfiles'];
                 $userGroups = $this->cachedUserGroups($userId);
-                $profileList = self::getAuthorizedProfileList($serverProfiles, $userGroups);
+                $profileList = self::getProfileList($serverProfiles, $userGroups);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -121,7 +121,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $instanceConfig = $this->serverClient->instanceConfig();
                 $serverProfiles = $instanceConfig['vpnProfiles'];
                 $userGroups = $this->cachedUserGroups($userId);
-                $profileList = self::getAuthorizedProfileList($serverProfiles, $userGroups);
+                $profileList = self::getProfileList($serverProfiles, $userGroups);
 
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
@@ -341,13 +341,17 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * Filter the list of profiles by checking if the user is a member of the
-     * required groups in case ACLs are enabled.
+     * Filter the list of profiles by checking if the profile should be shown,
+     * and that the user is a member of the required groups in case ACLs are
+     * enabled.
      */
-    private static function getAuthorizedProfileList(array $serverProfiles, array $userGroups)
+    private static function getProfileList(array $serverProfiles, array $userGroups)
     {
         $profileList = [];
         foreach ($serverProfiles as $profileId => $profileData) {
+            if ($profileData['hideProfile']) {
+                continue;
+            }
             if ($profileData['enableAcl']) {
                 // is the user member of the aclGroupList?
                 if (!self::isMember($userGroups, $profileData['aclGroupList'])) {

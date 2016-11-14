@@ -51,16 +51,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.0.2",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "d17a5a9af8a63eff7ce628a204e1c952d5f6fde6"
+                "reference": "9ad6deab4dbfc3a8482eaf95607ff33886d78ffc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/d17a5a9af8a63eff7ce628a204e1c952d5f6fde6",
-                "reference": "d17a5a9af8a63eff7ce628a204e1c952d5f6fde6",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/9ad6deab4dbfc3a8482eaf95607ff33886d78ffc",
+                "reference": "9ad6deab4dbfc3a8482eaf95607ff33886d78ffc",
                 "shasum": ""
             },
             "require": {
@@ -96,7 +96,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-11-09 10:52:56"
+            "time": "2016-11-14 12:44:24"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -550,16 +550,16 @@
         },
         {
             "name": "symfony/polyfill",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill.git",
-                "reference": "ee2c9c2576fdd4a42b024260a1906a9888770c34"
+                "reference": "385d033a8e1d8778446d699ecbd886480716eba7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill/zipball/ee2c9c2576fdd4a42b024260a1906a9888770c34",
-                "reference": "ee2c9c2576fdd4a42b024260a1906a9888770c34",
+                "url": "https://api.github.com/repos/symfony/polyfill/zipball/385d033a8e1d8778446d699ecbd886480716eba7",
+                "reference": "385d033a8e1d8778446d699ecbd886480716eba7",
                 "shasum": ""
             },
             "require": {
@@ -579,13 +579,14 @@
                 "symfony/polyfill-php55": "self.version",
                 "symfony/polyfill-php56": "self.version",
                 "symfony/polyfill-php70": "self.version",
+                "symfony/polyfill-php71": "self.version",
                 "symfony/polyfill-util": "self.version",
                 "symfony/polyfill-xml": "self.version"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2-dev"
+                    "dev-master": "1.3-dev"
                 }
             },
             "autoload": {
@@ -598,6 +599,7 @@
                     "src/Php55/bootstrap.php",
                     "src/Php56/bootstrap.php",
                     "src/Php70/bootstrap.php",
+                    "src/Php71/bootstrap.php",
                     "src/Iconv/bootstrap.php",
                     "src/Intl/Grapheme/bootstrap.php",
                     "src/Intl/Icu/bootstrap.php",
@@ -633,7 +635,7 @@
                 "polyfill",
                 "shim"
             ],
-            "time": "2016-05-18 14:27:53"
+            "time": "2016-11-14 01:15:23"
         },
         {
             "name": "symfony/yaml",
