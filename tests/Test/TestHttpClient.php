@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Portal\Test;
 
 use SURFnet\VPN\Common\HttpClient\HttpClientInterface;
@@ -32,6 +33,7 @@ class TestHttpClient implements HttpClientInterface
                         'instanceNumber' => 1,
                         'vpnProfiles' => [
                             'internet' => [
+                                'hideProfile' => false,
                                 'enableAcl' => false,
                                 'displayName' => 'Internet Access',
                                 'twoFactor' => false,
@@ -100,7 +102,7 @@ class TestHttpClient implements HttpClientInterface
                 'data' => [
                     $key => $response,
                 ],
-            ]
+            ],
         ];
     }
 }
