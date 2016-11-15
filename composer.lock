@@ -51,16 +51,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "9ad6deab4dbfc3a8482eaf95607ff33886d78ffc"
+                "reference": "5fa1ada9a2dc5c2c19bf3d9cdbc9b6f2e39eec94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/9ad6deab4dbfc3a8482eaf95607ff33886d78ffc",
-                "reference": "9ad6deab4dbfc3a8482eaf95607ff33886d78ffc",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/5fa1ada9a2dc5c2c19bf3d9cdbc9b6f2e39eec94",
+                "reference": "5fa1ada9a2dc5c2c19bf3d9cdbc9b6f2e39eec94",
                 "shasum": ""
             },
             "require": {
@@ -96,20 +96,20 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-11-14 12:44:24"
+            "time": "2016-11-15 19:15:09"
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "5dedc8cb99597f3d59018bc4f39e526de292788b"
+                "reference": "7a8854921275d3072fd77ec8f837d23ce277c4f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/5dedc8cb99597f3d59018bc4f39e526de292788b",
-                "reference": "5dedc8cb99597f3d59018bc4f39e526de292788b",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/7a8854921275d3072fd77ec8f837d23ce277c4f1",
+                "reference": "7a8854921275d3072fd77ec8f837d23ce277c4f1",
                 "shasum": ""
             },
             "require": {
@@ -121,7 +121,7 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
+                "psr-4": {
                     "fkooman\\OAuth\\Client\\": "src/"
                 }
             },
@@ -136,7 +136,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2016-09-29 08:44:31"
+            "time": "2016-11-15 09:25:17"
         },
         {
             "name": "guzzlehttp/guzzle",

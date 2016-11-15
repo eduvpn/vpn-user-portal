@@ -51,7 +51,10 @@ $logger = new Logger('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
-    $instanceId = $request->getServerName();
+
+    if (false === $instanceId = getenv('VPN_INSTANCE_ID')) {
+        $instanceId = $request->getServerName();
+    }
 
     $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
     if (!file_exists($dataDir)) {
@@ -66,11 +69,9 @@ try {
         sprintf('%s/views', dirname(__DIR__)),
         sprintf('%s/config/%s/views', dirname(__DIR__), $instanceId),
     ];
-    $serverMode = $config->v('serverMode');
 
     $templateCache = null;
-    if ('production' === $serverMode) {
-        // enable template cache when running in production mode
+    if ($config->v('enableTemplateCache')) {
         $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
@@ -86,7 +87,7 @@ try {
     $session = new Session(
         $request->getServerName(),
         $request->getRoot(),
-        'development' !== $serverMode
+        $config->v('secureCookie')
     );
 
     $supportedLanguages = $config->v('supportedLanguages');

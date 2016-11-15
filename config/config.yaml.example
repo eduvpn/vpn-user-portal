@@ -1,5 +1,7 @@
-serverMode: production
-#serverMode: development
+# set secureCookie flag, so browser only sends them over HTTPS
+secureCookie: false
+
+enableTemplateCache: true
 
 authMethod: FormAuthentication
 #authMethod: MellonAuthentication
@@ -16,11 +18,11 @@ apiProviders:
     vpn-ca-api:
         userName: vpn-user-portal
         userPass: abcdef
-        apiUri: 'http://10.42.101.100:8008/api.php'
+        apiUri: 'http://localhost/vpn-ca-api/api.php'
     vpn-server-api:
         userName: vpn-user-portal
         userPass: uvwxyz
-        apiUri: 'http://10.42.101.100:8009/api.php'
+        apiUri: 'http://localhost/vpn-server-api/api.php'
 
 enableVoot: false
 #enableVoot: true

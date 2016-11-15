@@ -33,7 +33,10 @@ $logger = new Logger('vpn-user-api');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
-    $instanceId = $request->getServerName();
+
+    if (false === $instanceId = getenv('VPN_INSTANCE_ID')) {
+        $instanceId = $request->getServerName();
+    }
 
     $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
     $config = Config::fromFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId));
