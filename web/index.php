@@ -54,6 +54,12 @@ try {
     $instanceId = $request->getServerName();
 
     $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
+    if (!file_exists($dataDir)) {
+        if (false === @mkdir($dataDir, 0700, true)) {
+            throw new RuntimeException(sprintf('unable to create folder "%s"', $dataDir));
+        }
+    }
+
     $config = Config::fromFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId));
 
     $templateDirs = [
@@ -214,12 +220,6 @@ try {
 
     // oauth module
     if ($config->v('enableOAuth')) {
-        if (!file_exists($dataDir)) {
-            if (false === @mkdir($dataDir, 0700, true)) {
-                throw new RuntimeException(sprintf('unable to create folder "%s"', $dataDir));
-            }
-        }
-
         $oauthModule = new OAuthModule(
             $tpl,
             new Random(),
