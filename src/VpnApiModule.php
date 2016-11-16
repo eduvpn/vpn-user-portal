@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Portal;
 
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
@@ -123,10 +124,23 @@ class VpnApiModule implements ServiceModuleInterface
         $service->get(
             '/system_messages',
             function (Request $request, array $hookData) {
+                $msgList = [];
+
+                $motdMessage = $this->serverClient->motd();
+                if (false !== $motdMessage) {
+                    // add MOTD
+                    $dateTime = new DateTime();
+                    $dateTime->setTimeZone(new DateTimeZone('UTC'));
+                    $msgList[] = [
+                        'type' => 'notification',
+                        'date' => $dateTime->format('Y-m-d\TH:i:s\Z'),
+                        'content' => $motdMessage,
+                    ];
+                }
+
                 return new ApiResponse(
                     'system_messages',
-                    [
-                    ]
+                    $msgList
                 );
             }
         );
