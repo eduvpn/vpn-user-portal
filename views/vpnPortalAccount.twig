@@ -55,7 +55,13 @@
         {% endif %}
     </p>
 
-    {% if otpEnabledProfiles is not empty %}
+    {% if otpEnabledProfiles is empty %}
+        {% trans %}
+            Currently no VPN profile has two-factor authentication enabled. It 
+            will only be used for logging in to the portal, and not for 
+            connecting to the VPN.
+        {% endtrans %}
+    {% else %}
         <p>
         {% trans %}
             Two-factor authentication will also be used when connecting to these VPN profiles:
