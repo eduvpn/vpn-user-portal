@@ -134,8 +134,8 @@ msgstr ""
 
 #: /tmp/cache/47/473e63ab7300087d310fa0658022ac5a9fea87c647e06166a0f641b012bdd53b.php:68
 #: /tmp/cache/54/542b7b336283c181c626b299b19b6bf8587ccd18d89a538b5039b0694d3c3ae9.php:194
-#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:152
-#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:158
+#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:151
+#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:157
 msgid "Name"
 msgstr ""
 
@@ -269,12 +269,12 @@ msgstr ""
 
 #: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:58
 msgid ""
-"This account does not have the required permissions to create a new VPN "
-"configurations for any of the \n"
-"    available profiles."
+"Either there are no VPN profiles defined, or this account does not have the "
+"required permissions to create a new VPN configurations for any of the "
+"available profiles."
 msgstr ""
 
-#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:73
+#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:72
 msgid ""
 "Create a new VPN configuration by choosing a unique name for your "
 "configuration, e.g. <em>Phone</em>. Allowed characters are <code>a-z</code>, "
@@ -282,22 +282,22 @@ msgid ""
 "code>, <code>@</code>."
 msgstr ""
 
-#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:87
+#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:86
 msgid ""
 "You cannot download this configuration, you need to <a href=\"otp\">enroll</"
 "a> for two-factor authentication first."
 msgstr ""
 
-#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:93
+#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:92
 msgid ""
 "A configuration with the name \"%configName%\" already exists. Try another "
 "name."
 msgstr ""
 
-#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:114
+#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:113
 msgid "Profile"
 msgstr ""
 
-#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:164
+#: /tmp/cache/60/601495583f4f8cf9ce9488dd3ff9abb5c533e54e48ea04e85ec9553e2aa1ceac.php:163
 msgid "Download"
 msgstr ""
