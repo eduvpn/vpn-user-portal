@@ -97,7 +97,7 @@ class ClientConfig
             $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
         }
 
-        return implode(PHP_EOL, $clientConfig);
+        return implode("\r\n", $clientConfig);
     }
 
     public static function remotePortProtoList($processCount, $shufflePorts)
