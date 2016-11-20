@@ -26,6 +26,10 @@ dt {
     text-align: right;
 }
 
+fieldset textarea {
+    width: 100%;
+}
+
 fieldset {
     border: 0;
     margin: 0;
@@ -76,16 +80,26 @@ p.block a {
     color: #555;
 }
 
+span.success, span.warning, span.error {
+    padding: 0.3em;
+    border-radius: 0.4em;
+    font-weight: bold;
+    font-size: 85%;
+}
+
 span.success, span.success a {
-    color: green;
+    background-color: green;
+    color: white;
 }
 
 span.warning, span.warning a {
-    color: #df7f0c;
+    background-color: #df7f0c;
+    color: black;
 }
 
 span.error, span.error a {
-    color: red;
+    background-color: red;
+    color: white;
 }
 
 ul.simple {
