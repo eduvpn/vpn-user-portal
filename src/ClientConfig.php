@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Portal;
 
 class ClientConfig
@@ -97,7 +98,7 @@ class ClientConfig
             $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
         }
 
-        return implode("\r\n", $clientConfig);
+        return implode(PHP_EOL, $clientConfig);
     }
 
     public static function remotePortProtoList($processCount, $shufflePorts)

@@ -316,6 +316,10 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
 
+        // convert the OpenVPN file to "Windows" format, no platform cares, but
+        // in Notepad on Windows it looks not so great everything on one line
+        $clientConfig = str_replace("\n", "\r\n", $clientConfig);
+
         // XXX consider the timezone in the data call, this will be weird
         // when not using same timezone as user machine...
         $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $configName);
