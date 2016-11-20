@@ -164,6 +164,7 @@ class VpnApiModule implements ServiceModuleInterface
         $profileData = $this->serverClient->serverProfile($profileId);
 
         $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
+        $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->setBody($clientConfig);
