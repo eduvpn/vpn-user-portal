@@ -51,16 +51,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "d2a5096468210d5c35e61fdb60d012c6aa117bb0"
+                "reference": "f1c4d0e453b75613a942cd6711e2ee8a097b518a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/d2a5096468210d5c35e61fdb60d012c6aa117bb0",
-                "reference": "d2a5096468210d5c35e61fdb60d012c6aa117bb0",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/f1c4d0e453b75613a942cd6711e2ee8a097b518a",
+                "reference": "f1c4d0e453b75613a942cd6711e2ee8a097b518a",
                 "shasum": ""
             },
             "require": {
@@ -96,7 +96,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-11-16 15:03:37"
+            "time": "2016-11-20 22:09:54"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -740,16 +740,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.27.0",
+            "version": "v1.28.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97"
+                "reference": "fff80c4a7ae1d47a81dfec10c76cbcb939170b45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
-                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/fff80c4a7ae1d47a81dfec10c76cbcb939170b45",
+                "reference": "fff80c4a7ae1d47a81dfec10c76cbcb939170b45",
                 "shasum": ""
             },
             "require": {
@@ -762,7 +762,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.27-dev"
+                    "dev-master": "1.28-dev"
                 }
             },
             "autoload": {
@@ -797,7 +797,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-10-25 19:17:17"
+            "time": "2016-11-19 05:52:49"
         }
     ],
     "packages-dev": [],
