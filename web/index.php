@@ -104,6 +104,42 @@ try {
     );
     $tpl->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
+    // vpn-ca-api
+    $caClient = new CaClient(
+        new GuzzleHttpClient(
+            [
+                'defaults' => [
+                    'auth' => [
+                        $config->v('apiProviders', 'vpn-ca-api', 'userName'),
+                        $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
+                    ],
+                ],
+            ]
+        ),
+        $config->v('apiProviders', 'vpn-ca-api', 'apiUri')
+    );
+
+    // vpn-server-api
+    $serverClient = new ServerClient(
+        new GuzzleHttpClient(
+            [
+                'defaults' => [
+                    'auth' => [
+                        $config->v('apiProviders', 'vpn-server-api', 'userName'),
+                        $config->v('apiProviders', 'vpn-server-api', 'userPass'),
+                    ],
+                ],
+            ]
+        ),
+        $config->v('apiProviders', 'vpn-server-api', 'apiUri')
+    );
+
+    $tpl->addDefault(
+        [
+            'motd' => $serverClient->motd(),
+        ]
+    );
+
     $service = new Service($tpl);
     $service->addBeforeHook('referrer_check', new ReferrerCheckHook());
     $service->addAfterHook('no_cache', new NoCacheHook());
@@ -141,36 +177,6 @@ try {
         default:
             throw new RuntimeException('unsupported authentication mechanism');
     }
-
-    // vpn-ca-api
-    $caClient = new CaClient(
-        new GuzzleHttpClient(
-            [
-                'defaults' => [
-                    'auth' => [
-                        $config->v('apiProviders', 'vpn-ca-api', 'userName'),
-                        $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
-                    ],
-                ],
-            ]
-        ),
-        $config->v('apiProviders', 'vpn-ca-api', 'apiUri')
-    );
-
-    // vpn-server-api
-    $serverClient = new ServerClient(
-        new GuzzleHttpClient(
-            [
-                'defaults' => [
-                    'auth' => [
-                        $config->v('apiProviders', 'vpn-server-api', 'userName'),
-                        $config->v('apiProviders', 'vpn-server-api', 'userPass'),
-                    ],
-                ],
-            ]
-        ),
-        $config->v('apiProviders', 'vpn-server-api', 'apiUri')
-    );
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     $service->addBeforehook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));

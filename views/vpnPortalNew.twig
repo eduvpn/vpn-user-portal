@@ -12,6 +12,10 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
+    {% if motd %}
+        <p class="block">{{ motd|nl2br }}</p>
+    {% endif %}
+       
     {% if profileList|length == 0 %}
         <p class="warning">
         {% trans %}Either there are no VPN profiles defined, or this account does not have the required permissions to create a new VPN configurations for any of the available profiles.{% endtrans %}
