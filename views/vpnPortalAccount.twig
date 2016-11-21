@@ -12,96 +12,91 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    <h2>{% trans "User ID" %}</h2>
-    <p>
-        {% trans %}
-            Your user identity is <code>{{ userId }}</code>.
-        {% endtrans %}
-    </p>
+    <h2>{% trans "User Info" %}</h2>
+    <table>
+        <tr>
+            <th>{% trans "ID" %}</th>
+            <td><code>{{ userId }}</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>{% trans "Group Membership" %}</th>
+            <td>
+                {% if userGroups is empty %}
+                    {% trans "N/A" %}
+                {% else %}
+                    <ul class="simple">
+                        {% for group in userGroups %}
+                            <li title="{{ group.id }}">{{ group.displayName }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </td>
+            <td></td>
+        </tr>
+    </table>
 
-    {% if userGroups is not empty %}
-        <h2>{% trans "Group Membership" %}</h2>
-        <p>
-            {% trans "You are a member of the following groups:" %}
-        </p>
-            <ul>
-                {% for group in userGroups %}
-                    <li title="{{ group.id }}">{{ group.displayName }}</li>
-                {% endfor %}
-            </ul>
-    {% endif %}
-    
     <h2>{% trans "Two-factor Authentication" %}</h2>
 
-    <p>
-    {% trans %}
-        Two-factor authentication can be used to protect your account from unauthorized access.
-    {% endtrans %}
-    </p>
+    <table>
+        <tr>
+            <th>{% trans "Status" %}</th>
+            <td>
+                {% if hasOtpSecret %}
+                    <span class="success">{% trans "Enrolled" %}</span>
+                {% else %}
+                    <span class="warning">{% trans "Not Enrolled" %}</span>
+                {% endif %}
+            </td>
+            <td class="text-right">
+                {% if not hasOtpSecret %} 
+                    <form method="get" action="otp"><button>Enroll</button></form>
+                {% endif %}
+            </td>
+        </tr>
 
-    <p>
-        {% if hasOtpSecret %}
-            <p class="success">
-            {% trans %}
-                You are currently enrolled!
-            {% endtrans %}
-            </p>
-        {% else %}
-            <p class="block">
-            {% trans %}
-                You are not yet enrolled! Enroll <a href="otp">here</a>.
-            {% endtrans %}
-            </p>
-        {% endif %}
-    </p>
+        <tr>
+            <th>{% trans "Profiles" %}</th>
+            <td>
+                {% if otpEnabledProfiles is empty %}
+                    {% trans "N/A" %}
+                {% else %}
+                    <ul class="simple">
+                    {% for otpEnabledProfile in otpEnabledProfiles %}
+                        <li>{{ otpEnabledProfile }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </td>
+            <td></td>
+        </tr>
 
-    {% if otpEnabledProfiles is empty %}
-        {% trans %}
-            Currently no VPN profile has two-factor authentication enabled. It 
-            will only be used for logging in to the portal, and not for 
-            connecting to the VPN.
-        {% endtrans %}
+    </table>            
+
+    <h2>{% trans "Authorized Applications" %}</h2>
+
+    {% if authorizedClients is empty %}
+        {% trans "No applications have access to your account." %}
     {% else %}
-        <p>
-        {% trans %}
-            Two-factor authentication will also be used when connecting to these VPN profiles:
-        {% endtrans %}
-        </p>
-
-        <ul>
-        {% for otpEnabledProfile in otpEnabledProfiles %}
-            <li>{{ otpEnabledProfile }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-
-    {% if authorizedClients is not empty %}
-        <h2>{% trans "Authorized Applications" %}</h2>
-        <p>
-            {% trans %}
-                This is a list of applications you gave permission to access your account.
-            {% endtrans %}
-        </p>
-
-        <table class="horizontal">
-            <thead>
-                <tr><th>{% trans "Name" %}</th><th>{% trans "Scope" %}</th><th></th></tr>
-            </thead>
-            <tbody>
-                {% for client in authorizedClients %}
-                <tr>
-                    <td>{{ client.client_id }}</td>
-                    <td><code>{{ client.scope }}</code></td>
-                    <td class="text-right">
-                        <form method="post" action="removeClientAuthorization">
-                            <input type="hidden" name="client_id" value="{{ client.client_id }}">
-                            <button class="error">{% trans "Revoke" %}</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <table>
+        <thead>
+            <tr><th>{% trans "Name" %}</th><th>{% trans "Scope" %}</th><th></th></tr>
+        </thead>
+        <tbody>
+            {% for client in authorizedClients %}
+            <tr>
+                <td>{{ client.client_id }}</td>
+                <td><code>{{ client.scope }}</code></td>
+                <td class="text-right">
+                    <form method="post" action="removeClientAuthorization">
+                        <input type="hidden" name="client_id" value="{{ client.client_id }}">
+                        <button class="error">{% trans "Revoke" %}</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     {% endif %}
 
     {% include 'footer.twig' %}

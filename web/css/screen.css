@@ -26,84 +26,62 @@ dt {
     text-align: right;
 }
 
-fieldset textarea {
-    width: 100%;
-}
-
 fieldset {
     border: 0;
     margin: 0;
     padding: 0;
 }
 
+fieldset textarea {
+    width: 100%;
+}
+
 fieldset button {
     margin-top: 1em;
 }
 
-p.success, p.warning, p.error, p.block {
-    padding: 1em;
-}
-
-p.success {
-    color: green;
-    border: 2px solid green;
-}
-
-p.success a {
-    color: green;
-}
-
-p.warning {
-    color: #df7f0c;
-    border: 2px solid #df7f0c;
-}
-
-p.warning a {
-    color: #df7f0c;
-}    
-
-p.error {
-    color: red;
-    border: 2px solid red;
-}
-
-p.error a {
-    color: red;
-}
-
-p.block {
-    color: #555;
-    border: 2px solid #555;
-}
-
-p.block a {
-    color: #555;
-}
-
-span.success, span.warning, span.error {
-    padding: 0.3em;
-    border-radius: 0.4em;
-    font-weight: bold;
-    font-size: 85%;
-}
-
-span.success, span.success a {
+p.success, p.success a, span.success, span.success a {
     background-color: green;
     color: white;
 }
 
-span.warning, span.warning a {
+p.warning, p.warning a, span.warning, span.warning a {
     background-color: #df7f0c;
-    color: black;
+    color: white;
 }
 
-span.error, span.error a {
-    background-color: red;
+p.error, p.error a, span.error, span.error a {
+    background-color: #c00;
     color: white;
+}
+
+p.block, p.block a {
+    background-color: #eee;
+    color: #555;
+}
+
+p.block, p.success, p.warning, p.error, span.success, span.warning, span.error {
+    border-radius: 0.5em;
+}
+
+span.success, span.warning, span.error {
+    padding: 0.3em 0.5em;
+    font-size: 85%;
+    font-weight: bold;
+}
+
+p.block, p.success, p.warning, p.error {
+    padding: 0.5em;
+    font-weight: bold;
+}
+
+p.block, p.success, p.warning, p.error {
+    padding: 0.8em;
 }
 
 ul.simple {
     padding: 0 1em;
+    margin: 0;
 }
 
 ul.menu {
@@ -119,6 +97,8 @@ ul.menu li {
 ul.menu li.active a {
     color: #fff;
     background-color: #555;
+    border-radius: 0.5em;
+
 }
 
 ul.menu li a {
@@ -129,35 +109,32 @@ ul.menu li a {
 }
 
 table {
+    border: 1px solid #ccc;
     width: 100%;
     border-collapse: collapse;
 }
 
-tr {
-    height: 3.5em;
+thead tr {
+    background-color: #eee;
+    color: #555;
+}
+
+tbody th {
+    vertical-align: top;
 }
 
 td, th {
-    padding: 0 0.5em;
+    padding: 0.8em 0.5em;
 }
 
-thead th {
-    text-align: left;
-    border-bottom: 2px solid #ddd;
+tbody tr:nth-child(even) {
+   background-color: #f4f4f4;
 }
 
 label {
     font-weight: bold;
     display: block;
     margin: 0.7em 0 0.3em 0;
-}
-
-button.error {
-    color: #c00;
-}
-
-button.success {
-    color: green;
 }
 
 hr {
