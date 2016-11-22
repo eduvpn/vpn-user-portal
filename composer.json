@@ -16,6 +16,7 @@
     "name": "eduvpn/vpn-user-portal",
     "repositories": [
         {
+            "no-api": true,
             "type": "vcs",
             "url": "https://github.com/eduvpn/vpn-lib-common"
         }

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6c96b4db219384f0eea3567ec74c341a",
-    "content-hash": "cb8f79038a07a2ea4d6a7977b505d14e",
+    "hash": "714182f7595cb74160272b168ab54f32",
+    "content-hash": "cd587f8c64adaed770938d22028dda62",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,13 +54,13 @@
             "version": "1.0.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/eduvpn/vpn-lib-common.git",
-                "reference": "f1c4d0e453b75613a942cd6711e2ee8a097b518a"
+                "url": "https://github.com/eduvpn/vpn-lib-common",
+                "reference": "c1fdf04b377aa248e82be92d9699aac5f41a2797"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/f1c4d0e453b75613a942cd6711e2ee8a097b518a",
-                "reference": "f1c4d0e453b75613a942cd6711e2ee8a097b518a",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/c1fdf04b377aa248e82be92d9699aac5f41a2797",
+                "reference": "c1fdf04b377aa248e82be92d9699aac5f41a2797",
                 "shasum": ""
             },
             "require": {
