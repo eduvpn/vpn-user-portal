@@ -13,7 +13,7 @@
     </ul>
 
     {% if motd %}
-        <p class="block">{{ motd|nl2br }}</p>
+        <p class="plain">{{ motd|nl2br }}</p>
     {% endif %}
        
     {% if profileList|length == 0 %}

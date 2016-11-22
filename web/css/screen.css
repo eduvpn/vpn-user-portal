@@ -55,28 +55,23 @@ p.error, p.error a, span.error, span.error a {
     color: white;
 }
 
-p.block, p.block a {
-    background-color: #eee;
-    color: #555;
+p.plain, p.plain a, span.plain, span.plain a {
+    background-color: #555;
+    color: #fff;
 }
 
-p.block, p.success, p.warning, p.error, span.success, span.warning, span.error {
+p.plain, p.success, p.warning, p.error, span.plain, span.success, span.warning, span.error {
     border-radius: 0.5em;
+    font-weight: bold;
 }
 
-span.success, span.warning, span.error {
+span.plain, span.success, span.warning, span.error {
     padding: 0.3em 0.5em;
     font-size: 85%;
-    font-weight: bold;
 }
 
-p.block, p.success, p.warning, p.error {
-    padding: 0.5em;
-    font-weight: bold;
-}
-
-p.block, p.success, p.warning, p.error {
-    padding: 0.8em;
+p.plain, p.success, p.warning, p.error {
+    padding: 1em;
 }
 
 ul.simple {
