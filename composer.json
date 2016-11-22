@@ -14,6 +14,12 @@
     "description": "VPN User Portal",
     "license": "AGPL-3.0",
     "name": "eduvpn/vpn-user-portal",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/eduvpn/vpn-lib-common"
+        }
+    ],
     "require": {
         "bacon/bacon-qr-code": "^1.0",
         "eduvpn/common": "^1.0",

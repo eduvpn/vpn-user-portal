@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d4e6bddbb81f188b54a218506ef467c5",
-    "content-hash": "dc923557057ecd34d5dc2ce966b70107",
+    "hash": "6c96b4db219384f0eea3567ec74c341a",
+    "content-hash": "cb8f79038a07a2ea4d6a7977b505d14e",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -474,16 +474,16 @@
         },
         {
             "name": "symfony/intl",
-            "version": "v2.8.13",
+            "version": "v2.8.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/intl.git",
-                "reference": "2ec401b37460b22077643d48773e5f6a9f0b21e8"
+                "reference": "36a13a8fc1a56cbfdc709135a1723323b53f3460"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/intl/zipball/2ec401b37460b22077643d48773e5f6a9f0b21e8",
-                "reference": "2ec401b37460b22077643d48773e5f6a9f0b21e8",
+                "url": "https://api.github.com/repos/symfony/intl/zipball/36a13a8fc1a56cbfdc709135a1723323b53f3460",
+                "reference": "36a13a8fc1a56cbfdc709135a1723323b53f3460",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 "l10n",
                 "localization"
             ],
-            "time": "2016-09-06 10:55:00"
+            "time": "2016-11-18 21:10:01"
         },
         {
             "name": "symfony/polyfill",
@@ -639,16 +639,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.13",
+            "version": "v2.8.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "396784cd06b91f3db576f248f2402d547a077787"
+                "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/396784cd06b91f3db576f248f2402d547a077787",
-                "reference": "396784cd06b91f3db576f248f2402d547a077787",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/befb26a3713c97af90d25dd12e75621ef14d91ff",
+                "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff",
                 "shasum": ""
             },
             "require": {
@@ -684,7 +684,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-10-21 20:59:10"
+            "time": "2016-11-14 16:15:57"
         },
         {
             "name": "twig/extensions",
