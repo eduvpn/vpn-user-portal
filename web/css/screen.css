@@ -41,32 +41,36 @@ fieldset button {
 }
 
 p.success, p.success a, span.success, span.success a {
-    background-color: green;
-    color: white;
+    background-color: #008000;
+    border: 1px solid #007000;
+    color: #fff;
 }
 
 p.warning, p.warning a, span.warning, span.warning a {
-    background-color: #df7f0c;
-    color: white;
+    background-color: #ff8c00;
+    border: 1px solid #ef7c00;
+    color: #fff;
 }
 
 p.error, p.error a, span.error, span.error a {
-    background-color: #c00;
-    color: white;
+    background-color: #dc143c;
+    border: 1px solid #cc042c;
+    color: #fff;
 }
 
 p.plain, p.plain a, span.plain, span.plain a {
-    background-color: #555;
-    color: #fff;
+    background-color: #d3d3d3;
+    border: 1px solid #c3c3c3;
+    color: #000;
 }
 
 p.plain, p.success, p.warning, p.error, span.plain, span.success, span.warning, span.error {
     border-radius: 0.5em;
-    font-weight: bold;
 }
 
 span.plain, span.success, span.warning, span.error {
     padding: 0.3em 0.5em;
+    font-weight: bold;
     font-size: 85%;
 }
 
