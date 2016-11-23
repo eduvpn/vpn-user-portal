@@ -59,8 +59,8 @@ p.error, p.error a, span.error, span.error a {
 }
 
 p.plain, p.plain a, span.plain, span.plain a {
-    background-color: #d3d3d3;
-    border: 1px solid #c3c3c3;
+    background-color: #f4f4f4;
+    border: 1px solid #e4e4e4;
     color: #000;
 }
 

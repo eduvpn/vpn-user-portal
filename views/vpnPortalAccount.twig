@@ -20,10 +20,10 @@
             <td></td>
         </tr>
         <tr>
-            <th>{% trans "Group Membership" %}</th>
+            <th>{% trans "Group Membership(s)" %}</th>
             <td>
                 {% if userGroups is empty %}
-                    {% trans "N/A" %}
+                    <em>{% trans "Not a member of any group." %}</em>
                 {% else %}
                     <ul class="simple">
                         {% for group in userGroups %}
@@ -56,10 +56,10 @@
         </tr>
 
         <tr>
-            <th>{% trans "Profiles" %}</th>
+            <th>{% trans "Secured Profiles" %}</th>
             <td>
                 {% if otpEnabledProfiles is empty %}
-                    {% trans "N/A" %}
+                    <em>{% trans "No profile uses two-factor authentication." %}</em>
                 {% else %}
                     <ul class="simple">
                     {% for otpEnabledProfile in otpEnabledProfiles %}
@@ -76,7 +76,7 @@
     <h2>{% trans "Authorized Applications" %}</h2>
 
     {% if authorizedClients is empty %}
-        {% trans "No applications have access to your account." %}
+        <p class="plain">{% trans "No applications have access to your account." %}</p>
     {% else %}
     <table>
         <thead>
