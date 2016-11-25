@@ -31,7 +31,7 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
-        "fkooman/oauth2-client": "^2.0",
+        "fkooman/oauth2-client": "^3.0",
         "php": ">=5.4.0",
         "twig/extensions": "^1.3",
         "twig/twig": "^1.24"

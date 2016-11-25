@@ -17,7 +17,7 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use fkooman\OAuth\Client\CurlHttpClient as OAuthHttpClient;
+use fkooman\OAuth\Client\GuzzleHttpClient as OAuthGuzzleHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use SURFnet\VPN\Common\Config;
@@ -46,6 +46,7 @@ use SURFnet\VPN\Common\Http\TwoFactorModule;
 use SURFnet\VPN\Portal\VootTokenHook;
 use SURFnet\VPN\Portal\VpnPortalModule;
 use SURFnet\VPN\Common\Http\TwoFactorHook;
+use GuzzleHttp\Client;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -196,7 +197,7 @@ try {
                     $config->v('Voot', 'authorizationEndpoint'),
                     $config->v('Voot', 'tokenEndpoint')
                 ),
-                new OAuthHttpClient()
+                new OAuthGuzzleHttpClient(new Client())
             ),
             $serverClient,
             $session

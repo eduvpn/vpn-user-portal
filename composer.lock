@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "714182f7595cb74160272b168ab54f32",
-    "content-hash": "cd587f8c64adaed770938d22028dda62",
+    "hash": "0686f5527cc143de34dd3727752a6021",
+    "content-hash": "c08fb440d692289b81b8afc66a989b01",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -100,22 +100,23 @@
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "2.0.2",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "7a8854921275d3072fd77ec8f837d23ce277c4f1"
+                "reference": "00cc53bb3dbe125d9803646016efd1befcf80c3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/7a8854921275d3072fd77ec8f837d23ce277c4f1",
-                "reference": "7a8854921275d3072fd77ec8f837d23ce277c4f1",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/00cc53bb3dbe125d9803646016efd1befcf80c3a",
+                "reference": "00cc53bb3dbe125d9803646016efd1befcf80c3a",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-spl": "*",
+                "guzzlehttp/guzzle": "^5.3",
                 "paragonie/random_compat": "^1.0",
                 "php": ">=5.4.0"
             },
@@ -136,7 +137,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2016-11-15 09:25:17"
+            "time": "2016-11-25 14:29:12"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -740,16 +741,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.28.1",
+            "version": "v1.28.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "fff80c4a7ae1d47a81dfec10c76cbcb939170b45"
+                "reference": "b22ce0eb070e41f7cba65d78fe216de29726459c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/fff80c4a7ae1d47a81dfec10c76cbcb939170b45",
-                "reference": "fff80c4a7ae1d47a81dfec10c76cbcb939170b45",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b22ce0eb070e41f7cba65d78fe216de29726459c",
+                "reference": "b22ce0eb070e41f7cba65d78fe216de29726459c",
                 "shasum": ""
             },
             "require": {
@@ -757,7 +758,7 @@
             },
             "require-dev": {
                 "symfony/debug": "~2.7",
-                "symfony/phpunit-bridge": "~2.7"
+                "symfony/phpunit-bridge": "~3.2@dev"
             },
             "type": "library",
             "extra": {
@@ -797,7 +798,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-11-19 05:52:49"
+            "time": "2016-11-23 18:41:40"
         }
     ],
     "packages-dev": [],

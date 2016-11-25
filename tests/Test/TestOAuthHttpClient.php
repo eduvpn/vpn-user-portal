@@ -24,6 +24,9 @@ class TestOAuthHttpClient implements HttpClientInterface
 {
     public function post(Provider $provider, array $postData)
     {
-        return '{"access_token": "X", "token_type": "bearer"}';
+        return [
+            'access_token' => 'X',
+            'token_type' => 'bearer'
+        ];
     }
 }
