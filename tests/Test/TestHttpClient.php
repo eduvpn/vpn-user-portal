@@ -26,42 +26,35 @@ class TestHttpClient implements HttpClientInterface
     public function get($requestUri, array $getData = [], array $requestHeaders = [])
     {
         switch ($requestUri) {
-            case 'serverClient/instance_config':
+            case 'serverClient/profile_list':
                 return self::wrap(
-                    'instance_config',
+                    'profile_list',
                     [
-                        'instanceNumber' => 1,
-                        'vpnProfiles' => [
-                            'internet' => [
-                                'hideProfile' => false,
-                                'enableAcl' => false,
-                                'displayName' => 'Internet Access',
-                                'twoFactor' => false,
-                                'processCount' => 4,
-                                'hostName' => 'vpn.example',
-                            ],
+                        'internet' => [
+                            'hideProfile' => false,
+                            'enableAcl' => false,
+                            'displayName' => 'Internet Access',
+                            'twoFactor' => false,
+                            'processCount' => 4,
+                            'hostName' => 'vpn.example',
                         ],
                     ]
                 );
-            case 'serverClient/server_profile?profile_id=internet':
+            case 'serverClient/list_client_certificates?user_id=foo':
                 return self::wrap(
-                    'server_profile',
+                    'list_client_certificates',
                     [
-                        'enableAcl' => false,
-                        'displayName' => 'Internet Access',
-                        'twoFactor' => false,
-                        'processCount' => 4,
-                        'hostName' => 'vpn.example',
+                        [
+                            'display_name' => 'Foo',
+                            'valid_from' => 123456,
+                            'valid_to' => 2345567,
+                        ],
                     ]
                 );
-            case 'serverClient/has_otp_secret?user_id=foo':
-                return self::wrap('has_otp_secret', false);
-            case 'caClient/user_certificate_list?user_id=foo':
-                return self::wrap('user_certificate_list', [['name' => 'FooConfig', 'user_id' => 'foo', 'state' => 'V']]);
+            case 'serverClient/has_totp_secret?user_id=foo':
+                return self::wrap('has_totp_secret', false);
             case 'serverClient/user_groups?user_id=foo':
                 return self::wrap('user_groups', []);
-            case 'serverClient/disabled_common_names':
-                return self::wrap('disabled_common_names', []);
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }
@@ -70,21 +63,20 @@ class TestHttpClient implements HttpClientInterface
     public function post($requestUri, array $postData, array $requestHeaders = [])
     {
         switch ($requestUri) {
-            case 'caClient/add_client_certificate':
+            case 'serverClient/add_client_certificate':
                 return self::wrap(
                     'add_client_certificate',
                     [
-                        'cn' => 'foo_MyConfig',
                         'valid_from' => 12345678,
                         'valid_to' => '23456789',
                         'ca' => 'CAPEM',
-                        'cert' => 'CERTPEM',
-                        'key' => 'KEYPEM',
+                        'certificate' => 'CERTPEM',
+                        'private_key' => 'KEYPEM',
                         'ta' => 'TAKEY',
                     ]
                 );
-            case 'serverClient/disable_common_name':
-                return self::wrap('disable_common_name', true);
+            case 'serverClient/disable_client_certificate':
+                return self::wrap('disable_client_certificate', true);
             case 'serverClient/kill_client':
                 return self::wrap('kill_client', true);
             case 'serverClient/set_voot_token':

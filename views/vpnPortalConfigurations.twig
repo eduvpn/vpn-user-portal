@@ -21,37 +21,30 @@
     {% else %}
         <table>
             <thead>
-                <tr><th>{% trans "Name" %}</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th class="text-right">{% trans "Status" %}</th><th></th></tr> 
+                <tr><th>{% trans "Name" %}</th><th>{% trans "Issued" %} ({{ date()|date('T') }})</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th class="text-right">{% trans "Status" %}</th><th></th></tr> 
             </thead>
             <tbody>
             {% for userCertificate in userCertificateList %}
                 <tr>
-                    {% if 'E' == userCertificate.state or 'R' == userCertificate.state %}
-                        <td>{{ userCertificate.name }}</td>
-                    {% else %}
-                        <td>{{ userCertificate.name }}</td>
-                    {% endif %}
-                    <td>{{ userCertificate.exp|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ userCertificate.display_name }}</td>
+                    <td>{{ userCertificate.valid_from|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ userCertificate.valid_to|date('Y-m-d H:i:s') }}</td>
                     <td class="text-right">
-                        {% if 'D' == userCertificate.state %}
+                        {% if userCertificate.is_disabled %}
                             <span class="error">{% trans "Disabled" %}</span>
-                        {% elseif 'V' == userCertificate.state %}
+                        {% else %}
                             <span class="success">{% trans "Active" %}</span>
-                        {% elseif 'R' == userCertificate.state %}
-                            <span class="red">{% trans "Revoked" %}</span>
-                        {% elseif 'E' == userCertificate.state %}
-                            <span>{% trans "Expired" %}</span>
                         {% endif %}
                     </td>
-                    {% if 'V' == userCertificate.state %}
-                    <td class="text-right">
-                        <form method="post" class="inline" action="disableCertificate">
-                            <input type="hidden" name="configName" value="{{ userCertificate.name }}">
-                            <button type="submit" class="error">{% trans "Disable" %}</button>
-                        </form>
-                    </td>
+                    {% if not userCertificate.is_disabled %}
+                        <td class="text-right">
+                            <form method="post" class="inline" action="disableCertificate">
+                                <input type="hidden" name="commonName" value="{{ userCertificate.common_name }}">
+                                <button type="submit" class="error">{% trans "Disable" %}</button>
+                            </form>
+                        </td>
                     {% else %}
-                    <td></td>
+                        <td></td>
                     {% endif %}
                 </tr>
             {% endfor %}

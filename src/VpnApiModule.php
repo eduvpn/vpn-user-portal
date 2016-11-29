@@ -21,8 +21,6 @@ namespace SURFnet\VPN\Portal;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\ApiResponse;
@@ -34,16 +32,12 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var \SURFnet\VPN\Common\HttpClient\CaClient */
-    private $caClient;
-
     /** @var bool */
     private $shuffleHosts;
 
-    public function __construct(ServerClient $serverClient, CaClient $caClient)
+    public function __construct(ServerClient $serverClient)
     {
         $this->serverClient = $serverClient;
-        $this->caClient = $caClient;
         $this->shuffleHosts = true;
     }
 
@@ -148,16 +142,8 @@ class VpnApiModule implements ServiceModuleInterface
 
     private function getConfig($serverName, $profileId, $userId, $configName)
     {
-        // check that a certificate does not yet exist with this configName
-        $userCertificateList = $this->caClient->userCertificateList($userId);
-        foreach ($userCertificateList as $userCertificate) {
-            if ($configName === $userCertificate['name']) {
-                throw new HttpException(sprintf('a configuration with the name "%s" already exists', $configName), 400);
-            }
-        }
-
         // create a certificate
-        $clientCertificate = $this->caClient->addClientCertificate($userId, $configName);
+        $clientCertificate = $this->serverClient->addClientCertificate($userId, $configName);
 
         // obtain information about this profile to be able to construct
         // a client configuration file

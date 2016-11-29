@@ -26,7 +26,6 @@ use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\TplInterface;
-use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
@@ -39,9 +38,6 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var \SURFnet\VPN\Common\HttpClient\CaClient */
-    private $caClient;
-
     /** @var \SURFnet\VPN\Common\Http\SessionInterface */
     private $session;
 
@@ -51,11 +47,10 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts;
 
-    public function __construct(TplInterface $tpl, ServerClient $serverClient, CaClient $caClient, SessionInterface $session, TokenStorage $tokenStorage)
+    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, TokenStorage $tokenStorage)
     {
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
-        $this->caClient = $caClient;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
         $this->shuffleHosts = true;
@@ -80,17 +75,15 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $instanceConfig = $this->serverClient->instanceConfig();
-                $serverProfiles = $instanceConfig['vpnProfiles'];
+                $profileList = $this->serverClient->profileList();
                 $userGroups = $this->cachedUserGroups($userId);
-                $profileList = self::getProfileList($serverProfiles, $userGroups);
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalNew',
                         [
-                            'profileList' => $profileList,
-                            'maxNameLength' => 63 - mb_strlen($userId),
+                            'profileList' => $visibleProfileList,
                         ]
                     )
                 );
@@ -102,26 +95,14 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $configName = $request->getPostParameter('configName');
-                InputValidation::configName($configName);
+                $displayName = $request->getPostParameter('displayName');
+                InputValidation::displayName($displayName);
                 $profileId = $request->getPostParameter('profileId');
                 InputValidation::profileId($profileId);
 
-                // the CN, built of userId + '_' + configName cannot exceed
-                // a length of 64 as the CN cert is only allowed to be of
-                // length 64
-                $cnLength = mb_strlen($userId) + mb_strlen($configName) + 1;
-                if (64 < $cnLength) {
-                    throw new HttpException(
-                        sprintf('configName too long, limited to "%d" characters', 63 - mb_strlen($userId)),
-                        400
-                    );
-                }
-
-                $instanceConfig = $this->serverClient->instanceConfig();
-                $serverProfiles = $instanceConfig['vpnProfiles'];
+                $profileList = $this->serverClient->profileList();
                 $userGroups = $this->cachedUserGroups($userId);
-                $profileList = self::getProfileList($serverProfiles, $userGroups);
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
@@ -130,27 +111,8 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to create a configuration for this profileId', 400);
                 }
 
-                // check that a certificate does not yet exist with this configName
-                $userCertificateList = $this->caClient->userCertificateList($userId);
-                foreach ($userCertificateList as $userCertificate) {
-                    if ($configName === $userCertificate['name']) {
-                        return new HtmlResponse(
-                            $this->tpl->render(
-                                'vpnPortalNew',
-                                [
-                                    'profileId' => $profileId,
-                                    'errorCode' => 'nameAlreadyUsed',
-                                    'profileList' => $profileList,
-                                    'configName' => $configName,
-                                    'maxNameLength' => 63 - mb_strlen($userId),
-                                ]
-                            )
-                        );
-                    }
-                }
-
                 if ($profileList[$profileId]['twoFactor']) {
-                    $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
+                    $hasOtpSecret = $this->serverClient->hasTotpSecret($userId);
                     if (!$hasOtpSecret) {
                         return new HtmlResponse(
                             $this->tpl->render(
@@ -158,15 +120,14 @@ class VpnPortalModule implements ServiceModuleInterface
                                 [
                                     'profileId' => $profileId,
                                     'errorCode' => 'otpRequired',
-                                    'profileList' => $profileList,
-                                    'maxNameLength' => 63 - mb_strlen($userId),
+                                    'profileList' => $visibleProfileList,
                                 ]
                             )
                         );
                     }
                 }
 
-                return $this->getConfig($request->getServerName(), $profileId, $userId, $configName);
+                return $this->getConfig($request->getServerName(), $profileId, $userId, $displayName);
             }
         );
 
@@ -175,30 +136,11 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $userCertificateList = $this->caClient->userCertificateList($userId);
-
-                // XXX we need a call to retrieve the disabled common names
-                // for a particular user, not for all, that seems overkill
-                $disabledCommonNames = $this->serverClient->disabledCommonNames();
-
-                // check all valid certificates to see if they are disabled
-                foreach ($userCertificateList as $i => $userCertificate) {
-                    if ('V' === $userCertificate['state']) {
-                        $commonName = sprintf('%s_%s', $userCertificate['user_id'], $userCertificate['name']);
-                        if (in_array($commonName, $disabledCommonNames)) {
-                            $userCertificateList[$i]['state'] = 'D';
-                        }
-                    }
-                }
-
-                // XXX we probably should support sorting of the certificate list
-                // and/or choose a default sorting that makes sense
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'userCertificateList' => $userCertificateList,
+                            'userCertificateList' => $this->serverClient->listClientCertificates($userId),
                         ]
                     )
                 );
@@ -210,14 +152,14 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $configName = $request->getPostParameter('configName');
-                InputValidation::configName($configName);
+                $commonName = $request->getPostParameter('commonName');
+                InputValidation::commonName($commonName);
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalConfirmDisable',
                         [
-                            'configName' => $configName,
+                            'commonName' => $commonName,
                         ]
                     )
                 );
@@ -229,14 +171,14 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $configName = $request->getPostParameter('configName');
-                InputValidation::configName($configName);
+                $commonName = $request->getPostParameter('commonName');
+                InputValidation::commonName($commonName);
                 $confirmDisable = $request->getPostParameter('confirmDisable');
                 InputValidation::confirmDisable($confirmDisable);
 
                 if ('yes' === $confirmDisable) {
-                    $this->serverClient->disableCommonName(sprintf('%s_%s', $userId, $configName));
-                    $this->serverClient->killClient(sprintf('%s_%s', $userId, $configName));
+                    $this->serverClient->disableClientCertificate($commonName);
+                    $this->serverClient->killClient($commonName);
                 }
 
                 return new RedirectResponse($request->getRootUri().'configurations', 302);
@@ -248,21 +190,16 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $hasOtpSecret = $this->serverClient->hasOtpSecret($userId);
+                $hasOtpSecret = $this->serverClient->hasTotpSecret($userId);
+
+                $profileList = $this->serverClient->profileList();
                 $userGroups = $this->cachedUserGroups($userId);
-                $instanceConfig = $this->serverClient->instanceConfig();
-                $serverProfiles = $instanceConfig['vpnProfiles'];
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
+
                 $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
 
                 $otpEnabledProfiles = [];
-                foreach ($serverProfiles as $profileData) {
-                    if ($profileData['enableAcl']) {
-                        // is the user member of the aclGroupList?
-                        if (!self::isMember($userGroups, $profileData['aclGroupList'])) {
-                            continue;
-                        }
-                    }
-
+                foreach ($visibleProfileList as $profileId => $profileData) {
                     if ($profileData['twoFactor']) {
                         // XXX we have to make sure displayName is always set...
                         $otpEnabledProfiles[] = $profileData['displayName'];
@@ -305,14 +242,13 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    private function getConfig($serverName, $profileId, $userId, $configName)
+    private function getConfig($serverName, $profileId, $userId, $displayName)
     {
         // create a certificate
-        $clientCertificate = $this->caClient->addClientCertificate($userId, $configName);
+        $clientCertificate = $this->serverClient->addClientCertificate($userId, $displayName);
 
-        // obtain information about this profile to be able to construct
-        // a client configuration file
-        $profileData = $this->serverClient->serverProfile($profileId);
+        $serverProfiles = $this->serverClient->profileList();
+        $profileData = $serverProfiles[$profileId];
 
         $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
 
@@ -322,7 +258,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // XXX consider the timezone in the data call, this will be weird
         // when not using same timezone as user machine...
-        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $configName);
+        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->addHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $clientConfigFile));

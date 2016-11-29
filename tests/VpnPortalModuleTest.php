@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Portal;
 
 require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
@@ -24,7 +25,6 @@ require_once sprintf('%s/Test/TestSession.php', __DIR__);
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Portal\Test\JsonTpl;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
@@ -48,7 +48,6 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
         $vpnPortalModule = new VpnPortalModule(
             new JsonTpl(),
             new ServerClient($httpClient, 'serverClient'),
-            new CaClient($httpClient, 'caClient'),
             new TestSession(),
             $tokenStorage
         );
@@ -70,7 +69,6 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                             'twoFactor' => false,
                         ],
                     ],
-                    'maxNameLength' => 60,
                 ],
             ],
             $this->makeRequest('GET', '/new')
@@ -85,7 +83,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                 'POST',
                 '/new',
                 [],
-                ['configName' => 'MyConfig', 'profileId' => 'internet'],
+                ['displayName' => 'MyConfig', 'profileId' => 'internet'],
                 true
             )->getBody()
         );
@@ -114,9 +112,9 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                 'vpnPortalConfigurations' => [
                     'userCertificateList' => [
                         [
-                            'name' => 'FooConfig',
-                            'user_id' => 'foo',
-                            'state' => 'V',
+                            'display_name' => 'Foo',
+                            'valid_from' => 123456,
+                            'valid_to' => 2345567,
                         ],
                     ],
                 ],
@@ -130,10 +128,10 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'vpnPortalConfirmDisable' => [
-                    'configName' => 'DeleteXYZ',
+                    'commonName' => '123abc',
                 ],
             ],
-            $this->makeRequest('POST', '/disableCertificate', [], ['configName' => 'DeleteXYZ'])
+            $this->makeRequest('POST', '/disableCertificate', [], ['commonName' => '123abc'])
         );
     }
 
@@ -141,7 +139,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             302,
-            $this->makeRequest('POST', '/disableCertificateConfirm', [], ['configName' => 'DeleteXYZ', 'confirmDisable' => 'yes'], true)->getStatusCode()
+            $this->makeRequest('POST', '/disableCertificateConfirm', [], ['commonName' => '123abc', 'confirmDisable' => 'yes'], true)->getStatusCode()
         );
     }
 

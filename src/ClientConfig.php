@@ -29,7 +29,7 @@ class ClientConfig
         $remoteProtoPortList = self::remotePortProtoList($processCount, $shufflePorts);
 
         $clientConfig = [
-            sprintf('# OpenVPN Client Configuration for %s', $clientCertificate['cn']),
+            '# OpenVPN Client Configuration',
 
             // XXX fix date format to be in UTC
             sprintf('# Valid From: %s', date('Y-m-d', $clientCertificate['valid_from'])),
@@ -74,11 +74,11 @@ class ClientConfig
             '</ca>',
 
             '<cert>',
-            $clientCertificate['cert'],
+            $clientCertificate['certificate'],
             '</cert>',
 
             '<key>',
-            $clientCertificate['key'],
+            $clientCertificate['private_key'],
             '</key>',
 
             'key-direction 1',

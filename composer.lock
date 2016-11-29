@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0686f5527cc143de34dd3727752a6021",
-    "content-hash": "c08fb440d692289b81b8afc66a989b01",
+    "hash": "ac1df5f26284d9a3b5e0fcf3d7a108b4",
+    "content-hash": "f0e9243ad10dbb65935587e86a377be5",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -51,16 +51,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.0.7",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "c1fdf04b377aa248e82be92d9699aac5f41a2797"
+                "reference": "cefa0a4a536081836f136756e19ca3fdd5815ce0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/c1fdf04b377aa248e82be92d9699aac5f41a2797",
-                "reference": "c1fdf04b377aa248e82be92d9699aac5f41a2797",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/cefa0a4a536081836f136756e19ca3fdd5815ce0",
+                "reference": "cefa0a4a536081836f136756e19ca3fdd5815ce0",
                 "shasum": ""
             },
             "require": {
@@ -85,18 +85,17 @@
                     "SURFnet\\VPN\\Common\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPL-3.0"
             ],
             "authors": [
                 {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net"
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-11-20 22:09:54"
+            "time": "2016-11-29 21:00:49"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -804,7 +803,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "eduvpn/common": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

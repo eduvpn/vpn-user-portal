@@ -58,8 +58,8 @@
 
                     {% endfor %}
                 </select>
-                <label for="configName">{% trans "Name" %}</label>
-                <input type="text" name="configName" id="configName" maxlength="{{ maxNameLength }}" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+                <label for="displayName">{% trans "Name" %}</label>
+                <input type="text" name="displayName" id="displayName" maxlength="64" placeholder="{% trans 'Name' %}" autofocus required>
             </fieldset>
             <fieldset>
                 <button type="submit">{% trans "Download" %}</button>

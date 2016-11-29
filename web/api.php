@@ -18,7 +18,6 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Portal\OAuth\BearerAuthenticationHook;
@@ -54,21 +53,6 @@ try {
             )
         );
 
-        // vpn-ca-api
-        $caClient = new CaClient(
-            new GuzzleHttpClient(
-                [
-                    'defaults' => [
-                        'auth' => [
-                            $config->v('apiProviders', 'vpn-ca-api', 'userName'),
-                            $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
-                        ],
-                    ],
-                ]
-            ),
-            $config->v('apiProviders', 'vpn-ca-api', 'apiUri')
-        );
-
         // vpn-server-api
         $serverClient = new ServerClient(
             new GuzzleHttpClient(
@@ -86,8 +70,7 @@ try {
 
         // api module
         $vpnApiModule = new VpnApiModule(
-            $serverClient,
-            $caClient
+            $serverClient
         );
         $service->addModule($vpnApiModule);
     }

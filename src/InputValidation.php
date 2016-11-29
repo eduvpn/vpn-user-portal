@@ -15,21 +15,34 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace SURFnet\VPN\Portal;
 
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 
 class InputValidation
 {
-    public static function configName($configName)
+    public static function displayName($displayName)
     {
-        self::validateString($configName);
+        self::validateString($displayName);
 
-        if (32 < mb_strlen($configName)) {
-            throw new HttpException('invalid configName (too long)', 400);
+        if (64 < mb_strlen($displayName)) {
+            throw new HttpException('invalid displayName (too long)', 400);
         }
-        if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $configName)) {
-            throw new HttpException('invalid configName (invalid characters)', 400);
+        if (0 === preg_match('/^[a-zA-Z0-9-_.@]+$/', $displayName)) {
+            throw new HttpException('invalid displayName (invalid characters)', 400);
+        }
+    }
+
+    public static function commonName($commonName)
+    {
+        self::validateString($commonName);
+
+        if (64 < mb_strlen($commonName)) {
+            throw new HttpException('invalid commonName (too long)', 400);
+        }
+        if (0 === preg_match('/^[a-fA-F0-9]+$/', $commonName)) {
+            throw new HttpException('invalid commonName (invalid characters)', 400);
         }
     }
 

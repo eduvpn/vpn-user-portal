@@ -21,7 +21,6 @@ use fkooman\OAuth\Client\GuzzleHttpClient as OAuthGuzzleHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\HttpClient\CaClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\FormAuthenticationHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationModule;
@@ -104,21 +103,6 @@ try {
         ]
     );
     $tpl->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
-
-    // vpn-ca-api
-    $caClient = new CaClient(
-        new GuzzleHttpClient(
-            [
-                'defaults' => [
-                    'auth' => [
-                        $config->v('apiProviders', 'vpn-ca-api', 'userName'),
-                        $config->v('apiProviders', 'vpn-ca-api', 'userPass'),
-                    ],
-                ],
-            ]
-        ),
-        $config->v('apiProviders', 'vpn-ca-api', 'apiUri')
-    );
 
     // vpn-server-api
     $serverClient = new ServerClient(
@@ -213,7 +197,6 @@ try {
     $vpnPortalModule = new VpnPortalModule(
         $tpl,
         $serverClient,
-        $caClient,
         $session,
         $tokenStorage
     );
