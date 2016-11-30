@@ -17,7 +17,7 @@ MellonAuthentication:
 apiProviders:
     vpn-server-api:
         userName: vpn-user-portal
-        userPass: uvwxyz
+        userPass: XXX-vpn-user-portal/vpn-server-api-XXX
         apiUri: 'http://localhost/vpn-server-api/api.php'
 
 enableVoot: false
