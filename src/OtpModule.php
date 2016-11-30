@@ -63,7 +63,7 @@ class OtpModule implements ServiceModuleInterface
                 $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
                 $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
 
-                if (false === $this->serverClient->setTotpSecret($userId, $totpSecret, $totpKey)) {
+                if (false === $this->serverClient->setTotpSecret($userId, $totpSecret, $totpKey)['ok']) {
                     // we were unable to set
                     return new HtmlResponse(
                         $this->tpl->render(

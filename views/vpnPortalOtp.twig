@@ -26,7 +26,7 @@
         <dt>{% trans "Secret" %}</dt>
         <dd><code>{{ otpSecret }}</code></dd>
         <dt>QR</dt>
-        <dd><img src="otp-qr-code?otp_secret={{ otpSecret }}"></dd>
+        <dd><img src="otp-qr-code?totp_secret={{ otpSecret }}"></dd>
     </dl>
 
     <p>
@@ -44,11 +44,11 @@
     <form method="post" action="otp">
         <fieldset>
             <label for="otp_key">OTP</label>
-            <input type="text" id="otp_key" name="otp_key" maxlength="6" required pattern="[0-9]{6}" autofocus>
-            <input type="hidden" name="otp_secret" value="{{ otpSecret }}"> 
+            <input type="text" id="totp_key" name="totp_key" maxlength="6" required pattern="[0-9]{6}" autofocus>
+            <input type="hidden" name="totp_secret" value="{{ otpSecret }}"> 
         </fieldset>
         <fieldset>
-            <button>{% trans "Validate" %}</button>
+            <button>{% trans "Register" %}</button>
         <fieldset>
     </form>
 

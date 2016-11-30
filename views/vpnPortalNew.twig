@@ -25,19 +25,15 @@
     {% if profileList|length > 0 %}
         <p>
         {% trans %}
-        Create a new VPN configuration by choosing a unique name for your configuration, e.g. <em>Phone</em>. Allowed characters are <code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</code>, <code>@</code>.
+            Create a new VPN configuration by choosing a profile and a name for your configuration, e.g. <em>Phone</em>.
         {% endtrans %}
         </p>
 
         {% if errorCode is defined %}
-            <p class="error">
+            <p class="warning">
             {% if 'otpRequired' == errorCode %}
                 {% trans %}
-                    You cannot download this configuration, you need to <a href="otp">enroll</a> for two-factor authentication first.
-                {% endtrans %}
-            {% elseif 'nameAlreadyUsed' == errorCode %}
-                {% trans %} 
-                    A configuration with the name "{{ configName }}" already exists. Try another name.
+                    You need to <a href="otp">enroll</a> for two-factor authentication before you can use this profile!
                 {% endtrans %}
             {% else %}
                 {{ errorCode }}
@@ -59,7 +55,7 @@
                     {% endfor %}
                 </select>
                 <label for="displayName">{% trans "Name" %}</label>
-                <input type="text" name="displayName" id="displayName" maxlength="64" placeholder="{% trans 'Name' %}" autofocus required>
+                <input type="text" name="displayName" id="displayName" size="32" maxlength="64" placeholder="{% trans 'Name' %}" autofocus required>
             </fieldset>
             <fieldset>
                 <button type="submit">{% trans "Download" %}</button>
