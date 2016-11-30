@@ -27,7 +27,7 @@ class TestSession implements SessionInterface
 
     public function __construct()
     {
-        $this->s = array();
+        $this->s = [];
     }
 
     public function set($key, $value)
@@ -56,6 +56,6 @@ class TestSession implements SessionInterface
 
     public function destroy()
     {
-        $this->s = array();
+        $this->s = [];
     }
 }

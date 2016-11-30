@@ -42,7 +42,7 @@ class TwigTpl implements TplInterface
      */
     public function __construct(array $templateDirs, $cacheDir = null)
     {
-        $existingTemplateDirs = array();
+        $existingTemplateDirs = [];
         foreach ($templateDirs as $templateDir) {
             if (false !== is_dir($templateDir)) {
                 $existingTemplateDirs[] = $templateDir;
@@ -50,9 +50,9 @@ class TwigTpl implements TplInterface
         }
         $existingTemplateDirs = array_reverse($existingTemplateDirs);
 
-        $environmentOptions = array(
+        $environmentOptions = [
             'strict_variables' => true,
-        );
+        ];
 
         if (null !== $cacheDir) {
             if (false === is_dir($cacheDir)) {
@@ -70,7 +70,7 @@ class TwigTpl implements TplInterface
             $environmentOptions
         );
 
-        $this->defaultVariables = array();
+        $this->defaultVariables = [];
     }
 
     public function setDefault(array $templateVariables)

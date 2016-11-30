@@ -77,11 +77,11 @@ try {
 
     $tpl = new TwigTpl($templateDirs, $templateCache);
     $tpl->setDefault(
-        array(
+        [
             'requestUri' => $request->getUri(),
             'requestRoot' => $request->getRoot(),
             'requestRootUri' => $request->getRootUri(),
-        )
+        ]
     );
 
     $session = new Session(
