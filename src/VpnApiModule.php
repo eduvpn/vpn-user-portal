@@ -26,6 +26,7 @@ use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\ProfileConfig;
 
 class VpnApiModule implements ServiceModuleInterface
 {
@@ -53,27 +54,27 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $instanceConfig = $this->serverClient->instanceConfig();
-                $serverProfiles = $instanceConfig['vpnProfiles'];
+                $profileList = $this->serverClient->profileList();
                 $userGroups = $this->serverClient->userGroups($userId);
-                $profileList = [];
 
-                foreach ($serverProfiles as $profileId => $profileData) {
-                    if ($profileData['enableAcl']) {
+                $userProfileList = [];
+                foreach ($profileList as $profileId => $profileData) {
+                    $profileConfig = new ProfileConfig($profileData);
+                    if ($profileData->v('enableAcl')) {
                         // is the user member of the aclGroupList?
-                        if (!self::isMember($userGroups, $profileData['aclGroupList'])) {
+                        if (!self::isMember($userGroups, $profileData->v('aclGroupList'))) {
                             continue;
                         }
                     }
 
-                    $profileList[] = [
+                    $userProfileList[] = [
                         'profile_id' => $profileId,
-                        'display_name' => $profileData['displayName'],
-                        'two_factor' => $profileData['twoFactor'],
+                        'display_name' => $profileData->v('displayName'),
+                        'two_factor' => $profileData->v('twoFactor'),
                     ];
                 }
 
-                return new ApiResponse('profile_list', $profileList);
+                return new ApiResponse('profile_list', $userProfileList);
             }
         );
 
@@ -82,12 +83,13 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $configName = $request->getPostParameter('config_name');
-                InputValidation::configName($configName);
+                // XXX update app to use 'display_name' instead!
+                $displayName = $request->getPostParameter('display_name');
+                InputValidation::displayName($displayName);
                 $profileId = $request->getPostParameter('profile_id');
                 InputValidation::profileId($profileId);
 
-                return $this->getConfig($request->getServerName(), $profileId, $userId, $configName);
+                return $this->getConfig($request->getServerName(), $profileId, $userId, $displayName);
             }
         );
 
@@ -147,7 +149,8 @@ class VpnApiModule implements ServiceModuleInterface
 
         // obtain information about this profile to be able to construct
         // a client configuration file
-        $profileData = $this->serverClient->serverProfile($profileId);
+        $profileList = $this->serverClient->profileList();
+        $profileData = $profileList[$profileId];
 
         $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
