@@ -18,8 +18,8 @@
 
 namespace SURFnet\VPN\Portal\OAuth\Test;
 
-use SURFnet\VPN\Portal\OAuth\RandomInterface;
 use RuntimeException;
+use SURFnet\VPN\Portal\OAuth\RandomInterface;
 
 class TestRandom implements RandomInterface
 {

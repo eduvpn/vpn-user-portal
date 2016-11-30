@@ -19,9 +19,9 @@
 namespace SURFnet\VPN\Portal;
 
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
 
 /**
  * This hook is used to check if a user is disabled before allowing any other

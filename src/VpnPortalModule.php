@@ -18,16 +18,16 @@
 
 namespace SURFnet\VPN\Portal;
 
-use SURFnet\VPN\Common\Http\SessionInterface;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\TplInterface;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
+use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\Http\SessionInterface;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\TplInterface;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
 
 class VpnPortalModule implements ServiceModuleInterface

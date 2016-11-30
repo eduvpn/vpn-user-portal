@@ -19,10 +19,10 @@
 namespace SURFnet\VPN\Portal;
 
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
 
 /**
  * This hook is used to make sure a VOOT token is available for the

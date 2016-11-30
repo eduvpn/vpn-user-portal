@@ -21,14 +21,14 @@ namespace SURFnet\VPN\Portal\OAuth;
 require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
 require_once sprintf('%s/Test/TestRandom.php', __DIR__);
 
-use SURFnet\VPN\Common\Http\NullAuthenticationHook;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\Request;
+use PDO;
+use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\Http\NullAuthenticationHook;
+use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Portal\OAuth\Test\JsonTpl;
 use SURFnet\VPN\Portal\OAuth\Test\TestRandom;
-use PHPUnit_Framework_TestCase;
-use PDO;
 
 class OAuthModuleTest extends PHPUnit_Framework_TestCase
 {

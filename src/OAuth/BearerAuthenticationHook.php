@@ -18,8 +18,8 @@
 
 namespace SURFnet\VPN\Portal\OAuth;
 
-use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\Request;
 
 class BearerAuthenticationHook implements BeforeHookInterface

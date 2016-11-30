@@ -18,14 +18,14 @@
 
 namespace SURFnet\VPN\Portal\OAuth;
 
+use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\TplInterface;
+use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\TplInterface;
 
 class OAuthModule implements ServiceModuleInterface
 {

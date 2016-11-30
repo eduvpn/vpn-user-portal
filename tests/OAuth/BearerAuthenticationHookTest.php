@@ -18,9 +18,9 @@
 
 namespace SURFnet\VPN\Portal\OAuth;
 
-use SURFnet\VPN\Common\Http\Request;
-use PHPUnit_Framework_TestCase;
 use PDO;
+use PHPUnit_Framework_TestCase;
+use SURFnet\VPN\Common\Http\Request;
 
 class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
 {

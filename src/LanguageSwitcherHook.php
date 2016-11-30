@@ -18,11 +18,11 @@
 
 namespace SURFnet\VPN\Portal;
 
-use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\SessionInterface;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\SessionInterface;
 
 /**
  * This hook is used to be able to switch the language without requiring to be

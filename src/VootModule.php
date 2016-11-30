@@ -18,13 +18,13 @@
 
 namespace SURFnet\VPN\Portal;
 
+use fkooman\OAuth\Client\OAuth2Client;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use SURFnet\VPN\Common\Http\SessionInterface;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use fkooman\OAuth\Client\OAuth2Client;
 
 class VootModule implements ServiceModuleInterface
 {

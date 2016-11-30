@@ -18,14 +18,14 @@
 
 namespace SURFnet\VPN\Portal;
 
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\Http\Response;
-use SURFnet\VPN\Common\Http\ApiResponse;
 use DateTime;
 use DateTimeZone;
+use SURFnet\VPN\Common\Http\ApiResponse;
+use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Response;
+use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
 
 class VpnApiModule implements ServiceModuleInterface
 {

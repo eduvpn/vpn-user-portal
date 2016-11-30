@@ -18,15 +18,15 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Portal\OAuth\BearerAuthenticationHook;
+use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\Logger;
+use SURFnet\VPN\Portal\OAuth\BearerAuthenticationHook;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\VpnApiModule;
-use SURFnet\VPN\Common\Http\Response;
 
 $logger = new Logger('vpn-user-api');
 
