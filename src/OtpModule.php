@@ -21,6 +21,7 @@ namespace SURFnet\VPN\Portal;
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
 use SURFnet\VPN\Common\Http\HtmlResponse;
+use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
@@ -59,18 +60,16 @@ class OtpModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $otpSecret = $request->getPostParameter('otp_secret');
-                InputValidation::otpSecret($otpSecret);
-                $otpKey = $request->getPostParameter('otp_key');
-                InputValidation::otpKey($otpKey);
+                $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
+                $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
 
-                if (false === $this->serverClient->setTotpSecret($userId, $otpSecret, $otpKey)) {
+                if (false === $this->serverClient->setTotpSecret($userId, $totpSecret, $totpKey)) {
                     // we were unable to set
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalOtp',
                             [
-                                'otpSecret' => $otpSecret,
+                                'otpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',
                             ]
                         )
@@ -86,14 +85,13 @@ class OtpModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $otpSecret = $request->getQueryParameter('otp_secret');
-                InputValidation::otpSecret($otpSecret);
+                $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));
 
                 $otpAuthUrl = sprintf(
                     'otpauth://totp/%s:%s?secret=%s&issuer=%s',
                     $request->getServerName(),
                     $userId,
-                    $otpSecret,
+                    $totpSecret,
                     $request->getServerName()
                 );
 
@@ -121,11 +119,11 @@ class OtpModule implements ServiceModuleInterface
             range(2, 7)
         );
 
-        $otpSecret = '';
+        $totpSecret = '';
         for ($i = 0; $i < 16; ++$i) {
-            $otpSecret .= $keys[random_int(0, 31)];
+            $totpSecret .= $keys[random_int(0, 31)];
         }
 
-        return $otpSecret;
+        return $totpSecret;
     }
 }

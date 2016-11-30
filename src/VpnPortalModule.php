@@ -20,6 +20,7 @@ namespace SURFnet\VPN\Portal;
 
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
+use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
@@ -95,10 +96,8 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $displayName = $request->getPostParameter('displayName');
-                InputValidation::displayName($displayName);
-                $profileId = $request->getPostParameter('profileId');
-                InputValidation::profileId($profileId);
+                $displayName = InputValidation::displayName($request->getPostParameter('displayName'));
+                $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
                 $profileList = $this->serverClient->profileList();
                 $userGroups = $this->cachedUserGroups($userId);
@@ -152,8 +151,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $commonName = $request->getPostParameter('commonName');
-                InputValidation::commonName($commonName);
+                $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -171,10 +169,10 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $commonName = $request->getPostParameter('commonName');
-                InputValidation::commonName($commonName);
+                $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
+
+                // no need to validate as we do strict string compare below
                 $confirmDisable = $request->getPostParameter('confirmDisable');
-                InputValidation::confirmDisable($confirmDisable);
 
                 if ('yes' === $confirmDisable) {
                     $this->serverClient->disableClientCertificate($commonName);
@@ -225,8 +223,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/removeClientAuthorization',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
-                $clientId = $request->getPostParameter('client_id');
-                InputValidation::clientId($clientId);
+                $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
 
                 $this->tokenStorage->removeClientTokens($userId, $clientId);
 

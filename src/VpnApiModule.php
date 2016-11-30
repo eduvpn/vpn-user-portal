@@ -21,6 +21,7 @@ namespace SURFnet\VPN\Portal;
 use DateTime;
 use DateTimeZone;
 use SURFnet\VPN\Common\Http\ApiResponse;
+use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
@@ -83,11 +84,8 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                // XXX update app to use 'display_name' instead!
-                $displayName = $request->getPostParameter('display_name');
-                InputValidation::displayName($displayName);
-                $profileId = $request->getPostParameter('profile_id');
-                InputValidation::profileId($profileId);
+                $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
+                $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
 
                 return $this->getConfig($request->getServerName(), $profileId, $userId, $displayName);
             }
