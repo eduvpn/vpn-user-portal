@@ -18,8 +18,8 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\CliParser;
+use SURFnet\VPN\Common\Config;
 
 try {
     $p = new CliParser(
