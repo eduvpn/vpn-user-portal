@@ -18,6 +18,8 @@
 
 namespace SURFnet\VPN\Portal;
 
+use RuntimeException;
+
 class ClientConfig
 {
     public static function get(array $profileConfig, array $clientCertificate, $shufflePorts)
@@ -114,7 +116,6 @@ class ClientConfig
                     ['proto' => 'tcp', 'port' => 443],
                 ];
             case 4:
-            default:
                 $portList = [1194, 1195];
                 if ($shufflePorts) {
                     shuffle($portList);
@@ -140,6 +141,8 @@ class ClientConfig
                     ['proto' => 'tcp', 'port' => $tcpPortList[0]],
                     ['proto' => 'tcp', 'port' => 443],
                 ];
+            default:
+                throw new RuntimeException('invalid processCount');
         }
     }
 }

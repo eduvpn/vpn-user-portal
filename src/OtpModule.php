@@ -60,8 +60,8 @@ class OtpModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
-                $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
+                $totpSecret = InputValidation::otpSecret($request->getPostParameter('totp_secret'));
+                $totpKey = InputValidation::otpKey($request->getPostParameter('totp_key'));
 
                 if (false === $this->serverClient->setTotpSecret($userId, $totpSecret, $totpKey)['ok']) {
                     // we were unable to set
@@ -85,7 +85,7 @@ class OtpModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));
+                $totpSecret = InputValidation::otpSecret($request->getQueryParameter('totp_secret'));
 
                 $otpAuthUrl = sprintf(
                     'otpauth://totp/%s:%s?secret=%s&issuer=%s',
