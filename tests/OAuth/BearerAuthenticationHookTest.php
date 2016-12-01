@@ -42,7 +42,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SURFnet\VPN\Common\Http\Exception\HttpException
+     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
      * @expectedExceptionMessage: no_token
      */
     public function testNoAuth()
@@ -67,7 +67,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SURFnet\VPN\Common\Http\Exception\HttpException
+     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
      * @expectedExceptionMessage: invalid_token
      */
     public function testInvalidAccessTokenKey()
@@ -82,7 +82,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SURFnet\VPN\Common\Http\Exception\HttpException
+     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
      * @expectedExceptionMessage: invalid_token
      */
     public function testInvalidAccessToken()
@@ -97,7 +97,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SURFnet\VPN\Common\Http\Exception\HttpException
+     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
      * @expectedExceptionMessage: invalid_token
      */
     public function testInvalidSyntax()
@@ -112,7 +112,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException SURFnet\VPN\Common\Http\Exception\HttpException
+     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
      * @expectedExceptionMessage: invalid_token
      */
     public function testBasicAuthentication()
