@@ -86,13 +86,27 @@ class TestHttpClient implements HttpClientInterface
         }
     }
 
-    private static function wrap($key, $response, $statusCode = 200)
+    private static function wrap($key, $responseData, $statusCode = 200)
     {
         return [
             $statusCode,
             [
-                'data' => [
-                    $key => $response,
+                $key => [
+                    'ok' => true,
+                    'data' => $responseData,
+                ],
+            ],
+        ];
+    }
+
+    private static function wrapError($key, $errorMessage, $statusCode = 200)
+    {
+        return [
+            $statusCode,
+            [
+                $key => [
+                    'ok' => false,
+                    'error' => $errorMessage,
                 ],
             ],
         ];
