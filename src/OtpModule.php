@@ -27,6 +27,7 @@ use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\HttpClient\Exception\ApiException;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\TplInterface;
 
@@ -63,7 +64,9 @@ class OtpModule implements ServiceModuleInterface
                 $totpSecret = InputValidation::otpSecret($request->getPostParameter('totp_secret'));
                 $totpKey = InputValidation::otpKey($request->getPostParameter('totp_key'));
 
-                if (false === $this->serverClient->setTotpSecret($userId, $totpSecret, $totpKey)['ok']) {
+                try {
+                    $this->serverClient->setTotpSecret($userId, $totpSecret, $totpKey);
+                } catch (ApiException $e) {
                     // we were unable to set
                     return new HtmlResponse(
                         $this->tpl->render(
