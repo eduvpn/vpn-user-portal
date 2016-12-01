@@ -14,12 +14,11 @@
 
     <p>
         {% trans "Here you can enroll for two-factor authentication (2FA)." %}
+        {% trans %}The Time-based One-time Password (<a target="_blank" href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_Algorithm">TOTP</a>) Algorithm is used.{% endtrans %}
     </p>
         
     <p class="warning">
-        {% trans %}
-    Only an administrator can remove two-factor authentication for your account. Make sure you do not lose your secret!
-        {% endtrans %}
+        {% trans %}Only an administrator can remove two-factor authentication for your account. Make sure you do not lose your secret!{% endtrans %}
     </p>
 
     <dl>
@@ -48,7 +47,7 @@
             <input type="hidden" name="totp_secret" value="{{ otpSecret }}"> 
         </fieldset>
         <fieldset>
-            <button>{% trans "Register" %}</button>
+            <button>{% trans "Verify" %}</button>
         <fieldset>
     </form>
 
