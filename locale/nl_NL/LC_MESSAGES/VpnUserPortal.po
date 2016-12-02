@@ -154,21 +154,15 @@ msgstr "Hier kan twee-factor authenticatie (2FA) ingeschakeld worden."
 
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:57
 msgid ""
-"The Time-based One-time Password (<a target=\"_blank\" href=\"https://en."
-"wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\">TOTP</a>) "
-"Algorithm is used."
+"See the <a href=\"documentation\">documentation</a> for more information on "
+"2FA and a list of applications to use."
 msgstr ""
-"Het tijdgebonden One-time Password (<a target=\"_blank\" href=\"https://en."
-"wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\">TOTP</a>) "
-"algoritme wordt gebruikt."
+"Zie de <a href=\"documentation\">documentation</a> voor meer informatie over "
+"2FA en een lijst met applicaties die gebruikt kunnen worden."
 
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:64
-msgid ""
-"Only an administrator can remove two-factor authentication for your account. "
-"Make sure you do not lose your secret!"
-msgstr ""
-"Alleen een beheerder kan twee-factor authenticatie van het account "
-"verwijderen."
+msgid "Only an administrator can remove 2FA from your account!"
+msgstr "Alleen een beheerder kan 2FA van het account halen!"
 
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:71
 msgid "Secret"

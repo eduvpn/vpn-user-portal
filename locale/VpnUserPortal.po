@@ -130,15 +130,12 @@ msgstr ""
 
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:57
 msgid ""
-"The Time-based One-time Password (<a target=\"_blank\" href=\"https://en."
-"wikipedia.org/wiki/Time-based_One-time_Password_Algorithm\">TOTP</a>) "
-"Algorithm is used."
+"See the <a href=\"documentation\">documentation</a> for more information on "
+"2FA and a list of applications to use."
 msgstr ""
 
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:64
-msgid ""
-"Only an administrator can remove two-factor authentication for your account. "
-"Make sure you do not lose your secret!"
+msgid "Only an administrator can remove 2FA from your account!"
 msgstr ""
 
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:71
