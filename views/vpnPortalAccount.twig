@@ -56,10 +56,10 @@
         </tr>
 
         <tr>
-            <th>{% trans "Secured Profiles" %}</th>
+            <th>{% trans "Profiles" %}</th>
             <td>
                 {% if otpEnabledProfiles is empty %}
-                    <em>{% trans "No profile uses two-factor authentication." %}</em>
+                    <em>{% trans "No profile uses two-factor authentication at the moment." %}</em>
                 {% else %}
                     <ul class="simple">
                     {% for otpEnabledProfile in otpEnabledProfiles %}

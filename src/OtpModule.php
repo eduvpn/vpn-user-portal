@@ -49,9 +49,17 @@ class OtpModule implements ServiceModuleInterface
     {
         $service->get(
             '/otp',
-            function () {
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
                 return new HtmlResponse(
-                    $this->tpl->render('vpnPortalOtp', ['otpSecret' => self::generateSecret()])
+                    $this->tpl->render(
+                        'vpnPortalOtp',
+                        [
+                            'hasTotpSecret' => $this->serverClient->hasTotpSecret($userId),
+                            'otpSecret' => self::generateSecret(),
+                        ]
+                    )
                 );
             }
         );
