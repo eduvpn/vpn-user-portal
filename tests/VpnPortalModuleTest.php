@@ -129,6 +129,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
             [
                 'vpnPortalConfirmDisable' => [
                     'commonName' => '12345678901234567890123456789012',
+                    'displayName' => 'Foo',
                 ],
             ],
             $this->makeRequest('POST', '/disableCertificate', [], ['commonName' => '12345678901234567890123456789012'])

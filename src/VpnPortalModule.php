@@ -152,12 +152,14 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
+                $certInfo = $this->serverClient->clientCertificateInfo($commonName);
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalConfirmDisable',
                         [
                             'commonName' => $commonName,
+                            'displayName' => $certInfo['display_name'],
                         ]
                     )
                 );
