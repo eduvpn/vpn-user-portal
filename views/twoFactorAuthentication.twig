@@ -21,8 +21,8 @@
 
     <form method="post" action="{{ requestRoot }}_two_factor/auth/verify">
         <fieldset>
-                <label for="otpKey">{% trans "OTP" %}</label>
-                <input type="text" id="otpKey" name="otpKey" maxlength="6" required pattern="[0-9]{6}" autofocus>
+                <label for="totpKey">{% trans "OTP" %}</label>
+                <input type="text" id="totpKey" name="totpKey" maxlength="6" required pattern="[0-9]{6}" autofocus>
         </fieldset>
         <fieldset>
             <input type="hidden" name="_two_factor_auth_redirect_to" value="{{ _two_factor_auth_redirect_to }}">
