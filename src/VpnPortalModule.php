@@ -85,6 +85,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         'vpnPortalNew',
                         [
                             'profileList' => $visibleProfileList,
+                            'motd' => $this->serverClient->getMotd(),
                         ]
                     )
                 );
@@ -120,6 +121,7 @@ class VpnPortalModule implements ServiceModuleInterface
                                     'profileId' => $profileId,
                                     'errorCode' => 'otpRequired',
                                     'profileList' => $visibleProfileList,
+                                    'motd' => $this->serverClient->getMotd(),
                                 ]
                             )
                         );

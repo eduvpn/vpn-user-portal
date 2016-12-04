@@ -51,6 +51,8 @@ class TestHttpClient implements HttpClientInterface
                         ],
                     ]
                 );
+            case 'serverClient/motd':
+                return self::wrap('motd', 'Hello World!');
             case 'serverClient/has_totp_secret?user_id=foo':
                 return self::wrap('has_totp_secret', false);
             case 'serverClient/user_groups?user_id=foo':

@@ -119,12 +119,6 @@ try {
         $config->v('apiProviders', 'vpn-server-api', 'apiUri')
     );
 
-    $tpl->addDefault(
-        [
-            'motd' => $serverClient->motd(),
-        ]
-    );
-
     $service = new Service($tpl);
     $service->addBeforeHook('referrer_check', new ReferrerCheckHook());
     $service->addAfterHook('no_cache', new NoCacheHook());

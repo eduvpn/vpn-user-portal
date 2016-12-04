@@ -69,6 +69,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                             'twoFactor' => false,
                         ],
                     ],
+                    'motd' => 'Hello World!',
                 ],
             ],
             $this->makeRequest('GET', '/new')
