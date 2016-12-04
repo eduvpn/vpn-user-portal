@@ -80,6 +80,7 @@ class OtpModule implements ServiceModuleInterface
                         $this->tpl->render(
                             'vpnPortalOtp',
                             [
+                                'hasTotpSecret' => $this->serverClient->getHasTotpSecret(['user_id' => $userId]),
                                 'otpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',
                             ]
