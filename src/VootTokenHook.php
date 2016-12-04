@@ -70,7 +70,7 @@ class VootTokenHook implements BeforeHookInterface
             return false;
         }
 
-        if (!$this->serverClient->hasVootToken($userId)) {
+        if (!$this->serverClient->getHasVootToken(['user_id' => $userId])) {
             return new RedirectResponse(
                 sprintf('%s_voot/authorize', $request->getRootUri()),
                 302

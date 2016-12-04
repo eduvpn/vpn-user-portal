@@ -56,7 +56,7 @@ class OtpModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalOtp',
                         [
-                            'hasTotpSecret' => $this->serverClient->hasTotpSecret($userId),
+                            'hasTotpSecret' => $this->serverClient->getHasTotpSecret(['user_id' => $userId]),
                             'otpSecret' => self::generateSecret(),
                         ]
                     )
@@ -73,7 +73,7 @@ class OtpModule implements ServiceModuleInterface
                 $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
 
                 try {
-                    $this->serverClient->setTotpSecret($userId, $totpSecret, $totpKey);
+                    $this->serverClient->postSetTotpSecret(['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
                 } catch (ApiException $e) {
                     // we were unable to set
                     return new HtmlResponse(

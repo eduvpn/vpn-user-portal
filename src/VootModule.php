@@ -74,7 +74,7 @@ class VootModule implements ServiceModuleInterface
                 $this->session->delete('_voot_state');
 
                 // store the access token
-                $this->serverClient->setVootToken($userId, $accessToken->getToken());
+                $this->serverClient->postSetVootToken(['user_id' => $userId, 'voot_token' => $accessToken->getToken()]);
 
                 // return to account page
                 return new RedirectResponse($request->getRootUri(), 302);

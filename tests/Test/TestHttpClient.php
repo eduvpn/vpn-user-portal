@@ -40,9 +40,9 @@ class TestHttpClient implements HttpClientInterface
                         ],
                     ]
                 );
-            case 'serverClient/list_client_certificates?user_id=foo':
+            case 'serverClient/client_certificate_list?user_id=foo':
                 return self::wrap(
-                    'list_client_certificates',
+                    'client_certificate_list',
                     [
                         [
                             'display_name' => 'Foo',

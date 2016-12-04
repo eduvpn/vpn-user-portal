@@ -55,8 +55,8 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $profileList = $this->serverClient->profileList();
-                $userGroups = $this->serverClient->userGroups($userId);
+                $profileList = $this->serverClient->getProfileList();
+                $userGroups = $this->serverClient->getUserGroups(['user_id' => $userId]);
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -98,7 +98,7 @@ class VpnApiModule implements ServiceModuleInterface
 
                 // check if the user is disabled, show this then
                 $msgList = [];
-                if ($this->serverClient->isDisabledUser($userId)) {
+                if ($this->serverClient->getIsDisabledUser(['user_id' => $userId])) {
                     $dateTime = new DateTime();
                     $dateTime->setTimeZone(new DateTimeZone('UTC'));
                     $msgList[] = [
@@ -120,7 +120,7 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $msgList = [];
 
-                $motdMessage = $this->serverClient->motd();
+                $motdMessage = $this->serverClient->getMotd();
                 if (false !== $motdMessage) {
                     // add MOTD
                     $dateTime = new DateTime();
@@ -140,14 +140,14 @@ class VpnApiModule implements ServiceModuleInterface
         );
     }
 
-    private function getConfig($serverName, $profileId, $userId, $configName)
+    private function getConfig($serverName, $profileId, $userId, $displayName)
     {
         // create a certificate
-        $clientCertificate = $this->serverClient->addClientCertificate($userId, $configName);
+        $clientCertificate = $this->serverClient->postAddClientCertificate(['user_id' => $userId, 'display_name' => $displayName]);
 
         // obtain information about this profile to be able to construct
         // a client configuration file
-        $profileList = $this->serverClient->profileList();
+        $profileList = $this->serverClient->getProfileList();
         $profileData = $profileList[$profileId];
 
         $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
