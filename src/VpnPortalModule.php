@@ -151,8 +151,6 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/disableCertificate',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
-
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
                 $certInfo = $this->serverClient->getClientCertificateInfo(['common_name' => $commonName]);
 
@@ -171,8 +169,6 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/disableCertificateConfirm',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
-
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
 
                 // no need to validate as we do strict string compare below
