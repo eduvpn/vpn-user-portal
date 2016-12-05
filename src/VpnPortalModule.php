@@ -149,14 +149,14 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/disableCertificate',
+            '/deleteCertificate',
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
                 $certInfo = $this->serverClient->getClientCertificateInfo(['common_name' => $commonName]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
-                        'vpnPortalConfirmDisable',
+                        'vpnPortalConfirmDelete',
                         [
                             'commonName' => $commonName,
                             'displayName' => $certInfo['display_name'],
@@ -167,15 +167,15 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/disableCertificateConfirm',
+            '/deleteCertificateConfirm',
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
 
                 // no need to validate as we do strict string compare below
-                $confirmDisable = $request->getPostParameter('confirmDisable');
+                $confirmDelete = $request->getPostParameter('confirmDelete');
 
-                if ('yes' === $confirmDisable) {
-                    $this->serverClient->postDisableClientCertificate(['common_name' => $commonName]);
+                if ('yes' === $confirmDelete) {
+                    $this->serverClient->postDeleteClientCertificate(['common_name' => $commonName]);
                     $this->serverClient->postKillClient(['common_name' => $commonName]);
                 }
 

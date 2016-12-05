@@ -79,8 +79,8 @@ class TestHttpClient implements HttpClientInterface
                         'ta' => 'TAKEY',
                     ]
                 );
-            case 'serverClient/disable_client_certificate':
-                return self::wrap('disable_client_certificate', true);
+            case 'serverClient/delete_client_certificate':
+                return self::wrap('delete_client_certificate', true);
             case 'serverClient/kill_client':
                 return self::wrap('kill_client', true);
             case 'serverClient/set_voot_token':

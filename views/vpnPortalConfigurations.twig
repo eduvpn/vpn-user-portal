@@ -36,16 +36,12 @@
                             <span class="success">{% trans "Active" %}</span>
                         {% endif %}
                     </td>
-                    {% if not userCertificate.is_disabled %}
-                        <td class="text-right">
-                            <form method="post" class="inline" action="disableCertificate">
-                                <input type="hidden" name="commonName" value="{{ userCertificate.common_name }}">
-                                <button type="submit" class="error">{% trans "Disable" %}</button>
-                            </form>
-                        </td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
+                    <td class="text-right">
+                        <form method="post" class="inline" action="deleteCertificate">
+                            <input type="hidden" name="commonName" value="{{ userCertificate.common_name }}">
+                            <button type="submit" class="error">{% trans "Delete" %}</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

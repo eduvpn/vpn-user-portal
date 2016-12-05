@@ -128,12 +128,12 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             [
-                'vpnPortalConfirmDisable' => [
+                'vpnPortalConfirmDelete' => [
                     'commonName' => '12345678901234567890123456789012',
                     'displayName' => 'Foo',
                 ],
             ],
-            $this->makeRequest('POST', '/disableCertificate', [], ['commonName' => '12345678901234567890123456789012'])
+            $this->makeRequest('POST', '/deleteCertificate', [], ['commonName' => '12345678901234567890123456789012'])
         );
     }
 
@@ -141,7 +141,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             302,
-            $this->makeRequest('POST', '/disableCertificateConfirm', [], ['commonName' => '12345678901234567890123456789012', 'confirmDisable' => 'yes'], true)->getStatusCode()
+            $this->makeRequest('POST', '/deleteCertificateConfirm', [], ['commonName' => '12345678901234567890123456789012', 'confirmDelete' => 'yes'], true)->getStatusCode()
         );
     }
 
