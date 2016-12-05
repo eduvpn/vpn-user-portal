@@ -26,41 +26,53 @@ msgstr "Fout"
 msgid "An error occurred."
 msgstr "Er is een fout opgetreden."
 
+#: /tmp/cache/58/58ef2f95c942547f58768ca78f6e8d792fec0eaab905965cd530b1fa40d2cf37.php:35
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:35
 #: /tmp/cache/fd/fdf98c2afd80ba35592f38938289fbd86edcd8ba910f3be79d6c9884bc7308de.php:35
-#: /tmp/cache/30/3092953b7ee8959a350ef03cdbea56ad643d2ae3b8afd5c40ceaa596615e7037.php:35
 #: /tmp/cache/d7/d73eeea2bc8099f45dfb15093c3096d37b16e0d2097117755e368d7378543010.php:35
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:35
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:35
 msgid "New"
 msgstr "Nieuw"
 
+#: /tmp/cache/58/58ef2f95c942547f58768ca78f6e8d792fec0eaab905965cd530b1fa40d2cf37.php:39
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:39
 #: /tmp/cache/fd/fdf98c2afd80ba35592f38938289fbd86edcd8ba910f3be79d6c9884bc7308de.php:39
-#: /tmp/cache/30/3092953b7ee8959a350ef03cdbea56ad643d2ae3b8afd5c40ceaa596615e7037.php:39
 #: /tmp/cache/d7/d73eeea2bc8099f45dfb15093c3096d37b16e0d2097117755e368d7378543010.php:39
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:39
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:39
 msgid "Configurations"
 msgstr "Configuraties"
 
+#: /tmp/cache/58/58ef2f95c942547f58768ca78f6e8d792fec0eaab905965cd530b1fa40d2cf37.php:43
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:43
 #: /tmp/cache/fd/fdf98c2afd80ba35592f38938289fbd86edcd8ba910f3be79d6c9884bc7308de.php:43
-#: /tmp/cache/30/3092953b7ee8959a350ef03cdbea56ad643d2ae3b8afd5c40ceaa596615e7037.php:43
 #: /tmp/cache/d7/d73eeea2bc8099f45dfb15093c3096d37b16e0d2097117755e368d7378543010.php:43
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:43
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:43
 msgid "Account"
 msgstr "Account"
 
+#: /tmp/cache/58/58ef2f95c942547f58768ca78f6e8d792fec0eaab905965cd530b1fa40d2cf37.php:47
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:47
 #: /tmp/cache/fd/fdf98c2afd80ba35592f38938289fbd86edcd8ba910f3be79d6c9884bc7308de.php:47
-#: /tmp/cache/30/3092953b7ee8959a350ef03cdbea56ad643d2ae3b8afd5c40ceaa596615e7037.php:47
 #: /tmp/cache/d7/d73eeea2bc8099f45dfb15093c3096d37b16e0d2097117755e368d7378543010.php:47
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:47
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:47
 msgid "Documentation"
 msgstr "Documentatie"
+
+#: /tmp/cache/58/58ef2f95c942547f58768ca78f6e8d792fec0eaab905965cd530b1fa40d2cf37.php:54
+msgid "Are you sure you want to delete <em>%displayName%</em>?"
+msgstr "De configuratie <em>%displayName%</em> wordt verwijderd. Doorgaan?"
+
+#: /tmp/cache/58/58ef2f95c942547f58768ca78f6e8d792fec0eaab905965cd530b1fa40d2cf37.php:66
+msgid "Yes"
+msgstr "Ja"
+
+#: /tmp/cache/58/58ef2f95c942547f58768ca78f6e8d792fec0eaab905965cd530b1fa40d2cf37.php:70
+msgid "No"
+msgstr "Nee"
 
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:69
 msgid ""
@@ -128,25 +140,9 @@ msgstr "Uitgeschakeld"
 msgid "Active"
 msgstr "Actief"
 
-#: /tmp/cache/fd/fdf98c2afd80ba35592f38938289fbd86edcd8ba910f3be79d6c9884bc7308de.php:131
-msgid "Disable"
-msgstr "Uitschakelen"
-
-#: /tmp/cache/30/3092953b7ee8959a350ef03cdbea56ad643d2ae3b8afd5c40ceaa596615e7037.php:54
-msgid ""
-"Are you sure you want to disable <em>%displayName%</em>? Only an "
-"administrator can undo this!"
-msgstr ""
-"De configuratie <em>%displayName%</em> wordt uitgeschakeld. Alleen een "
-"beheerder kan dit ongedaan maken. Doorgaan?"
-
-#: /tmp/cache/30/3092953b7ee8959a350ef03cdbea56ad643d2ae3b8afd5c40ceaa596615e7037.php:66
-msgid "Yes"
-msgstr "Ja"
-
-#: /tmp/cache/30/3092953b7ee8959a350ef03cdbea56ad643d2ae3b8afd5c40ceaa596615e7037.php:70
-msgid "No"
-msgstr "Nee"
+#: /tmp/cache/fd/fdf98c2afd80ba35592f38938289fbd86edcd8ba910f3be79d6c9884bc7308de.php:127
+msgid "Delete"
+msgstr "Verwijderen"
 
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:58
 msgid "You are already enrolled for two-factor authentication (2FA)."
@@ -318,3 +314,13 @@ msgstr "Gebruikersnaam"
 #: /tmp/cache/a0/a0c7b7f6514382804a7153f286041c8b11f9513d48487e2e39a81862c8bf6849.php:104
 msgid "Password"
 msgstr "Wachtwoord"
+
+#~ msgid "Disable"
+#~ msgstr "Uitschakelen"
+
+#~ msgid ""
+#~ "Are you sure you want to disable <em>%displayName%</em>? Only an "
+#~ "administrator can undo this!"
+#~ msgstr ""
+#~ "De configuratie <em>%displayName%</em> wordt uitgeschakeld. Alleen een "
+#~ "beheerder kan dit ongedaan maken. Doorgaan?"
