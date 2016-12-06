@@ -25,7 +25,7 @@ try {
     $p = new CliParser(
         'Add a user to the portal',
         [
-            'instance' => ['the instance to target, e.g. vpn.example', true, true],
+            'instance' => ['the VPN instance', true, false],
             'user' => ['the username', true, true],
             'pass' => ['the password', true, true],
         ]
@@ -37,7 +37,9 @@ try {
         exit(0);
     }
 
-    $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $opt->v('instance'));
+    $instanceId = $opt->e('instance') ? $opt->v('instance') : 'default';
+
+    $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId);
     $config = Config::fromFile($configFile);
     $configData = $config->v();
     $passwordHash = password_hash($opt->v('pass'), PASSWORD_DEFAULT);
