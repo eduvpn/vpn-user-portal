@@ -42,14 +42,19 @@
         <tr>
             <th>{% trans "Status" %}</th>
             <td>
-                {% if hasOtpSecret %}
+                {% if isEnrolled %}
                     <span class="success">{% trans "Enrolled" %}</span>
+                    {% if hasYubiKey %}
+                        <span class="plain">{% trans "YubiKey" %}</span>
+                    {% elseif hasTotpSecret %}
+                        <span class="plain">{% trans "TOTP" %}</span>
+                    {% endif %}
                 {% else %}
                     <span class="warning">{% trans "Not Enrolled" %}</span>
                 {% endif %}
             </td>
             <td class="text-right">
-                {% if not hasOtpSecret %} 
+                {% if not isEnrolled %} 
                     <form method="get" action="otp"><button>Enroll</button></form>
                 {% endif %}
             </td>

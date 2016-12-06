@@ -52,11 +52,22 @@ class OtpModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
+                $hasTotpSecret = $this->serverClient->getHasTotpSecret(['user_id' => $userId]);
+                // $hasYubiKey = $this->serverClient->getHasYubiKey(['user_id' => $userId]);
+                $hasYubiKey = false;
+                $isEnrolled = $hasTotpSecret || $hasYubiKey;
+
+                $otpType = $request->getQueryParameter('otp_type', false, false);
+                if (false !== $otpType) {
+                    $otpType = InputValidation::otpType($otpType);
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalOtp',
                         [
-                            'hasTotpSecret' => $this->serverClient->getHasTotpSecret(['user_id' => $userId]),
+                            'otpType' => $otpType,
+                            'isEnrolled' => $isEnrolled,
                             'otpSecret' => self::generateSecret(),
                         ]
                     )

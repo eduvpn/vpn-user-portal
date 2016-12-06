@@ -188,7 +188,10 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $hasOtpSecret = $this->serverClient->getHasTotpSecret(['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->getHasTotpSecret(['user_id' => $userId]);
+                // $hasYubiKey = $this->serverClient->getHasYubiKey(['user_id' => $userId]);
+                $hasYubiKey = false;
+                $isEnrolled = $hasTotpSecret || $hasYubiKey;
 
                 $profileList = $this->serverClient->getProfileList();
                 $userGroups = $this->cachedUserGroups($userId);
@@ -209,7 +212,9 @@ class VpnPortalModule implements ServiceModuleInterface
                         'vpnPortalAccount',
                         [
                             'otpEnabledProfiles' => $otpEnabledProfiles,
-                            'hasOtpSecret' => $hasOtpSecret,
+                            'isEnrolled' => $isEnrolled,
+                            'hasYubiKey' => $hasYubiKey,
+                            'hasTotpSecret' => $hasTotpSecret,
                             'userId' => $userId,
                             'userGroups' => $userGroups,
                             'authorizedClients' => $authorizedClients,

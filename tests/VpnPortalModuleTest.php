@@ -96,7 +96,9 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
             [
                 'vpnPortalAccount' => [
                     'otpEnabledProfiles' => [],
-                    'hasOtpSecret' => false,
+                    'isEnrolled' => false,
+                    'hasYubiKey' => false,
+                    'hasTotpSecret' => false,
                     'userId' => 'foo',
                     'userGroups' => [],
                     'authorizedClients' => [],

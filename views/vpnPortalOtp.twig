@@ -12,7 +12,7 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    {% if hasTotpSecret %}
+    {% if isEnrolled %}
         <p class="success">
             {% trans "You are already enrolled for two-factor authentication (2FA)." %}
         </p>
