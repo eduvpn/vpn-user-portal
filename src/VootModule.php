@@ -55,7 +55,7 @@ class VootModule implements ServiceModuleInterface
                 );
 
                 $this->session->set('_voot_state', $authorizationRequestUri);
-                $this->session->set('_voot_redirect_to', $request->getQueryParameter('redirect_to'));
+                $this->session->set('_voot_return_to', $request->getQueryParameter('return_to'));
 
                 return new RedirectResponse($authorizationRequestUri);
             }
@@ -78,10 +78,10 @@ class VootModule implements ServiceModuleInterface
                 $this->serverClient->postSetVootToken(['user_id' => $userId, 'voot_token' => $accessToken->getToken()]);
 
         
-                $redirectTo = $this->session->get('_voot_redirect_to');
-                $this->session->delete('_voot_redirect_to');
+                $returnTo = $this->session->get('_voot_return_to');
+                $this->session->delete('_voot_return_to');
 
-                return new RedirectResponse($redirectTo, 302);
+                return new RedirectResponse($returnTo, 302);
             }
         );
     }
