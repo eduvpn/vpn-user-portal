@@ -76,7 +76,7 @@ class VootTokenHook implements BeforeHookInterface
                     '%s_voot/authorize?%s',
                     $request->getRootUri(),
                     http_build_query(
-                        ['redirect_to' => $request->getUri()]
+                        ['return_to' => $request->getUri()]
                     )
                 ),
                 302
