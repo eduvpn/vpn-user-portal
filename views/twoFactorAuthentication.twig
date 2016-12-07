@@ -15,7 +15,7 @@
 
     {% if _two_factor_auth_invalid_key %}
         <p class="error">
-            {% trans "The OTP you provided is not correct." %}
+            {% trans "The OTP you provided is not correct." %} ({{ _two_factor_auth_error_msg }})
         </p>
     {% endif %}
 
