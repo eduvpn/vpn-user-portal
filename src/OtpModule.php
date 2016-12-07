@@ -86,12 +86,19 @@ class OtpModule implements ServiceModuleInterface
                 try {
                     $this->serverClient->postSetTotpSecret(['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
                 } catch (ApiException $e) {
-                    // we were unable to set
+                    // we were unable to set the OTP secret
+
+                    $hasTotpSecret = $this->serverClient->getHasTotpSecret(['user_id' => $userId]);
+                    // $hasYubiKey = $this->serverClient->getHasYubiKey(['user_id' => $userId]);
+                    $hasYubiKey = false;
+                    $isEnrolled = $hasTotpSecret || $hasYubiKey;
+
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalOtp',
                             [
                                 'hasTotpSecret' => $this->serverClient->getHasTotpSecret(['user_id' => $userId]),
+                                'isEnrolled' => $isEnrolled,
                                 'otpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',
                             ]
