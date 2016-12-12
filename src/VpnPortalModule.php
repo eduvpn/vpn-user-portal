@@ -118,6 +118,13 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to create a configuration for this profileId', 400);
                 }
 
+                $motdMessages = $this->serverClient->getSystemMessages('motd');
+                if (0 === count($motdMessages)) {
+                    $motdMessage = false;
+                } else {
+                    $motdMessage = $motdMessages[0];
+                }
+
                 if ($profileList[$profileId]['twoFactor']) {
                     $hasOtpSecret = $this->serverClient->getHasTotpSecret(['user_id' => $userId]);
                     if (!$hasOtpSecret) {
@@ -128,7 +135,7 @@ class VpnPortalModule implements ServiceModuleInterface
                                     'profileId' => $profileId,
                                     'errorCode' => 'otpRequired',
                                     'profileList' => $visibleProfileList,
-                                    'motd' => $this->serverClient->getMotd(),
+                                    'motdMessage' => $motdMessage,
                                 ]
                             )
                         );
