@@ -120,15 +120,13 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $msgList = [];
 
-                $motdMessage = $this->serverClient->getMotd();
-                if (false !== $motdMessage) {
-                    // add MOTD
-                    $dateTime = new DateTime();
-                    $dateTime->setTimeZone(new DateTimeZone('UTC'));
+                $motdMessages = $this->serverClient->getSystemMessages('motd');
+                foreach ($motdMessages as $motdMessage) {
                     $msgList[] = [
+                        // no support yet for 'motd' type in application API
                         'type' => 'notification',
-                        'date' => $dateTime->format('Y-m-d\TH:i:s\Z'),
-                        'content' => $motdMessage,
+                        'date' => sprintf('%sZ', $motdMessage['date_time']),
+                        'content' => $motdMessage['message'],
                     ];
                 }
 

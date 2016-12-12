@@ -12,8 +12,8 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    {% if motd %}
-        <p class="plain">{{ motd|nl2br }}</p>
+    {% if motdMessage %}
+        <p class="plain">{{ motdMessage.message|nl2br }}</p>
     {% endif %}
        
     {% if profileList|length == 0 %}

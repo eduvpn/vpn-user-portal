@@ -80,12 +80,19 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userGroups = $this->cachedUserGroups($userId);
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
+                $motdMessages = $this->serverClient->getSystemMessages('motd');
+                if (0 === count($motdMessages)) {
+                    $motdMessage = false;
+                } else {
+                    $motdMessage = $motdMessages[0];
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalNew',
                         [
                             'profileList' => $visibleProfileList,
-                            'motd' => $this->serverClient->getMotd(),
+                            'motdMessage' => $motdMessage,
                         ]
                     )
                 );
