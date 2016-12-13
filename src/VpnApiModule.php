@@ -103,7 +103,9 @@ class VpnApiModule implements ServiceModuleInterface
                     $dateTime->setTimeZone(new DateTimeZone('UTC'));
 
                     $msgList[] = [
-                        'type' => $userMessage['type'],
+                        // for now, everything is a notification
+                        // 'type' => $userMessage['type'],
+                        'type' => 'notification',
                         'date_time' => $dateTime->format('Y-m-d\TH:i:s\Z'),
                         'message' => $userMessage['message'],
                     ];
