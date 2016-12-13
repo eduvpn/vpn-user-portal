@@ -80,7 +80,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userGroups = $this->cachedUserGroups($userId);
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
-                $motdMessages = $this->serverClient->getSystemMessages('motd');
+                $motdMessages = $this->serverClient->getSystemMessages(['message_type' => 'motd']);
                 if (0 === count($motdMessages)) {
                     $motdMessage = false;
                 } else {
@@ -118,7 +118,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to create a configuration for this profileId', 400);
                 }
 
-                $motdMessages = $this->serverClient->getSystemMessages('motd');
+                $motdMessages = $this->serverClient->getSystemMessages(['message_type' => 'motd']);
                 if (0 === count($motdMessages)) {
                     $motdMessage = false;
                 } else {
@@ -202,7 +202,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $userMessages = $this->serverClient->getUserMessages($userId);
+                $userMessages = $this->serverClient->getUserMessages(['user_id' => $userId]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
