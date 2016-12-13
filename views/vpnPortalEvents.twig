@@ -28,13 +28,7 @@
                     <tr>
                         <td>{{ message.date_time|date('Y-m-d H:i:s') }}</td>
                         <td>{{ message.message }}</td>
-                        <td>
-                        {% if "notification" == message.type %}
-                            <span class="success">{{ message.type }}</span>
-                        {% elseif "error" == message.type %}
-                            <span class="error">{{ message.type }}</span>
-                        {% endif %}
-                        </td>
+                        <td><span class="plain">{{ message.type }}</span></td>
                     </tr>
                 {% endfor %}
             </tbody>
