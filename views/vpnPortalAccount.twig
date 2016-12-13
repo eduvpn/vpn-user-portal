@@ -78,32 +78,6 @@
 
     </table>            
 
-    <h2>{% trans "Notifications" %}</h2>
-    {% if userMessages is empty %}
-        <p class="plain">{% trans "No notifications available." %}</p>
-    {% else %}
-        <table>
-            <thead>
-                <tr><th>{% trans "Date/Time" %} ({{ date()|date('T') }})</th><th>{% trans "Message" %}</th><th>{% trans "Type" %}</tr>
-            </thead>
-            <tbody>
-                {% for message in userMessages %}
-                    <tr>
-                        <td>{{ message.date_time|date('Y-m-d H:i:s') }}</td>
-                        <td>{{ message.message }}</td>
-                        <td>
-                        {% if "notification" == message.type %}
-                            <span class="success">{{ message.type }}</span>
-                        {% elseif "error" == message.type %}
-                            <span class="error">{{ message.type }}</span>
-                        {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
     <h2>{% trans "Authorized Applications" %}</h2>
 
     {% if authorizedClients is empty %}

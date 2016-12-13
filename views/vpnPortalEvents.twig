@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="menu">
+      <li><a href="new">{% trans "New" %}</a></li>
+      <li><a href="configurations">{% trans "Configurations" %}</a></li>
+      <li class="active"><a href="account">{% trans "Account" %}</a></li>
+      <li><a href="documentation">{% trans "Documentation" %}</a></li>
+    </ul>
+
+    <h2>{% trans "Events" %}</h2>
+    <p>
+        {% trans %}This is a list of events that occurred related to your account.{% endtrans %}
+    </p>
+    {% if userMessages is empty %}
+        <p class="plain">{% trans "No events." %}</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr><th>{% trans "Date/Time" %} ({{ date()|date('T') }})</th><th>{% trans "Message" %}</th><th>{% trans "Type" %}</tr>
+            </thead>
+            <tbody>
+                {% for message in userMessages %}
+                    <tr>
+                        <td>{{ message.date_time|date('Y-m-d H:i:s') }}</td>
+                        <td>{{ message.message }}</td>
+                        <td>
+                        {% if "notification" == message.type %}
+                            <span class="success">{{ message.type }}</span>
+                        {% elseif "error" == message.type %}
+                            <span class="error">{{ message.type }}</span>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% include 'footer.twig' %}
+</body>
+</html>

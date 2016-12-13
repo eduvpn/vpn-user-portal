@@ -198,6 +198,24 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->get(
+            '/events',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $userMessages = $this->serverClient->getUserMessages($userId);
+
+                return new HtmlResponse(
+                    $this->tpl->render(
+                        'vpnPortalEvents',
+                        [
+                            'userMessages' => $userMessages,
+                        ]
+                    )
+                );
+            }
+        );
+
+        $service->get(
             '/account',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
@@ -212,8 +230,6 @@ class VpnPortalModule implements ServiceModuleInterface
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
-
-                $userMessages = $this->serverClient->getUserMessages($userId);
 
                 $otpEnabledProfiles = [];
                 foreach ($visibleProfileList as $profileId => $profileData) {
@@ -234,7 +250,6 @@ class VpnPortalModule implements ServiceModuleInterface
                             'userId' => $userId,
                             'userGroups' => $userGroups,
                             'authorizedClients' => $authorizedClients,
-                            'userMessages' => $userMessages,
                         ]
                     )
                 );

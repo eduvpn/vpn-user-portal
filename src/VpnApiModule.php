@@ -97,19 +97,6 @@ class VpnApiModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $msgList = [];
-                $userMessages = $this->serverClient->getUserMessages($userId);
-                foreach ($userMessages as $userMessage) {
-                    $dateTime = new DateTime($userMessage['date_time']);
-                    $dateTime->setTimeZone(new DateTimeZone('UTC'));
-
-                    $msgList[] = [
-                        // for now, everything is a notification
-                        // 'type' => $userMessage['type'],
-                        'type' => 'notification',
-                        'date_time' => $dateTime->format('Y-m-d\TH:i:s\Z'),
-                        'message' => $userMessage['message'],
-                    ];
-                }
 
                 return new ApiResponse(
                     'user_messages',
