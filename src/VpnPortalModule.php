@@ -213,6 +213,8 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
 
+                $userMessages = $this->serverClient->getUserMessages($userId);
+
                 $otpEnabledProfiles = [];
                 foreach ($visibleProfileList as $profileId => $profileData) {
                     if ($profileData['twoFactor']) {
@@ -232,6 +234,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'userId' => $userId,
                             'userGroups' => $userGroups,
                             'authorizedClients' => $authorizedClients,
+                            'userMessages' => $userMessages,
                         ]
                     )
                 );

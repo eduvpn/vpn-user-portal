@@ -106,6 +106,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
                     'userId' => 'foo',
                     'userGroups' => [],
                     'authorizedClients' => [],
+                    'userMessages' => [],
                 ],
             ],
             $this->makeRequest('GET', '/account')

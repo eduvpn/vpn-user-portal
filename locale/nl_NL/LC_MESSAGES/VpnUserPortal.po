@@ -107,7 +107,7 @@ msgstr "Profiel"
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:155
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:159
 #: /tmp/cache/fd/fdf98c2afd80ba35592f38938289fbd86edcd8ba910f3be79d6c9884bc7308de.php:68
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:212
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:283
 msgid "Name"
 msgstr "Naam"
 
@@ -191,7 +191,7 @@ msgstr ""
 "OTP-sleutel."
 
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:145
-#: /tmp/cache/3a/3ab457cb1ad8118b3d6cb15b96d461f7f8d62cf454252d90c5a57f294a7be573.php:80
+#: /tmp/cache/3a/3ab457cb1ad8118b3d6cb15b96d461f7f8d62cf454252d90c5a57f294a7be573.php:82
 msgid "Verify"
 msgstr "Verifiëren"
 
@@ -237,7 +237,7 @@ msgstr "Voer een OTP in."
 msgid "The OTP you provided is not correct."
 msgstr "Het opgegeven OTP is niet correct."
 
-#: /tmp/cache/3a/3ab457cb1ad8118b3d6cb15b96d461f7f8d62cf454252d90c5a57f294a7be573.php:69
+#: /tmp/cache/3a/3ab457cb1ad8118b3d6cb15b96d461f7f8d62cf454252d90c5a57f294a7be573.php:71
 msgid "OTP"
 msgstr "OTP"
 
@@ -265,31 +265,55 @@ msgstr "Twee-factor authenticatie"
 msgid "Enrolled"
 msgstr "Geactiveerd"
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:133
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:134
+msgid "YubiKey"
+msgstr "YubiKey"
+
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:141
+msgid "TOTP"
+msgstr "TOTP"
+
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:150
 msgid "Not Enrolled"
 msgstr "Niet geactiveerd"
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:154
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:171
 msgid "Profiles"
 msgstr "Profielen"
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:162
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:179
 msgid "No profile uses two-factor authentication at the moment."
 msgstr "Op dit moment gebruikt geen profiel twee-factor authenticatie."
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:195
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:212
+msgid "Notifications"
+msgstr "Notificaties"
+
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:219
+msgid "No notifications available."
+msgstr "Geen notificaties beschikbaar."
+
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:228
+msgid "Date/Time"
+msgstr "Datum/Tijd"
+
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:232
+msgid "Message"
+msgstr "Bericht"
+
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:266
 msgid "Authorized Applications"
 msgstr "Geautoriseerde applicaties"
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:203
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:274
 msgid "No applications have access to your account."
 msgstr "Er zijn geen programma's die toegang hebben tot dit account."
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:214
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:285
 msgid "Scope"
 msgstr "Rechten"
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:241
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:312
 msgid "Revoke"
 msgstr "Intrekken"
 
@@ -314,13 +338,3 @@ msgstr "Gebruikersnaam"
 #: /tmp/cache/a0/a0c7b7f6514382804a7153f286041c8b11f9513d48487e2e39a81862c8bf6849.php:104
 msgid "Password"
 msgstr "Wachtwoord"
-
-#~ msgid "Disable"
-#~ msgstr "Uitschakelen"
-
-#~ msgid ""
-#~ "Are you sure you want to disable <em>%displayName%</em>? Only an "
-#~ "administrator can undo this!"
-#~ msgstr ""
-#~ "De configuratie <em>%displayName%</em> wordt uitgeschakeld. Alleen een "
-#~ "beheerder kan dit ongedaan maken. Doorgaan?"

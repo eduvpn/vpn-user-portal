@@ -55,12 +55,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "8e48f9e1364bba8fef1acb5354e3cd65b295c1e6"
+                "reference": "36912d86420236a7b25c739525fff71eb48cfa61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/8e48f9e1364bba8fef1acb5354e3cd65b295c1e6",
-                "reference": "8e48f9e1364bba8fef1acb5354e3cd65b295c1e6",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/36912d86420236a7b25c739525fff71eb48cfa61",
+                "reference": "36912d86420236a7b25c739525fff71eb48cfa61",
                 "shasum": ""
             },
             "require": {
@@ -95,20 +95,20 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-12-12 10:42:26"
+            "time": "2016-12-13 10:23:08"
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "00cc53bb3dbe125d9803646016efd1befcf80c3a"
+                "reference": "a8930a476fb43e197e39f6e19e729882e34f3c8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/00cc53bb3dbe125d9803646016efd1befcf80c3a",
-                "reference": "00cc53bb3dbe125d9803646016efd1befcf80c3a",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/a8930a476fb43e197e39f6e19e729882e34f3c8c",
+                "reference": "a8930a476fb43e197e39f6e19e729882e34f3c8c",
                 "shasum": ""
             },
             "require": {
@@ -127,7 +127,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache-2.0"
+                "AGPL-3.0"
             ],
             "authors": [
                 {
@@ -136,7 +136,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2016-11-25 14:29:12"
+            "time": "2016-12-12 14:47:32"
         },
         {
             "name": "guzzlehttp/guzzle",
