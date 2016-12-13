@@ -96,15 +96,17 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                // check if the user is disabled, show this then
                 $msgList = [];
-                if ($this->serverClient->getIsDisabledUser(['user_id' => $userId])) {
-                    $dateTime = new DateTime();
+                $userMessages = $this->serverClient->getUserMessages($userId);
+                foreach ($userMessages as $userMessage) {
+                    $dateTime = new DateTime($userMessage['date_time']);
                     $dateTime->setTimeZone(new DateTimeZone('UTC'));
+
                     $msgList[] = [
-                        'type' => 'notification',
+                        // no support yet for 'motd' type in application API
+                        'type' => $userMessage['type'],
                         'date' => $dateTime->format('Y-m-d\TH:i:s\Z'),
-                        'content' => 'Your account has been disabled. Please contact support.',
+                        'content' => $userMessage['message'],
                     ];
                 }
 
