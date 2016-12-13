@@ -103,10 +103,9 @@ class VpnApiModule implements ServiceModuleInterface
                     $dateTime->setTimeZone(new DateTimeZone('UTC'));
 
                     $msgList[] = [
-                        // no support yet for 'motd' type in application API
                         'type' => $userMessage['type'],
-                        'date' => $dateTime->format('Y-m-d\TH:i:s\Z'),
-                        'content' => $userMessage['message'],
+                        'date_time' => $dateTime->format('Y-m-d\TH:i:s\Z'),
+                        'message' => $userMessage['message'],
                     ];
                 }
 
@@ -130,8 +129,8 @@ class VpnApiModule implements ServiceModuleInterface
                     $msgList[] = [
                         // no support yet for 'motd' type in application API
                         'type' => 'notification',
-                        'date' => $dateTime->format('Y-m-d\TH:i:s\Z'),
-                        'content' => $motdMessage['message'],
+                        'date_time' => $dateTime->format('Y-m-d\TH:i:s\Z'),
+                        'message' => $motdMessage['message'],
                     ];
                 }
 
