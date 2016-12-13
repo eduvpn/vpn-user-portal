@@ -32,6 +32,7 @@ msgstr "Er is een fout opgetreden."
 #: /tmp/cache/d7/d73eeea2bc8099f45dfb15093c3096d37b16e0d2097117755e368d7378543010.php:35
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:35
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:35
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:35
 msgid "New"
 msgstr "Nieuw"
 
@@ -41,6 +42,7 @@ msgstr "Nieuw"
 #: /tmp/cache/d7/d73eeea2bc8099f45dfb15093c3096d37b16e0d2097117755e368d7378543010.php:39
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:39
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:39
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:39
 msgid "Configurations"
 msgstr "Configuraties"
 
@@ -50,6 +52,7 @@ msgstr "Configuraties"
 #: /tmp/cache/d7/d73eeea2bc8099f45dfb15093c3096d37b16e0d2097117755e368d7378543010.php:43
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:43
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:43
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:43
 msgid "Account"
 msgstr "Account"
 
@@ -59,6 +62,7 @@ msgstr "Account"
 #: /tmp/cache/d7/d73eeea2bc8099f45dfb15093c3096d37b16e0d2097117755e368d7378543010.php:47
 #: /tmp/cache/d4/d4089014f25a9fd386c2916b84ce8898a813013ee733ad0a3ff33cb001997faf.php:47
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:47
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:47
 msgid "Documentation"
 msgstr "Documentatie"
 
@@ -107,7 +111,7 @@ msgstr "Profiel"
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:155
 #: /tmp/cache/1f/1ffcde19cc850bcbd27350dd1dbbdd01adabb66438a0fd599494b57c132da078.php:159
 #: /tmp/cache/fd/fdf98c2afd80ba35592f38938289fbd86edcd8ba910f3be79d6c9884bc7308de.php:68
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:283
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:229
 msgid "Name"
 msgstr "Naam"
 
@@ -286,36 +290,45 @@ msgid "No profile uses two-factor authentication at the moment."
 msgstr "Op dit moment gebruikt geen profiel twee-factor authenticatie."
 
 #: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:212
-msgid "Notifications"
-msgstr "Notificaties"
-
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:219
-msgid "No notifications available."
-msgstr "Geen notificaties beschikbaar."
-
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:228
-msgid "Date/Time"
-msgstr "Datum/Tijd"
-
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:232
-msgid "Message"
-msgstr "Bericht"
-
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:266
 msgid "Authorized Applications"
 msgstr "Geautoriseerde applicaties"
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:274
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:220
 msgid "No applications have access to your account."
 msgstr "Er zijn geen programma's die toegang hebben tot dit account."
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:285
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:231
 msgid "Scope"
 msgstr "Rechten"
 
-#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:312
+#: /tmp/cache/69/696a0cf435d45e0694e7301dc8c3422466c12895fcecf640edb77891358dfbe9.php:258
 msgid "Revoke"
 msgstr "Intrekken"
+
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:53
+msgid "Events"
+msgstr "Gebeurtenissen"
+
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:58
+msgid "This is a list of events that occurred related to your account."
+msgstr ""
+"Dit is een lijst van recente gebeurtenissen met betrekking tot dit account."
+
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:66
+msgid "No events yet."
+msgstr "Nog geen gebeurtenissen."
+
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:75
+msgid "Date/Time"
+msgstr "Datum/Tijd"
+
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:79
+msgid "Message"
+msgstr "Bericht"
+
+#: /tmp/cache/66/6662368277874f9b5803f0bd85001c585b1865b943f1920066aaa9b6925c6579.php:81
+msgid "Type"
+msgstr "Type"
 
 #: /tmp/cache/a0/a0c7b7f6514382804a7153f286041c8b11f9513d48487e2e39a81862c8bf6849.php:44
 msgid "Please sign in with your username and password."
@@ -338,3 +351,9 @@ msgstr "Gebruikersnaam"
 #: /tmp/cache/a0/a0c7b7f6514382804a7153f286041c8b11f9513d48487e2e39a81862c8bf6849.php:104
 msgid "Password"
 msgstr "Wachtwoord"
+
+#~ msgid "Notifications"
+#~ msgstr "Notificaties"
+
+#~ msgid "No notifications available."
+#~ msgstr "Geen notificaties beschikbaar."
