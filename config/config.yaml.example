@@ -13,12 +13,15 @@ MellonAuthentication:
     attribute: MELLON_NAME_ID
     #attribute: MELLON_eduPersonTargetedID
 
-# API providers & credentials for servers this service is connecting to
-apiProviders:
-    vpn-server-api:
-        userName: vpn-user-portal
-        userPass: XXX-vpn-user-portal/vpn-server-api-XXX
-        apiUri: 'http://localhost/vpn-server-api/api.php'
+apiUser: vpn-user-portal
+apiPass: XXX-vpn-user-portal/vpn-server-api-XXX
+apiUri: 'http://localhost/vpn-server-api/api.php'
+
+#apiProviders:
+#    vpn-server-api:
+#        userName: vpn-user-portal
+#        userPass: XXX-vpn-user-portal/vpn-server-api-XXX
+#        apiUri: 'http://localhost/vpn-server-api/api.php'
 
 enableVoot: false
 #enableVoot: true

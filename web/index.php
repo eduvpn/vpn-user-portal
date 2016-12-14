@@ -110,13 +110,13 @@ try {
             [
                 'defaults' => [
                     'auth' => [
-                        $config->v('apiProviders', 'vpn-server-api', 'userName'),
-                        $config->v('apiProviders', 'vpn-server-api', 'userPass'),
+                        $config->v('apiUser'),
+                        $config->v('apiPass'),
                     ],
                 ],
             ]
         ),
-        $config->v('apiProviders', 'vpn-server-api', 'apiUri')
+        $config->v('apiUri')
     );
 
     $service = new Service($tpl);
