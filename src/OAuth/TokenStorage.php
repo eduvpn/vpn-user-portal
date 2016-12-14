@@ -30,6 +30,8 @@ class TokenStorage
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->db = $db;
+        // enable foreign keys, only for SQLite!
+        $this->db->query('PRAGMA foreign_keys = ON');
     }
 
     public function store($userId, $accessTokenKey, $accessToken, $clientId, $scope)
