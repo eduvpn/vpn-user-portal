@@ -54,7 +54,7 @@ class DisabledUserHook implements BeforeHookInterface
             throw new HttpException('unable to determine user ID', 500);
         }
 
-        if ($this->serverClient->getIsDisabledUser(['user_id' => $userId])) {
+        if ($this->serverClient->get('is_disabled_user', ['user_id' => $userId])) {
             // user is disabled, show a special message
             throw new HttpException('account disabled', 403);
         }

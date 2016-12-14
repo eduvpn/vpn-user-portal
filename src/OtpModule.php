@@ -52,8 +52,8 @@ class OtpModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $hasTotpSecret = $this->serverClient->getHasTotpSecret(['user_id' => $userId]);
-                // $hasYubiKey = $this->serverClient->getHasYubiKey(['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                // $hasYubiKey = $this->serverClient->get('has_yubi_key', ['user_id' => $userId]);
                 $hasYubiKey = false;
                 $isEnrolled = $hasTotpSecret || $hasYubiKey;
 
@@ -84,12 +84,12 @@ class OtpModule implements ServiceModuleInterface
                 $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
 
                 try {
-                    $this->serverClient->postSetTotpSecret(['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                    $this->serverClient->post('set_totp_secret', ['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
                 } catch (ApiException $e) {
                     // we were unable to set the OTP secret
 
-                    $hasTotpSecret = $this->serverClient->getHasTotpSecret(['user_id' => $userId]);
-                    // $hasYubiKey = $this->serverClient->getHasYubiKey(['user_id' => $userId]);
+                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                    // $hasYubiKey = $this->serverClient->get('has_yubi_key', ['user_id' => $userId]);
                     $hasYubiKey = false;
                     $isEnrolled = $hasTotpSecret || $hasYubiKey;
 
@@ -97,7 +97,6 @@ class OtpModule implements ServiceModuleInterface
                         $this->tpl->render(
                             'vpnPortalOtp',
                             [
-                                'hasTotpSecret' => $this->serverClient->getHasTotpSecret(['user_id' => $userId]),
                                 'isEnrolled' => $isEnrolled,
                                 'otpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',

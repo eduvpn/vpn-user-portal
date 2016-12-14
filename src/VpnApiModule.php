@@ -55,8 +55,8 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $profileList = $this->serverClient->getProfileList();
-                $userGroups = $this->serverClient->getUserGroups(['user_id' => $userId]);
+                $profileList = $this->serverClient->get('profile_list');
+                $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userId]);
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -110,7 +110,7 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $msgList = [];
 
-                $motdMessages = $this->serverClient->getSystemMessages(['message_type' => 'motd']);
+                $motdMessages = $this->serverClient->get('system_messages', ['message_type' => 'motd']);
                 foreach ($motdMessages as $motdMessage) {
                     $dateTime = new DateTime($motdMessage['date_time']);
                     $dateTime->setTimeZone(new DateTimeZone('UTC'));
@@ -134,11 +134,11 @@ class VpnApiModule implements ServiceModuleInterface
     private function getConfig($serverName, $profileId, $userId, $displayName)
     {
         // create a certificate
-        $clientCertificate = $this->serverClient->postAddClientCertificate(['user_id' => $userId, 'display_name' => $displayName]);
+        $clientCertificate = $this->serverClient->post('add_client_certificate', ['user_id' => $userId, 'display_name' => $displayName]);
 
         // obtain information about this profile to be able to construct
         // a client configuration file
-        $profileList = $this->serverClient->getProfileList();
+        $profileList = $this->serverClient->get('profile_list');
         $profileData = $profileList[$profileId];
 
         $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
