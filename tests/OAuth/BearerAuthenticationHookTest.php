@@ -133,6 +133,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             'SERVER_PORT' => 80,
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/',
+            'SCRIPT_NAME' => '/index.php',
         ];
 
         return new Request(

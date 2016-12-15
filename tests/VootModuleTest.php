@@ -102,8 +102,8 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
                     'SERVER_PORT' => 80,
                     'SERVER_NAME' => 'vpn.example',
                     'REQUEST_METHOD' => $requestMethod,
-                    'PATH_INFO' => $pathInfo,
                     'REQUEST_URI' => $pathInfo,
+                    'SCRIPT_NAME' => '/index.php',
                 ],
                 $getData,
                 $postData

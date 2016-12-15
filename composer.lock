@@ -55,12 +55,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "20ce7a16c366ded662156503809728087ab88b74"
+                "reference": "d57894ea84a37ee5b97514727476c91c665bf690"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/20ce7a16c366ded662156503809728087ab88b74",
-                "reference": "20ce7a16c366ded662156503809728087ab88b74",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/d57894ea84a37ee5b97514727476c91c665bf690",
+                "reference": "d57894ea84a37ee5b97514727476c91c665bf690",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2016-12-14 09:16:04"
+            "time": "2016-12-15 09:42:17"
         },
         {
             "name": "fkooman/oauth2-client",
