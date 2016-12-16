@@ -52,11 +52,6 @@ class ClientConfig
             // wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
 
-            // allow the server to dictate the reneg-sec, by default it will be
-            // 3600 seconds, but when 2FA is enable we'd like to increase this
-            // to e.g. 8 hours to avoid asking for the OTP every hour
-            'reneg-sec 0',
-
             // CRYPTO (DATA CHANNEL)
             'auth SHA256',
             'cipher AES-256-CBC',
