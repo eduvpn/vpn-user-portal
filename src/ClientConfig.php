@@ -48,8 +48,6 @@ class ClientConfig
             'comp-lzo',
 
             'verb 3',
-            // tell the server more about this client (version, OS)
-            'push-peer-info',
 
             // wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
