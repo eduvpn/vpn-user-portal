@@ -283,7 +283,7 @@ msgstr "Niet geactiveerd"
 
 #: /tmp/cache/3d/3d1aac68d9b98442d33b8406f552e28f43dcf4082d2e566ce479f7ff7e47d9fd.php:171
 msgid "Two-factor Profiles"
-msgstr "Twee-factorprofielen"
+msgstr "Twee-factor profielen"
 
 #: /tmp/cache/3d/3d1aac68d9b98442d33b8406f552e28f43dcf4082d2e566ce479f7ff7e47d9fd.php:179
 msgid "No profile uses two-factor authentication at the moment."
@@ -351,12 +351,3 @@ msgstr "Gebruikersnaam"
 #: /tmp/cache/97/97dc5005d58a5f6916061f50bf574ce6386f8e838986838052655d1bc7e36a48.php:104
 msgid "Password"
 msgstr "Wachtwoord"
-
-#~ msgid "Profiles"
-#~ msgstr "Profielen"
-
-#~ msgid "Notifications"
-#~ msgstr "Notificaties"
-
-#~ msgid "No notifications available."
-#~ msgstr "Geen notificaties beschikbaar."
