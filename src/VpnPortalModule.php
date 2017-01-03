@@ -126,8 +126,9 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 if ($profileList[$profileId]['twoFactor']) {
-                    $hasOtpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
-                    if (!$hasOtpSecret) {
+                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                    $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
+                    if (!$hasTotpSecret && !$hasYubiKeyId) {
                         return new HtmlResponse(
                             $this->tpl->render(
                                 'vpnPortalNew',
