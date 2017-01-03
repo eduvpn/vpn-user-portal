@@ -33,7 +33,7 @@ use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Session;
 use SURFnet\VPN\Common\Http\TwoFactorHook;
 use SURFnet\VPN\Common\Http\TwoFactorModule;
-use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
+use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\DisabledUserHook;
@@ -105,18 +105,8 @@ try {
     );
     $tpl->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
-    // vpn-server-api
     $serverClient = new ServerClient(
-        new GuzzleHttpClient(
-            [
-                'defaults' => [
-                    'auth' => [
-                        $config->getItem('apiUser'),
-                        $config->getItem('apiPass'),
-                    ],
-                ],
-            ]
-        ),
+        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
         $config->getItem('apiUri')
     );
 

@@ -21,7 +21,7 @@ use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\HttpClient\GuzzleHttpClient;
+use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\OAuth\BearerAuthenticationHook;
@@ -53,18 +53,8 @@ try {
             )
         );
 
-        // vpn-server-api
         $serverClient = new ServerClient(
-            new GuzzleHttpClient(
-                [
-                    'defaults' => [
-                        'auth' => [
-                            $config->getItem('apiUser'),
-                            $config->getItem('apiPass'),
-                        ],
-                    ],
-                ]
-            ),
+            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
             $config->getItem('apiUri')
         );
 
