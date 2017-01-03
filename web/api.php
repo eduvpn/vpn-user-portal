@@ -38,11 +38,11 @@ try {
     }
 
     $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
-    $config = Config::fromFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId));
+    $config = Config::fromFile(sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId));
 
     $service = new Service();
 
-    if ($config->v('enableOAuth')) {
+    if ($config->getItem('enableOAuth')) {
         $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
         $tokenStorage->init();
 
@@ -59,13 +59,13 @@ try {
                 [
                     'defaults' => [
                         'auth' => [
-                            $config->v('apiUser'),
-                            $config->v('apiPass'),
+                            $config->getItem('apiUser'),
+                            $config->getItem('apiPass'),
                         ],
                     ],
                 ]
             ),
-            $config->v('apiUri')
+            $config->getItem('apiUri')
         );
 
         // api module

@@ -61,17 +61,17 @@ class VpnApiModule implements ServiceModuleInterface
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
                     $profileConfig = new ProfileConfig($profileData);
-                    if ($profileConfig->v('enableAcl')) {
+                    if ($profileConfig->getItem('enableAcl')) {
                         // is the user member of the aclGroupList?
-                        if (!self::isMember($userGroups, $profileConfig->v('aclGroupList'))) {
+                        if (!self::isMember($userGroups, $profileConfig->getSection('aclGroupList')->toArray())) {
                             continue;
                         }
                     }
 
                     $userProfileList[] = [
                         'profile_id' => $profileId,
-                        'display_name' => $profileConfig->v('displayName'),
-                        'two_factor' => $profileConfig->v('twoFactor'),
+                        'display_name' => $profileConfig->getItem('displayName'),
+                        'two_factor' => $profileConfig->getItem('twoFactor'),
                     ];
                 }
 

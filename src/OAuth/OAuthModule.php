@@ -164,10 +164,10 @@ class OAuthModule implements ServiceModuleInterface
         $redirectUri = $request->getQueryParameter('redirect_uri');
 
         // check if we have a client with this clientId and redirectUri
-        if (false === $this->config->e('apiConsumers', $clientId)) {
+        if (false === $this->config->getSection('apiConsumers')->hasSection($clientId)) {
             throw new HttpException(sprintf('client "%s" not registered', $clientId), 400);
         }
-        $clientRedirectUri = $this->config->v('apiConsumers', $clientId, 'redirect_uri');
+        $clientRedirectUri = $this->config->getSection('apiConsumers')->getSection($clientId)->getItem('redirect_uri');
         if ($redirectUri !== $clientRedirectUri) {
             throw new HttpException(sprintf('redirect_uri does not match expected value "%s"', $clientRedirectUri), 400);
         }

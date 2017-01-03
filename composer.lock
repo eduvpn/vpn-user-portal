@@ -55,12 +55,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "7b27a5135979c7be2ad05680b52a1e3bd7d8cf35"
+                "reference": "2b7a969d01b1971ce30dfa150c2eb86425c5d006"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/7b27a5135979c7be2ad05680b52a1e3bd7d8cf35",
-                "reference": "7b27a5135979c7be2ad05680b52a1e3bd7d8cf35",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/2b7a969d01b1971ce30dfa150c2eb86425c5d006",
+                "reference": "2b7a969d01b1971ce30dfa150c2eb86425c5d006",
                 "shasum": ""
             },
             "require": {
@@ -76,8 +76,7 @@
                 "php": ">= 5.4.0",
                 "psr/log": "^1.0",
                 "symfony/intl": "~2.8",
-                "symfony/polyfill": "^1.2",
-                "symfony/yaml": "^2.8"
+                "symfony/polyfill": "^1.2"
             },
             "type": "library",
             "autoload": {
@@ -95,28 +94,26 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-01-02 11:07:38"
+            "time": "2017-01-03 12:48:37"
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "a8930a476fb43e197e39f6e19e729882e34f3c8c"
+                "reference": "52e30588ac481bce8572231438b905beb1c3c021"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/a8930a476fb43e197e39f6e19e729882e34f3c8c",
-                "reference": "a8930a476fb43e197e39f6e19e729882e34f3c8c",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/52e30588ac481bce8572231438b905beb1c3c021",
+                "reference": "52e30588ac481bce8572231438b905beb1c3c021",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
                 "ext-spl": "*",
                 "guzzlehttp/guzzle": "^5.3",
-                "paragonie/random_compat": "^1.0",
+                "paragonie/random_compat": "^1.0|^2.0",
                 "php": ">=5.4.0"
             },
             "type": "library",
@@ -136,7 +133,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2016-12-12 14:47:32"
+            "time": "2017-01-03 11:54:22"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -335,16 +332,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.4.1",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774"
+                "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c7e26a21ba357863de030f0b9e701c7d04593774",
-                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
+                "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
                 "shasum": ""
             },
             "require": {
@@ -379,7 +376,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-03-18 20:34:03"
+            "time": "2016-11-07 23:38:38"
         },
         {
             "name": "psr/log",
@@ -635,55 +632,6 @@
                 "shim"
             ],
             "time": "2016-11-14 01:15:23"
-        },
-        {
-            "name": "symfony/yaml",
-            "version": "v2.8.15",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/befb26a3713c97af90d25dd12e75621ef14d91ff",
-                "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.8-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Yaml\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Yaml Component",
-            "homepage": "https://symfony.com",
-            "time": "2016-11-14 16:15:57"
         },
         {
             "name": "twig/extensions",

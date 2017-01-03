@@ -32,18 +32,18 @@ try {
     );
 
     $opt = $p->parse($argv);
-    if ($opt->e('help')) {
+    if ($opt->hasItem('help')) {
         echo $p->help();
         exit(0);
     }
 
-    $instanceId = $opt->e('instance') ? $opt->v('instance') : 'default';
+    $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
 
-    $configFile = sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId);
+    $configFile = sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId);
     $config = Config::fromFile($configFile);
-    $configData = $config->v();
-    $passwordHash = password_hash($opt->v('pass'), PASSWORD_DEFAULT);
-    $configData['FormAuthentication'][$opt->v('user')] = $passwordHash;
+    $configData = $config->toArray();
+    $passwordHash = password_hash($opt->getItem('pass'), PASSWORD_DEFAULT);
+    $configData['FormAuthentication'][$opt->getItem('user')] = $passwordHash;
     Config::toFile($configFile, $configData, 0644);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;

@@ -64,7 +64,7 @@ try {
         }
     }
 
-    $config = Config::fromFile(sprintf('%s/config/%s/config.yaml', dirname(__DIR__), $instanceId));
+    $config = Config::fromFile(sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId));
 
     $templateDirs = [
         sprintf('%s/views', dirname(__DIR__)),
@@ -72,7 +72,7 @@ try {
     ];
 
     $templateCache = null;
-    if ($config->v('enableTemplateCache')) {
+    if ($config->getItem('enableTemplateCache')) {
         $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
@@ -88,10 +88,10 @@ try {
     $session = new Session(
         $request->getServerName(),
         $request->getRoot(),
-        $config->v('secureCookie')
+        $config->getItem('secureCookie')
     );
 
-    $supportedLanguages = $config->v('supportedLanguages');
+    $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
     $activeLanguage = $session->get('activeLanguage');
     if (is_null($activeLanguage)) {
         $activeLanguage = array_keys($supportedLanguages)[0];
@@ -111,13 +111,13 @@ try {
             [
                 'defaults' => [
                     'auth' => [
-                        $config->v('apiUser'),
-                        $config->v('apiPass'),
+                        $config->getItem('apiUser'),
+                        $config->getItem('apiPass'),
                     ],
                 ],
             ]
         ),
-        $config->v('apiUri')
+        $config->getItem('apiUri')
     );
 
     $service = new Service($tpl);
@@ -126,14 +126,14 @@ try {
     $service->addBeforeHook('language_switcher', new LanguageSwitcherHook($session, array_keys($supportedLanguages)));
 
     // Authentication
-    $authMethod = $config->v('authMethod');
+    $authMethod = $config->getItem('authMethod');
 
     switch ($authMethod) {
         case 'MellonAuthentication':
             $service->addBeforeHook(
                 'auth',
                 new MellonAuthenticationHook(
-                    $config->v('MellonAuthentication', 'attribute')
+                    $config->getSection('MellonAuthentication')->getItem('attribute')
                 )
             );
             break;
@@ -148,7 +148,7 @@ try {
             );
             $service->addModule(
                 new FormAuthenticationModule(
-                    $config->v('FormAuthentication'),
+                    $config->getSection('FormAuthentication')->toArray(),
                     $session,
                     $tpl
                 )
@@ -166,15 +166,15 @@ try {
     $service->addModule($twoFactorModule);
 
     // voot module
-    if ($config->v('enableVoot')) {
+    if ($config->getItem('enableVoot')) {
         $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
         $vootModule = new VootModule(
                 new OAuth2Client(
                 new Provider(
-                    $config->v('Voot', 'clientId'),
-                    $config->v('Voot', 'clientSecret'),
-                    $config->v('Voot', 'authorizationEndpoint'),
-                    $config->v('Voot', 'tokenEndpoint')
+                    $config->getSection('Voot')->getItem('clientId'),
+                    $config->getSection('Voot')->getItem('clientSecret'),
+                    $config->getSection('Voot')->getItem('authorizationEndpoint'),
+                    $config->getSection('Voot')->getItem('tokenEndpoint')
                 ),
                 new OAuthGuzzleHttpClient(new Client())
             ),
@@ -212,7 +212,7 @@ try {
     $service->addModule($yubiModule);
 
     // oauth module
-    if ($config->v('enableOAuth')) {
+    if ($config->getItem('enableOAuth')) {
         $oauthModule = new OAuthModule(
             $tpl,
             new Random(),

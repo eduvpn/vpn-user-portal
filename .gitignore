@@ -1,6 +1,6 @@
 /vendor
 /data
-/config/*.yaml
+/config/*.php
 /config/views
-/config/*/*.yaml
+/config/*/*.php
 /config/*/views
