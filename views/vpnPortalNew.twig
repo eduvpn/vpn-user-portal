@@ -33,7 +33,7 @@
             <p class="warning">
             {% if 'otpRequired' == errorCode %}
                 {% trans %}
-                    You need to <a href="otp">enroll</a> for two-factor authentication before you can use this profile!
+                    You need to enroll for two-factor authentication on the <a href="account">account</a> page before you can use this profile!
                 {% endtrans %}
             {% else %}
                 {{ errorCode }}

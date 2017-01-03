@@ -31,7 +31,7 @@ use SURFnet\VPN\Common\HttpClient\Exception\ApiException;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\TplInterface;
 
-class OtpModule implements ServiceModuleInterface
+class TotpModule implements ServiceModuleInterface
 {
     /** @var \SURFnet\VPN\Common\TplInterface */
     private $tpl;
@@ -48,27 +48,18 @@ class OtpModule implements ServiceModuleInterface
     public function init(Service $service)
     {
         $service->get(
-            '/otp',
+            '/totp',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
                 $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
-                // $hasYubiKey = $this->serverClient->get('has_yubi_key', ['user_id' => $userId]);
-                $hasYubiKey = false;
-                $isEnrolled = $hasTotpSecret || $hasYubiKey;
-
-                $otpType = $request->getQueryParameter('otp_type', false, false);
-                if (false !== $otpType) {
-                    $otpType = InputValidation::otpType($otpType);
-                }
 
                 return new HtmlResponse(
                     $this->tpl->render(
-                        'vpnPortalOtp',
+                        'vpnPortalTotp',
                         [
-                            'otpType' => $otpType,
-                            'isEnrolled' => $isEnrolled,
-                            'otpSecret' => self::generateSecret(),
+                            'hasTotpSecret' => $hasTotpSecret,
+                            'totpSecret' => self::generateSecret(),
                         ]
                     )
                 );
@@ -76,7 +67,7 @@ class OtpModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/otp',
+            '/totp',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -87,18 +78,14 @@ class OtpModule implements ServiceModuleInterface
                     $this->serverClient->post('set_totp_secret', ['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
                 } catch (ApiException $e) {
                     // we were unable to set the OTP secret
-
                     $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
-                    // $hasYubiKey = $this->serverClient->get('has_yubi_key', ['user_id' => $userId]);
-                    $hasYubiKey = false;
-                    $isEnrolled = $hasTotpSecret || $hasYubiKey;
 
                     return new HtmlResponse(
                         $this->tpl->render(
-                            'vpnPortalOtp',
+                            'vpnPortalTotp',
                             [
-                                'isEnrolled' => $isEnrolled,
-                                'otpSecret' => $totpSecret,
+                                'hasTotpSecret' => $hasTotpSecret,
+                                'totpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',
                             ]
                         )
@@ -110,7 +97,7 @@ class OtpModule implements ServiceModuleInterface
         );
 
         $service->get(
-            '/otp-qr-code',
+            '/totp/qr-code',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 

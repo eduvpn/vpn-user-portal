@@ -39,44 +39,43 @@
     <h2>{% trans "Two-factor Authentication" %}</h2>
 
     <table>
+
         <tr>
-            <th>{% trans "Status" %}</th>
+            <th>{% trans "TOTP" %}</th>
             <td>
-                {% if isEnrolled %}
+                {% if hasTotpSecret %}
                     <span class="success">{% trans "Enrolled" %}</span>
-                    {% if hasYubiKey %}
-                        <span class="plain">{% trans "YubiKey" %}</span>
-                    {% elseif hasTotpSecret %}
-                        <span class="plain">{% trans "TOTP" %}</span>
-                    {% endif %}
                 {% else %}
-                    <span class="warning">{% trans "Not Enrolled" %}</span>
-                {% endif %}
-            </td>
-            <td class="text-right">
-                {% if not isEnrolled %} 
-                    <form method="get" action="otp"><button>Enroll</button></form>
+                    <a href="totp">Enroll</a>
                 {% endif %}
             </td>
         </tr>
 
         <tr>
-            <th>{% trans "Two-factor Profiles" %}</th>
+            <th>{% trans "YubiKey" %}</th>
             <td>
-                {% if otpEnabledProfiles is empty %}
-                    <em>{% trans "No profile uses two-factor authentication at the moment." %}</em>
+                {% if yubiKeyId %}
+                    <span class="success">{% trans "Enrolled" %}</span>
+                    <span title="Registered YubiKey ID" class="plain">{{ yubiKeyId }}</span>
                 {% else %}
-                    <ul class="simple">
-                    {% for otpEnabledProfile in otpEnabledProfiles %}
-                        <li>{{ otpEnabledProfile }}</li>
-                    {% endfor %}
-                    </ul>
+                    <a href="yubi">Enroll</a>
                 {% endif %}
             </td>
-            <td></td>
         </tr>
 
-    </table>            
+        {% if twoFactorEnabledProfiles is not empty %}
+        <tr>
+            <th>{% trans "Profiles" %}</th>
+            <td>
+                <ul class="simple">
+                {% for twoFactorEnabledProfile in twoFactorEnabledProfiles %}
+                    <li>{{ twoFactorEnabledProfile }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endif %}
+    </table>
 
     <h2>{% trans "Authorized Applications" %}</h2>
 

@@ -221,9 +221,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
-                // $hasYubiKey = $this->serverClient->get('has_yubi_key', ['user_id' => $userId]);
-                $hasYubiKey = false;
-                $isEnrolled = $hasTotpSecret || $hasYubiKey;
+                $yubiKeyId = $this->serverClient->get('yubi_key_id', ['user_id' => $userId]);
 
                 $profileList = $this->serverClient->get('profile_list');
                 $userGroups = $this->cachedUserGroups($userId);
@@ -231,11 +229,11 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
 
-                $otpEnabledProfiles = [];
+                $twoFactorEnabledProfiles = [];
                 foreach ($visibleProfileList as $profileId => $profileData) {
                     if ($profileData['twoFactor']) {
                         // XXX we have to make sure displayName is always set...
-                        $otpEnabledProfiles[] = $profileData['displayName'];
+                        $twoFactorEnabledProfiles[] = $profileData['displayName'];
                     }
                 }
 
@@ -243,9 +241,8 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalAccount',
                         [
-                            'otpEnabledProfiles' => $otpEnabledProfiles,
-                            'isEnrolled' => $isEnrolled,
-                            'hasYubiKey' => $hasYubiKey,
+                            'twoFactorEnabledProfiles' => $twoFactorEnabledProfiles,
+                            'yubiKeyId' => $yubiKeyId,
                             'hasTotpSecret' => $hasTotpSecret,
                             'userId' => $userId,
                             'userGroups' => $userGroups,

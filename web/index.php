@@ -41,11 +41,12 @@ use SURFnet\VPN\Portal\LanguageSwitcherHook;
 use SURFnet\VPN\Portal\OAuth\OAuthModule;
 use SURFnet\VPN\Portal\OAuth\Random;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
-use SURFnet\VPN\Portal\OtpModule;
+use SURFnet\VPN\Portal\TotpModule;
 use SURFnet\VPN\Portal\TwigTpl;
 use SURFnet\VPN\Portal\VootModule;
 use SURFnet\VPN\Portal\VootTokenHook;
 use SURFnet\VPN\Portal\VpnPortalModule;
+use SURFnet\VPN\Portal\YubiModule;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -196,12 +197,19 @@ try {
     );
     $service->addModule($vpnPortalModule);
 
-    // otp module
-    $otpModule = new OtpModule(
+    // TOTP module
+    $totpModule = new TotpModule(
         $tpl,
         $serverClient
     );
-    $service->addModule($otpModule);
+    $service->addModule($totpModule);
+
+    // Yubi module
+    $yubiModule = new YubiModule(
+        $tpl,
+        $serverClient
+    );
+    $service->addModule($yubiModule);
 
     // oauth module
     if ($config->v('enableOAuth')) {

@@ -12,16 +12,13 @@
       <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
-    {% if isEnrolled %}
+    {% if hasTotpSecret %}
         <p class="success">
-            {% trans "You are already enrolled for two-factor authentication (2FA)." %}
-        </p>
-        <p>
-            {% trans "Contact support if you lost your second factor." %}
+            {% trans "You are already enrolled for TOTP." %}
         </p>
     {% else %}
         <p>
-            {% trans "Here you can enroll for two-factor authentication (2FA)." %}
+            {% trans "Here you can enroll for two-factor authentication (2FA) using a Time-based One-time Password (TOTP)." %}
             {% trans %}See the <a href="documentation">documentation</a> for more information on 2FA and a list of applications to use.{% endtrans %}
         </p>
 
@@ -31,9 +28,9 @@
             
         <dl>
             <dt>{% trans "Secret" %}</dt>
-            <dd><code>{{ otpSecret }}</code></dd>
+            <dd><code>{{ totpSecret }}</code></dd>
             <dt>QR</dt>
-            <dd><img src="otp-qr-code?totp_secret={{ otpSecret }}"></dd>
+            <dd><img src="totp/qr-code?totp_secret={{ totpSecret }}"></dd>
         </dl>
 
         <p>
@@ -48,11 +45,11 @@
             {% endif %}
         {% endif %}
 
-        <form method="post" action="otp">
+        <form method="post" action="totp">
             <fieldset>
                 <label for="otp_key">OTP</label>
                 <input type="text" id="totp_key" name="totp_key" maxlength="6" required pattern="[0-9]{6}" autofocus>
-                <input type="hidden" name="totp_secret" value="{{ otpSecret }}"> 
+                <input type="hidden" name="totp_secret" value="{{ totpSecret }}"> 
             </fieldset>
             <fieldset>
                 <button>{% trans "Verify" %}</button>

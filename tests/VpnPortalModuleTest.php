@@ -99,14 +99,12 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'vpnPortalAccount' => [
-                    'otpEnabledProfiles' => [],
-                    'isEnrolled' => false,
-                    'hasYubiKey' => false,
+                    'twoFactorEnabledProfiles' => [],
+                    'yubiKeyId' => false,
                     'hasTotpSecret' => false,
                     'userId' => 'foo',
                     'userGroups' => [],
                     'authorizedClients' => [],
-//                    'userMessages' => [],
                 ],
             ],
             $this->makeRequest('GET', '/account')

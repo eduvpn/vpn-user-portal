@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="menu">
+      <li><a href="new">{% trans "New" %}</a></li>
+      <li><a href="configurations">{% trans "Configurations" %}</a></li>
+      <li class="active"><a href="account">{% trans "Account" %}</a></li>
+      <li><a href="documentation">{% trans "Documentation" %}</a></li>
+    </ul>
+
+    {% if hasYubiId %}
+        <p class="success">
+            {% trans "You are already enrolled with a YubiKey." %}
+        </p>
+    {% else %}
+        <p>
+            {% trans "Here you can enroll for two-factor authentication (2FA) using a YubiKey One-time Password (OTP)." %}
+            {% trans %}See the <a href="documentation">documentation</a> for more information on 2FA.{% endtrans %}
+        </p>
+
+        <p class="warning">
+            {% trans %}Only an administrator can remove 2FA from your account!{% endtrans %}
+        </p>
+            
+        <p>
+            {% trans "Please attach your YubiKey and press its button." %}
+        </p>
+
+        {% if error_code is defined %}
+            {% if 'invalid_yubi_key_otp' == error_code %}
+                <p class="error">{% trans "The YubiKey OTP is not valid." %}</p>
+            {% else %}
+                <p class="error">{{ error_code }}</p>
+            {% endif %}
+        {% endif %}
+
+        <form method="post" action="yubi">
+            <fieldset>
+                <label for="yubiKeyOtp">{% trans "YubiKey OTP" %}</label>
+                <input type="text" id="yubiKeyOtp" name="yubi_key_otp" size="44" maxlength="44" required pattern="[a-z]{44}" autofocus>
+            </fieldset>
+            <fieldset>
+                <button>{% trans "Verify" %}</button>
+            </fieldset>
+        </form>
+    {% endif %}
+    
+    {% include 'footer.twig' %}
+</body>
+</html>
