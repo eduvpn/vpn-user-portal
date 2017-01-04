@@ -22,7 +22,7 @@
     <form method="post" action="{{ requestRoot }}_two_factor/auth/verify/totp">
         <fieldset>
                 <label for="totpKey">{% trans "TOTP" %}</label>
-                <input type="text" id="totpKey" name="_two_factor_auth_totp_key" maxlength="6" required pattern="[0-9]{6}" autofocus>
+                <input type="text" inputmode="numeric" id="totpKey" name="_two_factor_auth_totp_key" autocomplete="off" maxlength="6" required pattern="[0-9]{6}" autofocus>
         </fieldset>
         <fieldset>
             <input type="hidden" name="_two_factor_auth_redirect_to" value="{{ _two_factor_auth_redirect_to }}">

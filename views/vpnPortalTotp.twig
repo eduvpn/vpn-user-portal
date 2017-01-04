@@ -48,7 +48,7 @@
         <form method="post" action="totp">
             <fieldset>
                 <label for="otp_key">OTP</label>
-                <input type="text" id="totp_key" name="totp_key" maxlength="6" required pattern="[0-9]{6}" autofocus>
+                <input type="text" id="totp_key" inputmode="numeric" name="totp_key" autocomplete="off" maxlength="6" required pattern="[0-9]{6}" autofocus>
                 <input type="hidden" name="totp_secret" value="{{ totpSecret }}"> 
             </fieldset>
             <fieldset>

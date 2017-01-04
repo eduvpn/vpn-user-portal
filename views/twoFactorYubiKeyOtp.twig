@@ -22,7 +22,7 @@
     <form method="post" action="{{ requestRoot }}_two_factor/auth/verify/yubi">
         <fieldset>
                 <label for="yubiKeyOtp">{% trans "YubiKey OTP" %}</label>
-                <input type="text" id="yubiKeyOtp" size="44" name="_two_factor_auth_yubi_key_otp" maxlength="44" required pattern="[a-z]{44}" autofocus>
+                <input type="text" id="yubiKeyOtp" size="44" name="_two_factor_auth_yubi_key_otp" autocomplete="off" maxlength="44" required pattern="[a-z]{44}" autofocus>
         </fieldset>
         <fieldset>
             <input type="hidden" name="_two_factor_auth_redirect_to" value="{{ _two_factor_auth_redirect_to }}">
