@@ -133,13 +133,13 @@ class VpnApiModule implements ServiceModuleInterface
 
     private function getConfig($serverName, $profileId, $userId, $displayName)
     {
-        // create a certificate
-        $clientCertificate = $this->serverClient->post('add_client_certificate', ['user_id' => $userId, 'display_name' => $displayName]);
-
         // obtain information about this profile to be able to construct
         // a client configuration file
         $profileList = $this->serverClient->get('profile_list');
         $profileData = $profileList[$profileId];
+
+        // create a certificate
+        $clientCertificate = $this->serverClient->post('add_client_certificate', ['user_id' => $userId, 'display_name' => $displayName]);
 
         $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
