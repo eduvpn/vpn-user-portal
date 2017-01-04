@@ -17,10 +17,9 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use fkooman\OAuth\Client\GuzzleHttpClient as OAuthGuzzleHttpClient;
+use fkooman\OAuth\Client\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
-use GuzzleHttp\Client;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\FormAuthenticationHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationModule;
@@ -166,7 +165,7 @@ try {
                     $config->getSection('Voot')->getItem('authorizationEndpoint'),
                     $config->getSection('Voot')->getItem('tokenEndpoint')
                 ),
-                new OAuthGuzzleHttpClient(new Client())
+                new OAuthCurlHttpClient()
             ),
             $serverClient,
             $session

@@ -9,7 +9,6 @@ return [
         'vendor/eduvpn/common',
         'vendor/fkooman/oauth2-client',
         'vendor/twig',
-        'vendor/guzzlehttp',
         'vendor/psr/log',
     ],
     'exclude_analysis_directory_list' => [
