@@ -25,6 +25,7 @@ use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\RandomInterface;
 use SURFnet\VPN\Common\TplInterface;
 
 class OAuthModule implements ServiceModuleInterface
@@ -32,7 +33,7 @@ class OAuthModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\TplInterface */
     private $tpl;
 
-    /** @var RandomInterface */
+    /** @var \SURFnet\VPN\Common\RandomInterface */
     private $random;
 
     /** @var TokenStorage */

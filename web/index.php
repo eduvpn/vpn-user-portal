@@ -25,7 +25,6 @@ use SURFnet\VPN\Common\Http\FormAuthenticationHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationModule;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
-use SURFnet\VPN\Common\Http\NoCacheHook;
 use SURFnet\VPN\Common\Http\ReferrerCheckHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -35,10 +34,10 @@ use SURFnet\VPN\Common\Http\TwoFactorModule;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
+use SURFnet\VPN\Common\Random;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LanguageSwitcherHook;
 use SURFnet\VPN\Portal\OAuth\OAuthModule;
-use SURFnet\VPN\Portal\OAuth\Random;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\TotpModule;
 use SURFnet\VPN\Portal\TwigTpl;
@@ -111,7 +110,6 @@ try {
 
     $service = new Service($tpl);
     $service->addBeforeHook('referrer_check', new ReferrerCheckHook());
-    $service->addAfterHook('no_cache', new NoCacheHook());
     $service->addBeforeHook('language_switcher', new LanguageSwitcherHook($session, array_keys($supportedLanguages)));
 
     // Authentication
