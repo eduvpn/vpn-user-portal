@@ -115,6 +115,21 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
      * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
      * @expectedExceptionMessage: invalid_token
      */
+    public function testNoDot()
+    {
+        $request = self::getRequest(
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer abcdef',
+            ]
+        );
+        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
+        $bearerAuthenticationHook->executeBefore($request, []);
+    }
+
+    /**
+     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
+     * @expectedExceptionMessage: invalid_token
+     */
     public function testBasicAuthentication()
     {
         $request = self::getRequest(

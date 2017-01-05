@@ -136,7 +136,7 @@ class OAuthModule implements ServiceModuleInterface
 
     private function validateRequest(Request $request)
     {
-        // we enforce that all parameter are, nothing is "OPTIONAL"
+        // we enforce that all parameter are set, nothing is "OPTIONAL"
         $clientId = $request->getQueryParameter('client_id');
         if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $clientId)) {
             throw new HttpException('invalid client_id', 400);

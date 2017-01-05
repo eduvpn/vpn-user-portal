@@ -38,10 +38,10 @@ class BearerAuthenticationHook implements BeforeHookInterface
 
     public function executeBefore(Request $request, array $hookData)
     {
-        $authHeader = $request->getHeader('HTTP_AUTHORIZATION', false, null);
+        $authorizationHeader = $request->getHeader('HTTP_AUTHORIZATION', false, null);
 
         // is authorization header there?
-        if (is_null($authHeader)) {
+        if (is_null($authorizationHeader)) {
             throw new HttpException(
                 'no_token',
                 401,
@@ -50,7 +50,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
         }
 
         // validate the HTTP_AUTHORIZATION header
-        if (false === $bearerToken = self::getBearerToken($authHeader)) {
+        if (false === $bearerToken = self::getBearerToken($authorizationHeader)) {
             throw $this->invalidTokenException();
         }
 
@@ -70,33 +70,18 @@ class BearerAuthenticationHook implements BeforeHookInterface
         throw $this->invalidTokenException();
     }
 
-    private static function getBearerToken($authHeader)
+    private static function getBearerToken($authorizationHeader)
     {
-        if (!is_string($authHeader)) {
-            return false;
-        }
-        if (7 >= mb_strlen($authHeader)) {
-            return false;
-        }
-        if (0 !== mb_strpos($authHeader, 'Bearer ')) {
-            return false;
-        }
-        $bearerToken = mb_substr($authHeader, 7);
-        if (!self::validateTokenSyntax($bearerToken)) {
+        if (1 !== preg_match('|^Bearer ([[:alpha:][:digit:]-._~+/]+=*)$|', $authorizationHeader, $m)) {
             return false;
         }
 
-        if (false === mb_strpos($bearerToken, '.')) {
+        $bearerToken = $m[1];
+        if (false === strpos($bearerToken, '.')) {
             return false;
         }
 
         return explode('.', $bearerToken);
-    }
-
-    private static function validateTokenSyntax($bearerToken)
-    {
-        // b64token = 1*( ALPHA / DIGIT / "-" / "." / "_" / "~" / "+" / "/" ) *"="
-        return 1 === preg_match('|^[[:alpha:][:digit:]-._~+/]+=*$|', $bearerToken);
     }
 
     private function invalidTokenException()
