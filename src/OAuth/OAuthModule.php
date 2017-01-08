@@ -80,58 +80,71 @@ class OAuthModule implements ServiceModuleInterface
                 $this->validateRequest($request);
                 $this->validateClient($request);
 
+                $returnUriPattern = '%s#%s';
+
                 if ('no' === $request->getPostParameter('approve')) {
                     $redirectQuery = http_build_query(
                         [
-                        'error' => 'access_denied',
-                        'error_description' => 'user refused authorization',
-                        'state' => $request->getQueryParameter('state'),
+                            'error' => 'access_denied',
+                            'error_description' => 'user refused authorization',
+                            'state' => $request->getQueryParameter('state'),
                         ]
                     );
 
-                    $redirectUri = sprintf('%s#%s', $request->getQueryParameter('redirect_uri'), $redirectQuery);
+                    $redirectUri = sprintf($returnUriPattern, $request->getQueryParameter('redirect_uri'), $redirectQuery);
 
                     return new RedirectResponse($redirectUri, 302);
                 }
 
-                $existingToken = $this->tokenStorage->getExistingToken(
+                $accessToken = $this->getAccessToken(
                     $userId,
                     $request->getQueryParameter('client_id'),
                     $request->getQueryParameter('scope')
                 );
 
-                if (false !== $existingToken) {
-                    // if the user already has an access_token for this client and
-                    // scope, reuse it
-                    $accessTokenKey = $existingToken['access_token_key'];
-                    $accessToken = $existingToken['access_token'];
-                } else {
-                    // generate a new one
-                    $accessTokenKey = $this->random->get(8);
-                    $accessToken = $this->random->get(16);
-                    // store it
-                    $this->tokenStorage->store(
-                        $userId,
-                        $accessTokenKey,
-                        $accessToken,
-                        $request->getQueryParameter('client_id'),
-                        $request->getQueryParameter('scope')
-                    );
-                }
-
                 // add state, access_token to redirect_uri
                 $redirectQuery = http_build_query(
                     [
-                        'access_token' => sprintf('%s.%s', $accessTokenKey, $accessToken),
+                        'access_token' => $accessToken,
                         'state' => $request->getQueryParameter('state'),
                     ]
                 );
 
-                $redirectUri = sprintf('%s#%s', $request->getQueryParameter('redirect_uri'), $redirectQuery);
+                $redirectUri = sprintf($returnUriPattern, $request->getQueryParameter('redirect_uri'), $redirectQuery);
 
                 return new RedirectResponse($redirectUri, 302);
             }
         );
+    }
+
+    private function getAccessToken($userId, $clientId, $scope)
+    {
+        $existingToken = $this->tokenStorage->getExistingToken(
+            $userId,
+            $clientId,
+            $scope
+        );
+
+        if (false !== $existingToken) {
+            // if the user already has an access_token for this client and
+            // scope, reuse it
+            $accessTokenKey = $existingToken['access_token_key'];
+            $accessToken = $existingToken['access_token'];
+        } else {
+            // generate a new one
+            $accessTokenKey = $this->random->get(8);
+            $accessToken = $this->random->get(16);
+            // store it
+            $this->tokenStorage->store(
+                $userId,
+                $accessTokenKey,
+                $accessToken,
+                $clientId,
+                $scope
+            );
+        }
+
+        return sprintf('%s.%s', $accessTokenKey, $accessToken);
     }
 
     private function validateRequest(Request $request)
