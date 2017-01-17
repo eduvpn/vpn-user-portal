@@ -20,6 +20,7 @@ namespace SURFnet\VPN\Portal;
 
 use DateTime;
 use DateTimeZone;
+use SURFnet\VPN\Common\Http\ApiErrorResponse;
 use SURFnet\VPN\Common\Http\ApiResponse;
 use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\Http\Request;
@@ -50,6 +51,7 @@ class VpnApiModule implements ServiceModuleInterface
 
     public function init(Service $service)
     {
+        // API 1, 2
         $service->get(
             '/profile_list',
             function (Request $request, array $hookData) {
@@ -79,6 +81,61 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
+        // API 2
+        $service->post(
+            '/create_certificate',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
+
+                $clientCertificate = $this->getCertificate($userId, $displayName);
+
+                return new ApiResponse(
+                    'create_certificate',
+                    [
+                        'certificate' => $clientCertificate['certificate'],
+                        'private_key' => $clientCertificate['private_key'],
+                    ]
+                );
+            }
+        );
+
+        // API 2
+        $service->get(
+            '/profile_config',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
+
+                $profileList = $this->serverClient->get('profile_list');
+                $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userId]);
+
+                $availableProfiles = [];
+                foreach ($profileList as $profileId => $profileData) {
+                    $profileConfig = new ProfileConfig($profileData);
+                    if ($profileConfig->getItem('enableAcl')) {
+                        // is the user member of the aclGroupList?
+                        if (!self::isMember($userGroups, $profileConfig->getSection('aclGroupList')->toArray())) {
+                            continue;
+                        }
+                    }
+
+                    $availableProfiles[] = $profileId;
+                }
+
+                if (!in_array($requestedProfileId, $availableProfiles)) {
+                    return new ApiErrorResponse('profile_config', 'user has no access to this profile');
+                }
+
+                return $this->getConfigOnly($requestedProfileId);
+
+//                return new ApiResponse('profile_config', $profileConfig);
+            }
+        );
+
+        // API 1
         $service->post(
             '/create_config',
             function (Request $request, array $hookData) {
@@ -91,6 +148,7 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
+        // API 1, 2
         $service->get(
             '/user_messages',
             function (Request $request, array $hookData) {
@@ -105,6 +163,7 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
+        // API 1, 2
         $service->get(
             '/system_messages',
             function (Request $request, array $hookData) {
@@ -131,6 +190,7 @@ class VpnApiModule implements ServiceModuleInterface
         );
     }
 
+    // API 1
     private function getConfig($serverName, $profileId, $userId, $displayName)
     {
         // obtain information about this profile to be able to construct
@@ -139,15 +199,49 @@ class VpnApiModule implements ServiceModuleInterface
         $profileData = $profileList[$profileId];
 
         // create a certificate
-        $clientCertificate = $this->serverClient->post('add_client_certificate', ['user_id' => $userId, 'display_name' => $displayName]);
+        $clientCertificate = $this->getCertificate($userId, $displayName);
+        // get the CA & tls-auth
+        $serverInfo = $this->serverClient->get('server_info');
 
-        $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->setBody($clientConfig);
 
         return $response;
+    }
+
+    // API 2
+    private function getConfigOnly($profileId)
+    {
+        // obtain information about this profile to be able to construct
+        // a client configuration file
+        $profileList = $this->serverClient->get('profile_list');
+        $profileData = $profileList[$profileId];
+
+        // get the CA & tls-auth
+        $serverInfo = $this->serverClient->get('server_info');
+
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->shuffleHosts);
+        $clientConfig = str_replace("\n", "\r\n", $clientConfig);
+
+        $response = new Response(200, 'application/x-openvpn-profile');
+        $response->setBody($clientConfig);
+
+        return $response;
+    }
+
+    private function getCertificate($userId, $displayName)
+    {
+        // create a certificate
+        return $this->serverClient->post(
+            'add_client_certificate',
+            [
+                'user_id' => $userId,
+                'display_name' => $displayName,
+            ]
+        );
     }
 
     private static function isMember(array $userGroups, array $aclGroupList)

@@ -65,6 +65,14 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('user_groups', []);
             case 'serverClient/client_certificate_info?common_name=12345678901234567890123456789012':
                 return self::wrap('client_certificate_info', ['display_name' => 'Foo']);
+            case 'serverClient/server_info':
+                return self::wrap(
+                    'server_info',
+                    [
+                        'ca' => 'CAPEM',
+                        'ta' => 'TAKEY',
+                    ]
+                );
             default:
                 throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
         }
@@ -79,10 +87,8 @@ class TestHttpClient implements HttpClientInterface
                     [
                         'valid_from' => 12345678,
                         'valid_to' => '23456789',
-                        'ca' => 'CAPEM',
                         'certificate' => 'CERTPEM',
                         'private_key' => 'KEYPEM',
-                        'ta' => 'TAKEY',
                     ]
                 );
             case 'serverClient/delete_client_certificate':

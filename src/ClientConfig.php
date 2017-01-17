@@ -22,7 +22,7 @@ use RuntimeException;
 
 class ClientConfig
 {
-    public static function get(array $profileConfig, array $clientCertificate, $shufflePorts)
+    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig['hostName'];
@@ -32,11 +32,6 @@ class ClientConfig
 
         $clientConfig = [
             '# OpenVPN Client Configuration',
-
-            // XXX fix date format to be in UTC
-            sprintf('# Valid From: %s', date('Y-m-d', $clientCertificate['valid_from'])),
-            sprintf('# Valid To: %s', date('Y-m-d', $clientCertificate['valid_to'])),
-
             'dev tun',
             'client',
             'nobind',
@@ -65,23 +60,32 @@ class ClientConfig
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384:TLS-ECDHE-RSA-WITH-AES-256-CBC-SHA384:TLS-ECDHE-ECDSA-WITH-AES-256-CBC-SHA384:TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-128-GCM-SHA256',
 
             '<ca>',
-            $clientCertificate['ca'],
+            trim($serverInfo['ca']),
             '</ca>',
-
-            '<cert>',
-            $clientCertificate['certificate'],
-            '</cert>',
-
-            '<key>',
-            $clientCertificate['private_key'],
-            '</key>',
 
             'key-direction 1',
 
             '<tls-auth>',
-            $clientCertificate['ta'],
+            trim($serverInfo['ta']),
             '</tls-auth>',
         ];
+
+        // API 1, if clientCertificate is provided, we add it directly to the
+        // configuration file, XXX can be removed for API 2
+        if (0 !== count($clientCertificate)) {
+            $clientConfig = array_merge(
+                $clientConfig,
+                [
+                    '<cert>',
+                    $clientCertificate['certificate'],
+                    '</cert>',
+
+                    '<key>',
+                    $clientCertificate['private_key'],
+                    '</key>',
+                ]
+            );
+        }
 
         // 2FA
         if ($profileConfig['twoFactor']) {

@@ -282,7 +282,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $serverProfiles = $this->serverClient->get('profile_list');
         $profileData = $serverProfiles[$profileId];
 
-        $clientConfig = ClientConfig::get($profileData, $clientCertificate, $this->shuffleHosts);
+        // get the CA & tls-auth
+        $serverInfo = $this->serverClient->get('server_info');
+
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
 
         // convert the OpenVPN file to "Windows" format, no platform cares, but
         // in Notepad on Windows it looks not so great everything on one line
