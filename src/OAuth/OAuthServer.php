@@ -18,6 +18,7 @@
 
 namespace SURFnet\VPN\Portal\OAuth;
 
+use DateInterval;
 use DateTime;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\RandomInterface;
@@ -92,12 +93,24 @@ class OAuthServer
         list($authorizationCodeKey, $authorizationCode) = explode('.', $postData['authorization_code']);
         $codeInfo = $this->tokenStorage->getCode($authorizationCodeKey);
 
-        // XXX match redirect_uri
-        // XXX match client_id
-        // XXX match scope
-        // XXX check expired
-        // XXX timing safe compare authorization_code
+        if (!hash_equals($codeInfo['authorization_code'], $authorizationCode)) {
+            throw new HttpException('invalid "authorization_code"', 400);
+        }
 
+        // XXX make sure this is correct!
+        if ($this->dateTime->sub(new DateInterval('-10 minutes')) < new DateTime($codeInfo['issued_at'])) {
+            throw new HttpException('expired "authorization_code"', 400);
+        }
+
+        if ($postData['redirect_uri'] !== $codeInfo['redirect_uri']) {
+            throw new HttpException('unexpected "redirect_uri"', 400);
+        }
+
+        if ($postData['client_id'] !== $codeInfo['client_id']) {
+            throw new HttpException('unexpected "client_id"', 400);
+        }
+
+        // XXX we should link the code to the access token to be able to revoke it?
         $accessToken = $this->getAccessToken(
             $codeInfo['user_id'],
             $postData['client_id'],
@@ -107,16 +120,8 @@ class OAuthServer
         return [
             'access_token' => $accessToken,
             'token_type' => 'bearer',
+            //'scope' => 'XXX'  // only if it changed...
         ];
-    }
-
-    private function validateTokenPostParameters(array $postData)
-    {
-        // XXX authorization_code
-        // XXX client_id
-        // XXX scope
-        // XXX redirect_uri
-        // XXX grant_type (or sth)
     }
 
     private function tokenAuthorize(array $getData, array $postData, $userId)
@@ -247,28 +252,28 @@ class OAuthServer
             }
         }
 
-        // check they are all syntactically correct
-        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $getData['client_id'])) {
-            throw new HttpException('invalid client_id', 400);
+        // check syntax
+        $this->validateClientId($getData['client_id']);
+        $this->validateRedirectUri($getData['redirect_uri']);
+        $this->validateResponseType($getData['response_type']);
+        $this->validateScope($getData['scope']);
+        $this->validateState($getData['state']);
+    }
+
+    private function validateTokenPostParameters(array $postData)
+    {
+        // check all parameters are there
+        foreach (['grant_type', 'code', 'redirect_uri', 'client_id'] as $postParameter) {
+            if (!array_key_exists($postParameter, $postData)) {
+                throw new HttpException(sprintf('missing "%s" parameter', $postParameter), 400);
+            }
         }
 
-        // XXX cannot contain '?'
-        if (false === filter_var($getData['redirect_uri'], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_PATH_REQUIRED)) {
-            throw new HttpException('invalid "redirect_uri"', 400);
-        }
-
-        if (!in_array($getData['response_type'], ['token', 'code'])) {
-            throw new HttpException('invalid "response_type"', 400);
-        }
-
-        // XXX allow more values here, maybe statically defined at top of class
-        if ('config' !== $getData['scope']) {
-            throw new HttpException('invalid "scope"', 400);
-        }
-
-        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $getData['state'])) {
-            throw new HttpException('invalid state', 400);
-        }
+        // check syntax
+        $this->validateGrantType($postData['grant_type']);
+        $this->validateCode($postData['code']);
+        $this->validateRedirectUri($postData['redirect_uri']);
+        $this->validateClientId($postData['client_id']);
     }
 
     private function validatePostParameters(array $postData)
@@ -280,10 +285,7 @@ class OAuthServer
             }
         }
 
-        // check they are all syntactically correct
-        if (!in_array($postData['approve'], ['yes', 'no'])) {
-            throw new HttpException('invalid "approve"', 400);
-        }
+        $this->validateApprove($postData['approve']);
     }
 
     private function validateClient($clientId, $responseType, $redirectUri)
@@ -302,5 +304,68 @@ class OAuthServer
         }
 
         return $clientInfo;
+    }
+
+    // STRING VALIDATORS
+
+    private function validateClientId($clientId)
+    {
+        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $clientId)) {
+            throw new HttpException('invalid "client_id"', 400);
+        }
+    }
+
+    private function validateRedirectUri($redirectUri)
+    {
+        if (false === filter_var($redirectUri, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_PATH_REQUIRED)) {
+            throw new HttpException('invalid "redirect_uri"', 400);
+        }
+        if (false !== strpos($redirectUri, '?')) {
+            throw new HttpException('"redirect_uri" cannot contain "?"', 400);
+        }
+    }
+
+    private function validateCode($code)
+    {
+        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $code)) {
+            throw new HttpException('invalid "code"', 400);
+        }
+    }
+
+    private function validateGrantType($grantType)
+    {
+        if ('authorization_code' !== $grantType) {
+            throw new HttpException('invalid "grant_type"', 400);
+        }
+    }
+
+    private function validateResponseType($responseType)
+    {
+        if (!in_array($responseType, ['token', 'code'])) {
+            throw new HttpException('invalid "response_type"', 400);
+        }
+    }
+
+    private function validateScope($scope)
+    {
+        // XXX allow more values here, maybe statically defined at top of class
+        if ('config' !== $scope) {
+            throw new HttpException('invalid "scope"', 400);
+        }
+    }
+
+    private function validateState($state)
+    {
+        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $state)) {
+            throw new HttpException('invalid "state"', 400);
+        }
+    }
+
+    private function validateApprove($approve)
+    {
+        // check they are all syntactically correct
+        if (!in_array($approve, ['yes', 'no'])) {
+            throw new HttpException('invalid "approve"', 400);
+        }
     }
 }

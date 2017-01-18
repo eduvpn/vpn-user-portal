@@ -143,8 +143,6 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
             return $response;
         }
 
-        $responseBody = $response->getBody();
-
-        return json_decode($responseBody, true);
+        return json_decode($response->getBody(), true);
     }
 }
