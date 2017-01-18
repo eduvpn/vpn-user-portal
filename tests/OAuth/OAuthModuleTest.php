@@ -21,6 +21,7 @@ namespace SURFnet\VPN\Portal\OAuth;
 require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
 require_once sprintf('%s/Test/TestRandom.php', __DIR__);
 
+use DateTime;
 use PDO;
 use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Config;
@@ -59,6 +60,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                 new OAuthServer(
                     $tokenStorage,
                     new TestRandom(),
+                    new DateTime(),
                     function ($clientId) use ($config) {
                         if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
                             return false;

@@ -216,6 +216,7 @@ try {
             new OAuthServer(
                 $tokenStorage,
                 new Random(),
+                new DateTime(),
                 $getClientInfo
             )
         );

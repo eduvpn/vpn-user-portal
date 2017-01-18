@@ -57,7 +57,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
         $accessTokenKey = $bearerToken[0];
         $accessToken = $bearerToken[1];
 
-        $tokenInfo = $this->tokenStorage->get($accessTokenKey);
+        $tokenInfo = $this->tokenStorage->getToken($accessTokenKey);
         if (false === $tokenInfo) {
             throw $this->invalidTokenException();
         }

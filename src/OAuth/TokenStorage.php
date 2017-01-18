@@ -18,6 +18,7 @@
 
 namespace SURFnet\VPN\Portal\OAuth;
 
+use DateTime;
 use PDO;
 use PDOException;
 
@@ -34,7 +35,47 @@ class TokenStorage
         $this->db->query('PRAGMA foreign_keys = ON');
     }
 
-    public function store($userId, $accessTokenKey, $accessToken, $clientId, $scope)
+    public function storeCode($userId, $authorizationCodeKey, $authorizationCode, $clientId, $scope, $redirectUri, DateTime $dateTime)
+    {
+        $stmt = $this->db->prepare(
+            'INSERT INTO codes (
+                user_id,    
+                authorization_code_key,
+                authorization_code,
+                client_id,
+                scope,
+                redirect_uri,
+                issued_at
+             ) 
+             VALUES(
+                :user_id, 
+                :authorization_code_key,
+                :authorization_code,
+                :client_id,
+                :scope,
+                :redirect_uri,
+                :issued_at
+             )'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':authorization_code_key', $authorizationCodeKey, PDO::PARAM_STR);
+        $stmt->bindValue(':authorization_code', $authorizationCode, PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
+        $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
+        $stmt->bindValue(':redirect_uri', $redirectUri, PDO::PARAM_STR);
+        $stmt->bindValue(':issued_at', $dateTime->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+
+        try {
+            $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function storeToken($userId, $accessTokenKey, $accessToken, $clientId, $scope)
     {
         $stmt = $this->db->prepare(
             'INSERT INTO tokens (
@@ -89,7 +130,7 @@ class TokenStorage
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function get($accessTokenKey)
+    public function getToken($accessTokenKey)
     {
         $stmt = $this->db->prepare(
             'SELECT
@@ -153,6 +194,17 @@ class TokenStorage
                 client_id VARCHAR(255) NOT NULL,
                 scope VARCHAR(255) NOT NULL,
                 UNIQUE(access_token_key)
+            )',
+
+            'CREATE TABLE IF NOT EXISTS codes (
+                user_id VARCHAR(255) NOT NULL,
+                authorization_code_key VARCHAR(255) NOT NULL,
+                authorization_code VARCHAR(255) NOT NULL,
+                client_id VARCHAR(255) NOT NULL,
+                scope VARCHAR(255) NOT NULL,
+                redirect_uri VARCHAR(255) NOT NULL,
+                issued_at VARCHAR(255) NOT NULL,
+                UNIQUE(authorization_code_key)
             )',
         ];
 

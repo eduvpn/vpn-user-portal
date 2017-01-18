@@ -18,6 +18,7 @@
 
 namespace SURFnet\VPN\Portal\OAuth;
 
+use DateTime;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\RandomInterface;
 
@@ -29,13 +30,17 @@ class OAuthServer
     /** @var \SURFnet\VPN\Common\RandomInterface */
     private $random;
 
+    /** @var \DateTime */
+    private $dateTime;
+
     /** @var callable */
     private $getClientInfo;
 
-    public function __construct(TokenStorage $tokenStorage, RandomInterface $random, callable $getClientInfo)
+    public function __construct(TokenStorage $tokenStorage, RandomInterface $random, DateTime $dateTime, callable $getClientInfo)
     {
         $this->tokenStorage = $tokenStorage;
         $this->random = $random;
+        $this->dateTime = $dateTime;
         $this->getClientInfo = $getClientInfo;
     }
 
@@ -68,18 +73,32 @@ class OAuthServer
         $this->validateClient($getData);
         $this->validatePostParameters($postData);
 
-        $returnUriPattern = '%s#%s';
+        switch ($getData['response_type']) {
+            case 'token':
+                return $this->tokenAuthorize($getData, $postData, $userId);
+            case 'code':
+                return $this->codeAuthorize($getData, $postData, $userId);
+            default:
+                throw new HttpException('invalid "response_type"', 400);
+        }
+    }
 
+    public function postToken(array $postData)
+    {
+    }
+
+    private function tokenAuthorize(array $getData, array $postData, $userId)
+    {
         if ('no' === $postData['approve']) {
-            $redirectQuery = http_build_query(
+            return $this->prepareRedirect(
+                '#',
+                $getData['redirect_uri'],
                 [
                     'error' => 'access_denied',
                     'error_description' => 'user refused authorization',
                     'state' => $getData['state'],
                 ]
             );
-
-            return sprintf($returnUriPattern, $getData['redirect_uri'], $redirectQuery);
         }
 
         $accessToken = $this->getAccessToken(
@@ -88,19 +107,55 @@ class OAuthServer
             $getData['scope']
         );
 
-        // add state, access_token to redirect_uri
-        $redirectQuery = http_build_query(
+        return $this->prepareRedirect(
+            '#',
+            $getData['redirect_uri'],
             [
                 'access_token' => $accessToken,
                 'state' => $getData['state'],
             ]
         );
-
-        return sprintf($returnUriPattern, $getData['redirect_uri'], $redirectQuery);
     }
 
-    public function postToken(array $postData)
+    private function codeAuthorize(array $getData, array $postData, $userId)
     {
+        if ('no' === $postData['approve']) {
+            return $this->prepareRedirect(
+                '?',
+                $getData['redirect_uri'],
+                [
+                    'error' => 'access_denied',
+                    'error_description' => 'user refused authorization',
+                    'state' => $getData['state'],
+                ]
+            );
+        }
+
+        $authorizationCode = $this->getAuthorizationCode(
+            $userId,
+            $getData['client_id'],
+            $getData['scope'],
+            $getData['redirect_uri']
+        );
+
+        return $this->prepareRedirect(
+            '?',
+            $getData['redirect_uri'],
+            [
+                'authorization_code' => $authorizationCode,
+                'state' => $getData['state'],
+            ]
+        );
+    }
+
+    private function prepareRedirect($querySeparator, $redirectUri, array $queryParameters)
+    {
+        return sprintf(
+            '%s%s%s',
+            $redirectUri,
+            $querySeparator,
+            http_build_query($queryParameters)
+        );
     }
 
     private function getAccessToken($userId, $clientId, $scope)
@@ -121,7 +176,7 @@ class OAuthServer
             $accessTokenKey = $this->random->get(8);
             $accessToken = $this->random->get(16);
             // store it
-            $this->tokenStorage->store(
+            $this->tokenStorage->storeToken(
                 $userId,
                 $accessTokenKey,
                 $accessToken,
@@ -131,6 +186,24 @@ class OAuthServer
         }
 
         return sprintf('%s.%s', $accessTokenKey, $accessToken);
+    }
+
+    private function getAuthorizationCode($userId, $clientId, $scope, $redirectUri)
+    {
+        $authorizationCodeKey = $this->random->get(8);
+        $authorizationCode = $this->random->get(16);
+
+        $this->tokenStorage->storeCode(
+            $userId,
+            $authorizationCodeKey,
+            $authorizationCode,
+            $clientId,
+            $scope,
+            $redirectUri,
+            $this->dateTime
+        );
+
+        return sprintf('%s.%s', $authorizationCodeKey, $authorizationCode);
     }
 
     private function validateQueryParameters(array $getData)

@@ -32,7 +32,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
         $this->tokenStorage = new TokenStorage(new PDO('sqlite::memory:'));
         $this->tokenStorage->init();
 
-        $this->tokenStorage->store(
+        $this->tokenStorage->storeToken(
             'foo',
             '1234',
             'abcdefgh',
