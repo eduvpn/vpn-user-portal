@@ -130,8 +130,6 @@ class VpnApiModule implements ServiceModuleInterface
                 }
 
                 return $this->getConfigOnly($requestedProfileId);
-
-//                return new ApiResponse('profile_config', $profileConfig);
             }
         );
 

@@ -38,6 +38,7 @@ use SURFnet\VPN\Common\Random;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LanguageSwitcherHook;
 use SURFnet\VPN\Portal\OAuth\OAuthModule;
+use SURFnet\VPN\Portal\OAuth\OAuthServer;
 use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\TotpModule;
 use SURFnet\VPN\Portal\TwigTpl;
@@ -198,13 +199,21 @@ try {
     );
     $service->addModule($yubiModule);
 
-    // oauth module
+    // OAuth module
     if ($config->getItem('enableOAuth')) {
         $oauthModule = new OAuthModule(
             $tpl,
-            new Random(),
-            $tokenStorage,
-            $config
+            new OAuthServer(
+                $tokenStorage,
+                new Random(),
+                function ($clientId) use ($config) {
+                    if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
+                        return false;
+                    }
+
+                    return $config->getSection('apiConsumers')->getItem($clientId);
+                }
+            )
         );
         $service->addModule($oauthModule);
     }

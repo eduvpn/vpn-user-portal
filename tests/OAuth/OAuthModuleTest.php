@@ -42,6 +42,8 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                 'apiConsumers' => [
                     'vpn-companion' => [
                         'redirect_uri' => 'vpn://import/callback',
+                        'response_type' => 'token',
+                        'display_name' => 'eduVPN for Android',
                     ],
                 ],
             ]
@@ -54,9 +56,17 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         $this->service->addModule(
             new OAuthModule(
                 new JsonTpl(),
-                new TestRandom(),
-                $tokenStorage,
-                $config
+                new OAuthServer(
+                    $tokenStorage,
+                    new TestRandom(),
+                    function ($clientId) use ($config) {
+                        if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
+                            return false;
+                        }
+
+                        return $config->getSection('apiConsumers')->getItem($clientId);
+                    }
+                )
             )
         );
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));

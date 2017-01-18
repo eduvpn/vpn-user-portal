@@ -18,14 +18,11 @@
 
 namespace SURFnet\VPN\Portal\OAuth;
 
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\RandomInterface;
 use SURFnet\VPN\Common\TplInterface;
 
 class OAuthModule implements ServiceModuleInterface
@@ -33,40 +30,27 @@ class OAuthModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\TplInterface */
     private $tpl;
 
-    /** @var \SURFnet\VPN\Common\RandomInterface */
-    private $random;
+    /** @var OAuthServer */
+    private $oauthServer;
 
-    /** @var TokenStorage */
-    private $tokenStorage;
-
-    /** @var \SURFnet\VPN\Common\Config */
-    private $config;
-
-    public function __construct(TplInterface $tpl, RandomInterface $random, TokenStorage $tokenStorage, Config $config)
+    public function __construct(TplInterface $tpl, OAuthServer $oauthServer)
     {
         $this->tpl = $tpl;
-        $this->random = $random;
-        $this->tokenStorage = $tokenStorage;
-        $this->config = $config;
+        $this->oauthServer = $oauthServer;
     }
 
     public function init(Service $service)
     {
         $service->get(
             '/_oauth/authorize',
-            function (Request $request) {
-                $this->validateRequest($request);
-                $this->validateClient($request);
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
 
                 // ask for approving this client/scope
                 return new HtmlResponse(
                     $this->tpl->render(
                         'authorizeOAuthClient',
-                        [
-                            'client_id' => $request->getQueryParameter('client_id'),
-                            'scope' => $request->getQueryParameter('scope'),
-                            'redirect_uri' => $request->getQueryParameter('redirect_uri'),
-                        ]
+                        $this->oauthServer->getAuthorize($request->getQueryParameters(), $userId)
                     )
                 );
             }
@@ -77,113 +61,21 @@ class OAuthModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $this->validateRequest($request);
-                $this->validateClient($request);
-
-                $returnUriPattern = '%s#%s';
-
-                if ('no' === $request->getPostParameter('approve')) {
-                    $redirectQuery = http_build_query(
-                        [
-                            'error' => 'access_denied',
-                            'error_description' => 'user refused authorization',
-                            'state' => $request->getQueryParameter('state'),
-                        ]
-                    );
-
-                    $redirectUri = sprintf($returnUriPattern, $request->getQueryParameter('redirect_uri'), $redirectQuery);
-
-                    return new RedirectResponse($redirectUri, 302);
-                }
-
-                $accessToken = $this->getAccessToken(
-                    $userId,
-                    $request->getQueryParameter('client_id'),
-                    $request->getQueryParameter('scope')
+                return new RedirectResponse(
+                    $this->oauthServer->postAuthorize(
+                        $request->getQueryParameters(),
+                        $request->getPostParameters(),
+                        $userId
+                    ),
+                    302
                 );
-
-                // add state, access_token to redirect_uri
-                $redirectQuery = http_build_query(
-                    [
-                        'access_token' => $accessToken,
-                        'state' => $request->getQueryParameter('state'),
-                    ]
-                );
-
-                $redirectUri = sprintf($returnUriPattern, $request->getQueryParameter('redirect_uri'), $redirectQuery);
-
-                return new RedirectResponse($redirectUri, 302);
             }
         );
-    }
 
-    private function getAccessToken($userId, $clientId, $scope)
-    {
-        $existingToken = $this->tokenStorage->getExistingToken(
-            $userId,
-            $clientId,
-            $scope
+        $service->post(
+            '/_oauth/token',
+            function (Request $request, array $hookData) {
+            }
         );
-
-        if (false !== $existingToken) {
-            // if the user already has an access_token for this client and
-            // scope, reuse it
-            $accessTokenKey = $existingToken['access_token_key'];
-            $accessToken = $existingToken['access_token'];
-        } else {
-            // generate a new one
-            $accessTokenKey = $this->random->get(8);
-            $accessToken = $this->random->get(16);
-            // store it
-            $this->tokenStorage->store(
-                $userId,
-                $accessTokenKey,
-                $accessToken,
-                $clientId,
-                $scope
-            );
-        }
-
-        return sprintf('%s.%s', $accessTokenKey, $accessToken);
-    }
-
-    private function validateRequest(Request $request)
-    {
-        // we enforce that all parameter are set, nothing is "OPTIONAL"
-        $clientId = $request->getQueryParameter('client_id');
-        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $clientId)) {
-            throw new HttpException('invalid client_id', 400);
-        }
-        $redirectUri = $request->getQueryParameter('redirect_uri');
-        if (false === filter_var($redirectUri, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_PATH_REQUIRED)) {
-            throw new HttpException('invalid redirect_uri', 400);
-        }
-        $responseType = $request->getQueryParameter('response_type');
-        if ('token' !== $responseType) {
-            throw new HttpException('invalid response_type', 400);
-        }
-        $scope = $request->getQueryParameter('scope');
-        if ('config' !== $scope) {
-            throw new HttpException('invalid scope', 400);
-        }
-        $state = $request->getQueryParameter('state');
-        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $state)) {
-            throw new HttpException('invalid state', 400);
-        }
-    }
-
-    private function validateClient(Request $request)
-    {
-        $clientId = $request->getQueryParameter('client_id');
-        $redirectUri = $request->getQueryParameter('redirect_uri');
-
-        // check if we have a client with this clientId and redirectUri
-        if (false === $this->config->getSection('apiConsumers')->hasSection($clientId)) {
-            throw new HttpException(sprintf('client "%s" not registered', $clientId), 400);
-        }
-        $clientRedirectUri = $this->config->getSection('apiConsumers')->getSection($clientId)->getItem('redirect_uri');
-        if ($redirectUri !== $clientRedirectUri) {
-            throw new HttpException(sprintf('redirect_uri does not match expected value "%s"', $clientRedirectUri), 400);
-        }
     }
 }
