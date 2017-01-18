@@ -45,7 +45,7 @@ return [
         'nl.eduvpn.app' => [
             'redirect_uri' => 'nl.eduvpn.app://import/callback',
             'response_type' => 'token',
-            'display_name' => 'eduVPN for Android'
+            'display_name' => 'eduVPN for Android',
         ],
     ],
 ];
