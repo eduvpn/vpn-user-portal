@@ -149,6 +149,27 @@ class TokenStorage
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getCode($authorizationCodeKey)
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                user_id,    
+                authorization_code,
+                client_id,
+                scope,
+                redirect_uri,
+                issued_at
+             FROM codes
+             WHERE
+                authorization_code_key = :authorization_code_key'
+        );
+
+        $stmt->bindValue(':authorization_code_key', $authorizationCodeKey, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function getAuthorizedClients($userId)
     {
         $stmt = $this->db->prepare(

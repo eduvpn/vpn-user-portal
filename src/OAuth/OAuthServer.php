@@ -53,7 +53,7 @@ class OAuthServer
     public function getAuthorize(array $getData, $userId)
     {
         $this->validateQueryParameters($getData);
-        $clientInfo = $this->validateClient($getData);
+        $clientInfo = $this->validateClient($getData['client_id'], $getData['response_type'], $getData['redirect_uri']);
 
         return [
             'client_id' => $getData['client_id'],
@@ -70,7 +70,7 @@ class OAuthServer
     {
         // XXX the Referer MUST be equal to the current URL
         $this->validateQueryParameters($getData);
-        $this->validateClient($getData);
+        $this->validateClient($getData['client_id'], $getData['response_type'], $getData['redirect_uri']);
         $this->validatePostParameters($postData);
 
         switch ($getData['response_type']) {
@@ -85,6 +85,38 @@ class OAuthServer
 
     public function postToken(array $postData)
     {
+        // for now only "public" clients without authentication
+        $this->validateTokenPostParameters($postData);
+        $this->validateClient($postData['client_id'], 'code', $postData['redirect_uri']);
+
+        list($authorizationCodeKey, $authorizationCode) = explode('.', $postData['authorization_code']);
+        $codeInfo = $this->tokenStorage->getCode($authorizationCodeKey);
+
+        // XXX match redirect_uri
+        // XXX match client_id
+        // XXX match scope
+        // XXX check expired
+        // XXX timing safe compare authorization_code
+
+        $accessToken = $this->getAccessToken(
+            $codeInfo['user_id'],
+            $postData['client_id'],
+            $postData['scope']
+        );
+
+        return [
+            'access_token' => $accessToken,
+            'token_type' => 'bearer',
+        ];
+    }
+
+    private function validateTokenPostParameters(array $postData)
+    {
+        // XXX authorization_code
+        // XXX client_id
+        // XXX scope
+        // XXX redirect_uri
+        // XXX grant_type (or sth)
     }
 
     private function tokenAuthorize(array $getData, array $postData, $userId)
@@ -229,7 +261,7 @@ class OAuthServer
             throw new HttpException('invalid "response_type"', 400);
         }
 
-        // XXX allow more values here
+        // XXX allow more values here, maybe statically defined at top of class
         if ('config' !== $getData['scope']) {
             throw new HttpException('invalid "scope"', 400);
         }
@@ -254,18 +286,18 @@ class OAuthServer
         }
     }
 
-    private function validateClient(array $getData)
+    private function validateClient($clientId, $responseType, $redirectUri)
     {
-        $clientInfo = call_user_func($this->getClientInfo, $getData['client_id']);
+        $clientInfo = call_user_func($this->getClientInfo, $clientId);
         if (false === $clientInfo) {
-            throw new HttpException(sprintf('client "%s" not registered', $getData['client_id']), 400);
+            throw new HttpException(sprintf('client "%s" not registered', $clientId), 400);
         }
 
-        if ($clientInfo['response_type'] !== $getData['response_type']) {
+        if ($clientInfo['response_type'] !== $responseType) {
             throw new HttpException('invalid response_type for this client_id', 400);
         }
 
-        if ($clientInfo['redirect_uri'] !== $getData['redirect_uri']) {
+        if ($clientInfo['redirect_uri'] !== $redirectUri) {
             throw new HttpException(sprintf('"redirect_uri" does not match expected value "%s"', $clientInfo['redirect_uri']), 400);
         }
 

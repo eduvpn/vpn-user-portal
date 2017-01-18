@@ -19,6 +19,7 @@
 namespace SURFnet\VPN\Portal\OAuth;
 
 use SURFnet\VPN\Common\Http\HtmlResponse;
+use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -75,6 +76,7 @@ class OAuthModule implements ServiceModuleInterface
         $service->post(
             '/_oauth/token',
             function (Request $request, array $hookData) {
+                return new JsonResponse($this->oauthServer->postToken($request->getPostParameters()));
             }
         );
     }
