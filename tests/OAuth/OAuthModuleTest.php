@@ -78,6 +78,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
             [
                 'authorizeOAuthClient' => [
                     'client_id' => 'vpn-companion',
+                    'display_name' => 'eduVPN for Android',
                     'scope' => 'config',
                     'redirect_uri' => 'vpn://import/callback',
                 ],

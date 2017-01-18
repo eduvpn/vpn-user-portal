@@ -48,10 +48,11 @@ class OAuthServer
     public function getAuthorize(array $getData, $userId)
     {
         $this->validateQueryParameters($getData);
-        $this->validateClient($getData);
+        $clientInfo = $this->validateClient($getData);
 
         return [
             'client_id' => $getData['client_id'],
+            'display_name' => $clientInfo['display_name'],
             'scope' => $getData['scope'],
             'redirect_uri' => $getData['redirect_uri'],
         ];
@@ -194,5 +195,7 @@ class OAuthServer
         if ($clientInfo['redirect_uri'] !== $getData['redirect_uri']) {
             throw new HttpException(sprintf('"redirect_uri" does not match expected value "%s"', $clientInfo['redirect_uri']), 400);
         }
+
+        return $clientInfo;
     }
 }

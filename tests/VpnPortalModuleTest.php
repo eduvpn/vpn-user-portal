@@ -49,7 +49,10 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
             new JsonTpl(),
             new ServerClient($httpClient, 'serverClient'),
             new TestSession(),
-            $tokenStorage
+            $tokenStorage,
+            function ($clientId) {
+                return false;
+            }
         );
         $vpnPortalModule->setShuffleHosts(false);
 

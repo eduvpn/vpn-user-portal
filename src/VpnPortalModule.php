@@ -45,15 +45,19 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Portal\OAuth\TokenStorage */
     private $tokenStorage;
 
+    /** @var callable */
+    private $getClientInfo;
+
     /** @var bool */
     private $shuffleHosts;
 
-    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, TokenStorage $tokenStorage)
+    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, TokenStorage $tokenStorage, callable $getClientInfo)
     {
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
+        $this->getClientInfo = $getClientInfo;
         $this->shuffleHosts = true;
     }
 
@@ -229,6 +233,9 @@ class VpnPortalModule implements ServiceModuleInterface
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
+                foreach ($authorizedClients as $k => $v) {
+                    $authorizedClients[$k]['display_name'] = call_user_func($this->getClientInfo, $v['client_id'])['display_name'];
+                }
 
                 $twoFactorEnabledProfiles = [];
                 foreach ($visibleProfileList as $profileId => $profileData) {

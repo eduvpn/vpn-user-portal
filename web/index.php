@@ -176,13 +176,23 @@ try {
     $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
     $tokenStorage->init();
 
+    $getClientInfo = function ($clientId) use ($config) {
+        if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
+            return false;
+        }
+
+        return $config->getSection('apiConsumers')->getItem($clientId);
+    };
+
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $tpl,
         $serverClient,
         $session,
-        $tokenStorage
+        $tokenStorage,
+        $getClientInfo
     );
+
     $service->addModule($vpnPortalModule);
 
     // TOTP module
@@ -206,13 +216,7 @@ try {
             new OAuthServer(
                 $tokenStorage,
                 new Random(),
-                function ($clientId) use ($config) {
-                    if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
-                        return false;
-                    }
-
-                    return $config->getSection('apiConsumers')->getItem($clientId);
-                }
+                $getClientInfo
             )
         );
         $service->addModule($oauthModule);
