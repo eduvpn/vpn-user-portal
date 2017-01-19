@@ -90,15 +90,17 @@ class OAuthServer
         $this->validateTokenPostParameters($postData);
         $this->validateClient($postData['client_id'], 'code', $postData['redirect_uri']);
 
-        list($authorizationCodeKey, $authorizationCode) = explode('.', $postData['authorization_code']);
+        list($authorizationCodeKey, $authorizationCode) = explode('.', $postData['code']);
         $codeInfo = $this->tokenStorage->getCode($authorizationCodeKey);
 
         if (!hash_equals($codeInfo['authorization_code'], $authorizationCode)) {
             throw new HttpException('invalid "authorization_code"', 400);
         }
 
-        // XXX make sure this is correct!
-        if ($this->dateTime->sub(new DateInterval('-10 minutes')) < new DateTime($codeInfo['issued_at'])) {
+        // check for code expiry, it may be at most 10 minutes old
+        $codeTime = new DateTime($codeInfo['issued_at']);
+        $codeTime->add(new DateInterval('PT10M'));
+        if ($this->dateTime >= $codeTime) {
             throw new HttpException('expired "authorization_code"', 400);
         }
 
@@ -114,7 +116,7 @@ class OAuthServer
         $accessToken = $this->getAccessToken(
             $codeInfo['user_id'],
             $postData['client_id'],
-            $postData['scope']
+            $codeInfo['scope']
         );
 
         return [

@@ -41,10 +41,15 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         $config = new Config(
             [
                 'apiConsumers' => [
-                    'vpn-companion' => [
-                        'redirect_uri' => 'vpn://import/callback',
+                    'token-client' => [
+                        'redirect_uri' => 'http://example.org/token-cb',
                         'response_type' => 'token',
-                        'display_name' => 'eduVPN for Android',
+                        'display_name' => 'Token Client',
+                    ],
+                    'code-client' => [
+                        'redirect_uri' => 'http://example.org/code-cb',
+                        'response_type' => 'code',
+                        'display_name' => 'Code Client',
                     ],
                 ],
             ]
@@ -53,6 +58,8 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         $tokenStorage = new TokenStorage(new PDO('sqlite::memory:'));
         $tokenStorage->init();
 
+        $tokenStorage->storeCode('foo', '12345', 'abcdefgh', 'code-client', 'config', 'http://example.org/code-cb', new DateTime('2016-01-01'));
+
         $this->service = new Service();
         $this->service->addModule(
             new OAuthModule(
@@ -60,7 +67,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                 new OAuthServer(
                     $tokenStorage,
                     new TestRandom(),
-                    new DateTime(),
+                    new DateTime('2016-01-01'),
                     function ($clientId) use ($config) {
                         if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
                             return false;
@@ -74,23 +81,23 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
     }
 
-    public function testAuthorize()
+    public function testAuthorizeToken()
     {
         $this->assertSame(
             [
                 'authorizeOAuthClient' => [
-                    'client_id' => 'vpn-companion',
-                    'display_name' => 'eduVPN for Android',
+                    'client_id' => 'token-client',
+                    'display_name' => 'Token Client',
                     'scope' => 'config',
-                    'redirect_uri' => 'vpn://import/callback',
+                    'redirect_uri' => 'http://example.org/token-cb',
                 ],
             ],
             $this->makeRequest(
                 'GET',
                 '/_oauth/authorize',
                 [
-                    'client_id' => 'vpn-companion',
-                    'redirect_uri' => 'vpn://import/callback',
+                    'client_id' => 'token-client',
+                    'redirect_uri' => 'http://example.org/token-cb',
                     'response_type' => 'token',
                     'scope' => 'config',
                     'state' => '12345',
@@ -99,14 +106,39 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAuthorizePost()
+    public function testAuthorizeCode()
+    {
+        $this->assertSame(
+            [
+                'authorizeOAuthClient' => [
+                    'client_id' => 'code-client',
+                    'display_name' => 'Code Client',
+                    'scope' => 'config',
+                    'redirect_uri' => 'http://example.org/code-cb',
+                ],
+            ],
+            $this->makeRequest(
+                'GET',
+                '/_oauth/authorize',
+                [
+                    'client_id' => 'code-client',
+                    'redirect_uri' => 'http://example.org/code-cb',
+                    'response_type' => 'code',
+                    'scope' => 'config',
+                    'state' => '12345',
+                ]
+            )
+        );
+    }
+
+    public function testAuthorizeTokenPost()
     {
         $response = $this->makeRequest(
             'POST',
             '/_oauth/authorize',
             [
-                'client_id' => 'vpn-companion',
-                'redirect_uri' => 'vpn://import/callback',
+                'client_id' => 'token-client',
+                'redirect_uri' => 'http://example.org/token-cb',
                 'response_type' => 'token',
                 'scope' => 'config',
                 'state' => '12345',
@@ -118,9 +150,67 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
-            'vpn://import/callback#access_token=abcd1234abcd1234.wxyz1234efgh5678wxyz1234efgh5678&state=12345',
+            'http://example.org/token-cb#access_token=abcd1234abcd1234.wxyz1234efgh5678wxyz1234efgh5678&state=12345',
             $response->getHeader('Location')
         );
+    }
+
+    public function testAuthorizeCodePost()
+    {
+        $response = $this->makeRequest(
+            'POST',
+            '/_oauth/authorize',
+            [
+                'client_id' => 'code-client',
+                'redirect_uri' => 'http://example.org/code-cb',
+                'response_type' => 'code',
+                'scope' => 'config',
+                'state' => '12345',
+            ],
+            [
+                'approve' => 'yes',
+            ],
+            true    // return response
+        );
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame(
+            'http://example.org/code-cb?authorization_code=abcd1234abcd1234.wxyz1234efgh5678wxyz1234efgh5678&state=12345',
+            $response->getHeader('Location')
+        );
+    }
+
+    public function testPostToken()
+    {
+        $this->assertSame(
+            [
+                'access_token' => 'abcd1234abcd1234.wxyz1234efgh5678wxyz1234efgh5678',
+                'token_type' => 'bearer',
+            ],
+            $this->makeRequest(
+                'POST',
+                '/_oauth/token',
+                [],
+                [
+                    'grant_type' => 'authorization_code',
+                    'code' => '12345.abcdefgh',
+                    'redirect_uri' => 'http://example.org/code-cb',
+                    'client_id' => 'code-client',
+                ],
+                false
+            )
+        );
+    }
+
+    public function testExpiredCode()
+    {
+    }
+
+    /**
+     * Test getting access_token when one was already issued to same client
+     * with same scope.
+     */
+    public function testAuthorizeTokenExistingAccessToken()
+    {
     }
 
     private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $returnResponseObj = false)
