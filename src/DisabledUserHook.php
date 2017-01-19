@@ -50,6 +50,9 @@ class DisabledUserHook implements BeforeHookInterface
             if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
                 return;
             }
+            if ('POST' === $request->getRequestMethod() && '/_oauth/token' === $request->getPathInfo()) {
+                return;
+            }
 
             throw new HttpException('unable to determine user ID', 500);
         }
