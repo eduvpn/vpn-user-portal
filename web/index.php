@@ -25,7 +25,7 @@ use SURFnet\VPN\Common\Http\FormAuthenticationHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationModule;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
-use SURFnet\VPN\Common\Http\ReferrerCheckHook;
+use SURFnet\VPN\Common\Http\CsrfProtectionHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\Session;
@@ -110,7 +110,7 @@ try {
     );
 
     $service = new Service($tpl);
-    $service->addBeforeHook('referrer_check', new ReferrerCheckHook());
+    $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());
     $service->addBeforeHook('language_switcher', new LanguageSwitcherHook($session, array_keys($supportedLanguages)));
 
     // Authentication
