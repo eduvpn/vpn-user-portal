@@ -24,15 +24,17 @@ use PDOException;
 
 class TokenStorage
 {
-    /** @var PDO */
+    /** @var \PDO */
     private $db;
 
     public function __construct(PDO $db)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            $db->query('PRAGMA foreign_keys = ON');
+        }
+
         $this->db = $db;
-        // enable foreign keys, only for SQLite!
-        $this->db->query('PRAGMA foreign_keys = ON');
     }
 
     public function storeCode($userId, $authorizationCodeKey, $authorizationCode, $clientId, $scope, $redirectUri, DateTime $dateTime, $codeChallenge)
@@ -220,7 +222,6 @@ class TokenStorage
                 scope VARCHAR(255) NOT NULL,
                 UNIQUE(access_token_key)
             )',
-
             'CREATE TABLE IF NOT EXISTS codes (
                 user_id VARCHAR(255) NOT NULL,
                 authorization_code_key VARCHAR(255) NOT NULL,
