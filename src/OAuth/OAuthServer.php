@@ -69,7 +69,6 @@ class OAuthServer
      */
     public function postAuthorize(array $getData, array $postData, $userId)
     {
-        // XXX the Referer MUST be equal to the current URL
         $this->validateQueryParameters($getData);
         $this->validateClient($getData['client_id'], $getData['response_type'], $getData['redirect_uri']);
         $this->validatePostParameters($postData);
@@ -97,6 +96,13 @@ class OAuthServer
             throw new HttpException('invalid "authorization_code"', 400);
         }
 
+        // validate the code_verifier
+        $codeChallenge = $codeInfo['code_challenge'];
+        $codeVerifier = $postData['code_verifier'];
+        if (!hash_equals($codeChallenge, $this->uriEncode(hash('sha256', $codeVerifier, true)))) {
+            throw new HttpException('invalid "code_verifier"', 400);
+        }
+
         // check for code expiry, it may be at most 10 minutes old
         $codeTime = new DateTime($codeInfo['issued_at']);
         $codeTime->add(new DateInterval('PT10M'));
@@ -119,10 +125,10 @@ class OAuthServer
             $codeInfo['scope']
         );
 
+        // XXX if user modified scope, provide it here as well
         return [
             'access_token' => $accessToken,
             'token_type' => 'bearer',
-            //'scope' => 'XXX'  // only if it changed...
         ];
     }
 
@@ -174,7 +180,8 @@ class OAuthServer
             $userId,
             $getData['client_id'],
             $getData['scope'],
-            $getData['redirect_uri']
+            $getData['redirect_uri'],
+            $getData['code_challenge']     // XXX if non public client can be NULL
         );
 
         return $this->prepareRedirect(
@@ -227,7 +234,7 @@ class OAuthServer
         return sprintf('%s.%s', $accessTokenKey, $accessToken);
     }
 
-    private function getAuthorizationCode($userId, $clientId, $scope, $redirectUri)
+    private function getAuthorizationCode($userId, $clientId, $scope, $redirectUri, $codeChallenge)
     {
         $authorizationCodeKey = $this->random->get(8);
         $authorizationCode = $this->random->get(16);
@@ -239,7 +246,8 @@ class OAuthServer
             $clientId,
             $scope,
             $redirectUri,
-            $this->dateTime
+            $this->dateTime,
+            $codeChallenge
         );
 
         return sprintf('%s.%s', $authorizationCodeKey, $authorizationCode);
@@ -260,6 +268,17 @@ class OAuthServer
         $this->validateResponseType($getData['response_type']);
         $this->validateScope($getData['scope']);
         $this->validateState($getData['state']);
+
+        // XXX if client is not public this is not needed!
+        if ('code' === $getData['response_type']) {
+            foreach (['code_challenge_method', 'code_challenge'] as $queryParameter) {
+                if (!array_key_exists($queryParameter, $getData)) {
+                    throw new HttpException(sprintf('missing "%s" parameter', $queryParameter), 400);
+                }
+            }
+            $this->validateCodeChallengeMethod($getData['code_challenge_method']);
+            $this->validateCodeChallenge($getData['code_challenge']);
+        }
     }
 
     private function validateTokenPostParameters(array $postData)
@@ -276,6 +295,13 @@ class OAuthServer
         $this->validateCode($postData['code']);
         $this->validateRedirectUri($postData['redirect_uri']);
         $this->validateClientId($postData['client_id']);
+
+        if ('authorization_code' === $postData['grant_type']) {
+            if (!array_key_exists('code_verifier', $postData)) {
+                throw new HttpException('missing "code_verifier" parameter', 400);
+            }
+            $this->validateCodeVerifier($postData['code_verifier']);
+        }
     }
 
     private function validatePostParameters(array $postData)
@@ -312,7 +338,7 @@ class OAuthServer
 
     private function validateClientId($clientId)
     {
-        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $clientId)) {
+        if (1 !== preg_match('/^[\x20-\x7E]+$/', $clientId)) {
             throw new HttpException('invalid "client_id"', 400);
         }
     }
@@ -329,7 +355,7 @@ class OAuthServer
 
     private function validateCode($code)
     {
-        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $code)) {
+        if (1 !== preg_match('/^[\x20-\x7E]+$/', $code)) {
             throw new HttpException('invalid "code"', 400);
         }
     }
@@ -350,7 +376,7 @@ class OAuthServer
 
     private function validateScope($scope)
     {
-        // XXX allow more values here, maybe statically defined at top of class
+        // XXX do actual "scope" syntax validation here
         if ('config' !== $scope) {
             throw new HttpException('invalid "scope"', 400);
         }
@@ -358,8 +384,34 @@ class OAuthServer
 
     private function validateState($state)
     {
-        if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $state)) {
+        if (1 !== preg_match('/^[\x20-\x7E]+$/', $state)) {
             throw new HttpException('invalid "state"', 400);
+        }
+    }
+
+    private function validateCodeChallengeMethod($codeChallengeMethod)
+    {
+        if ('S256' !== $codeChallengeMethod) {
+            throw new HttpException('invalid "code_challenge_method"', 400);
+        }
+    }
+
+    private function validateCodeVerifier($codeVerifier)
+    {
+        // code-verifier = 43*128unreserved
+        // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+        // ALPHA = %x41-5A / %x61-7A
+        // DIGIT = %x30-39
+        if (1 !== preg_match('/^[\x41-\x5A\x61-\x7A\x30-\x39-._~]{43,128}$/', $codeVerifier)) {
+            throw new HttpException('invalid "code_verifier"', 400);
+        }
+    }
+
+    private function validateCodeChallenge($codeChallenge)
+    {
+        // it seems the length of the codeChallenge is always 43
+        if (1 !== preg_match('/^[\x41-\x5A\x61-\x7A\x30-\x39-_]{43}$/', $codeChallenge)) {
+            throw new HttpException('invalid "code_challenge"', 400);
         }
     }
 
@@ -369,5 +421,17 @@ class OAuthServer
         if (!in_array($approve, ['yes', 'no'])) {
             throw new HttpException('invalid "approve"', 400);
         }
+    }
+
+    private function uriEncode($inputString)
+    {
+        return strtr(
+            rtrim(
+                base64_encode($inputString),
+                '='
+            ),
+            '+/',
+            '-_'
+        );
     }
 }

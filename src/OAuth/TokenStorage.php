@@ -35,7 +35,7 @@ class TokenStorage
         $this->db->query('PRAGMA foreign_keys = ON');
     }
 
-    public function storeCode($userId, $authorizationCodeKey, $authorizationCode, $clientId, $scope, $redirectUri, DateTime $dateTime)
+    public function storeCode($userId, $authorizationCodeKey, $authorizationCode, $clientId, $scope, $redirectUri, DateTime $dateTime, $codeChallenge)
     {
         $stmt = $this->db->prepare(
             'INSERT INTO codes (
@@ -45,7 +45,8 @@ class TokenStorage
                 client_id,
                 scope,
                 redirect_uri,
-                issued_at
+                issued_at,
+                code_challenge
              ) 
              VALUES(
                 :user_id, 
@@ -54,7 +55,8 @@ class TokenStorage
                 :client_id,
                 :scope,
                 :redirect_uri,
-                :issued_at
+                :issued_at,
+                :code_challenge
              )'
         );
 
@@ -65,6 +67,7 @@ class TokenStorage
         $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
         $stmt->bindValue(':redirect_uri', $redirectUri, PDO::PARAM_STR);
         $stmt->bindValue(':issued_at', $dateTime->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $stmt->bindValue(':code_challenge', $codeChallenge, PDO::PARAM_STR);
 
         try {
             $stmt->execute();
@@ -158,7 +161,8 @@ class TokenStorage
                 client_id,
                 scope,
                 redirect_uri,
-                issued_at
+                issued_at,
+                code_challenge
              FROM codes
              WHERE
                 authorization_code_key = :authorization_code_key'
@@ -225,6 +229,7 @@ class TokenStorage
                 scope VARCHAR(255) NOT NULL,
                 redirect_uri VARCHAR(255) NOT NULL,
                 issued_at VARCHAR(255) NOT NULL,
+                code_challenge VARCHAR(255) NOT NULL,
                 UNIQUE(authorization_code_key)
             )',
         ];

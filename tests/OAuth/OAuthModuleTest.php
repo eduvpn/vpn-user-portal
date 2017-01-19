@@ -58,7 +58,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         $tokenStorage = new TokenStorage(new PDO('sqlite::memory:'));
         $tokenStorage->init();
 
-        $tokenStorage->storeCode('foo', '12345', 'abcdefgh', 'code-client', 'config', 'http://example.org/code-cb', new DateTime('2016-01-01'));
+        $tokenStorage->storeCode('foo', '12345', 'abcdefgh', 'code-client', 'config', 'http://example.org/code-cb', new DateTime('2016-01-01'), 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM');
 
         $this->service = new Service();
         $this->service->addModule(
@@ -126,6 +126,8 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                     'response_type' => 'code',
                     'scope' => 'config',
                     'state' => '12345',
+                    'code_challenge_method' => 'S256',
+                    'code_challenge' => 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
                 ]
             )
         );
@@ -166,6 +168,8 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                 'response_type' => 'code',
                 'scope' => 'config',
                 'state' => '12345',
+                'code_challenge_method' => 'S256',
+                'code_challenge' => 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
             ],
             [
                 'approve' => 'yes',
@@ -195,6 +199,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                     'code' => '12345.abcdefgh',
                     'redirect_uri' => 'http://example.org/code-cb',
                     'client_id' => 'code-client',
+                    'code_verifier' => 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk',
                 ],
                 false
             )
