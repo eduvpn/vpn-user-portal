@@ -101,7 +101,7 @@
 
     <h2>Recommendations for using the VPN</h2>
     <p>
-        Use the latest version of 
+        At the very least, use the latest version of 
         <a href="https://getfirefox.com">Mozilla Firefox</a> to browse the 
         web, and use the following add-ons:
     </p>
@@ -110,9 +110,7 @@
         <li>
             <a href="https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/">uBlock Origin</a> 
             to block web trackers and advertisements to limit the exposure 
-            to malware. Make sure to enable "<a href="https://github.com/gorhill/uBlock/wiki/Prevent-WebRTC-from-leaking-local-IP-address">Prevent WebRTC from leaking 
-            local IP addresses</a>" in the uBlock Origin dashboard to prevent web sites from 
-            discovering your real IP address;
+            to malware;
         </li>
         <li>
             <a href="https://addons.mozilla.org/en-US/firefox/addon/https-everywhere/">HTTPS Everywhere</a> 
@@ -121,6 +119,13 @@
             HTTPS version of the site.
         </li>
     </ul>
+
+    <p>
+        Make sure you <em>disable</em> WebRTC to avoid leaking your (local)
+        non-VPN addresses by typing <code>about:config</code> in the URL bar, 
+        looking for the <code>media.peerconnection.enabled</code> key and 
+        setting it to <code>false</code>.
+    </p>
 
     <h2>Privacy and Trust</h2>
     <p>
