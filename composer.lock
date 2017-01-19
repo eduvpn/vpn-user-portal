@@ -98,16 +98,16 @@
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "4.0.0",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "855fd565d297fc5c06070877dcc0039f4ee075d9"
+                "reference": "e2e651a9bad3a92949d149953baeddc3f4113a25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/855fd565d297fc5c06070877dcc0039f4ee075d9",
-                "reference": "855fd565d297fc5c06070877dcc0039f4ee075d9",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/e2e651a9bad3a92949d149953baeddc3f4113a25",
+                "reference": "e2e651a9bad3a92949d149953baeddc3f4113a25",
                 "shasum": ""
             },
             "require": {
@@ -134,7 +134,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-01-04T10:37:35+00:00"
+            "time": "2017-01-19T17:19:13+00:00"
         },
         {
             "name": "ircmaxell/password-compat",

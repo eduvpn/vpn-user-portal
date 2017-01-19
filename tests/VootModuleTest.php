@@ -20,7 +20,6 @@ namespace SURFnet\VPN\Portal;
 
 require_once sprintf('%s/Test/TestHttpClient.php', __DIR__);
 require_once sprintf('%s/Test/TestOAuthHttpClient.php', __DIR__);
-require_once sprintf('%s/Test/TestRandom.php', __DIR__);
 require_once sprintf('%s/Test/TestSession.php', __DIR__);
 
 use fkooman\OAuth\Client\OAuth2Client;
@@ -32,7 +31,6 @@ use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Portal\Test\TestHttpClient;
 use SURFnet\VPN\Portal\Test\TestOAuthHttpClient;
-use SURFnet\VPN\Portal\Test\TestRandom;
 use SURFnet\VPN\Portal\Test\TestSession;
 
 class VootModuleTest extends PHPUnit_Framework_TestCase
@@ -45,6 +43,9 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $random = $this->getMockBuilder('\fkooman\OAuth\Client\RandomInterface')->getMock();
+        $random->method('get')->willReturn('state12345abcde');
+
         $httpClient = new TestHttpClient();
 
         $this->session = new TestSession();
@@ -54,7 +55,7 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
                 new OAuth2Client(
                     new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token'),
                     new TestOAuthHttpClient(),
-                    new TestRandom()
+                    $random
                 ),
                 new ServerClient($httpClient, 'serverClient'),
                 $this->session
