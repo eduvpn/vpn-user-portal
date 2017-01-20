@@ -39,21 +39,18 @@ class DisabledUserHook implements BeforeHookInterface
 
     public function executeBefore(Request $request, array $hookData)
     {
+        if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
+            return false;
+        }
+        if ('POST' === $request->getRequestMethod() && '/_oauth/token' === $request->getPathInfo()) {
+            return false;
+        }
+
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
         $userId = $hookData['auth'];
-
-        // userId is null during POST to /_form/auth/verify if using
-        // FormAuthentication, that is fine...
         if (is_null($userId)) {
-            if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
-                return;
-            }
-            if ('POST' === $request->getRequestMethod() && '/_oauth/token' === $request->getPathInfo()) {
-                return;
-            }
-
             throw new HttpException('unable to determine user ID', 500);
         }
 
