@@ -75,7 +75,13 @@ try {
         $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
-    $tpl = new TwigTpl($templateDirs, $templateCache);
+    $session = new Session(
+        $request->getServerName(),
+        $request->getRoot(),
+        $config->getItem('secureCookie')
+    );
+
+    $tpl = new TwigTpl($session, $templateDirs, dirname(__DIR__).'/locale', $templateCache);
     $tpl->setDefault(
         [
             'requestUri' => $request->getUri(),
@@ -83,26 +89,12 @@ try {
             'requestRootUri' => $request->getRootUri(),
         ]
     );
-
-    $session = new Session(
-        $request->getServerName(),
-        $request->getRoot(),
-        $config->getItem('secureCookie')
-    );
-
     $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
-    $activeLanguage = $session->get('activeLanguage');
-    if (is_null($activeLanguage)) {
-        $activeLanguage = array_keys($supportedLanguages)[0];
-    }
-
     $tpl->addDefault(
         [
             'supportedLanguages' => $supportedLanguages,
-            'activeLanguage' => $activeLanguage,
         ]
     );
-    $tpl->setI18n('VpnUserPortal', $activeLanguage, dirname(__DIR__).'/locale');
 
     $serverClient = new ServerClient(
         new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
