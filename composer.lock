@@ -142,12 +142,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "62ef2e9d481be7fe5df58b7d450b75395d6c29df"
+                "reference": "c5497c1145f35e121b7f7272f9d1a19ec8dafd6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/62ef2e9d481be7fe5df58b7d450b75395d6c29df",
-                "reference": "62ef2e9d481be7fe5df58b7d450b75395d6c29df",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/c5497c1145f35e121b7f7272f9d1a19ec8dafd6a",
+                "reference": "c5497c1145f35e121b7f7272f9d1a19ec8dafd6a",
                 "shasum": ""
             },
             "require": {
@@ -177,7 +177,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-01-19 23:54:55"
+            "time": "2017-01-20 09:54:04"
         },
         {
             "name": "ircmaxell/password-compat",

@@ -156,7 +156,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
-            'http://example.org/token-cb#access_token=random_1.random_2&state=12345',
+            'http://example.org/token-cb#access_token=cmFuZG9tXzE.cmFuZG9tXzI&state=12345',
             $response->getHeader('Location')
         );
     }
@@ -182,7 +182,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
-            'http://example.org/code-cb?authorization_code=random_1.random_2&state=12345',
+            'http://example.org/code-cb?authorization_code=cmFuZG9tXzE.cmFuZG9tXzI&state=12345',
             $response->getHeader('Location')
         );
     }
@@ -191,7 +191,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             [
-                'access_token' => 'random_1.random_2',
+                'access_token' => 'cmFuZG9tXzE.cmFuZG9tXzI',
                 'token_type' => 'bearer',
             ],
             $this->makeRequest(
