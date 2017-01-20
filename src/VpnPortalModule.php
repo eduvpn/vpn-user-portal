@@ -18,6 +18,7 @@
 
 namespace SURFnet\VPN\Portal;
 
+use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\InputValidation;
@@ -29,7 +30,6 @@ use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use SURFnet\VPN\Common\Http\SessionInterface;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\TplInterface;
-use SURFnet\VPN\Portal\OAuth\TokenStorage;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -42,7 +42,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\Http\SessionInterface */
     private $session;
 
-    /** @var \SURFnet\VPN\Portal\OAuth\TokenStorage */
+    /** @var \fkooman\OAuth\Server\TokenStorage */
     private $tokenStorage;
 
     /** @var callable */

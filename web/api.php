@@ -17,6 +17,7 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
+use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
@@ -24,8 +25,7 @@ use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Portal\OAuth\BearerAuthenticationHook;
-use SURFnet\VPN\Portal\OAuth\TokenStorage;
+use SURFnet\VPN\Portal\BearerAuthenticationHook;
 use SURFnet\VPN\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');

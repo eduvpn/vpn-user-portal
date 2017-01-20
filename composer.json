@@ -19,6 +19,11 @@
             "no-api": true,
             "type": "vcs",
             "url": "https://github.com/eduvpn/vpn-lib-common"
+        },
+        {
+            "no-api": true,
+            "type": "vcs",
+            "url": "https://github.com/fkooman/php-oauth2-server"
         }
     ],
     "require": {
@@ -34,6 +39,7 @@
         "ext-pdo": "*",
         "ext-spl": "*",
         "fkooman/oauth2-client": "^4.0",
+        "fkooman/oauth2-server": "dev-master",
         "php": ">=5.4.0",
         "symfony/polyfill-php56": "^1.3",
         "symfony/polyfill-php70": "^1.3",

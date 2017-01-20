@@ -16,8 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal\OAuth;
+namespace SURFnet\VPN\Portal;
 
+use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\Request;

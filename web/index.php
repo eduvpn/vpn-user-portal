@@ -20,6 +20,9 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 use fkooman\OAuth\Client\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
+use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\Random as OAuthRandom;
+use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\CsrfProtectionHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationHook;
@@ -34,12 +37,9 @@ use SURFnet\VPN\Common\Http\TwoFactorModule;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Common\Random;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LanguageSwitcherHook;
-use SURFnet\VPN\Portal\OAuth\OAuthModule;
-use SURFnet\VPN\Portal\OAuth\OAuthServer;
-use SURFnet\VPN\Portal\OAuth\TokenStorage;
+use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\TotpModule;
 use SURFnet\VPN\Portal\TwigTpl;
 use SURFnet\VPN\Portal\VootModule;
@@ -215,7 +215,7 @@ try {
             $tpl,
             new OAuthServer(
                 $tokenStorage,
-                new Random(),
+                new OAuthRandom(),
                 new DateTime(),
                 $getClientInfo
             )

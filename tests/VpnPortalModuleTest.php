@@ -22,13 +22,13 @@ require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
 require_once sprintf('%s/Test/TestHttpClient.php', __DIR__);
 require_once sprintf('%s/Test/TestSession.php', __DIR__);
 
+use fkooman\OAuth\Server\TokenStorage;
 use PDO;
 use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Portal\OAuth\TokenStorage;
 use SURFnet\VPN\Portal\Test\JsonTpl;
 use SURFnet\VPN\Portal\Test\TestHttpClient;
 use SURFnet\VPN\Portal\Test\TestSession;

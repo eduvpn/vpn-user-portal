@@ -16,8 +16,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal\OAuth;
+namespace SURFnet\VPN\Portal;
 
+use fkooman\OAuth\Server\Exception\OAuthException;
+use fkooman\OAuth\Server\Exception\TokenException;
+use fkooman\OAuth\Server\OAuthServer;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
@@ -47,13 +51,17 @@ class OAuthModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                // ask for approving this client/scope
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'authorizeOAuthClient',
-                        $this->oauthServer->getAuthorize($request->getQueryParameters(), $userId)
-                    )
-                );
+                try {
+                    // ask for approving this client/scope
+                    return new HtmlResponse(
+                        $this->tpl->render(
+                            'authorizeOAuthClient',
+                            $this->oauthServer->getAuthorize($request->getQueryParameters(), $userId)
+                        )
+                    );
+                } catch (OAuthException $e) {
+                    throw new HttpException($e->getMessage(), $e->getCode());
+                }
             }
         );
 
@@ -62,21 +70,36 @@ class OAuthModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                return new RedirectResponse(
-                    $this->oauthServer->postAuthorize(
-                        $request->getQueryParameters(),
-                        $request->getPostParameters(),
-                        $userId
-                    ),
-                    302
-                );
+                try {
+                    return new RedirectResponse(
+                        $this->oauthServer->postAuthorize(
+                            $request->getQueryParameters(),
+                            $request->getPostParameters(),
+                            $userId
+                        ),
+                        302
+                    );
+                } catch (OAuthException $e) {
+                    throw new HttpException($e->getMessage(), $e->getCode());
+                }
             }
         );
 
         $service->post(
             '/_oauth/token',
             function (Request $request, array $hookData) {
-                return new JsonResponse($this->oauthServer->postToken($request->getPostParameters()));
+                try {
+                    $tokenResponse = $this->oauthServer->postToken($request->getPostParameters());
+                } catch (TokenException $e) {
+                    $tokenResponse = $e->getResponse();
+                }
+
+                $response = new JsonResponse($tokenResponse->getBody(true), $tokenResponse->getStatusCode());
+                foreach ($tokenResponse->getHeaders() as $k => $v) {
+                    $response->addHeader($k, $v);
+                }
+
+                return $response;
             }
         );
     }

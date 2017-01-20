@@ -16,20 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal\OAuth;
+namespace SURFnet\VPN\Portal;
 
 require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
-require_once sprintf('%s/Test/TestRandom.php', __DIR__);
 
 use DateTime;
+use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\TokenStorage;
 use PDO;
 use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Portal\OAuth\Test\JsonTpl;
-use SURFnet\VPN\Portal\OAuth\Test\TestRandom;
+use SURFnet\VPN\Portal\Test\JsonTpl;
 
 class OAuthModuleTest extends PHPUnit_Framework_TestCase
 {
@@ -38,6 +38,9 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $random = $this->getMockBuilder('\fkooman\OAuth\Server\RandomInterface')->getMock();
+        $random->method('get')->will($this->onConsecutiveCalls('random_1', 'random_2'));
+
         $config = new Config(
             [
                 'apiConsumers' => [
@@ -66,7 +69,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                 new JsonTpl(),
                 new OAuthServer(
                     $tokenStorage,
-                    new TestRandom(),
+                    $random,
                     new DateTime('2016-01-01'),
                     function ($clientId) use ($config) {
                         if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
@@ -102,7 +105,8 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                     'scope' => 'config',
                     'state' => '12345',
                 ]
-            )
+            ),
+            true
         );
     }
 
@@ -152,7 +156,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
-            'http://example.org/token-cb#access_token=abcd1234abcd1234.wxyz1234efgh5678wxyz1234efgh5678&state=12345',
+            'http://example.org/token-cb#access_token=random_1.random_2&state=12345',
             $response->getHeader('Location')
         );
     }
@@ -178,7 +182,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
-            'http://example.org/code-cb?authorization_code=abcd1234abcd1234.wxyz1234efgh5678wxyz1234efgh5678&state=12345',
+            'http://example.org/code-cb?authorization_code=random_1.random_2&state=12345',
             $response->getHeader('Location')
         );
     }
@@ -187,7 +191,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             [
-                'access_token' => 'abcd1234abcd1234.wxyz1234efgh5678wxyz1234efgh5678',
+                'access_token' => 'random_1.random_2',
                 'token_type' => 'bearer',
             ],
             $this->makeRequest(

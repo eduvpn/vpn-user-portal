@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "77676e8aa6fe622fafdb2e9bef7a03ee",
+    "content-hash": "09588fb6bc3f14b5f4e1d4c56402109e",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -135,6 +135,49 @@
             ],
             "description": "Very simple OAuth 2.0 client",
             "time": "2017-01-19T17:19:13+00:00"
+        },
+        {
+            "name": "fkooman/oauth2-server",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fkooman/php-oauth2-server",
+                "reference": "62ef2e9d481be7fe5df58b7d450b75395d6c29df"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/62ef2e9d481be7fe5df58b7d450b75395d6c29df",
+                "reference": "62ef2e9d481be7fe5df58b7d450b75395d6c29df",
+                "shasum": ""
+            },
+            "require": {
+                "ext-date": "*",
+                "ext-filter": "*",
+                "ext-hash": "*",
+                "ext-json": "*",
+                "ext-pcre": "*",
+                "ext-pdo": "*",
+                "paragonie/random_compat": "^1.0|^2.0",
+                "php": ">=5.4.0",
+                "symfony/polyfill-php56": "^1.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fkooman\\OAuth\\Server\\": "src/"
+                }
+            },
+            "license": [
+                "AGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "Very simple OAuth 2.0 server",
+            "time": "2017-01-19 23:54:55"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -614,7 +657,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "eduvpn/common": 20
+        "eduvpn/common": 20,
+        "fkooman/oauth2-server": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
