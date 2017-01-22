@@ -18,6 +18,7 @@
 
 namespace SURFnet\VPN\Portal;
 
+use DateTime;
 use fkooman\OAuth\Server\TokenStorage;
 use PDO;
 use PHPUnit_Framework_TestCase;
@@ -38,7 +39,8 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             '1234',
             'abcdefgh',
             'vpn-companion',
-            'create_config'
+            'create_config',
+            new DateTime('2016-01-01')
         );
     }
 
@@ -52,7 +54,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             [
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
         $bearerAuthenticationHook->executeBefore($request, []);
     }
 
@@ -63,7 +65,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
                 'HTTP_AUTHORIZATION' => 'Bearer 1234.abcdefgh',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
         $bearerAuthenticationHook->executeBefore($request, []);
     }
 
@@ -78,7 +80,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
                 'HTTP_AUTHORIZATION' => 'Bearer aaaa.abcdefgh',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
         $bearerAuthenticationHook->executeBefore($request, []);
     }
 
@@ -93,7 +95,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
                 'HTTP_AUTHORIZATION' => 'Bearer 1234.aaaaaaaa',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
         $bearerAuthenticationHook->executeBefore($request, []);
     }
 
@@ -108,7 +110,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
                 'HTTP_AUTHORIZATION' => 'Bearer %%%%',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
         $bearerAuthenticationHook->executeBefore($request, []);
     }
 
@@ -123,7 +125,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
                 'HTTP_AUTHORIZATION' => 'Bearer abcdef',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
         $bearerAuthenticationHook->executeBefore($request, []);
     }
 
@@ -138,7 +140,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
                 'HTTP_AUTHORIZATION' => 'Basic AAA===',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
         $bearerAuthenticationHook->executeBefore($request, []);
     }
 

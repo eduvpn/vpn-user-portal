@@ -17,6 +17,7 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
+use DateTime;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\JsonResponse;
@@ -49,7 +50,8 @@ try {
         $service->addBeforeHook(
             'auth',
             new BearerAuthenticationHook(
-                $tokenStorage
+                $tokenStorage,
+                new DateTime()
             )
         );
 

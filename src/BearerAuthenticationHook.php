@@ -18,6 +18,7 @@
 
 namespace SURFnet\VPN\Portal;
 
+use DateTime;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
@@ -28,12 +29,16 @@ class BearerAuthenticationHook implements BeforeHookInterface
     /** @var TokenStorage */
     private $tokenStorage;
 
+    /** @var \DateTime */
+    private $dateTime;
+
     /** @var string */
     private $realm;
 
-    public function __construct(TokenStorage $tokenStorage, $realm = 'Protected Area')
+    public function __construct(TokenStorage $tokenStorage, DateTime $dateTime, $realm = 'Protected Area')
     {
         $this->tokenStorage = $tokenStorage;
+        $this->dateTime = $dateTime;
         $this->realm = $realm;
     }
 
@@ -64,11 +69,16 @@ class BearerAuthenticationHook implements BeforeHookInterface
         }
 
         // time safe string compare, using polyfill on PHP < 5.6
-        if (hash_equals($tokenInfo['access_token'], $accessToken)) {
-            return $tokenInfo['user_id'];
+        if (!hash_equals($tokenInfo['access_token'], $accessToken)) {
+            throw $this->invalidTokenException();
         }
 
-        throw $this->invalidTokenException();
+        $expiresAt = new DateTime($tokenInfo['expires_at']);
+        if ($this->dateTime > $expiresAt) {
+            throw $this->invalidTokenException();
+        }
+
+        return $tokenInfo['user_id'];
     }
 
     private static function getBearerToken($authorizationHeader)

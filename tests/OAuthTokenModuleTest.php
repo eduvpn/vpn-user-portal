@@ -87,6 +87,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
             [
                 'access_token' => 'cmFuZG9tXzE.cmFuZG9tXzI',
                 'token_type' => 'bearer',
+                'expires_in' => 3600,
             ],
             $this->makeRequest(
                 'POST',

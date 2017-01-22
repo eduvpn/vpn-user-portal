@@ -169,11 +169,11 @@ try {
     $tokenStorage->init();
 
     $getClientInfo = function ($clientId) use ($config) {
-        if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
+        if (false === $config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
             return false;
         }
 
-        return $config->getSection('apiConsumers')->getItem($clientId);
+        return $config->getSection('Api')->getSection('consumerList')->getItem($clientId);
     };
 
     // portal module
@@ -202,15 +202,17 @@ try {
     $service->addModule($yubiModule);
 
     // OAuth module
-    if ($config->getItem('enableOAuth')) {
+    if ($config->hasSection('Api')) {
+        $oauthServer = new OAuthServer(
+            $tokenStorage,
+            new OAuthRandom(),
+            new DateTime(),
+            $getClientInfo
+        );
+        $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
         $oauthModule = new OAuthModule(
             $tpl,
-            new OAuthServer(
-                $tokenStorage,
-                new OAuthRandom(),
-                new DateTime(),
-                $getClientInfo
-            )
+            $oauthServer
         );
         $service->addModule($oauthModule);
     }

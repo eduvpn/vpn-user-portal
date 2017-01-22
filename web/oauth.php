@@ -51,24 +51,26 @@ try {
     $tokenStorage->init();
 
     $getClientInfo = function ($clientId) use ($config) {
-        if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
+        if (false === $config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
             return false;
         }
 
-        return $config->getSection('apiConsumers')->getItem($clientId);
+        return $config->getSection('Api')->getSection('consumerList')->getItem($clientId);
     };
 
     // OAuth module
-    if ($config->getItem('enableOAuth')) {
-        $oauthTokenModule = new OAuthTokenModule(
-            new OAuthServer(
-                $tokenStorage,
-                new Random(),
-                new DateTime(),
-                $getClientInfo
-            )
+    if ($config->hasSection('Api')) {
+        $oauthServer = new OAuthServer(
+            $tokenStorage,
+            new Random(),
+            new DateTime(),
+            $getClientInfo
         );
-        $service->addModule($oauthTokenModule);
+        $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
+        $oauthModule = new OAuthTokenModule(
+            $oauthServer
+        );
+        $service->addModule($oauthModule);
     }
 
     $service->run($request)->send();
