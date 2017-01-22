@@ -19,11 +19,9 @@
 namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
-use fkooman\OAuth\Server\Exception\TokenException;
 use fkooman\OAuth\Server\OAuthServer;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -82,24 +80,6 @@ class OAuthModule implements ServiceModuleInterface
                 } catch (OAuthException $e) {
                     throw new HttpException($e->getMessage(), $e->getCode());
                 }
-            }
-        );
-
-        $service->post(
-            '/_oauth/token',
-            function (Request $request, array $hookData) {
-                try {
-                    $tokenResponse = $this->oauthServer->postToken($request->getPostParameters());
-                } catch (TokenException $e) {
-                    $tokenResponse = $e->getResponse();
-                }
-
-                $response = new JsonResponse($tokenResponse->getBody(true), $tokenResponse->getStatusCode());
-                foreach ($tokenResponse->getHeaders() as $k => $v) {
-                    $response->addHeader($k, $v);
-                }
-
-                return $response;
             }
         );
     }

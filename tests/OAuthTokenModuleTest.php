@@ -26,12 +26,11 @@ use fkooman\OAuth\Server\TokenStorage;
 use PDO;
 use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Portal\Test\JsonTpl;
 
-class OAuthModuleTest extends PHPUnit_Framework_TestCase
+class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
 {
     /** @var \SURFnet\VPN\Common\Http\Service */
     private $service;
@@ -65,8 +64,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
 
         $this->service = new Service();
         $this->service->addModule(
-            new OAuthModule(
-                new JsonTpl(),
+            new OAuthTokenModule(
                 new OAuthServer(
                     $tokenStorage,
                     $random,
@@ -81,109 +79,28 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                 )
             )
         );
-        $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
     }
 
-    public function testAuthorizeToken()
+    public function testPostToken()
     {
         $this->assertSame(
             [
-                'authorizeOAuthClient' => [
-                    'client_id' => 'token-client',
-                    'display_name' => 'Token Client',
-                    'scope' => 'config',
-                    'redirect_uri' => 'http://example.org/token-cb',
-                ],
+                'access_token' => 'cmFuZG9tXzE.cmFuZG9tXzI',
+                'token_type' => 'bearer',
             ],
             $this->makeRequest(
-                'GET',
-                '/_oauth/authorize',
+                'POST',
+                '/token',
+                [],
                 [
-                    'client_id' => 'token-client',
-                    'redirect_uri' => 'http://example.org/token-cb',
-                    'response_type' => 'token',
-                    'scope' => 'config',
-                    'state' => '12345',
-                ]
-            ),
-            true
-        );
-    }
-
-    public function testAuthorizeCode()
-    {
-        $this->assertSame(
-            [
-                'authorizeOAuthClient' => [
-                    'client_id' => 'code-client',
-                    'display_name' => 'Code Client',
-                    'scope' => 'config',
+                    'grant_type' => 'authorization_code',
+                    'code' => '12345.abcdefgh',
                     'redirect_uri' => 'http://example.org/code-cb',
+                    'client_id' => 'code-client',
+                    'code_verifier' => 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk',
                 ],
-            ],
-            $this->makeRequest(
-                'GET',
-                '/_oauth/authorize',
-                [
-                    'client_id' => 'code-client',
-                    'redirect_uri' => 'http://example.org/code-cb',
-                    'response_type' => 'code',
-                    'scope' => 'config',
-                    'state' => '12345',
-                    'code_challenge_method' => 'S256',
-                    'code_challenge' => 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
-                ]
+                false
             )
-        );
-    }
-
-    public function testAuthorizeTokenPost()
-    {
-        $response = $this->makeRequest(
-            'POST',
-            '/_oauth/authorize',
-            [
-                'client_id' => 'token-client',
-                'redirect_uri' => 'http://example.org/token-cb',
-                'response_type' => 'token',
-                'scope' => 'config',
-                'state' => '12345',
-            ],
-            [
-                'approve' => 'yes',
-            ],
-            true    // return response
-        );
-        $this->assertSame(302, $response->getStatusCode());
-        $this->assertSame(
-            'http://example.org/token-cb#access_token=cmFuZG9tXzE.cmFuZG9tXzI&state=12345',
-            $response->getHeader('Location')
-        );
-    }
-
-    public function testAuthorizeCodePost()
-    {
-        $response = $this->makeRequest(
-            'POST',
-            '/_oauth/authorize',
-            [
-                'client_id' => 'code-client',
-                'redirect_uri' => 'http://example.org/code-cb',
-                'response_type' => 'code',
-                'scope' => 'config',
-                'state' => '12345',
-                'code_challenge_method' => 'S256',
-                'code_challenge' => 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
-            ],
-            [
-                'approve' => 'yes',
-            ],
-            true    // return response
-        );
-        $this->assertSame(302, $response->getStatusCode());
-        $this->assertSame(
-            'http://example.org/code-cb?authorization_code=cmFuZG9tXzE.cmFuZG9tXzI&state=12345',
-            $response->getHeader('Location')
         );
     }
 

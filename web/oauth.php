@@ -17,18 +17,17 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
+use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\Random;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Portal\BearerAuthenticationHook;
-use SURFnet\VPN\Portal\VpnApiModule;
+use SURFnet\VPN\Portal\OAuthTokenModule;
 
-$logger = new Logger('vpn-user-api');
+$logger = new Logger('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
@@ -38,32 +37,40 @@ try {
     }
 
     $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
-    $config = Config::fromFile(sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId));
+    if (!file_exists($dataDir)) {
+        if (false === @mkdir($dataDir, 0700, true)) {
+            throw new RuntimeException(sprintf('unable to create folder "%s"', $dataDir));
+        }
+    }
 
+    $config = Config::fromFile(sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId));
     $service = new Service();
 
-    if ($config->getItem('enableOAuth')) {
-        $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
-        $tokenStorage->init();
+    // OAuth tokens
+    $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+    $tokenStorage->init();
 
-        $service->addBeforeHook(
-            'auth',
-            new BearerAuthenticationHook(
-                $tokenStorage
+    $getClientInfo = function ($clientId) use ($config) {
+        if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
+            return false;
+        }
+
+        return $config->getSection('apiConsumers')->getItem($clientId);
+    };
+
+    // OAuth module
+    if ($config->getItem('enableOAuth')) {
+        $oauthTokenModule = new OAuthTokenModule(
+            new OAuthServer(
+                $tokenStorage,
+                new Random(),
+                new DateTime(),
+                $getClientInfo
             )
         );
-
-        $serverClient = new ServerClient(
-            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-            $config->getItem('apiUri')
-        );
-
-        // api module
-        $vpnApiModule = new VpnApiModule(
-            $serverClient
-        );
-        $service->addModule($vpnApiModule);
+        $service->addModule($oauthTokenModule);
     }
+
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
