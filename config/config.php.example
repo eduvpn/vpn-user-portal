@@ -42,10 +42,22 @@ return [
     //'enableOAuth' => true,
     // OAuth 2.0 consumers
     'apiConsumers' => [
+        // API 1 Apps
         'nl.eduvpn.app' => [
             'redirect_uri' => 'nl.eduvpn.app://import/callback',
             'response_type' => 'token',
             'display_name' => 'eduVPN for Android',
         ],
+        // API 2 Apps
+        //'nl.eduvpn.app.android' => [
+        //    'redirect_uri' => 'nl.eduvpn.app.android://api/callback',
+        //    'response_type' => 'code',
+        //    'display_name' => 'eduVPN for Android',
+        //],
+        //'nl.eduvpn.app.windows' => [
+        //    'redirect_uri' => 'nl.eduvpn.app.windows://api/callback',
+        //    'response_type' => 'code',
+        //    'display_name' => 'eduVPN for Windows',
+        //],
     ],
 ];
