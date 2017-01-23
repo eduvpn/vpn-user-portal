@@ -47,7 +47,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
         } catch (TokenException $e) {
             $tokenResponse = $e->getResponse();
 
-            $response = new JsonResponse($tokenResponse->getBody(true), $tokenResponse->getStatusCode());
+            $response = new JsonResponse($tokenResponse->getArrayBody(), $tokenResponse->getStatusCode());
             foreach ($tokenResponse->getHeaders() as $k => $v) {
                 $response->addHeader($k, $v);
             }

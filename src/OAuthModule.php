@@ -47,14 +47,12 @@ class OAuthModule implements ServiceModuleInterface
         $service->get(
             '/_oauth/authorize',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
-
                 try {
                     // ask for approving this client/scope
                     return new HtmlResponse(
                         $this->tpl->render(
                             'authorizeOAuthClient',
-                            $this->oauthServer->getAuthorize($request->getQueryParameters(), $userId)
+                            $this->oauthServer->getAuthorize($request->getQueryParameters())
                         )
                     );
                 } catch (OAuthException $e) {
