@@ -42,7 +42,7 @@ try {
 
     $service = new Service();
 
-    if ($config->getItem('enableOAuth')) {
+    if ($config->hasSection('Api')) {
         $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
         $tokenStorage->init();
 
