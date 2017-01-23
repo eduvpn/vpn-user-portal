@@ -85,7 +85,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             [
-                'access_token' => 'cmFuZG9tXzE.cmFuZG9tXzI',
+                'access_token' => '12345.cmFuZG9tXzE',
                 'token_type' => 'bearer',
                 'expires_in' => 3600,
             ],
