@@ -19,93 +19,40 @@
 namespace SURFnet\VPN\Portal;
 
 use DateTime;
+use fkooman\OAuth\Server\Exception\TokenException;
 use fkooman\OAuth\Server\TokenStorage;
+use fkooman\OAuth\Server\Validator;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
+use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
-    /** @var TokenStorage */
-    private $tokenStorage;
+    /** @var \fkooman\OAuth\Server\Validator */
+    private $validator;
 
-    /** @var \DateTime */
-    private $dateTime;
-
-    /** @var string */
-    private $realm;
-
-    public function __construct(TokenStorage $tokenStorage, DateTime $dateTime, $realm = 'Protected Area')
+    public function __construct(TokenStorage $tokenStorage, DateTime $dateTime)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->dateTime = $dateTime;
-        $this->realm = $realm;
+        $this->validator = new Validator($tokenStorage, $dateTime);
     }
 
     public function executeBefore(Request $request, array $hookData)
     {
         $authorizationHeader = $request->getHeader('HTTP_AUTHORIZATION', false, null);
 
-        // is authorization header there?
-        if (is_null($authorizationHeader)) {
-            throw new HttpException(
-                'no_token',
-                401,
-                ['WWW-Authenticate' => sprintf('Bearer realm="%s"', $this->realm)]
-            );
+        try {
+            $tokenInfo = $this->validator->validate($authorizationHeader);
+
+            return $tokenInfo['user_id'];
+        } catch (TokenException $e) {
+            $tokenResponse = $e->getResponse();
+
+            $response = new JsonResponse($tokenResponse->getBody(true), $tokenResponse->getStatusCode());
+            foreach ($tokenResponse->getHeaders() as $k => $v) {
+                $response->addHeader($k, $v);
+            }
+
+            return $response;
         }
-
-        // validate the HTTP_AUTHORIZATION header
-        if (false === $bearerToken = self::getBearerToken($authorizationHeader)) {
-            throw $this->invalidTokenException();
-        }
-
-        $accessTokenKey = $bearerToken[0];
-        $accessToken = $bearerToken[1];
-
-        $tokenInfo = $this->tokenStorage->getToken($accessTokenKey);
-        if (false === $tokenInfo) {
-            throw $this->invalidTokenException();
-        }
-
-        // time safe string compare, using polyfill on PHP < 5.6
-        if (!hash_equals($tokenInfo['access_token'], $accessToken)) {
-            throw $this->invalidTokenException();
-        }
-
-        $expiresAt = new DateTime($tokenInfo['expires_at']);
-        if ($this->dateTime > $expiresAt) {
-            throw $this->invalidTokenException();
-        }
-
-        return $tokenInfo['user_id'];
-    }
-
-    private static function getBearerToken($authorizationHeader)
-    {
-        if (1 !== preg_match('|^Bearer ([[:alpha:][:digit:]-._~+/]+=*)$|', $authorizationHeader, $m)) {
-            return false;
-        }
-
-        $bearerToken = $m[1];
-        if (false === strpos($bearerToken, '.')) {
-            return false;
-        }
-
-        return explode('.', $bearerToken);
-    }
-
-    private function invalidTokenException()
-    {
-        return new HttpException(
-            'invalid_token',
-            401,
-            [
-                'WWW-Authenticate' => sprintf(
-                    'Bearer realm="%s",error="invalid_token"',
-                    $this->realm
-                ),
-            ]
-        );
     }
 }

@@ -44,10 +44,6 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
-     * @expectedExceptionMessage: no_token
-     */
     public function testNoAuth()
     {
         $request = self::getRequest(
@@ -55,7 +51,12 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             ]
         );
         $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
-        $bearerAuthenticationHook->executeBefore($request, []);
+        $tokenResponse = $bearerAuthenticationHook->executeBefore($request, []);
+        $this->assertSame(401, $tokenResponse->getStatusCode());
+        $this->assertSame(
+            'Bearer realm="OAuth"',
+            $tokenResponse->getHeader('WWW-Authenticate')
+        );
     }
 
     public function testValidToken()
@@ -66,82 +67,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             ]
         );
         $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
-        $bearerAuthenticationHook->executeBefore($request, []);
-    }
-
-    /**
-     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
-     * @expectedExceptionMessage: invalid_token
-     */
-    public function testInvalidAccessTokenKey()
-    {
-        $request = self::getRequest(
-            [
-                'HTTP_AUTHORIZATION' => 'Bearer aaaa.abcdefgh',
-            ]
-        );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
-        $bearerAuthenticationHook->executeBefore($request, []);
-    }
-
-    /**
-     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
-     * @expectedExceptionMessage: invalid_token
-     */
-    public function testInvalidAccessToken()
-    {
-        $request = self::getRequest(
-            [
-                'HTTP_AUTHORIZATION' => 'Bearer 1234.aaaaaaaa',
-            ]
-        );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
-        $bearerAuthenticationHook->executeBefore($request, []);
-    }
-
-    /**
-     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
-     * @expectedExceptionMessage: invalid_token
-     */
-    public function testInvalidSyntax()
-    {
-        $request = self::getRequest(
-            [
-                'HTTP_AUTHORIZATION' => 'Bearer %%%%',
-            ]
-        );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
-        $bearerAuthenticationHook->executeBefore($request, []);
-    }
-
-    /**
-     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
-     * @expectedExceptionMessage: invalid_token
-     */
-    public function testNoDot()
-    {
-        $request = self::getRequest(
-            [
-                'HTTP_AUTHORIZATION' => 'Bearer abcdef',
-            ]
-        );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
-        $bearerAuthenticationHook->executeBefore($request, []);
-    }
-
-    /**
-     * @expectedException \SURFnet\VPN\Common\Http\Exception\HttpException
-     * @expectedExceptionMessage: invalid_token
-     */
-    public function testBasicAuthentication()
-    {
-        $request = self::getRequest(
-            [
-                'HTTP_AUTHORIZATION' => 'Basic AAA===',
-            ]
-        );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
-        $bearerAuthenticationHook->executeBefore($request, []);
+        $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, []));
     }
 
     private static function getRequest(array $additionalHeaders = [])
