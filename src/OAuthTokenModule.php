@@ -41,7 +41,7 @@ class OAuthTokenModule implements ServiceModuleInterface
             '/token',
             function (Request $request, array $hookData) {
                 try {
-                    $tokenResponse = $this->oauthServer->postToken($request->getPostParameters());
+                    $tokenResponse = $this->oauthServer->postToken($request->getPostParameters(), null, null);
                 } catch (TokenException $e) {
                     $tokenResponse = $e->getResponse();
                 }
