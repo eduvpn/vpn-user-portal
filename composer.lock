@@ -142,23 +142,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "dabdaf7288841c406c2ff25f78b6e8757a010e33"
+                "reference": "27458ec96d283709db1e88ce62b42d03c9b580b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/dabdaf7288841c406c2ff25f78b6e8757a010e33",
-                "reference": "dabdaf7288841c406c2ff25f78b6e8757a010e33",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/27458ec96d283709db1e88ce62b42d03c9b580b2",
+                "reference": "27458ec96d283709db1e88ce62b42d03c9b580b2",
                 "shasum": ""
             },
             "require": {
                 "ext-date": "*",
                 "ext-hash": "*",
                 "ext-json": "*",
+                "ext-libsodium": "*",
                 "ext-pcre": "*",
                 "ext-pdo": "*",
-                "paragonie/random_compat": "^1.0|^2.0",
-                "php": ">=5.4.0",
-                "symfony/polyfill-php56": "^1.3"
+                "php": ">=5.4.0"
             },
             "type": "library",
             "autoload": {
@@ -176,7 +175,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-01-25 09:07:24"
+            "time": "2017-01-25 12:08:44"
         },
         {
             "name": "ircmaxell/password-compat",
