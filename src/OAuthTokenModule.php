@@ -18,7 +18,7 @@
 
 namespace SURFnet\VPN\Portal;
 
-use fkooman\OAuth\Server\Exception\TokenException;
+use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
@@ -41,17 +41,20 @@ class OAuthTokenModule implements ServiceModuleInterface
             '/token',
             function (Request $request, array $hookData) {
                 try {
-                    $tokenResponse = $this->oauthServer->postToken($request->getPostParameters(), null, null);
-                } catch (TokenException $e) {
-                    $tokenResponse = $e->getResponse();
-                }
+                    $responseData = $this->oauthServer->postToken($request->getPostParameters(), null, null);
+                    $response = new JsonResponse($responseData);
+                    $response->addHeader('Cache-Control', 'no-store');
+                    $response->addHeader('Pragma', 'no-cache');
 
-                $response = new JsonResponse($tokenResponse->getArrayBody(), $tokenResponse->getStatusCode());
-                foreach ($tokenResponse->getHeaders() as $k => $v) {
-                    $response->addHeader($k, $v);
-                }
+                    return $response;
+                } catch (OAuthException $e) {
+                    $responseData = ['error' => $e->getMessage(), 'error_description' => $e->getDescription()];
+                    $response = new JsonResponse($responseData, $e->getCode());
+                    $response->addHeader('Cache-Control', 'no-store');
+                    $response->addHeader('Pragma', 'no-cache');
 
-                return $response;
+                    return $response;
+                }
             }
         );
     }

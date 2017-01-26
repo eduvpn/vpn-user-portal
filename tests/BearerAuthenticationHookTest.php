@@ -40,7 +40,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             'abcdefgh',
             'vpn-companion',
             'create_config',
-            new DateTime('2016-01-01')
+            new DateTime('2016-01-01 01:00:00')
         );
     }
 

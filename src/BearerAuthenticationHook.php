@@ -19,21 +19,22 @@
 namespace SURFnet\VPN\Portal;
 
 use DateTime;
-use fkooman\OAuth\Server\Exception\TokenException;
+use fkooman\OAuth\Server\BearerValidator;
+use fkooman\OAuth\Server\Exception\BearerException;
 use fkooman\OAuth\Server\TokenStorage;
-use fkooman\OAuth\Server\Validator;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Response;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
-    /** @var \fkooman\OAuth\Server\Validator */
-    private $validator;
+    /** @var \fkooman\OAuth\Server\BearerValidator */
+    private $bearerValidator;
 
     public function __construct(TokenStorage $tokenStorage, DateTime $dateTime)
     {
-        $this->validator = new Validator($tokenStorage, $dateTime);
+        $this->bearerValidator = new BearerValidator($tokenStorage, $dateTime);
     }
 
     public function executeBefore(Request $request, array $hookData)
@@ -41,16 +42,19 @@ class BearerAuthenticationHook implements BeforeHookInterface
         $authorizationHeader = $request->getHeader('HTTP_AUTHORIZATION', false, null);
 
         try {
-            $tokenInfo = $this->validator->validate($authorizationHeader);
+            $tokenInfo = $this->bearerValidator->validate($authorizationHeader);
+            if (false === $tokenInfo) {
+                // no Bearer token was provided
+                $response = new Response(401);
+                $response->addHeader('WWW-Authenticate', 'Bearer realm="OAuth"');
+
+                return $response;
+            }
 
             return $tokenInfo['user_id'];
-        } catch (TokenException $e) {
-            $tokenResponse = $e->getResponse();
-
-            $response = new JsonResponse($tokenResponse->getArrayBody(), $tokenResponse->getStatusCode());
-            foreach ($tokenResponse->getHeaders() as $k => $v) {
-                $response->addHeader($k, $v);
-            }
+        } catch (BearerException $e) {
+            $response = new JsonResponse(['error' => $e->getMessage(), 'error_description' => $e->getDescription()], 401);
+            $response->addHeader('WWW-Authenticate', sprintf('Bearer realm="OAuth",error="%s",error_description="%s"', $e->getMessage(), $e->getDescription()));
 
             return $response;
         }
