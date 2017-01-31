@@ -62,5 +62,9 @@ return [
             //    'display_name' => 'eduVPN for Windows',
             //],
         ],
+
+        // Accept tokens signed with this public key from a central token 
+        // service
+        //'signPublicKey' => 'nmvVNpuu3CJQ17dGFG26p72olRm4hr7hS8eQcnipWD8='
     ],
 ];

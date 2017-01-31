@@ -19,6 +19,7 @@
 namespace SURFnet\VPN\Portal;
 
 use DateTime;
+use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\TokenStorage;
 use PDO;
 use PHPUnit_Framework_TestCase;
@@ -50,7 +51,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             [
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
+        $bearerAuthenticationHook = new BearerAuthenticationHook(new BearerValidator($this->tokenStorage, new DateTime('2016-01-01')));
         $tokenResponse = $bearerAuthenticationHook->executeBefore($request, []);
         $this->assertSame(401, $tokenResponse->getStatusCode());
         $this->assertSame(
@@ -66,7 +67,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
                 'HTTP_AUTHORIZATION' => 'Bearer 1234.abcdefgh',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook($this->tokenStorage, new DateTime('2016-01-01'));
+        $bearerAuthenticationHook = new BearerAuthenticationHook(new BearerValidator($this->tokenStorage, new DateTime('2016-01-01')));
         $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, []));
     }
 

@@ -18,10 +18,8 @@
 
 namespace SURFnet\VPN\Portal;
 
-use DateTime;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\BearerException;
-use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
@@ -32,9 +30,9 @@ class BearerAuthenticationHook implements BeforeHookInterface
     /** @var \fkooman\OAuth\Server\BearerValidator */
     private $bearerValidator;
 
-    public function __construct(TokenStorage $tokenStorage, DateTime $dateTime)
+    public function __construct(BearerValidator $bearerValidator)
     {
-        $this->bearerValidator = new BearerValidator($tokenStorage, $dateTime);
+        $this->bearerValidator = $bearerValidator;
     }
 
     public function executeBefore(Request $request, array $hookData)

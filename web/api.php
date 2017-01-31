@@ -17,6 +17,7 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
+use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\JsonResponse;
@@ -46,11 +47,22 @@ try {
         $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
         $tokenStorage->init();
 
+        $bearerValidator = new BearerValidator(
+            $tokenStorage,
+            new DateTime()
+        );
+        if ($config->getSection('Api')->hasItem('signPublicKey')) {
+            $bearerValidator->setSignPublicKey(
+                base64_decode(
+                    $config->getSection('Api')->getItem('signPublicKey')
+                )
+            );
+        }
+
         $service->addBeforeHook(
             'auth',
             new BearerAuthenticationHook(
-                $tokenStorage,
-                new DateTime()
+                $bearerValidator
             )
         );
 
