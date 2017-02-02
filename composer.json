@@ -24,6 +24,11 @@
             "no-api": true,
             "type": "vcs",
             "url": "https://github.com/fkooman/php-oauth2-server"
+        },
+        {
+            "no-api": true,
+            "type": "vcs",
+            "url": "https://github.com/fkooman/php-oauth2-client"
         }
     ],
     "require": {
@@ -38,7 +43,7 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
-        "fkooman/oauth2-client": "^4.0",
+        "fkooman/oauth2-client": "dev-master",
         "fkooman/oauth2-server": "dev-master",
         "php": ">=5.4.0",
         "symfony/polyfill-php56": "^1.3",
