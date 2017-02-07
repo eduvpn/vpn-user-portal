@@ -137,7 +137,7 @@ class TotpModule implements ServiceModuleInterface
 
         $totpSecret = '';
         for ($i = 0; $i < 16; ++$i) {
-            $totpSecret .= $keys[random_int(0, 31)];
+            $totpSecret .= $keys[\Sodium\randombytes_uniform(31)];
         }
 
         return $totpSecret;

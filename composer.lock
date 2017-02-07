@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea6fd504bed4aa17df28cb74e4173236",
+    "content-hash": "7fd8d46f648b5c8de63dd076b351f902",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -102,12 +102,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "d3b2b124824ad4caeafd14414b88a1bbf2e5beec"
+                "reference": "25d48b0cf88f549feb9667a6c5b5ed15f65270c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/d3b2b124824ad4caeafd14414b88a1bbf2e5beec",
-                "reference": "d3b2b124824ad4caeafd14414b88a1bbf2e5beec",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/25d48b0cf88f549feb9667a6c5b5ed15f65270c6",
+                "reference": "25d48b0cf88f549feb9667a6c5b5ed15f65270c6",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-02-02 20:26:38"
+            "time": "2017-02-02 20:59:54"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -666,6 +666,7 @@
         "ext-gettext": "*",
         "ext-hash": "*",
         "ext-json": "*",
+        "ext-libsodium": "*",
         "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
