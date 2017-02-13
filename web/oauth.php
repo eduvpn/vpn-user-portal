@@ -18,7 +18,6 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\OAuth\Server\Random;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\JsonResponse;
@@ -61,10 +60,8 @@ try {
     // OAuth module
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
-            $tokenStorage,
-            new Random(),
-            new DateTime(),
-            $getClientInfo
+            $getClientInfo,
+            $tokenStorage
         );
         $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
         $oauthModule = new OAuthTokenModule(

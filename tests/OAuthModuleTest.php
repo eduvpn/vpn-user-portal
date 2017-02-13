@@ -68,16 +68,16 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
             new OAuthModule(
                 new JsonTpl(),
                 new OAuthServer(
-                    $tokenStorage,
-                    $random,
-                    new DateTime('2016-01-01'),
                     function ($clientId) use ($config) {
                         if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
                             return false;
                         }
 
                         return $config->getSection('apiConsumers')->getItem($clientId);
-                    }
+                    },
+                    $tokenStorage,
+                    $random,
+                    new DateTime('2016-01-01')
                 )
             )
         );
@@ -156,7 +156,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
-            'http://example.org/token-cb#access_token=cmFuZG9tXzE%3D.cmFuZG9tXzI%3D&state=12345&expires_in=3600',
+            'http://example.org/token-cb#access_token=random_1.random_2&state=12345&expires_in=3600',
             $response->getHeader('Location')
         );
     }
@@ -182,7 +182,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         );
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
-            'http://example.org/code-cb?code=cmFuZG9tXzE%3D.cmFuZG9tXzI%3D&state=12345',
+            'http://example.org/code-cb?code=random_1.random_2&state=12345',
             $response->getHeader('Location')
         );
     }

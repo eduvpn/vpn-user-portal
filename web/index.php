@@ -21,7 +21,6 @@ use fkooman\OAuth\Client\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\OAuth\Server\Random as OAuthRandom;
 use fkooman\OAuth\Server\TokenStorage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\CsrfProtectionHook;
@@ -204,10 +203,8 @@ try {
     // OAuth module
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
-            $tokenStorage,
-            new OAuthRandom(),
-            new DateTime(),
-            $getClientInfo
+            $getClientInfo,
+            $tokenStorage
         );
         $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
         $oauthModule = new OAuthModule(

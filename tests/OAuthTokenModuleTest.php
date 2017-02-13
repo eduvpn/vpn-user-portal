@@ -66,16 +66,16 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
         $this->service->addModule(
             new OAuthTokenModule(
                 new OAuthServer(
-                    $tokenStorage,
-                    $random,
-                    new DateTime('2016-01-01'),
                     function ($clientId) use ($config) {
                         if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
                             return false;
                         }
 
                         return $config->getSection('apiConsumers')->getItem($clientId);
-                    }
+                    },
+                    $tokenStorage,
+                    $random,
+                    new DateTime('2016-01-01')
                 )
             )
         );
@@ -85,7 +85,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             [
-                'access_token' => '12345.cmFuZG9tXzE=',
+                'access_token' => '12345.random_1',
                 'token_type' => 'bearer',
                 'expires_in' => 3600,
             ],
