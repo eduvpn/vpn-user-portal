@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7fd8d46f648b5c8de63dd076b351f902",
+    "content-hash": "a6acfe9c6a3874c43ffb710463b1f11c",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -220,22 +220,23 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.0.3",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "e085e08c939de49707dbf64315d178d90fbc708d"
+                "reference": "d96e63b79a7135a65659ba5b1cb02826172bfedd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/e085e08c939de49707dbf64315d178d90fbc708d",
-                "reference": "e085e08c939de49707dbf64315d178d90fbc708d",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/d96e63b79a7135a65659ba5b1cb02826172bfedd",
+                "reference": "d96e63b79a7135a65659ba5b1cb02826172bfedd",
                 "shasum": ""
             },
             "require": {
-                "php": "^7"
+                "php": "^5.3|^7"
             },
             "require-dev": {
+                "paragonie/random_compat": "^1.4|^2.0",
                 "phpunit/phpunit": "4.*|5.*"
             },
             "type": "library",
@@ -277,7 +278,7 @@
                 "hex2bin",
                 "rfc4648"
             ],
-            "time": "2016-07-11T20:32:06+00:00"
+            "time": "2016-06-13T01:00:24+00:00"
         },
         {
             "name": "psr/log",

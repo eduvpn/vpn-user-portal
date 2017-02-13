@@ -46,6 +46,7 @@
         "ext-spl": "*",
         "fkooman/oauth2-client": "dev-master",
         "fkooman/oauth2-server": "dev-master",
+        "paragonie/constant_time_encoding": "^1",
         "php": ">=5.4.0",
         "twig/extensions": "^1.3",
         "twig/twig": "^1.24"
