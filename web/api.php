@@ -59,7 +59,7 @@ try {
         );
 
         // add addititional public keys to verify tokens if they are available
-        if ($config->getSection('Api')->hasSection('publicKeys')) {
+        if ($config->getSection('Api')->hasItem('publicKeys')) {
             foreach ($config->getSection('Api')->getSection('publicKeys')->toArray() as $publicKey) {
                 $bearerValidator->addPublicKey(
                     Base64::decode($publicKey)
