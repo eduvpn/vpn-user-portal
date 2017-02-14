@@ -11,6 +11,7 @@ return [
         'vendor/fkooman/oauth2-server',
         'vendor/twig',
         'vendor/psr/log',
+        'vendor/paragonie/constant_time_encoding',
     ],
     'exclude_analysis_directory_list' => [
         'vendor/',

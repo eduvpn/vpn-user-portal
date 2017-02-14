@@ -18,7 +18,8 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use fkooman\OAuth\Server\BearerValidator;
-use fkooman\OAuth\Server\TokenStorage;
+use fkooman\OAuth\Server\Storage;
+use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
@@ -49,19 +50,21 @@ try {
     $service = new Service();
 
     if ($config->hasSection('Api')) {
-        $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
-        $tokenStorage->init();
+        $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+        $storage->init();
 
         $bearerValidator = new BearerValidator(
-            $tokenStorage,
-            new DateTime()
+            Base64::decode($config->getSection('Api')->getItem('keyPair')),
+            $storage
         );
-        if ($config->getSection('Api')->hasItem('signPublicKey')) {
-            $bearerValidator->setSignPublicKey(
-                base64_decode(
-                    $config->getSection('Api')->getItem('signPublicKey')
-                )
-            );
+
+        // add addititional public keys to verify tokens if they are available
+        if ($config->getSection('Api')->hasSection('publicKeys')) {
+            foreach ($config->getSection('Api')->getSection('publicKeys')->toArray() as $publicKey) {
+                $bearerValidator->addPublicKey(
+                    Base64::decode($publicKey)
+                );
+            }
         }
 
         $service->addBeforeHook(

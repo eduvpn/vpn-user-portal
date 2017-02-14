@@ -18,7 +18,8 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\OAuth\Server\TokenStorage;
+use fkooman\OAuth\Server\Storage;
+use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
@@ -46,8 +47,8 @@ try {
     $service = new Service();
 
     // OAuth tokens
-    $tokenStorage = new TokenStorage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
-    $tokenStorage->init();
+    $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+    $storage->init();
 
     $getClientInfo = function ($clientId) use ($config) {
         if (false === $config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
@@ -61,7 +62,8 @@ try {
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
             $getClientInfo,
-            $tokenStorage
+            Base64::decode($config->getSection('Api')->getItem('keyPair')),
+            $storage
         );
         $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
         $oauthModule = new OAuthTokenModule(

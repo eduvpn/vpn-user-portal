@@ -20,29 +20,21 @@ namespace SURFnet\VPN\Portal;
 
 use DateTime;
 use fkooman\OAuth\Server\BearerValidator;
-use fkooman\OAuth\Server\TokenStorage;
+use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Http\Request;
 
 class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
 {
-    /** @var TokenStorage */
-    private $tokenStorage;
+    /** @var Storage */
+    private $storage;
 
     public function setUp()
     {
-        $this->tokenStorage = new TokenStorage(new PDO('sqlite::memory:'));
-        $this->tokenStorage->init();
-
-        $this->tokenStorage->storeToken(
-            'foo',
-            '1234',
-            'abcdefgh',
-            'vpn-companion',
-            'create_config',
-            new DateTime('2016-01-01 01:00:00')
-        );
+        $this->storage = new Storage(new PDO('sqlite::memory:'));
+        $this->storage->init();
+        $this->keyPair = base64_decode('2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol');
     }
 
     public function testNoAuth()
@@ -51,7 +43,7 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             [
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook(new BearerValidator($this->tokenStorage, new DateTime('2016-01-01')));
+        $bearerAuthenticationHook = new BearerAuthenticationHook(new BearerValidator($this->keyPair, $this->storage, new DateTime('2016-01-01')));
         $tokenResponse = $bearerAuthenticationHook->executeBefore($request, []);
         $this->assertSame(401, $tokenResponse->getStatusCode());
         $this->assertSame(
@@ -64,10 +56,10 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
     {
         $request = self::getRequest(
             [
-                'HTTP_AUTHORIZATION' => 'Bearer 1234.abcdefgh',
+                'HTTP_AUTHORIZATION' => 'Bearer qrCFqzPz4ac7U8/fSOa6ReXvDJ6D8zsz1VNK/yEHrryWHpHanbHjVgL6Ss+pLenWgTVTOHcLLv1aT3D1RTnmAnsidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoidG9rZW4tY2xpZW50Iiwic2NvcGUiOiJjb25maWciLCJleHBpcmVzX2F0IjoiMjAxNi0wMS0wMSAwMTowMDowMCJ9',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook(new BearerValidator($this->tokenStorage, new DateTime('2016-01-01')));
+        $bearerAuthenticationHook = new BearerAuthenticationHook(new BearerValidator($this->keyPair, $this->storage, new DateTime('2016-01-01')));
         $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, []));
     }
 

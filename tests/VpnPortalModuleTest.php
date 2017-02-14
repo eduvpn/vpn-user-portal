@@ -22,7 +22,7 @@ require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
 require_once sprintf('%s/Test/TestHttpClient.php', __DIR__);
 require_once sprintf('%s/Test/TestSession.php', __DIR__);
 
-use fkooman\OAuth\Server\TokenStorage;
+use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
@@ -42,14 +42,14 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
     {
         $httpClient = new TestHttpClient();
 
-        $tokenStorage = new TokenStorage(new PDO('sqlite::memory:'));
-        $tokenStorage->init();
+        $storage = new Storage(new PDO('sqlite::memory:'));
+        $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(
             new JsonTpl(),
             new ServerClient($httpClient, 'serverClient'),
             new TestSession(),
-            $tokenStorage,
+            $storage,
             function ($clientId) {
                 return false;
             }

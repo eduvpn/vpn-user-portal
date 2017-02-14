@@ -22,7 +22,7 @@ require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
 
 use DateTime;
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\OAuth\Server\TokenStorage;
+use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Config;
@@ -57,10 +57,8 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
             ]
         );
 
-        $tokenStorage = new TokenStorage(new PDO('sqlite::memory:'));
-        $tokenStorage->init();
-
-        $tokenStorage->storeCode('foo', '12345', 'abcdefgh', 'code-client', 'config', 'http://example.org/code-cb', new DateTime('2016-01-01'), 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM');
+        $storage = new Storage(new PDO('sqlite::memory:'));
+        $storage->init();
 
         $this->service = new Service();
         $this->service->addModule(
@@ -73,7 +71,8 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
 
                         return $config->getSection('apiConsumers')->getItem($clientId);
                     },
-                    $tokenStorage,
+                    base64_decode('2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol'),
+                    $storage,
                     $random,
                     new DateTime('2016-01-01')
                 )
@@ -85,7 +84,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame(
             [
-                'access_token' => '12345.random_1',
+                'access_token' => 'znwcwk0WpP1y0qrUSd/J6KToSlXdceGBaliVLhYYjRESQoVZI1aZTX9cRfBfIpOBnMcyTF3Izs9H8918OwiqBHsidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxIDAxOjAwOjAwIn0=',
                 'token_type' => 'bearer',
                 'expires_in' => 3600,
             ],
@@ -95,7 +94,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
                 [],
                 [
                     'grant_type' => 'authorization_code',
-                    'code' => '12345.abcdefgh',
+                    'code' => 'nmVljssjTwA29QjWrzieuAQjwR0yJo6DodWaTAa72t03WWyGDA8ajTdUy0Dzklrzx4kUjkL7MX/BaE2PUuykBHsidHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsInJlZGlyZWN0X3VyaSI6Imh0dHA6XC9cL2V4YW1wbGUub3JnXC9jb2RlLWNiIiwiY29kZV9jaGFsbGVuZ2UiOiJFOU1lbGhvYTJPd3ZGckVNVEpndUNIYW9lSzF0OFVSV2J1R0pTc3R3LWNNIiwiZXhwaXJlc19hdCI6IjIwMTYtMDEtMDEgMDA6MDU6MDAifQ==',
                     'redirect_uri' => 'http://example.org/code-cb',
                     'client_id' => 'code-client',
                     'code_verifier' => 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk',

@@ -18,7 +18,7 @@
 
 namespace SURFnet\VPN\Portal;
 
-use fkooman\OAuth\Server\TokenStorage;
+use fkooman\OAuth\Server\Storage;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\InputValidation;
@@ -42,8 +42,8 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\Http\SessionInterface */
     private $session;
 
-    /** @var \fkooman\OAuth\Server\TokenStorage */
-    private $tokenStorage;
+    /** @var \fkooman\OAuth\Server\Storage */
+    private $storage;
 
     /** @var callable */
     private $getClientInfo;
@@ -51,12 +51,12 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts;
 
-    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, TokenStorage $tokenStorage, callable $getClientInfo)
+    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, callable $getClientInfo)
     {
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
         $this->session = $session;
-        $this->tokenStorage = $tokenStorage;
+        $this->storage = $storage;
         $this->getClientInfo = $getClientInfo;
         $this->shuffleHosts = true;
     }
@@ -232,7 +232,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userGroups = $this->cachedUserGroups($userId);
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
-                $authorizedClients = $this->tokenStorage->getAuthorizedClients($userId);
+                $authorizedClients = $this->storage->getAuthorizations($userId);
                 foreach ($authorizedClients as $k => $v) {
                     $authorizedClients[$k]['display_name'] = call_user_func($this->getClientInfo, $v['client_id'])['display_name'];
                 }
@@ -267,7 +267,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
                 $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
 
-                $this->tokenStorage->removeClientTokens($userId, $clientId);
+                $this->storage->deleteAuthorization($userId, $clientId);
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }
