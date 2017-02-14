@@ -56,7 +56,7 @@ class OAuthModule implements ServiceModuleInterface
                         )
                     );
                 } catch (OAuthException $e) {
-                    throw new HttpException($e->getMessage(), $e->getCode());
+                    throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()), $e->getCode());
                 }
             }
         );
@@ -76,7 +76,7 @@ class OAuthModule implements ServiceModuleInterface
                         302
                     );
                 } catch (OAuthException $e) {
-                    throw new HttpException($e->getMessage(), $e->getCode());
+                    throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()), $e->getCode());
                 }
             }
         );
