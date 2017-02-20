@@ -20,6 +20,7 @@ namespace SURFnet\VPN\Portal;
 
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
+use ParagonIE\ConstantTime\Base32;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\Http\RedirectResponse;
@@ -59,7 +60,7 @@ class TotpModule implements ServiceModuleInterface
                         'vpnPortalTotp',
                         [
                             'hasTotpSecret' => $hasTotpSecret,
-                            'totpSecret' => self::generateSecret(),
+                            'totpSecret' => Base32::encodeUpper(\Sodium\randombytes_buf(10)),
                         ]
                     )
                 );
@@ -123,23 +124,5 @@ class TotpModule implements ServiceModuleInterface
                 return $response;
             }
         );
-    }
-
-    private static function generateSecret()
-    {
-        // Insipired by https://github.com/ChristianRiesen/otp and modified a
-        // bit, MIT licensed code
-        // Generates a random BASE32 string of length 16 without padding
-        $keys = array_merge(
-            range('A', 'Z'),
-            range(2, 7)
-        );
-
-        $totpSecret = '';
-        for ($i = 0; $i < 16; ++$i) {
-            $totpSecret .= $keys[\Sodium\randombytes_uniform(31)];
-        }
-
-        return $totpSecret;
     }
 }
