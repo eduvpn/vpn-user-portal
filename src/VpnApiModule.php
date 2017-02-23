@@ -82,6 +82,26 @@ class VpnApiModule implements ServiceModuleInterface
         );
 
         // API 2
+        $service->get(
+            '/user_info',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                $isDisabledUser = $this->serverClient->get('is_disabled_user', ['user_id' => $userId]);
+
+                return new ApiResponse(
+                    'user_info',
+                    [
+                        'two_factor_enrolled' => $hasYubiKeyId || $hasTotpSecret,
+                        'is_disabled' => $isDisabledUser,
+                    ]
+                );
+            }
+        );
+
+        // API 2
         $service->post(
             '/create_certificate',
             function (Request $request, array $hookData) {
