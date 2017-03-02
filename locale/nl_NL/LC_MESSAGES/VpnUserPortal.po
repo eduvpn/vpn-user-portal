@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: /tmp/cache/b7/b786a4558153135ab4e53ecc6261d0c87bc200d56ed3befad3e5277810a86b7e.php:37
@@ -23,7 +23,7 @@ msgstr "Inloggen"
 #: /tmp/cache/b7/b786a4558153135ab4e53ecc6261d0c87bc200d56ed3befad3e5277810a86b7e.php:44
 #: /tmp/cache/f4/f4fa3e80dc913133cc1531b2806f202b8e43b56b4d450f1baa519cd760e70ff1.php:84
 msgid "Please attach your YubiKey and press its button."
-msgstr "Sluit de YubiKey aan en druk op de knop."
+msgstr "Stop de YubiKey in de USB-poort en druk op de knop."
 
 #: /tmp/cache/b7/b786a4558153135ab4e53ecc6261d0c87bc200d56ed3befad3e5277810a86b7e.php:55
 msgid "The YubiKey OTP you provided is not correct."
@@ -100,15 +100,15 @@ msgstr "Documentatie"
 
 #: /tmp/cache/f4/f4fa3e80dc913133cc1531b2806f202b8e43b56b4d450f1baa519cd760e70ff1.php:58
 msgid "You are already enrolled with a YubiKey."
-msgstr "Al aangemeld met een YubiKey."
+msgstr "Je bent al aangemeld met een YubiKey OTP."
 
 #: /tmp/cache/f4/f4fa3e80dc913133cc1531b2806f202b8e43b56b4d450f1baa519cd760e70ff1.php:67
 msgid ""
 "Here you can enroll for two-factor authentication (2FA) using a YubiKey One-"
 "time Password (OTP)."
 msgstr ""
-"Hier kan aangemeld worden voor twee-factor authenticatie (2FA) door middel "
-"van een YubiKey One-time Password (OTP)."
+"Hier kun je je aanmelden voor twee-factor authenticatie (2FA) met een "
+"YubiKey."
 
 #: /tmp/cache/f4/f4fa3e80dc913133cc1531b2806f202b8e43b56b4d450f1baa519cd760e70ff1.php:70
 msgid ""
@@ -129,7 +129,8 @@ msgstr "De YubiKey OTP is ongeldig."
 
 #: /tmp/cache/b4/b4053128bfd836d174855216bfafa8b64938c37b093dd7d428327a0cbe8494d5.php:54
 msgid "Are you sure you want to delete <em>%displayName%</em>?"
-msgstr "De configuratie <em>%displayName%</em> wordt verwijderd. Doorgaan?"
+msgstr ""
+"Weet je zeker dat je de configuratie <em>%displayName%</em> wilt verwijderen?"
 
 #: /tmp/cache/b4/b4053128bfd836d174855216bfafa8b64938c37b093dd7d428327a0cbe8494d5.php:66
 msgid "Yes"
@@ -154,7 +155,7 @@ msgid ""
 "Create a new VPN configuration by choosing a profile and a name for your "
 "configuration, e.g. <em>Phone</em>."
 msgstr ""
-"Maak een nieuwe VPN-configuratie aan door het kiezen van een profile en het "
+"Maak een nieuwe VPN-configuratie aan door het kiezen van een profiel en het "
 "invoeren van een naam, bijvoorbeeld <em>Telefoon</em>."
 
 #: /tmp/cache/ca/ca495fe7053a32c9004a83538dbc29fdc6c1a6f6f11cbfa06c92a5385b2c8791.php:97
@@ -162,8 +163,8 @@ msgid ""
 "You need to enroll for two-factor authentication on the <a href=\"account"
 "\">account</a> page before you can use this profile!"
 msgstr ""
-"Voor dit profiel is twee-factor authenticatie nodig, echter is dat nog niet "
-"ingesteld. Doe dit op de <a href=\"account\">account</a> pagina."
+"Je moet aangemeld zijn voor twee-factor authenticatie op de <a href=\"account"
+"\">account</a> pagina voordat dit profiel gebruikt kan worden."
 
 #: /tmp/cache/ca/ca495fe7053a32c9004a83538dbc29fdc6c1a6f6f11cbfa06c92a5385b2c8791.php:117
 msgid "Profile"
@@ -182,15 +183,14 @@ msgstr "Downloaden"
 
 #: /tmp/cache/bc/bc586982f623717e7b00566774b1f25019ec149e576994eb71e69f6e40f5a0af.php:58
 msgid "You are already enrolled for TOTP."
-msgstr "Al aangemeld voor TOTP."
+msgstr "Je bent al aangemeld voor TOTP."
 
 #: /tmp/cache/bc/bc586982f623717e7b00566774b1f25019ec149e576994eb71e69f6e40f5a0af.php:67
 msgid ""
 "Here you can enroll for two-factor authentication (2FA) using a Time-based "
 "One-time Password (TOTP)."
 msgstr ""
-"Hier kan aangemeld worden voor twee-factor authenticatie (2FA) door middel "
-"van een Time-based One-time Password (TOTP)."
+"Hier kun je je aanmelden voor twee-factor authenticatie (2FA) met TOTP."
 
 #: /tmp/cache/bc/bc586982f623717e7b00566774b1f25019ec149e576994eb71e69f6e40f5a0af.php:70
 msgid ""
@@ -219,8 +219,8 @@ msgid ""
 "The OTP key you entered does not match the expected value for this OTP "
 "secret."
 msgstr ""
-"De ingevoerde OTP-code komt niet overeen met de verwachtte waarde voor deze "
-"OTP-sleutel."
+"De OTP-code die je invoerde komt niet overeen met de verwachtte waarde voor "
+"deze OTP-sleutel."
 
 #: /tmp/cache/b8/b8cf1be4e4de70adb93a3ab86a07737c2e177c0233b5bf24130e6cc870a795f9.php:58
 msgid "There are currently no configurations. <a href=\"new\">Create</a> one."
@@ -252,11 +252,11 @@ msgstr "Verwijderen"
 
 #: /tmp/cache/5d/5d7eab36c9ab8bc1c6b26d6315eb29d0a4c7c3b47bcd0f0c49d19cc48500aa84.php:44
 msgid "Please provide your TOTP."
-msgstr "Voer de TOTP in."
+msgstr "Voer de TOTP-code in."
 
 #: /tmp/cache/5d/5d7eab36c9ab8bc1c6b26d6315eb29d0a4c7c3b47bcd0f0c49d19cc48500aa84.php:55
 msgid "The TOTP you provided is incorrect."
-msgstr "De TOTP is ongeldig."
+msgstr "De TOTP-code is ongeldig."
 
 #: /tmp/cache/5d/5d7eab36c9ab8bc1c6b26d6315eb29d0a4c7c3b47bcd0f0c49d19cc48500aa84.php:71
 #: /tmp/cache/12/12f43120d7e36a6a862ff401222dd1e73432d7fc210110e36e11d5c39df4b1f0.php:120
@@ -326,7 +326,7 @@ msgstr "Geautoriseerde applicaties"
 
 #: /tmp/cache/12/12f43120d7e36a6a862ff401222dd1e73432d7fc210110e36e11d5c39df4b1f0.php:211
 msgid "No applications have access to your account."
-msgstr "Er zijn geen programma's die toegang hebben tot dit account."
+msgstr "Er zijn geen programma's die toegang hebben tot je account."
 
 #: /tmp/cache/12/12f43120d7e36a6a862ff401222dd1e73432d7fc210110e36e11d5c39df4b1f0.php:222
 msgid "Scope"
@@ -363,7 +363,7 @@ msgstr "Type"
 
 #: /tmp/cache/22/2287dad3a816a007bf72156e9d638610ec39b060ea875a5992d2b06c7f3a9ae5.php:44
 msgid "Please sign in with your username and password."
-msgstr "Log in met gebruikersnaam en wachtwoord."
+msgstr "Log in met je gebruikersnaam en wachtwoord."
 
 #: /tmp/cache/22/2287dad3a816a007bf72156e9d638610ec39b060ea875a5992d2b06c7f3a9ae5.php:55
 msgid "The credentials you provided were not correct."
