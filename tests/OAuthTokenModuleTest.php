@@ -59,7 +59,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
 
         $storage = new Storage(new PDO('sqlite::memory:'));
         $storage->init();
-
+        $storage->storeAuthorization('foo', 'code-client', 'config', 'random_1');
         $this->service = new Service();
         $this->service->addModule(
             new OAuthTokenModule(
@@ -71,7 +71,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
 
                         return $config->getSection('apiConsumers')->getItem($clientId);
                     },
-                    base64_decode('2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol'),
+                    '2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol',
                     $storage,
                     $random,
                     new DateTime('2016-01-01')
@@ -85,6 +85,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'access_token' => 'znwcwk0WpP1y0qrUSd/J6KToSlXdceGBaliVLhYYjRESQoVZI1aZTX9cRfBfIpOBnMcyTF3Izs9H8918OwiqBHsidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxIDAxOjAwOjAwIn0=',
+                'refresh_token' => 'wi5vLrEtTVmTFfI+lLCfVVg3b6punZLQs6+N/8Q67ybHLEqdDzxXYjD3FePW3KmMW0NhVqMOFge52h8U30lQC3sidHlwZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoX2tleSI6InJhbmRvbV8xIiwidXNlcl9pZCI6ImZvbyIsImNsaWVudF9pZCI6ImNvZGUtY2xpZW50Iiwic2NvcGUiOiJjb25maWcifQ==',
                 'token_type' => 'bearer',
                 'expires_in' => 3600,
             ],

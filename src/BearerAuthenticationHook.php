@@ -18,19 +18,18 @@
 
 namespace SURFnet\VPN\Portal;
 
-use fkooman\OAuth\Server\BearerValidator;
+use fkooman\OAuth\Server\BearerLocalValidator;
 use fkooman\OAuth\Server\Exception\BearerException;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Response;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
     /** @var \fkooman\OAuth\Server\BearerValidator */
     private $bearerValidator;
 
-    public function __construct(BearerValidator $bearerValidator)
+    public function __construct(BearerLocalValidator $bearerValidator)
     {
         $this->bearerValidator = $bearerValidator;
     }
@@ -41,13 +40,6 @@ class BearerAuthenticationHook implements BeforeHookInterface
 
         try {
             $tokenInfo = $this->bearerValidator->validate($authorizationHeader);
-            if (false === $tokenInfo) {
-                // no Bearer token was provided
-                $response = new Response(401);
-                $response->addHeader('WWW-Authenticate', 'Bearer realm="OAuth"');
-
-                return $response;
-            }
 
             return $tokenInfo['user_id'];
         } catch (BearerException $e) {

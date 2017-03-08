@@ -22,7 +22,6 @@ use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Storage;
-use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\CsrfProtectionHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationHook;
@@ -205,7 +204,7 @@ try {
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
             $getClientInfo,
-            Base64::decode($config->getSection('Api')->getItem('keyPair')),
+            $config->getSection('Api')->getItem('keyPair'),
             $storage
         );
         $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));

@@ -263,11 +263,12 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/removeClientAuthorization',
-            function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
-                $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
-
-                $this->storage->deleteAuthorization($userId, $clientId);
+            function (Request $request) {
+                $authKey = $request->getPostParameter('auth_key');
+                if (1 !== preg_match('/^[0-9][a-f]{32}$/', $authKey)) {
+                    throw new HttpException('invalid "auth_key"', 400);
+                }
+                $this->storage->deleteAuthorization($authKey);
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }

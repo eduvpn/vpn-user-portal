@@ -40,7 +40,7 @@ return [
 
     'Api' => [
         // access_tokens expire after 3 months
-        'tokenExpiry' => 3*31*24*3600,
+        'tokenExpiry' => 3 * 31 * 24 * 3600,
 
         // OAuth 2.0 consumers
         'consumerList' => [
@@ -63,13 +63,8 @@ return [
             //],
         ],
 
-        // contains a keypair that is used to sign and verify authorization 
+        // contains a keypair that is used to sign and verify authorization
         // codes and access tokens
         'keyPair' => '__REPLACE_ME__',
-
-        // Accept tokens signed with these public keys from other OAuth servers
-        //'publicKeys' => [
-        //    'nmvVNpuu3CJQ17dGFG26p72olRm4hr7hS8eQcnipWD8=',
-        //],
     ],
 ];
