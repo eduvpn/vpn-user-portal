@@ -93,7 +93,7 @@
                 <td><code>{{ client.scope }}</code></td>
                 <td class="text-right">
                     <form method="post" action="removeClientAuthorization">
-                        <input type="hidden" name="client_id" value="{{ client.client_id }}">
+                        <input type="hidden" name="auth_key" value="{{ client.auth_key }}">
                         <button class="error">{% trans "Revoke" %}</button>
                     </form>
                 </td>

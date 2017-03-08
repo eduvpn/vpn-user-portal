@@ -265,7 +265,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/removeClientAuthorization',
             function (Request $request) {
                 $authKey = $request->getPostParameter('auth_key');
-                if (1 !== preg_match('/^[0-9][a-f]{32}$/', $authKey)) {
+                if (1 !== preg_match('/^[0-9a-f]{32}$/', $authKey)) {
                     throw new HttpException('invalid "auth_key"', 400);
                 }
                 $this->storage->deleteAuthorization($authKey);
