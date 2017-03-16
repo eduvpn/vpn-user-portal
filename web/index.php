@@ -80,7 +80,7 @@ try {
         $config->getItem('secureCookie')
     );
 
-    $tpl = new TwigTpl($session, $templateDirs, dirname(__DIR__).'/locale', $templateCache);
+    $tpl = new TwigTpl($templateDirs, dirname(__DIR__).'/locale', $templateCache);
     $tpl->setDefault(
         [
             'requestUri' => $request->getUri(),
@@ -102,7 +102,7 @@ try {
 
     $service = new Service($tpl);
     $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());
-    $service->addBeforeHook('language_switcher', new LanguageSwitcherHook($session, array_keys($supportedLanguages)));
+    $service->addBeforeHook('language_switcher', new LanguageSwitcherHook(array_keys($supportedLanguages), $config->getItem('secureCookie')));
 
     // Authentication
     $authMethod = $config->getItem('authMethod');

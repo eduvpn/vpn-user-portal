@@ -22,26 +22,25 @@ use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\SessionInterface;
 
 /**
  * This hook is used to be able to switch the language without requiring to be
  * authenticated. As the language switcher is only a user preference stored in
- * the user's session this is not a problem. This way, even the authentication
- * page can use the language switcher.
+ * a cookie this is not a problem. This way, even the authentication page can
+ * use the language switcher.
  */
 class LanguageSwitcherHook implements BeforeHookInterface
 {
-    /** @var \SURFnet\VPN\Common\Http\SessionInterface */
-    private $session;
+    /** @var bool */
+    private $secureCookie;
 
     /** @var array */
     private $supportedLanguages;
 
-    public function __construct(SessionInterface $session, array $supportedLanguages)
+    public function __construct(array $supportedLanguages, $secureCookie = true)
     {
-        $this->session = $session;
         $this->supportedLanguages = $supportedLanguages;
+        $this->secureCookie = (bool) $secureCookie;
     }
 
     public function executeBefore(Request $request, array $hookData)
@@ -59,7 +58,15 @@ class LanguageSwitcherHook implements BeforeHookInterface
             throw new HttpException('invalid language', 400);
         }
 
-        $this->session->set('activeLanguage', $language);
+        setcookie(
+            'uiLanguage',
+            $language,
+            time() + 60 * 60 * 24 * 365,    // remember for 1 year
+            $request->getRoot(),
+            $request->getServerName(),
+            $this->secureCookie,
+            true
+        );
 
         // XXX do we need to validate HTTP_REFERER here?
         return new RedirectResponse($request->getHeader('HTTP_REFERER'), 302);

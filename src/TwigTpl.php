@@ -19,7 +19,6 @@
 namespace SURFnet\VPN\Portal;
 
 use RuntimeException;
-use SURFnet\VPN\Common\Http\SessionInterface;
 use SURFnet\VPN\Common\TplInterface;
 use Twig_Environment;
 use Twig_Extensions_Extension_I18n;
@@ -28,9 +27,6 @@ use Twig_SimpleFilter;
 
 class TwigTpl implements TplInterface
 {
-    /** @var \SURFnet\VPN\Common\Http\SessionInterface */
-    private $session;
-
     /** @var string */
     private $localeDir;
 
@@ -47,9 +43,8 @@ class TwigTpl implements TplInterface
      *                             paths override the earlier paths
      * @param string $cacheDir     the writable directory to store the cache
      */
-    public function __construct(SessionInterface $session, array $templateDirs, $localeDir, $cacheDir = null)
+    public function __construct(array $templateDirs, $localeDir, $cacheDir = null)
     {
-        $this->session = $session;
         $existingTemplateDirs = [];
         foreach ($templateDirs as $templateDir) {
             if (false !== is_dir($templateDir)) {
@@ -133,14 +128,16 @@ class TwigTpl implements TplInterface
     public function render($templateName, array $templateVariables)
     {
         // get the language
-        $activeLanguage = $this->session->get('activeLanguage');
-        if (is_null($activeLanguage)) {
-            $activeLanguage = 'en_US';
+        $uiLanguage = 'en_US';
+        if (array_key_exists('uiLanguage', $_COOKIE)) {
             if (array_key_exists('supportedLanguages', $this->defaultVariables)) {
-                $activeLanguage = array_keys($this->defaultVariables['supportedLanguages'])[0];
+                if (array_key_exists($_COOKIE['uiLanguage'], $this->defaultVariables['supportedLanguages'])) {
+                    $uiLanguage = $_COOKIE['uiLanguage'];
+                }
             }
         }
-        $this->setI18n('VpnUserPortal', $activeLanguage, $this->localeDir);
+
+        $this->setI18n('VpnUserPortal', $uiLanguage, $this->localeDir);
         $templateVariables = array_merge($this->defaultVariables, $templateVariables);
 
         return $this->twig->render(
