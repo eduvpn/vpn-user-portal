@@ -33,9 +33,9 @@ return [
     // supported languages in the UI, the first one mentioned is the default
     'supportedLanguages' => [
         'en_US' => 'English',
-        //'nl_NL' => Nederlands,
-        //'fr_FR' => Français,
-        //'de_DE' => Deutsch,
+        //'nl_NL' => 'Nederlands',
+        //'fr_FR' => 'Français',
+        //'de_DE' => 'Deutsch',
     ],
 
     'Api' => [
