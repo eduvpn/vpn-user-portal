@@ -15,6 +15,11 @@ return [
     'MellonAuthentication' => [
         'attribute' => 'MELLON_NAME_ID',
         //'attribute' => 'MELLON_eduPersonTargetedID',
+
+        // add the entityID of the IdP to the user ID as to make sure the user
+        // IDs are unique among the (multiple) IdPs. This MUST be set to true
+        // for e.g. eduGAIN
+        'addEntityID' => true,
     ],
 
     'apiUser' => 'vpn-user-portal',

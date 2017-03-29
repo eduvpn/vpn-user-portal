@@ -18,16 +18,25 @@
 
 namespace SURFnet\VPN\Portal\Test;
 
-use fkooman\OAuth\Client\HttpClientInterface;
-use fkooman\OAuth\Client\Provider;
+use fkooman\OAuth\Client\Http\HttpClientInterface;
+use fkooman\OAuth\Client\Http\Response;
 
 class TestOAuthHttpClient implements HttpClientInterface
 {
-    public function post(Provider $provider, array $postData)
+    public function get($requestUri, array $requestHeaders = [])
     {
-        return [
-            'access_token' => 'X',
-            'token_type' => 'bearer',
-        ];
+    }
+
+    public function post($requestUri, array $postData = [], array $requestHeaders = [])
+    {
+        return new Response(
+            200,
+            json_encode(
+                [
+                    'access_token' => 'X',
+                    'token_type' => 'bearer',
+                ]
+            )
+        );
     }
 }
