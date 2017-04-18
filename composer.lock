@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "932af3d45b29a60252ac304880e26b9fbd6ee6e0"
+                "reference": "d7edadddba7256341e307f8431daaa0d9aec4ae6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/932af3d45b29a60252ac304880e26b9fbd6ee6e0",
-                "reference": "932af3d45b29a60252ac304880e26b9fbd6ee6e0",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/d7edadddba7256341e307f8431daaa0d9aec4ae6",
+                "reference": "d7edadddba7256341e307f8431daaa0d9aec4ae6",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-04-11 16:34:03"
+            "time": "2017-04-18 21:48:43"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -440,16 +440,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.33.0",
+            "version": "v1.33.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "05cf49921b13f6f01d3cfdf9018cfa7a8086fd5a"
+                "reference": "a87f959f4b691da66aada267a2dfdb260d0bb58a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/05cf49921b13f6f01d3cfdf9018cfa7a8086fd5a",
-                "reference": "05cf49921b13f6f01d3cfdf9018cfa7a8086fd5a",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a87f959f4b691da66aada267a2dfdb260d0bb58a",
+                "reference": "a87f959f4b691da66aada267a2dfdb260d0bb58a",
                 "shasum": ""
             },
             "require": {
@@ -498,7 +498,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-03-22T15:40:09+00:00"
+            "time": "2017-04-18T21:43:11+00:00"
         }
     ],
     "packages-dev": [

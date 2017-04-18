@@ -112,6 +112,7 @@ try {
             $service->addBeforeHook(
                 'auth',
                 new MellonAuthenticationHook(
+                    $session,
                     $config->getSection('MellonAuthentication')->getItem('attribute'),
                     $config->getSection('MellonAuthentication')->getItem('addEntityID')
                 )
