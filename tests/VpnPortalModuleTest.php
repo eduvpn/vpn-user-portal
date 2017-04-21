@@ -16,11 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal;
-
-require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
-require_once sprintf('%s/Test/TestHttpClient.php', __DIR__);
-require_once sprintf('%s/Test/TestSession.php', __DIR__);
+namespace SURFnet\VPN\Portal\Tests;
 
 use fkooman\OAuth\Server\Storage;
 use PDO;
@@ -29,9 +25,7 @@ use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Portal\Test\JsonTpl;
-use SURFnet\VPN\Portal\Test\TestHttpClient;
-use SURFnet\VPN\Portal\Test\TestSession;
+use SURFnet\VPN\Portal\VpnPortalModule;
 
 class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
 {
@@ -86,7 +80,7 @@ class VpnPortalModuleTest extends PHPUnit_Framework_TestCase
     public function testNewPost()
     {
         $this->assertSame(
-            file_get_contents(sprintf('%s/Test/data/foo_MyConfig.ovpn', __DIR__)),
+            file_get_contents(sprintf('%s/data/foo_MyConfig.ovpn', __DIR__)),
             $this->makeRequest(
                 'POST',
                 '/new',

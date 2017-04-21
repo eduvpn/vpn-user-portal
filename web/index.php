@@ -20,8 +20,10 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
+use fkooman\OAuth\Client\Random as OAuthRandom;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Storage;
+use Psr\Log\NullLogger;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\CsrfProtectionHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationHook;
@@ -43,6 +45,7 @@ use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\TotpModule;
 use SURFnet\VPN\Portal\VootModule;
 use SURFnet\VPN\Portal\VootTokenHook;
+use SURFnet\VPN\Portal\VootTokenStorage;
 use SURFnet\VPN\Portal\VpnPortalModule;
 use SURFnet\VPN\Portal\YubiModule;
 
@@ -140,7 +143,7 @@ try {
     }
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
-    $service->addBeforehook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
+    $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
 
     // two factor module
     $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
@@ -151,13 +154,17 @@ try {
         $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
         $vootModule = new VootModule(
                 new OAuth2Client(
-                new Provider(
-                    $config->getSection('Voot')->getItem('clientId'),
-                    $config->getSection('Voot')->getItem('clientSecret'),
-                    $config->getSection('Voot')->getItem('authorizationEndpoint'),
-                    $config->getSection('Voot')->getItem('tokenEndpoint')
-                ),
-                new OAuthCurlHttpClient()
+                    new Provider(
+                        $config->getSection('Voot')->getItem('clientId'),
+                        $config->getSection('Voot')->getItem('clientSecret'),
+                        $config->getSection('Voot')->getItem('authorizationEndpoint'),
+                        $config->getSection('Voot')->getItem('tokenEndpoint')
+                    ),
+                    new VootTokenStorage($serverClient),
+                    new OAuthCurlHttpClient(),
+                    new OAuthRandom(),
+                    new NullLogger(),
+                    new DateTime()
             ),
             $serverClient,
             $session

@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal;
+namespace SURFnet\VPN\Portal\Tests;
 
 use DateTime;
 use fkooman\OAuth\Server\BearerLocalValidator;
@@ -24,6 +24,7 @@ use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit_Framework_TestCase;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Portal\BearerAuthenticationHook;
 
 class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
 {

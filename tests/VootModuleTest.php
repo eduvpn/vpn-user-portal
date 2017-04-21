@@ -16,22 +16,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal;
+namespace SURFnet\VPN\Portal\Tests;
 
-require_once sprintf('%s/Test/TestHttpClient.php', __DIR__);
-require_once sprintf('%s/Test/TestOAuthHttpClient.php', __DIR__);
-require_once sprintf('%s/Test/TestSession.php', __DIR__);
-
+use DateTime;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\NullLogger;
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Portal\Test\TestHttpClient;
-use SURFnet\VPN\Portal\Test\TestOAuthHttpClient;
-use SURFnet\VPN\Portal\Test\TestSession;
+use SURFnet\VPN\Portal\VootModule;
+use SURFnet\VPN\Portal\VootTokenStorage;
 
 class VootModuleTest extends PHPUnit_Framework_TestCase
 {
@@ -48,16 +45,21 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
 
         $httpClient = new TestHttpClient();
 
+        $serverClient = new ServerClient($httpClient, 'serverClient');
+
         $this->session = new TestSession();
         $this->service = new Service();
         $this->service->addModule(
             new VootModule(
                 new OAuth2Client(
                     new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token'),
+                    new VootTokenStorage($serverClient),
                     new TestOAuthHttpClient(),
-                    $random
+                    $random,
+                    new NullLogger(),
+                    new DateTime()
                 ),
-                new ServerClient($httpClient, 'serverClient'),
+                $serverClient,
                 $this->session
             )
         );

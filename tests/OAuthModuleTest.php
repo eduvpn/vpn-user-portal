@@ -16,9 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal;
-
-require_once sprintf('%s/Test/JsonTpl.php', __DIR__);
+namespace SURFnet\VPN\Portal\Tests;
 
 use DateTime;
 use fkooman\OAuth\Server\OAuthServer;
@@ -29,7 +27,7 @@ use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Portal\Test\JsonTpl;
+use SURFnet\VPN\Portal\OAuthModule;
 
 class OAuthModuleTest extends PHPUnit_Framework_TestCase
 {
@@ -104,8 +102,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
                     'scope' => 'config',
                     'state' => '12345',
                 ]
-            ),
-            true
+            )
         );
     }
 

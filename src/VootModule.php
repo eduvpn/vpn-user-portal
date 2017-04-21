@@ -49,7 +49,7 @@ class VootModule implements ServiceModuleInterface
         $service->get(
             '/_voot/authorize',
             function (Request $request) {
-                $authorizationRequestUri = $this->oauthClient->getAuthorizationRequestUri(
+                $authorizationRequestUri = $this->oauthClient->getAuthorizeUri(
                     'groups',
                     $request->getRootUri().'_voot/callback'
                 );
@@ -66,16 +66,18 @@ class VootModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
+                $this->oauthClient->setUserId($userId);
                 // obtain the access token
-                $accessToken = $this->oauthClient->getAccessToken(
+                $this->oauthClient->handleCallback(
                     $this->session->get('_voot_state'),
                     $request->getQueryParameter('code'),
                     $request->getQueryParameter('state')
                 );
                 $this->session->delete('_voot_state');
 
-                // store the access token
-                $this->serverClient->post('set_voot_token', ['user_id' => $userId, 'voot_token' => $accessToken->json()]);
+//                // store the access token
+    // XXX this is taken care of by TokenStorageFoo
+//                $this->serverClient->post('set_voot_token', ['user_id' => $userId, 'voot_token' => $accessToken->json()]);
 
                 $returnTo = $this->session->get('_voot_return_to');
                 $this->session->delete('_voot_return_to');

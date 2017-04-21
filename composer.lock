@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "7f9365d99a88d31ac68b56e6024abb582a27429d"
+                "reference": "334e35f0a2dc5288e27c31e8e8ed4aad5ea1bf35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/7f9365d99a88d31ac68b56e6024abb582a27429d",
-                "reference": "7f9365d99a88d31ac68b56e6024abb582a27429d",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/334e35f0a2dc5288e27c31e8e8ed4aad5ea1bf35",
+                "reference": "334e35f0a2dc5288e27c31e8e8ed4aad5ea1bf35",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-04-18 21:58:50"
+            "time": "2017-04-18 22:22:12"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "4878829d33b810f935e1be51d0e0698e5f06d14a"
+                "reference": "45476642148c9b187d2dacfdb58e15cfba0cd1d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/4878829d33b810f935e1be51d0e0698e5f06d14a",
-                "reference": "4878829d33b810f935e1be51d0e0698e5f06d14a",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/45476642148c9b187d2dacfdb58e15cfba0cd1d7",
+                "reference": "45476642148c9b187d2dacfdb58e15cfba0cd1d7",
                 "shasum": ""
             },
             "require": {
@@ -127,7 +127,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "fkooman\\OAuth\\Client\\": "src/"
+                    "fkooman\\OAuth\\Client\\": "src/",
+                    "fkooman\\OAuth\\Client\\Tests\\": "tests/"
                 }
             },
             "license": [
@@ -140,7 +141,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-03-22 11:34:20"
+            "time": "2017-04-21 15:57:06"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -148,12 +149,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "50385ca37344e840de88e1bdd2fdc402a9168134"
+                "reference": "102d7ec8c76c4bc1f2b3c09534846b7e90771622"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/50385ca37344e840de88e1bdd2fdc402a9168134",
-                "reference": "50385ca37344e840de88e1bdd2fdc402a9168134",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/102d7ec8c76c4bc1f2b3c09534846b7e90771622",
+                "reference": "102d7ec8c76c4bc1f2b3c09534846b7e90771622",
                 "shasum": ""
             },
             "require": {
@@ -172,7 +173,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "fkooman\\OAuth\\Server\\": "src/"
+                    "fkooman\\OAuth\\Server\\": "src/",
+                    "fkooman\\OAuth\\Server\\Tests\\": "tests/"
                 }
             },
             "license": [
@@ -185,7 +187,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-03-20 17:32:06"
+            "time": "2017-04-20 19:25:04"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -440,16 +442,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.33.1",
+            "version": "v1.33.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "a87f959f4b691da66aada267a2dfdb260d0bb58a"
+                "reference": "dd6ca96227917e1e85b41c7c3cc6507b411e0927"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a87f959f4b691da66aada267a2dfdb260d0bb58a",
-                "reference": "a87f959f4b691da66aada267a2dfdb260d0bb58a",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/dd6ca96227917e1e85b41c7c3cc6507b411e0927",
+                "reference": "dd6ca96227917e1e85b41c7c3cc6507b411e0927",
                 "shasum": ""
             },
             "require": {
@@ -498,7 +500,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-04-18T21:43:11+00:00"
+            "time": "2017-04-20T17:39:48+00:00"
         }
     ],
     "packages-dev": [

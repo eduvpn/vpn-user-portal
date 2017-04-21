@@ -16,9 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal;
+namespace SURFnet\VPN\Portal\Tests;
 
 use PHPUnit_Framework_TestCase;
+use SURFnet\VPN\Portal\ClientConfig;
 
 class ClientConfigTest extends PHPUnit_Framework_TestCase
 {

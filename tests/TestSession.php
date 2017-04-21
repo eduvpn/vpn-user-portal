@@ -16,27 +16,46 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal\Test;
+namespace SURFnet\VPN\Portal\Tests;
 
-use fkooman\OAuth\Client\Http\HttpClientInterface;
-use fkooman\OAuth\Client\Http\Response;
+use SURFnet\VPN\Common\Http\SessionInterface;
 
-class TestOAuthHttpClient implements HttpClientInterface
+class TestSession implements SessionInterface
 {
-    public function get($requestUri, array $requestHeaders = [])
+    /** var @array */
+    private $s;
+
+    public function __construct()
     {
+        $this->s = [];
     }
 
-    public function post($requestUri, array $postData = [], array $requestHeaders = [])
+    public function set($key, $value)
     {
-        return new Response(
-            200,
-            json_encode(
-                [
-                    'access_token' => 'X',
-                    'token_type' => 'bearer',
-                ]
-            )
-        );
+        $this->s[$key] = $value;
+    }
+
+    public function delete($key)
+    {
+        unset($this->s[$key]);
+    }
+
+    public function has($key)
+    {
+        return array_key_exists($key, $this->s);
+    }
+
+    public function get($key)
+    {
+        if (!$this->has($key)) {
+            return;
+        }
+
+        return $this->s[$key];
+    }
+
+    public function destroy()
+    {
+        $this->s = [];
     }
 }

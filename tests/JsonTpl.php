@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace SURFnet\VPN\Portal\Test;
+namespace SURFnet\VPN\Portal\Tests;
 
 use SURFnet\VPN\Common\TplInterface;
 
