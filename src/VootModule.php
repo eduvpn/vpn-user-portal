@@ -18,7 +18,7 @@
 
 namespace SURFnet\VPN\Portal;
 
-use fkooman\OAuth\Client\OAuth2Client;
+use fkooman\OAuth\Client\OAuthClient;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -28,7 +28,7 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
 
 class VootModule implements ServiceModuleInterface
 {
-    /** @var \fkooman\OAuth\Client\OAuth2Client */
+    /** @var \fkooman\OAuth\Client\OAuthClient */
     private $oauthClient;
 
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
@@ -37,7 +37,7 @@ class VootModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\Http\SessionInterface */
     private $session;
 
-    public function __construct(OAuth2Client $oauthClient, ServerClient $serverClient, SessionInterface $session)
+    public function __construct(OAuthClient $oauthClient, ServerClient $serverClient, SessionInterface $session)
     {
         $this->oauthClient = $oauthClient;
         $this->serverClient = $serverClient;
@@ -74,10 +74,6 @@ class VootModule implements ServiceModuleInterface
                     $request->getQueryParameter('state')
                 );
                 $this->session->delete('_voot_state');
-
-//                // store the access token
-    // XXX this is taken care of by TokenStorageFoo
-//                $this->serverClient->post('set_voot_token', ['user_id' => $userId, 'voot_token' => $accessToken->json()]);
 
                 $returnTo = $this->session->get('_voot_return_to');
                 $this->session->delete('_voot_return_to');

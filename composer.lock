@@ -103,18 +103,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "45476642148c9b187d2dacfdb58e15cfba0cd1d7"
+                "reference": "3a8ed10d5e7caa7d407ff1b755aeb1cff7439ece"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/45476642148c9b187d2dacfdb58e15cfba0cd1d7",
-                "reference": "45476642148c9b187d2dacfdb58e15cfba0cd1d7",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/3a8ed10d5e7caa7d407ff1b755aeb1cff7439ece",
+                "reference": "3a8ed10d5e7caa7d407ff1b755aeb1cff7439ece",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-date": "*",
                 "ext-json": "*",
+                "ext-session": "*",
                 "ext-spl": "*",
                 "paragonie/constant_time_encoding": "^1|^2",
                 "paragonie/random_compat": "^1|^2",
@@ -132,7 +133,7 @@
                 }
             },
             "license": [
-                "AGPL-3.0"
+                "MIT"
             ],
             "authors": [
                 {
@@ -141,7 +142,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-04-21 15:57:06"
+            "time": "2017-04-21 20:19:00"
         },
         {
             "name": "fkooman/oauth2-server",

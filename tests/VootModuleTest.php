@@ -19,7 +19,7 @@
 namespace SURFnet\VPN\Portal\Tests;
 
 use DateTime;
-use fkooman\OAuth\Client\OAuth2Client;
+use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\NullLogger;
@@ -51,7 +51,7 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
         $this->service = new Service();
         $this->service->addModule(
             new VootModule(
-                new OAuth2Client(
+                new OAuthClient(
                     new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token'),
                     new VootTokenStorage($serverClient),
                     new TestOAuthHttpClient(),

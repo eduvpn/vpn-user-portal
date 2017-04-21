@@ -18,7 +18,7 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
-use fkooman\OAuth\Client\OAuth2Client;
+use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Client\Random as OAuthRandom;
 use fkooman\OAuth\Server\OAuthServer;
@@ -153,7 +153,7 @@ try {
     if ($config->getItem('enableVoot')) {
         $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
         $vootModule = new VootModule(
-                new OAuth2Client(
+                new OAuthClient(
                     new Provider(
                         $config->getSection('Voot')->getItem('clientId'),
                         $config->getSection('Voot')->getItem('clientSecret'),
