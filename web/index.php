@@ -20,10 +20,8 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
-use fkooman\OAuth\Client\Random as OAuthRandom;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Storage;
-use Psr\Log\NullLogger;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\CsrfProtectionHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationHook;
@@ -153,18 +151,15 @@ try {
     if ($config->getItem('enableVoot')) {
         $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
         $vootModule = new VootModule(
-                new OAuthClient(
-                    new Provider(
-                        $config->getSection('Voot')->getItem('clientId'),
-                        $config->getSection('Voot')->getItem('clientSecret'),
-                        $config->getSection('Voot')->getItem('authorizationEndpoint'),
-                        $config->getSection('Voot')->getItem('tokenEndpoint')
-                    ),
-                    new VootTokenStorage($serverClient),
-                    new OAuthCurlHttpClient(),
-                    new OAuthRandom(),
-                    new NullLogger(),
-                    new DateTime()
+            new OAuthClient(
+                new Provider(
+                    $config->getSection('Voot')->getItem('clientId'),
+                    $config->getSection('Voot')->getItem('clientSecret'),
+                    $config->getSection('Voot')->getItem('authorizationEndpoint'),
+                    $config->getSection('Voot')->getItem('tokenEndpoint')
+                ),
+                new VootTokenStorage($serverClient),
+                new OAuthCurlHttpClient()
             ),
             $serverClient,
             $session
