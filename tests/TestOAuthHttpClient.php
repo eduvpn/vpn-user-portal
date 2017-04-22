@@ -19,15 +19,12 @@
 namespace SURFnet\VPN\Portal\Tests;
 
 use fkooman\OAuth\Client\Http\HttpClientInterface;
+use fkooman\OAuth\Client\Http\Request;
 use fkooman\OAuth\Client\Http\Response;
 
 class TestOAuthHttpClient implements HttpClientInterface
 {
-    public function get($requestUri, array $requestHeaders = [])
-    {
-    }
-
-    public function post($requestUri, array $postData = [], array $requestHeaders = [])
+    public function send(Request $request)
     {
         return new Response(
             200,

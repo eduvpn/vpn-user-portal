@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "3a8ed10d5e7caa7d407ff1b755aeb1cff7439ece"
+                "reference": "8fc84e11113be1901c605a782008e9be8c96b9ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/3a8ed10d5e7caa7d407ff1b755aeb1cff7439ece",
-                "reference": "3a8ed10d5e7caa7d407ff1b755aeb1cff7439ece",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/8fc84e11113be1901c605a782008e9be8c96b9ba",
+                "reference": "8fc84e11113be1901c605a782008e9be8c96b9ba",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-04-21 20:19:00"
+            "time": "2017-04-22 08:53:53"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "102d7ec8c76c4bc1f2b3c09534846b7e90771622"
+                "reference": "91de4f8cdb725b21265ee1605efaa9f264d4f492"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/102d7ec8c76c4bc1f2b3c09534846b7e90771622",
-                "reference": "102d7ec8c76c4bc1f2b3c09534846b7e90771622",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/91de4f8cdb725b21265ee1605efaa9f264d4f492",
+                "reference": "91de4f8cdb725b21265ee1605efaa9f264d4f492",
                 "shasum": ""
             },
             "require": {
@@ -179,7 +179,7 @@
                 }
             },
             "license": [
-                "AGPL-3.0"
+                "MIT"
             ],
             "authors": [
                 {
@@ -188,7 +188,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-04-20 19:25:04"
+            "time": "2017-04-21 20:33:45"
         },
         {
             "name": "ircmaxell/password-compat",
