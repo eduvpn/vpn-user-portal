@@ -38,7 +38,7 @@ class VootTokenStorage implements TokenStorageInterface
      *
      * @return AccessToken|false
      */
-    public function getAccessToken($userId)
+    public function getAccessToken($userId, $requestScope)
     {
         // vpn-user-portal will never use this
         throw new RuntimeException('not implemented');
