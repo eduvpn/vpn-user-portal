@@ -59,23 +59,25 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
         $storage = new Storage(new PDO('sqlite::memory:'));
         $storage->init();
 
+        $oauthServer = new OAuthServer(
+            $storage,
+            function ($clientId) use ($config) {
+                if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
+                    return false;
+                }
+
+                return $config->getSection('apiConsumers')->getItem($clientId);
+            },
+            '2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol'
+        );
+        $oauthServer->setDateTime(new DateTime('2016-01-01'));
+        $oauthServer->setRandom($random);
+
         $this->service = new Service();
         $this->service->addModule(
             new OAuthModule(
                 new JsonTpl(),
-                new OAuthServer(
-                    function ($clientId) use ($config) {
-                        if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
-                            return false;
-                        }
-
-                        return $config->getSection('apiConsumers')->getItem($clientId);
-                    },
-                    '2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol',
-                    $storage,
-                    $random,
-                    new DateTime('2016-01-01')
-                )
+                $oauthServer
             )
         );
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));

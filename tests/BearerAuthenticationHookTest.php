@@ -19,7 +19,7 @@
 namespace SURFnet\VPN\Portal\Tests;
 
 use DateTime;
-use fkooman\OAuth\Server\BearerLocalValidator;
+use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit_Framework_TestCase;
@@ -48,7 +48,10 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
             [
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook(new BearerLocalValidator($this->keyPair, $this->storage, new DateTime('2016-01-01')));
+
+        $validator = new BearerValidator($this->storage, $this->keyPair);
+        $validator->setDateTime(new DateTime('2016-01-01'));
+        $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
         $tokenResponse = $bearerAuthenticationHook->executeBefore($request, []);
         $this->assertSame(401, $tokenResponse->getStatusCode());
         $this->assertSame(
@@ -64,7 +67,10 @@ class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
                 'HTTP_AUTHORIZATION' => 'Bearer qrCFqzPz4ac7U8/fSOa6ReXvDJ6D8zsz1VNK/yEHrryWHpHanbHjVgL6Ss+pLenWgTVTOHcLLv1aT3D1RTnmAnsidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoidG9rZW4tY2xpZW50Iiwic2NvcGUiOiJjb25maWciLCJleHBpcmVzX2F0IjoiMjAxNi0wMS0wMSAwMTowMDowMCJ9',
             ]
         );
-        $bearerAuthenticationHook = new BearerAuthenticationHook(new BearerLocalValidator($this->keyPair, $this->storage, new DateTime('2016-01-01')));
+
+        $validator = new BearerValidator($this->storage, $this->keyPair);
+        $validator->setDateTime(new DateTime('2016-01-01'));
+        $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
         $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, []));
     }
 

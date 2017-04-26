@@ -61,9 +61,9 @@ try {
     // OAuth module
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
+            $storage,
             $getClientInfo,
-            Base64::decode($config->getSection('Api')->getItem('keyPair')),
-            $storage
+            Base64::decode($config->getSection('Api')->getItem('keyPair'))
         );
         $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
         $oauthModule = new OAuthTokenModule(

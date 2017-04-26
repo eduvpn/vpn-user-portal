@@ -207,9 +207,9 @@ try {
     // OAuth module
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
+            $storage,
             $getClientInfo,
-            $config->getSection('Api')->getItem('keyPair'),
-            $storage
+            $config->getSection('Api')->getItem('keyPair')
         );
         $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
         $oauthModule = new OAuthModule(

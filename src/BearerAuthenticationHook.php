@@ -18,7 +18,7 @@
 
 namespace SURFnet\VPN\Portal;
 
-use fkooman\OAuth\Server\BearerLocalValidator;
+use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\BearerException;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\JsonResponse;
@@ -29,7 +29,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
     /** @var \fkooman\OAuth\Server\BearerValidator */
     private $bearerValidator;
 
-    public function __construct(BearerLocalValidator $bearerValidator)
+    public function __construct(BearerValidator $bearerValidator)
     {
         $this->bearerValidator = $bearerValidator;
     }

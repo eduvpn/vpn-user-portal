@@ -17,7 +17,7 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
-use fkooman\OAuth\Server\BearerLocalValidator;
+use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Storage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\JsonResponse;
@@ -52,9 +52,9 @@ try {
         $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
         $storage->init();
 
-        $bearerValidator = new BearerLocalValidator(
-            $config->getSection('Api')->getItem('keyPair'),
-            $storage
+        $bearerValidator = new BearerValidator(
+            $storage,
+            $config->getSection('Api')->getItem('keyPair')
         );
 
         $service->addBeforeHook(

@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "334e35f0a2dc5288e27c31e8e8ed4aad5ea1bf35"
+                "reference": "07510f6562bb4a063a8349fcd4ee0e4acb2652a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/334e35f0a2dc5288e27c31e8e8ed4aad5ea1bf35",
-                "reference": "334e35f0a2dc5288e27c31e8e8ed4aad5ea1bf35",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/07510f6562bb4a063a8349fcd4ee0e4acb2652a9",
+                "reference": "07510f6562bb4a063a8349fcd4ee0e4acb2652a9",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-04-18 22:22:12"
+            "time": "2017-04-24 20:18:10"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "91de4f8cdb725b21265ee1605efaa9f264d4f492"
+                "reference": "1557bb8f74b3d29f500282622ed3ce9b3633c2c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/91de4f8cdb725b21265ee1605efaa9f264d4f492",
-                "reference": "91de4f8cdb725b21265ee1605efaa9f264d4f492",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/1557bb8f74b3d29f500282622ed3ce9b3633c2c6",
+                "reference": "1557bb8f74b3d29f500282622ed3ce9b3633c2c6",
                 "shasum": ""
             },
             "require": {
@@ -188,7 +188,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-04-21 20:33:45"
+            "time": "2017-04-26 21:17:07"
         },
         {
             "name": "ircmaxell/password-compat",
