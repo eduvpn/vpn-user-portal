@@ -71,5 +71,18 @@ return [
         // contains a keypair that is used to sign and verify authorization
         // codes and access tokens
         'keyPair' => '__REPLACE_ME__',
+
+        // contains the list of *foreign* OAuth public keys that we want to 
+        // accept in our instance. 
+        // 
+        // This functionality is used for a federated deployment where various
+        // instances work together to provide access to each other's 
+        // authenticate users.
+        //
+        // The key ("issuer") will be the prefix in the user ID.
+        'publicKeys' => [
+            //'vpn.example.org' => 'AABBCC==',
+            //'vpn.example.com' => 'BBCCDD==',
+        ],
     ],
 ];

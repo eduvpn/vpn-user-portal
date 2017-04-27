@@ -41,7 +41,12 @@ class BearerAuthenticationHook implements BeforeHookInterface
         try {
             $tokenInfo = $this->bearerValidator->validate($authorizationHeader);
 
-            return $tokenInfo['user_id'];
+            $tokenIssuer = $tokenInfo->getIssuer();
+            if (!is_null($tokenIssuer)) {
+                return sprintf('%s_%s', $tokenIssuer, $tokenInfo->getUserId());
+            }
+
+            return $tokenInfo->getUserId();
         } catch (BearerException $e) {
             $response = new JsonResponse(['error' => $e->getMessage(), 'error_description' => $e->getDescription()], 401);
             $response->addHeader('WWW-Authenticate', sprintf('Bearer realm="OAuth",error="%s",error_description="%s"', $e->getMessage(), $e->getDescription()));
