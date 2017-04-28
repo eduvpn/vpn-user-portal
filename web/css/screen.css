@@ -78,6 +78,11 @@ p.plain, p.success, p.warning, p.error {
     padding: 1em;
 }
 
+p img {
+    display: block;
+    margin: 1em auto;
+}
+  
 ul.simple {
     padding: 0 1em;
     margin: 0;
