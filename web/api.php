@@ -56,6 +56,7 @@ try {
             $storage,
             $config->getSection('Api')->getItem('keyPair')
         );
+        $bearerValidator->setPublicKeys($config->getSection('Api')->getItem('publicKeys'));
 
         $service->addBeforeHook(
             'auth',
