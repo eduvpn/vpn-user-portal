@@ -54,19 +54,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "07510f6562bb4a063a8349fcd4ee0e4acb2652a9"
+                "reference": "59c35afd232a6733db0f9f3a743829abd54ea708"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/07510f6562bb4a063a8349fcd4ee0e4acb2652a9",
-                "reference": "07510f6562bb4a063a8349fcd4ee0e4acb2652a9",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/59c35afd232a6733db0f9f3a743829abd54ea708",
+                "reference": "59c35afd232a6733db0f9f3a743829abd54ea708",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-date": "*",
                 "ext-filter": "*",
-                "ext-hash": "*",
+                "ext-gettext": "*",
                 "ext-json": "*",
                 "ext-libsodium": "*",
                 "ext-mbstring": "*",
@@ -79,10 +79,14 @@
                 "twig/extensions": "^1",
                 "twig/twig": "^1"
             },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "SURFnet\\VPN\\Common\\": "src/"
+                    "SURFnet\\VPN\\Common\\": "src/",
+                    "SURFnet\\VPN\\Common\\Tests\\": "tests/"
                 }
             },
             "license": [
@@ -95,7 +99,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-04-24 20:18:10"
+            "time": "2017-04-29 19:11:16"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -103,12 +107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "6f85b1e01b0bf6ae2a74cea6a35a10c3f9e78619"
+                "reference": "24cab48b8c8015ed6a8fcc0aa7e53a7cccbcd0c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/6f85b1e01b0bf6ae2a74cea6a35a10c3f9e78619",
-                "reference": "6f85b1e01b0bf6ae2a74cea6a35a10c3f9e78619",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/24cab48b8c8015ed6a8fcc0aa7e53a7cccbcd0c5",
+                "reference": "24cab48b8c8015ed6a8fcc0aa7e53a7cccbcd0c5",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +146,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-04-23 17:46:23"
+            "time": "2017-04-28 18:30:27"
         },
         {
             "name": "fkooman/oauth2-server",
