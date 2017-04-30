@@ -12,6 +12,6 @@ before_install:
   - sudo apt-get install libsodium-dev -y
 before_script:
   - pecl install libsodium
-  - composer install
+  - composer update
 
 script: phpunit --coverage-text tests
