@@ -41,7 +41,11 @@ class OAuthTokenModule implements ServiceModuleInterface
             '/token',
             function (Request $request, array $hookData) {
                 try {
-                    $responseData = $this->oauthServer->postToken($request->getPostParameters(), null, null);
+                    $responseData = $this->oauthServer->postToken(
+                        $request->getPostParameters(),
+                        $request->getHeader('PHP_AUTH_USER', false),
+                        $request->getHeader('PHP_AUTH_PW', false)
+                    );
                     $response = new JsonResponse($responseData);
                     $response->addHeader('Cache-Control', 'no-store');
                     $response->addHeader('Pragma', 'no-cache');
