@@ -103,7 +103,7 @@ class VpnApiModule implements ServiceModuleInterface
 
         // API 2
         $service->post(
-            '/create_certificate',
+            '/create_keypair',
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -112,7 +112,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $clientCertificate = $this->getCertificate($userId, $displayName);
 
                 return new ApiResponse(
-                    'create_certificate',
+                    'create_keypair',
                     [
                         'certificate' => $clientCertificate['certificate'],
                         'private_key' => $clientCertificate['private_key'],
