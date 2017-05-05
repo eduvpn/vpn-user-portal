@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "59c35afd232a6733db0f9f3a743829abd54ea708"
+                "reference": "f7d990aa7b8b41e9e8be2b2e0a4fbcbae7827adb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/59c35afd232a6733db0f9f3a743829abd54ea708",
-                "reference": "59c35afd232a6733db0f9f3a743829abd54ea708",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/f7d990aa7b8b41e9e8be2b2e0a4fbcbae7827adb",
+                "reference": "f7d990aa7b8b41e9e8be2b2e0a4fbcbae7827adb",
                 "shasum": ""
             },
             "require": {
@@ -99,7 +99,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-04-29 19:11:16"
+            "time": "2017-05-01 17:52:42"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -107,12 +107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "24cab48b8c8015ed6a8fcc0aa7e53a7cccbcd0c5"
+                "reference": "cd0e25d10e340c6d84b3ebf65a0646443406ea8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/24cab48b8c8015ed6a8fcc0aa7e53a7cccbcd0c5",
-                "reference": "24cab48b8c8015ed6a8fcc0aa7e53a7cccbcd0c5",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/cd0e25d10e340c6d84b3ebf65a0646443406ea8b",
+                "reference": "cd0e25d10e340c6d84b3ebf65a0646443406ea8b",
                 "shasum": ""
             },
             "require": {
@@ -146,7 +146,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-04-28 18:30:27"
+            "time": "2017-05-05 14:49:18"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -154,12 +154,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "302c4bc52c80a705300dc89dacbc2d1b94449eb6"
+                "reference": "edfd0223e834c9ba6ff22bd2441628ff5b57d932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/302c4bc52c80a705300dc89dacbc2d1b94449eb6",
-                "reference": "302c4bc52c80a705300dc89dacbc2d1b94449eb6",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/edfd0223e834c9ba6ff22bd2441628ff5b57d932",
+                "reference": "edfd0223e834c9ba6ff22bd2441628ff5b57d932",
                 "shasum": ""
             },
             "require": {
@@ -192,7 +192,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-04-27 17:25:48"
+            "time": "2017-05-03 12:51:02"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1522,16 +1522,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621"
+                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/62b4cdb99d52cb1ff253c465eb1532a80cebb621",
-                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/acec26fcf7f3031e094e910b94b002fa53d4e4d6",
+                "reference": "acec26fcf7f3031e094e910b94b002fa53d4e4d6",
                 "shasum": ""
             },
             "require": {
@@ -1573,7 +1573,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-20T09:45:15+00:00"
+            "time": "2017-05-01T14:55:58+00:00"
         },
         {
             "name": "webmozart/assert",

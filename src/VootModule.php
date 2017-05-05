@@ -54,7 +54,7 @@ class VootModule implements ServiceModuleInterface
                     $request->getRootUri().'_voot/callback'
                 );
 
-                $this->session->set('_voot_state', $authorizationRequestUri);
+//                $this->session->set('_voot_state', $authorizationRequestUri);
                 $this->session->set('_voot_return_to', $request->getQueryParameter('return_to'));
 
                 return new RedirectResponse($authorizationRequestUri);
@@ -69,11 +69,11 @@ class VootModule implements ServiceModuleInterface
                 $this->oauthClient->setUserId($userId);
                 // obtain the access token
                 $this->oauthClient->handleCallback(
-                    $this->session->get('_voot_state'),
+//                    $this->session->get('_voot_state'),
                     $request->getQueryParameter('code'),
                     $request->getQueryParameter('state')
                 );
-                $this->session->delete('_voot_state');
+//                $this->session->delete('_voot_state');
 
                 $returnTo = $this->session->get('_voot_return_to');
                 $this->session->delete('_voot_return_to');

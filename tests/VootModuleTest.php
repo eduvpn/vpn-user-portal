@@ -36,6 +36,9 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
     /** @var \SURFnet\VPN\Common\Http\SessionInterface */
     private $session;
 
+    /** @var \fkooman\OAuth\Client\SessionInterface */
+    private $oauthSession;
+
     public function setUp()
     {
         $random = $this->getMockBuilder('\fkooman\OAuth\Client\RandomInterface')->getMock();
@@ -53,6 +56,8 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
             new VootTokenStorage($serverClient),
             new TestOAuthHttpClient()
         );
+        $this->oauthSession = new TestOAuthSession();
+        $client->setSession($this->oauthSession);
         $client->setRandom($random);
         $this->service->addModule(
             new VootModule(
@@ -70,14 +75,12 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
         $response = $this->makeRequest('GET', '/_voot/authorize', ['return_to' => 'http://vpn.example/foo'], [], true);
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame('https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=state12345abcde&response_type=code', $response->getHeader('Location'));
-
-        $this->assertSame('https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=state12345abcde&response_type=code', $this->session->get('_voot_state'));
         $this->assertSame('http://vpn.example/foo', $this->session->get('_voot_return_to'));
     }
 
     public function testCallback()
     {
-        $this->session->set('_voot_state', 'https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=state12345abcde&response_type=code');
+        $this->oauthSession->set('_oauth2_session', 'https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=state12345abcde&response_type=code');
         $this->session->set('_voot_return_to', 'http://vpn.example/foo');
 
         $response = $this->makeRequest(
