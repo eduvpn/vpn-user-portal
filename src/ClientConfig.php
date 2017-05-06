@@ -35,8 +35,12 @@ class ClientConfig
             'dev tun',
             'client',
             'nobind',
-            'persist-key',
-            'persist-tun',
+
+            // the server can also push these if needed, and it should be up
+            // to the client anyway if this is a good idea or not, e.g. running
+            // in a chroot
+            //'persist-key',
+            //'persist-tun',
             'remote-cert-tls server',
 
             // adaptive compression, allow server to override using push
