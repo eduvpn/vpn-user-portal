@@ -89,7 +89,7 @@
         <tbody>
             {% for client in authorizedClients %}
             <tr>
-                <td><span title="{{ client.client_id }}">{{ client.display_name }}</span></td>
+                <td><span title="{{ client.client_id }}">{% if client.display_name %}{{ client.display_name }}{% else %}<em>Unregistered Client</em>{% endif %}</span></td>
                 <td><code>{{ client.scope }}</code></td>
                 <td class="text-right">
                     <form method="post" action="removeClientAuthorization">

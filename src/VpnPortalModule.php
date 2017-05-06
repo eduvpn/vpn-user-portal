@@ -234,7 +234,16 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $authorizedClients = $this->storage->getAuthorizations($userId);
                 foreach ($authorizedClients as $k => $v) {
-                    $authorizedClients[$k]['display_name'] = call_user_func($this->getClientInfo, $v['client_id'])['display_name'];
+                    // false means no longer registered
+                    $displayName = false;
+                    if (false !== $clientInfo = call_user_func($this->getClientInfo, $v['client_id'])) {
+                        // client_id as name in case no 'display_name' is provided
+                        $displayName = $v['client_id'];
+                        if (array_key_exists('display_name', $clientInfo)) {
+                            $displayName = $clientInfo['display_name'];
+                        }
+                    }
+                    $authorizedClients[$k]['display_name'] = $displayName;
                 }
 
                 $twoFactorEnabledProfiles = [];
