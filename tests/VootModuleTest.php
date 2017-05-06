@@ -52,10 +52,10 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
         $this->service = new Service();
 
         $client = new OAuthClient(
-            new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token'),
             new VootTokenStorage($serverClient),
             new TestOAuthHttpClient()
         );
+        $client->addProvider('voot', new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token'));
         $this->oauthSession = new TestOAuthSession();
         $client->setSession($this->oauthSession);
         $client->setRandom($random);
@@ -80,7 +80,8 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
 
     public function testCallback()
     {
-        $this->oauthSession->set('_oauth2_session', 'https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=state12345abcde&response_type=code');
+        $this->oauthSession->set('_oauth2_session_provider_id', 'voot');
+        $this->oauthSession->set('_oauth2_session_authorize_uri', 'https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=state12345abcde&response_type=code');
         $this->session->set('_voot_return_to', 'http://vpn.example/foo');
 
         $response = $this->makeRequest(

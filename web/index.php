@@ -150,17 +150,21 @@ try {
     // voot module
     if ($config->getItem('enableVoot')) {
         $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
+        $oauthClient = new OAuthClient(
+            new VootTokenStorage($serverClient),
+            new OAuthCurlHttpClient()
+        );
+        $oauthClient->addProvider(
+            'voot',
+            new Provider(
+                $config->getSection('Voot')->getItem('clientId'),
+                $config->getSection('Voot')->getItem('clientSecret'),
+                $config->getSection('Voot')->getItem('authorizationEndpoint'),
+                $config->getSection('Voot')->getItem('tokenEndpoint')
+            )
+        );
         $vootModule = new VootModule(
-            new OAuthClient(
-                new Provider(
-                    $config->getSection('Voot')->getItem('clientId'),
-                    $config->getSection('Voot')->getItem('clientSecret'),
-                    $config->getSection('Voot')->getItem('authorizationEndpoint'),
-                    $config->getSection('Voot')->getItem('tokenEndpoint')
-                ),
-                new VootTokenStorage($serverClient),
-                new OAuthCurlHttpClient()
-            ),
+            $oauthClient,
             $serverClient,
             $session
         );

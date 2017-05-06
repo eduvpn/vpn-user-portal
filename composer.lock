@@ -107,12 +107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "cd0e25d10e340c6d84b3ebf65a0646443406ea8b"
+                "reference": "b76473d36eff2d730549e1a5b43f90e098eb78c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/cd0e25d10e340c6d84b3ebf65a0646443406ea8b",
-                "reference": "cd0e25d10e340c6d84b3ebf65a0646443406ea8b",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/b76473d36eff2d730549e1a5b43f90e098eb78c6",
+                "reference": "b76473d36eff2d730549e1a5b43f90e098eb78c6",
                 "shasum": ""
             },
             "require": {
@@ -146,7 +146,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-05-05 14:49:18"
+            "time": "2017-05-06 19:11:42"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -154,12 +154,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "edfd0223e834c9ba6ff22bd2441628ff5b57d932"
+                "reference": "10d00f9b1a81ef488e65b7659d8153b8db4ed263"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/edfd0223e834c9ba6ff22bd2441628ff5b57d932",
-                "reference": "edfd0223e834c9ba6ff22bd2441628ff5b57d932",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/10d00f9b1a81ef488e65b7659d8153b8db4ed263",
+                "reference": "10d00f9b1a81ef488e65b7659d8153b8db4ed263",
                 "shasum": ""
             },
             "require": {
@@ -192,7 +192,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-05-03 12:51:02"
+            "time": "2017-05-05 20:17:41"
         },
         {
             "name": "ircmaxell/password-compat",
