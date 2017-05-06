@@ -272,12 +272,12 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/removeClientAuthorization',
-            function (Request $request) {
-                $authKey = $request->getPostParameter('auth_key');
-                if (1 !== preg_match('/^[0-9a-f]{32}$/', $authKey)) {
-                    throw new HttpException('invalid "auth_key"', 400);
-                }
-                $this->storage->deleteAuthorization($authKey);
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+                $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
+                $scope = self::validateScope($request->getPostParameter('scope'));
+
+                $this->storage->deleteAuthorization($userId, $clientId, $scope);
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }
@@ -289,6 +289,23 @@ class VpnPortalModule implements ServiceModuleInterface
                 return new HtmlResponse($this->tpl->render('vpnPortalDocumentation', []));
             }
         );
+    }
+
+    /**
+     * @param string $scope
+     */
+    public static function validateScope($scope)
+    {
+        // scope       = scope-token *( SP scope-token )
+        // scope-token = 1*NQCHAR
+        // NQCHAR      = %x21 / %x23-5B / %x5D-7E
+        foreach (explode(' ', $scope) as $scopeToken) {
+            if (1 !== preg_match('/^[\x21\x23-\x5B\x5D-\x7E]+$/', $scopeToken)) {
+                throw new HttpException('invalid "scope"', 400);
+            }
+        }
+
+        return $scope;
     }
 
     private function getConfig($serverName, $profileId, $userId, $displayName)
