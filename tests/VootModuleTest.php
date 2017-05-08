@@ -41,9 +41,6 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $random = $this->getMockBuilder('\fkooman\OAuth\Client\RandomInterface')->getMock();
-        $random->method('get')->willReturn('state12345abcde');
-
         $httpClient = new TestHttpClient();
 
         $serverClient = new ServerClient($httpClient, 'serverClient');
@@ -58,7 +55,7 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
         $client->addProvider('voot', new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token'));
         $this->oauthSession = new TestOAuthSession();
         $client->setSession($this->oauthSession);
-        $client->setRandom($random);
+        $client->setRandom(new TestOAuthClientRandom());
         $this->service->addModule(
             new VootModule(
                 $client,
@@ -74,7 +71,7 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
         // redirects to OAuth provider
         $response = $this->makeRequest('GET', '/_voot/authorize', ['return_to' => 'http://vpn.example/foo'], [], true);
         $this->assertSame(302, $response->getStatusCode());
-        $this->assertSame('https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=state12345abcde&response_type=code', $response->getHeader('Location'));
+        $this->assertSame('https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=random_0&response_type=code', $response->getHeader('Location'));
         $this->assertSame('http://vpn.example/foo', $this->session->get('_voot_return_to'));
     }
 

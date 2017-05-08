@@ -36,9 +36,6 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $random = $this->getMockBuilder('\fkooman\OAuth\Server\RandomInterface')->getMock();
-        $random->method('get')->will($this->onConsecutiveCalls('random_1', 'random_2'));
-
         $config = new Config(
             [
                 'apiConsumers' => [
@@ -71,7 +68,7 @@ class OAuthModuleTest extends PHPUnit_Framework_TestCase
             '2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol'
         );
         $oauthServer->setDateTime(new DateTime('2016-01-01'));
-        $oauthServer->setRandom($random);
+        $oauthServer->setRandom(new TestOAuthServerRandom());
 
         $this->service = new Service();
         $this->service->addModule(
