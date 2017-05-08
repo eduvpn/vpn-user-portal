@@ -77,8 +77,7 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
 
     public function testCallback()
     {
-        $this->oauthSession->set('_oauth2_session_provider_id', 'voot');
-        $this->oauthSession->set('_oauth2_session_authorize_uri', 'https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=state12345abcde&response_type=code');
+        $this->oauthSession->set('_oauth2_session', ['provider_id' => 'voot', 'client_id' => 'client_id', 'redirect_uri' => 'http%3A%2F%2Fvpn.example%2F_voot%2Fcallback', 'scope' => 'groups', 'state' => 'state12345abcde', 'response_type' => 'code']);
         $this->session->set('_voot_return_to', 'http://vpn.example/foo');
 
         $response = $this->makeRequest(
