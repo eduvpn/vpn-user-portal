@@ -33,7 +33,8 @@ class TestOAuthHttpClient implements HttpClientInterface
                     'access_token' => 'X',
                     'token_type' => 'bearer',
                 ]
-            )
+            ),
+            ['Content-Type' => 'application/json']
         );
     }
 }

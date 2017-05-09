@@ -54,7 +54,7 @@ class VootTokenStorage implements TokenStorageInterface
             'set_voot_token',
             [
                 'user_id' => $userId,
-                'voot_token' => $accessToken->json(),
+                'voot_token' => $accessToken->toStorage(),
             ]
         );
     }
