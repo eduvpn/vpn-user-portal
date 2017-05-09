@@ -154,8 +154,7 @@ try {
             new VootTokenStorage($serverClient),
             new OAuthCurlHttpClient()
         );
-        $oauthClient->addProvider(
-            'voot',
+        $oauthClient->setProvider(
             new Provider(
                 $config->getSection('Voot')->getItem('clientId'),
                 $config->getSection('Voot')->getItem('clientSecret'),

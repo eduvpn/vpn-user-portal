@@ -36,9 +36,9 @@ class VootTokenStorage implements TokenStorageInterface
     /**
      * @param string $userId
      *
-     * @return AccessToken|false
+     * @return AccessToken
      */
-    public function getAccessToken($userId, $providerId, $requestScope)
+    public function getAccessToken($userId)
     {
         // vpn-user-portal will never use this
         throw new RuntimeException('not implemented');
@@ -48,7 +48,7 @@ class VootTokenStorage implements TokenStorageInterface
      * @param string      $userId
      * @param AccessToken $accessToken
      */
-    public function setAccessToken($userId, $providerId, AccessToken $accessToken)
+    public function addAccessToken($userId, AccessToken $accessToken)
     {
         $this->serverClient->post(
             'set_voot_token',
@@ -63,7 +63,7 @@ class VootTokenStorage implements TokenStorageInterface
      * @param string      $userId
      * @param AccessToken $accessToken
      */
-    public function deleteAccessToken($userId, $providerId, AccessToken $accessToken)
+    public function deleteAccessToken($userId, AccessToken $accessToken)
     {
         // vpn-user-portal will never use this
         throw new RuntimeException('not implemented');
