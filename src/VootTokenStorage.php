@@ -36,7 +36,7 @@ class VootTokenStorage implements TokenStorageInterface
     /**
      * @param string $userId
      *
-     * @return AccessToken
+     * @return array
      */
     public function getAccessToken($userId)
     {
