@@ -38,7 +38,7 @@ class VootTokenStorage implements TokenStorageInterface
      *
      * @return array
      */
-    public function getAccessToken($userId)
+    public function getAccessTokenList($userId)
     {
         // vpn-user-portal will never use this
         throw new RuntimeException('not implemented');
@@ -48,13 +48,13 @@ class VootTokenStorage implements TokenStorageInterface
      * @param string      $userId
      * @param AccessToken $accessToken
      */
-    public function addAccessToken($userId, AccessToken $accessToken)
+    public function storeAccessToken($userId, AccessToken $accessToken)
     {
         $this->serverClient->post(
             'set_voot_token',
             [
                 'user_id' => $userId,
-                'voot_token' => $accessToken->toStorage(),
+                'voot_token' => $accessToken->toJson(),
             ]
         );
     }

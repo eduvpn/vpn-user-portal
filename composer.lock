@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "f7d990aa7b8b41e9e8be2b2e0a4fbcbae7827adb"
+                "reference": "b22f148b2083191a43f1825e76f689d718b45ef9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/f7d990aa7b8b41e9e8be2b2e0a4fbcbae7827adb",
-                "reference": "f7d990aa7b8b41e9e8be2b2e0a4fbcbae7827adb",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/b22f148b2083191a43f1825e76f689d718b45ef9",
+                "reference": "b22f148b2083191a43f1825e76f689d718b45ef9",
                 "shasum": ""
             },
             "require": {
@@ -99,7 +99,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-05-01 17:52:42"
+            "time": "2017-05-10 21:25:14"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -107,18 +107,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "96b54658fdc6864103fe1f603fd28b114c737107"
+                "reference": "411235ac24eb828412c241ce8bc886e32d7e67ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/96b54658fdc6864103fe1f603fd28b114c737107",
-                "reference": "96b54658fdc6864103fe1f603fd28b114c737107",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/411235ac24eb828412c241ce8bc886e32d7e67ac",
+                "reference": "411235ac24eb828412c241ce8bc886e32d7e67ac",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-date": "*",
+                "ext-hash": "*",
                 "ext-json": "*",
+                "ext-pcre": "*",
+                "ext-pdo": "*",
                 "ext-session": "*",
                 "ext-spl": "*",
                 "paragonie/constant_time_encoding": "^1|^2",
@@ -146,7 +149,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-05-09 22:31:21"
+            "time": "2017-05-12 10:26:16"
         },
         {
             "name": "fkooman/oauth2-server",
