@@ -26,9 +26,7 @@ class ClientConfig
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig['hostName'];
-        $processCount = $profileConfig['processCount'];
-
-        $remoteProtoPortList = self::remotePortProtoList($processCount, $shufflePorts);
+        $remoteProtoPortList = self::remotePortProtoList($profileConfig['vpnProtoPorts'], $shufflePorts);
 
         $clientConfig = [
             '# OpenVPN Client Configuration',
@@ -104,46 +102,52 @@ class ClientConfig
         return implode(PHP_EOL, $clientConfig);
     }
 
-    public static function remotePortProtoList($processCount, $shufflePorts)
+    public static function remotePortProtoList(array $vpnProtoPorts, $shufflePorts)
     {
-        switch ($processCount) {
-            case 1:
-                return [
-                    ['proto' => 'udp', 'port' => 1194],
-                ];
-            case 2:
-                return [
-                    ['proto' => 'udp', 'port' => 1194],
-                    ['proto' => 'tcp', 'port' => 443],
-                ];
-            case 4:
-                $portList = [1194, 1195];
-                if ($shufflePorts) {
-                    shuffle($portList);
-                }
+        $udpPorts = [];
+        $tcpPorts = [];
+        foreach ($vpnProtoPorts as $vpnProtoPort) {
+            list($proto, $port) = explode('/', $vpnProtoPort);
+            if ('udp' === $proto) {
+                $udpPorts[] = (int) $port;
+                continue;
+            }
+            if ('tcp' === $proto) {
+                $tcpPorts[] = (int) $port;
+                continue;
+            }
 
-                return [
-                    ['proto' => 'udp', 'port' => $portList[0]],
-                    ['proto' => 'udp', 'port' => $portList[1]],
-                    ['proto' => 'tcp', 'port' => 1194],
-                    ['proto' => 'tcp', 'port' => 443],
-                ];
-            case 8:
-                $udpPortList = [1194, 1195, 1196, 1197, 1198];
-                $tcpPortList = [1194, 1195];
-                if ($shufflePorts) {
-                    shuffle($udpPortList);
-                    shuffle($tcpPortList);
-                }
-
-                return [
-                    ['proto' => 'udp', 'port' => $udpPortList[0]],
-                    ['proto' => 'udp', 'port' => $udpPortList[1]],
-                    ['proto' => 'tcp', 'port' => $tcpPortList[0]],
-                    ['proto' => 'tcp', 'port' => 443],
-                ];
-            default:
-                throw new RuntimeException('invalid processCount');
+            throw new RuntimeException('invalid protocol');
         }
+
+        if ($shufflePorts) {
+            shuffle($udpPorts);
+            shuffle($tcpPorts);
+        }
+
+        $protoPortList = [];
+        // take the first 2 UDP entries, if they are there
+        for ($i = 0; $i < 2; ++$i) {
+            if (null !== $udpPort = array_shift($udpPorts)) {
+                $protoPortList[] = ['proto' => 'udp', 'port' => $udpPort];
+            }
+        }
+
+        // then take the first TCP entry
+        if (null !== $tcpPort = array_shift($tcpPorts)) {
+            $protoPortList[] = ['proto' => 'tcp', 'port' => $tcpPort];
+        }
+
+        // then take the rest of the UDP entries
+        while (null !== $udpPort = array_shift($udpPorts)) {
+            $protoPortList[] = ['proto' => 'udp', 'port' => $udpPort];
+        }
+
+        // then take the rest of the TCP entries
+        while (null !== $tcpPort = array_shift($tcpPorts)) {
+            $protoPortList[] = ['proto' => 'tcp', 'port' => $tcpPort];
+        }
+
+        return $protoPortList;
     }
 }
