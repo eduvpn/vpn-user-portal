@@ -43,6 +43,10 @@ return [
         //'de_DE' => 'Deutsch',
     ],
 
+    // If you have "port sharing" for TCP/443 with the web server, enable the
+    // following
+    //'addVpnProtoPorts' => ['tcp/443'],
+
     'Api' => [
         // access_tokens expire after 3 months
         'tokenExpiry' => 3 * 31 * 24 * 3600,

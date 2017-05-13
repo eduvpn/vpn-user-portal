@@ -22,11 +22,16 @@ use RuntimeException;
 
 class ClientConfig
 {
-    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts)
+    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts, array $addVpnProtoPorts)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig['hostName'];
-        $remoteProtoPortList = self::remotePortProtoList($profileConfig['vpnProtoPorts'], $shufflePorts);
+        $vpnProtoPorts = array_merge(
+            array_values($profileConfig['vpnProtoPorts']),
+            array_values($addVpnProtoPorts)
+        );
+
+        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $shufflePorts);
 
         $clientConfig = [
             '# OpenVPN Client Configuration',

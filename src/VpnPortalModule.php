@@ -49,7 +49,10 @@ class VpnPortalModule implements ServiceModuleInterface
     private $getClientInfo;
 
     /** @var bool */
-    private $shuffleHosts;
+    private $shuffleHosts = true;
+
+    /** @var array */
+    private $addVpnProtoPorts = [];
 
     public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, callable $getClientInfo)
     {
@@ -58,12 +61,16 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->session = $session;
         $this->storage = $storage;
         $this->getClientInfo = $getClientInfo;
-        $this->shuffleHosts = true;
     }
 
     public function setShuffleHosts($shuffleHosts)
     {
         $this->shuffleHosts = (bool) $shuffleHosts;
+    }
+
+    public function setAddVpnProtoPorts(array $addVpnProtoPorts)
+    {
+        $this->addVpnProtoPorts = $addVpnProtoPorts;
     }
 
     public function init(Service $service)
@@ -319,7 +326,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->get('server_info');
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts, $this->addVpnProtoPorts);
 
         // convert the OpenVPN file to "Windows" format, no platform cares, but
         // in Notepad on Windows it looks not so great everything on one line

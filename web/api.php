@@ -74,6 +74,10 @@ try {
         $vpnApiModule = new VpnApiModule(
             $serverClient
         );
+        if ($config->hasItem('addVpnProtoPorts')) {
+            $vpnApiModule->setAddVpnProtoPorts($config->getItem('addVpnProtoPorts'));
+        }
+
         $service->addModule($vpnApiModule);
     }
     $service->run($request)->send();

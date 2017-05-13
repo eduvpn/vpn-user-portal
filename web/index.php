@@ -190,6 +190,9 @@ try {
         $storage,
         $getClientInfo
     );
+    if ($config->hasItem('addVpnProtoPorts')) {
+        $vpnPortalModule->setAddVpnProtoPorts($config->getItem('addVpnProtoPorts'));
+    }
 
     $service->addModule($vpnPortalModule);
 
