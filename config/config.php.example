@@ -84,7 +84,7 @@ return [
         ],
 
         // Fetch a list of foreign public keys automatically
-        'foreignKeyListSource' => 'https://static.eduvpn.nl/federation.json',
-        'foreignKeyListPublicKey' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
+        //'foreignKeyListSource' => 'https://static.eduvpn.nl/federation.json',
+        //'foreignKeyListPublicKey' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
     ],
 ];
