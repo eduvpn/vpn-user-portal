@@ -42,13 +42,12 @@ try {
     $configFile = sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId);
     $config = Config::fromFile($configFile);
 
-    if ($config->hasItem('foreignKeyListSource')) {
-        $publicKeysSource = $config->getItem('foreignKeyListSource');
-        $publicKeysSourcePublicKey = $config->getItem('foreignKeyListPublicKey');
+    if ($config->getSection('Api')->hasItem('foreignKeyListSource')) {
+        $publicKeysSource = $config->getSection('Api')->getItem('foreignKeyListSource');
+        $publicKeysSourcePublicKey = $config->getSection('Api')->getItem('foreignKeyListPublicKey');
 
         $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/%s/foreign_key_list.json', dirname(__DIR__), $instanceId));
         $foreignKeyListFetcher->update(new CurlHttpClient(), $publicKeysSource, $publicKeysSourcePublicKey);
-        var_dump($foreignKeyListFetcher->extract());
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;

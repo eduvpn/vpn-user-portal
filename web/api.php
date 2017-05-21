@@ -67,7 +67,6 @@ try {
             $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/%s/foreign_key_list.json', dirname(__DIR__), $instanceId));
             $foreignKeys = array_merge($foreignKeys, $foreignKeyListFetcher->extract());
         }
-        error_log(var_export($foreignKeys, true));
         $bearerValidator->setForeignKeys($foreignKeys);
 
         $service->addBeforeHook(
