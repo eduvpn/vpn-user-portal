@@ -18,12 +18,14 @@
  */
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
+use fkooman\OAuth\Client\Http\CurlHttpClient;
 use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Portal\ForeignKeyListFetcher;
 
 try {
     $p = new CliParser(
-        'Show the OAuth server\'s public key',
+        'Fetch foreign key list.',
         [
             'instance' => ['the VPN instance', true, false],
         ]
@@ -39,8 +41,15 @@ try {
 
     $configFile = sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId);
     $config = Config::fromFile($configFile);
-    $configData = $config->toArray();
-    echo base64_encode(\Sodium\crypto_sign_publickey(base64_decode($configData['Api']['keyPair']))).PHP_EOL;
+
+    if ($config->hasItem('foreignKeyListSource')) {
+        $publicKeysSource = $config->getItem('foreignKeyListSource');
+        $publicKeysSourcePublicKey = $config->getItem('foreignKeyListPublicKey');
+
+        $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/%s/foreign_key_list.json', dirname(__DIR__), $instanceId));
+        $foreignKeyListFetcher->update(new CurlHttpClient(), $publicKeysSource, $publicKeysSourcePublicKey);
+        var_dump($foreignKeyListFetcher->extract());
+    }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

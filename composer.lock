@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "efd5c11e06cc396ee73e1d66798d77779fb854ca"
+                "reference": "485503633aecce68ce53c48a1e592358f3c78c2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/efd5c11e06cc396ee73e1d66798d77779fb854ca",
-                "reference": "efd5c11e06cc396ee73e1d66798d77779fb854ca",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/485503633aecce68ce53c48a1e592358f3c78c2b",
+                "reference": "485503633aecce68ce53c48a1e592358f3c78c2b",
                 "shasum": ""
             },
             "require": {
@@ -99,7 +99,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-05-13 17:26:19"
+            "time": "2017-05-19 14:45:45"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -157,12 +157,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "d1fa2ac4aebf840dd0d8d18fbc21aee36ecf5f94"
+                "reference": "5d5cd075ae13f7da8b07b4821c52b553eea72474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/d1fa2ac4aebf840dd0d8d18fbc21aee36ecf5f94",
-                "reference": "d1fa2ac4aebf840dd0d8d18fbc21aee36ecf5f94",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/5d5cd075ae13f7da8b07b4821c52b553eea72474",
+                "reference": "5d5cd075ae13f7da8b07b4821c52b553eea72474",
                 "shasum": ""
             },
             "require": {
@@ -195,7 +195,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-05-06 20:55:48"
+            "time": "2017-05-21 19:00:59"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1325,23 +1325,23 @@
         },
         {
             "name": "sebastian/diff",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e"
+                "reference": "3c7d21999e815cdfac70c6c7d79d3a9cb1bc7bc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/13edfd8706462032c2f52b4b862974dd46b71c9e",
-                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/3c7d21999e815cdfac70c6c7d79d3a9cb1bc7bc2",
+                "reference": "3c7d21999e815cdfac70c6c7d79d3a9cb1bc7bc2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": "^5.3.3 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.8"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
             },
             "type": "library",
             "extra": {
@@ -1373,7 +1373,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08T07:14:41+00:00"
+            "time": "2017-05-18T13:44:30+00:00"
         },
         {
             "name": "sebastian/environment",

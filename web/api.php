@@ -27,6 +27,7 @@ use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\BearerAuthenticationHook;
+use SURFnet\VPN\Portal\ForeignKeyListFetcher;
 use SURFnet\VPN\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
@@ -56,7 +57,18 @@ try {
             $storage,
             $config->getSection('Api')->getItem('keyPair')
         );
-        $bearerValidator->setPublicKeys($config->getSection('Api')->getItem('publicKeys'));
+
+        $foreignKeys = [];
+        if ($config->getSection('Api')->hasItem('foreignKeys')) {
+            $foreignKeys = array_merge($foreignKeys, $config->getSection('Api')->getItem('foreignKeys'));
+        }
+
+        if ($config->getSection('Api')->hasItem('foreignKeyListSource')) {
+            $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/%s/foreign_key_list.json', dirname(__DIR__), $instanceId));
+            $foreignKeys = array_merge($foreignKeys, $foreignKeyListFetcher->extract());
+        }
+        error_log(var_export($foreignKeys, true));
+        $bearerValidator->setForeignKeys($foreignKeys);
 
         $service->addBeforeHook(
             'auth',

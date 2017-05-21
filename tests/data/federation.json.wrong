@@ -1,0 +1,19 @@
+{
+    "instances": [
+        {
+            "base_uri": "https:\/\/labrat.eduvpn.nl\/",
+            "display_name": "The Netherlands (Amsterdam)",
+            "logo_uri": "https:\/\/static.eduvpn.nl\/img\/nl.png",
+            "public_key": "wGos0zPERxPYZHyJXQXz\/OOSCWWej27PEScjScJzXQ8="
+        },
+        {
+            "base_uri": "https:\/\/vpn.tuxed.net\/",
+            "display_name": "The Netherlands (Utrecht)",
+            "logo_uri": "https:\/\/static.eduvpn.nl\/img\/nl.png",
+            "public_key": "dfkwpMo\/btz\/j\/1YsQJRQ3izYPjn3wehfDSiSXeLFBs="
+        }
+    ],
+    "seq": 6,
+    "signed_at": "2017-05-14 09:46:07",
+    "version": 1
+}
