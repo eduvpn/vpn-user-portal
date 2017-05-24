@@ -30,8 +30,8 @@ class ForeignKeyListFetcherTest extends PHPUnit_Framework_TestCase
         $foreignKeyListFetcher->update(new TestOAuthHttpClient(), 'https://example.org/federation.json', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
         $this->assertSame(
             [
-                'https://labrat.eduvpn.nl/' => 'wGos0zPERxPYZHyJXQXz/OOSCWWej27PEScjScJzXQ8=',
-                'https://vpn.tuxed.net/' => 'cfkwpMo/btz/j/1YsQJRQ3izYPjn3wehfDSiSXeLFBs=',
+                'labrat.eduvpn.nl' => 'wGos0zPERxPYZHyJXQXz/OOSCWWej27PEScjScJzXQ8=',
+                'vpn.tuxed.net' => 'cfkwpMo/btz/j/1YsQJRQ3izYPjn3wehfDSiSXeLFBs=',
             ],
             $foreignKeyListFetcher->extract()
         );
@@ -45,8 +45,8 @@ class ForeignKeyListFetcherTest extends PHPUnit_Framework_TestCase
         $foreignKeyListFetcher->update(new TestOAuthHttpClient(), 'https://example.org/federation.json', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
         $this->assertSame(
             [
-                'https://labrat.eduvpn.nl/' => 'wGos0zPERxPYZHyJXQXz/OOSCWWej27PEScjScJzXQ8=',
-                'https://vpn.tuxed.net/' => 'cfkwpMo/btz/j/1YsQJRQ3izYPjn3wehfDSiSXeLFBs=',
+                'labrat.eduvpn.nl' => 'wGos0zPERxPYZHyJXQXz/OOSCWWej27PEScjScJzXQ8=',
+                'vpn.tuxed.net' => 'cfkwpMo/btz/j/1YsQJRQ3izYPjn3wehfDSiSXeLFBs=',
             ],
             $foreignKeyListFetcher->extract()
         );

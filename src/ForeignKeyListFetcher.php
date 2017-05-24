@@ -88,7 +88,12 @@ class ForeignKeyListFetcher
 
         $entryList = [];
         foreach ($jsonData['instances'] as $instance) {
-            $entryList[$instance['base_uri']] = $instance['public_key'];
+            // convert base_uri to FQDN
+            $baseUri = $instance['base_uri'];
+            if (false === $hostName = parse_url($baseUri, PHP_URL_HOST)) {
+                throw new RuntimeException('unable to extract host name from base_uri');
+            }
+            $entryList[$hostName] = $instance['public_key'];
         }
 
         return $entryList;
