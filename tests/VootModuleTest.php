@@ -71,13 +71,13 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
         // redirects to OAuth provider
         $response = $this->makeRequest('GET', '/_voot/authorize', ['return_to' => 'http://vpn.example/foo'], [], true);
         $this->assertSame(302, $response->getStatusCode());
-        $this->assertSame('https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=random_0&response_type=code', $response->getHeader('Location'));
+        $this->assertSame('https://example.org/authorize?client_id=client_id&redirect_uri=http%3A%2F%2Fvpn.example%2F_voot%2Fcallback&scope=groups&state=random_1&response_type=code&code_challenge_method=S256&code_challenge=elRpCEYh8XiYBhjcG1EBHe5qHscwyYvQC-xtVeca5jM', $response->getHeader('Location'));
         $this->assertSame('http://vpn.example/foo', $this->session->get('_voot_return_to'));
     }
 
     public function testCallback()
     {
-        $this->oauthSession->set('_oauth2_session', ['user_id' => 'foo', 'provider_id' => 'https://example.org/authorize|client_id', 'client_id' => 'client_id', 'redirect_uri' => 'http%3A%2F%2Fvpn.example%2F_voot%2Fcallback', 'scope' => 'groups', 'state' => 'state12345abcde', 'response_type' => 'code']);
+        $this->oauthSession->set('_oauth2_session', ['user_id' => 'foo', 'provider_id' => 'https://example.org/authorize|client_id', 'client_id' => 'client_id', 'redirect_uri' => 'http%3A%2F%2Fvpn.example%2F_voot%2Fcallback', 'scope' => 'groups', 'state' => 'state12345abcde', 'response_type' => 'code', 'code_verifier' => 'ABCD']);
         $this->session->set('_voot_return_to', 'http://vpn.example/foo');
 
         $response = $this->makeRequest(

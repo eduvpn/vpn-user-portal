@@ -32,11 +32,12 @@ class TestOAuthClientRandom implements RandomInterface
     private $counter = 0;
 
     /**
-     * Get a randomly generated crypto secure string.
+     * @param int  $length
+     * @param bool $rawBytes
      *
-     * @param $len int the length (in bytes) of the random string
+     * @return string
      */
-    public function get($length)
+    public function get($length, $rawBytes = false)
     {
         return sprintf('random_%d', $this->counter++);
     }
