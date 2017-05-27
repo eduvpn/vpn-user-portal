@@ -2,14 +2,16 @@
 
 return [
     // set secureCookie flag, so browser only sends them over HTTPS
-    'secureCookie' => false,
+    'secureCookie' => true,
 
+    // template caching for performance improvements
     'enableTemplateCache' => true,
 
     'authMethod' => 'FormAuthentication',
     //'authMethod' => 'MellonAuthentication',
 
     'FormAuthentication' => [
+        // use vpn-user-portal-add-user to add users!
     ],
 
     'MellonAuthentication' => [
