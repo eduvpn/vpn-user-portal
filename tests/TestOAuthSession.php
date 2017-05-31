@@ -33,46 +33,31 @@ class TestOAuthSession implements SessionInterface
     private $data = [];
 
     /**
-     * @param string $key
+     * Get value, delete key.
      *
-     * @return bool
-     */
-    public function has($key)
-    {
-        return array_key_exists($key, $this->data);
-    }
-
-    /**
      * @param string $key
-     */
-    public function get($key)
-    {
-        if (!$this->has($key)) {
-            throw new SessionException(sprintf('key "%s" not found in session', $key));
-        }
-
-        return $this->data[$key];
-    }
-
-    /**
-     * @param string $key
-     * @param mixed  $value
      *
      * @return mixed
      */
-    public function set($key, $value)
-    {
-        $this->data[$key] = $value;
-    }
-
-    /**
-     * @param string $key
-     */
-    public function del($key)
+    public function take($key)
     {
         if (!array_key_exists($key, $this->data)) {
             throw new SessionException(sprintf('key "%s" not found in session', $key));
         }
+        $value = $this->data[$key];
         unset($this->data[$key]);
+
+        return $value;
+    }
+
+    /**
+     * Set key to value.
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function set($key, $value)
+    {
+        $this->data[$key] = $value;
     }
 }
