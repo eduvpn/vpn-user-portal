@@ -107,12 +107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "d0bb7ada6c14a7e9280fbfca1a9f210aecb3993f"
+                "reference": "c04f8c668a4e65c81ad14c7fd2a33c09de25b0a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/d0bb7ada6c14a7e9280fbfca1a9f210aecb3993f",
-                "reference": "d0bb7ada6c14a7e9280fbfca1a9f210aecb3993f",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/c04f8c668a4e65c81ad14c7fd2a33c09de25b0a4",
+                "reference": "c04f8c668a4e65c81ad14c7fd2a33c09de25b0a4",
                 "shasum": ""
             },
             "require": {
@@ -149,7 +149,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-05-31 21:33:18"
+            "time": "2017-05-31 21:39:26"
         },
         {
             "name": "fkooman/oauth2-server",
