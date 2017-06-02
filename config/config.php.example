@@ -64,7 +64,7 @@ return [
             // API 2 Apps
             // Application for federated eduVPN
             //'net.tuxed.eduvpn' => [
-            //    'redirect_uri' => 'https://eduvpn.tuxed.net/client/callback',
+            //    'redirect_uri' => 'https://eduvpn.tuxed.net/vpn-for-web/callback',
             //    'response_type' => 'code',
             //    'display_name' => 'eduVPN for Web',
             //],
