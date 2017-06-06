@@ -33,7 +33,7 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
     /** @var \SURFnet\VPN\Common\Http\Service */
     private $service;
 
-    /** @var \SURFnet\VPN\Common\Http\SessionInterface */
+    /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
     /** @var \fkooman\OAuth\Client\SessionInterface */

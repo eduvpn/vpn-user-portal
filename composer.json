@@ -19,6 +19,11 @@
         {
             "no-api": true,
             "type": "vcs",
+            "url": "https://github.com/fkooman/php-secookie"
+        },
+        {
+            "no-api": true,
+            "type": "vcs",
             "url": "https://github.com/eduvpn/vpn-lib-common"
         },
         {
@@ -45,6 +50,7 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
+	"fkooman/secookie": "dev-master",
         "fkooman/oauth2-client": "dev-master",
         "fkooman/oauth2-server": "dev-master",
         "paragonie/constant_time_encoding": "^1",

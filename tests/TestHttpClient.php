@@ -23,7 +23,7 @@ use SURFnet\VPN\Common\HttpClient\HttpClientInterface;
 
 class TestHttpClient implements HttpClientInterface
 {
-    public function get($requestUri)
+    public function get($requestUri, array $getData = [], array $requestHeaders = [])
     {
         switch ($requestUri) {
             case 'serverClient/profile_list':
@@ -83,7 +83,7 @@ class TestHttpClient implements HttpClientInterface
         }
     }
 
-    public function post($requestUri, array $postData = [])
+    public function post($requestUri, array $postData = [], array $requestHeaders = [])
     {
         switch ($requestUri) {
             case 'serverClient/add_client_certificate':

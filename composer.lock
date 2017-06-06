@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "79e1389f5621a8344d7bdeba255d7d2d",
+    "content-hash": "fc63c4efb59d19c237a83c11f1ca531c",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "485503633aecce68ce53c48a1e592358f3c78c2b"
+                "reference": "975157f643491daea3ccffdb4a9e55612e905e39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/485503633aecce68ce53c48a1e592358f3c78c2b",
-                "reference": "485503633aecce68ce53c48a1e592358f3c78c2b",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/975157f643491daea3ccffdb4a9e55612e905e39",
+                "reference": "975157f643491daea3ccffdb4a9e55612e905e39",
                 "shasum": ""
             },
             "require": {
@@ -73,6 +73,7 @@
                 "ext-pcre": "*",
                 "ext-session": "*",
                 "ext-spl": "*",
+                "fkooman/secookie": "dev-master",
                 "ircmaxell/password-compat": "^1.0",
                 "php": ">= 5.4.0",
                 "psr/log": "^1.0",
@@ -99,7 +100,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-05-19 14:45:45"
+            "time": "2017-06-06 17:43:54"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -107,12 +108,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client",
-                "reference": "c04f8c668a4e65c81ad14c7fd2a33c09de25b0a4"
+                "reference": "79da075478c74490e019031d880a904e72a89c4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/c04f8c668a4e65c81ad14c7fd2a33c09de25b0a4",
-                "reference": "c04f8c668a4e65c81ad14c7fd2a33c09de25b0a4",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/79da075478c74490e019031d880a904e72a89c4c",
+                "reference": "79da075478c74490e019031d880a904e72a89c4c",
                 "shasum": ""
             },
             "require": {
@@ -130,7 +131,7 @@
                 "symfony/polyfill-php56": "^1.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8"
+                "phpunit/phpunit": "^5.7"
             },
             "type": "library",
             "autoload": {
@@ -149,7 +150,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-05-31 21:39:26"
+            "time": "2017-06-01 15:23:01"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -157,12 +158,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "5d5cd075ae13f7da8b07b4821c52b553eea72474"
+                "reference": "45ee9886c06d36fa34955eb32d48ec5648e00b3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/5d5cd075ae13f7da8b07b4821c52b553eea72474",
-                "reference": "5d5cd075ae13f7da8b07b4821c52b553eea72474",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/45ee9886c06d36fa34955eb32d48ec5648e00b3a",
+                "reference": "45ee9886c06d36fa34955eb32d48ec5648e00b3a",
                 "shasum": ""
             },
             "require": {
@@ -176,7 +177,7 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8"
+                "phpunit/phpunit": "^5.7"
             },
             "type": "library",
             "autoload": {
@@ -195,7 +196,48 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-05-21 19:00:59"
+            "time": "2017-06-01 15:24:09"
+        },
+        {
+            "name": "fkooman/secookie",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fkooman/php-secookie",
+                "reference": "153bea3d47fcd304d9ae9d1d4644abb5b70e9fd8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fkooman/php-secookie/zipball/153bea3d47fcd304d9ae9d1d4644abb5b70e9fd8",
+                "reference": "153bea3d47fcd304d9ae9d1d4644abb5b70e9fd8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-date": "*",
+                "ext-session": "*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fkooman\\SeCookie\\": "src/",
+                    "fkooman\\SeCookie\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "Very simple Cookie and PHP Session library",
+            "time": "2017-06-06 17:35:12"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -562,20 +604,20 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.33.2",
+            "version": "v1.34.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "dd6ca96227917e1e85b41c7c3cc6507b411e0927"
+                "reference": "55e4beb721a044db9e31ae0470024fc205b6a008"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/dd6ca96227917e1e85b41c7c3cc6507b411e0927",
-                "reference": "dd6ca96227917e1e85b41c7c3cc6507b411e0927",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/55e4beb721a044db9e31ae0470024fc205b6a008",
+                "reference": "55e4beb721a044db9e31ae0470024fc205b6a008",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.7"
+                "php": ">=5.3.3"
             },
             "require-dev": {
                 "psr/container": "^1.0",
@@ -585,12 +627,15 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.33-dev"
+                    "dev-master": "1.34-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
                     "Twig_": "lib/"
+                },
+                "psr-4": {
+                    "Twig\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -620,7 +665,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-04-20T17:39:48+00:00"
+            "time": "2017-06-06T03:56:50+00:00"
         }
     ],
     "packages-dev": [
@@ -1637,16 +1682,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.0",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "885db865f6b2b918404a1fae28f9ac640f71f994"
+                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/885db865f6b2b918404a1fae28f9ac640f71f994",
-                "reference": "885db865f6b2b918404a1fae28f9ac640f71f994",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/9752a30000a8ca9f4b34b5227d15d0101b96b063",
+                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063",
                 "shasum": ""
             },
             "require": {
@@ -1688,7 +1733,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-28T10:56:20+00:00"
+            "time": "2017-06-02T22:05:06+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -1745,6 +1790,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "eduvpn/common": 20,
+        "fkooman/secookie": 20,
         "fkooman/oauth2-client": 20,
         "fkooman/oauth2-server": 20
     },

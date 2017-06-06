@@ -18,44 +18,91 @@
 
 namespace SURFnet\VPN\Portal\Tests;
 
-use SURFnet\VPN\Common\Http\SessionInterface;
+use fkooman\SeCookie\SessionInterface;
+use fkooman\SeCookie\Exception\SessionException;
 
 class TestSession implements SessionInterface
 {
-    /** var @array */
-    private $s;
+    /** @var array */
+    private $sessionData = [];
 
-    public function __construct()
+    /**
+     * Get the session ID.
+     *
+     * @return string
+     */
+    public function id()
     {
-        $this->s = [];
+        return '12345';
     }
 
+    /**
+     * Regenerate the session ID.
+     *
+     * @param bool $deleteOldSession
+     */
+    public function regenerate($deleteOldSession = false)
+    {
+        // NOP
+    }
+
+    /**
+     * Set session value.
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
     public function set($key, $value)
     {
-        $this->s[$key] = $value;
+        $this->sessionData[$key] = $value;
     }
 
+    /**
+     * Delete session key/value.
+     *
+     * @param string $key
+     */
     public function delete($key)
     {
-        unset($this->s[$key]);
+        if ($this->has($key)) {
+            unset($this->sessionData[$key]);
+        }
     }
 
+    /**
+     * Test if session key exists.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
     public function has($key)
     {
-        return array_key_exists($key, $this->s);
+        return array_key_exists($key, $this->sessionData);
     }
 
+    /**
+     * Get session value.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
     public function get($key)
     {
         if (!$this->has($key)) {
-            return;
+            throw new SessionException(sprintf('key "%s" not available in session', $key));
         }
 
-        return $this->s[$key];
+        return $this->sessionData[$key];
     }
 
+    /**
+     * Empty the session.
+     */
     public function destroy()
     {
-        $this->s = [];
+        $this->sessionData = [];
+        $this->regenerate(true);
     }
 }

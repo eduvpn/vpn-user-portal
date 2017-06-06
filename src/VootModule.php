@@ -19,11 +19,11 @@
 namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Client\OAuthClient;
+use fkooman\SeCookie\SessionInterface;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\Http\SessionInterface;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 
 class VootModule implements ServiceModuleInterface
@@ -34,7 +34,7 @@ class VootModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var \SURFnet\VPN\Common\Http\SessionInterface */
+    /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
     public function __construct(OAuthClient $oauthClient, ServerClient $serverClient, SessionInterface $session)
