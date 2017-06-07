@@ -111,46 +111,53 @@ class ClientConfig
     {
         $udpPorts = [];
         $tcpPorts = [];
+        $hasUdp53 = false;
+        $hasTcp443 = false;
+
         foreach ($vpnProtoPorts as $vpnProtoPort) {
             list($proto, $port) = explode('/', $vpnProtoPort);
             if ('udp' === $proto) {
-                $udpPorts[] = (int) $port;
+                $port = (int) $port;
+                if (53 === $port) {
+                    $hasUdp53 = true;
+                } else {
+                    $udpPorts[] = $port;
+                }
                 continue;
             }
             if ('tcp' === $proto) {
-                $tcpPorts[] = (int) $port;
+                $port = (int) $port;
+                if (443 === $port) {
+                    $hasTcp443 = true;
+                } else {
+                    $tcpPorts[] = $port;
+                }
                 continue;
             }
 
             throw new RuntimeException('invalid protocol');
         }
 
+        $udpIndex = 0;
+        $tcpIndex = 0;
         if ($shufflePorts) {
-            shuffle($udpPorts);
-            shuffle($tcpPorts);
+            $udpIndex = 0 !== count($udpPorts) ? random_int(0, count($udpPorts) - 1) : 0;
+            $tcpIndex = 0 !== count($tcpPorts) ? random_int(0, count($tcpPorts) - 1) : 0;
         }
 
         $protoPortList = [];
-        // take the first 2 UDP entries, if they are there
-        for ($i = 0; $i < 2; ++$i) {
-            if (null !== $udpPort = array_shift($udpPorts)) {
-                $protoPortList[] = ['proto' => 'udp', 'port' => $udpPort];
-            }
+        if (0 !== count($udpPorts)) {
+            $protoPortList[] = ['proto' => 'udp', 'port' => $udpPorts[$udpIndex]];
+        }
+        if ($hasUdp53) {
+            $protoPortList[] = ['proto' => 'udp', 'port' => 53];
         }
 
-        // then take the first TCP entry
-        if (null !== $tcpPort = array_shift($tcpPorts)) {
-            $protoPortList[] = ['proto' => 'tcp', 'port' => $tcpPort];
+        if (0 !== count($tcpPorts)) {
+            $protoPortList[] = ['proto' => 'tcp', 'port' => $tcpPorts[$tcpIndex]];
         }
-
-        // then take the rest of the UDP entries
-        while (null !== $udpPort = array_shift($udpPorts)) {
-            $protoPortList[] = ['proto' => 'udp', 'port' => $udpPort];
-        }
-
-        // then take the rest of the TCP entries
-        while (null !== $tcpPort = array_shift($tcpPorts)) {
-            $protoPortList[] = ['proto' => 'tcp', 'port' => $tcpPort];
+        if ($hasTcp443) {
+            $protoPortList[] = ['proto' => 'tcp', 'port' => 443];
         }
 
         return $protoPortList;
