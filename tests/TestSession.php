@@ -18,8 +18,8 @@
 
 namespace SURFnet\VPN\Portal\Tests;
 
-use fkooman\SeCookie\SessionInterface;
 use fkooman\SeCookie\Exception\SessionException;
+use fkooman\SeCookie\SessionInterface;
 
 class TestSession implements SessionInterface
 {

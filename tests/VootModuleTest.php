@@ -42,20 +42,18 @@ class VootModuleTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $httpClient = new TestHttpClient();
-
         $serverClient = new ServerClient($httpClient, 'serverClient');
-
         $this->session = new TestSession();
         $this->service = new Service();
+        $this->oauthSession = new TestOAuthSession();
 
         $client = new OAuthClient(
             new VootTokenStorage($serverClient),
-            new TestOAuthHttpClient()
+            new TestOAuthHttpClient(),
+            $this->oauthSession,
+            new TestOAuthClientRandom()
         );
         $client->setProvider(new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token'));
-        $this->oauthSession = new TestOAuthSession();
-        $client->setSession($this->oauthSession);
-        $client->setRandom(new TestOAuthClientRandom());
         $this->service->addModule(
             new VootModule(
                 $client,
