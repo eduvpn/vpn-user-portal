@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc63c4efb59d19c237a83c11f1ca531c",
+    "content-hash": "f7225816cf39eaeb08e7da88050fd00b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "b04c563e06b74c508ef72cb8f5b9390729c4d970"
+                "reference": "1bda5adbbcc64d8efbcfc73bcc9212cfabcc06c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/b04c563e06b74c508ef72cb8f5b9390729c4d970",
-                "reference": "b04c563e06b74c508ef72cb8f5b9390729c4d970",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/1bda5adbbcc64d8efbcfc73bcc9212cfabcc06c4",
+                "reference": "1bda5adbbcc64d8efbcfc73bcc9212cfabcc06c4",
                 "shasum": ""
             },
             "require": {
@@ -100,14 +100,14 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-06-08 08:12:09"
+            "time": "2017-06-08 11:31:43"
         },
         {
             "name": "fkooman/oauth2-client",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fkooman/php-oauth2-client",
+                "url": "https://github.com/fkooman/php-oauth2-client.git",
                 "reference": "84bd95a0afe6e15eee37f698a5ac23425e188c18"
             },
             "dist": {
@@ -203,13 +203,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/fkooman/php-secookie",
-                "reference": "82d48e5c8b4b61d2f5fb263994ff219bf1c5dfa2"
+                "url": "https://github.com/fkooman/php-secookie.git",
+                "reference": "a5ec58c122d781c4b8ab94503c034ddd5945039b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-secookie/zipball/82d48e5c8b4b61d2f5fb263994ff219bf1c5dfa2",
-                "reference": "82d48e5c8b4b61d2f5fb263994ff219bf1c5dfa2",
+                "url": "https://api.github.com/repos/fkooman/php-secookie/zipball/a5ec58c122d781c4b8ab94503c034ddd5945039b",
+                "reference": "a5ec58c122d781c4b8ab94503c034ddd5945039b",
                 "shasum": ""
             },
             "require": {
@@ -227,17 +227,18 @@
                     "fkooman\\SeCookie\\Tests\\": "tests/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
-                    "email": "fkooman@tuxed.net",
-                    "name": "François Kooman"
+                    "name": "François Kooman",
+                    "email": "fkooman@tuxed.net"
                 }
             ],
             "description": "Very simple Cookie and PHP Session library",
-            "time": "2017-06-07 17:11:26"
+            "time": "2017-06-08 11:20:37"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1790,9 +1791,9 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "eduvpn/common": 20,
-        "fkooman/secookie": 20,
         "fkooman/oauth2-client": 20,
-        "fkooman/oauth2-server": 20
+        "fkooman/oauth2-server": 20,
+        "fkooman/secookie": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
