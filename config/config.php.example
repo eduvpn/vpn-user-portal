@@ -62,12 +62,12 @@ return [
                 'display_name' => 'eduVPN for Android',
             ],
             // API 2 Apps
-            // Application for federated eduVPN
-            //'net.tuxed.eduvpn' => [
-            //    'redirect_uri' => 'https://eduvpn.tuxed.net/vpn-for-web/callback',
-            //    'response_type' => 'code',
-            //    'display_name' => 'eduVPN for Web',
-            //],
+            // eduVPN for Web
+            'net.tuxed.eduvpn' => [
+                'redirect_uri' => 'https://eduvpn.tuxed.net/vpn-for-web/callback',
+                'response_type' => 'code',
+                'display_name' => 'eduVPN for Web',
+            ],
             //'nl.eduvpn.app.android' => [
             //    'redirect_uri' => 'nl.eduvpn.app.android://api/callback',
             //    'response_type' => 'code',
