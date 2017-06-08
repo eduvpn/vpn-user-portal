@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "975157f643491daea3ccffdb4a9e55612e905e39"
+                "reference": "b04c563e06b74c508ef72cb8f5b9390729c4d970"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/975157f643491daea3ccffdb4a9e55612e905e39",
-                "reference": "975157f643491daea3ccffdb4a9e55612e905e39",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/b04c563e06b74c508ef72cb8f5b9390729c4d970",
+                "reference": "b04c563e06b74c508ef72cb8f5b9390729c4d970",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-06-06 17:43:54"
+            "time": "2017-06-08 08:12:09"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -204,12 +204,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-secookie",
-                "reference": "12b467334317d1f4a95b12b74b0dcb7a991917ae"
+                "reference": "82d48e5c8b4b61d2f5fb263994ff219bf1c5dfa2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-secookie/zipball/12b467334317d1f4a95b12b74b0dcb7a991917ae",
-                "reference": "12b467334317d1f4a95b12b74b0dcb7a991917ae",
+                "url": "https://api.github.com/repos/fkooman/php-secookie/zipball/82d48e5c8b4b61d2f5fb263994ff219bf1c5dfa2",
+                "reference": "82d48e5c8b4b61d2f5fb263994ff219bf1c5dfa2",
                 "shasum": ""
             },
             "require": {
@@ -237,7 +237,7 @@
                 }
             ],
             "description": "Very simple Cookie and PHP Session library",
-            "time": "2017-06-06 18:00:45"
+            "time": "2017-06-07 17:11:26"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -604,16 +604,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.34.2",
+            "version": "v1.34.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "55e4beb721a044db9e31ae0470024fc205b6a008"
+                "reference": "451c6f4197e113e24c1c85bc3fc8c2d77adeff2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/55e4beb721a044db9e31ae0470024fc205b6a008",
-                "reference": "55e4beb721a044db9e31ae0470024fc205b6a008",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/451c6f4197e113e24c1c85bc3fc8c2d77adeff2e",
+                "reference": "451c6f4197e113e24c1c85bc3fc8c2d77adeff2e",
                 "shasum": ""
             },
             "require": {
@@ -665,7 +665,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-06-06T03:56:50+00:00"
+            "time": "2017-06-07T18:45:17+00:00"
         }
     ],
     "packages-dev": [
