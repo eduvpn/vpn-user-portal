@@ -40,7 +40,7 @@ return [
     // supported languages in the UI, the first one mentioned is the default
     'supportedLanguages' => [
         'en_US' => 'English',
-        //'nl_NL' => 'Nederlands',
+        'nl_NL' => 'Nederlands',
         //'fr_FR' => 'Français',
         //'de_DE' => 'Deutsch',
     ],
@@ -56,6 +56,7 @@ return [
         // OAuth 2.0 consumers
         'consumerList' => [
             // API 1 Apps
+            // eduVPN for Android
             'nl.eduvpn.app' => [
                 'redirect_uri' => 'nl.eduvpn.app://import/callback',
                 'response_type' => 'token',
