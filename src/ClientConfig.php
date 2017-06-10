@@ -69,12 +69,6 @@ class ClientConfig
             '<ca>',
             trim($serverInfo['ca']),
             '</ca>',
-
-            'key-direction 1',
-
-            '<tls-auth>',
-            trim($serverInfo['ta']),
-            '</tls-auth>',
         ];
 
         // API 1, if clientCertificate is provided, we add it directly to the
@@ -90,6 +84,27 @@ class ClientConfig
                     '<key>',
                     $clientCertificate['private_key'],
                     '</key>',
+                ]
+            );
+        }
+
+        if ($profileConfig['tlsCrypt']) {
+            $clientConfig = array_merge(
+                $clientConfig,
+                [
+                    '<tls-crypt>',
+                    trim($serverInfo['ta']),
+                    '</tls-crypt>',
+                ]
+            );
+        } else {
+            $clientConfig = array_merge(
+                $clientConfig,
+                [
+                    'key-direction 1',
+                    '<tls-auth>',
+                    trim($serverInfo['ta']),
+                    '</tls-auth>',
                 ]
             );
         }
