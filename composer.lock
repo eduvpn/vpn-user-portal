@@ -158,12 +158,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "45ee9886c06d36fa34955eb32d48ec5648e00b3a"
+                "reference": "5aeb812a48835701d19453d9735641871dbf8212"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/45ee9886c06d36fa34955eb32d48ec5648e00b3a",
-                "reference": "45ee9886c06d36fa34955eb32d48ec5648e00b3a",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/5aeb812a48835701d19453d9735641871dbf8212",
+                "reference": "5aeb812a48835701d19453d9735641871dbf8212",
                 "shasum": ""
             },
             "require": {
@@ -196,7 +196,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-06-01 15:24:09"
+            "time": "2017-06-10 20:21:20"
         },
         {
             "name": "fkooman/secookie",

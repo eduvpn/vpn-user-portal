@@ -70,15 +70,20 @@ return [
                 'response_type' => 'code',
                 'display_name' => 'eduVPN for Web',
             ],
+            // eduVPN for Windows
+            'nl.eduvpn.app.windows' => [
+                'redirect_uri' => [
+                    'http://127.0.0.1:{PORT}/callback',
+                    'http://[::1]:{PORT}/callback',
+                ],
+                'response_type' => 'code',
+                'display_name' => 'eduVPN for Windows',
+            ],
+            // eduVPN for Android
             //'nl.eduvpn.app.android' => [
             //    'redirect_uri' => 'nl.eduvpn.app.android://api/callback',
             //    'response_type' => 'code',
             //    'display_name' => 'eduVPN for Android',
-            //],
-            //'nl.eduvpn.app.windows' => [
-            //    'redirect_uri' => 'nl.eduvpn.app.windows://api/callback',
-            //    'response_type' => 'code',
-            //    'display_name' => 'eduVPN for Windows',
             //],
         ],
 
