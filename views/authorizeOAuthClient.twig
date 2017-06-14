@@ -10,10 +10,12 @@
     </ul>
 
     <p>{% trans "An application wants to act on your behalf." %}</p>
+    <p class="warning">{% trans "Approve <strong>only</strong> if you know and trust the application!" %}</p>
 
     <dl>
         <dt>{% trans "Application" %}</dt><dd><span title="{{ client_id }}">{{ display_name }}</span></dd>
         <dt>{% trans "Permissions" %}</dt><dd>{{ scope }}</dd>
+        <dt>{% trans "Location" %}</dt><dd>{{ redirect_uri }}</dd>
     </dl>
 
     <form method="post">
