@@ -20,6 +20,7 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Storage;
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -55,7 +56,7 @@ try {
 
         $bearerValidator = new BearerValidator(
             $storage,
-            $config->getSection('Api')->getItem('keyPair')
+            FileIO::readFile(sprintf('%s/OAuth.key', $dataDir))
         );
 
         $foreignKeys = [];

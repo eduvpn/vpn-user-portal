@@ -20,6 +20,7 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Storage;
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -62,7 +63,7 @@ try {
         $oauthServer = new OAuthServer(
             $storage,
             $getClientInfo,
-            $config->getSection('Api')->getItem('keyPair')
+            FileIO::readFile(sprintf('%s/OAuth.key', $dataDir))
         );
         $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
         $oauthModule = new OAuthTokenModule(

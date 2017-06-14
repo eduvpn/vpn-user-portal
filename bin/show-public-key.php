@@ -19,7 +19,7 @@
 require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 
 use SURFnet\VPN\Common\CliParser;
-use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\FileIO;
 
 try {
     $p = new CliParser(
@@ -36,11 +36,15 @@ try {
     }
 
     $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
-
-    $configFile = sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId);
-    $config = Config::fromFile($configFile);
-    $configData = $config->toArray();
-    echo base64_encode(\Sodium\crypto_sign_publickey(base64_decode($configData['Api']['keyPair']))).PHP_EOL;
+    $keyPairFile = sprintf('%s/data/%s/OAuth.key', dirname(__DIR__), $instanceId);
+    echo base64_encode(
+        \Sodium\crypto_sign_publickey(
+            base64_decode(
+                FileIO::readFile($keyPairFile)
+            )
+        )
+    );
+    echo PHP_EOL;
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

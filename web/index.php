@@ -25,6 +25,7 @@ use fkooman\OAuth\Server\Storage;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\CsrfProtectionHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationModule;
@@ -230,7 +231,7 @@ try {
         $oauthServer = new OAuthServer(
             $storage,
             $getClientInfo,
-            $config->getSection('Api')->getItem('keyPair')
+            FileIO::readFile(sprintf('%s/OAuth.key', $dataDir))
         );
         $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
         $oauthModule = new OAuthModule(

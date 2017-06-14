@@ -88,10 +88,6 @@ return [
             //],
         ],
 
-        // contains a keypair that is used to sign and verify authorization
-        // codes and access tokens (the init script will take care of this)
-        'keyPair' => '__REPLACE_ME__',
-
         // List of foreign OAuth *PUBLIC* keys of VPN instances for which we 
         // want to allow guest usage
         'foreignKeys' => [
