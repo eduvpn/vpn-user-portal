@@ -42,9 +42,9 @@ return [
     'supportedLanguages' => [
         'en_US' => 'English',
         'nl_NL' => 'Nederlands',
+        //'nb_NO' => 'norsk bokmål',
         //'fr_FR' => 'Français',
         //'de_DE' => 'Deutsch',
-        //'nb_NO' => 'norsk bokmål',
     ],
 
     // If you have "port sharing" for TCP/443 with the web server, enable the

@@ -9,179 +9,186 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:35
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:112
+#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:37
+#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:37
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:37
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:118
 msgid "Sign In"
 msgstr "Se connecter"
 
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:42
-msgid "Please sign in with your username and password."
+#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:44
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:84
+msgid "Please attach your YubiKey and press its button."
 msgstr ""
-"Veuillez vous connecter à l'aide votre nom d'utilisateur et votre mot de "
-"passe."
 
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:53
-msgid "The credentials you provided are not correct. Please try again!"
+#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:55
+msgid "The YubiKey OTP you provided is not correct."
 msgstr ""
-"Les informations d'identification que vous avez saisies ne sont pas "
-"correctes. Veuillez réessayer !"
 
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:70
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:74
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:90
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:94
-msgid "Username"
-msgstr "Nom d'utilisateur"
+#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:71
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:115
+msgid "YubiKey OTP"
+msgstr ""
 
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:80
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:84
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:98
-#: /tmp/cache/84/844f7914fee03920c95cbef8e31d5619f65371cff5b466450a1e74d6d823a114.php:102
-msgid "Password"
-msgstr "Mot de passe"
+#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:82
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:122
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:139
+#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:82
+msgid "Verify"
+msgstr ""
 
-#: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:35
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:35
-#: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:35
-#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:35
-#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:35
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:35
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:35
-#: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:35
-msgid "New"
-msgstr "Nouveau"
+#: /tmp/cache/c6/c6317c2c0348341e0de6b6cf2a229484f570294e6d2336b58199727afabe500d.php:20
+#: /tmp/cache/9f/9f0c203bfafc61a33dd934ce49c063a9d03f1aaade5b41736ad7340997841368.php:24
+msgid "VPN User Portal"
+msgstr "Portail d'utilisateur VPN"
 
-#: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:39
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:39
-#: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:39
-#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:39
-#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:39
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:39
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:39
-#: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:39
-msgid "Configurations"
-msgstr "Configurations"
-
-#: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:43
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:43
-#: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:43
-#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:43
-#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:43
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:43
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:43
-#: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:43
-msgid "Account"
-msgstr "Compte"
-
-#: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:47
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:47
-#: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:47
-#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:47
-#: /tmp/cache/4c/4c02ccad89559a88a6862024c4ce9673138c392906d9247b8f58efa7be66f0fb.php:47
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:47
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:47
-#: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:47
-msgid "Documentation"
-msgstr "Documentation"
-
-#: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:53
-#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:53
+#: /tmp/cache/64/64f870f366a9b85b4c50ac64efa40d5f667b7d7cd143c4b318e6dd480775badc.php:37
 msgid "Error"
 msgstr "Erreur"
 
-# Améliorer
-#: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:58
-msgid ""
-"Setting up two-factor authentication failed because the entered code does "
-"not match the expected value."
+#: /tmp/cache/64/64f870f366a9b85b4c50ac64efa40d5f667b7d7cd143c4b318e6dd480775badc.php:49
+msgid "An error occurred."
 msgstr ""
-"La configuration de l'authentification à deux facteurs a échoué, car le code "
-"saisi ne correspond pas à la valeur prévue."
 
-#: /tmp/cache/b9/b916955166261e5885f3d108048d64f95e6febe8b42b832044e9db872d7c3b6f.php:65
-msgid "<a href=\"otp\">Try</a> again."
-msgstr "Veuillez <a href=\"otp\">réessayez</a>"
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:35
+#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:35
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:35
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:35
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:35
+#: /tmp/cache/d7/d7caac0f2fbd307866b415cd87a2685c18314f225b48680b1c86d18809b33859.php:35
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:35
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:35
+msgid "New"
+msgstr "Nouveau"
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:58
-msgid ""
-"This account does not have the required permissions to create a new VPN "
-"configurations for any of the \n"
-"    available profiles."
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:39
+#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:39
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:39
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:39
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:39
+#: /tmp/cache/d7/d7caac0f2fbd307866b415cd87a2685c18314f225b48680b1c86d18809b33859.php:39
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:39
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:39
+msgid "Configurations"
+msgstr "Configurations"
+
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:43
+#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:43
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:43
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:43
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:43
+#: /tmp/cache/d7/d7caac0f2fbd307866b415cd87a2685c18314f225b48680b1c86d18809b33859.php:43
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:43
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:43
+msgid "Account"
+msgstr "Compte"
+
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:47
+#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:47
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:47
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:47
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:47
+#: /tmp/cache/d7/d7caac0f2fbd307866b415cd87a2685c18314f225b48680b1c86d18809b33859.php:47
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:47
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:47
+msgid "Documentation"
+msgstr "Documentation"
+
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:58
+msgid "You are already enrolled with a YubiKey."
 msgstr ""
-"Ce compte n'a pas la permission requise de créer une nouvelle configuration "
-"VPN pour aucun des profils disponibles."
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:73
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:67
 msgid ""
-"Create a new VPN configuration by choosing a unique name for your "
-"configuration, e.g. <em>Phone</em>. Allowed characters are <code>a-z</code>, "
-"<code>A-Z</code>, <code>0-9</code>, <code>-</code>, <code>_</code>, <code>.</"
-"code>, <code>@</code>."
+"Here you can enroll for two-factor authentication (2FA) using a YubiKey One-"
+"time Password (OTP)."
 msgstr ""
-"Créez une nouvelle configuration VPN en choisissant un nom pour votre "
-"configuration, par exemple <em>Téléphone</em>. Les caractères autorisés sont "
-"<code>a-z</code>, <code>A-Z</code>, <code>0-9</code>, <code>-</code>, "
-"<code>_</code>, <code>.</code>, <code>@</code>."
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:86
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:70
 msgid ""
-"The <strong>%tfa%</strong> profile requires two-factor authentication. "
-"Enroll <a href=\"otp\">here</a>."
+"See the <a href=\"documentation\">documentation</a> for more information on "
+"2FA."
 msgstr ""
-"Ce <strong>%tfa%</strong> profil nécessite une authentification à deux "
-"facteurs. Veuillez vous inscrire <a href=\"otp\">ici</a>."
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:101
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:77
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:77
+msgid "Only an administrator can remove 2FA from your account!"
+msgstr ""
+
+#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:96
+msgid "The YubiKey OTP is not valid."
+msgstr ""
+
+#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:54
+msgid "Are you sure you want to delete <em>%displayName%</em>?"
+msgstr ""
+
+#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:66
+msgid "Yes"
+msgstr "Oui"
+
+#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:70
+msgid "No"
+msgstr "Non"
+
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:69
+msgid ""
+"Either there are no VPN profiles defined, or this account does not have the "
+"required permissions to create a new VPN configurations for any of the "
+"available profiles."
+msgstr ""
+
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:83
+msgid ""
+"Create a new VPN configuration by choosing a profile and a name for your "
+"configuration, e.g. <em>Phone</em>."
+msgstr ""
+
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:97
+msgid ""
+"You need to enroll for two-factor authentication on the <a href=\"account"
+"\">account</a> page before you can use this profile!"
+msgstr ""
+
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:117
 msgid "Profile"
 msgstr "Profil"
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:124
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:130
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:73
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:155
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:159
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:68
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:220
 msgid "Name"
 msgstr "Nom"
 
-#: /tmp/cache/be/beec533262f5883c1d1ce6dc67bd73f65c5fe6d03ebaebb81d732d92c9dbccf2.php:136
+#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:165
 msgid "Download"
 msgstr "Télécharger"
 
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:32
-msgid "English"
-msgstr "Anglais"
-
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:40
-msgid "French"
-msgstr "Français"
-
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:48
-msgid "German"
-msgstr "Allemand"
-
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:56
-msgid "Dutch"
-msgstr "Néerlandais"
-
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:65
-msgid "Switch"
-msgstr "Changer"
-
-#: /tmp/cache/69/695734bcb2697e4114fbfa21115a0bb568650fc6937c9d7201e16740346d283a.php:85
-msgid "Sign Out"
-msgstr "Se déconnecter"
-
-#: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:54
-msgid "Here you can enroll for two-factor authentication (2FA)."
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:58
+msgid "You are already enrolled for TOTP."
 msgstr ""
-"Vous pouvez vous inscrire pour l'authentification à deux facteurs (2FA) ici."
 
-#: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:61
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:67
+msgid ""
+"Here you can enroll for two-factor authentication (2FA) using a Time-based "
+"One-time Password (TOTP)."
+msgstr ""
+
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:70
+msgid ""
+"See the <a href=\"documentation\">documentation</a> for more information on "
+"2FA and a list of applications to use."
+msgstr ""
+
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:84
 msgid "Secret"
 msgstr "Secret"
 
-#: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:77
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:100
 msgid ""
 "Scan the QR code using your 2FA application, or import the secret manually. "
 "Confirm the successful configuration by entering a 6 digit OTP generated by "
@@ -191,127 +198,180 @@ msgstr ""
 "le secret manuellement. Confirmez la configuration en entrant les 6 chiffres "
 "OTP générés par l'application ci-dessous."
 
-#: /tmp/cache/c8/c8795595200b6b1d37bff832592126085edd3326c61dc5d48eb1206b7a9c6f9c.php:93
-msgid "Validate"
-msgstr "Valider"
-
-#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:61
+#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:112
 msgid ""
-"Configuration with name <em>%configName%</em> is already in use! You can "
-"only use a name once."
-msgstr ""
-"La  configuration <em>%configName%</em>est déjà en cours d'utilisation ! Une "
-"configuration ne peut être utilisée qu'une seule fois."
-
-#: /tmp/cache/c1/c1257a6c51ba99f7d8942adfc45d5cb3ff8d7fa6069b0b983faa6a8679b64f4a.php:68
-msgid "<a href=\"new\">Try</a> again."
-msgstr "<a href=\"new\">Réessayez</a>"
-
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:35
-msgid "Approval"
-msgstr "Autorisation"
-
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:41
-msgid "An application wants to act on your behalf."
+"The OTP key you entered does not match the expected value for this OTP "
+"secret."
 msgstr ""
 
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:47
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:139
-msgid "Application"
-msgstr "Application"
-
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:53
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:141
-msgid "Permissions"
-msgstr "Permissions"
-
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:65
-msgid "Reject"
-msgstr "Refuser"
-
-#: /tmp/cache/39/394b091b8874d0a3e1495e69205813f1c3032d928dcdbf3fdc8056eaa390a1e4.php:69
-msgid "Approve"
-msgstr "Accepter"
-
-#: /tmp/cache/39/39866eeb755bdc6b051ca9f0803dedb835ee616793001013416b04ca887dac0a.php:20
-#: /tmp/cache/f7/f7d540d8e16b0873676b45909acc333d5b639109e73ed1071d78cbb63bfe9c8f.php:24
-msgid "VPN User Portal"
-msgstr "Portail d'utilisateur VPN"
-
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:58
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:58
 msgid "There are currently no configurations. <a href=\"new\">Create</a> one."
 msgstr ""
 "Il n'y a pour l'instant aucune configuration. En <a href=\"new\">créer</a> "
 "une nouvelle."
 
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:75
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:70
+msgid "Issued"
+msgstr ""
+
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:74
 msgid "Expires"
 msgstr "Expire"
 
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:79
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:78
 msgid "Status"
 msgstr "Statut"
 
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:115
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:107
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:122
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:113
 msgid "Active"
 msgstr "Actif"
 
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:129
-msgid "Revoked"
-msgstr "Annulé"
+#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:127
+msgid "Delete"
+msgstr ""
 
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:136
-msgid "Expired"
-msgstr "Expiré"
+#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:35
+msgid "Approval"
+msgstr "Autorisation"
 
-#: /tmp/cache/e9/e91ab69aac62d2de4ce6fffc52582184e932f3fa25d07cc314f0d0276ed95ff4.php:154
-msgid "Disable"
-msgstr "Désactiver"
+#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:41
+msgid "An application wants to act on your behalf."
+msgstr ""
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:54
-msgid "User ID"
-msgstr "Identifiant"
+#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:45
+msgid "Approve <strong>only</strong> if you know and trust the application!"
+msgstr ""
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:66
-msgid "Two-factor Authentication"
-msgstr "Authentification à deux facteurs"
+#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:51
+msgid "Application"
+msgstr "Application"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:74
-msgid "Enrolled"
-msgstr "Inscrit"
+#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:59
+msgid "Permissions"
+msgstr "Permissions"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:80
-msgid "Enroll"
-msgstr "S'inscrire"
+#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:65
+msgid "Location"
+msgstr ""
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:95
+#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:74
+msgid "Reject"
+msgstr "Refuser"
+
+#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:78
+msgid "Approve"
+msgstr "Accepter"
+
+#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:44
+msgid "Please provide your TOTP."
+msgstr ""
+
+#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:55
+msgid "The TOTP you provided is incorrect."
+msgstr ""
+
+#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:71
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:120
+msgid "TOTP"
+msgstr ""
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:53
+msgid "User Info"
+msgstr ""
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:59
+msgid "ID"
+msgstr ""
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:70
 msgid "Group Membership(s)"
 msgstr "Adhésion au(x) groupe(s)"
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:131
-msgid "Applications"
-msgstr "Applications"
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:78
+msgid "Not a member of any group."
+msgstr ""
 
-#: /tmp/cache/43/4388e1b11c846155bb65e7f98c6afd3f318af5a231c3a95f0e87a29ad6ef6610.php:168
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:112
+msgid "Two-factor Authentication"
+msgstr "Authentification à deux facteurs"
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:128
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:151
+msgid "Enrolled"
+msgstr "Inscrit"
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:143
+msgid "YubiKey"
+msgstr ""
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:174
+msgid "Profiles"
+msgstr ""
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:203
+msgid "Authorized Applications"
+msgstr ""
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:211
+msgid "No applications have access to your account."
+msgstr ""
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:222
+msgid "Scope"
+msgstr ""
+
+#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:259
 msgid "Revoke"
 msgstr "Annuler"
 
-#: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:57
-msgid ""
-"Are you sure you want to disable <em>%configName%</em>? Only an "
-"administrator can undo this!"
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:53
+msgid "Events"
 msgstr ""
-"Êtes-vous sûr de vouloir désactiver <em>%configName%</em> ? Seul un "
-"administrateur peut annuler cette action !"
 
-#: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:69
-msgid "Yes"
-msgstr "Oui"
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:58
+msgid "This is a list of events that occurred related to your account."
+msgstr ""
 
-#: /tmp/cache/bc/bcfe97de021b737bef672bfb1657429033b7f8c434171835dfe1c78e790415f3.php:73
-msgid "No"
-msgstr "Non"
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:66
+msgid "No events yet."
+msgstr ""
+
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:75
+msgid "Date/Time"
+msgstr ""
+
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:79
+msgid "Message"
+msgstr ""
+
+#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:81
+msgid "Type"
+msgstr ""
+
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:44
+msgid "Please sign in with your username and password."
+msgstr ""
+"Veuillez vous connecter à l'aide votre nom d'utilisateur et votre mot de "
+"passe."
+
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:55
+msgid "The credentials you provided were not correct."
+msgstr ""
+
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:72
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:76
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:92
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:96
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:82
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:86
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:100
+#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:104
+msgid "Password"
+msgstr "Mot de passe"
