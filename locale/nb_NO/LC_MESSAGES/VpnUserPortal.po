@@ -155,7 +155,7 @@ msgid ""
 "configuration, e.g. <em>Phone</em>."
 msgstr ""
 "Lag en ny VPN-konfigurasjon ved å velge en profil og å fylle ut navn,"
-"for eksempel <em>Telefoon</em>."
+"for eksempel <em>Telefon</em>."
 
 #: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:97
 msgid ""
@@ -349,7 +349,7 @@ msgstr "Henvendelser"
 #: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:58
 msgid "This is a list of events that occurred related to your account."
 msgstr ""
-"Dette er ei liste over nylige henvendelser som gjelder kontoen din."
+"Dette er ei liste over nylige henvendelser som angår kontoen din."
 
 #: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:66
 msgid "No events yet."
