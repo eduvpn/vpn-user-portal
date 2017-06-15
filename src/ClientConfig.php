@@ -63,9 +63,7 @@ class ClientConfig
             // @see https://bettercrypto.org
             // @see https://community.openvpn.net/openvpn/wiki/Hardening
             'tls-version-min 1.2',
-
-            // 2.4 only clients: 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
-            'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-256-GCM-SHA384',
+            'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
 
             '<ca>',
             trim($serverInfo['ca']),
