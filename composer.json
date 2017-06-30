@@ -42,7 +42,7 @@
         "ext-spl": "*",
         "fkooman/oauth2-client": "dev-master",
         "fkooman/oauth2-server": "dev-master",
-        "fkooman/secookie": "dev-master",
+        "fkooman/secookie": "^1",
         "paragonie/constant_time_encoding": "^1",
         "php": ">=5.4.0"
     },
