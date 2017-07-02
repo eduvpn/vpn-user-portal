@@ -36,6 +36,10 @@ try {
     }
 
     $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
+    FileIO::createDir(
+        sprintf('%s/data/%s', dirname(__DIR__), $instanceId),
+        0700
+    );
     $keyPairData = base64_encode(\Sodium\crypto_sign_keypair());
     $keyPairFile = sprintf('%s/data/%s/OAuth.key', dirname(__DIR__), $instanceId);
     FileIO::writeFile($keyPairFile, $keyPairData);
