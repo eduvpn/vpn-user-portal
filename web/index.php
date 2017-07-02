@@ -20,6 +20,7 @@ require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
+use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Storage;
 use fkooman\SeCookie\Cookie;
@@ -195,7 +196,7 @@ try {
             return false;
         }
 
-        return $config->getSection('Api')->getSection('consumerList')->getItem($clientId);
+        return new ClientInfo($config->getSection('Api')->getSection('consumerList')->getItem($clientId));
     };
 
     // portal module

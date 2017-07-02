@@ -19,6 +19,7 @@
 namespace SURFnet\VPN\Portal\Tests;
 
 use DateTime;
+use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Storage;
 use PDO;
@@ -63,7 +64,7 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
                     return false;
                 }
 
-                return $config->getSection('apiConsumers')->getItem($clientId);
+                return new ClientInfo($config->getSection('apiConsumers')->getItem($clientId));
             },
             '2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol'
         );
