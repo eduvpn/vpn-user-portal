@@ -57,36 +57,23 @@ return [
 
         // OAuth 2.0 consumers
         'consumerList' => [
-            // API 1 Apps
-            // eduVPN for Android
+            // eduVPN Applications
+            'org.eduvpn.app' => [
+                'redirect_uri' => [
+                    'org.eduvpn.app:/api/callback',
+                    'http://127.0.0.1:{PORT}/callback',
+                    'http://[::1]:{PORT}/callback',
+                    'https://eduvpn.tuxed.net/vpn-for-web/callback',
+                ],
+                'response_type' => 'code',
+                'display_name' => 'eduVPN',
+            ],
+            // **LEGACY** eduVPN Application for Android
             'nl.eduvpn.app' => [
                 'redirect_uri' => 'nl.eduvpn.app://import/callback',
                 'response_type' => 'token',
                 'display_name' => 'eduVPN for Android',
             ],
-            // API 2 Apps
-            // eduVPN for Web
-            'net.tuxed.eduvpn' => [
-                'redirect_uri' => 'https://eduvpn.tuxed.net/vpn-for-web/callback',
-                'response_type' => 'code',
-                'display_name' => 'eduVPN for Web',
-            ],
-            // eduVPN for Windows
-            'nl.eduvpn.app.windows' => [
-                'redirect_uri' => [
-                    'http://127.0.0.1:{PORT}/callback',
-                    'http://[::1]:{PORT}/callback',
-                    'nl.eduvpn.app.windows:/api/callback',
-                ],
-                'response_type' => 'code',
-                'display_name' => 'eduVPN for Windows',
-            ],
-            // eduVPN for Android
-            //'nl.eduvpn.app.android' => [
-            //    'redirect_uri' => 'nl.eduvpn.app.android:/api/callback',
-            //    'response_type' => 'code',
-            //    'display_name' => 'eduVPN for Android',
-            //],
         ],
 
         // List of foreign OAuth *PUBLIC* keys of VPN instances for which we 
