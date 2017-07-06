@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "05ff9172d6ec14a533aa79162f4d21d3",
+    "content-hash": "9d0a636a6111ecaf8fc079ed47be33db",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -104,16 +104,16 @@
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "dev-master",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "84bd95a0afe6e15eee37f698a5ac23425e188c18"
+                "reference": "358666aaf3f774898c602b8e6c70dcdf7d420179"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/84bd95a0afe6e15eee37f698a5ac23425e188c18",
-                "reference": "84bd95a0afe6e15eee37f698a5ac23425e188c18",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/358666aaf3f774898c602b8e6c70dcdf7d420179",
+                "reference": "358666aaf3f774898c602b8e6c70dcdf7d420179",
                 "shasum": ""
             },
             "require": {
@@ -140,30 +140,31 @@
                     "fkooman\\OAuth\\Client\\Tests\\": "tests/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
-                    "email": "fkooman@tuxed.net",
-                    "name": "François Kooman"
+                    "name": "François Kooman",
+                    "email": "fkooman@tuxed.net"
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-06-07 12:34:55"
+            "time": "2017-07-06T12:18:00+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "deb2d5cbbe584148fdcb1e7fd112f2a6cf01268b"
+                "reference": "3aac9a41a9c3d47a0b5e91345cb78abfa282736c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/deb2d5cbbe584148fdcb1e7fd112f2a6cf01268b",
-                "reference": "deb2d5cbbe584148fdcb1e7fd112f2a6cf01268b",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/3aac9a41a9c3d47a0b5e91345cb78abfa282736c",
+                "reference": "3aac9a41a9c3d47a0b5e91345cb78abfa282736c",
                 "shasum": ""
             },
             "require": {
@@ -196,7 +197,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-07-02 15:07:35"
+            "time": "2017-07-06T12:12:55+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -441,7 +442,7 @@
         },
         {
             "name": "symfony/intl",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/intl.git",
@@ -665,16 +666,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.34.3",
+            "version": "v1.34.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "451c6f4197e113e24c1c85bc3fc8c2d77adeff2e"
+                "reference": "f878bab48edb66ad9c6ed626bf817f60c6c096ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/451c6f4197e113e24c1c85bc3fc8c2d77adeff2e",
-                "reference": "451c6f4197e113e24c1c85bc3fc8c2d77adeff2e",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/f878bab48edb66ad9c6ed626bf817f60c6c096ee",
+                "reference": "f878bab48edb66ad9c6ed626bf817f60c6c096ee",
                 "shasum": ""
             },
             "require": {
@@ -726,7 +727,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-06-07T18:45:17+00:00"
+            "time": "2017-07-04T13:19:31+00:00"
         }
     ],
     "packages-dev": [
@@ -1743,16 +1744,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063"
+                "reference": "1f93a8d19b8241617f5074a123e282575b821df8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/9752a30000a8ca9f4b34b5227d15d0101b96b063",
-                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/1f93a8d19b8241617f5074a123e282575b821df8",
+                "reference": "1f93a8d19b8241617f5074a123e282575b821df8",
                 "shasum": ""
             },
             "require": {
@@ -1794,7 +1795,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-02T22:05:06+00:00"
+            "time": "2017-06-15T12:58:50+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -1849,10 +1850,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fkooman/oauth2-client": 20,
-        "fkooman/oauth2-server": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
