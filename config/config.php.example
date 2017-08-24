@@ -19,7 +19,7 @@ return [
         //'attribute' => 'MELLON_eduPersonTargetedID',
 
         // add the entityID of the IdP to the user ID. This MUST be enabled
-        // if multiple IdPs are used and the attribute used for the user ID is 
+        // if multiple IdPs are used and the attribute used for the user ID is
         // not enforced to be unique among the different IdPs
         'addEntityID' => false,
     ],
@@ -50,8 +50,8 @@ return [
     //'addVpnProtoPorts' => ['tcp/443'],
 
     'Api' => [
-        // access_tokens expire after 3 months
-        'tokenExpiry' => 3 * 31 * 24 * 3600,
+        // access_tokens expire after 1 hour
+        'tokenExpiry' => 3600,
 
         // OAuth 2.0 consumers
         'consumerList' => [
@@ -61,20 +61,13 @@ return [
                     'org.eduvpn.app:/api/callback',
                     'http://127.0.0.1:{PORT}/callback',
                     'http://[::1]:{PORT}/callback',
-                    //'https://eduvpn.tuxed.net/vpn-for-web/callback',
                 ],
                 'response_type' => 'code',
                 'display_name' => 'eduVPN',
             ],
-            // **LEGACY** eduVPN Application for Android
-            'nl.eduvpn.app' => [
-                'redirect_uri' => 'nl.eduvpn.app://import/callback',
-                'response_type' => 'token',
-                'display_name' => 'eduVPN for Android',
-            ],
         ],
 
-        // List of foreign OAuth *PUBLIC* keys of VPN instances for which we 
+        // List of foreign OAuth *PUBLIC* keys of VPN instances for which we
         // want to allow guest usage
         'foreignKeys' => [
             //'vpn.example.org' => 'AABBCC==',
