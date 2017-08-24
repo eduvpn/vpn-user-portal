@@ -61,7 +61,7 @@ return [
                     'org.eduvpn.app:/api/callback',
                     'http://127.0.0.1:{PORT}/callback',
                     'http://[::1]:{PORT}/callback',
-                    'https://eduvpn.tuxed.net/vpn-for-web/callback',
+                    //'https://eduvpn.tuxed.net/vpn-for-web/callback',
                 ],
                 'response_type' => 'code',
                 'display_name' => 'eduVPN',
@@ -82,7 +82,7 @@ return [
         ],
 
         // Fetch a list of foreign public keys automatically
-        //'foreignKeyListSource' => 'https://static.eduvpn.nl/federation.json',
+        //'foreignKeyListSource' => 'https://static.eduvpn.nl/disco/secure_internet.json',
         //'foreignKeyListPublicKey' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
     ],
 ];
