@@ -69,16 +69,6 @@ try {
         $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
-    $session = new Session(
-        [
-            'SameSite' => 'Lax',
-            'Path' => $request->getRoot(),
-            'DomainBinding' => $request->getServerName(),
-            'PathBinding' => $request->getRoot(),
-            'Secure' => $config->getItem('secureCookie'),
-        ]
-    );
-
     $cookie = new Cookie(
         [
             'SameSite' => 'Lax',
@@ -87,6 +77,14 @@ try {
             'Path' => $request->getRoot(),
             'Domain' => $request->getServerName(),
         ]
+    );
+
+    $session = new Session(
+        [
+            'DomainBinding' => $request->getServerName(),
+            'PathBinding' => $request->getRoot(),
+        ],
+        $cookie
     );
 
     $tpl = new TwigTpl($templateDirs, dirname(__DIR__).'/locale', 'VpnUserPortal', $templateCache);

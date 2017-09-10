@@ -42,11 +42,11 @@
         "ext-spl": "*",
         "fkooman/oauth2-client": "^5",
         "fkooman/oauth2-server": "^1",
-        "fkooman/secookie": "^1",
+        "fkooman/secookie": "^2",
         "paragonie/constant_time_encoding": "^1",
         "php": ">=5.4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^5"
     }
 }
