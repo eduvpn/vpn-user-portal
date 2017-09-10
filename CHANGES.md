@@ -2,6 +2,9 @@
 
 ## 1.0.2 (2017-09-10)
 - update `fkooman/secookie`
+- update default config file, no effect for deployed instances:
+  - set OAuth access token expiry to 1 hour
+  - remove old Android app as OAuth client
 
 ## 1.0.1 (2017-08-24)
 - remove incomplete `de_DE` and `fr_FR` translations for now
