@@ -74,8 +74,6 @@ try {
             'SameSite' => 'Lax',
             'Secure' => $config->getItem('secureCookie'),
             'Max-Age' => 60 * 60 * 24 * 90,   // 90 days
-            'Path' => $request->getRoot(),
-            'Domain' => $request->getServerName(),
         ]
     );
 
@@ -84,7 +82,16 @@ try {
             'DomainBinding' => $request->getServerName(),
             'PathBinding' => $request->getRoot(),
         ],
-        $cookie
+        new Cookie(
+            [
+                // we need to bind to "Path", otherwise the (Basic)
+                // authentication mechanism will set a cookie for
+                // {ROOT}/_form/auth/
+                'Path' => $request->getRoot(),
+                'SameSite' => 'Lax',
+                'Secure' => $config->getItem('secureCookie'),
+            ]
+        )
     );
 
     $tpl = new TwigTpl($templateDirs, dirname(__DIR__).'/locale', 'VpnUserPortal', $templateCache);
