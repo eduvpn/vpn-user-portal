@@ -79,6 +79,7 @@ try {
 
     $session = new Session(
         [
+            'SessionName' => 'SID',
             'DomainBinding' => $request->getServerName(),
             'PathBinding' => $request->getRoot(),
         ],
