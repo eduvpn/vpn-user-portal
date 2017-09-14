@@ -237,8 +237,8 @@ class VpnPortalModule implements ServiceModuleInterface
                     if (false !== $clientInfo = call_user_func($this->getClientInfo, $v['client_id'])) {
                         // client_id as name in case no 'display_name' is provided
                         $displayName = $v['client_id'];
-                        if (array_key_exists('display_name', $clientInfo)) {
-                            $displayName = $clientInfo['display_name'];
+                        if (null !== $clientInfo->getDisplayName()) {
+                            $displayName = $clientInfo->getDisplayName();
                         }
                     }
                     $authorizedClients[$k]['display_name'] = $displayName;

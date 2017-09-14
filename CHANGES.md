@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5 (2017-09-14)
+- show "display name" of OAuth client instead of "client id" on the account 
+  page (issue #75)
+
 ## 1.0.4 (2017-09-11)
 - change session name to SID to get rid of explicit Domain binding;
 
