@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6 (TBD)
+- API call `user_info` also exposes `two_factor_enrolled_with` now to show 
+  which 2FA methods the user is enrolled for
+
 ## 1.0.5 (2017-09-14)
 - show "display name" of OAuth client instead of "client id" on the account 
   page (issue #75)

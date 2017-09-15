@@ -90,10 +90,19 @@ class VpnApiModule implements ServiceModuleInterface
                 $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
                 $isDisabledUser = $this->serverClient->get('is_disabled_user', ['user_id' => $userId]);
 
+                $twoFactorTypes = [];
+                if ($hasYubiKeyId) {
+                    $twoFactorTypes[] = 'yubi';
+                }
+                if ($hasTotpSecret) {
+                    $twoFactorTypes[] = 'totp';
+                }
+
                 return new ApiResponse(
                     'user_info',
                     [
                         'two_factor_enrolled' => $hasYubiKeyId || $hasTotpSecret,
+                        'two_factor_enrolled_with' => $twoFactorTypes,
                         'is_disabled' => $isDisabledUser,
                     ]
                 );
