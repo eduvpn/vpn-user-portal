@@ -107,7 +107,7 @@ class ForeignKeyListFetcher
     }
 
     /**
-     * @param string
+     * @param string $jsonText
      *
      * @return array
      */

@@ -33,7 +33,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
             $tokenInfo = $this->bearerValidator->validate($authorizationHeader);
 
             $tokenIssuer = $tokenInfo->getIssuer();
-            if (!is_null($tokenIssuer)) {
+            if (null !== $tokenIssuer) {
                 // "bind" the issuer to the user_id
                 return sprintf(
                     '%s_%s',

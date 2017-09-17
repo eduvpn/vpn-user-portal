@@ -19,7 +19,7 @@ class TestOAuthServerRandom implements RandomInterface
     /**
      * Get a randomly generated crypto secure string.
      *
-     * @param $len int the length (in bytes) of the random string
+     * @param int $length
      */
     public function get($length)
     {

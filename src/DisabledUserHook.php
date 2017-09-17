@@ -41,7 +41,7 @@ class DisabledUserHook implements BeforeHookInterface
             throw new HttpException('authentication hook did not run before', 500);
         }
         $userId = $hookData['auth'];
-        if (is_null($userId)) {
+        if (null === $userId) {
             throw new HttpException('unable to determine user ID', 500);
         }
 

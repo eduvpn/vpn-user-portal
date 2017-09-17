@@ -31,7 +31,7 @@ try {
     echo base64_encode(
         \Sodium\crypto_sign_publickey(
             base64_decode(
-                FileIO::readFile($keyPairFile)
+                FileIO::readFile($keyPairFile), true
             )
         )
     );
