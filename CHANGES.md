@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.6 (TBD)
+## 1.0.6 (2017-09-18)
 - API call `user_info` also exposes `two_factor_enrolled_with` now to show 
   which 2FA methods the user is enrolled for
 
