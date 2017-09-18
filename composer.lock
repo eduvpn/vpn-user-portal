@@ -156,30 +156,36 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "3aac9a41a9c3d47a0b5e91345cb78abfa282736c"
+                "reference": "585410072f3921ac2122098ec51f7a93a67c8a5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/3aac9a41a9c3d47a0b5e91345cb78abfa282736c",
-                "reference": "3aac9a41a9c3d47a0b5e91345cb78abfa282736c",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/585410072f3921ac2122098ec51f7a93a67c8a5e",
+                "reference": "585410072f3921ac2122098ec51f7a93a67c8a5e",
                 "shasum": ""
             },
             "require": {
                 "ext-date": "*",
                 "ext-hash": "*",
                 "ext-json": "*",
-                "ext-libsodium": "*",
                 "ext-pcre": "*",
                 "ext-pdo": "*",
+                "ext-spl": "*",
                 "paragonie/constant_time_encoding": "^1|^2",
-                "php": ">=5.4.0"
+                "paragonie/random_compat": "^1|^2",
+                "php": ">=5.4",
+                "symfony/polyfill-php56": "^1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.7"
+                "phpunit/phpunit": "^5"
+            },
+            "suggest": {
+                "ext-libsodium": "PHP < 7.2 sodium implementation",
+                "ext-sodium": "PHP >= 7.2 sodium implementation"
             },
             "type": "library",
             "autoload": {
@@ -198,7 +204,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-07-06T12:12:55+00:00"
+            "time": "2017-09-18T10:26:03+00:00"
         },
         {
             "name": "fkooman/secookie",
