@@ -41,8 +41,9 @@ return [
     // supported languages in the UI, the first one mentioned is the default
     'supportedLanguages' => [
         'en_US' => 'English',
-        'nl_NL' => 'Nederlands',
+        //'nl_NL' => 'Nederlands',
         //'nb_NO' => 'norsk bokmål',
+        //'da_DK' => 'Dansk',
     ],
 
     // If you have "port sharing" for TCP/443 with the web server, enable the

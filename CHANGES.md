@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.7 (TBD)
+- add Danish translation (provided by Tangui Coulouarn)
+- update Documentation page
+- only have English as supported language by default
+
 ## 1.0.6 (2017-09-18)
 - API call `user_info` also exposes `two_factor_enrolled_with` now to show 
   which 2FA methods the user is enrolled for
