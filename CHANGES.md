@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.8 (2017-10-24)
+- update iOS documentation, mention seamless tunnel
+- update Linux documentation, mention various tested distributions
+
 ## 1.0.7 (2017-10-17)
 - add Danish translation (provided by Tangui Coulouarn)
 - update Documentation page (remove screenshot, 2FA updates)
