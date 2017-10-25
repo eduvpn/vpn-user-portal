@@ -35,7 +35,6 @@
         "ext-gettext": "*",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-libsodium": "*",
         "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
@@ -44,9 +43,14 @@
         "fkooman/oauth2-server": "^1",
         "fkooman/secookie": "^2",
         "paragonie/constant_time_encoding": "^1",
+        "paragonie/random_compat": "^1|^2",
         "php": ">=5.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4|^5"
+    },
+    "suggest": {
+        "ext-libsodium": "PHP < 7.2 sodium implementation",
+        "ext-sodium": "PHP >= 7.2 sodium implementation"
     }
 }

@@ -51,7 +51,7 @@ class TotpModule implements ServiceModuleInterface
                         'vpnPortalTotp',
                         [
                             'hasTotpSecret' => $hasTotpSecret,
-                            'totpSecret' => Base32::encodeUpper(\Sodium\randombytes_buf(10)),
+                            'totpSecret' => Base32::encodeUpper(random_bytes(10)),
                         ]
                     )
                 );

@@ -43,7 +43,7 @@ class ForeignKeyListFetcher
         $discoverySignature = Base64::decode($discoverySignatureResponse->getBody());
         $discoveryBody = $discoveryResponse->getBody();
 
-        if (!\Sodium\crypto_sign_verify_detached($discoverySignature, $discoveryBody, $publicKey)) {
+        if (!SodiumCompat::crypto_sign_verify_detached($discoverySignature, $discoveryBody, $publicKey)) {
             throw new RuntimeException('unable to verify signature');
         }
 
