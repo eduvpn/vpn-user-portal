@@ -6,7 +6,15 @@
  * Copyright: 2016-2017, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
-require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
+$baseDir = dirname(__DIR__);
+
+// find the autoloader (package installs, composer)
+foreach (['src', 'vendor'] as $autoloadDir) {
+    if (@file_exists(sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir))) {
+        require_once sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir);
+        break;
+    }
+}
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Storage;
@@ -31,13 +39,13 @@ try {
         $instanceId = $request->getServerName();
     }
 
-    $dataDir = sprintf('%s/data/%s', dirname(__DIR__), $instanceId);
+    $dataDir = sprintf('%s/data/%s', $baseDir, $instanceId);
     if (!file_exists($dataDir)) {
         if (false === @mkdir($dataDir, 0700, true)) {
             throw new RuntimeException(sprintf('unable to create folder "%s"', $dataDir));
         }
     }
-    $config = Config::fromFile(sprintf('%s/config/%s/config.php', dirname(__DIR__), $instanceId));
+    $config = Config::fromFile(sprintf('%s/config/%s/config.php', $baseDir, $instanceId));
 
     $service = new Service();
 
@@ -56,7 +64,7 @@ try {
         }
 
         if ($config->getSection('Api')->hasItem('foreignKeyListSource')) {
-            $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/%s/foreign_key_list.json', dirname(__DIR__), $instanceId));
+            $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/%s/foreign_key_list.json', $baseDir, $instanceId));
             $foreignKeys = array_merge($foreignKeys, $foreignKeyListFetcher->extract());
         }
         $bearerValidator->setForeignKeys($foreignKeys);

@@ -7,7 +7,15 @@
  * Copyright: 2016-2017, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
-require_once sprintf('%s/vendor/autoload.php', dirname(__DIR__));
+$baseDir = dirname(__DIR__);
+
+// find the autoloader (package installs, composer)
+foreach (['src', 'vendor'] as $autoloadDir) {
+    if (@file_exists(sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir))) {
+        require_once sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir);
+        break;
+    }
+}
 
 use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\FileIO;
@@ -29,11 +37,11 @@ try {
 
     $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
     FileIO::createDir(
-        sprintf('%s/data/%s', dirname(__DIR__), $instanceId),
+        sprintf('%s/data/%s', $baseDir, $instanceId),
         0700
     );
     $keyPairData = base64_encode(SodiumCompat::crypto_sign_keypair());
-    $keyPairFile = sprintf('%s/data/%s/OAuth.key', dirname(__DIR__), $instanceId);
+    $keyPairFile = sprintf('%s/data/%s/OAuth.key', $baseDir, $instanceId);
     FileIO::writeFile($keyPairFile, $keyPairData);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
