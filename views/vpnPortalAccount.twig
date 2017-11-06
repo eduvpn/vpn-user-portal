@@ -19,19 +19,21 @@
             <td><code>{{ userId }}</code></td>
             <td></td>
         </tr>
-        {% if userGroups is not empty %}
         <tr>
             <th>{% trans "Group Membership(s)" %}</th>
             <td>
-                <ul class="simple">
-                    {% for group in userGroups %}
-                        <li title="{{ group.id }}">{{ group.displayName }}</li>
-                    {% endfor %}
-                </ul>
+                {% if userGroups is empty %}
+                    <em>{% trans "Not a member of any group." %}</em>
+                {% else %}
+                    <ul class="simple">
+                        {% for group in userGroups %}
+                            <li title="{{ group.id }}">{{ group.displayName }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </td>
             <td></td>
         </tr>
-        {% endif %}
     </table>
 
     <h2>{% trans "Two-factor Authentication" %}</h2>
