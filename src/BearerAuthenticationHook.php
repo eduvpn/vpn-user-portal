@@ -37,7 +37,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
                 // "bind" the issuer to the user_id
                 return sprintf(
                     '%s_%s',
-                    preg_replace('/__*/', '_', preg_replace('/[^A-Za-z.]/', '_', $tokenIssuer)),
+                    preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $tokenIssuer)),
                     $tokenInfo->getUserId()
                 );
             }
