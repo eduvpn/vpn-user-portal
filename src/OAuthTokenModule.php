@@ -11,8 +11,8 @@ namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
-use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 
@@ -32,23 +32,27 @@ class OAuthTokenModule implements ServiceModuleInterface
             '/token',
             function (Request $request, array $hookData) {
                 try {
-                    $responseData = $this->oauthServer->postToken(
+                    $tokenResponse = $this->oauthServer->postToken(
                         $request->getPostParameters(),
                         $request->getHeader('PHP_AUTH_USER', false),
                         $request->getHeader('PHP_AUTH_PW', false)
                     );
-                    $response = new JsonResponse($responseData);
-                    $response->addHeader('Cache-Control', 'no-store');
-                    $response->addHeader('Pragma', 'no-cache');
 
-                    return $response;
+                    return Response::import(
+                        [
+                            'statusCode' => $tokenResponse->getStatusCode(),
+                            'responseHeaders' => $tokenResponse->getHeaders(),
+                            'responseBody' => $tokenResponse->getBody(),
+                        ]
+                    );
                 } catch (OAuthException $e) {
-                    $responseData = ['error' => $e->getMessage(), 'error_description' => $e->getDescription()];
-                    $response = new JsonResponse($responseData, $e->getCode());
-                    $response->addHeader('Cache-Control', 'no-store');
-                    $response->addHeader('Pragma', 'no-cache');
-
-                    return $response;
+                    return Response::import(
+                        [
+                            'statusCode' => $e->getResponse()->getStatusCode(),
+                            'responseHeaders' => $e->getResponse()->getHeaders(),
+                            'responseBody' => $e->getResponse()->getBody(),
+                        ]
+                    );
                 }
             }
         );

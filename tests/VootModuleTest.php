@@ -11,7 +11,7 @@ namespace SURFnet\VPN\Portal\Tests;
 
 use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -19,7 +19,7 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Portal\VootModule;
 use SURFnet\VPN\Portal\VootTokenStorage;
 
-class VootModuleTest extends PHPUnit_Framework_TestCase
+class VootModuleTest extends TestCase
 {
     /** @var \SURFnet\VPN\Common\Http\Service */
     private $service;

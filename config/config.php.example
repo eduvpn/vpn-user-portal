@@ -63,7 +63,6 @@ return [
                     'http://127.0.0.1:{PORT}/callback',
                     'http://[::1]:{PORT}/callback',
                 ],
-                'response_type' => 'code',
                 'display_name' => 'eduVPN',
             ],
         ],

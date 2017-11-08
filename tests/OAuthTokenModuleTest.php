@@ -14,13 +14,13 @@ use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Storage;
 use PDO;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Portal\OAuthTokenModule;
 
-class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
+class OAuthTokenModuleTest extends TestCase
 {
     /** @var \SURFnet\VPN\Common\Http\Service */
     private $service;
@@ -30,11 +30,6 @@ class OAuthTokenModuleTest extends PHPUnit_Framework_TestCase
         $config = new Config(
             [
                 'apiConsumers' => [
-                    'token-client' => [
-                        'redirect_uri' => 'http://example.org/token-cb',
-                        'response_type' => 'token',
-                        'display_name' => 'Token Client',
-                    ],
                     'code-client' => [
                         'redirect_uri' => 'http://example.org/code-cb',
                         'response_type' => 'code',

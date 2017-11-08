@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.11 (...)
+- support PHPUnit 6
+- update for `fkooman/oauth2-server` 2.0 API
+
 ## 1.0.10 (2017-11-06)
 - update documentation, recommend against jail breaking / rooting
 - federated identity issuer can also contain numbers

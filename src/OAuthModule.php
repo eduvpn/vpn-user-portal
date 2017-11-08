@@ -13,8 +13,8 @@ use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use SURFnet\VPN\Common\TplInterface;
@@ -58,13 +58,18 @@ class OAuthModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 try {
-                    return new RedirectResponse(
-                        $this->oauthServer->postAuthorize(
-                            $request->getQueryParameters(),
-                            $request->getPostParameters(),
-                            $userId
-                        ),
-                        302
+                    $authorizeResponse = $this->oauthServer->postAuthorize(
+                        $request->getQueryParameters(),
+                        $request->getPostParameters(),
+                        $userId
+                    );
+
+                    return Response::import(
+                        [
+                            'statusCode' => $authorizeResponse->getStatusCode(),
+                            'responseHeaders' => $authorizeResponse->getHeaders(),
+                            'responseBody' => $authorizeResponse->getBody(),
+                        ]
                     );
                 } catch (OAuthException $e) {
                     throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()), $e->getCode());

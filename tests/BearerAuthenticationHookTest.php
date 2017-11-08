@@ -13,11 +13,11 @@ use DateTime;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Storage;
 use PDO;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Portal\BearerAuthenticationHook;
 
-class BearerAuthenticationHookTest extends PHPUnit_Framework_TestCase
+class BearerAuthenticationHookTest extends TestCase
 {
     /** @var Storage */
     private $storage;

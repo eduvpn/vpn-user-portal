@@ -9,10 +9,10 @@
 
 namespace SURFnet\VPN\Portal\Tests;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Portal\ForeignKeyListFetcher;
 
-class ForeignKeyListFetcherTest extends PHPUnit_Framework_TestCase
+class ForeignKeyListFetcherTest extends TestCase
 {
     public function testFetch()
     {
