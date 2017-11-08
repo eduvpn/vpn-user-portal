@@ -46,11 +46,13 @@ class OAuthTokenModule implements ServiceModuleInterface
                         ]
                     );
                 } catch (OAuthException $e) {
+                    $tokenResponse = $e->getTokenResponse();
+
                     return Response::import(
                         [
-                            'statusCode' => $e->getResponse()->getStatusCode(),
-                            'responseHeaders' => $e->getResponse()->getHeaders(),
-                            'responseBody' => $e->getResponse()->getBody(),
+                            'statusCode' => $tokenResponse->getStatusCode(),
+                            'responseHeaders' => $tokenResponse->getHeaders(),
+                            'responseBody' => $tokenResponse->getBody(),
                         ]
                     );
                 }
