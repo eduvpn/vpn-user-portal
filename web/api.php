@@ -17,6 +17,7 @@ foreach (['src', 'vendor'] as $autoloadDir) {
 }
 
 use fkooman\OAuth\Server\BearerValidator;
+use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\Storage;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
@@ -53,8 +54,17 @@ try {
         $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
         $storage->init();
 
+        $getClientInfo = function ($clientId) use ($config) {
+            if (false === $config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
+                return false;
+            }
+
+            return new ClientInfo($config->getSection('Api')->getSection('consumerList')->getItem($clientId));
+        };
+
         $bearerValidator = new BearerValidator(
             $storage,
+            $getClientInfo,
             FileIO::readFile(sprintf('%s/OAuth.key', $dataDir))
         );
 

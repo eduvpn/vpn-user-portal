@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "ad800dfd71c10528225c1cae758835792306d96e"
+                "reference": "a10b420e959673b9d3b8a8db2442adb8ae1f1111"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/ad800dfd71c10528225c1cae758835792306d96e",
-                "reference": "ad800dfd71c10528225c1cae758835792306d96e",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/a10b420e959673b9d3b8a8db2442adb8ae1f1111",
+                "reference": "a10b420e959673b9d3b8a8db2442adb8ae1f1111",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "twig/twig": "^1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4|^5"
+                "phpunit/phpunit": "^4.8.35|^5|^6"
             },
             "type": "library",
             "autoload": {
@@ -106,20 +106,20 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-10-26T09:22:49+00:00"
+            "time": "2017-11-08T16:38:08+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "5.0.1",
+            "version": "5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "2ffbe7b8387238e98a6da5f916ffc21b62a0771a"
+                "reference": "e3eb45d6a61ba97072f6b3a263b4d5e9c7291cc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/2ffbe7b8387238e98a6da5f916ffc21b62a0771a",
-                "reference": "2ffbe7b8387238e98a6da5f916ffc21b62a0771a",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/e3eb45d6a61ba97072f6b3a263b4d5e9c7291cc1",
+                "reference": "e3eb45d6a61ba97072f6b3a263b4d5e9c7291cc1",
                 "shasum": ""
             },
             "require": {
@@ -137,7 +137,7 @@
                 "symfony/polyfill-php56": "^1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5"
+                "phpunit/phpunit": "^4.8.35|^5|^6"
             },
             "type": "library",
             "autoload": {
@@ -157,7 +157,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-09-18T18:42:36+00:00"
+            "time": "2017-11-08T21:57:05+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
