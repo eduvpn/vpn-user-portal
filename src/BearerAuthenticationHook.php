@@ -32,6 +32,9 @@ class BearerAuthenticationHook implements BeforeHookInterface
         try {
             $tokenInfo = $this->bearerValidator->validate($authorizationHeader);
 
+            // require "config" scope
+            BearerValidator::requireAllScope($tokenInfo, ['config']);
+
             $tokenIssuer = $tokenInfo->getIssuer();
             if (null !== $tokenIssuer) {
                 // "bind" the issuer to the user_id
