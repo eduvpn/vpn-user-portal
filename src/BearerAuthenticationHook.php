@@ -10,10 +10,10 @@
 namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Server\BearerValidator;
-use fkooman\OAuth\Server\Exception\BearerException;
+use fkooman\OAuth\Server\Exception\OAuthException;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Response;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
@@ -46,11 +46,16 @@ class BearerAuthenticationHook implements BeforeHookInterface
             }
 
             return $tokenInfo->getUserId();
-        } catch (BearerException $e) {
-            $response = new JsonResponse(['error' => $e->getMessage(), 'error_description' => $e->getDescription()], 401);
-            $response->addHeader('WWW-Authenticate', sprintf('Bearer realm="OAuth",error="%s",error_description="%s"', $e->getMessage(), $e->getDescription()));
+        } catch (OAuthException $e) {
+            $jsonResponse = $e->getJsonResponse();
 
-            return $response;
+            return Response::import(
+                [
+                    'statusCode' => $jsonResponse->getStatusCode(),
+                    'responseHeaders' => $jsonResponse->getHeaders(),
+                    'responseBody' => $jsonResponse->getBody(),
+                ]
+            );
         }
     }
 }

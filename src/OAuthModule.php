@@ -11,7 +11,6 @@ namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
@@ -47,7 +46,15 @@ class OAuthModule implements ServiceModuleInterface
                         )
                     );
                 } catch (OAuthException $e) {
-                    throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()), $e->getCode());
+                    $htmlResponse = $e->getHtmlResponse();
+
+                    return Response::import(
+                        [
+                            'statusCode' => $htmlResponse->getStatusCode(),
+                            'responseHeaders' => $htmlResponse->getHeaders(),
+                            'responseBody' => $htmlResponse->getBody(),
+                        ]
+                    );
                 }
             }
         );
@@ -72,7 +79,15 @@ class OAuthModule implements ServiceModuleInterface
                         ]
                     );
                 } catch (OAuthException $e) {
-                    throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()), $e->getCode());
+                    $htmlResponse = $e->getHtmlResponse();
+
+                    return Response::import(
+                        [
+                            'statusCode' => $htmlResponse->getStatusCode(),
+                            'responseHeaders' => $htmlResponse->getHeaders(),
+                            'responseBody' => $htmlResponse->getBody(),
+                        ]
+                    );
                 }
             }
         );
