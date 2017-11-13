@@ -7,6 +7,11 @@ return [
     // template caching for performance improvements
     'enableTemplateCache' => true,
 
+    // override default branding style (templates/CSS) with custom style.
+    // NOTE: the styling/branding MUST be installed for this to work!
+    //'styleName' => 'eduVPN',
+    //'styleName' => 'LC',
+
     'authMethod' => 'FormAuthentication',
     //'authMethod' => 'MellonAuthentication',
 

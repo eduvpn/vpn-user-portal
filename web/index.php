@@ -71,6 +71,9 @@ try {
         sprintf('%s/views', $baseDir),
         sprintf('%s/config/%s/views', $baseDir, $instanceId),
     ];
+    if ($config->hasItem('styleName')) {
+        $templateDirs[] = sprintf('%s/views/%s', $baseDir, $config->getItem('styleName'));
+    }
 
     $templateCache = null;
     if ($config->getItem('enableTemplateCache')) {
