@@ -46,13 +46,11 @@ class OAuthModule implements ServiceModuleInterface
                         )
                     );
                 } catch (OAuthException $e) {
-                    $htmlResponse = $e->getHtmlResponse();
-
                     return Response::import(
                         [
-                            'statusCode' => $htmlResponse->getStatusCode(),
-                            'responseHeaders' => $htmlResponse->getHeaders(),
-                            'responseBody' => $htmlResponse->getBody(),
+                            'statusCode' => $e->getCode(),
+                            'responseHeaders' => [],
+                            'responseBody' => sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()),
                         ]
                     );
                 }
@@ -79,13 +77,11 @@ class OAuthModule implements ServiceModuleInterface
                         ]
                     );
                 } catch (OAuthException $e) {
-                    $htmlResponse = $e->getHtmlResponse();
-
                     return Response::import(
                         [
-                            'statusCode' => $htmlResponse->getStatusCode(),
-                            'responseHeaders' => $htmlResponse->getHeaders(),
-                            'responseBody' => $htmlResponse->getBody(),
+                            'statusCode' => $e->getCode(),
+                            'responseHeaders' => [],
+                            'responseBody' => sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()),
                         ]
                     );
                 }
