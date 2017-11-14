@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.11 (...)
+## 1.0.11 (2017.11-14)
 - support PHPUnit 6
 - update for `fkooman/oauth2-server` 2.0 API
 - allow updating branding/style using `styleName` configuration option
