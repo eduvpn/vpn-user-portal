@@ -38,7 +38,7 @@ class BearerAuthenticationHookTest extends TestCase
                     'token-client' => [
                         // just named here token-client because the signed
                         // access_token below was generated with token-client...
-                        'redirect_uri' => 'http://example.org/code-cb',
+                        'redirect_uri_list' => ['http://example.org/code-cb'],
                         'display_name' => 'Code Client',
                     ],
                 ],

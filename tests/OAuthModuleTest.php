@@ -32,7 +32,7 @@ class OAuthModuleTest extends TestCase
             [
                 'apiConsumers' => [
                     'code-client' => [
-                        'redirect_uri' => 'http://example.org/code-cb',
+                        'redirect_uri_list' => ['http://example.org/code-cb'],
                         'display_name' => 'Code Client',
                     ],
                 ],
@@ -123,6 +123,8 @@ class OAuthModuleTest extends TestCase
                 'approve' => 'yes',
             ]
         );
+
+//        var_dump($response);
 
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(

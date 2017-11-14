@@ -63,7 +63,7 @@ return [
         'consumerList' => [
             // eduVPN Applications
             'org.eduvpn.app' => [
-                'redirect_uri' => [
+                'redirect_uri_list' => [
                     'org.eduvpn.app:/api/callback',
                     'http://127.0.0.1:{PORT}/callback',
                     'http://[::1]:{PORT}/callback',

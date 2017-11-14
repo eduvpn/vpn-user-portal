@@ -31,7 +31,7 @@ class OAuthTokenModuleTest extends TestCase
             [
                 'apiConsumers' => [
                     'code-client' => [
-                        'redirect_uri' => 'http://example.org/code-cb',
+                        'redirect_uri_list' => ['http://example.org/code-cb'],
                         'response_type' => 'code',
                         'display_name' => 'Code Client',
                     ],
