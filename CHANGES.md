@@ -2,7 +2,7 @@
 
 ## 1.1.0 (2017.11-14)
 - support PHPUnit 6
-- update for `fkooman/oauth2-server` 2.0 API
+- update to `fkooman/oauth2-server` 2.0 ([CHANGES](https://github.com/fkooman/php-oauth2-server/blob/master/CHANGES.md#200-201711-14))
 - allow updating branding/style using `styleName` configuration option
 
 ## 1.0.10 (2017-11-06)
