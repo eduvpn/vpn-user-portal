@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.1 (...)
+## 1.1.1 (2017-11-20)
 - support disabling compression
 
 ## 1.1.0 (2017.11-14)
