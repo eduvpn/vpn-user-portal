@@ -34,6 +34,7 @@ class TestHttpClient implements HttpClientInterface
                                 'tcp/443',
                             ],
                             'hostName' => 'vpn.example',
+                            'enableCompression' => true,
                         ],
                     ]
                 );

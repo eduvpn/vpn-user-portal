@@ -37,9 +37,6 @@ class ClientConfig
             //'persist-tun',
             'remote-cert-tls server',
 
-            // adaptive compression, allow server to override using push
-            'comp-lzo',
-
             'verb 3',
 
             // wait this long (seconds) before trying the next server in the list
@@ -97,6 +94,12 @@ class ClientConfig
                     '</tls-auth>',
                 ]
             );
+        }
+
+        // --comp-lzo
+        if ($profileConfig['enableCompression']) {
+            // adaptive compression, allow server to override using push
+            $clientConfig[] = 'comp-lzo';
         }
 
         // 2FA

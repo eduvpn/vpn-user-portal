@@ -71,7 +71,7 @@ class VpnPortalModuleTest extends TestCase
     public function testNewPost()
     {
         $this->assertSame(
-            file_get_contents(sprintf('%s/data/foo_MyConfig.ovpn', __DIR__)),
+            trim(file_get_contents(sprintf('%s/data/foo_MyConfig.ovpn', __DIR__))),
             $this->makeRequest(
                 'POST',
                 '/new',

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.1 (...)
+- support disabling compression
+
 ## 1.1.0 (2017.11-14)
 - support PHPUnit 6
 - update to `fkooman/oauth2-server` 2.0 ([CHANGES](https://github.com/fkooman/php-oauth2-server/blob/master/CHANGES.md#200-201711-14))
