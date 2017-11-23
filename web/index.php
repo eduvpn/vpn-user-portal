@@ -31,13 +31,16 @@ use SURFnet\VPN\Common\Http\FormAuthenticationHook;
 use SURFnet\VPN\Common\Http\FormAuthenticationModule;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\LanguageSwitcherHook;
+use SURFnet\VPN\Common\Http\LdapAuth;
 use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\Http\SimpleAuth;
 use SURFnet\VPN\Common\Http\TwoFactorHook;
 use SURFnet\VPN\Common\Http\TwoFactorModule;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\LdapClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\TwigTpl;
 use SURFnet\VPN\Portal\DisabledUserHook;
@@ -143,8 +146,9 @@ try {
                     $config->getSection('MellonAuthentication')->getItem('addEntityID')
                 )
             );
+
             break;
-        case 'FormAuthentication':
+        case 'FormLdapAuthentication':
             $tpl->addDefault(['_show_logout' => true]);
             $service->addBeforeHook(
                 'auth',
@@ -153,13 +157,44 @@ try {
                     $tpl
                 )
             );
+            $ldapClient = new LdapClient(
+                $config->getSection('FormLdapAuthentication')->getItem('ldapUri')
+            );
+            $userAuth = new LdapAuth(
+                $logger,
+                $ldapClient,
+                $config->getSection('FormLdapAuthentication')->getItem('userDnTemplate')
+            );
             $service->addModule(
                 new FormAuthenticationModule(
-                    $config->getSection('FormAuthentication')->toArray(),
+                    $userAuth,
                     $session,
                     $tpl
                 )
             );
+
+            break;
+        case 'FormAuthentication':
+            // XXX rename to FormSimpleAuthentication for 2.0
+            $tpl->addDefault(['_show_logout' => true]);
+            $service->addBeforeHook(
+                'auth',
+                new FormAuthenticationHook(
+                    $session,
+                    $tpl
+                )
+            );
+            $userAuth = new SimpleAuth(
+                $config->getSection('FormAuthentication')->toArray()
+            );
+            $service->addModule(
+                new FormAuthenticationModule(
+                    $userAuth,
+                    $session,
+                    $tpl
+                )
+            );
+
             break;
         default:
             throw new RuntimeException('unsupported authentication mechanism');

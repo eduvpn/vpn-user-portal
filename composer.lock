@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.0.8",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "f4ca927898e78ea5ba663041e898053c9f260cc4"
+                "reference": "d9ebc2b4a197ce491fea98b0a21c9bde4f6b1c5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/f4ca927898e78ea5ba663041e898053c9f260cc4",
-                "reference": "f4ca927898e78ea5ba663041e898053c9f260cc4",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/d9ebc2b4a197ce491fea98b0a21c9bde4f6b1c5d",
+                "reference": "d9ebc2b4a197ce491fea98b0a21c9bde4f6b1c5d",
                 "shasum": ""
             },
             "require": {
@@ -73,6 +73,7 @@
                 "ext-gettext": "*",
                 "ext-hash": "*",
                 "ext-json": "*",
+                "ext-ldap": "*",
                 "ext-mbstring": "*",
                 "ext-pcre": "*",
                 "ext-spl": "*",
@@ -106,7 +107,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-11-20T13:59:21+00:00"
+            "time": "2017-11-23T09:02:19+00:00"
         },
         {
             "name": "fkooman/oauth2-client",

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.0 (2017-11-23)
+- support LDAP authentication
+
 ## 1.1.1 (2017-11-20)
 - support disabling compression
 
