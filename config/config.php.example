@@ -23,10 +23,10 @@ return [
 
     // LDAP
     'FormLdapAuthentication' => [
-        'ldapUri' => 'ldap://ldap.example.org',
+        'ldapUri' => 'ldaps://ipa.example.org',
         // "{{UID}}" will be replaced with the username the user provides
         // on the login page
-        'userDnTemplate' => 'uid={{UID}},ou=People,dc=example,dc=org',
+        'userDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
     ],
 
     // SAML
