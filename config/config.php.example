@@ -27,6 +27,8 @@ return [
         // "{{UID}}" will be replaced with the username the user provides
         // on the login page
         'userDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
+        // Active Directory
+        //'userDnTemplate' => 'DOMAIN\{{UID}}',
     ],
 
     // SAML
