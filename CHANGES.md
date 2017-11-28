@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.0 (...)
+## 1.3.0 (2017-11-28)
 - update `fkooman/oauth-client` to 
   [6.0.0](https://github.com/fkooman/php-oauth2-client/blob/master/CHANGES.md#600-2017-11-27)
 - update LDAP authentication configuration examples
