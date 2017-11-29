@@ -2,6 +2,8 @@
 
 ## 1.3.1 (2017-11-29)
 - fix unit tests for `fkooman/oauth2-server` 2.0.1
+  - OAuth server update fixes IE 11 support for the eduVPN for Windows 
+    application
 
 ## 1.3.0 (2017-11-28)
 - update `fkooman/oauth-client` to 
