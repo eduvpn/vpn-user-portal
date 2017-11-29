@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "d9ebc2b4a197ce491fea98b0a21c9bde4f6b1c5d"
+                "reference": "0aa297d77d147ed7cd20197f8be69394317135a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/d9ebc2b4a197ce491fea98b0a21c9bde4f6b1c5d",
-                "reference": "d9ebc2b4a197ce491fea98b0a21c9bde4f6b1c5d",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/0aa297d77d147ed7cd20197f8be69394317135a3",
+                "reference": "0aa297d77d147ed7cd20197f8be69394317135a3",
                 "shasum": ""
             },
             "require": {
@@ -107,20 +107,20 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2017-11-23T09:02:19+00:00"
+            "time": "2017-11-27T18:59:20+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "6.0.0",
+            "version": "6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "0bf8148accd68c92473188dcdc499154d306f0fb"
+                "reference": "68aa51e8f3bacb073fc4397409bec227b31db24d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/0bf8148accd68c92473188dcdc499154d306f0fb",
-                "reference": "0bf8148accd68c92473188dcdc499154d306f0fb",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/68aa51e8f3bacb073fc4397409bec227b31db24d",
+                "reference": "68aa51e8f3bacb073fc4397409bec227b31db24d",
                 "shasum": ""
             },
             "require": {
@@ -157,20 +157,20 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-11-27T18:14:47+00:00"
+            "time": "2017-11-28T09:45:11+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "1e86c3443e23bc3ec6a612e76dd3ede50178cdb7"
+                "reference": "c78f4c46bf0df824c697791ac86b6dc01a19fd38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/1e86c3443e23bc3ec6a612e76dd3ede50178cdb7",
-                "reference": "1e86c3443e23bc3ec6a612e76dd3ede50178cdb7",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/c78f4c46bf0df824c697791ac86b6dc01a19fd38",
+                "reference": "c78f4c46bf0df824c697791ac86b6dc01a19fd38",
                 "shasum": ""
             },
             "require": {
@@ -194,6 +194,9 @@
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/sodium_compat.php"
+                ],
                 "psr-4": {
                     "fkooman\\OAuth\\Server\\": "src/"
                 }
@@ -213,7 +216,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-11-14T16:48:06+00:00"
+            "time": "2017-11-29T15:28:52+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -944,29 +947,35 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.1.1",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "2d3d238c433cf69caeb4842e97a3223a116f94b2"
+                "reference": "66465776cfc249844bde6d117abff1d22e06c2da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/2d3d238c433cf69caeb4842e97a3223a116f94b2",
-                "reference": "2d3d238c433cf69caeb4842e97a3223a116f94b2",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/66465776cfc249844bde6d117abff1d22e06c2da",
+                "reference": "66465776cfc249844bde6d117abff1d22e06c2da",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.0",
-                "phpdocumentor/reflection-common": "^1.0@dev",
+                "phpdocumentor/reflection-common": "^1.0.0",
                 "phpdocumentor/type-resolver": "^0.4.0",
                 "webmozart/assert": "^1.0"
             },
             "require-dev": {
-                "mockery/mockery": "^0.9.4",
-                "phpunit/phpunit": "^4.4"
+                "doctrine/instantiator": "~1.0.5",
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^6.4"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "phpDocumentor\\Reflection\\": [
@@ -985,7 +994,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-08-30T18:51:59+00:00"
+            "time": "2017-11-27T17:38:31+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
