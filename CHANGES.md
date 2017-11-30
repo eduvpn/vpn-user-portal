@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.3.2 (...)
+- support disabling approval for trusted OAuth clients
+
 ## 1.3.1 (2017-11-29)
 - fix unit tests for `fkooman/oauth2-server` 2.0.1
   - OAuth server update fixes IE 11 support for the eduVPN for Windows 

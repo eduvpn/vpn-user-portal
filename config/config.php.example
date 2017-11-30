@@ -82,6 +82,7 @@ return [
                     'http://[::1]:{PORT}/callback',
                 ],
                 'display_name' => 'eduVPN',
+                'require_approval' => true,
             ],
         ],
 

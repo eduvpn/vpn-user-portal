@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e735b0e7b085c9ab41865a6b108f3aa",
+    "content-hash": "4efaff6ae18d1be0d3fb2dd046b3fcfd",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -161,16 +161,16 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "2.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "c78f4c46bf0df824c697791ac86b6dc01a19fd38"
+                "reference": "08e0102835bf0d1c3c0075135afadf15603709d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/c78f4c46bf0df824c697791ac86b6dc01a19fd38",
-                "reference": "c78f4c46bf0df824c697791ac86b6dc01a19fd38",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/08e0102835bf0d1c3c0075135afadf15603709d0",
+                "reference": "08e0102835bf0d1c3c0075135afadf15603709d0",
                 "shasum": ""
             },
             "require": {
@@ -216,7 +216,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2017-11-29T15:28:52+00:00"
+            "time": "2017-11-30T10:26:47+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -2151,7 +2151,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fkooman/oauth2-server": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

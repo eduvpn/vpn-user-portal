@@ -38,7 +38,19 @@ class OAuthModule implements ServiceModuleInterface
         $service->get(
             '/_oauth/authorize',
             function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
                 try {
+                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userId)) {
+                        // optmization where we do not ask for approval
+                        return Response::import(
+                            [
+                                'statusCode' => $authorizeResponse->getStatusCode(),
+                                'responseHeaders' => $authorizeResponse->getHeaders(),
+                                'responseBody' => $authorizeResponse->getBody(),
+                            ]
+                        );
+                    }
+
                     // ask for approving this client/scope
                     return new HtmlResponse(
                         $this->tpl->render(
