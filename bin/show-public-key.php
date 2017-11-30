@@ -19,7 +19,6 @@ foreach (['src', 'vendor'] as $autoloadDir) {
 
 use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Portal\SodiumCompat;
 
 try {
     $p = new CliParser(
@@ -38,7 +37,7 @@ try {
     $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
     $keyPairFile = sprintf('%s/data/%s/OAuth.key', $baseDir, $instanceId);
     echo base64_encode(
-        SodiumCompat::crypto_sign_publickey(
+        sodium_crypto_sign_publickey(
             base64_decode(
                 FileIO::readFile($keyPairFile), true
             )

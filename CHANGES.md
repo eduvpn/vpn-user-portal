@@ -2,6 +2,7 @@
 
 ## 1.3.2 (...)
 - support disabling approval for trusted OAuth clients
+- rework (lib)sodium compatiblity
 
 ## 1.3.1 (2017-11-29)
 - fix unit tests for `fkooman/oauth2-server` 2.0.1

@@ -19,7 +19,6 @@ foreach (['src', 'vendor'] as $autoloadDir) {
 
 use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Portal\SodiumCompat;
 
 try {
     $p = new CliParser(
@@ -40,7 +39,7 @@ try {
         sprintf('%s/data/%s', $baseDir, $instanceId),
         0700
     );
-    $keyPairData = base64_encode(SodiumCompat::crypto_sign_keypair());
+    $keyPairData = base64_encode(sodium_crypto_sign_keypair());
     $keyPairFile = sprintf('%s/data/%s/OAuth.key', $baseDir, $instanceId);
     FileIO::writeFile($keyPairFile, $keyPairData);
 } catch (Exception $e) {

@@ -7,6 +7,9 @@
         }
     ],
     "autoload": {
+        "files": [
+            "src/sodium_compat.php"
+        ],
         "psr-4": {
             "SURFnet\\VPN\\Portal\\": "src/"
         }
