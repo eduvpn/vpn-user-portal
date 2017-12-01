@@ -23,14 +23,14 @@
         <fieldset>
             {% if _form_auth_invalid_credentials %}
                 <label for="userName">{% trans "Username" %}</label>
-                <input type="text"     id="userName" name="userName" autocapitalize="off" placeholder="{% trans 'Username' %}" value="{{ _form_auth_invalid_credentials_user }}" required>
+                <input size="30" type="text"     id="userName" name="userName" autocapitalize="off" placeholder="{% trans 'Username' %}" value="{{ _form_auth_invalid_credentials_user }}" required>
                 <label for="userPass">{% trans "Password" %}</label>
-                <input type="password" id="userPass"name="userPass" placeholder="{% trans 'Password' %}" autofocus required>
+                <input size="30" type="password" id="userPass"name="userPass" placeholder="{% trans 'Password' %}" autofocus required>
             {% else %}
                 <label for="userName">{% trans "Username" %}</label>
-                <input type="text"     id="userName" name="userName" autocapitalize="off" placeholder="{% trans 'Username' %}" autofocus required>
+                <input size="30" type="text"     id="userName" name="userName" autocapitalize="off" placeholder="{% trans 'Username' %}" autofocus required>
                 <label for="userPass">{% trans "Password" %}</label>
-                <input type="password" id="userPass" name="userPass" placeholder="{% trans 'Password' %}" required>
+                <input size="30" type="password" id="userPass" name="userPass" placeholder="{% trans 'Password' %}" required>
             {% endif %} 
         </fieldset>
         <fieldset>
