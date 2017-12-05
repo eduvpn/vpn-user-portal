@@ -1,10 +1,12 @@
 # Changelog
 
-## 1.4.0 (...)
+## 1.4.0 (2017-12-05)
 - cleanup templates for easier extension and custom styling
-  - breaks existing templates (fallback to default)
-- implement page informing user to close the browser (after redirect to native
-  app)
+  - breaks existing templates (falls back to default)
+- implement page informing user to close the browser (after redirects to 
+  native app only)
+- mention uMatrix on documentation page (for advanced users)
+- update `nl_NL` translation
 
 ## 1.3.2 (2017-11-30)
 - support disabling approval for trusted OAuth clients
