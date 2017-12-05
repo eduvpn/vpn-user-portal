@@ -4,7 +4,7 @@ msgstr ""
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: fkooman@tuxed.net\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,34 +214,6 @@ msgstr "Rechten"
 msgid "Revoke"
 msgstr "Intrekken"
 
-#: /tmp/cache/93/93c5be67621db44ac991a7b5d0ccc57cba83f47856f30c7ea2042e561e10800e.php:29
-#: /tmp/cache/93/93c5be67621db44ac991a7b5d0ccc57cba83f47856f30c7ea2042e561e10800e.php:50
-#: /tmp/cache/42/42367bdd6bff6a9f40a3c6d38dad19072847da0b9288e9d060021d34b6149317.php:24
-#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:29
-#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:47
-msgid "VPN User Portal"
-msgstr "VPN-Gebruikersportal"
-
-#: /tmp/cache/93/93c5be67621db44ac991a7b5d0ccc57cba83f47856f30c7ea2042e561e10800e.php:63
-#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:60
-msgid "New"
-msgstr "Nieuw"
-
-#: /tmp/cache/93/93c5be67621db44ac991a7b5d0ccc57cba83f47856f30c7ea2042e561e10800e.php:71
-#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:68
-msgid "Configurations"
-msgstr "Configuraties"
-
-#: /tmp/cache/93/93c5be67621db44ac991a7b5d0ccc57cba83f47856f30c7ea2042e561e10800e.php:79
-#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:76
-msgid "Account"
-msgstr "Account"
-
-#: /tmp/cache/93/93c5be67621db44ac991a7b5d0ccc57cba83f47856f30c7ea2042e561e10800e.php:87
-#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:84
-msgid "Documentation"
-msgstr "Documentatie"
-
 #: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:40
 msgid "You are already enrolled with a YubiKey."
 msgstr "Je bent al aangemeld met een YubiKey OTP."
@@ -320,6 +292,22 @@ msgstr "Fout"
 msgid "An error occurred."
 msgstr "Er is een fout opgetreden."
 
+#: /tmp/cache/cb/cb3df0441c5e8f4f66bac059e857367c4faf288680d52c70c0a800ef2f8af17f.php:26
+msgid "New"
+msgstr "Nieuw"
+
+#: /tmp/cache/cb/cb3df0441c5e8f4f66bac059e857367c4faf288680d52c70c0a800ef2f8af17f.php:34
+msgid "Configurations"
+msgstr "Configuraties"
+
+#: /tmp/cache/cb/cb3df0441c5e8f4f66bac059e857367c4faf288680d52c70c0a800ef2f8af17f.php:42
+msgid "Account"
+msgstr "Account"
+
+#: /tmp/cache/cb/cb3df0441c5e8f4f66bac059e857367c4faf288680d52c70c0a800ef2f8af17f.php:50
+msgid "Documentation"
+msgstr "Documentatie"
+
 #: /tmp/cache/4d/4d7125794e6c6de4bad879e6c458657abe1735e7b0ec0c17420853e05a5598a5.php:37
 msgid "Are you sure you want to delete <em>%displayName%</em>?"
 msgstr ""
@@ -354,6 +342,15 @@ msgstr "Gebruikersnaam"
 #: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:101
 msgid "Password"
 msgstr "Wachtwoord"
+
+#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:29
+#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:47
+msgid "VPN User Portal"
+msgstr "VPN-Gebruikersportal"
+
+#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:105
+msgid "Sign Out"
+msgstr "Uitloggen"
 
 #: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:40
 msgid "An application wants to act on your behalf."
