@@ -98,13 +98,13 @@ ul.menu li {
     font-weight: bold;
 }
 
-ul.menu li.active a {
+ul.menu li.active a, ul.menu li.active span {
     color: #fff;
     background-color: #555;
     border-radius: 0.5em;
 }
 
-ul.menu li a {
+ul.menu li a, ul.menu li span {
     display: inline-block;
     padding: 0.7em;
     text-decoration: none;

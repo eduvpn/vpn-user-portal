@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-
-<html lang="en">
-{% include 'head.twig' %}
-<body>
-    {% include 'header.twig' %}
-
+{% extends "base.twig" %}
+{% block content %}
     <ul class="menu">
-        <li class="active"><a href="">{% trans "Approval" %}</a>
+        <li class="active"><span>{% trans "Approval" %}</span></li>
     </ul>
 
     <p>{% trans "An application wants to act on your behalf." %}</p>
@@ -22,7 +17,4 @@
         <button class="error" type="submit" name="approve" value="no">{% trans "Reject" %}</button>
         <button class="success" type="submit" name="approve" value="yes">{% trans "Approve" %}</button>
     </form>
-
-    {% include 'footer.twig' %}
-</body>
-</html>
+{% endblock %}

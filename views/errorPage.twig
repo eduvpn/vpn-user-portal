@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-
-<html lang="en">
-{% include 'head.twig' %}
-<body>
-    {% include 'header.twig' %}
-
+{% extends "base.twig" %}
+{% block content %}
     <ul class="menu">
-        <li class="active"><a href="{{ requestRoot }}">{% trans "Error" %}</a>
+        <li class="active"><span>{% trans "Error" %}</span></li>
     </ul>
 
     <h2>{{ code }}</h2>
@@ -20,7 +15,4 @@
             {{ message }}
         </code>
     </p>
-
-    {% include 'footer.twig' %}
-</body>
-</html>
+{% endblock %}

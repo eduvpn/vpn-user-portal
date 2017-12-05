@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 (...)
+- cleanup templates for easier extension and custom styling
+  - breaks existing templates (fallback to default)
+- implement page informing user to close the browser (after redirect to native
+  app)
+
 ## 1.3.2 (2017-11-30)
 - support disabling approval for trusted OAuth clients
 - rework (lib)sodium compatiblity

@@ -1,0 +1,20 @@
+{% extends "base.twig" %}
+
+{% block head %}
+    <meta http-equiv="refresh" content="0; url={{ refreshUrl }}">
+{% endblock %}
+
+{% block content %}
+    <ul class="menu">
+        <li class="active"><span>{% trans "Approval" %}</span></li>
+    </ul>
+
+    <p>
+        The VPN application should have been launched automatically. If that 
+        did not work, click <a href="{{ refreshUrl }}">here</a>.
+    </p>
+
+    <p class="success">
+        {% trans "You can now close this browser window or tab!" %}
+    </p>
+{% endblock %}

@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-
-<html lang="en">
-{% include 'head.twig' %}
-<body>
-    {% include 'header.twig' %}
-
+{% extends "base.twig" %}
+{% block content %}
     <ul class="menu">
-        <li class="active"><a href="{{ _two_factor_auth_redirect_to }}">{% trans "Sign In" %}</a></li>
+        <li class="active"><span>{% trans "Sign In" %}</span></li>
     </ul>
 
     <p>
@@ -29,7 +24,4 @@
             <button type="submit">{% trans "Verify" %}</button>
         </fieldset>
     </form>
-
-    {% include 'footer.twig' %}
-</body>
-</html>
+{% endblock %}
