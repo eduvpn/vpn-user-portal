@@ -174,6 +174,43 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
+        $service->post(
+            '/two_factor_enroll_yubi',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                if ($hasYubiKeyId || $hasTotpSecret) {
+                    return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
+                }
+                $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
+                $this->serverClient->post('set_yubi_key_id', ['yubi_key_otp' => $yubiKeyOtp]);
+
+                return new ApiResponse('two_factor_enroll_yubi');
+            }
+        );
+
+        $service->post(
+            '/two_factor_enroll_totp',
+            function (Request $request, array $hookData) {
+                $userId = $hookData['auth'];
+
+                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                if ($hasYubiKeyId || $hasTotpSecret) {
+                    return new ApiErrorResponse('two_factor_enroll_totp', 'user already enrolled');
+                }
+
+                $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
+                $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
+
+                $this->serverClient->post('set_totp_secret', ['totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+
+                return new ApiResponse('two_factor_enroll_totp');
+            }
+        );
+
         // API 1, 2
         $service->get(
             '/user_messages',
