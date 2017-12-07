@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.1 (...)
+- add 2FA enrollment to OAuth API
+
 ## 1.4.0 (2017-12-05)
 - cleanup templates for easier extension and custom styling
   - breaks existing templates (falls back to default)

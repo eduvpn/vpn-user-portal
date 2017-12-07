@@ -201,7 +201,7 @@ class VpnApiModule implements ServiceModuleInterface
         );
 
         $service->post(
-            'two_factor_enroll_yubi',
+            '/two_factor_enroll_yubi',
             /**
              * @return \SURFnet\VPN\Common\Http\Response
              */
@@ -214,14 +214,14 @@ class VpnApiModule implements ServiceModuleInterface
                     return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
                 }
                 $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
-                $this->serverClient->post('set_yubi_key_id', ['yubi_key_otp' => $yubiKeyOtp]);
+                $this->serverClient->post('set_yubi_key_id', ['user_id' => $userId, 'yubi_key_otp' => $yubiKeyOtp]);
 
                 return new ApiResponse('two_factor_enroll_yubi');
             }
         );
 
         $service->post(
-            'two_factor_enroll_totp',
+            '/two_factor_enroll_totp',
             /**
              * @return \SURFnet\VPN\Common\Http\Response
              */
@@ -237,7 +237,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
                 $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
 
-                $this->serverClient->post('set_totp_secret', ['totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                $this->serverClient->post('set_totp_secret', ['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
 
                 return new ApiResponse('two_factor_enroll_totp');
             }
