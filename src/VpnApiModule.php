@@ -38,21 +38,35 @@ class VpnApiModule implements ServiceModuleInterface
         $this->shuffleHosts = true;
     }
 
+    /**
+     * @param bool $shuffleHosts
+     *
+     * @return void
+     */
     public function setShuffleHosts($shuffleHosts)
     {
         $this->shuffleHosts = (bool) $shuffleHosts;
     }
 
+    /**
+     * @return void
+     */
     public function setAddVpnProtoPorts(array $addVpnProtoPorts)
     {
         $this->addVpnProtoPorts = $addVpnProtoPorts;
     }
 
+    /**
+     * @return void
+     */
     public function init(Service $service)
     {
         // API 1, 2
         $service->get(
             '/profile_list',
+            /**
+             * @return ApiResponse
+             */
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -83,6 +97,9 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/user_info',
+            /**
+             * @return ApiResponse
+             */
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -112,6 +129,9 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->post(
             '/create_keypair',
+            /**
+             * @return ApiResponse
+             */
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -132,6 +152,9 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/profile_config',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -164,6 +187,9 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1
         $service->post(
             '/create_config',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -175,7 +201,10 @@ class VpnApiModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/two_factor_enroll_yubi',
+            'two_factor_enroll_yubi',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -192,7 +221,10 @@ class VpnApiModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/two_factor_enroll_totp',
+            'two_factor_enroll_totp',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -214,6 +246,9 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1, 2
         $service->get(
             '/user_messages',
+            /**
+             * @return ApiResponse
+             */
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
@@ -229,6 +264,9 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1, 2
         $service->get(
             '/system_messages',
+            /**
+             * @return ApiResponse
+             */
             function (Request $request, array $hookData) {
                 $msgList = [];
 
@@ -253,7 +291,14 @@ class VpnApiModule implements ServiceModuleInterface
         );
     }
 
-    // API 1
+    /**
+     * @param string $serverName
+     * @param string $profileId
+     * @param string $userId
+     * @param string $displayName
+     *
+     * @return Response
+     */
     private function getConfig($serverName, $profileId, $userId, $displayName)
     {
         // obtain information about this profile to be able to construct
@@ -275,7 +320,11 @@ class VpnApiModule implements ServiceModuleInterface
         return $response;
     }
 
-    // API 2
+    /**
+     * @param string $profileId
+     *
+     * @return Response
+     */
     private function getConfigOnly($profileId)
     {
         // obtain information about this profile to be able to construct
@@ -295,6 +344,12 @@ class VpnApiModule implements ServiceModuleInterface
         return $response;
     }
 
+    /**
+     * @param string $userId
+     * @param string $displayName
+     *
+     * @return array|bool
+     */
     private function getCertificate($userId, $displayName)
     {
         // create a certificate
@@ -307,6 +362,9 @@ class VpnApiModule implements ServiceModuleInterface
         );
     }
 
+    /**
+     * @return bool
+     */
     private static function isMember(array $userGroups, array $aclGroupList)
     {
         // if any of the groups in userGroups is part of aclGroupList return
