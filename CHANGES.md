@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.1 (...)
+## 1.4.1 (2017-12-08)
 - add 2FA enrollment to OAuth API
 
 ## 1.4.0 (2017-12-05)
