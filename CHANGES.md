@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.2 (...)
+## 1.4.2 (2017-12-12)
 - cleanup autoloading
 - hardcode the official eduVPN application registration for all platforms
 - wrap `InputValidationException` in proper API responses when the API 
