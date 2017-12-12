@@ -13,6 +13,7 @@ use DateTime;
 use DateTimeZone;
 use SURFnet\VPN\Common\Http\ApiErrorResponse;
 use SURFnet\VPN\Common\Http\ApiResponse;
+use SURFnet\VPN\Common\Http\Exception\InputValidationException;
 use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
@@ -135,17 +136,20 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
+                try {
+                    $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
+                    $clientCertificate = $this->getCertificate($userId, $displayName);
 
-                $clientCertificate = $this->getCertificate($userId, $displayName);
-
-                return new ApiResponse(
-                    'create_keypair',
-                    [
-                        'certificate' => $clientCertificate['certificate'],
-                        'private_key' => $clientCertificate['private_key'],
-                    ]
-                );
+                    return new ApiResponse(
+                        'create_keypair',
+                        [
+                            'certificate' => $clientCertificate['certificate'],
+                            'private_key' => $clientCertificate['private_key'],
+                        ]
+                    );
+                } catch (InputValidationException $e) {
+                    return new ApiErrorResponse('create_keypair', $e->getMessage());
+                }
             }
         );
 
@@ -158,29 +162,33 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
+                try {
+                    $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
 
-                $profileList = $this->serverClient->get('profile_list');
-                $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userId]);
+                    $profileList = $this->serverClient->get('profile_list');
+                    $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userId]);
 
-                $availableProfiles = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $profileConfig = new ProfileConfig($profileData);
-                    if ($profileConfig->getItem('enableAcl')) {
-                        // is the user member of the aclGroupList?
-                        if (!self::isMember($userGroups, $profileConfig->getSection('aclGroupList')->toArray())) {
-                            continue;
+                    $availableProfiles = [];
+                    foreach ($profileList as $profileId => $profileData) {
+                        $profileConfig = new ProfileConfig($profileData);
+                        if ($profileConfig->getItem('enableAcl')) {
+                            // is the user member of the aclGroupList?
+                            if (!self::isMember($userGroups, $profileConfig->getSection('aclGroupList')->toArray())) {
+                                continue;
+                            }
                         }
+
+                        $availableProfiles[] = $profileId;
                     }
 
-                    $availableProfiles[] = $profileId;
-                }
+                    if (!in_array($requestedProfileId, $availableProfiles, true)) {
+                        return new ApiErrorResponse('profile_config', 'user has no access to this profile');
+                    }
 
-                if (!in_array($requestedProfileId, $availableProfiles, true)) {
-                    return new ApiErrorResponse('profile_config', 'user has no access to this profile');
+                    return $this->getConfigOnly($requestedProfileId);
+                } catch (InputValidationException $e) {
+                    return new ApiErrorResponse('profile_config', $e->getMessage());
                 }
-
-                return $this->getConfigOnly($requestedProfileId);
             }
         );
 
@@ -193,10 +201,14 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
-                $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
+                try {
+                    $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
+                    $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
 
-                return $this->getConfig($request->getServerName(), $profileId, $userId, $displayName);
+                    return $this->getConfig($request->getServerName(), $profileId, $userId, $displayName);
+                } catch (InputValidationException $e) {
+                    return new ApiErrorResponse('create_config', $e->getMessage());
+                }
             }
         );
 
@@ -208,15 +220,19 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userId = $hookData['auth'];
 
-                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
-                if ($hasYubiKeyId || $hasTotpSecret) {
-                    return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
-                }
-                $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
-                $this->serverClient->post('set_yubi_key_id', ['user_id' => $userId, 'yubi_key_otp' => $yubiKeyOtp]);
+                try {
+                    $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
+                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                    if ($hasYubiKeyId || $hasTotpSecret) {
+                        return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
+                    }
+                    $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
+                    $this->serverClient->post('set_yubi_key_id', ['user_id' => $userId, 'yubi_key_otp' => $yubiKeyOtp]);
 
-                return new ApiResponse('two_factor_enroll_yubi');
+                    return new ApiResponse('two_factor_enroll_yubi');
+                } catch (InputValidationException $e) {
+                    return new ApiErrorResponse('two_factor_enroll_yubi', $e->getMessage());
+                }
             }
         );
 
@@ -234,9 +250,12 @@ class VpnApiModule implements ServiceModuleInterface
                     return new ApiErrorResponse('two_factor_enroll_totp', 'user already enrolled');
                 }
 
-                $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
-                $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
-
+                try {
+                    $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
+                    $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
+                } catch (InputValidationException $e) {
+                    return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
+                }
                 $this->serverClient->post('set_totp_secret', ['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
 
                 return new ApiResponse('two_factor_enroll_totp');

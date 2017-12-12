@@ -3,6 +3,9 @@
 ## 1.4.2 (...)
 - cleanup autoloading
 - hardcode the official eduVPN application registration for all platforms
+- wrap `InputValidationException` in proper API responses when the API 
+  calls triggered those exceptions
+- update `eduvpn/common`
 
 ## 1.4.1 (2017-12-08)
 - add 2FA enrollment to OAuth API
