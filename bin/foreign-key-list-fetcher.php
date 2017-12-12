@@ -8,14 +8,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 $baseDir = dirname(__DIR__);
-
-// find the autoloader (package installs, composer)
-foreach (['src', 'vendor'] as $autoloadDir) {
-    if (@file_exists(sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir))) {
-        require_once sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir);
-        break;
-    }
-}
+require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use fkooman\OAuth\Client\Http\CurlHttpClient;
 use SURFnet\VPN\Common\CliParser;

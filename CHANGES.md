@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.2 (...)
+- cleanup autoloading
+- hardcode the official eduVPN application registrations
+
 ## 1.4.1 (2017-12-08)
 - add 2FA enrollment to OAuth API
 

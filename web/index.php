@@ -7,14 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 $baseDir = dirname(__DIR__);
-
-// find the autoloader (package installs, composer)
-foreach (['src', 'vendor'] as $autoloadDir) {
-    if (@file_exists(sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir))) {
-        require_once sprintf('%s/%s/autoload.php', $baseDir, $autoloadDir);
-        break;
-    }
-}
+require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuthClient;
@@ -44,6 +37,7 @@ use SURFnet\VPN\Common\LdapClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\TwigTpl;
 use SURFnet\VPN\Portal\DisabledUserHook;
+use SURFnet\VPN\Portal\OAuthClientInfo;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\TotpModule;
 use SURFnet\VPN\Portal\VootModule;
@@ -236,7 +230,8 @@ try {
 
     $getClientInfo = function ($clientId) use ($config) {
         if (false === $config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
-            return false;
+            // if not in configuration file, check if it is in the hardcoded list
+            return OAuthClientInfo::getClient($clientId);
         }
 
         // XXX switch to only support 'redirect_uri_list' for 2.0

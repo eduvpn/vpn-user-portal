@@ -71,19 +71,16 @@ return [
     'Api' => [
         // access_tokens expire after 1 hour
         'tokenExpiry' => 3600,
-
-        // OAuth 2.0 consumers
         'consumerList' => [
-            // eduVPN Applications
-            'org.eduvpn.app' => [
-                'redirect_uri_list' => [
-                    'org.eduvpn.app:/api/callback',
-                    'http://127.0.0.1:{PORT}/callback',
-                    'http://[::1]:{PORT}/callback',
-                ],
-                'display_name' => 'eduVPN',
-                'require_approval' => true,
-            ],
+            //'_CLIENT_ID_' => [
+            //    'redirect_uri_list' => [
+            //        '_REDIRECT_URI_1_',
+            //        '_REDIRECT_URI_2_',
+            //    ],
+            //    'display_name' => '_DISPLAY_NAME_',
+            //    'require_approval' => true,
+            //    'client_secret' => '_SECRET_',
+            //],
         ],
 
         // List of foreign OAuth *PUBLIC* keys of VPN instances for which we
