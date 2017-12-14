@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.3 (...)
+- use 160 bits TOTP secret instead of 80 bits
+
 ## 1.4.2 (2017-12-12)
 - cleanup autoloading
 - hardcode the official eduVPN application registration for all platforms
