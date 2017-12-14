@@ -2,6 +2,7 @@
 
 ## 1.4.3 (...)
 - use 160 bits TOTP secret instead of 80 bits
+- expose `user_id` in `/user_info` API call
 
 ## 1.4.2 (2017-12-12)
 - cleanup autoloading

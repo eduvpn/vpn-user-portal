@@ -119,6 +119,7 @@ class VpnApiModule implements ServiceModuleInterface
                 return new ApiResponse(
                     'user_info',
                     [
+                        'user_id' => $userId,
                         'two_factor_enrolled' => $hasYubiKeyId || $hasTotpSecret,
                         'two_factor_enrolled_with' => $twoFactorTypes,
                         'is_disabled' => $isDisabledUser,
