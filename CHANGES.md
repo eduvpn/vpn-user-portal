@@ -3,6 +3,7 @@
 ## 1.4.3 (2017-12-14)
 - use 160 bits TOTP secret instead of 80 bits
 - expose `user_id` in `/user_info` API call
+- update Tunneblick documentation
 
 ## 1.4.2 (2017-12-12)
 - cleanup autoloading
