@@ -1,390 +1,336 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: VpnUserPortal\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.3\n"
+"Project-Id-Version: vpn-user-portal\n"
+"Language: nb\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: nb_NO\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.12\n"
-"X-Poedit-SourceCharset: UTF-8\n"
 
-#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:37
-#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:37
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:37
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:118
-msgid "Sign In"
-msgstr "Logg inn"
-
-#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:44
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:84
-msgid "Please attach your YubiKey and press its button."
-msgstr "Sett inn din YubiKey i USB-porten og trykk på knappen."
-
-#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:55
-msgid "The YubiKey OTP you provided is not correct."
-msgstr "Mottatt YubiKey OTP er ikke gyldig."
-
-#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:71
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:115
-msgid "YubiKey OTP"
-msgstr "YubiKey OTP"
-
-#: /tmp/cache/46/461a1c6d6162fceb96ed658fcceba7e8bd25e2daed39ab15a75b9466fd76e38d.php:82
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:122
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:139
-#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:82
-msgid "Verify"
-msgstr "Verifiser"
-
-#: /tmp/cache/c6/c6317c2c0348341e0de6b6cf2a229484f570294e6d2336b58199727afabe500d.php:20
-#: /tmp/cache/9f/9f0c203bfafc61a33dd934ce49c063a9d03f1aaade5b41736ad7340997841368.php:24
-msgid "VPN User Portal"
-msgstr "VPN-Brukerportal"
-
-#: /tmp/cache/64/64f870f366a9b85b4c50ac64efa40d5f667b7d7cd143c4b318e6dd480775badc.php:37
-msgid "Error"
-msgstr "Feil"
-
-#: /tmp/cache/64/64f870f366a9b85b4c50ac64efa40d5f667b7d7cd143c4b318e6dd480775badc.php:49
-msgid "An error occurred."
-msgstr "Det har skjedd noe feil."
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:35
-#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:35
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:35
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:35
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:35
-#: /tmp/cache/d7/d7caac0f2fbd307866b415cd87a2685c18314f225b48680b1c86d18809b33859.php:35
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:35
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:35
-msgid "New"
-msgstr "Ny"
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:39
-#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:39
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:39
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:39
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:39
-#: /tmp/cache/d7/d7caac0f2fbd307866b415cd87a2685c18314f225b48680b1c86d18809b33859.php:39
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:39
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:39
-msgid "Configurations"
-msgstr "Konfigurasjoner"
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:43
-#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:43
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:43
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:43
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:43
-#: /tmp/cache/d7/d7caac0f2fbd307866b415cd87a2685c18314f225b48680b1c86d18809b33859.php:43
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:43
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:43
-msgid "Account"
-msgstr "Konto"
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:47
-#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:47
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:47
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:47
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:47
-#: /tmp/cache/d7/d7caac0f2fbd307866b415cd87a2685c18314f225b48680b1c86d18809b33859.php:47
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:47
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:47
-msgid "Documentation"
-msgstr "Dokumentasjon"
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:58
-msgid "You are already enrolled with a YubiKey."
-msgstr "Du har allerede registrert en YubiKey."
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:67
-msgid ""
-"Here you can enroll for two-factor authentication (2FA) using a YubiKey One-"
-"time Password (OTP)."
-msgstr ""
-"Her kan du skru på to-faktor autentisering (2FA) ved bruk av en "
-"YubiKey."
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:70
-msgid ""
-"See the <a href=\"documentation\">documentation</a> for more information on "
-"2FA."
-msgstr ""
-"Les <a href=\"documentation\">dokumentasjonen</a> for å finne ut mer om "
-"2FA."
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:77
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:77
-msgid "Only an administrator can remove 2FA from your account!"
-msgstr "Bare en administrator kan fjerne 2FA fra din konto!"
-
-#: /tmp/cache/9e/9e8ab758560097e98dcc7654c63457c343eff09fbbb2816931cf0cacc521d267.php:96
-msgid "The YubiKey OTP is not valid."
-msgstr "YubiKey OTP er ikke gyldig."
-
-#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:54
-msgid "Are you sure you want to delete <em>%displayName%</em>?"
-msgstr ""
-"Vil du slette <em>%displayName%</em>?"
-
-#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:66
-msgid "Yes"
-msgstr "Ja"
-
-#: /tmp/cache/83/8393dddd66adf8aaa613a373c7c80dc988f079cc64aa5e7e42c7c0253012cdfc.php:70
-msgid "No"
-msgstr "Nei"
-
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:69
-msgid ""
-"Either there are no VPN profiles defined, or this account does not have the "
-"required permissions to create a new VPN configurations for any of the "
-"available profiles."
-msgstr ""
-"Enten er ingen VPN-profil definert, eller kontoen din har ingen rettigheter "
-"til å konfigurere VPN i en av de tilgjengelige profiler."
-
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:83
-msgid ""
-"Create a new VPN configuration by choosing a profile and a name for your "
-"configuration, e.g. <em>Phone</em>."
-msgstr ""
-"Lag en ny VPN-konfigurasjon ved å velge en profil og å fylle ut navn,"
-"for eksempel <em>Telefon</em>."
-
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:97
-msgid ""
-"You need to enroll for two-factor authentication on the <a href=\"account"
-"\">account</a> page before you can use this profile!"
-msgstr ""
-"Du må registrere deg for to-factor autentisering på <a href=\"account"
-"\">konto</a>-siden før denne profilen kan brukes."
-
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:117
-msgid "Profile"
-msgstr "Profil"
-
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:155
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:159
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:68
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:220
-msgid "Name"
-msgstr "Navn"
-
-#: /tmp/cache/72/720e41170c71da0aa4298064ace2b19a71b152cd59c92b1d464c9751fee767ae.php:165
-msgid "Download"
-msgstr "Last ned"
-
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:58
-msgid "You are already enrolled for TOTP."
-msgstr "Du er allerede registrert for TOTP."
-
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:67
-msgid ""
-"Here you can enroll for two-factor authentication (2FA) using a Time-based "
-"One-time Password (TOTP)."
-msgstr ""
-"Her kan du registrere deg for to-factor autentisering (2FA) med TOTP."
-
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:70
-msgid ""
-"See the <a href=\"documentation\">documentation</a> for more information on "
-"2FA and a list of applications to use."
-msgstr ""
-"Se på <a href=\"documentation\">dokumentasjonen</a> for å finne ut mer om "
-"2FA og ei liste med applikasjoner som kan brukes."
-
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:84
-msgid "Secret"
-msgstr "Nøkkel"
-
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:100
-msgid ""
-"Scan the QR code using your 2FA application, or import the secret manually. "
-"Confirm the successful configuration by entering a 6 digit OTP generated by "
-"the application below."
-msgstr ""
-"Scan QR-koden med en 2FA-applikasjon, eller importer nøkkelen for hand. "
-"Bekreft konfigurasjonen med den 6-sifrete koden som er generert av 2FA-applikasjonen."
-
-#: /tmp/cache/56/56bbda72b1839f6202170e843b1e471b94d0b73b5cb7220f5e72333dbecc4ae0.php:112
-msgid ""
-"The OTP key you entered does not match the expected value for this OTP "
-"secret."
-msgstr ""
-"OTP-koden du brukte stemmer ikke overens med den forventede verdien"
-
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:58
+#: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:40
 msgid "There are currently no configurations. <a href=\"new\">Create</a> one."
 msgstr "Ingen konfigurasjon tilgjengelig. <a href=\"new\">Opprett</a> ny."
 
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:70
+#: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:50
+#: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:137
+#: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:141
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:202
+msgid "Name"
+msgstr "Navn"
+
+#: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:52
 msgid "Issued"
 msgstr "Utstedt"
 
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:74
+#: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:56
 msgid "Expires"
 msgstr "Går ut"
 
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:78
+#: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:60
 msgid "Status"
 msgstr "Status"
 
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:107
+#: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:89
 msgid "Disabled"
 msgstr "Deaktivert"
 
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:113
+#: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:95
 msgid "Active"
 msgstr "Aktiv"
 
-#: /tmp/cache/4d/4d2f37eaf8d2339470f01a51a31255c651a0438ab904237f64cb8f4dc82fb62a.php:127
+#: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:109
 msgid "Delete"
 msgstr "Slett"
 
-#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:35
-msgid "Approval"
-msgstr "Tillatelse"
+#: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:51
+msgid "Either there are no VPN profiles defined, or this account does not have the required permissions to create a new VPN configurations for any of the available profiles."
+msgstr "Enten er ingen VPN-profil definert, eller kontoen din har ingen rettigheter til å konfigurere VPN i en av de tilgjengelige profiler."
 
-#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:41
-msgid "An application wants to act on your behalf."
-msgstr "En applikasjon ønsker å bruke kontoen din."
+#: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:65
+msgid "Create a new VPN configuration by choosing a profile and a name for your configuration, e.g. <em>Phone</em>."
+msgstr "Lag en ny VPN-konfigurasjon ved å velge en profil og fyll ut navn, for eksempel <em>Telefon</em>."
 
-#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:45
-msgid "Approve <strong>only</strong> if you know and trust the application!"
-msgstr ""
-"Tillat <strong>bare</strong> dersom du kjenner til applikasjonen og du stoler på den!"
+#: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:79
+msgid "You need to enroll for two-factor authentication on the <a href=\"account\">account</a> page before you can use this profile!"
+msgstr "Du må registrere deg for to-factor autentisering på <a href=\"account\">konto</a>-siden før denne profilen kan brukes."
 
-#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:51
-msgid "Application"
-msgstr "Applikasjon"
+#: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:99
+msgid "Profile"
+msgstr "Profil"
 
-#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:59
-msgid "Permissions"
-msgstr "Tillatelser"
+#: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:147
+msgid "Download"
+msgstr "Last ned"
 
-#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:65
-msgid "Location"
-msgstr "Sted"
+#: /tmp/cache/73/7391066a2337f0b8efac66de377f61e2f9974d0d06273e92ce8ce30e3ebead64.php:34
+#: /tmp/cache/ce/ce1e113939ecca76054c79598b215e7ca025f7dfaba7dd069278bc1ffbaec7ce.php:34
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:34
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:115
+msgid "Sign In"
+msgstr "Logg inn"
 
-#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:74
-msgid "Reject"
-msgstr "Avslå"
-
-#: /tmp/cache/e1/e148656671a78b0b0112038597df0f453543e5f343bc5366f4819001f267c5fb.php:78
-msgid "Approve"
-msgstr "Tillat"
-
-#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:44
+#: /tmp/cache/73/7391066a2337f0b8efac66de377f61e2f9974d0d06273e92ce8ce30e3ebead64.php:41
 msgid "Please provide your TOTP."
 msgstr "Fyll ut TOTP-koden din."
 
-#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:55
+#: /tmp/cache/73/7391066a2337f0b8efac66de377f61e2f9974d0d06273e92ce8ce30e3ebead64.php:52
 msgid "The TOTP you provided is incorrect."
 msgstr "TOTP-koden er ugyldig."
 
-#: /tmp/cache/70/70ce10e79fa8b8b5d324e9dfa9059ba66beb75e7349caacb2605cfda10bfd4b0.php:71
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:120
+#: /tmp/cache/73/7391066a2337f0b8efac66de377f61e2f9974d0d06273e92ce8ce30e3ebead64.php:68
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:102
 msgid "TOTP"
 msgstr "TOTP"
 
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:53
-msgid "User Info"
-msgstr "Brukerinformasjon"
+#: /tmp/cache/73/7391066a2337f0b8efac66de377f61e2f9974d0d06273e92ce8ce30e3ebead64.php:79
+#: /tmp/cache/ce/ce1e113939ecca76054c79598b215e7ca025f7dfaba7dd069278bc1ffbaec7ce.php:79
+#: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:104
+#: /tmp/cache/7a/7a07b49f6936fddd8e59dbba3926783b423fcc04c20dab78a09f91cd20eaef6b.php:121
+msgid "Verify"
+msgstr "Verifiser"
 
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:59
-msgid "ID"
-msgstr "ID"
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:70
-msgid "Group Membership(s)"
-msgstr "Grupptilhørighet"
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:78
-msgid "Not a member of any group."
-msgstr "Ikke medlem av noen gruppe."
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:112
-msgid "Two-factor Authentication"
-msgstr "To-faktor autentisering"
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:128
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:151
-msgid "Enrolled"
-msgstr "Meldt inn"
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:143
-msgid "YubiKey"
-msgstr "YubiKey"
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:174
-msgid "Profiles"
-msgstr "Profiler"
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:203
-msgid "Authorized Applications"
-msgstr "Autoriserte applikasjoner"
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:211
-msgid "No applications have access to your account."
-msgstr "Ingen applikasjoner har tilgang til kontoen din."
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:222
-msgid "Scope"
-msgstr "Rettigheter"
-
-#: /tmp/cache/70/70403e1512ccd1d28bbfa8e2f78ea3ab79ade03e6c18d868396dc4151eaccfeb.php:259
-msgid "Revoke"
-msgstr "Tilbakekall"
-
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:53
+#: /tmp/cache/45/454011a5977a738555116ae23c73e120a89886da62b04b6bf66f3bfc9b9d59b2.php:35
 msgid "Events"
 msgstr "Henvendelser"
 
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:58
+#: /tmp/cache/45/454011a5977a738555116ae23c73e120a89886da62b04b6bf66f3bfc9b9d59b2.php:40
 msgid "This is a list of events that occurred related to your account."
-msgstr ""
-"Dette er ei liste over nylige henvendelser som angår kontoen din."
+msgstr "Dette er ei liste over nylige henvendelser som angår kontoen din."
 
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:66
+#: /tmp/cache/45/454011a5977a738555116ae23c73e120a89886da62b04b6bf66f3bfc9b9d59b2.php:48
 msgid "No events yet."
 msgstr "Ingen henvendelser."
 
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:75
+#: /tmp/cache/45/454011a5977a738555116ae23c73e120a89886da62b04b6bf66f3bfc9b9d59b2.php:57
 msgid "Date/Time"
 msgstr "Dato/Tid"
 
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:79
+#: /tmp/cache/45/454011a5977a738555116ae23c73e120a89886da62b04b6bf66f3bfc9b9d59b2.php:61
 msgid "Message"
 msgstr "Melding"
 
-#: /tmp/cache/15/1595a63e3cf7cdef49cadc3d8b94ead343f2e4668a79bcf7c1f5a1850bc4c491.php:81
+#: /tmp/cache/45/454011a5977a738555116ae23c73e120a89886da62b04b6bf66f3bfc9b9d59b2.php:63
 msgid "Type"
 msgstr "Type"
 
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:44
+#: /tmp/cache/e1/e14fe24d355cc03eafd61581a93b2c724599cf60ac829535ca25596f50b60c78.php:45
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:34
+msgid "Approval"
+msgstr "Tillatelse"
+
+#: /tmp/cache/e1/e14fe24d355cc03eafd61581a93b2c724599cf60ac829535ca25596f50b60c78.php:52
+msgid ""
+"The VPN application should have been launched automatically. If that \n"
+"        did not work, click <a href=\"%refreshUrl%\">here</a>."
+msgstr "VPN-programmet skal ha startet automatisk. Hvis det ikke gjorde det, klikk <a href=\"%refreshUrl%\">her</a>."
+
+#: /tmp/cache/e1/e14fe24d355cc03eafd61581a93b2c724599cf60ac829535ca25596f50b60c78.php:61
+msgid "You can now close this browser window or tab!"
+msgstr "Du kan nå lukke dette siden!"
+
+#: /tmp/cache/ce/ce1e113939ecca76054c79598b215e7ca025f7dfaba7dd069278bc1ffbaec7ce.php:41
+#: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:66
+msgid "Please attach your YubiKey and press its button."
+msgstr "Sett inn din YubiKey i USB-porten og trykk på knappen."
+
+#: /tmp/cache/ce/ce1e113939ecca76054c79598b215e7ca025f7dfaba7dd069278bc1ffbaec7ce.php:52
+msgid "The YubiKey OTP you provided is not correct."
+msgstr "Mottatt YubiKey OTP er ikke gyldig."
+
+#: /tmp/cache/ce/ce1e113939ecca76054c79598b215e7ca025f7dfaba7dd069278bc1ffbaec7ce.php:68
+#: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:97
+msgid "YubiKey OTP"
+msgstr "YubiKey OTP"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:35
+msgid "User Info"
+msgstr "Brukerinformasjon"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:41
+msgid "ID"
+msgstr "ID"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:52
+msgid "Group Membership(s)"
+msgstr "Grupptilhørighet"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:60
+msgid "Not a member of any group."
+msgstr "Ikke medlem av noen gruppe."
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:94
+msgid "Two-factor Authentication"
+msgstr "To-faktor autentisering"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:110
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:133
+msgid "Enrolled"
+msgstr "Meldt inn"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:125
+msgid "YubiKey"
+msgstr "YubiKey"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:156
+msgid "Profiles"
+msgstr "Profiler"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:185
+msgid "Authorized Applications"
+msgstr "Autoriserte applikasjoner"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:193
+msgid "No applications have access to your account."
+msgstr "Ingen applikasjoner har tilgang til kontoen din."
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:204
+msgid "Scope"
+msgstr "Rettigheter"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:241
+msgid "Revoke"
+msgstr "Tilbakekall"
+
+#: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:40
+msgid "You are already enrolled with a YubiKey."
+msgstr "Du har allerede registrert en YubiKey."
+
+#: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:49
+msgid "Here you can enroll for two-factor authentication (2FA) using a YubiKey One-time Password (OTP)."
+msgstr "Her kan du skru på to-faktor autentisering (2FA) ved bruk av en YubiKey."
+
+#: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:52
+msgid "See the <a href=\"documentation\">documentation</a> for more information on 2FA."
+msgstr "Les <a href=\"documentation\">dokumentasjonen</a> for å finne ut mer om 2FA."
+
+#: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:59
+#: /tmp/cache/7a/7a07b49f6936fddd8e59dbba3926783b423fcc04c20dab78a09f91cd20eaef6b.php:59
+msgid "Only an administrator can remove 2FA from your account!"
+msgstr "Bare en administrator kan fjerne 2FA fra din konto!"
+
+#: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:78
+msgid "The YubiKey OTP is not valid."
+msgstr "YubiKey OTP er ikke gyldig."
+
+#: /tmp/cache/7a/7a07b49f6936fddd8e59dbba3926783b423fcc04c20dab78a09f91cd20eaef6b.php:40
+msgid "You are already enrolled for TOTP."
+msgstr "Du er allerede registrert for TOTP."
+
+#: /tmp/cache/7a/7a07b49f6936fddd8e59dbba3926783b423fcc04c20dab78a09f91cd20eaef6b.php:49
+msgid "Here you can enroll for two-factor authentication (2FA) using a Time-based One-time Password (TOTP)."
+msgstr "Her kan du registrere deg for to-factor autentisering (2FA) med TOTP."
+
+#: /tmp/cache/7a/7a07b49f6936fddd8e59dbba3926783b423fcc04c20dab78a09f91cd20eaef6b.php:52
+msgid "See the <a href=\"documentation\">documentation</a> for more information on 2FA and a list of applications to use."
+msgstr "Se på <a href=\"documentation\">dokumentasjonen</a> for å finne ut mer om 2FA og ei liste med applikasjoner som kan brukes."
+
+#: /tmp/cache/7a/7a07b49f6936fddd8e59dbba3926783b423fcc04c20dab78a09f91cd20eaef6b.php:66
+msgid "Secret"
+msgstr "Nøkkel"
+
+#: /tmp/cache/7a/7a07b49f6936fddd8e59dbba3926783b423fcc04c20dab78a09f91cd20eaef6b.php:82
+msgid "Scan the QR code using your 2FA application, or import the secret manually. Confirm the successful configuration by entering a 6 digit OTP generated by the application below."
+msgstr "Scan QR-koden med en 2FA-applikasjon, eller importer nøkkelen for hand. Bekreft konfigurasjonen med den 6-sifrete koden som er generert av 2FA-applikasjonen."
+
+#: /tmp/cache/7a/7a07b49f6936fddd8e59dbba3926783b423fcc04c20dab78a09f91cd20eaef6b.php:94
+msgid "The OTP key you entered does not match the expected value for this OTP secret."
+msgstr "OTP-koden du brukte stemmer ikke overens med den forventede verdien"
+
+#: /tmp/cache/a3/a3c854163a668a2f050d97f4d68b8a3fb704a489ab7914105df6ae6b2b21c023.php:34
+msgid "Error"
+msgstr "Feil"
+
+#: /tmp/cache/a3/a3c854163a668a2f050d97f4d68b8a3fb704a489ab7914105df6ae6b2b21c023.php:46
+msgid "An error occurred."
+msgstr "Det har skjedd noe feil."
+
+#: /tmp/cache/cb/cb3df0441c5e8f4f66bac059e857367c4faf288680d52c70c0a800ef2f8af17f.php:26
+msgid "New"
+msgstr "Ny"
+
+#: /tmp/cache/cb/cb3df0441c5e8f4f66bac059e857367c4faf288680d52c70c0a800ef2f8af17f.php:34
+msgid "Configurations"
+msgstr "Konfigurasjoner"
+
+#: /tmp/cache/cb/cb3df0441c5e8f4f66bac059e857367c4faf288680d52c70c0a800ef2f8af17f.php:42
+msgid "Account"
+msgstr "Konto"
+
+#: /tmp/cache/cb/cb3df0441c5e8f4f66bac059e857367c4faf288680d52c70c0a800ef2f8af17f.php:50
+msgid "Documentation"
+msgstr "Dokumentasjon"
+
+#: /tmp/cache/4d/4d7125794e6c6de4bad879e6c458657abe1735e7b0ec0c17420853e05a5598a5.php:37
+msgid "Are you sure you want to delete <em>%displayName%</em>?"
+msgstr "Vil du slette <em>%displayName%</em>?"
+
+#: /tmp/cache/4d/4d7125794e6c6de4bad879e6c458657abe1735e7b0ec0c17420853e05a5598a5.php:49
+msgid "Yes"
+msgstr "Ja"
+
+#: /tmp/cache/4d/4d7125794e6c6de4bad879e6c458657abe1735e7b0ec0c17420853e05a5598a5.php:53
+msgid "No"
+msgstr "Nei"
+
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:41
 msgid "Please sign in with your username and password."
 msgstr "Logg inn med brukernavn og passord."
 
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:55
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:52
 msgid "The credentials you provided were not correct."
 msgstr "Innloggingsdetaljene er ikke riktige."
 
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:72
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:76
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:92
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:96
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:69
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:73
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:89
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:93
 msgid "Username"
 msgstr "Brukernavn"
 
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:82
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:86
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:100
-#: /tmp/cache/4f/4f4b28f83f651b4912979df71ce07d0294c639001181510b431ea1d1714bf714.php:104
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:79
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:83
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:97
+#: /tmp/cache/ee/ee1dfd6704aebdda434dfa6d6344eaa4aa3d9266b0c330276b02176f0ef5d987.php:101
 msgid "Password"
 msgstr "Passord"
+
+#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:29
+#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:47
+msgid "VPN User Portal"
+msgstr "VPN-Brukerportal"
+
+#: /tmp/cache/9b/9b632a755d0feac3f1d9e70a27681f07047a97d3e83e008db2c8eff8b5117cec.php:105
+msgid "Sign Out"
+msgstr "Logg ut"
+
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:40
+msgid "An application wants to act on your behalf."
+msgstr "En applikasjon ønsker å bruke kontoen din."
+
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:44
+msgid "Approve <strong>only</strong> if you know and trust the application!"
+msgstr "Tillat <strong>bare</strong> dersom du kjenner til applikasjonen og du stoler på den!"
+
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:50
+msgid "Application"
+msgstr "Applikasjon"
+
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:58
+msgid "Permissions"
+msgstr "Tillatelser"
+
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:64
+msgid "Location"
+msgstr "Sted"
+
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:73
+msgid "Reject"
+msgstr "Avslå"
+
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:77
+msgid "Approve"
+msgstr "Tillat"
