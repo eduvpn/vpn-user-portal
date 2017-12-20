@@ -314,30 +314,19 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:40
-msgid "An application wants to act on your behalf."
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:41
+msgid ""
+"<strong>%display_name%</strong> wants to use this VPN service on your behalf."
 msgstr ""
 
-#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:44
-msgid "Approve <strong>only</strong> if you know and trust the application!"
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:48
+msgid "Only approve this if you are using %display_name%!"
 msgstr ""
 
-#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:50
-msgid "Application"
-msgstr ""
-
-#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:58
-msgid "Permissions"
-msgstr ""
-
-#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:64
-msgid "Location"
-msgstr ""
-
-#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:73
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:55
 msgid "Reject"
 msgstr ""
 
-#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:77
+#: /tmp/cache/e6/e61cd514992ca3d7304a57a72d974cc124c8a966428820651b4b0a196f83ecf8.php:59
 msgid "Approve"
 msgstr ""
