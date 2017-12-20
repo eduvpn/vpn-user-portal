@@ -4,14 +4,13 @@
         <li class="active"><span>{% trans "Approval" %}</span></li>
     </ul>
 
-    <p>{% trans "An application wants to act on your behalf." %}</p>
-    <p class="warning">{% trans "Approve <strong>only</strong> if you know and trust the application!" %}</p>
+    <p>     
+        <strong><span title="{{ client_id }}">{{ display_name }}</span></strong> {% trans "wants to use this VPN service on your behalf." %}
+    </p>
 
-    <dl>
-        <dt>{% trans "Application" %}</dt><dd><span title="{{ client_id }}">{{ display_name }}</span></dd>
-        <dt>{% trans "Permissions" %}</dt><dd>{{ scope }}</dd>
-        <dt>{% trans "Location" %}</dt><dd>{{ redirect_uri }}</dd>
-    </dl>
+    <p class="warning">
+        <strong>{% trans %}Only approve this if you are using {{ display_name }}!{% endtrans %}</strong>
+    </p>
 
     <form method="post">
         <button class="error" type="submit" name="approve" value="no">{% trans "Reject" %}</button>

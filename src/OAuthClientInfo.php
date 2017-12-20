@@ -23,7 +23,7 @@ class OAuthClientInfo
         $clientInfo = [
             // org.eduvpn.app is DEPRECATED and will be removed once all
             // clients use their new client_id, but we'd have to wait for a
-            // new release
+            // new release of those apps
             'org.eduvpn.app' => [
                 'redirect_uri_list' => [
                     'org.eduvpn.app:/api/callback',
@@ -31,7 +31,7 @@ class OAuthClientInfo
                     'http://[::1]:{PORT}/callback',
                 ],
                 'display_name' => 'eduVPN',
-                'require_approval' => false,
+                'require_approval' => true,
             ],
             // Windows
             'org.eduvpn.app.windows' => [
@@ -41,7 +41,7 @@ class OAuthClientInfo
                     'http://[::1]:{PORT}/callback',
                 ],
                 'display_name' => 'eduVPN for Windows',
-                'require_approval' => false,
+                'require_approval' => true,
             ],
             // Android
             'org.eduvpn.app.android' => [
@@ -49,7 +49,7 @@ class OAuthClientInfo
                     'org.eduvpn.app:/api/callback',
                 ],
                 'display_name' => 'eduVPN for Android',
-                'require_approval' => false,
+                'require_approval' => true,
             ],
             // iOS
             'org.eduvpn.app.ios' => [
@@ -57,7 +57,7 @@ class OAuthClientInfo
                     'org.eduvpn.app:/api/callback',
                 ],
                 'display_name' => 'eduVPN for iOS',
-                'require_approval' => false,
+                'require_approval' => true,
             ],
             // macOS
             'org.eduvpn.app.macos' => [
@@ -67,7 +67,7 @@ class OAuthClientInfo
                     'http://[::1]:{PORT}/callback',
                 ],
                 'display_name' => 'eduVPN for macOS',
-                'require_approval' => false,
+                'require_approval' => true,
             ],
             // Linux
             'org.eduvpn.app.linux' => [
@@ -77,7 +77,7 @@ class OAuthClientInfo
                     'http://[::1]:{PORT}/callback',
                 ],
                 'display_name' => 'eduVPN for Linux',
-                'require_approval' => false,
+                'require_approval' => true,
             ],
         ];
 
