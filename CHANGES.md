@@ -3,6 +3,8 @@
 ## 1.4.4 (...)
 - simplify OAuth consent dialog
 - reenable "Approval" dialog for OAuth clients for now
+- make add-user script interactive if no `--user` or `--pass` CLI parameters
+  are specified (issue #83)
 
 ## 1.4.3 (2017-12-14)
 - use 160 bits TOTP secret instead of 80 bits
