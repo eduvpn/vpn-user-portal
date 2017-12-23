@@ -30,7 +30,7 @@ class OAuthClientInfo
                     'http://127.0.0.1:{PORT}/callback',
                     'http://[::1]:{PORT}/callback',
                 ],
-                'display_name' => 'eduVPN',
+                'display_name' => 'eduVPN (legacy)',
                 'require_approval' => true,
             ],
             // Windows
