@@ -206,11 +206,7 @@ msgstr "Geautoriseerde applicaties"
 msgid "No applications have access to your account."
 msgstr "Er zijn geen programma's die toegang hebben tot je account."
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:204
-msgid "Scope"
-msgstr "Rechten"
-
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:241
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:235
 msgid "Revoke"
 msgstr "Intrekken"
 
