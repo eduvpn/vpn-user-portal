@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.4 (...)
+## 1.4.4 (2017-12-23)
 - simplify OAuth consent dialog
 - reenable "Approval" dialog for OAuth clients for now
 - make add-user script interactive if no `--user` or `--pass` CLI parameters
