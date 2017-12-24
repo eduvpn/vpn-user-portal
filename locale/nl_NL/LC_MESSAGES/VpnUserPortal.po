@@ -20,7 +20,7 @@ msgstr "Er zijn momenteel geen configuraties. <a href=\"new\">Maak</a> er een."
 #: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:50
 #: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:137
 #: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:141
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:202
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:192
 msgid "Name"
 msgstr "Naam"
 
@@ -72,7 +72,7 @@ msgid ""
 "\">account</a> page before you can use this profile!"
 msgstr ""
 "Je moet aangemeld zijn voor twee-factor authenticatie op de <a href=\"account"
-"\">account</a> pagina voordat dit profiel gebruikt kan worden."
+"\">account</a> pagina voordat dit profiel gebruikt kan worden!"
 
 #: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:99
 msgid "Profile"
@@ -98,7 +98,7 @@ msgid "The TOTP you provided is incorrect."
 msgstr "De TOTP-code is ongeldig."
 
 #: /tmp/cache/73/7391066a2337f0b8efac66de377f61e2f9974d0d06273e92ce8ce30e3ebead64.php:68
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:102
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:96
 msgid "TOTP"
 msgstr "TOTP"
 
@@ -149,7 +149,7 @@ msgstr ""
 
 #: /tmp/cache/e1/e14fe24d355cc03eafd61581a93b2c724599cf60ac829535ca25596f50b60c78.php:61
 msgid "You can now close this browser window or tab!"
-msgstr "Je kunt dit browserscherm of deze browsertab nu sluiten."
+msgstr "Je kunt dit browserscherm of deze browsertab nu sluiten!"
 
 #: /tmp/cache/ce/ce1e113939ecca76054c79598b215e7ca025f7dfaba7dd069278bc1ffbaec7ce.php:41
 #: /tmp/cache/76/76585d3186ca4da3f3c061f052cca8cd5b3491948b2d9cd3c9d6b0f09413b5ce.php:66
@@ -173,40 +173,37 @@ msgstr "Gebruikersinformatie"
 msgid "ID"
 msgstr "ID"
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:52
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:56
 msgid "Group Membership(s)"
 msgstr "Groeplidmaatschap(pen)"
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:60
-msgid "Not a member of any group."
-msgstr "Niet lid van een groep."
-
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:94
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:88
 msgid "Two-factor Authentication"
 msgstr "Twee-factor authenticatie"
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:110
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:133
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:104
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:129
 msgid "Enrolled"
 msgstr "Geactiveerd"
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:125
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:110
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:139
+msgid "Enroll"
+msgstr "Aanmelden"
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:121
 msgid "YubiKey"
 msgstr "YubiKey"
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:156
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:154
 msgid "Profiles"
 msgstr "Profielen"
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:185
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:186
 msgid "Authorized Applications"
 msgstr "Geautoriseerde applicaties"
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:193
-msgid "No applications have access to your account."
-msgstr "Er zijn geen programma's die toegang hebben tot je account."
-
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:235
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:225
 msgid "Revoke"
 msgstr "Intrekken"
 

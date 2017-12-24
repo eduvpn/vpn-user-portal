@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.5 (...)
+- no longer show "Scope" for authorized applications
+- translate "Enroll" on account page
+- do not show group information when there are no groups to show (issue #85)
+- do not show authorized applications when there are none
+
 ## 1.4.4 (2017-12-23)
 - simplify OAuth consent dialog
 - reenable "Approval" dialog for OAuth clients for now

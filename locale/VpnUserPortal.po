@@ -5,7 +5,7 @@ msgstr ""
 #: /tmp/cache/9d/9d69e30a5752787863d5bfd87a7f8efa260a0a93b200e0d481e9da994a276525.php:50
 #: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:137
 #: /tmp/cache/48/488f91ceb2f57d3b19f6c4cf3fd609d76b177044a14aaa4b2486d29a936cadd1.php:141
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:202
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:192
 msgid "Name"
 msgstr ""
 
@@ -76,7 +76,7 @@ msgid "The TOTP you provided is incorrect."
 msgstr ""
 
 #: /tmp/cache/73/7391066a2337f0b8efac66de377f61e2f9974d0d06273e92ce8ce30e3ebead64.php:68
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:102
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:96
 msgid "TOTP"
 msgstr ""
 
@@ -148,40 +148,37 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:52
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:56
 msgid "Group Membership(s)"
 msgstr ""
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:60
-msgid "Not a member of any group."
-msgstr ""
-
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:94
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:88
 msgid "Two-factor Authentication"
 msgstr ""
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:110
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:133
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:104
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:129
 msgid "Enrolled"
 msgstr ""
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:125
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:110
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:139
+msgid "Enroll"
+msgstr ""
+
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:121
 msgid "YubiKey"
 msgstr ""
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:156
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:154
 msgid "Profiles"
 msgstr ""
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:185
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:186
 msgid "Authorized Applications"
 msgstr ""
 
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:193
-msgid "No applications have access to your account."
-msgstr ""
-
-#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:235
+#: /tmp/cache/8f/8fb722e076038bf740099fb9c5f08de8b35ebc2e1069f9785b5f73dfda025bbd.php:225
 msgid "Revoke"
 msgstr ""
 

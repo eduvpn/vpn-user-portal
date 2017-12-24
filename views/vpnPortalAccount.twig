@@ -8,21 +8,19 @@
             <td><code>{{ userId }}</code></td>
             <td></td>
         </tr>
+        {% if userGroups is not empty %}
         <tr>
             <th>{% trans "Group Membership(s)" %}</th>
             <td>
-                {% if userGroups is empty %}
-                    <em>{% trans "Not a member of any group." %}</em>
-                {% else %}
-                    <ul class="simple">
-                        {% for group in userGroups %}
-                            <li title="{{ group.id }}">{{ group.displayName }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+                <ul class="simple">
+                    {% for group in userGroups %}
+                        <li title="{{ group.id }}">{{ group.displayName }}</li>
+                    {% endfor %}
+                </ul>
             </td>
             <td></td>
         </tr>
+        {% endif %}
     </table>
 
     <h2>{% trans "Two-factor Authentication" %}</h2>
@@ -35,7 +33,7 @@
                 {% if hasTotpSecret %}
                     <span class="success">{% trans "Enrolled" %}</span>
                 {% else %}
-                    <a href="totp">Enroll</a>
+                    <a href="totp">{% trans "Enroll" %}</a>
                 {% endif %}
             </td>
         </tr>
@@ -47,7 +45,7 @@
                     <span class="success">{% trans "Enrolled" %}</span>
                     <span title="Registered YubiKey ID" class="plain">{{ yubiKeyId }}</span>
                 {% else %}
-                    <a href="yubi">Enroll</a>
+                    <a href="yubi">{% trans "Enroll" %}</a>
                 {% endif %}
             </td>
         </tr>
@@ -66,11 +64,8 @@
         {% endif %}
     </table>
 
+    {% if authorizedClients is not empty %}
     <h2>{% trans "Authorized Applications" %}</h2>
-
-    {% if authorizedClients is empty %}
-        <p class="plain">{% trans "No applications have access to your account." %}</p>
-    {% else %}
     <table>
         <thead>
             <tr><th>{% trans "Name" %}</th><th></th></tr>
