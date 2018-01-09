@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.6 (...)
+- support refresh token expiry
+
 ## 1.4.5 (2017-12-28)
 - no longer show "Scope" for authorized applications
 - translate "Enroll" on account page

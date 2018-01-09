@@ -72,7 +72,14 @@ try {
             $getClientInfo,
             FileIO::readFile(sprintf('%s/OAuth.key', $dataDir))
         );
-        $oauthServer->setExpiresIn($config->getSection('Api')->getItem('tokenExpiry'));
+        // if we have a 'refreshTokenExpiry' setting use it, otherwise default to 1 year
+        $refreshTokenExpiry = $config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : new DateInterval('P1Y');
+
+        $oauthServer->setExpiry(
+            new DateInterval(sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry'))),
+            new DateInterval($refreshTokenExpiry)
+        );
+
         $oauthModule = new OAuthTokenModule(
             $oauthServer
         );
