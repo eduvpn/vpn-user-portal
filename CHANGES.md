@@ -1,7 +1,8 @@
 # Changelog
 
-## 1.4.6 (...)
-- support refresh token expiry
+## 1.4.6 (2018-01-10)
+- support refresh token expiry (update `fkooman/oauth2-server`)
+- set default for refresh token expiry to 6 months
 
 ## 1.4.5 (2017-12-28)
 - no longer show "Scope" for authorized applications
