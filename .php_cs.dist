@@ -15,6 +15,14 @@ return PhpCsFixer\Config::create()
             'strict_comparison' => true,
             'strict_param' => true,
             'php_unit_strict' => true,
+            'header_comment' => [
+                'header' => <<< 'EOD'
+eduVPN - End-user friendly VPN.
+
+Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+SPDX-License-Identifier: AGPL-3.0+
+EOD
+             ]
         ]
     )
     ->setFinder(PhpCsFixer\Finder::create()->in(__DIR__));

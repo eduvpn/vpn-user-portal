@@ -1,11 +1,12 @@
 <?php
 
-/**
+/*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2017, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
+
 $baseDir = dirname(__DIR__);
 /** @psalm-suppress UnresolvableInclude */
 require_once sprintf('%s/vendor/autoload.php', $baseDir);
