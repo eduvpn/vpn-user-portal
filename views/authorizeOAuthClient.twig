@@ -4,12 +4,15 @@
         <li class="active"><span>{% trans "Approval" %}</span></li>
     </ul>
 
-    <p>     
-        {% trans %}<strong>{{ display_name }}</strong> wants to use this VPN service on your behalf.{% endtrans %}
-    </p>
+    {% if display_name is null %}
+        {% set display_name = client_id %}
+    {% endif %}
 
-    <p class="warning">
-        <strong>{% trans %}Only approve this if you are using {{ display_name }}!{% endtrans %}</strong>
+    <p>
+        {% trans %}
+            <strong title="{{ client_id }}">{{ display_name }}</strong> wants to use this VPN service on your behalf.
+<strong>Only</strong> approve this if you are using {{ display_name }}!
+        {% endtrans %}
     </p>
 
     <form method="post">
