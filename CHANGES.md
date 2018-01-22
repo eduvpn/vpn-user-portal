@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.7 (2018-01-22)
+- update authorization dialog text
+
 ## 1.4.6 (2018-01-10)
 - support refresh token expiry (update `fkooman/oauth2-server`)
 - set default for refresh token expiry to 6 months
