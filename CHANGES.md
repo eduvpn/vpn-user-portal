@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.8 (...)
+- update Norwegian translation
+
 ## 1.4.7 (2018-01-22)
 - update authorization dialog text
 
