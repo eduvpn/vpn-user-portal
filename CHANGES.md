@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.8 (...)
+## 1.4.8 (2018-01-24)
 - update Norwegian translation
 
 ## 1.4.7 (2018-01-22)
