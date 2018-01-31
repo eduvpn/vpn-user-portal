@@ -71,8 +71,8 @@ return [
     'Api' => [
         // access_tokens expire after 1 hour
         'tokenExpiry' => 3600,
-        // refresh_tokens expire after 6 months
-        'refreshTokenExpiry' => 'P6M',
+        // refresh_tokens expire after 180 days
+        'refreshTokenExpiry' => 'P180D',
         'consumerList' => [
             //'_CLIENT_ID_' => [
             //    'redirect_uri_list' => [
