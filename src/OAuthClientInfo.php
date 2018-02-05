@@ -36,11 +36,19 @@ class OAuthClientInfo
             // Windows
             'org.eduvpn.app.windows' => [
                 'redirect_uri_list' => [
-                    'org.eduvpn.app:/api/callback',
                     'http://127.0.0.1:{PORT}/callback',
                     'http://[::1]:{PORT}/callback',
                 ],
                 'display_name' => 'eduVPN for Windows',
+                'require_approval' => true,
+            ],
+            // Windows (LC)
+            'org.letsconnect-vpn.app.windows' => [
+                'redirect_uri_list' => [
+                    'http://127.0.0.1:{PORT}/callback',
+                    'http://[::1]:{PORT}/callback',
+                ],
+                'display_name' => 'Let\'s Connect for Windows',
                 'require_approval' => true,
             ],
             // Android
