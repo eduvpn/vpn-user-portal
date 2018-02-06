@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.9 (...)
+## 1.4.9 (2018-02-06)
 - set default for refresh token expiry to 180 days (instead of 6 months to sync
   with default of CA certificates)
 - add Let's Connect OAuth client registration for Windows
