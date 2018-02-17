@@ -14,6 +14,7 @@ require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\Http\PdoAuth;
 
 try {
     $p = new CliParser(
@@ -40,6 +41,10 @@ try {
         $userId = trim(fgets(STDIN));
     }
 
+    if (empty($userId)) {
+        throw new RuntimeException('User ID cannot be empty');
+    }
+
     if ($opt->hasItem('pass')) {
         $userPass = $opt->getItem('pass');
     } else {
@@ -57,12 +62,36 @@ try {
         }
     }
 
+    if (empty($userPass)) {
+        throw new RuntimeException('Password cannot be empty');
+    }
+
     $configFile = sprintf('%s/config/%s/config.php', $baseDir, $instanceId);
     $config = Config::fromFile($configFile);
-    $configData = $config->toArray();
-    $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
-    $configData['FormAuthentication'][$userId] = $passwordHash;
-    Config::toFile($configFile, $configData, 0644);
+
+    switch ($config->getItem('authMethod')) {
+        case 'FormAuthentication':
+            // users/hashes stored in configuration file
+            // XXX remove for 2.0!
+            $configData = $config->toArray();
+            $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
+            $configData['FormAuthentication'][$userId] = $passwordHash;
+            Config::toFile($configFile, $configData, 0644);
+
+            break;
+        case 'FormPdoAuthentication':
+            // users/hashes stored in DB
+            $pdoAuth = new PdoAuth(
+                new PDO(
+                   sprintf('sqlite://%s/data/%s/userdb.sqlite', $baseDir, $instanceId)
+                )
+            );
+            $pdoAuth->init();
+            $pdoAuth->add($userId, $userPass);
+            break;
+        default:
+            throw new RuntimeException('backend not supported for adding users');
+    }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

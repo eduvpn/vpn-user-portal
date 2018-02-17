@@ -12,14 +12,9 @@ return [
     //'styleName' => 'eduVPN',
     //'styleName' => 'LC',
 
-    'authMethod' => 'FormAuthentication',
+    'authMethod' => 'FormPdoAuthentication',
     //'authMethod' => 'FormLdapAuthentication',
     //'authMethod' => 'MellonAuthentication',
-
-    // Simple
-    'FormAuthentication' => [
-        // use vpn-user-portal-add-user to add users!
-    ],
 
     // LDAP
     'FormLdapAuthentication' => [

@@ -28,6 +28,7 @@ use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\LanguageSwitcherHook;
 use SURFnet\VPN\Common\Http\LdapAuth;
 use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
+use SURFnet\VPN\Common\Http\PdoAuth;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\SimpleAuth;
@@ -170,8 +171,31 @@ try {
             );
 
             break;
+        case 'FormPdoAuthentication':
+            $tpl->addDefault(['_show_logout' => true]);
+            $service->addBeforeHook(
+                'auth',
+                new FormAuthenticationHook(
+                    $session,
+                    $tpl
+                )
+            );
+            $userAuth = new PdoAuth(
+                new PDO(
+                    sprintf('sqlite://%s/data/%s/userdb.sqlite', $baseDir, $instanceId)
+                )
+            );
+            $service->addModule(
+                new FormAuthenticationModule(
+                    $userAuth,
+                    $session,
+                    $tpl
+                )
+            );
+
+            break;
         case 'FormAuthentication':
-            // XXX rename to FormSimpleAuthentication for 2.0
+            // XXX remove for 2.0
             $tpl->addDefault(['_show_logout' => true]);
             $service->addBeforeHook(
                 'auth',
