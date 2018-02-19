@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "32d37fd383928e87285b6d17c8efbbd28c60dd2b"
+                "reference": "e52ccade4f16bca090bbb06ed914e4f3e77a46b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/32d37fd383928e87285b6d17c8efbbd28c60dd2b",
-                "reference": "32d37fd383928e87285b6d17c8efbbd28c60dd2b",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/e52ccade4f16bca090bbb06ed914e4f3e77a46b7",
+                "reference": "e52ccade4f16bca090bbb06ed914e4f3e77a46b7",
                 "shasum": ""
             },
             "require": {
@@ -76,6 +76,7 @@
                 "ext-ldap": "*",
                 "ext-mbstring": "*",
                 "ext-pcre": "*",
+                "ext-pdo": "*",
                 "ext-spl": "*",
                 "fkooman/secookie": "^2",
                 "ircmaxell/password-compat": "^1",
@@ -107,7 +108,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2018-02-17T09:21:49+00:00"
+            "time": "2018-02-19T14:06:03+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -1044,16 +1045,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.7.4",
+            "version": "1.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "9f901e29c93dae4aa77c0bb161df4276f9c9a1be"
+                "reference": "dfd6be44111a7c41c2e884a336cc4f461b3b2401"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/9f901e29c93dae4aa77c0bb161df4276f9c9a1be",
-                "reference": "9f901e29c93dae4aa77c0bb161df4276f9c9a1be",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/dfd6be44111a7c41c2e884a336cc4f461b3b2401",
+                "reference": "dfd6be44111a7c41c2e884a336cc4f461b3b2401",
                 "shasum": ""
             },
             "require": {
@@ -1103,7 +1104,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-02-11T18:49:29+00:00"
+            "time": "2018-02-19T10:16:54+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
