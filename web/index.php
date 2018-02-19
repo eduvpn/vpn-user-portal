@@ -42,6 +42,7 @@ use SURFnet\VPN\Common\TwigTpl;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\OAuthClientInfo;
 use SURFnet\VPN\Portal\OAuthModule;
+use SURFnet\VPN\Portal\PasswdModule;
 use SURFnet\VPN\Portal\TotpModule;
 use SURFnet\VPN\Portal\VootModule;
 use SURFnet\VPN\Portal\VootTokenHook;
@@ -192,6 +193,13 @@ try {
                     $tpl
                 )
             );
+            // add module for changing password
+            $service->addModule(
+                new PasswdModule(
+                    $tpl,
+                    $userAuth
+                )
+            );
 
             break;
         case 'FormAuthentication':
@@ -219,6 +227,12 @@ try {
         default:
             throw new RuntimeException('unsupported authentication mechanism');
     }
+
+    $tpl->addDefault(
+        [
+            'authMethod' => $authMethod,
+        ]
+    );
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));

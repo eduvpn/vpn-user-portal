@@ -8,6 +8,14 @@
             <td><code>{{ userId }}</code></td>
             <td></td>
         </tr>
+        {% if authMethod == 'FormPdoAuthentication' %}
+            <tr>
+                <th></th>
+                <td><a href="passwd">{% trans "Change Password" %}</a></td>
+                <td></td>
+            </tr>
+        {% endif %}
+
         {% if userGroups is not empty %}
         <tr>
             <th>{% trans "Group Membership(s)" %}</th>
