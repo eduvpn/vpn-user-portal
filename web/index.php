@@ -43,10 +43,12 @@ use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\OAuthClientInfo;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\PasswdModule;
+use SURFnet\VPN\Portal\RegistrationHook;
 use SURFnet\VPN\Portal\TotpModule;
 use SURFnet\VPN\Portal\VootModule;
 use SURFnet\VPN\Portal\VootTokenHook;
 use SURFnet\VPN\Portal\VootTokenStorage;
+use SURFnet\VPN\Portal\Voucher;
 use SURFnet\VPN\Portal\VpnPortalModule;
 use SURFnet\VPN\Portal\YubiModule;
 
@@ -174,6 +176,34 @@ try {
             break;
         case 'FormPdoAuthentication':
             $tpl->addDefault(['_show_logout' => true]);
+
+            $userAuth = new PdoAuth(
+                new PDO(
+                    sprintf('sqlite://%s/data/%s/userdb.sqlite', $baseDir, $instanceId)
+                )
+            );
+
+            // if we allow registration, enable that module as well, but
+            // before the authentication module as to not require to authenticate
+            // before registration can take place
+            if ($config->getSection('FormPdoAuthentication')->getItem('allowRegistration')) {
+                $voucher = new Voucher(
+                    new PDO(
+                        sprintf('sqlite://%s/data/%s/vouchers.sqlite', $baseDir, $instanceId)
+                    )
+                );
+
+                // registration enabled
+                $service->addBeforeHook(
+                    'registration',
+                    new RegistrationHook(
+                        $tpl,
+                        $userAuth,
+                        $voucher
+                    )
+                );
+            }
+
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
@@ -181,11 +211,7 @@ try {
                     $tpl
                 )
             );
-            $userAuth = new PdoAuth(
-                new PDO(
-                    sprintf('sqlite://%s/data/%s/userdb.sqlite', $baseDir, $instanceId)
-                )
-            );
+
             $service->addModule(
                 new FormAuthenticationModule(
                     $userAuth,

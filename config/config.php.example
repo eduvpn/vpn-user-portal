@@ -12,9 +12,16 @@ return [
     //'styleName' => 'eduVPN',
     //'styleName' => 'LC',
 
-    'authMethod' => 'FormPdoAuthentication',
-    //'authMethod' => 'FormLdapAuthentication',
-    //'authMethod' => 'MellonAuthentication',
+    'authMethod' => 'FormPdoAuthentication',        // PDO (database)
+    //'authMethod' => 'FormLdapAuthentication',     // LDAP
+    //'authMethod' => 'MellonAuthentication',       // SAML
+
+    // PDO (database)
+    'FormPdoAuthentication' => [
+        // allow users to register themselves using a voucher provided to them
+        // by the administrator
+        'allowRegistration' => false
+    ],
 
     // LDAP
     'FormLdapAuthentication' => [
