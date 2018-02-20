@@ -6,6 +6,7 @@
   by default
 - implement support for changing passwords by users when using 
   `FormPdoAuthentication`
+- implement user self registration with vouchers
 
 ## 1.4.9 (2018-02-06)
 - set default for refresh token expiry to 180 days (instead of 6 months to sync
