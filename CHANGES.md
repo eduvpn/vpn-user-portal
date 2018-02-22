@@ -1,11 +1,12 @@
 # Changelog
 
-## 1.4.10 (...)
+## 1.5.1 (...)
 - support `FormPdoAuthentication` and make it the default
 - deprecate `FormAuthentcation`, new deploys will use `FormPdoAuthentication` 
   by default
 - implement support for changing passwords by users when using 
   `FormPdoAuthentication`
+- if `tlsCrypt` is enabled, use `AES-256-GCM` as only supported cipher
 
 ## 1.4.9 (2018-02-06)
 - set default for refresh token expiry to 180 days (instead of 6 months to sync

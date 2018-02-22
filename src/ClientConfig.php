@@ -44,7 +44,6 @@ class ClientConfig
 
             // CRYPTO (DATA CHANNEL)
             'auth SHA256',
-            'cipher AES-256-CBC',
 
             // CRYPTO (CONTROL CHANNEL)
             // @see RFC 7525
@@ -84,6 +83,9 @@ class ClientConfig
                     '</tls-crypt>',
                 ]
             );
+            // if tls-crypt is enabled, we need OpenVPN >= 2.4 anyway, so also
+            // bump cipher
+            $clientConfig[] = 'cipher AES-256-GCM';
         } else {
             $clientConfig = array_merge(
                 $clientConfig,
@@ -94,6 +96,10 @@ class ClientConfig
                     '</tls-auth>',
                 ]
             );
+            // if tls-crypt is not enabled, we still want to maintain OpenVPN
+            // 2.3 compat, so allow CBC as well, NCP will override this for
+            // 2.4 clients anyway
+            $clientConfig[] = 'cipher AES-256-CBC';
         }
 
         // --comp-lzo
