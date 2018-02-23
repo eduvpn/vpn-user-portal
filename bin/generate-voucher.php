@@ -13,6 +13,7 @@ $baseDir = dirname(__DIR__);
 require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use SURFnet\VPN\Common\CliParser;
+use SURFnet\VPN\Common\Http\PdoAuth;
 use SURFnet\VPN\Common\Random;
 use SURFnet\VPN\Portal\Voucher;
 
@@ -42,6 +43,15 @@ try {
 
     if (empty($userId)) {
         throw new RuntimeException('User ID cannot be empty');
+    }
+
+    $pdoAuth = new PdoAuth(
+        new PDO(
+            sprintf('sqlite://%s/data/%s/userdb.sqlite', $baseDir, $instanceId)
+        )
+    );
+    if (!$pdoAuth->userExists($userId)) {
+        throw new RuntimeException(sprintf('User "%s" does not exist', $userId));
     }
 
     $voucher = new Voucher(

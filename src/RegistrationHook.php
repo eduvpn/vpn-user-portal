@@ -12,6 +12,7 @@ namespace SURFnet\VPN\Portal;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
+use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\Http\PdoAuth;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
@@ -45,7 +46,7 @@ class RegistrationHook implements BeforeHookInterface
                     return false;
                 }
 
-                $voucherCode = $request->getQueryParameter('voucherCode');
+                $voucherCode = InputValidation::voucherCode($request->getQueryParameter('voucherCode'));
                 $voucherUserId = $this->voucher->getInfo($voucherCode);
                 if (false === $voucherUserId) {
                     throw new HttpException(
@@ -71,7 +72,7 @@ class RegistrationHook implements BeforeHookInterface
                     return false;
                 }
 
-                $voucherCode = $request->getQueryParameter('voucherCode');
+                $voucherCode = InputValidation::voucherCode($request->getQueryParameter('voucherCode'));
                 $voucherUserId = $this->voucher->getInfo($voucherCode);
 
                 if (false === $voucherUserId) {
@@ -81,9 +82,9 @@ class RegistrationHook implements BeforeHookInterface
                     );
                 }
 
-                $userId = $request->getPostParameter('userName');
-                $userPass = $request->getPostParameter('userPass');
-                $userPassConfirm = $request->getPostParameter('userPassConfirm');
+                $userId = InputValidation::userId($request->getPostParameter('userName'));
+                $userPass = $request->getPostParameter('userPass'); // may contain everything
+                $userPassConfirm = $request->getPostParameter('userPassConfirm'); // may contain everything
 
                 if ($userPass !== $userPassConfirm) {
                     return new HtmlResponse(
