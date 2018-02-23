@@ -134,6 +134,47 @@ msgstr "Bericht"
 msgid "Type"
 msgstr "Type"
 
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:34
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:113
+msgid "Register"
+msgstr "Registreren"
+
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:41
+msgid ""
+"Choose a username and password to register your account. This invite was "
+"provided to you by <code>%voucherUserId%</code>."
+msgstr ""
+"Kies een gebruikersnaam en wachtwoord om je account te registreren. Deze "
+"uitnodiging word je aangeboden door <code>%voucherUserId%</code>."
+
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:56
+msgid "Password and Password (confirm) MUST match!"
+msgstr "Wachtwoord en wachtwoord (bevestigen) moeten gelijk zijn!"
+
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:76
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:80
+#: /tmp/cache/7f/7ff22c181fd27882cffdbec7fbd3ee26ce04faa214abb83a648c1619dc631542.php:77
+#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:69
+#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:73
+#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:89
+#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:93
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:90
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:94
+#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:79
+#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:83
+#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:97
+#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:101
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:99
+#: /tmp/cache/a8/a89325b731af6ce930577425633a124c0770b0a0dad4af5e1afd1aeffec350f9.php:103
+msgid "Password (confirm)"
+msgstr "Nieuw wachtwoord (bevestigen)"
+
 #: /tmp/cache/1d/1dbeb3d38588c2f066dcccd78048090ea9141089e9aa456728a59089e7a149f8.php:45
 #: /tmp/cache/3e/3e58c2975fbb51a0e975ce308993efeff47b359cd6acd964dcab4870be433eac.php:34
 msgid "Approval"
@@ -162,14 +203,6 @@ msgstr "Huidig wachtwoord niet correct!"
 #: /tmp/cache/7f/7ff22c181fd27882cffdbec7fbd3ee26ce04faa214abb83a648c1619dc631542.php:57
 msgid "New Password and New Password (confirm) MUST match!"
 msgstr "Nieuw wachtwoord en nieuw wachtwoord (bevestigen) moeten gelijk zijn!"
-
-#: /tmp/cache/7f/7ff22c181fd27882cffdbec7fbd3ee26ce04faa214abb83a648c1619dc631542.php:77
-#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:69
-#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:73
-#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:89
-#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:93
-msgid "Username"
-msgstr "Gebruikersnaam"
 
 #: /tmp/cache/7f/7ff22c181fd27882cffdbec7fbd3ee26ce04faa214abb83a648c1619dc631542.php:86
 #: /tmp/cache/7f/7ff22c181fd27882cffdbec7fbd3ee26ce04faa214abb83a648c1619dc631542.php:90
@@ -319,13 +352,6 @@ msgstr "Log in met je gebruikersnaam en wachtwoord."
 msgid "The credentials you provided were not correct."
 msgstr "De inloggegevens zijn niet correct."
 
-#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:79
-#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:83
-#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:97
-#: /tmp/cache/e0/e014b2e9c5dc5132f652f75ca6d5163b890974eff811bd46be7dcde8a4ea5c69.php:101
-msgid "Password"
-msgstr "Wachtwoord"
-
 #: /tmp/cache/30/307bb7cfbc99a99b72d5868d1574e51a405b03f564097331c577245743163828.php:29
 #: /tmp/cache/30/307bb7cfbc99a99b72d5868d1574e51a405b03f564097331c577245743163828.php:47
 msgid "VPN User Portal"
@@ -396,3 +422,6 @@ msgstr "Afwijzen"
 #: /tmp/cache/3e/3e58c2975fbb51a0e975ce308993efeff47b359cd6acd964dcab4870be433eac.php:64
 msgid "Approve"
 msgstr "Toestaan"
+
+#~ msgid "Your were invited by %voucherUserId%."
+#~ msgstr "Je werd uitgenodigd door %voucherUserId%."

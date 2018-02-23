@@ -6,6 +6,7 @@
   by default
 - implement support for changing passwords by users when using 
   `FormPdoAuthentication`
+- implement user self registration with vouchers
 - if `tlsCrypt` is enabled, use `AES-256-GCM` as only supported cipher
 
 ## 1.4.9 (2018-02-06)
