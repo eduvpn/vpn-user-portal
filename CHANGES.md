@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.0 (...)
+## 1.5.0 (2018-02-25)
 - support `FormPdoAuthentication` and make it the default
 - deprecate `FormAuthentcation`, new deploys will use `FormPdoAuthentication` 
   by default
