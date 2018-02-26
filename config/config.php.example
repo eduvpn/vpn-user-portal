@@ -66,10 +66,6 @@ return [
         //'da_DK' => 'Dansk',
     ],
 
-    // If you have "port sharing" for TCP/443 with the web server, enable the
-    // following
-    //'addVpnProtoPorts' => ['tcp/443'],
-
     'Api' => [
         // access_tokens expire after 1 hour
         'tokenExpiry' => 3600,

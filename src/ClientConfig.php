@@ -13,14 +13,17 @@ use RuntimeException;
 
 class ClientConfig
 {
-    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts, array $addVpnProtoPorts)
+    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig['hostName'];
-        $vpnProtoPorts = array_merge(
-            array_values($profileConfig['vpnProtoPorts']),
-            array_values($addVpnProtoPorts)
-        );
+
+        $vpnProtoPorts = $profileConfig['vpnProtoPorts'];
+        if (array_key_exists('exposedVpnProtoPorts', $profileConfig)) {
+            if (0 !== count($profileConfig['exposedVpnProtoPorts'])) {
+                $vpnProtoPorts = $profileConfig['exposedVpnProtoPorts'];
+            }
+        }
 
         $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $shufflePorts);
 

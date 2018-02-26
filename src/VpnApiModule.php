@@ -30,9 +30,6 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts;
 
-    /** @var array */
-    private $addVpnProtoPorts = [];
-
     public function __construct(ServerClient $serverClient)
     {
         $this->serverClient = $serverClient;
@@ -47,14 +44,6 @@ class VpnApiModule implements ServiceModuleInterface
     public function setShuffleHosts($shuffleHosts)
     {
         $this->shuffleHosts = (bool) $shuffleHosts;
-    }
-
-    /**
-     * @return void
-     */
-    public function setAddVpnProtoPorts(array $addVpnProtoPorts)
-    {
-        $this->addVpnProtoPorts = $addVpnProtoPorts;
     }
 
     /**
@@ -331,7 +320,7 @@ class VpnApiModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->get('server_info');
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts, $this->addVpnProtoPorts);
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');
@@ -355,7 +344,7 @@ class VpnApiModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->get('server_info');
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->shuffleHosts, $this->addVpnProtoPorts);
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');

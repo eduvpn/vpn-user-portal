@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1 (...)
+- remove `addVpnProtoPorts` configuration option, and switch to 
+  `exposedVpnProtoPorts` in Server API
+
 ## 1.5.0 (2018-02-25)
 - support `FormPdoAuthentication` and make it the default
 - deprecate `FormAuthentcation`, new deploys will use `FormPdoAuthentication` 
