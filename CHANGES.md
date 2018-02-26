@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.1 (...)
+## 1.5.1 (2018-02-26)
 - remove `addVpnProtoPorts` configuration option, and switch to 
   `exposedVpnProtoPorts` in Server API
 
