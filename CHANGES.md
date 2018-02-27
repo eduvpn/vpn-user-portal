@@ -4,6 +4,8 @@
 - make sure chosen userId does not exist yet when registering a new account
   (avoiding database constraint exception)
 - script to generate voucher now prints voucherCode
+- input validation for user chosen passwords when changing passwords and
+  registering new accounts
 
 ## 1.5.1 (2018-02-26)
 - remove `addVpnProtoPorts` configuration option, and switch to 

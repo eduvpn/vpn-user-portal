@@ -83,8 +83,8 @@ class RegistrationHook implements BeforeHookInterface
                 }
 
                 $userId = InputValidation::userId($request->getPostParameter('userName'));
-                $userPass = $request->getPostParameter('userPass'); // may contain everything
-                $userPassConfirm = $request->getPostParameter('userPassConfirm'); // may contain everything
+                $userPass = InputValidation::userPass($request->getPostParameter('userPass'));
+                $userPassConfirm = InputValidation::userPass($request->getPostParameter('userPassConfirm'));
 
                 if ($userPass !== $userPassConfirm) {
                     return new HtmlResponse(

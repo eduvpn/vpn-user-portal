@@ -10,6 +10,7 @@
 namespace SURFnet\VPN\Portal;
 
 use SURFnet\VPN\Common\Http\HtmlResponse;
+use SURFnet\VPN\Common\Http\InputValidation;
 use SURFnet\VPN\Common\Http\PdoAuth;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
@@ -55,8 +56,8 @@ class PasswdModule implements ServiceModuleInterface
                 $userId = $hookData['auth'];
 
                 $userPass = $request->getPostParameter('userPass');
-                $newUserPass = $request->getPostParameter('newUserPass');
-                $newUserPassConfirm = $request->getPostParameter('newUserPassConfirm');
+                $newUserPass = InputValidation::userPass($request->getPostParameter('newUserPass'));
+                $newUserPassConfirm = InputValidation::userPass($request->getPostParameter('newUserPassConfirm'));
 
                 if (!$this->pdoAuth->isValid($userId, $userPass)) {
                     return new HtmlResponse(
