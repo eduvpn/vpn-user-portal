@@ -101,6 +101,14 @@ class RegistrationHook implements BeforeHookInterface
                     );
                 }
 
+                // make sure the user does not exist
+                if ($this->pdoAuth->userExists($userId)) {
+                    throw new HttpException(
+                        sprintf('user "%s" already exists', $userId),
+                        400
+                    );
+                }
+
                 if (!$this->voucher->useVoucher($userId, $voucherCode)) {
                     throw new HttpException(
                         'invalid "voucherCode"',
