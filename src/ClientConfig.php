@@ -9,10 +9,16 @@
 
 namespace SURFnet\VPN\Portal;
 
-use RuntimeException;
-
 class ClientConfig
 {
+    /**
+     * @param array $profileConfig
+     * @param array $serverInfo
+     * @param array $clientCertificate
+     * @param bool  $shufflePorts
+     *
+     * @return string
+     */
     public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts)
     {
         // make a list of ports/proto to add to the configuration file
@@ -124,57 +130,74 @@ class ClientConfig
         return implode(PHP_EOL, $clientConfig);
     }
 
+    /**
+     * @param array $vpnProtoPorts
+     * @param bool  $shufflePorts
+     *
+     * @return array
+     */
     public static function remotePortProtoList(array $vpnProtoPorts, $shufflePorts)
     {
+        // if these ports are listed in vpnProtoPorts they are ALWAYS added to
+        // the client configuration file
+        $specialUdpPorts = ['udp/53', 'udp/443'];
+        $specialTcpPorts = ['tcp/80', 'tcp/443'];
+
         $udpPorts = [];
         $tcpPorts = [];
-        $hasUdp53 = false;
-        $hasTcp443 = false;
+        $normalUdpPorts = [];
+        $normalTcpPorts = [];
 
         foreach ($vpnProtoPorts as $vpnProtoPort) {
-            list($proto, $port) = explode('/', $vpnProtoPort);
-            if ('udp' === $proto) {
-                $port = (int) $port;
-                if (53 === $port) {
-                    $hasUdp53 = true;
+            if (0 === strpos($vpnProtoPort, 'udp')) {
+                // UDP
+                if (!in_array($vpnProtoPort, $specialUdpPorts, true)) {
+                    $normalUdpPorts[] = $vpnProtoPort;
                 } else {
-                    $udpPorts[] = $port;
+                    $udpPorts[] = $vpnProtoPort;
                 }
-                continue;
-            }
-            if ('tcp' === $proto) {
-                $port = (int) $port;
-                if (443 === $port) {
-                    $hasTcp443 = true;
-                } else {
-                    $tcpPorts[] = $port;
-                }
-                continue;
             }
 
-            throw new RuntimeException('invalid protocol');
+            if (0 === strpos($vpnProtoPort, 'tcp')) {
+                // TCP
+                if (!in_array($vpnProtoPort, $specialTcpPorts, true)) {
+                    $normalTcpPorts[] = $vpnProtoPort;
+                } else {
+                    $tcpPorts[] = $vpnProtoPort;
+                }
+            }
         }
 
-        $udpIndex = 0;
-        $tcpIndex = 0;
+        // pick one normal UDP port, if available
+        if (0 !== count($normalUdpPorts)) {
+            if ($shufflePorts) {
+                $udpPorts[] = $normalUdpPorts[random_int(0, count($normalUdpPorts) - 1)];
+            } else {
+                $udpPorts[] = reset($normalUdpPorts);
+            }
+        }
+
+        // pick one normal TCP port, if available
+        if (0 !== count($normalTcpPorts)) {
+            if ($shufflePorts) {
+                $tcpPorts[] = $normalTcpPorts[random_int(0, count($normalTcpPorts) - 1)];
+            } else {
+                $tcpPorts[] = reset($normalTcpPorts);
+            }
+        }
+
         if ($shufflePorts) {
-            $udpIndex = 0 !== count($udpPorts) ? random_int(0, count($udpPorts) - 1) : 0;
-            $tcpIndex = 0 !== count($tcpPorts) ? random_int(0, count($tcpPorts) - 1) : 0;
+            // this is only "really" random in PHP >= 7.1
+            shuffle($udpPorts);
+            shuffle($tcpPorts);
         }
 
         $protoPortList = [];
-        if (0 !== count($udpPorts)) {
-            $protoPortList[] = ['proto' => 'udp', 'port' => $udpPorts[$udpIndex]];
+        foreach ($udpPorts as $udpPort) {
+            $protoPortList[] = ['proto' => 'udp', 'port' => (int) substr($udpPort, 4)];
         }
-        if ($hasUdp53) {
-            $protoPortList[] = ['proto' => 'udp', 'port' => 53];
-        }
-
-        if (0 !== count($tcpPorts)) {
-            $protoPortList[] = ['proto' => 'tcp', 'port' => $tcpPorts[$tcpIndex]];
-        }
-        if ($hasTcp443) {
-            $protoPortList[] = ['proto' => 'tcp', 'port' => 443];
+        foreach ($tcpPorts as $tcpPort) {
+            $protoPortList[] = ['proto' => 'tcp', 'port' => (int) substr($tcpPort, 4)];
         }
 
         return $protoPortList;

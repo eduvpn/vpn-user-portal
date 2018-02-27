@@ -6,6 +6,7 @@
 - script to generate voucher now prints voucherCode
 - input validation for user chosen passwords when changing passwords and
   registering new accounts
+- rework exposing proto/port in client configuration
 
 ## 1.5.1 (2018-02-26)
 - remove `addVpnProtoPorts` configuration option, and switch to 
