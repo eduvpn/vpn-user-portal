@@ -60,11 +60,14 @@ try {
         )
     );
     $random = new Random();
+    $voucherCode = $random->get(16);
     $voucher->init();
     $voucher->addVoucher(
         $userId,
-        $random->get(16)
+        $voucherCode
     );
+
+    echo sprintf('user "%s" generated a new voucherCode "%s"', $userId, $voucherCode).PHP_EOL;
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
