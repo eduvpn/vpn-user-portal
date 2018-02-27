@@ -422,6 +422,3 @@ msgstr "Afwijzen"
 #: /tmp/cache/3e/3e58c2975fbb51a0e975ce308993efeff47b359cd6acd964dcab4870be433eac.php:64
 msgid "Approve"
 msgstr "Toestaan"
-
-#~ msgid "Your were invited by %voucherUserId%."
-#~ msgstr "Je werd uitgenodigd door %voucherUserId%."
