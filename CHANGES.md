@@ -7,6 +7,7 @@
 - input validation for user chosen passwords when changing passwords and
   registering new accounts
 - rework exposing proto/port in client configuration
+- make sure data directory exists before adding users
 
 ## 1.5.1 (2018-02-26)
 - remove `addVpnProtoPorts` configuration option, and switch to 

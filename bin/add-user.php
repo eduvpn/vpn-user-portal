@@ -14,6 +14,7 @@ require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\Config;
+use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\PdoAuth;
 
 try {
@@ -81,9 +82,11 @@ try {
             break;
         case 'FormPdoAuthentication':
             // users/hashes stored in DB
+            $dbFile = sprintf('%s/data/%s/userdb.sqlite', $baseDir, $instanceId);
+            FileIO::createDir(dirname($dbFile), 0700);
             $pdoAuth = new PdoAuth(
                 new PDO(
-                   sprintf('sqlite://%s/data/%s/userdb.sqlite', $baseDir, $instanceId)
+                   sprintf('sqlite://%s', $dbFile)
                 )
             );
             $pdoAuth->init();
