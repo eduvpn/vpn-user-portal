@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.2 (...)
+## 1.5.2 (2018-02-28)
 - make sure chosen userId does not exist yet when registering a new account
   (avoiding database constraint exception)
 - script to generate voucher now prints voucherCode
