@@ -42,9 +42,9 @@ class TotpModule implements ServiceModuleInterface
         $service->get(
             '/totp',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -61,16 +61,16 @@ class TotpModule implements ServiceModuleInterface
         $service->post(
             '/totp',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
                 $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
 
                 try {
-                    $this->serverClient->post('set_totp_secret', ['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
                 } catch (ApiException $e) {
                     // we were unable to set the OTP secret
-                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
 
                     return new HtmlResponse(
                         $this->tpl->render(
@@ -91,14 +91,14 @@ class TotpModule implements ServiceModuleInterface
         $service->get(
             '/totp/qr-code',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));
 
                 $otpAuthUrl = sprintf(
                     'otpauth://totp/%s:%s?secret=%s&issuer=%s',
                     $request->getServerName(),
-                    $userId,
+                    $userInfo->id(),
                     $totpSecret,
                     $request->getServerName()
                 );

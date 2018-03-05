@@ -58,7 +58,7 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->get('profile_list');
                 $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userId]);
@@ -91,11 +91,11 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
-                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
-                $isDisabledUser = $this->serverClient->get('is_disabled_user', ['user_id' => $userId]);
+                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
+                $isDisabledUser = $this->serverClient->get('is_disabled_user', ['user_id' => $userInfo->id()]);
 
                 $twoFactorTypes = [];
                 if ($hasYubiKeyId) {
@@ -108,7 +108,7 @@ class VpnApiModule implements ServiceModuleInterface
                 return new ApiResponse(
                     'user_info',
                     [
-                        'user_id' => $userId,
+                        'user_id' => $userInfo->id(),
                         'two_factor_enrolled' => $hasYubiKeyId || $hasTotpSecret,
                         'two_factor_enrolled_with' => $twoFactorTypes,
                         'is_disabled' => $isDisabledUser,
@@ -124,11 +124,11 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 try {
                     $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
-                    $clientCertificate = $this->getCertificate($userId, $displayName);
+                    $clientCertificate = $this->getCertificate($userInfo->id(), $displayName);
 
                     return new ApiResponse(
                         'create_keypair',
@@ -150,13 +150,13 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
 
                     $profileList = $this->serverClient->get('profile_list');
-                    $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userId]);
+                    $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userInfo->id()]);
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
@@ -189,13 +189,13 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 try {
                     $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
                     $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
 
-                    return $this->getConfig($request->getServerName(), $profileId, $userId, $displayName);
+                    return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName);
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('create_config', $e->getMessage());
                 }
@@ -208,16 +208,16 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 try {
-                    $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
-                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                    $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
+                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
                     if ($hasYubiKeyId || $hasTotpSecret) {
                         return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
                     }
                     $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
-                    $this->serverClient->post('set_yubi_key_id', ['user_id' => $userId, 'yubi_key_otp' => $yubiKeyOtp]);
+                    $this->serverClient->post('set_yubi_key_id', ['user_id' => $userInfo->id(), 'yubi_key_otp' => $yubiKeyOtp]);
 
                     return new ApiResponse('two_factor_enroll_yubi');
                 } catch (InputValidationException $e) {
@@ -232,10 +232,10 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
-                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
+                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
                 if ($hasYubiKeyId || $hasTotpSecret) {
                     return new ApiErrorResponse('two_factor_enroll_totp', 'user already enrolled');
                 }
@@ -246,7 +246,7 @@ class VpnApiModule implements ServiceModuleInterface
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
                 }
-                $this->serverClient->post('set_totp_secret', ['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
 
                 return new ApiResponse('two_factor_enroll_totp');
             }
@@ -259,7 +259,7 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 $msgList = [];
 

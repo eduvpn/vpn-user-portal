@@ -39,9 +39,9 @@ class OAuthModule implements ServiceModuleInterface
         $service->get(
             '/_oauth/authorize',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
                 try {
-                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userId)) {
+                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userInfo->id())) {
                         // optimization where we do not ask for approval
                         return $this->prepareReturnResponse($authorizeResponse);
                     }
@@ -62,13 +62,13 @@ class OAuthModule implements ServiceModuleInterface
         $service->post(
             '/_oauth/authorize',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 try {
                     $authorizeResponse = $this->oauthServer->postAuthorize(
                         $request->getQueryParameters(),
                         $request->getPostParameters(),
-                        $userId
+                        $userInfo->id()
                     );
 
                     return $this->prepareReturnResponse($authorizeResponse);

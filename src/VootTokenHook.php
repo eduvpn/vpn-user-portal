@@ -45,7 +45,7 @@ class VootTokenHook implements BeforeHookInterface
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-        $userId = $hookData['auth'];
+        $userInfo = $hookData['auth'];
 
         // do not get involved in POST requests, only in GETs
         if ('GET' !== $request->getRequestMethod()) {
@@ -61,7 +61,7 @@ class VootTokenHook implements BeforeHookInterface
             return false;
         }
 
-        if (!$this->serverClient->get('has_voot_token', ['user_id' => $userId])) {
+        if (!$this->serverClient->get('has_voot_token', ['user_id' => $userInfo->id()])) {
             return new RedirectResponse(
                 sprintf(
                     '%s_voot/authorize?%s',

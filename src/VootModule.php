@@ -40,9 +40,9 @@ class VootModule implements ServiceModuleInterface
         $service->get(
             '/_voot/authorize',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
-                $this->oauthClient->setUserId($userId);
+                $this->oauthClient->setUserId($userInfo->id());
                 $authorizationRequestUri = $this->oauthClient->getAuthorizeUri(
                     'groups',
                     $request->getRootUri().'_voot/callback'
@@ -57,9 +57,9 @@ class VootModule implements ServiceModuleInterface
         $service->get(
             '/_voot/callback',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
-                $this->oauthClient->setUserId($userId);
+                $this->oauthClient->setUserId($userInfo->id());
                 // obtain the access token
                 $this->oauthClient->handleCallback(
                     $request->getQueryParameters()

@@ -68,10 +68,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/new',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->get('profile_list');
-                $userGroups = $this->cachedUserGroups($userId);
+                $userGroups = $this->cachedUserGroups($userInfo->id());
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $motdMessages = $this->serverClient->get('system_messages', ['message_type' => 'motd']);
@@ -96,13 +96,13 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/new',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 $displayName = InputValidation::displayName($request->getPostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
                 $profileList = $this->serverClient->get('profile_list');
-                $userGroups = $this->cachedUserGroups($userId);
+                $userGroups = $this->cachedUserGroups($userInfo->id());
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 // make sure the profileId is in the list of allowed profiles for this
@@ -120,8 +120,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 if ($profileList[$profileId]['twoFactor']) {
-                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
-                    $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
+                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
+                    $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
                     if (!$hasTotpSecret && !$hasYubiKeyId) {
                         return new HtmlResponse(
                             $this->tpl->render(
@@ -137,20 +137,20 @@ class VpnPortalModule implements ServiceModuleInterface
                     }
                 }
 
-                return $this->getConfig($request->getServerName(), $profileId, $userId, $displayName);
+                return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName);
             }
         );
 
         $service->get(
             '/configurations',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'userCertificateList' => $this->serverClient->get('client_certificate_list', ['user_id' => $userId]),
+                            'userCertificateList' => $this->serverClient->get('client_certificate_list', ['user_id' => $userInfo->id()]),
                         ]
                     )
                 );
@@ -195,9 +195,9 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/events',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
-                $userMessages = $this->serverClient->get('user_messages', ['user_id' => $userId]);
+                $userMessages = $this->serverClient->get('user_messages', ['user_id' => $userInfo->id()]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -213,16 +213,16 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userId]);
-                $yubiKeyId = $this->serverClient->get('yubi_key_id', ['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
+                $yubiKeyId = $this->serverClient->get('yubi_key_id', ['user_id' => $userInfo->id()]);
 
                 $profileList = $this->serverClient->get('profile_list');
-                $userGroups = $this->cachedUserGroups($userId);
+                $userGroups = $this->cachedUserGroups($userInfo->id());
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
-                $authorizedClients = $this->storage->getAuthorizations($userId);
+                $authorizedClients = $this->storage->getAuthorizations($userInfo->id());
                 foreach ($authorizedClients as $k => $v) {
                     // false means no longer registered
                     $displayName = false;
@@ -251,7 +251,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'twoFactorEnabledProfiles' => $twoFactorEnabledProfiles,
                             'yubiKeyId' => $yubiKeyId,
                             'hasTotpSecret' => $hasTotpSecret,
-                            'userId' => $userId,
+                            'userId' => $userInfo->id(),
                             'userGroups' => $userGroups,
                             'authorizedClients' => $authorizedClients,
                         ]
@@ -263,11 +263,11 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/removeClientAuthorization',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
                 $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
                 $scope = self::validateScope($request->getPostParameter('scope'));
 
-                $this->storage->deleteAuthorization($userId, $clientId, $scope);
+                $this->storage->deleteAuthorization($userInfo->id(), $clientId, $scope);
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }

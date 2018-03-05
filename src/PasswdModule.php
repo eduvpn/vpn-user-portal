@@ -37,13 +37,13 @@ class PasswdModule implements ServiceModuleInterface
         $service->get(
             '/passwd',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalPasswd',
                         [
-                            'userId' => $userId,
+                            'userId' => $userInfo->id(),
                         ]
                     )
                 );
@@ -53,18 +53,18 @@ class PasswdModule implements ServiceModuleInterface
         $service->post(
             '/passwd',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 $userPass = $request->getPostParameter('userPass');
                 $newUserPass = InputValidation::userPass($request->getPostParameter('newUserPass'));
                 $newUserPassConfirm = InputValidation::userPass($request->getPostParameter('newUserPassConfirm'));
 
-                if (!$this->pdoAuth->isValid($userId, $userPass)) {
+                if (!$this->pdoAuth->isValid($userInfo->id(), $userPass)) {
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalPasswd',
                             [
-                                'userId' => $userId,
+                                'userId' => $userInfo->id(),
                                 'errorCode' => 'wrongPassword',
                             ]
                         )
@@ -76,19 +76,19 @@ class PasswdModule implements ServiceModuleInterface
                         $this->tpl->render(
                             'vpnPortalPasswd',
                             [
-                                'userId' => $userId,
+                                'userId' => $userInfo->id(),
                                 'errorCode' => 'noMatchingPassword',
                             ]
                         )
                     );
                 }
 
-                if (!$this->pdoAuth->updatePassword($userId, $newUserPass)) {
+                if (!$this->pdoAuth->updatePassword($userInfo->id(), $newUserPass)) {
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalPasswd',
                             [
-                                'userId' => $userId,
+                                'userId' => $userInfo->id(),
                                 'errorCode' => 'updateFailPassword',
                             ]
                         )

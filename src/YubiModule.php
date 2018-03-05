@@ -38,9 +38,9 @@ class YubiModule implements ServiceModuleInterface
         $service->get(
             '/yubi',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
-                $hasYubiId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
+                $hasYubiId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -56,15 +56,15 @@ class YubiModule implements ServiceModuleInterface
         $service->post(
             '/yubi',
             function (Request $request, array $hookData) {
-                $userId = $hookData['auth'];
+                $userInfo = $hookData['auth'];
 
                 $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
 
                 try {
-                    $this->serverClient->post('set_yubi_key_id', ['user_id' => $userId, 'yubi_key_otp' => $yubiKeyOtp]);
+                    $this->serverClient->post('set_yubi_key_id', ['user_id' => $userInfo->id(), 'yubi_key_otp' => $yubiKeyOtp]);
                 } catch (ApiException $e) {
                     // we were unable to set the Yubi ID
-                    $hasYubiId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userId]);
+                    $hasYubiId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
 
                     return new HtmlResponse(
                         $this->tpl->render(
