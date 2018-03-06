@@ -61,7 +61,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->get('profile_list');
-                $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userId]);
+                $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userInfo->id()]);
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
