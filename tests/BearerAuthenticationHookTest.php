@@ -87,7 +87,7 @@ class BearerAuthenticationHookTest extends TestCase
         $validator = new BearerValidator($this->storage, $this->getClientInfo, $this->keyPair);
         $validator->setDateTime(new DateTime('2016-01-01'));
         $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
-        $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, []));
+        $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, [])->id());
     }
 
     private static function getRequest(array $additionalHeaders = [])

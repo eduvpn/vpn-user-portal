@@ -14,6 +14,7 @@ use fkooman\OAuth\Server\Exception\OAuthException;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
+use SURFnet\VPN\Common\Http\UserInfo;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
@@ -38,14 +39,16 @@ class BearerAuthenticationHook implements BeforeHookInterface
             $tokenIssuer = $tokenInfo->getIssuer();
             if (null !== $tokenIssuer) {
                 // "bind" the issuer to the user_id
-                return sprintf(
-                    '%s_%s',
-                    preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $tokenIssuer)),
-                    $tokenInfo->getUserId()
+                return new UserInfo(
+                    sprintf(
+                        '%s_%s',
+                        preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $tokenIssuer)),
+                        $tokenInfo->getUserId()
+                    )
                 );
             }
 
-            return $tokenInfo->getUserId();
+            return new UserInfo($tokenInfo->getUserId());
         } catch (OAuthException $e) {
             $jsonResponse = $e->getJsonResponse();
 
