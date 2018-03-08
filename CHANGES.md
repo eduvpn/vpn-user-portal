@@ -4,6 +4,7 @@
 - switch to `UserInfo` class
 - no longer need --auth and --cipher for OpenVPN >= 2.4 clients
 - add extra redirect URIs for iOS client
+- disable approval dialog for iOS client, remove obsolete redirect URI
 
 ## 1.5.2 (2018-02-28)
 - make sure chosen userId does not exist yet when registering a new account
