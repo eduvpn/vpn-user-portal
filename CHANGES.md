@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.3 (...)
+## 1.5.3 (2018-03-15)
 - switch to `UserInfo` class
 - add extra redirect URIs for iOS client
 
