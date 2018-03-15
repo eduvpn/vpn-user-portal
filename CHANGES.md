@@ -2,7 +2,6 @@
 
 ## 1.5.3 (...)
 - switch to `UserInfo` class
-- no longer need --auth and --cipher for OpenVPN >= 2.4 clients
 - add extra redirect URIs for iOS client
 
 ## 1.5.2 (2018-02-28)

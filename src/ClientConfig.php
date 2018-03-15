@@ -90,8 +90,8 @@ class ClientConfig
                     '</tls-crypt>',
                 ]
             );
-        // no need to specify --auth or --cipher for 2.4 clients with
-            // tls-crypt
+            $clientConfig[] = 'cipher AES-256-GCM';
+            $clientConfig[] = 'auth SHA256';
         } else {
             // < 2.4
             $clientConfig = array_merge(
