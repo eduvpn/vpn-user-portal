@@ -48,7 +48,7 @@ class OAuthClientInfo
                     'http://127.0.0.1:{PORT}/callback',
                     'http://[::1]:{PORT}/callback',
                 ],
-                'display_name' => 'Let\'s Connect for Windows',
+                'display_name' => 'Let\'s Connect! for Windows',
                 'require_approval' => true,
             ],
             // Android
