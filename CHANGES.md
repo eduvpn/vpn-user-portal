@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.4 (...)
+## 1.5.4 (2018-05-16)
 - support RADIUS for user authentication
 
 ## 1.5.3 (2018-03-15)
