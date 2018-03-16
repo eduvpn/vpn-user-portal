@@ -33,6 +33,15 @@ return [
         //'userDnTemplate' => 'DOMAIN\{{UID}}',
     ],
 
+    // RADIUS
+    'FormRadiusAuthentication' => [
+        'host' => 'radius.example.org',
+        //'port' => 1812,
+        //'addRealm' => 'example.org',
+        'secret' => 'testing123',
+        //'nasIdentifier' => 'vpn.example.org',
+    ],
+
     // SAML
     'MellonAuthentication' => [
         'attribute' => 'MELLON_NAME_ID',

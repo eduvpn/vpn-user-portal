@@ -29,6 +29,7 @@ use SURFnet\VPN\Common\Http\LanguageSwitcherHook;
 use SURFnet\VPN\Common\Http\LdapAuth;
 use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
 use SURFnet\VPN\Common\Http\PdoAuth;
+use SURFnet\VPN\Common\Http\RadiusAuth;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\SimpleAuth;
@@ -224,6 +225,40 @@ try {
                 new PasswdModule(
                     $tpl,
                     $userAuth
+                )
+            );
+
+            break;
+        case 'FormRadiusAuthentication':
+            $tpl->addDefault(['_show_logout' => true]);
+            $service->addBeforeHook(
+                'auth',
+                new FormAuthenticationHook(
+                    $session,
+                    $tpl
+                )
+            );
+            $userAuth = new RadiusAuth(
+                $logger,
+                $config->getSection('FormRadiusAuthentication')->getItem('host'),
+                $config->getSection('FormRadiusAuthentication')->getItem('secret')
+            );
+
+            if ($config->getSection('FormRadiusAuthentication')->hasItem('port')) {
+                $userAuth->setPort($config->getSection('FormRadiusAuthentication')->getItem('port'));
+            }
+            if ($config->getSection('FormRadiusAuthentication')->hasItem('addRealm')) {
+                $userAuth->setRealm($config->getSection('FormRadiusAuthentication')->getItem('addRealm'));
+            }
+            if ($config->getSection('FormRadiusAuthentication')->hasItem('nasIdentifier')) {
+                $userAuth->setNasIdentifier($config->getSection('FormRadiusAuthentication')->getItem('nasIdentifier'));
+            }
+
+            $service->addModule(
+                new FormAuthenticationModule(
+                    $userAuth,
+                    $session,
+                    $tpl
                 )
             );
 
