@@ -12,6 +12,7 @@ namespace SURFnet\VPN\Portal\Tests;
 use DateTime;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -51,7 +52,7 @@ class OAuthModuleTest extends TestCase
 
                 return new ClientInfo($config->getSection('apiConsumers')->getItem($clientId));
             },
-            '2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol'
+            new SodiumSigner(base64_decode('2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol', true))
         );
         $oauthServer->setDateTime(new DateTime('2016-01-01'));
         $oauthServer->setRandom(new TestOAuthServerRandom());
@@ -130,7 +131,7 @@ class OAuthModuleTest extends TestCase
         $this->assertSame(
             [
                 'Content-Type' => 'text/html; charset=utf-8',
-                'Location' => 'http://example.org/code-cb?code=nmVljssjTwA29QjWrzieuAQjwR0yJo6DodWaTAa72t03WWyGDA8ajTdUy0Dzklrzx4kUjkL7MX_BaE2PUuykBHsidHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsInJlZGlyZWN0X3VyaSI6Imh0dHA6XC9cL2V4YW1wbGUub3JnXC9jb2RlLWNiIiwiY29kZV9jaGFsbGVuZ2UiOiJFOU1lbGhvYTJPd3ZGckVNVEpndUNIYW9lSzF0OFVSV2J1R0pTc3R3LWNNIiwiZXhwaXJlc19hdCI6IjIwMTYtMDEtMDEgMDA6MDU6MDAifQ&state=12345',
+                'Location' => 'http://example.org/code-cb?code=VPs5SxNCjQBTqf_3qZJ3V9oFv-XcFzoDVUCqmdYsfWNJ9BGTcWDu2COUbTy5eW-xV7QjWR3kh0eac4YN9HpsAXsidHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsInJlZGlyZWN0X3VyaSI6Imh0dHA6XC9cL2V4YW1wbGUub3JnXC9jb2RlLWNiIiwiY29kZV9jaGFsbGVuZ2UiOiJFOU1lbGhvYTJPd3ZGckVNVEpndUNIYW9lSzF0OFVSV2J1R0pTc3R3LWNNIiwiZXhwaXJlc19hdCI6IjIwMTYtMDEtMDFUMDA6MDU6MDArMDA6MDAifQ&state=12345',
             ],
             $response->getHeaders()
         );

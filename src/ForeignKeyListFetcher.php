@@ -84,7 +84,7 @@ class ForeignKeyListFetcher
             if (false === $hostName = parse_url($baseUri, PHP_URL_HOST)) {
                 throw new RuntimeException('unable to extract host name from base_uri');
             }
-            $entryList[$hostName] = $instance['public_key'];
+            $entryList[$hostName] = Base64::decode($instance['public_key']);
         }
 
         return $entryList;

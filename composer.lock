@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f94fee465bdd59d151044c530a833def",
+    "content-hash": "4efaff6ae18d1be0d3fb2dd046b3fcfd",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -163,16 +163,16 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "2.2.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "5c48b5b1d0eab5ff8cf4c68eafc7123585279373"
+                "reference": "1ae5883cdb35c0e83c2262703e69179fd1b6ece3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/5c48b5b1d0eab5ff8cf4c68eafc7123585279373",
-                "reference": "5c48b5b1d0eab5ff8cf4c68eafc7123585279373",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/1ae5883cdb35c0e83c2262703e69179fd1b6ece3",
+                "reference": "1ae5883cdb35c0e83c2262703e69179fd1b6ece3",
                 "shasum": ""
             },
             "require": {
@@ -181,7 +181,7 @@
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-pdo": "*",
-                "paragonie/constant_time_encoding": "^1|^2",
+                "paragonie/constant_time_encoding": "^1",
                 "paragonie/random_compat": "^1|^2",
                 "php": ">=5.4",
                 "symfony/polyfill-php56": "^1"
@@ -217,7 +217,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2018-01-10T08:50:49+00:00"
+            "time": "2018-03-18T09:16:12+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -2152,7 +2152,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fkooman/oauth2-server": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

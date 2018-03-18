@@ -12,6 +12,7 @@ namespace SURFnet\VPN\Portal\Tests;
 use DateTime;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -52,7 +53,7 @@ class OAuthTokenModuleTest extends TestCase
 
                 return new ClientInfo($config->getSection('apiConsumers')->getItem($clientId));
             },
-            '2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol'
+            new SodiumSigner(base64_decode('2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol', true))
         );
         $oauthServer->setDateTime(new DateTime('2016-01-01'));
         $oauthServer->setRandom(new TestOAuthServerRandom());
@@ -69,8 +70,8 @@ class OAuthTokenModuleTest extends TestCase
     {
         $this->assertSame(
             [
-                'access_token' => 'znwcwk0WpP1y0qrUSd_J6KToSlXdceGBaliVLhYYjRESQoVZI1aZTX9cRfBfIpOBnMcyTF3Izs9H8918OwiqBHsidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxIDAxOjAwOjAwIn0',
-                'refresh_token' => '70aldQhpAKU_cldItiItk7Y-LknAMce6kq9ECGiBFQ5zEne0YC0hOBjjONAFuDDE2dH9miMTA8D36Dl-dNWLA3sidHlwZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoX2tleSI6InJhbmRvbV8xIiwidXNlcl9pZCI6ImZvbyIsImNsaWVudF9pZCI6ImNvZGUtY2xpZW50Iiwic2NvcGUiOiJjb25maWciLCJleHBpcmVzX2F0IjoiMjAxNy0wMS0wMSAwMDowMDowMCJ9',
+                'access_token' => 'l36SeveDzBqNU4jjTTK_VuSBgfWBwRcvTIRfWVNye0SfNCr2sMU74cUUTiSt69rI8SGe_bPrG8a29tlueBt6D3sidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxVDAxOjAwOjAwKzAwOjAwIn0',
+                'refresh_token' => 'yNZ-vkql8BhPPMTiig95wmtexTgXW--Yulc7LfFAl1UpeJfJ46iwiGbzBNEk3vIGdB0F4EE0IsgVg82_-dvBDHsidHlwZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoX2tleSI6InJhbmRvbV8xIiwidXNlcl9pZCI6ImZvbyIsImNsaWVudF9pZCI6ImNvZGUtY2xpZW50Iiwic2NvcGUiOiJjb25maWciLCJleHBpcmVzX2F0IjoiMjAxNy0wMS0wMVQwMDowMDowMCswMDowMCJ9',
                 'token_type' => 'bearer',
                 'expires_in' => 3600,
             ],

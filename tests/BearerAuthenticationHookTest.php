@@ -12,6 +12,7 @@ namespace SURFnet\VPN\Portal\Tests;
 use DateTime;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\ClientInfo;
+use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -65,13 +66,13 @@ class BearerAuthenticationHookTest extends TestCase
             ]
         );
 
-        $validator = new BearerValidator($this->storage, $this->getClientInfo, $this->keyPair);
+        $validator = new BearerValidator($this->storage, $this->getClientInfo, new SodiumSigner(base64_decode($this->keyPair, true)));
         $validator->setDateTime(new DateTime('2016-01-01'));
-        $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($validator, []);
         $tokenResponse = $bearerAuthenticationHook->executeBefore($request, []);
         $this->assertSame(401, $tokenResponse->getStatusCode());
         $this->assertSame(
-            'Bearer realm="OAuth",error="invalid_token",error_description="bearer credential syntax error"',
+            'Bearer realm="OAuth",error="invalid_token",error_description="invalid Bearer token"',
             $tokenResponse->getHeader('WWW-Authenticate')
         );
     }
@@ -84,9 +85,9 @@ class BearerAuthenticationHookTest extends TestCase
             ]
         );
 
-        $validator = new BearerValidator($this->storage, $this->getClientInfo, $this->keyPair);
+        $validator = new BearerValidator($this->storage, $this->getClientInfo, new SodiumSigner(base64_decode($this->keyPair, true)));
         $validator->setDateTime(new DateTime('2016-01-01'));
-        $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($validator, []);
         $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, [])->id());
     }
 

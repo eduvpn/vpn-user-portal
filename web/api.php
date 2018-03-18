@@ -13,7 +13,9 @@ require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\ClientInfo;
+use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
+use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\JsonResponse;
@@ -70,27 +72,36 @@ try {
             return new ClientInfo($clientInfoData);
         };
 
-        $bearerValidator = new BearerValidator(
-            $storage,
-            $getClientInfo,
-            FileIO::readFile(sprintf('%s/OAuth.key', $dataDir))
-        );
-
         $foreignKeys = [];
         if ($config->getSection('Api')->hasItem('foreignKeys')) {
-            $foreignKeys = array_merge($foreignKeys, $config->getSection('Api')->getItem('foreignKeys'));
+            foreach ($config->getSection('Api')->getItem('foreignKeys') as $tokenIssuer => $publicKey) {
+                $foreignKeys[$tokenIssuer] = Base64::decode($publicKey);
+            }
         }
 
         if ($config->getSection('Api')->hasItem('foreignKeyListSource')) {
             $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/%s/foreign_key_list.json', $baseDir, $instanceId));
             $foreignKeys = array_merge($foreignKeys, $foreignKeyListFetcher->extract());
         }
-        $bearerValidator->setForeignKeys($foreignKeys);
+
+        $bearerValidator = new BearerValidator(
+            $storage,
+            $getClientInfo,
+            new SodiumSigner(
+                Base64::decode(
+                    FileIO::readFile(
+                        sprintf('%s/OAuth.key', $dataDir)
+                    )
+                ),
+                $foreignKeys
+            )
+        );
 
         $service->addBeforeHook(
             'auth',
             new BearerAuthenticationHook(
-                $bearerValidator
+                $bearerValidator,
+                $foreignKeys
             )
         );
 

@@ -13,7 +13,9 @@ require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
+use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\JsonResponse;
@@ -71,14 +73,24 @@ try {
         $oauthServer = new OAuthServer(
             $storage,
             $getClientInfo,
-            FileIO::readFile(sprintf('%s/OAuth.key', $dataDir))
+            new SodiumSigner(
+                Base64::decode(
+                    FileIO::readFile(
+                        sprintf('%s/OAuth.key', $dataDir)
+                    )
+                )
+            )
         );
-        // if we have a 'refreshTokenExpiry' setting use it, otherwise default to 1 year
-        $refreshTokenExpiry = $config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P1Y';
 
-        $oauthServer->setExpiry(
-            new DateInterval(sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry'))),
-            new DateInterval($refreshTokenExpiry)
+        $oauthServer->setRefreshTokenExpiry(
+            new DateInterval(
+                $config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P1Y'
+            )
+        );
+        $oauthServer->setAccessTokenExpiry(
+            new DateInterval(
+                sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry'))
+            )
         );
 
         $oauthModule = new OAuthTokenModule(
