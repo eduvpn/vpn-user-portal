@@ -93,7 +93,7 @@ try {
                         sprintf('%s/OAuth.key', $dataDir)
                     )
                 ),
-                $foreignKeys
+                array_values($foreignKeys)
             )
         );
 

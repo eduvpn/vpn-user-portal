@@ -100,7 +100,14 @@ return [
         ],
 
         // Fetch a list of foreign public keys automatically
+        //
+        // ** Production **
         //'foreignKeyListSource' => 'https://static.eduvpn.nl/disco/secure_internet.json',
         //'foreignKeyListPublicKey' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
+        //
+        // ** Development **
+        //'foreignKeyListSource' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
+        //'foreignKeyListPublicKey' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
+
     ],
 ];
