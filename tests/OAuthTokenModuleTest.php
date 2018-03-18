@@ -53,7 +53,7 @@ class OAuthTokenModuleTest extends TestCase
 
                 return new ClientInfo($config->getSection('apiConsumers')->getItem($clientId));
             },
-            new SodiumSigner(base64_decode('2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol', true))
+            new SodiumSigner(file_get_contents(sprintf('%s/data/server.key', __DIR__)))
         );
         $oauthServer->setDateTime(new DateTime('2016-01-01'));
         $oauthServer->setRandom(new TestOAuthServerRandom());
@@ -70,8 +70,8 @@ class OAuthTokenModuleTest extends TestCase
     {
         $this->assertSame(
             [
-                'access_token' => 'l36SeveDzBqNU4jjTTK_VuSBgfWBwRcvTIRfWVNye0SfNCr2sMU74cUUTiSt69rI8SGe_bPrG8a29tlueBt6D3sidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxVDAxOjAwOjAwKzAwOjAwIn0',
-                'refresh_token' => 'yNZ-vkql8BhPPMTiig95wmtexTgXW--Yulc7LfFAl1UpeJfJ46iwiGbzBNEk3vIGdB0F4EE0IsgVg82_-dvBDHsidHlwZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoX2tleSI6InJhbmRvbV8xIiwidXNlcl9pZCI6ImZvbyIsImNsaWVudF9pZCI6ImNvZGUtY2xpZW50Iiwic2NvcGUiOiJjb25maWciLCJleHBpcmVzX2F0IjoiMjAxNy0wMS0wMVQwMDowMDowMCswMDowMCJ9',
+                'access_token' => 'dXvNt6RuSqxvwE-KU60ddP7dZ8rkj0faYzckfp3xLYIGtfgTwsMGl1XQRYmZ4pXBhSVanOsCgvXWM6eDOUQ4C3sidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxVDAxOjAwOjAwKzAwOjAwIn0',
+                'refresh_token' => 'KvlRYNF_xgAUV_QdT5B87RS0NIbGa03uWWA7eZj5SkfjtSaB-Gm61U1YTuZ0S-sbmcmVSHAf5BaYWsvcJOlbBXsidHlwZSI6InJlZnJlc2hfdG9rZW4iLCJhdXRoX2tleSI6InJhbmRvbV8xIiwidXNlcl9pZCI6ImZvbyIsImNsaWVudF9pZCI6ImNvZGUtY2xpZW50Iiwic2NvcGUiOiJjb25maWciLCJleHBpcmVzX2F0IjoiMjAxNy0wMS0wMVQwMDowMDowMCswMDowMCJ9',
                 'token_type' => 'bearer',
                 'expires_in' => 3600,
             ],
@@ -81,7 +81,7 @@ class OAuthTokenModuleTest extends TestCase
                 [],
                 [
                     'grant_type' => 'authorization_code',
-                    'code' => 'nmVljssjTwA29QjWrzieuAQjwR0yJo6DodWaTAa72t03WWyGDA8ajTdUy0Dzklrzx4kUjkL7MX_BaE2PUuykBHsidHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsInJlZGlyZWN0X3VyaSI6Imh0dHA6XC9cL2V4YW1wbGUub3JnXC9jb2RlLWNiIiwiY29kZV9jaGFsbGVuZ2UiOiJFOU1lbGhvYTJPd3ZGckVNVEpndUNIYW9lSzF0OFVSV2J1R0pTc3R3LWNNIiwiZXhwaXJlc19hdCI6IjIwMTYtMDEtMDEgMDA6MDU6MDAifQ',
+                    'code' => '3544_z8zoWj4E7UxrI3RGmkBDiA3DpAMB20AxcMzujNxKNDv0Bzt_8ZrAW6Dq71YEDHMpABJ5QGeruejGSwmDHsidHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsInJlZGlyZWN0X3VyaSI6Imh0dHA6XC9cL2V4YW1wbGUub3JnXC9jb2RlLWNiIiwiY29kZV9jaGFsbGVuZ2UiOiJFOU1lbGhvYTJPd3ZGckVNVEpndUNIYW9lSzF0OFVSV2J1R0pTc3R3LWNNIiwiZXhwaXJlc19hdCI6IjIwMTYtMDEtMDFUMDA6MDU6MDArMDA6MDAifQ',
                     'redirect_uri' => 'http://example.org/code-cb',
                     'client_id' => 'code-client',
                     'code_verifier' => 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk',

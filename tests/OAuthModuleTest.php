@@ -52,7 +52,7 @@ class OAuthModuleTest extends TestCase
 
                 return new ClientInfo($config->getSection('apiConsumers')->getItem($clientId));
             },
-            new SodiumSigner(base64_decode('2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol', true))
+            new SodiumSigner(file_get_contents(sprintf('%s/data/server.key', __DIR__)))
         );
         $oauthServer->setDateTime(new DateTime('2016-01-01'));
         $oauthServer->setRandom(new TestOAuthServerRandom());
@@ -66,45 +66,6 @@ class OAuthModuleTest extends TestCase
         );
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
     }
-
-//    public function testAuthorizeCode()
-//    {
-//        $response = $this->makeRequest(
-//            'GET',
-//            '/_oauth/authorize',
-//            [
-//                'client_id' => 'code-client',
-//                'redirect_uri' => 'http://example.org/code-cb',
-//                'response_type' => 'code',
-//                'scope' => 'config',
-//                'state' => '12345',
-//                'code_challenge_method' => 'S256',
-//                'code_challenge' => 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
-//            ]
-//        );
-//        $this->assertSame(200, $response->getStatusCode());
-//        $this->assertSame(
-//            [
-//                'Content-Type' => 'text/html; charset=utf-8'
-//            ],
-//            $response->getHeaders()
-//        );
-//        $this->assertSame(
-//            '',
-
-    ////        $this->assertSame(
-    ////            [
-    ////                'authorizeOAuthClient' => [
-    ////                    'client_id' => 'code-client',
-    ////                    'display_name' => 'Code Client',
-    ////                    'scope' => 'config',
-    ////                    'redirect_uri' => 'http://example.org/code-cb',
-    ////                ],
-    ////            ],
-
-//            $response->getBody()
-//        );
-//    }
 
     public function testAuthorizeCodePost()
     {
@@ -125,13 +86,11 @@ class OAuthModuleTest extends TestCase
             ]
         );
 
-//        var_dump($response);
-
         $this->assertSame(302, $response->getStatusCode());
         $this->assertSame(
             [
                 'Content-Type' => 'text/html; charset=utf-8',
-                'Location' => 'http://example.org/code-cb?code=VPs5SxNCjQBTqf_3qZJ3V9oFv-XcFzoDVUCqmdYsfWNJ9BGTcWDu2COUbTy5eW-xV7QjWR3kh0eac4YN9HpsAXsidHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsInJlZGlyZWN0X3VyaSI6Imh0dHA6XC9cL2V4YW1wbGUub3JnXC9jb2RlLWNiIiwiY29kZV9jaGFsbGVuZ2UiOiJFOU1lbGhvYTJPd3ZGckVNVEpndUNIYW9lSzF0OFVSV2J1R0pTc3R3LWNNIiwiZXhwaXJlc19hdCI6IjIwMTYtMDEtMDFUMDA6MDU6MDArMDA6MDAifQ&state=12345',
+                'Location' => 'http://example.org/code-cb?code=3544_z8zoWj4E7UxrI3RGmkBDiA3DpAMB20AxcMzujNxKNDv0Bzt_8ZrAW6Dq71YEDHMpABJ5QGeruejGSwmDHsidHlwZSI6ImF1dGhvcml6YXRpb25fY29kZSIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsInJlZGlyZWN0X3VyaSI6Imh0dHA6XC9cL2V4YW1wbGUub3JnXC9jb2RlLWNiIiwiY29kZV9jaGFsbGVuZ2UiOiJFOU1lbGhvYTJPd3ZGckVNVEpndUNIYW9lSzF0OFVSV2J1R0pTc3R3LWNNIiwiZXhwaXJlc19hdCI6IjIwMTYtMDEtMDFUMDA6MDU6MDArMDA6MDAifQ&state=12345',
             ],
             $response->getHeaders()
         );

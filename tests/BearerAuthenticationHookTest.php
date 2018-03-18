@@ -36,7 +36,7 @@ class BearerAuthenticationHookTest extends TestCase
         $config = new Config(
             [
                 'apiConsumers' => [
-                    'token-client' => [
+                    'code-client' => [
                         // just named here token-client because the signed
                         // access_token below was generated with token-client...
                         'redirect_uri_list' => ['http://example.org/code-cb'],
@@ -49,7 +49,6 @@ class BearerAuthenticationHookTest extends TestCase
         $this->storage = new Storage(new PDO('sqlite::memory:'));
         $this->storage->init();
         $this->storage->storeAuthorization('foo', 'code-client', 'config', 'random_1');
-        $this->keyPair = '2y5vJlGqpjTzwr3Ym3UqNwJuI1BKeLs53fc6Zf84kbYcP2/6Ar7zgiPS6BL4bvCaWN4uatYfuP7Dj/QvdctqJRw/b/oCvvOCI9LoEvhu8JpY3i5q1h+4/sOP9C91y2ol';
         $this->getClientInfo = function ($clientId) use ($config) {
             if (false === $config->getSection('apiConsumers')->hasItem($clientId)) {
                 return false;
@@ -66,7 +65,7 @@ class BearerAuthenticationHookTest extends TestCase
             ]
         );
 
-        $validator = new BearerValidator($this->storage, $this->getClientInfo, new SodiumSigner(base64_decode($this->keyPair, true)));
+        $validator = new BearerValidator($this->storage, $this->getClientInfo, new SodiumSigner(file_get_contents(sprintf('%s/data/server.key', __DIR__))));
         $validator->setDateTime(new DateTime('2016-01-01'));
         $bearerAuthenticationHook = new BearerAuthenticationHook($validator, []);
         $tokenResponse = $bearerAuthenticationHook->executeBefore($request, []);
@@ -81,14 +80,44 @@ class BearerAuthenticationHookTest extends TestCase
     {
         $request = self::getRequest(
             [
-                'HTTP_AUTHORIZATION' => 'Bearer qrCFqzPz4ac7U8/fSOa6ReXvDJ6D8zsz1VNK/yEHrryWHpHanbHjVgL6Ss+pLenWgTVTOHcLLv1aT3D1RTnmAnsidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoidG9rZW4tY2xpZW50Iiwic2NvcGUiOiJjb25maWciLCJleHBpcmVzX2F0IjoiMjAxNi0wMS0wMSAwMTowMDowMCJ9',
+                'HTTP_AUTHORIZATION' => 'Bearer dXvNt6RuSqxvwE-KU60ddP7dZ8rkj0faYzckfp3xLYIGtfgTwsMGl1XQRYmZ4pXBhSVanOsCgvXWM6eDOUQ4C3sidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxVDAxOjAwOjAwKzAwOjAwIn0',
             ]
         );
 
-        $validator = new BearerValidator($this->storage, $this->getClientInfo, new SodiumSigner(base64_decode($this->keyPair, true)));
+        $validator = new BearerValidator($this->storage, $this->getClientInfo, new SodiumSigner(file_get_contents(sprintf('%s/data/server.key', __DIR__))));
+
         $validator->setDateTime(new DateTime('2016-01-01'));
         $bearerAuthenticationHook = new BearerAuthenticationHook($validator, []);
         $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, [])->id());
+    }
+
+    public function testValidRemoteToken()
+    {
+        $request = self::getRequest(
+            [
+                'HTTP_AUTHORIZATION' => 'Bearer dXvNt6RuSqxvwE-KU60ddP7dZ8rkj0faYzckfp3xLYIGtfgTwsMGl1XQRYmZ4pXBhSVanOsCgvXWM6eDOUQ4C3sidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxVDAxOjAwOjAwKzAwOjAwIn0',
+            ]
+        );
+
+        $validator = new BearerValidator(
+            $this->storage,
+            $this->getClientInfo,
+            new SodiumSigner(
+                file_get_contents(sprintf('%s/data/server_2.key', __DIR__)),
+                [
+                    'bar' => file_get_contents(sprintf('%s/data/public.key', __DIR__)),
+                ]
+            )
+        );
+
+        $validator->setDateTime(new DateTime('2016-01-01'));
+        $bearerAuthenticationHook = new BearerAuthenticationHook(
+            $validator,
+            [
+                'bar' => file_get_contents(sprintf('%s/data/public.key', __DIR__)),
+            ]
+        );
+        $this->assertSame('bar_foo', $bearerAuthenticationHook->executeBefore($request, [])->id());
     }
 
     private static function getRequest(array $additionalHeaders = [])
