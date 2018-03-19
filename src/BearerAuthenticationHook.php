@@ -21,13 +21,9 @@ class BearerAuthenticationHook implements BeforeHookInterface
     /** @var \fkooman\OAuth\Server\BearerValidator */
     private $bearerValidator;
 
-    /** @var array */
-    private $foreignKeys;
-
-    public function __construct(BearerValidator $bearerValidator, array $foreignKeys)
+    public function __construct(BearerValidator $bearerValidator)
     {
         $this->bearerValidator = $bearerValidator;
-        $this->foreignKeys = $foreignKeys;
     }
 
     public function executeBefore(Request $request, array $hookData)
@@ -39,13 +35,13 @@ class BearerAuthenticationHook implements BeforeHookInterface
 
             // require "config" scope
             $tokenInfo->requireAllScope(['config']);
-            $publicKey = $tokenInfo->getPublicKey();
-            if ($tokenIssuer = array_search($publicKey, $this->foreignKeys, true)) {
-                // "bind" the issuer to the user_id
+            $keyId = $tokenInfo->getKeyId();
+            if ('local' !== $keyId) {
+                // use the key ID as part of the user_id to indicate this is a "foreign" user
                 return new UserInfo(
                     sprintf(
                         '%s_%s',
-                        preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $tokenIssuer)),
+                        preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $keyId)),
                         $tokenInfo->getUserId()
                     )
                 );

@@ -93,15 +93,14 @@ try {
                         sprintf('%s/OAuth.key', $dataDir)
                     )
                 ),
-                array_values($foreignKeys)
+                $foreignKeys
             )
         );
 
         $service->addBeforeHook(
             'auth',
             new BearerAuthenticationHook(
-                $bearerValidator,
-                $foreignKeys
+                $bearerValidator
             )
         );
 

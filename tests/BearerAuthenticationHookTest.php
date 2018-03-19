@@ -67,7 +67,7 @@ class BearerAuthenticationHookTest extends TestCase
 
         $validator = new BearerValidator($this->storage, $this->getClientInfo, new SodiumSigner(file_get_contents(sprintf('%s/data/server.key', __DIR__))));
         $validator->setDateTime(new DateTime('2016-01-01'));
-        $bearerAuthenticationHook = new BearerAuthenticationHook($validator, []);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
         $tokenResponse = $bearerAuthenticationHook->executeBefore($request, []);
         $this->assertSame(401, $tokenResponse->getStatusCode());
         $this->assertSame(
@@ -87,7 +87,7 @@ class BearerAuthenticationHookTest extends TestCase
         $validator = new BearerValidator($this->storage, $this->getClientInfo, new SodiumSigner(file_get_contents(sprintf('%s/data/server.key', __DIR__))));
 
         $validator->setDateTime(new DateTime('2016-01-01'));
-        $bearerAuthenticationHook = new BearerAuthenticationHook($validator, []);
+        $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
         $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, [])->id());
     }
 
@@ -111,12 +111,7 @@ class BearerAuthenticationHookTest extends TestCase
         );
 
         $validator->setDateTime(new DateTime('2016-01-01'));
-        $bearerAuthenticationHook = new BearerAuthenticationHook(
-            $validator,
-            [
-                'bar' => file_get_contents(sprintf('%s/data/public.key', __DIR__)),
-            ]
-        );
+        $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
         $this->assertSame('bar_foo', $bearerAuthenticationHook->executeBefore($request, [])->id());
     }
 
