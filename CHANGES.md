@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.0 (...)
+## 1.6.0 (2018-03-19)
 - update for `fkooman/oauth2-server` API changes
 
 ## 1.5.4 (2018-05-16)
