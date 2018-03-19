@@ -167,12 +167,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-server",
-                "reference": "d81b1c4aa0ea36270990d59f3b9a17b670beaa8c"
+                "reference": "a4277243cb7d7971cdf26496ddf1dfeff3ac8d71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/d81b1c4aa0ea36270990d59f3b9a17b670beaa8c",
-                "reference": "d81b1c4aa0ea36270990d59f3b9a17b670beaa8c",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-server/zipball/a4277243cb7d7971cdf26496ddf1dfeff3ac8d71",
+                "reference": "a4277243cb7d7971cdf26496ddf1dfeff3ac8d71",
                 "shasum": ""
             },
             "require": {
@@ -181,7 +181,7 @@
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-pdo": "*",
-                "paragonie/constant_time_encoding": "^1",
+                "paragonie/constant_time_encoding": "^1|^2",
                 "paragonie/random_compat": "^1|^2",
                 "php": ">=5.4",
                 "symfony/polyfill-php56": "^1"
@@ -217,7 +217,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 server",
-            "time": "2018-03-19T11:08:11+00:00"
+            "time": "2018-03-19T12:40:59+00:00"
         },
         {
             "name": "fkooman/secookie",

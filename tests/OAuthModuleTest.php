@@ -9,6 +9,7 @@
 
 namespace SURFnet\VPN\Portal\Tests;
 
+use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
@@ -56,6 +57,7 @@ class OAuthModuleTest extends TestCase
         );
         $oauthServer->setDateTime(new DateTime('2016-01-01'));
         $oauthServer->setRandom(new TestOAuthServerRandom());
+        $oauthServer->setRefreshTokenExpiry(new DateInterval('P1Y'));
 
         $this->service = new Service();
         $this->service->addModule(
