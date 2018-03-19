@@ -74,8 +74,8 @@ try {
 
         $foreignKeys = [];
         if ($config->getSection('Api')->hasItem('foreignKeys')) {
-            foreach ($config->getSection('Api')->getItem('foreignKeys') as $tokenIssuer => $publicKey) {
-                $foreignKeys[$tokenIssuer] = Base64::decode($publicKey);
+            foreach ($config->getSection('Api')->getItem('foreignKeys') as $keyId => $publicKey) {
+                $foreignKeys[$keyId] = Base64::decode($publicKey);
             }
         }
 
