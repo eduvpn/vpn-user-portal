@@ -145,6 +145,34 @@ class VpnApiModule implements ServiceModuleInterface
 
         // API 2
         $service->get(
+            '/check_certificate',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                $userInfo = $hookData['auth'];
+
+                $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
+                $clientCertificateInfo = $this->serverClient->get('client_certificate_info', ['common_name' => $commonName]);
+                if (false === $clientCertificateInfo) {
+                    $isValid = false;
+                } else {
+                    $isValid = (bool) !$clientCertificateInfo['certificate_is_disabled'] && !$clientCertificateInfo['user_is_disabled'];
+                }
+
+                return new ApiResponse(
+                    'check_certificate',
+                    [
+                        'data' => [
+                            'is_valid' => $isValid,
+                        ],
+                    ]
+                );
+            }
+        );
+
+        // API 2
+        $service->get(
             '/profile_config',
             /**
              * @return \SURFnet\VPN\Common\Http\Response
