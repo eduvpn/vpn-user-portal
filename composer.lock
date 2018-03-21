@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fbfcb60f0331decf99410b7a31739741",
+    "content-hash": "925e4795d197f7dd8f593112c40c55cb",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.1.10",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "edd87b746cb546e7f5091c50616a36f9be27eca5"
+                "reference": "abd42365a1b7795b6f1b2eaf690b9185fc16983f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/edd87b746cb546e7f5091c50616a36f9be27eca5",
-                "reference": "edd87b746cb546e7f5091c50616a36f9be27eca5",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/abd42365a1b7795b6f1b2eaf690b9185fc16983f",
+                "reference": "abd42365a1b7795b6f1b2eaf690b9185fc16983f",
                 "shasum": ""
             },
             "require": {
@@ -109,7 +109,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2018-03-16T13:34:53+00:00"
+            "time": "2018-03-21T19:52:48+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -627,16 +627,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.35.2",
+            "version": "v1.35.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "9c24f2cd39dc1906b76879e099970b7e53724601"
+                "reference": "b48680b6eb7d16b5025b9bfc4108d86f6b8af86f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/9c24f2cd39dc1906b76879e099970b7e53724601",
-                "reference": "9c24f2cd39dc1906b76879e099970b7e53724601",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b48680b6eb7d16b5025b9bfc4108d86f6b8af86f",
+                "reference": "b48680b6eb7d16b5025b9bfc4108d86f6b8af86f",
                 "shasum": ""
             },
             "require": {
@@ -644,8 +644,8 @@
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/debug": "~2.7",
-                "symfony/phpunit-bridge": "~3.3@dev"
+                "symfony/debug": "^2.7",
+                "symfony/phpunit-bridge": "^3.3"
             },
             "type": "library",
             "extra": {
@@ -688,7 +688,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2018-03-03T16:21:29+00:00"
+            "time": "2018-03-20T04:25:58+00:00"
         }
     ],
     "packages-dev": [
@@ -2152,7 +2152,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "eduvpn/common": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

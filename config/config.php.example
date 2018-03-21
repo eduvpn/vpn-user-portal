@@ -20,7 +20,7 @@ return [
     'FormPdoAuthentication' => [
         // allow users to register themselves using a voucher provided to them
         // by the administrator
-        'allowRegistration' => false
+        'allowRegistration' => false,
     ],
 
     // LDAP
@@ -35,10 +35,14 @@ return [
 
     // RADIUS
     'FormRadiusAuthentication' => [
-        'host' => 'radius.example.org',
-        //'port' => 1812,
+        'serverList' => [
+            [
+                'host' => 'radius.example.org',
+                'secret' => 'testing123',
+                //'port' => 1812,
+            ],
+        ],
         //'addRealm' => 'example.org',
-        'secret' => 'testing123',
         //'nasIdentifier' => 'vpn.example.org',
     ],
 
@@ -108,6 +112,5 @@ return [
         // ** Development **
         //'foreignKeyListSource' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
         //'foreignKeyListPublicKey' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
-
     ],
 ];

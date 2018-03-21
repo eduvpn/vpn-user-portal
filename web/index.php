@@ -240,15 +240,22 @@ try {
                     $tpl
                 )
             );
-            $userAuth = new RadiusAuth(
-                $logger,
-                $config->getSection('FormRadiusAuthentication')->getItem('host'),
-                $config->getSection('FormRadiusAuthentication')->getItem('secret')
-            );
 
-            if ($config->getSection('FormRadiusAuthentication')->hasItem('port')) {
-                $userAuth->setPort($config->getSection('FormRadiusAuthentication')->getItem('port'));
+            if ($config->getSection('FormRadiusAuthentication')->hasItem('serverList')) {
+                $serverList = $config->getSection('FormRadiusAuthentication')->getItem('serverList');
+            } else {
+                // legacy way of configuring RADIUS servers, only one specified here
+                // XXX remove for 2.0
+                $serverList = [
+                    [
+                        'host' => $config->getSection('FormRadiusAuthentication')->getItem('host'),
+                        'secret' => $config->getSection('FormRadiusAuthentication')->getItem('secret'),
+$config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getSection('FormRadiusAuthentication')->getItem('port') : 1812,
+                    ],
+                ];
             }
+
+            $userAuth = new RadiusAuth($logger, $serverList);
             if ($config->getSection('FormRadiusAuthentication')->hasItem('addRealm')) {
                 $userAuth->setRealm($config->getSection('FormRadiusAuthentication')->getItem('addRealm'));
             }

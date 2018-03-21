@@ -2,6 +2,7 @@
 
 ## 1.6.1 (...)
 - implement `/check_certificate` API call
+- support multiple RADIUS servers
 
 ## 1.6.0 (2018-03-19)
 - update for `fkooman/oauth2-server` API changes
