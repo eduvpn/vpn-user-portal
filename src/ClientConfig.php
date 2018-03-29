@@ -107,10 +107,10 @@ class ClientConfig
             $clientConfig[] = 'auth SHA256';
         }
 
-        // --comp-lzo
+        // --compress
         if ($profileConfig['enableCompression']) {
             // adaptive compression, allow server to override using push
-            $clientConfig[] = 'comp-lzo';
+            $clientConfig[] = 'compress';
         }
 
         // 2FA
