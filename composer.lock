@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "925e4795d197f7dd8f593112c40c55cb",
+    "content-hash": "fbfcb60f0331decf99410b7a31739741",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "dev-master",
+            "version": "1.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "abd42365a1b7795b6f1b2eaf690b9185fc16983f"
+                "reference": "3743fdc4075d3a1e5c0a9a31f79c56c899401c49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/abd42365a1b7795b6f1b2eaf690b9185fc16983f",
-                "reference": "abd42365a1b7795b6f1b2eaf690b9185fc16983f",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/3743fdc4075d3a1e5c0a9a31f79c56c899401c49",
+                "reference": "3743fdc4075d3a1e5c0a9a31f79c56c899401c49",
                 "shasum": ""
             },
             "require": {
@@ -109,20 +109,20 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2018-03-21T19:52:48+00:00"
+            "time": "2018-03-29T14:54:15+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "6.0.1",
+            "version": "6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "68aa51e8f3bacb073fc4397409bec227b31db24d"
+                "reference": "bfb6b75c45812515e61ead526447197bdf08821f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/68aa51e8f3bacb073fc4397409bec227b31db24d",
-                "reference": "68aa51e8f3bacb073fc4397409bec227b31db24d",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/bfb6b75c45812515e61ead526447197bdf08821f",
+                "reference": "bfb6b75c45812515e61ead526447197bdf08821f",
                 "shasum": ""
             },
             "require": {
@@ -159,7 +159,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2017-11-28T09:45:11+00:00"
+            "time": "2018-03-21T22:19:37+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -2152,9 +2152,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "eduvpn/common": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
