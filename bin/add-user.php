@@ -93,7 +93,7 @@ try {
             $pdoAuth->add($userId, $userPass);
             break;
         default:
-            throw new RuntimeException('backend not supported for adding users');
+            throw new RuntimeException(sprintf('backend "%s" not supported for adding users', $config->getItem('authMethod')));
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
