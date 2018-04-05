@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.1.11",
+            "version": "1.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "3743fdc4075d3a1e5c0a9a31f79c56c899401c49"
+                "reference": "ccf7dcf5f0b8511858e291a57497ed46a3eb4399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/3743fdc4075d3a1e5c0a9a31f79c56c899401c49",
-                "reference": "3743fdc4075d3a1e5c0a9a31f79c56c899401c49",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/ccf7dcf5f0b8511858e291a57497ed46a3eb4399",
+                "reference": "ccf7dcf5f0b8511858e291a57497ed46a3eb4399",
                 "shasum": ""
             },
             "require": {
@@ -109,7 +109,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2018-03-29T14:54:15+00:00"
+            "time": "2018-04-05T08:12:56+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -368,16 +368,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.11",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8"
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/5da4d3c796c275c55f057af5a643ae297d96b4d8",
-                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
                 "shasum": ""
             },
             "require": {
@@ -412,7 +412,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-09-27T21:40:39+00:00"
+            "time": "2018-04-04T21:24:14+00:00"
         },
         {
             "name": "psr/log",
