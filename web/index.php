@@ -318,16 +318,15 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
             new VootTokenStorage($serverClient),
             new OAuthCurlHttpClient()
         );
-        $oauthClient->setProvider(
-            new Provider(
-                $config->getSection('Voot')->getItem('clientId'),
-                $config->getSection('Voot')->getItem('clientSecret'),
-                $config->getSection('Voot')->getItem('authorizationEndpoint'),
-                $config->getSection('Voot')->getItem('tokenEndpoint')
-            )
+        $provider = new Provider(
+            $config->getSection('Voot')->getItem('clientId'),
+            $config->getSection('Voot')->getItem('clientSecret'),
+            $config->getSection('Voot')->getItem('authorizationEndpoint'),
+            $config->getSection('Voot')->getItem('tokenEndpoint')
         );
         $vootModule = new VootModule(
             $oauthClient,
+            $provider,
             $serverClient,
             $session
         );

@@ -40,14 +40,16 @@ class VootModuleTest extends TestCase
 
         $client = new OAuthClient(
             new VootTokenStorage($serverClient),
-            new TestOAuthHttpClient(),
-            $this->oauthSession,
-            new TestOAuthClientRandom()
+            new TestOAuthHttpClient()
         );
-        $client->setProvider(new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token'));
+        $client->setSession($this->oauthSession);
+        $client->setRandom(new TestOAuthClientRandom());
+
+        $provider = new Provider('client_id', 'client_secret', 'https://example.org/authorize', 'https://example.org/token');
         $this->service->addModule(
             new VootModule(
                 $client,
+                $provider,
                 $serverClient,
                 $this->session
             )

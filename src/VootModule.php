@@ -16,11 +16,15 @@ use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use fkooman\OAuth\Client\Provider;
 
 class VootModule implements ServiceModuleInterface
 {
     /** @var \fkooman\OAuth\Client\OAuthClient */
     private $oauthClient;
+
+    /** @var \fkooman\OAuth\Client\Provider */
+    private $provider;
 
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
@@ -28,9 +32,10 @@ class VootModule implements ServiceModuleInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    public function __construct(OAuthClient $oauthClient, ServerClient $serverClient, SessionInterface $session)
+    public function __construct(OAuthClient $oauthClient, Provider $provider, ServerClient $serverClient, SessionInterface $session)
     {
         $this->oauthClient = $oauthClient;
+        $this->provider = $provider;
         $this->serverClient = $serverClient;
         $this->session = $session;
     }
@@ -41,9 +46,9 @@ class VootModule implements ServiceModuleInterface
             '/_voot/authorize',
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
-
-                $this->oauthClient->setUserId($userInfo->id());
                 $authorizationRequestUri = $this->oauthClient->getAuthorizeUri(
+                    $this->provider,
+                    $userInfo->id(),
                     'groups',
                     $request->getRootUri().'_voot/callback'
                 );
@@ -58,10 +63,10 @@ class VootModule implements ServiceModuleInterface
             '/_voot/callback',
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
-
-                $this->oauthClient->setUserId($userInfo->id());
                 // obtain the access token
                 $this->oauthClient->handleCallback(
+                    $this->provider,
+                    $userInfo->id(),
                     $request->getQueryParameters()
                 );
 
