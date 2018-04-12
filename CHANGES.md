@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.2 (...)
+## 1.6.2 (2018-04-12)
 - update for `fkooman/oauth2-client` version 7
 
 ## 1.6.1 (2018-03-29)
