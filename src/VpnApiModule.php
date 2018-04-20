@@ -163,9 +163,7 @@ class VpnApiModule implements ServiceModuleInterface
                 return new ApiResponse(
                     'check_certificate',
                     [
-                        'data' => [
-                            'is_valid' => $isValid,
-                        ],
+                        'is_valid' => $isValid,
                     ]
                 );
             }

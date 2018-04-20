@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.3 (2018-04-20)
+- fix `/check_certificate` response to match API (#32)
+
 ## 1.6.2 (2018-04-12)
 - update for `fkooman/oauth2-client` version 7
 
