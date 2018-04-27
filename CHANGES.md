@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.4 (...)
+- convert spaces in `_` when downloading an OpenVPN configuration through the
+  portal, fixes import in NetworkManager (Linux) (#92)
+
 ## 1.6.3 (2018-04-20)
 - fix `/check_certificate` response to match API (#32)
 

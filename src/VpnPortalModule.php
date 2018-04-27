@@ -317,6 +317,10 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // XXX consider the timezone in the data call, this will be weird
         // when not using same timezone as user machine...
+
+        // remove spaces from the name
+        $displayName = str_replace(' ', '_', $displayName);
+
         $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
 
         $response = new Response(200, 'application/x-openvpn-profile');
