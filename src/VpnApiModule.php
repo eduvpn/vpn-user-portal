@@ -154,17 +154,45 @@ class VpnApiModule implements ServiceModuleInterface
 
                 $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
                 $clientCertificateInfo = $this->serverClient->get('client_certificate_info', ['common_name' => $commonName]);
+
+                $reason = null;
                 if (false === $clientCertificateInfo) {
+                    // certificate with this CN does not exist, was deleted by
+                    // user, or complete new installation of service with new
+                    // CA
                     $isValid = false;
+                    $reason = 'certificate_missing';
+                } elseif ($clientCertificateInfo['user_is_disabled']) {
+                    // user account disabled by admin
+                    $isValid = false;
+                    $reason = 'user_disabled';
+                } elseif ($clientCertificateInfo['certificate_is_disabled']) {
+                    // certificate disabled by admin
+                    $isValid = false;
+                    $reason = 'certificate_disabled';
+                } elseif (new DateTime($clientCertificateInfo['valid_from']) > new DateTime()) {
+                    // certificate not yet valid
+                    $isValid = false;
+                    $reason = 'certificate_not_yet_valid';
+                } elseif (new DateTime($clientCertificateInfo['valid_to']) < new DateTime()) {
+                    // certificate not valid anymore
+                    $isValid = false;
+                    $reason = 'certificate_expired';
                 } else {
-                    $isValid = (bool) !$clientCertificateInfo['certificate_is_disabled'] && !$clientCertificateInfo['user_is_disabled'];
+                    $isValid = true;
+                }
+
+                $responseData = [
+                    'is_valid' => $isValid,
+                ];
+
+                if (!$isValid) {
+                    $responseData['reason'] = $reason;
                 }
 
                 return new ApiResponse(
                     'check_certificate',
-                    [
-                        'is_valid' => $isValid,
-                    ]
+                    $responseData
                 );
             }
         );

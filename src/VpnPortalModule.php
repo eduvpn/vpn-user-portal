@@ -318,7 +318,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // XXX consider the timezone in the data call, this will be weird
         // when not using same timezone as user machine...
 
-        // special characters don't work in file names as NetworkManager 
+        // special characters don't work in file names as NetworkManager
         // URL encodes the filename when searching for certificates
         // https://bugzilla.gnome.org/show_bug.cgi?id=795601
         $displayName = str_replace(' ', '_', $displayName);
