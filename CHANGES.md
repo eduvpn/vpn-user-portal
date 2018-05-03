@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.4 (...)
+## 1.6.4 (2018-05-03)
 - convert spaces in `_` when downloading an OpenVPN configuration through the
   portal, fixes import in NetworkManager (Linux) (#92)
 - return `reason` through API when checking validity of certificate
