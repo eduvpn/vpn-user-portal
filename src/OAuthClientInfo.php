@@ -60,7 +60,7 @@ class OAuthClientInfo
                 'require_approval' => true,
             ],
             // Android (LC)
-            'org.letsconnect-vpn.android' => [
+            'org.letsconnect-vpn.app.android' => [
                 'redirect_uri_list' => [
                     'org.letsconnect-vpn.app:/api/callback',
                 ],
