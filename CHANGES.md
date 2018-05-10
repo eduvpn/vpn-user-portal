@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.5 (2018-05-11)
+- add Let's Connect for Android as an OAuth client registration
+
 ## 1.6.4 (2018-05-03)
 - convert spaces in `_` when downloading an OpenVPN configuration through the
   portal, fixes import in NetworkManager (Linux) (#92)
