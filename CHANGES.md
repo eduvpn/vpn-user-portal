@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.6 (2018-05-16)
+- show the user ID on the TOTP/YubiKey page when authenticating
+
 ## 1.6.5 (2018-05-11)
 - add Let's Connect for Android as an OAuth client registration
 

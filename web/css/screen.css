@@ -40,6 +40,10 @@ fieldset button {
     margin-top: 1em;
 }
 
+p.small {
+    font-size: 85%;
+}
+
 p.success, p.success a, span.success, span.success a {
     background-color: #008000;
     border: 1px solid #007000;

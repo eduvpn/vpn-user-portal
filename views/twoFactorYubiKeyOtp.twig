@@ -24,4 +24,14 @@
             <button type="submit">{% trans "Verify" %}</button>
         </fieldset>
     </form>
+
+    <p class="small">
+        {% trans %}
+            Contact support if you lost your YubiKey.
+        {% endtrans %}
+
+        {% trans %}
+            Your ID is <code>{{ _two_factor_user_id }}</code>.
+        {% endtrans %}
+    </p>
 {% endblock %}
