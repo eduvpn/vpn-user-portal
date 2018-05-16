@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.7 (...)
+- update nl_NL translations
+
 ## 1.6.6 (2018-05-16)
 - show the user ID on the TOTP/YubiKey page when authenticating
 
