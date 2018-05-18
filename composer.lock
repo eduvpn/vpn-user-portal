@@ -113,16 +113,16 @@
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "7.0.0",
+            "version": "7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fkooman/php-oauth2-client.git",
-                "reference": "93d6b0ab533e109bb16e19d499ac7d800915e506"
+                "reference": "901880724a1566c72caa8f5c13c064e949294bf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/93d6b0ab533e109bb16e19d499ac7d800915e506",
-                "reference": "93d6b0ab533e109bb16e19d499ac7d800915e506",
+                "url": "https://api.github.com/repos/fkooman/php-oauth2-client/zipball/901880724a1566c72caa8f5c13c064e949294bf7",
+                "reference": "901880724a1566c72caa8f5c13c064e949294bf7",
                 "shasum": ""
             },
             "require": {
@@ -137,6 +137,7 @@
                 "paragonie/constant_time_encoding": "^1|^2",
                 "paragonie/random_compat": "^1|^2",
                 "php": ">=5.4",
+                "psr/log": "^1.0",
                 "symfony/polyfill-php56": "^1"
             },
             "require-dev": {
@@ -159,7 +160,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2018-04-12T08:14:19+00:00"
+            "time": "2018-05-18T15:50:10+00:00"
         },
         {
             "name": "fkooman/oauth2-server",

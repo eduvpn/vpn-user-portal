@@ -316,7 +316,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
         $oauthClient = new OAuthClient(
             new VootTokenStorage($serverClient),
-            new OAuthCurlHttpClient()
+            new OAuthCurlHttpClient([], $logger)
         );
         $provider = new Provider(
             $config->getSection('Voot')->getItem('clientId'),
