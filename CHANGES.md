@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.8 (...)
+- add support for Android "app links" for OAuth clients
+
 ## 1.6.7 (2018-05-17)
 - update nl_NL translations
 

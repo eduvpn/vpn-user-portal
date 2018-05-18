@@ -55,6 +55,7 @@ class OAuthClientInfo
             'org.eduvpn.app.android' => [
                 'redirect_uri_list' => [
                     'org.eduvpn.app:/api/callback',
+                    'https://android.app.eduvpn.org/api/callback',  // Android >= 6
                 ],
                 'display_name' => 'eduVPN for Android',
                 'require_approval' => true,
@@ -63,6 +64,7 @@ class OAuthClientInfo
             'org.letsconnect-vpn.app.android' => [
                 'redirect_uri_list' => [
                     'org.letsconnect-vpn.app:/api/callback',
+                    'https://android.app.letsconnect-vpn.org/api/callback',  // Android >= 6
                 ],
                 'display_name' => 'Let\'s Connect! for Android',
                 'require_approval' => true,
