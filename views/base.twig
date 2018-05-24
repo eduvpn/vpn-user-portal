@@ -19,6 +19,8 @@
 
     <hr>
     <div class="footer">
+	{% include "customFooter.twig" ignore missing %}
+
         {% if supportedLanguages|length > 1 %}
             <form method="post" action="{{ requestRoot }}setLanguage">
                 {% for key, language in supportedLanguages %}

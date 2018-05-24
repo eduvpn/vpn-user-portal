@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.9 (...)
+- support optional "customFooter" template
+
 ## 1.6.8 (2018-05-22)
 - add support for Android "app links" for OAuth clients
 - enable logging in OAuth client
