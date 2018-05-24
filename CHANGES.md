@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.9 (...)
+## 1.6.9 (2018-05-24)
 - support optional "customFooter" template
 
 ## 1.6.8 (2018-05-22)
