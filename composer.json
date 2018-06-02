@@ -29,9 +29,8 @@
             "url": "https://github.com/eduvpn/vpn-lib-common"
         },
         {
-            "no-api": true,
             "type": "vcs",
-            "url": "https://github.com/fkooman/php-oauth2-server"
+            "url": "https://git.tuxed.net/fkooman/php-oauth2-server"
         }
     ],
     "require": {
