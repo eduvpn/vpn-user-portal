@@ -80,7 +80,7 @@ class ClientConfig
             );
         }
 
-        if ($profileConfig['tlsCrypt']) {
+        if ('tls-crypt' === self::getTlsProtection($profileConfig)) {
             // >= 2.4
             $clientConfig = array_merge(
                 $clientConfig,
@@ -92,7 +92,7 @@ class ClientConfig
             );
             $clientConfig[] = 'cipher AES-256-GCM';
             $clientConfig[] = 'auth SHA256';
-        } else {
+        } elseif ('tls-auth' === self::getTlsProtection($profileConfig)) {
             // < 2.4
             $clientConfig = array_merge(
                 $clientConfig,
@@ -103,6 +103,10 @@ class ClientConfig
                     '</tls-auth>',
                 ]
             );
+            $clientConfig[] = 'cipher AES-256-CBC';
+            $clientConfig[] = 'auth SHA256';
+        } else {
+            // no tls-auth, no tls-crypt
             $clientConfig[] = 'cipher AES-256-CBC';
             $clientConfig[] = 'auth SHA256';
         }
@@ -197,5 +201,23 @@ class ClientConfig
         }
 
         return $protoPortList;
+    }
+
+    /**
+     * @param array $profileConfig
+     *
+     * @return false|string
+     */
+    private static function getTlsProtection(array $profileConfig)
+    {
+        if (array_key_exists('tlsCrypt', $profileConfig)) {
+            if ($profileConfig['tlsCrypt']) {
+                return 'tls-crypt';
+            }
+
+            return 'tls-auth';
+        }
+
+        return $profileConfig['tlsProtection'];
     }
 }

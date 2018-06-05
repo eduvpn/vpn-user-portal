@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9cbb3e574e5bbe4d4439963b558323f5",
+    "content-hash": "12c55ea02ad8a897a47d9e12dbfe76f1",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "1.1.15",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "7757af7d2a40a56f3caea017a8c192641131e0ef"
+                "reference": "0a979713d5e5b5499677ad768b9817a0df32e617"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/7757af7d2a40a56f3caea017a8c192641131e0ef",
-                "reference": "7757af7d2a40a56f3caea017a8c192641131e0ef",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/0a979713d5e5b5499677ad768b9817a0df32e617",
+                "reference": "0a979713d5e5b5499677ad768b9817a0df32e617",
                 "shasum": ""
             },
             "require": {
@@ -90,7 +90,7 @@
                 "twig/twig": "^1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5|^6"
+                "phpunit/phpunit": "^4.8.35|^5|^6|^7"
             },
             "type": "library",
             "autoload": {
@@ -109,7 +109,7 @@
                 }
             ],
             "description": "Common VPN library",
-            "time": "2018-05-16T13:07:18+00:00"
+            "time": "2018-06-05T14:01:34+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -1343,16 +1343,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.2.2",
+            "version": "7.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3cf0836680bf5c365c627e8566d46c9e1f544db9"
+                "reference": "00bc0b93f0ff4f557e9ea766557fde96da9a03dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3cf0836680bf5c365c627e8566d46c9e1f544db9",
-                "reference": "3cf0836680bf5c365c627e8566d46c9e1f544db9",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/00bc0b93f0ff4f557e9ea766557fde96da9a03dd",
+                "reference": "00bc0b93f0ff4f557e9ea766557fde96da9a03dd",
                 "shasum": ""
             },
             "require": {
@@ -1423,7 +1423,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-06-01T07:54:27+00:00"
+            "time": "2018-06-05T03:40:05+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2081,7 +2081,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "eduvpn/common": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

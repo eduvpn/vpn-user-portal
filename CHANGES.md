@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.6.10 (...)
+- support `tlsProtection`
+
 ## 1.6.9 (2018-05-24)
 - support optional "customFooter" template
 
