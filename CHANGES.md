@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.0 (...)
+- record the last time the user authenticated
+
 ## 1.6.10 (2018-06-06)
 - support `tlsProtection`
 
