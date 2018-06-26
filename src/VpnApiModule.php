@@ -166,10 +166,6 @@ class VpnApiModule implements ServiceModuleInterface
                     // user account disabled by admin
                     $isValid = false;
                     $reason = 'user_disabled';
-                } elseif ($clientCertificateInfo['certificate_is_disabled']) {
-                    // certificate disabled by admin
-                    $isValid = false;
-                    $reason = 'certificate_disabled';
                 } elseif (new DateTime($clientCertificateInfo['valid_from']) > new DateTime()) {
                     // certificate not yet valid
                     $isValid = false;

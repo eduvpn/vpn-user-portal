@@ -10,7 +10,7 @@
     {% else %}
         <table>
             <thead>
-                <tr><th>{% trans "Name" %}</th><th>{% trans "Issued" %} ({{ date()|date('T') }})</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th class="text-right">{% trans "Status" %}</th><th></th></tr> 
+                <tr><th>{% trans "Name" %}</th><th>{% trans "Issued" %} ({{ date()|date('T') }})</th><th>{% trans "Expires" %} ({{ date()|date('T') }})</th><th></th></tr> 
             </thead>
             <tbody>
             {% for userCertificate in userCertificateList %}
@@ -18,13 +18,6 @@
                     <td>{{ userCertificate.display_name }}</td>
                     <td>{{ userCertificate.valid_from|date('Y-m-d H:i:s') }}</td>
                     <td>{{ userCertificate.valid_to|date('Y-m-d H:i:s') }}</td>
-                    <td class="text-right">
-                        {% if userCertificate.is_disabled %}
-                            <span class="error">{% trans "Disabled" %}</span>
-                        {% else %}
-                            <span class="success">{% trans "Active" %}</span>
-                        {% endif %}
-                    </td>
                     <td class="text-right">
                         <form method="post" class="inline" action="deleteCertificate">
                             <input type="hidden" name="commonName" value="{{ userCertificate.common_name }}">
