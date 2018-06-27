@@ -78,6 +78,15 @@ class OAuthClientInfo
                 'display_name' => 'eduVPN for iOS',
                 'require_approval' => false,
             ],
+            // iOS (LC)
+            'org.letsconnect-vpn.app.ios' => [
+                'redirect_uri_list' => [
+                    'https://ios.app.letsconnect-vpn.org/auth/app/redirect/',
+                    'https://ios.app.letsconnect-vpn.org/auth/app/redirect/development/',
+                ],
+                'display_name' => 'Let\'s Connect! for iOS',
+                'require_approval' => false,
+            ],
             // macOS
             'org.eduvpn.app.macos' => [
                 'redirect_uri_list' => [
@@ -88,6 +97,16 @@ class OAuthClientInfo
                 'display_name' => 'eduVPN for macOS',
                 'require_approval' => true,
             ],
+            // macOS (LC)
+            'org.letsconnect-vpn.app.macos' => [
+                'redirect_uri_list' => [
+                    'org.letsconnect-vpn.app:/api/callback',
+                    'http://127.0.0.1:{PORT}/callback',
+                    'http://[::1]:{PORT}/callback',
+                ],
+                'display_name' => 'Let\'s Connect! for macOS',
+                'require_approval' => true,
+            ],
             // Linux
             'org.eduvpn.app.linux' => [
                 'redirect_uri_list' => [
@@ -96,6 +115,16 @@ class OAuthClientInfo
                     'http://[::1]:{PORT}/callback',
                 ],
                 'display_name' => 'eduVPN for Linux',
+                'require_approval' => true,
+            ],
+            // Linux (LC)
+            'org.letsconnect-vpn.app.linux' => [
+                'redirect_uri_list' => [
+                    'org.letsconnect-vpn.app:/api/callback',
+                    'http://127.0.0.1:{PORT}/callback',
+                    'http://[::1]:{PORT}/callback',
+                ],
+                'display_name' => 'Let\'s Connect! for Linux',
                 'require_approval' => true,
             ],
         ];
