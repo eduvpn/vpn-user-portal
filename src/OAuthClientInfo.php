@@ -72,12 +72,11 @@ class OAuthClientInfo
             // iOS
             'org.eduvpn.app.ios' => [
                 'redirect_uri_list' => [
-                    'org.eduvpn.app:/api/callback',
                     'https://ios.app.eduvpn.org/auth/app/redirect/',
                     'https://ios.app.eduvpn.org/auth/app/redirect/development/',
                 ],
                 'display_name' => 'eduVPN for iOS',
-                'require_approval' => true,
+                'require_approval' => false,
             ],
             // macOS
             'org.eduvpn.app.macos' => [
