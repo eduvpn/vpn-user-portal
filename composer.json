@@ -20,7 +20,7 @@
         }
     },
     "description": "VPN User Portal",
-    "license": "AGPL-3.0",
+    "license": "AGPL-3.0-or-later",
     "name": "eduvpn/vpn-user-portal",
     "repositories": [
         {
@@ -58,5 +58,10 @@
     "suggest": {
         "ext-libsodium": "PHP < 7.2 sodium implementation",
         "ext-sodium": "PHP >= 7.2 sodium implementation"
-    }
+    },
+    "support": {
+        "email": "eduvpn@surfnet.nl",
+        "source": "https://github.com/eduvpn/vpn-user-portal"
+    },
+    "type": "project"
 }
