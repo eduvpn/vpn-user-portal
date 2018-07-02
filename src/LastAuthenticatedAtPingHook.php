@@ -16,10 +16,10 @@ use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 
 /**
- * This hook is used to record the time stamp of the last browser action by
- * the user. The VPN server wants to know the "last seen" time of the user.
+ * This hook is used to record the time stamp of the last user authentication
+ * The VPN server wants to know the "last_authenticated_at" time of the user.
  */
-class LastSeenWebPingHook implements BeforeHookInterface
+class LastAuthenticatedAtPingHook implements BeforeHookInterface
 {
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
@@ -45,7 +45,7 @@ class LastSeenWebPingHook implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
-        if ($this->session->has('_last_seen_web_ping_sent')) {
+        if ($this->session->has('_last_authenticated_at_ping_sent')) {
             // only sent the ping once per browser session, not on every
             // request
             return false;
@@ -60,7 +60,7 @@ class LastSeenWebPingHook implements BeforeHookInterface
         }
 
         $userInfo = $hookData['auth'];
-        $this->serverClient->post('last_seen_web_ping', ['user_id' => $userInfo->id()]);
-        $this->session->set('_last_seen_web_ping_sent', true);
+        $this->serverClient->post('last_authenticated_at_ping', ['user_id' => $userInfo->id()]);
+        $this->session->set('_last_authenticated_at_ping_sent', true);
     }
 }

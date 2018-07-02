@@ -43,7 +43,7 @@ use SURFnet\VPN\Common\LdapClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\TwigTpl;
 use SURFnet\VPN\Portal\DisabledUserHook;
-use SURFnet\VPN\Portal\LastSeenWebPingHook;
+use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
 use SURFnet\VPN\Portal\OAuthClientInfo;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\PasswdModule;
@@ -307,7 +307,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
-    $service->addBeforeHook('last_seen_web_ping', new LastSeenWebPingHook($session, $serverClient));
+    $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
 
     // two factor module
     $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
