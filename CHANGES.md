@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.7.0 (...)
+## 1.7.0 (2018-07-02)
 - record the last time the user authenticated
 - certificates can no longer be disabled, so no need to show this any longer, 
   also remove it as a reason from `/check_certificate` API call
