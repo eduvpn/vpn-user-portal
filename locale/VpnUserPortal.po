@@ -29,19 +29,7 @@ msgstr ""
 msgid "Expires"
 msgstr ""
 
-#: /tmp/cache/10/10d03fbbbaf231d6af364078dbea28e6b3eca51a0102cf1c056f92f44d9db1a7.php:60
-msgid "Status"
-msgstr ""
-
 #: /tmp/cache/10/10d03fbbbaf231d6af364078dbea28e6b3eca51a0102cf1c056f92f44d9db1a7.php:89
-msgid "Disabled"
-msgstr ""
-
-#: /tmp/cache/10/10d03fbbbaf231d6af364078dbea28e6b3eca51a0102cf1c056f92f44d9db1a7.php:95
-msgid "Active"
-msgstr ""
-
-#: /tmp/cache/10/10d03fbbbaf231d6af364078dbea28e6b3eca51a0102cf1c056f92f44d9db1a7.php:109
 msgid "Delete"
 msgstr ""
 
@@ -382,7 +370,7 @@ msgstr ""
 msgid "VPN User Portal"
 msgstr ""
 
-#: /tmp/cache/ec/eca39d45d1f97fb7aeb2c8e4cac5f201b460fff331add480058e6c3a35ab9a87.php:105
+#: /tmp/cache/ec/eca39d45d1f97fb7aeb2c8e4cac5f201b460fff331add480058e6c3a35ab9a87.php:115
 msgid "Sign Out"
 msgstr ""
 

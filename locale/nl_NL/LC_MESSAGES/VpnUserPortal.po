@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.0.8\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: /tmp/cache/6a/6a3ceca0c25e45ebdac4a451a10ad2b38bf22c0fc67b2110a5a89f7c868ed769.php:37
@@ -45,19 +45,7 @@ msgstr "Uitgegeven"
 msgid "Expires"
 msgstr "Verloopt"
 
-#: /tmp/cache/10/10d03fbbbaf231d6af364078dbea28e6b3eca51a0102cf1c056f92f44d9db1a7.php:60
-msgid "Status"
-msgstr "Toestand"
-
 #: /tmp/cache/10/10d03fbbbaf231d6af364078dbea28e6b3eca51a0102cf1c056f92f44d9db1a7.php:89
-msgid "Disabled"
-msgstr "Uitgeschakeld"
-
-#: /tmp/cache/10/10d03fbbbaf231d6af364078dbea28e6b3eca51a0102cf1c056f92f44d9db1a7.php:95
-msgid "Active"
-msgstr "Actief"
-
-#: /tmp/cache/10/10d03fbbbaf231d6af364078dbea28e6b3eca51a0102cf1c056f92f44d9db1a7.php:109
 msgid "Delete"
 msgstr "Verwijderen"
 
@@ -424,7 +412,7 @@ msgstr "Nieuw wachtwoord (bevestigen)"
 msgid "VPN User Portal"
 msgstr "VPN-Gebruikersportal"
 
-#: /tmp/cache/ec/eca39d45d1f97fb7aeb2c8e4cac5f201b460fff331add480058e6c3a35ab9a87.php:105
+#: /tmp/cache/ec/eca39d45d1f97fb7aeb2c8e4cac5f201b460fff331add480058e6c3a35ab9a87.php:115
 msgid "Sign Out"
 msgstr "Uitloggen"
 
