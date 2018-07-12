@@ -19,6 +19,7 @@ use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\HttpClient\Exception\ApiException;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\ProfileConfig;
 
@@ -270,6 +271,8 @@ class VpnApiModule implements ServiceModuleInterface
                     $this->serverClient->post('set_yubi_key_id', ['user_id' => $userInfo->id(), 'yubi_key_otp' => $yubiKeyOtp]);
 
                     return new ApiResponse('two_factor_enroll_yubi');
+                } catch (ApiException $e) {
+                    return new ApiErrorResponse('two_factor_enroll_yubi', $e->getMessage());
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('two_factor_enroll_yubi', $e->getMessage());
                 }
@@ -293,10 +296,12 @@ class VpnApiModule implements ServiceModuleInterface
                 try {
                     $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
                     $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
+                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                } catch (ApiException $e) {
+                    return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
                 }
-                $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
 
                 return new ApiResponse('two_factor_enroll_totp');
             }

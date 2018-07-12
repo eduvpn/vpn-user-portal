@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.1 (...)
+- convert errors from backend into proper API responses instead of HTTP/500 
+  responses to API client (#95)
+
 ## 1.7.0 (2018-07-02)
 - record the last time the user authenticated
 - certificates can no longer be disabled, so no need to show this any longer, 
