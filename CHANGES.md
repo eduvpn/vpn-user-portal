@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.7.1 (...)
+## 1.7.1 (2018-07-24)
 - convert errors from backend into proper API responses instead of HTTP/500 
   responses to API client (#95)
 
