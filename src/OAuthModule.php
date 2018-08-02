@@ -34,10 +34,16 @@ class OAuthModule implements ServiceModuleInterface
         $this->oauthServer = $oauthServer;
     }
 
+    /**
+     * @return void
+     */
     public function init(Service $service)
     {
         $service->get(
             '/_oauth/authorize',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
                 try {
@@ -61,6 +67,9 @@ class OAuthModule implements ServiceModuleInterface
 
         $service->post(
             '/_oauth/authorize',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 

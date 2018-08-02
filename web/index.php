@@ -14,7 +14,6 @@ require_once sprintf('%s/vendor/autoload.php', $baseDir);
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
-use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
@@ -42,9 +41,9 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\LdapClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\TwigTpl;
+use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
-use SURFnet\VPN\Portal\OAuthClientInfo;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\PasswdModule;
 use SURFnet\VPN\Portal\RegistrationHook;
@@ -339,25 +338,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
     $storage->init();
 
-    $getClientInfo = function ($clientId) use ($config) {
-        if (false === $config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
-            // if not in configuration file, check if it is in the hardcoded list
-            return OAuthClientInfo::getClient($clientId);
-        }
-
-        // XXX switch to only support 'redirect_uri_list' for 2.0
-        $clientInfoData = $config->getSection('Api')->getSection('consumerList')->getItem($clientId);
-        $redirectUriList = [];
-        if (array_key_exists('redirect_uri_list', $clientInfoData)) {
-            $redirectUriList = array_merge($redirectUriList, (array) $clientInfoData['redirect_uri_list']);
-        }
-        if (array_key_exists('redirect_uri', $clientInfoData)) {
-            $redirectUriList = array_merge($redirectUriList, (array) $clientInfoData['redirect_uri']);
-        }
-        $clientInfoData['redirect_uri_list'] = $redirectUriList;
-
-        return new ClientInfo($clientInfoData);
-    };
+    $clientFetcher = new ClientFetcher($config);
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
@@ -365,7 +346,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         $serverClient,
         $session,
         $storage,
-        $getClientInfo
+        [$clientFetcher, 'get']
     );
     $service->addModule($vpnPortalModule);
 
@@ -387,7 +368,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
             $storage,
-            $getClientInfo,
+            [$clientFetcher, 'get'],
             new SodiumSigner(
                 Base64::decode(
                     FileIO::readFile(

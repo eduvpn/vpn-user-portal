@@ -12,7 +12,6 @@ $baseDir = dirname(__DIR__);
 require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use fkooman\OAuth\Server\BearerValidator;
-use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
 use ParagonIE\ConstantTime\Base64;
@@ -25,8 +24,8 @@ use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\BearerAuthenticationHook;
+use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\ForeignKeyListFetcher;
-use SURFnet\VPN\Portal\OAuthClientInfo;
 use SURFnet\VPN\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
@@ -52,25 +51,7 @@ try {
         $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
         $storage->init();
 
-        $getClientInfo = function ($clientId) use ($config) {
-            if (false === $config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
-                // if not in configuration file, check if it is in the hardcoded list
-                return OAuthClientInfo::getClient($clientId);
-            }
-
-            // XXX switch to only support 'redirect_uri_list' for 2.0
-            $clientInfoData = $config->getSection('Api')->getSection('consumerList')->getItem($clientId);
-            $redirectUriList = [];
-            if (array_key_exists('redirect_uri_list', $clientInfoData)) {
-                $redirectUriList = array_merge($redirectUriList, (array) $clientInfoData['redirect_uri_list']);
-            }
-            if (array_key_exists('redirect_uri', $clientInfoData)) {
-                $redirectUriList = array_merge($redirectUriList, (array) $clientInfoData['redirect_uri']);
-            }
-            $clientInfoData['redirect_uri_list'] = $redirectUriList;
-
-            return new ClientInfo($clientInfoData);
-        };
+        $clientFetcher = new ClientFetcher($config);
 
         $foreignKeys = [];
         if ($config->getSection('Api')->hasItem('foreignKeys')) {
@@ -86,7 +67,7 @@ try {
 
         $bearerValidator = new BearerValidator(
             $storage,
-            $getClientInfo,
+            [$clientFetcher, 'get'],
             new SodiumSigner(
                 Base64::decode(
                     FileIO::readFile(

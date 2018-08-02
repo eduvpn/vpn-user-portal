@@ -32,10 +32,16 @@ class PasswdModule implements ServiceModuleInterface
         $this->pdoAuth = $pdoAuth;
     }
 
+    /**
+     * @return void
+     */
     public function init(Service $service)
     {
         $service->get(
             '/passwd',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -52,6 +58,9 @@ class PasswdModule implements ServiceModuleInterface
 
         $service->post(
             '/passwd',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 

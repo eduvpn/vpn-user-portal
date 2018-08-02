@@ -51,15 +51,26 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->getClientInfo = $getClientInfo;
     }
 
+    /**
+     * @param mixed $shuffleHosts
+     *
+     * @return void
+     */
     public function setShuffleHosts($shuffleHosts)
     {
         $this->shuffleHosts = (bool) $shuffleHosts;
     }
 
+    /**
+     * @return void
+     */
     public function init(Service $service)
     {
         $service->get(
             '/',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request) {
                 return new RedirectResponse($request->getRootUri().'new', 302);
             }
@@ -67,6 +78,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/new',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -95,6 +109,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/new',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -143,6 +160,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/configurations',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -159,6 +179,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/deleteCertificate',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
                 $certInfo = $this->serverClient->get('client_certificate_info', ['common_name' => $commonName]);
@@ -177,6 +200,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/deleteCertificateConfirm',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
 
@@ -194,6 +220,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/events',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -212,6 +241,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/account',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -262,6 +294,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/removeClientAuthorization',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
                 $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
@@ -275,6 +310,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/documentation',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function () {
                 return new HtmlResponse($this->tpl->render('vpnPortalDocumentation', []));
             }
@@ -283,6 +321,8 @@ class VpnPortalModule implements ServiceModuleInterface
 
     /**
      * @param string $scope
+     *
+     * @return string
      */
     public static function validateScope($scope)
     {
@@ -298,6 +338,14 @@ class VpnPortalModule implements ServiceModuleInterface
         return $scope;
     }
 
+    /**
+     * @param string $serverName
+     * @param string $profileId
+     * @param string $userId
+     * @param string $displayName
+     *
+     * @return \SURFnet\VPN\Common\Http\Response
+     */
     private function getConfig($serverName, $profileId, $userId, $displayName)
     {
         // create a certificate
@@ -332,6 +380,9 @@ class VpnPortalModule implements ServiceModuleInterface
         return $response;
     }
 
+    /**
+     * @return bool
+     */
     private static function isMember(array $userGroups, array $aclGroupList)
     {
         // if any of the groups in userGroups is part of aclGroupList return
@@ -349,6 +400,8 @@ class VpnPortalModule implements ServiceModuleInterface
      * Filter the list of profiles by checking if the profile should be shown,
      * and that the user is a member of the required groups in case ACLs are
      * enabled.
+     *
+     * @return array
      */
     private static function getProfileList(array $serverProfiles, array $userGroups)
     {
@@ -373,6 +426,11 @@ class VpnPortalModule implements ServiceModuleInterface
         return $profileList;
     }
 
+    /**
+     * @param string $userId
+     *
+     * @return array
+     */
     private function cachedUserGroups($userId)
     {
         if ($this->session->has('_cached_groups_user_id')) {

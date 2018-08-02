@@ -40,10 +40,16 @@ class VootModule implements ServiceModuleInterface
         $this->session = $session;
     }
 
+    /**
+     * @return void
+     */
     public function init(Service $service)
     {
         $service->get(
             '/_voot/authorize',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
                 $authorizationRequestUri = $this->oauthClient->getAuthorizeUri(
@@ -61,6 +67,9 @@ class VootModule implements ServiceModuleInterface
 
         $service->get(
             '/_voot/callback',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
                 // obtain the access token

@@ -37,10 +37,16 @@ class TotpModule implements ServiceModuleInterface
         $this->serverClient = $serverClient;
     }
 
+    /**
+     * @return void
+     */
     public function init(Service $service)
     {
         $service->get(
             '/totp',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -60,6 +66,9 @@ class TotpModule implements ServiceModuleInterface
 
         $service->post(
             '/totp',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -90,6 +99,9 @@ class TotpModule implements ServiceModuleInterface
 
         $service->get(
             '/totp/qr-code',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 

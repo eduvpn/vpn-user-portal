@@ -33,10 +33,16 @@ class YubiModule implements ServiceModuleInterface
         $this->serverClient = $serverClient;
     }
 
+    /**
+     * @return void
+     */
     public function init(Service $service)
     {
         $service->get(
             '/yubi',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
@@ -55,6 +61,9 @@ class YubiModule implements ServiceModuleInterface
 
         $service->post(
             '/yubi',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 

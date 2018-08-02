@@ -26,10 +26,16 @@ class OAuthTokenModule implements ServiceModuleInterface
         $this->oauthServer = $oauthServer;
     }
 
+    /**
+     * @return void
+     */
     public function init(Service $service)
     {
         $service->post(
             '/token',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
             function (Request $request, array $hookData) {
                 try {
                     $tokenResponse = $this->oauthServer->postToken(

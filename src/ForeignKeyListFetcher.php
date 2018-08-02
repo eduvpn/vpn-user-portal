@@ -31,6 +31,8 @@ class ForeignKeyListFetcher
      * @param HttpClientInterface $httpClient
      * @param string              $discoveryUrl
      * @param string              $encodedPublicKey
+     *
+     * @return void
      */
     public function update(HttpClientInterface $httpClient, $discoveryUrl, $encodedPublicKey)
     {
@@ -81,7 +83,8 @@ class ForeignKeyListFetcher
         foreach ($jsonData['instances'] as $instance) {
             // convert base_uri to FQDN
             $baseUri = $instance['base_uri'];
-            if (false === $hostName = parse_url($baseUri, PHP_URL_HOST)) {
+            $hostName = parse_url($baseUri, PHP_URL_HOST);
+            if (!is_string($hostName)) {
                 throw new RuntimeException('unable to extract host name from base_uri');
             }
             $entryList[$hostName] = Base64::decode($instance['public_key']);
