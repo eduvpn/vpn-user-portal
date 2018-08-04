@@ -61,8 +61,8 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
-                $profileList = $this->serverClient->get('profile_list');
-                $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userInfo->id()]);
+                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $userGroups = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userInfo->id()]);
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -94,9 +94,9 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
-                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
-                $isDisabledUser = $this->serverClient->get('is_disabled_user', ['user_id' => $userInfo->id()]);
+                $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
+                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
+                $isDisabledUser = $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userInfo->id()]);
 
                 $twoFactorTypes = [];
                 if ($hasYubiKeyId) {
@@ -122,7 +122,7 @@ class VpnApiModule implements ServiceModuleInterface
         $service->post(
             '/create_keypair',
             /**
-             * @return ApiResponse
+             * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -154,38 +154,8 @@ class VpnApiModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
-                $clientCertificateInfo = $this->serverClient->get('client_certificate_info', ['common_name' => $commonName]);
-
-                $reason = null;
-                if (false === $clientCertificateInfo) {
-                    // certificate with this CN does not exist, was deleted by
-                    // user, or complete new installation of service with new
-                    // CA
-                    $isValid = false;
-                    $reason = 'certificate_missing';
-                } elseif ($clientCertificateInfo['user_is_disabled']) {
-                    // user account disabled by admin
-                    $isValid = false;
-                    $reason = 'user_disabled';
-                } elseif (new DateTime($clientCertificateInfo['valid_from']) > new DateTime()) {
-                    // certificate not yet valid
-                    $isValid = false;
-                    $reason = 'certificate_not_yet_valid';
-                } elseif (new DateTime($clientCertificateInfo['valid_to']) < new DateTime()) {
-                    // certificate not valid anymore
-                    $isValid = false;
-                    $reason = 'certificate_expired';
-                } else {
-                    $isValid = true;
-                }
-
-                $responseData = [
-                    'is_valid' => $isValid,
-                ];
-
-                if (!$isValid) {
-                    $responseData['reason'] = $reason;
-                }
+                $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
+                $responseData = self::validateCertificate($clientCertificateInfo);
 
                 return new ApiResponse(
                     'check_certificate',
@@ -206,8 +176,8 @@ class VpnApiModule implements ServiceModuleInterface
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
 
-                    $profileList = $this->serverClient->get('profile_list');
-                    $userGroups = $this->serverClient->get('user_groups', ['user_id' => $userInfo->id()]);
+                    $profileList = $this->serverClient->getRequireArray('profile_list');
+                    $userGroups = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userInfo->id()]);
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
@@ -262,8 +232,8 @@ class VpnApiModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 try {
-                    $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
+                    $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
+                    $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
                     if ($hasYubiKeyId || $hasTotpSecret) {
                         return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
                     }
@@ -287,8 +257,8 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
-                $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
+                $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
+                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
                 if ($hasYubiKeyId || $hasTotpSecret) {
                     return new ApiErrorResponse('two_factor_enroll_totp', 'user already enrolled');
                 }
@@ -334,7 +304,7 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $msgList = [];
 
-                $motdMessages = $this->serverClient->get('system_messages', ['message_type' => 'motd']);
+                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
                 foreach ($motdMessages as $motdMessage) {
                     $dateTime = new DateTime($motdMessage['date_time']);
                     $dateTime->setTimezone(new DateTimeZone('UTC'));
@@ -367,13 +337,13 @@ class VpnApiModule implements ServiceModuleInterface
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
-        $profileList = $this->serverClient->get('profile_list');
+        $profileList = $this->serverClient->getRequireArray('profile_list');
         $profileData = $profileList[$profileId];
 
         // create a certificate
         $clientCertificate = $this->getCertificate($userId, $displayName);
         // get the CA & tls-auth
-        $serverInfo = $this->serverClient->get('server_info');
+        $serverInfo = $this->serverClient->getRequireArray('server_info');
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
@@ -393,11 +363,11 @@ class VpnApiModule implements ServiceModuleInterface
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
-        $profileList = $this->serverClient->get('profile_list');
+        $profileList = $this->serverClient->getRequireArray('profile_list');
         $profileData = $profileList[$profileId];
 
         // get the CA & tls-auth
-        $serverInfo = $this->serverClient->get('server_info');
+        $serverInfo = $this->serverClient->getRequireArray('server_info');
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
@@ -412,12 +382,12 @@ class VpnApiModule implements ServiceModuleInterface
      * @param string $userId
      * @param string $displayName
      *
-     * @return array|bool
+     * @return array
      */
     private function getCertificate($userId, $displayName)
     {
         // create a certificate
-        return $this->serverClient->post(
+        return $this->serverClient->postRequireArray(
             'add_client_certificate',
             [
                 'user_id' => $userId,
@@ -440,5 +410,46 @@ class VpnApiModule implements ServiceModuleInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param false|array $clientCertificateInfo
+     *
+     * @return array<string, bool|string>
+     */
+    private static function validateCertificate($clientCertificateInfo)
+    {
+        $reason = '';
+        if (false === $clientCertificateInfo) {
+            // certificate with this CN does not exist, was deleted by
+            // user, or complete new installation of service with new
+            // CA
+            $isValid = false;
+            $reason = 'certificate_missing';
+        } elseif ($clientCertificateInfo['user_is_disabled']) {
+            // user account disabled by admin
+            $isValid = false;
+            $reason = 'user_disabled';
+        } elseif (new DateTime($clientCertificateInfo['valid_from']) > new DateTime()) {
+            // certificate not yet valid
+            $isValid = false;
+            $reason = 'certificate_not_yet_valid';
+        } elseif (new DateTime($clientCertificateInfo['valid_to']) < new DateTime()) {
+            // certificate not valid anymore
+            $isValid = false;
+            $reason = 'certificate_expired';
+        } else {
+            $isValid = true;
+        }
+
+        $responseData = [
+            'is_valid' => $isValid,
+        ];
+
+        if (!$isValid) {
+            $responseData['reason'] = $reason;
+        }
+
+        return $responseData;
     }
 }

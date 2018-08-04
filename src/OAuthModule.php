@@ -108,7 +108,7 @@ class OAuthModule implements ServiceModuleInterface
         // can close the browser after the OAuth authorization
         // completed...
         $locationHeader = $htmlResponse->getHeader('Location');
-        if (0 === strpos($locationHeader, 'https://') || 0 === strpos($locationHeader, 'http://')) {
+        if (null === $locationHeader || 0 === strpos($locationHeader, 'https://') || 0 === strpos($locationHeader, 'http://')) {
             return $htmlResponse;
         }
 

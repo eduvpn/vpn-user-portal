@@ -84,11 +84,11 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
-                $profileList = $this->serverClient->get('profile_list');
+                $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
-                $motdMessages = $this->serverClient->get('system_messages', ['message_type' => 'motd']);
+                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
                 if (0 === count($motdMessages)) {
                     $motdMessage = false;
                 } else {
@@ -118,7 +118,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $displayName = InputValidation::displayName($request->getPostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
-                $profileList = $this->serverClient->get('profile_list');
+                $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
@@ -129,7 +129,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to create a configuration for this profileId', 400);
                 }
 
-                $motdMessages = $this->serverClient->get('system_messages', ['message_type' => 'motd']);
+                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
                 if (0 === count($motdMessages)) {
                     $motdMessage = false;
                 } else {
@@ -137,8 +137,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 if ($profileList[$profileId]['twoFactor']) {
-                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
-                    $hasYubiKeyId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
+                    $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
+                    $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
                     if (!$hasTotpSecret && !$hasYubiKeyId) {
                         return new HtmlResponse(
                             $this->tpl->render(
@@ -170,7 +170,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'userCertificateList' => $this->serverClient->get('client_certificate_list', ['user_id' => $userInfo->id()]),
+                            'userCertificateList' => $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->id()]),
                         ]
                     )
                 );
@@ -184,7 +184,7 @@ class VpnPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
-                $certInfo = $this->serverClient->get('client_certificate_info', ['common_name' => $commonName]);
+                $certInfo = $this->serverClient->getRequireArray('client_certificate_info', ['common_name' => $commonName]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -226,7 +226,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
-                $userMessages = $this->serverClient->get('user_messages', ['user_id' => $userInfo->id()]);
+                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->id()]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -247,10 +247,10 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
 
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
-                $yubiKeyId = $this->serverClient->get('yubi_key_id', ['user_id' => $userInfo->id()]);
+                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
+                $yubiKeyId = $this->serverClient->getRequireBool('yubi_key_id', ['user_id' => $userInfo->id()]);
 
-                $profileList = $this->serverClient->get('profile_list');
+                $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
@@ -349,13 +349,13 @@ class VpnPortalModule implements ServiceModuleInterface
     private function getConfig($serverName, $profileId, $userId, $displayName)
     {
         // create a certificate
-        $clientCertificate = $this->serverClient->post('add_client_certificate', ['user_id' => $userId, 'display_name' => $displayName]);
+        $clientCertificate = $this->serverClient->postRequireArray('add_client_certificate', ['user_id' => $userId, 'display_name' => $displayName]);
 
-        $serverProfiles = $this->serverClient->get('profile_list');
+        $serverProfiles = $this->serverClient->getRequireArray('profile_list');
         $profileData = $serverProfiles[$profileId];
 
         // get the CA & tls-auth
-        $serverInfo = $this->serverClient->get('server_info');
+        $serverInfo = $this->serverClient->getRequireArray('server_info');
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
 
@@ -441,7 +441,7 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         $this->session->set('_cached_groups_user_id', $userId);
-        $this->session->set('_cached_groups', $this->serverClient->get('user_groups', ['user_id' => $userId]));
+        $this->session->set('_cached_groups', $this->serverClient->getRequireArray('user_groups', ['user_id' => $userId]));
 
         return $this->session->get('_cached_groups');
     }
