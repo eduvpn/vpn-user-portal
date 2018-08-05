@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.2 (2018-08-05)
+- many `vimeo/psalm` fixes
+- code refactors to make it better verifyable
+
 ## 1.7.1 (2018-07-24)
 - convert errors from backend into proper API responses instead of HTTP/500 
   responses to API client (#95)
