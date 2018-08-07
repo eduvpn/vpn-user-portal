@@ -43,11 +43,12 @@ class BearerAuthenticationHook implements BeforeHookInterface
                         '%s_%s',
                         preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $keyId)),
                         $tokenInfo->getUserId()
-                    )
+                    ),
+                    []
                 );
             }
 
-            return new UserInfo($tokenInfo->getUserId());
+            return new UserInfo($tokenInfo->getUserId(), []);
         } catch (OAuthException $e) {
             $jsonResponse = $e->getJsonResponse();
 

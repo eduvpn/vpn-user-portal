@@ -166,7 +166,11 @@ try {
             $userAuth = new LdapAuth(
                 $logger,
                 $ldapClient,
-                $config->getSection('FormLdapAuthentication')->getItem('userDnTemplate')
+                $config->getSection('FormLdapAuthentication')->getItem('userDnTemplate'),
+                null,
+                null,
+                null,
+                []
             );
             $service->addModule(
                 new FormAuthenticationModule(

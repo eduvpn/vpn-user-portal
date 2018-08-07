@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.8.0 (...)
+- use new authorization method
+
 ## 1.7.2 (2018-08-05)
 - many `vimeo/psalm` fixes
 - code refactors to make it better verifyable
