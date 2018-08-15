@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.8.0 (...)
+## 1.8.0 (2018-08-15)
 - use new authorization method
 
 ## 1.7.2 (2018-08-05)
