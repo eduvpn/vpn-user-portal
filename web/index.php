@@ -7,9 +7,8 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
+require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
-/** @psalm-suppress UnresolvableInclude */
-require_once sprintf('%s/vendor/autoload.php', $baseDir);
 
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuthClient;
@@ -146,7 +145,8 @@ try {
                 new MellonAuthenticationHook(
                     $session,
                     $config->getSection('MellonAuthentication')->getItem('attribute'),
-                    $config->getSection('MellonAuthentication')->getItem('addEntityID')
+                    $config->getSection('MellonAuthentication')->getItem('addEntityID'),
+                    null // we don't (yet) care about entitlements in the user portal
                 )
             );
 
@@ -167,10 +167,7 @@ try {
                 $logger,
                 $ldapClient,
                 $config->getSection('FormLdapAuthentication')->getItem('userDnTemplate'),
-                null,
-                null,
-                null,
-                []
+                null // we don't (yet) care about entitlements in the user portal
             );
             $service->addModule(
                 new FormAuthenticationModule(

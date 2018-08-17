@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.8.1 (...)
+- update for new vpn-lib-common API
+- cleanup autoloader so Psalm will be able to verify the scripts in web and bin
+  folder
+
 ## 1.8.0 (2018-08-15)
 - use new authorization method
 

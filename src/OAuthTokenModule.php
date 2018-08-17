@@ -40,8 +40,8 @@ class OAuthTokenModule implements ServiceModuleInterface
                 try {
                     $tokenResponse = $this->oauthServer->postToken(
                         $request->getPostParameters(),
-                        $request->getHeader('PHP_AUTH_USER', false),
-                        $request->getHeader('PHP_AUTH_PW', false)
+                        $request->optionalHeader('PHP_AUTH_USER'),
+                        $request->optionalHeader('PHP_AUTH_PW')
                     );
 
                     return Response::import(

@@ -28,7 +28,9 @@ class BearerAuthenticationHook implements BeforeHookInterface
 
     public function executeBefore(Request $request, array $hookData)
     {
-        $authorizationHeader = $request->getHeader('HTTP_AUTHORIZATION', false, null);
+        if (null === $authorizationHeader = $request->optionalHeader('HTTP_AUTHORIZATION')) {
+            $authorizationHeader = '';
+        }
 
         try {
             $tokenInfo = $this->bearerValidator->validate($authorizationHeader);

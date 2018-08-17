@@ -35,7 +35,7 @@
     ],
     "require": {
         "bacon/bacon-qr-code": "^1.0",
-        "eduvpn/common": "^1",
+        "eduvpn/common": "dev-master",
         "ext-date": "*",
         "ext-filter": "*",
         "ext-gettext": "*",
