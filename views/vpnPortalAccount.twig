@@ -5,7 +5,7 @@
     <table>
         <tr>
             <th>{% trans "ID" %}</th>
-            <td><code>{{ userId }}</code></td>
+            <td><code>{{ userInfo.id() }}</code></td>
             <td></td>
         </tr>
         {% if authMethod == 'FormPdoAuthentication' %}
@@ -14,6 +14,20 @@
                 <td><a href="passwd">{% trans "Change Password" %}</a></td>
                 <td></td>
             </tr>
+        {% endif %}
+
+        {% if userInfo.entitlementList() is not empty %}
+        <tr>
+            <th>{% trans "Entitlement(s)" %}</th>
+            <td>
+                <ul class="simple">
+                    {% for entitlement in userInfo.entitlementList() %}
+                        <li title="{{ entitlement }}">{{ entitlement }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td></td>
+        </tr>
         {% endif %}
 
         {% if userGroups is not empty %}

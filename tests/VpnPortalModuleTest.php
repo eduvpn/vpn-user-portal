@@ -90,7 +90,7 @@ class VpnPortalModuleTest extends TestCase
                     'twoFactorEnabledProfiles' => [],
                     'yubiKeyId' => false,
                     'hasTotpSecret' => false,
-                    'userId' => 'foo',
+                    'userInfo' => [],
                     'userGroups' => [],
                     'authorizedClients' => [],
                 ],

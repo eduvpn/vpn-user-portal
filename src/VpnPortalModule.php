@@ -283,7 +283,8 @@ class VpnPortalModule implements ServiceModuleInterface
                             'twoFactorEnabledProfiles' => $twoFactorEnabledProfiles,
                             'yubiKeyId' => $yubiKeyId,
                             'hasTotpSecret' => $hasTotpSecret,
-                            'userId' => $userInfo->id(),
+//                            'userId' => $userInfo->id(),
+                            'userInfo' => $userInfo,
                             'userGroups' => $userGroups,
                             'authorizedClients' => $authorizedClients,
                         ]
