@@ -31,6 +31,13 @@ return [
         'userDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
         // Active Directory
         //'userDnTemplate' => 'DOMAIN\{{UID}}',
+
+        // ** AUTHORIZATION | ENTITLEMENT **
+        // use eduPersonEntitlement attribute
+        //'entitlementAttribute' => 'eduPersonEntitlement',
+
+        // use LDAP "memberOf"
+        //'entitlementAttribute' => 'memberOf',
     ],
 
     // RADIUS

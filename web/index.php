@@ -167,7 +167,7 @@ try {
                 $logger,
                 $ldapClient,
                 $config->getSection('FormLdapAuthentication')->getItem('userDnTemplate'),
-                null // we don't (yet) care about entitlements in the user portal
+                $config->getSection('FormLdapAuthentication')->hasItem('entitlementAttribute') ? $config->getSection('FormLdapAuthentication')->getItem('entitlementAttribute') : null
             );
             $service->addModule(
                 new FormAuthenticationModule(
