@@ -146,7 +146,7 @@ try {
                     $session,
                     $config->getSection('MellonAuthentication')->getItem('attribute'),
                     $config->getSection('MellonAuthentication')->getItem('addEntityID'),
-                    null // we don't (yet) care about entitlements in the user portal
+                    $config->getSection('MellonAuthentication')->optionalItem('entitlementAttribute')
                 )
             );
 
@@ -167,7 +167,7 @@ try {
                 $logger,
                 $ldapClient,
                 $config->getSection('FormLdapAuthentication')->getItem('userDnTemplate'),
-                $config->getSection('FormLdapAuthentication')->hasItem('entitlementAttribute') ? $config->getSection('FormLdapAuthentication')->getItem('entitlementAttribute') : null
+                $config->getSection('FormLdapAuthentication')->optionalItem('entitlementAttribute')
             );
             $service->addModule(
                 new FormAuthenticationModule(
