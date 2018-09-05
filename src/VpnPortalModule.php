@@ -126,7 +126,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 // user, it would not result in the ability to use the VPN, but
                 // better prevent it early
                 if (!in_array($profileId, array_keys($profileList), true)) {
-                    throw new HttpException('no permission to create a configuration for this profileId', 400);
+                    throw new HttpException('no permission to download a configuration for this profile', 400);
                 }
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
@@ -159,7 +159,7 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->get(
-            '/configurations',
+            '/certificates',
             /**
              * @return \SURFnet\VPN\Common\Http\Response
              */
@@ -168,7 +168,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 return new HtmlResponse(
                     $this->tpl->render(
-                        'vpnPortalConfigurations',
+                        'vpnPortalCertificates',
                         [
                             'userCertificateList' => $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->id()]),
                         ]
@@ -214,7 +214,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->serverClient->post('kill_client', ['common_name' => $commonName]);
                 }
 
-                return new RedirectResponse($request->getRootUri().'configurations', 302);
+                return new RedirectResponse($request->getRootUri().'certificates', 302);
             }
         );
 

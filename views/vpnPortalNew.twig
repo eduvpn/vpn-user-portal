@@ -7,14 +7,14 @@
        
     {% if profileList|length == 0 %}
         <p class="warning">
-        {% trans %}Either there are no VPN profiles defined, or this account does not have the required permissions to create a new VPN configurations for any of the available profiles.{% endtrans %}
+        {% trans %}Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.{% endtrans %}
         </p>
     {% endif %}
 
     {% if profileList|length > 0 %}
         <p>
         {% trans %}
-            Create a new VPN configuration by choosing a profile and a name for your configuration, e.g. <em>Phone</em>.
+            Download a new VPN configuration by choosing a profile and a name, e.g. <em>Phone</em>.
         {% endtrans %}
         </p>
 

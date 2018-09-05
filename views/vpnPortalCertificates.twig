@@ -1,10 +1,10 @@
-{% set activeItem = 'configurations' %}
+{% set activeItem = 'certificates' %}
 {% extends "base.twig" %}
 {% block content %}
     {% if userCertificateList is empty %}
         <p class="plain">
             {% trans %}
-                There are currently no configurations. <a href="new">Create</a> one.
+                There are currently no issued certificates. <a href="new">Download</a> a new configuration.
             {% endtrans %}
         </p>                    
     {% else %}

@@ -99,11 +99,11 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
-    public function testConfigurations()
+    public function testCertificates()
     {
         $this->assertSame(
             [
-                'vpnPortalConfigurations' => [
+                'vpnPortalCertificates' => [
                     'userCertificateList' => [
                         [
                             'display_name' => 'Foo',
@@ -113,7 +113,7 @@ class VpnPortalModuleTest extends TestCase
                     ],
                 ],
             ],
-            $this->makeRequest('GET', '/configurations')
+            $this->makeRequest('GET', '/certificates')
         );
     }
 
