@@ -304,6 +304,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $scope = self::validateScope($request->getPostParameter('scope'));
 
                 $this->storage->deleteAuthorization($userInfo->id(), $clientId, $scope);
+                $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userInfo->id(), 'client_id' => $clientId]);
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }

@@ -14,7 +14,6 @@ use fkooman\OAuth\Server\Exception\OAuthException;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
-use SURFnet\VPN\Common\Http\UserInfo;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
@@ -26,6 +25,9 @@ class BearerAuthenticationHook implements BeforeHookInterface
         $this->bearerValidator = $bearerValidator;
     }
 
+    /**
+     * @return \fkooman\OAuth\Server\TokenInfo|\SURFnet\VPN\Common\Http\Response
+     */
     public function executeBefore(Request $request, array $hookData)
     {
         if (null === $authorizationHeader = $request->optionalHeader('HTTP_AUTHORIZATION')) {
@@ -34,23 +36,10 @@ class BearerAuthenticationHook implements BeforeHookInterface
 
         try {
             $tokenInfo = $this->bearerValidator->validate($authorizationHeader);
-
             // require "config" scope
             $tokenInfo->requireAllScope(['config']);
-            $keyId = $tokenInfo->getKeyId();
-            if ('local' !== $keyId) {
-                // use the key ID as part of the user_id to indicate this is a "foreign" user
-                return new UserInfo(
-                    sprintf(
-                        '%s_%s',
-                        preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $keyId)),
-                        $tokenInfo->getUserId()
-                    ),
-                    []
-                );
-            }
 
-            return new UserInfo($tokenInfo->getUserId(), []);
+            return $tokenInfo;
         } catch (OAuthException $e) {
             $jsonResponse = $e->getJsonResponse();
 

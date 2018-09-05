@@ -4,6 +4,9 @@
 - update for new vpn-lib-common API
 - cleanup autoloader so Psalm will be able to verify the scripts in web and bin
   folder
+- when creating a certificate through the API, bind it to the OAuth client ID
+- delete all certificates associated with OAuth client ID when revoking OAuth
+  application on "Account" page (issue #89)
 
 ## 1.8.0 (2018-08-15)
 - use new authorization method

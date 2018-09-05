@@ -11,6 +11,7 @@ namespace SURFnet\VPN\Portal;
 
 use DateTime;
 use DateTimeZone;
+use fkooman\OAuth\Server\TokenInfo;
 use SURFnet\VPN\Common\Http\ApiErrorResponse;
 use SURFnet\VPN\Common\Http\ApiResponse;
 use SURFnet\VPN\Common\Http\Exception\InputValidationException;
@@ -59,10 +60,12 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                $userInfo = $hookData['auth'];
+                /** @var \fkooman\OAuth\Server\TokenInfo */
+                $tokenInfo = $hookData['auth'];
+                $userId = self::tokenInfoToUserId($tokenInfo);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userInfo->id()]);
+                $userGroups = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userId]);
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -92,11 +95,13 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                $userInfo = $hookData['auth'];
+                /** @var \fkooman\OAuth\Server\TokenInfo */
+                $tokenInfo = $hookData['auth'];
+                $userId = self::tokenInfoToUserId($tokenInfo);
 
-                $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
-                $isDisabledUser = $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userInfo->id()]);
+                $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]);
+                $isDisabledUser = $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]);
 
                 $twoFactorTypes = [];
                 if ($hasYubiKeyId) {
@@ -109,7 +114,7 @@ class VpnApiModule implements ServiceModuleInterface
                 return new ApiResponse(
                     'user_info',
                     [
-                        'user_id' => $userInfo->id(),
+                        'user_id' => $userId,
                         'two_factor_enrolled' => $hasYubiKeyId || $hasTotpSecret,
                         'two_factor_enrolled_with' => $twoFactorTypes,
                         'is_disabled' => $isDisabledUser,
@@ -125,11 +130,13 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userInfo = $hookData['auth'];
+                /** @var \fkooman\OAuth\Server\TokenInfo */
+                $tokenInfo = $hookData['auth'];
+                $userId = self::tokenInfoToUserId($tokenInfo);
 
                 try {
                     $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
-                    $clientCertificate = $this->getCertificate($userInfo->id(), $displayName);
+                    $clientCertificate = $this->getCertificate($tokenInfo, $displayName);
 
                     return new ApiResponse(
                         'create_keypair',
@@ -151,7 +158,9 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userInfo = $hookData['auth'];
+                /** @var \fkooman\OAuth\Server\TokenInfo */
+                $tokenInfo = $hookData['auth'];
+                $userId = self::tokenInfoToUserId($tokenInfo);
 
                 $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
                 $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
@@ -171,13 +180,15 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userInfo = $hookData['auth'];
+                /** @var \fkooman\OAuth\Server\TokenInfo */
+                $tokenInfo = $hookData['auth'];
+                $userId = self::tokenInfoToUserId($tokenInfo);
 
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
 
                     $profileList = $this->serverClient->getRequireArray('profile_list');
-                    $userGroups = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userInfo->id()]);
+                    $userGroups = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userId]);
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
@@ -210,13 +221,15 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userInfo = $hookData['auth'];
+                /** @var \fkooman\OAuth\Server\TokenInfo */
+                $tokenInfo = $hookData['auth'];
+                $userId = self::tokenInfoToUserId($tokenInfo);
 
                 try {
                     $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
                     $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
 
-                    return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName);
+                    return $this->getConfig($request->getServerName(), $profileId, $tokenInfo, $displayName);
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('create_config', $e->getMessage());
                 }
@@ -229,16 +242,18 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userInfo = $hookData['auth'];
+                /** @var \fkooman\OAuth\Server\TokenInfo */
+                $tokenInfo = $hookData['auth'];
+                $userId = self::tokenInfoToUserId($tokenInfo);
 
                 try {
-                    $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-                    $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
+                    $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userId]);
+                    $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]);
                     if ($hasYubiKeyId || $hasTotpSecret) {
                         return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
                     }
                     $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
-                    $this->serverClient->post('set_yubi_key_id', ['user_id' => $userInfo->id(), 'yubi_key_otp' => $yubiKeyOtp]);
+                    $this->serverClient->post('set_yubi_key_id', ['user_id' => $userId, 'yubi_key_otp' => $yubiKeyOtp]);
 
                     return new ApiResponse('two_factor_enroll_yubi');
                 } catch (ApiException $e) {
@@ -255,10 +270,12 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $userInfo = $hookData['auth'];
+                /** @var \fkooman\OAuth\Server\TokenInfo */
+                $tokenInfo = $hookData['auth'];
+                $userId = self::tokenInfoToUserId($tokenInfo);
 
-                $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
+                $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userId]);
+                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]);
                 if ($hasYubiKeyId || $hasTotpSecret) {
                     return new ApiErrorResponse('two_factor_enroll_totp', 'user already enrolled');
                 }
@@ -266,7 +283,7 @@ class VpnApiModule implements ServiceModuleInterface
                 try {
                     $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
                     $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
-                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                    $this->serverClient->post('set_totp_secret', ['user_id' => $userId, 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
                 } catch (ApiException $e) {
                     return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
                 } catch (InputValidationException $e) {
@@ -284,6 +301,7 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
+                /** @var \fkooman\OAuth\Server\TokenInfo */
                 $userInfo = $hookData['auth'];
 
                 $msgList = [];
@@ -326,14 +344,14 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string $serverName
-     * @param string $profileId
-     * @param string $userId
-     * @param string $displayName
+     * @param string                          $serverName
+     * @param string                          $profileId
+     * @param \fkooman\OAuth\Server\TokenInfo $tokenInfo
+     * @param string                          $displayName
      *
      * @return Response
      */
-    private function getConfig($serverName, $profileId, $userId, $displayName)
+    private function getConfig($serverName, $profileId, TokenInfo $tokenInfo, $displayName)
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
@@ -341,7 +359,7 @@ class VpnApiModule implements ServiceModuleInterface
         $profileData = $profileList[$profileId];
 
         // create a certificate
-        $clientCertificate = $this->getCertificate($userId, $displayName);
+        $clientCertificate = $this->getCertificate($tokenInfo, $displayName);
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info');
 
@@ -379,19 +397,20 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string $userId
-     * @param string $displayName
+     * @param \fkooman\OAuth\Server\TokenInfo $tokenInfo
+     * @param string                          $displayName
      *
      * @return array
      */
-    private function getCertificate($userId, $displayName)
+    private function getCertificate(TokenInfo $tokenInfo, $displayName)
     {
         // create a certificate
         return $this->serverClient->postRequireArray(
             'add_client_certificate',
             [
-                'user_id' => $userId,
+                'user_id' => self::tokenInfoToUserId($tokenInfo),
                 'display_name' => $displayName,
+                'client_id' => $tokenInfo->getClientId(),
             ]
         );
     }
@@ -451,5 +470,25 @@ class VpnApiModule implements ServiceModuleInterface
         }
 
         return $responseData;
+    }
+
+    /**
+     * @param \fkooman\OAuth\Server\TokenInfo $tokenInfo
+     *
+     * @return string
+     */
+    private static function tokenInfoToUserId(TokenInfo $tokenInfo)
+    {
+        $keyId = $tokenInfo->getKeyId();
+        if ('local' !== $keyId) {
+            // use the key ID as part of the user_id to indicate this is a "foreign" user
+            return sprintf(
+                '%s_%s',
+                preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $keyId)),
+                $tokenInfo->getUserId()
+            );
+        }
+
+        return $tokenInfo->getUserId();
     }
 }

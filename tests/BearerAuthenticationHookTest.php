@@ -88,31 +88,7 @@ class BearerAuthenticationHookTest extends TestCase
 
         $validator->setDateTime(new DateTime('2016-01-01'));
         $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
-        $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, [])->id());
-    }
-
-    public function testValidRemoteToken()
-    {
-        $request = self::getRequest(
-            [
-                'HTTP_AUTHORIZATION' => 'Bearer dXvNt6RuSqxvwE-KU60ddP7dZ8rkj0faYzckfp3xLYIGtfgTwsMGl1XQRYmZ4pXBhSVanOsCgvXWM6eDOUQ4C3sidHlwZSI6ImFjY2Vzc190b2tlbiIsImF1dGhfa2V5IjoicmFuZG9tXzEiLCJ1c2VyX2lkIjoiZm9vIiwiY2xpZW50X2lkIjoiY29kZS1jbGllbnQiLCJzY29wZSI6ImNvbmZpZyIsImV4cGlyZXNfYXQiOiIyMDE2LTAxLTAxVDAxOjAwOjAwKzAwOjAwIn0',
-            ]
-        );
-
-        $validator = new BearerValidator(
-            $this->storage,
-            $this->getClientInfo,
-            new SodiumSigner(
-                file_get_contents(sprintf('%s/data/server_2.key', __DIR__)),
-                [
-                    'bar' => file_get_contents(sprintf('%s/data/public.key', __DIR__)),
-                ]
-            )
-        );
-
-        $validator->setDateTime(new DateTime('2016-01-01'));
-        $bearerAuthenticationHook = new BearerAuthenticationHook($validator);
-        $this->assertSame('bar_foo', $bearerAuthenticationHook->executeBefore($request, [])->id());
+        $this->assertSame('foo', $bearerAuthenticationHook->executeBefore($request, [])->getUserId());
     }
 
     private static function getRequest(array $additionalHeaders = [])
