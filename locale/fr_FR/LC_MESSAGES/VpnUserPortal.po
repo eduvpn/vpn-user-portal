@@ -35,12 +35,12 @@ msgid ""
 "        did not work, click <a href=\"%refreshUrl%\">here</a>."
 msgstr ""
 "L'application VPN aurait dû démarrer automatiquement. Si cela ne fonctionne "
-"pas, cliquez sur < a href = \"%refreshUrl%\" > here </a>."
+"pas, cliquez sur <a href=\"%refreshUrl%\">here</a>."
 
 #: /tmp/cache/3e/3e2bd55d8bc4be2d55435468bbefa3e228a6cacd68e05068a20fc5267f59219a.php:61
 msgid "You can now close this browser window or tab!"
 msgstr ""
-"Vous pouvez maintenant fermer cette fenêtre ou l'onglet de votre navigateur !"
+"Vous pouvez maintenant fermer cette fenêtre ou l'onglet de votre navigateur!"
 
 #: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:40
 msgid "You are already enrolled for TOTP."
@@ -59,7 +59,7 @@ msgid ""
 "See the <a href=\"documentation\">documentation</a> for more information on "
 "2FA and a list of applications to use."
 msgstr ""
-"Consultez la < a href = \"documentation\" > documentation </a> pour plus "
+"Consultez la <a href=\"documentation\">documentation</a> pour plus "
 "d'informations sur 2FA et une liste d'applications à utiliser."
 
 #: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:59
@@ -103,8 +103,8 @@ msgid ""
 "There are currently no issued certificates. <a href=\"new\">Download</a> a "
 "new configuration."
 msgstr ""
-"Aucun certificat n’a été émis pour l’instant. < a href = \"new\" > "
-"Téléchargez </a> une nouvelle configuration."
+"Aucun certificat n’a été émis pour l’instant. <a href=\"new\">Téléchargez</"
+"a> une nouvelle configuration."
 
 #: /tmp/cache/a8/a8cbab7e40d704ed712eb0c7ac215a83147dec776176e785a7c3be6914207274.php:50
 #: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:244
@@ -142,8 +142,8 @@ msgid ""
 "See the <a href=\"documentation\">documentation</a> for more information on "
 "2FA."
 msgstr ""
-"Voir la < a href = \"documentation\" > documentation </a> pour plus "
-"d'informations sur 2FA."
+"Voir la <a href=\"documentation\">documentation</a> pour plus d'informations "
+"sur 2FA."
 
 #: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:66
 #: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:41
