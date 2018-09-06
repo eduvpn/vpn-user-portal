@@ -6,7 +6,8 @@
   folder
 - when creating a certificate through the API, bind it to the OAuth client ID
 - delete all certificates associated with OAuth client ID when revoking OAuth
-  application on "Account" page (issue #89)
+  application on "Account" page and disconnect the clients using certificates 
+  issued to this client (issue #89)
 - rename "Configurations" to "Certificates" as that better covers what this 
   page is actually about
 - update `nl_NL` translations
