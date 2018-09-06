@@ -10,6 +10,7 @@
 - rename "Configurations" to "Certificates" as that better covers what this 
   page is actually about
 - update `nl_NL` translations
+- add `fr_FR` translation (by Tangui Coulouarn)
 
 ## 1.8.0 (2018-08-15)
 - use new authorization method
