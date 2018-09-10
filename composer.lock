@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12c55ea02ad8a897a47d9e12dbfe76f1",
+    "content-hash": "9599ecfefb914b05a2bf18560fabd935",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "7bc2412f1814bb0c9524e99998a29310c744f771"
+                "reference": "ea2409b241c5fcf952758f66802d5d2dfd66578a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/7bc2412f1814bb0c9524e99998a29310c744f771",
-                "reference": "7bc2412f1814bb0c9524e99998a29310c744f771",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/ea2409b241c5fcf952758f66802d5d2dfd66578a",
+                "reference": "ea2409b241c5fcf952758f66802d5d2dfd66578a",
                 "shasum": ""
             },
             "require": {
@@ -113,7 +113,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2018-08-17T08:31:37+00:00"
+            "time": "2018-09-06T15:51:43+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -1410,16 +1410,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.3.4",
+            "version": "7.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0356331bf62896dc56e3a15030b23b73f38b2935"
+                "reference": "7b331efabbb628c518c408fdfcaf571156775de2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0356331bf62896dc56e3a15030b23b73f38b2935",
-                "reference": "0356331bf62896dc56e3a15030b23b73f38b2935",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7b331efabbb628c518c408fdfcaf571156775de2",
+                "reference": "7b331efabbb628c518c408fdfcaf571156775de2",
                 "shasum": ""
             },
             "require": {
@@ -1490,7 +1490,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-09-05T09:58:53+00:00"
+            "time": "2018-09-08T15:14:29+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2155,11 +2155,7 @@
     "prefer-lowest": false,
     "platform": {
         "ext-date": "*",
-        "ext-filter": "*",
-        "ext-gettext": "*",
-        "ext-hash": "*",
         "ext-json": "*",
-        "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
