@@ -84,7 +84,7 @@ class ForeignKeyListFetcher
             // convert base_uri to FQDN
             $baseUri = $instance['base_uri'];
             $hostName = parse_url($baseUri, PHP_URL_HOST);
-            if (!is_string($hostName)) {
+            if (!\is_string($hostName)) {
                 throw new RuntimeException('unable to extract host name from base_uri');
             }
             $entryList[$hostName] = Base64::decode($instance['public_key']);

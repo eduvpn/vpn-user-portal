@@ -203,7 +203,7 @@ class VpnApiModule implements ServiceModuleInterface
                         $availableProfiles[] = $profileId;
                     }
 
-                    if (!in_array($requestedProfileId, $availableProfiles, true)) {
+                    if (!\in_array($requestedProfileId, $availableProfiles, true)) {
                         return new ApiErrorResponse('profile_config', 'user has no access to this profile');
                     }
 
@@ -423,7 +423,7 @@ class VpnApiModule implements ServiceModuleInterface
         // if any of the groups in userGroups is part of aclGroupList return
         // true, otherwise false
         foreach ($userGroups as $userGroup) {
-            if (in_array($userGroup['id'], $aclGroupList, true)) {
+            if (\in_array($userGroup['id'], $aclGroupList, true)) {
                 return true;
             }
         }

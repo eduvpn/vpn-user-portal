@@ -26,7 +26,7 @@ class ClientConfig
 
         $vpnProtoPorts = $profileConfig['vpnProtoPorts'];
         if (array_key_exists('exposedVpnProtoPorts', $profileConfig)) {
-            if (0 !== count($profileConfig['exposedVpnProtoPorts'])) {
+            if (0 !== \count($profileConfig['exposedVpnProtoPorts'])) {
                 $vpnProtoPorts = $profileConfig['exposedVpnProtoPorts'];
             }
         }
@@ -65,7 +65,7 @@ class ClientConfig
 
         // API 1, if clientCertificate is provided, we add it directly to the
         // configuration file, XXX can be removed for API 2
-        if (0 !== count($clientCertificate)) {
+        if (0 !== \count($clientCertificate)) {
             $clientConfig = array_merge(
                 $clientConfig,
                 [
@@ -151,7 +151,7 @@ class ClientConfig
         foreach ($vpnProtoPorts as $vpnProtoPort) {
             if (0 === strpos($vpnProtoPort, 'udp')) {
                 // UDP
-                if (!in_array($vpnProtoPort, $specialUdpPorts, true)) {
+                if (!\in_array($vpnProtoPort, $specialUdpPorts, true)) {
                     $normalUdpPorts[] = $vpnProtoPort;
                 } else {
                     $udpPorts[] = $vpnProtoPort;
@@ -160,7 +160,7 @@ class ClientConfig
 
             if (0 === strpos($vpnProtoPort, 'tcp')) {
                 // TCP
-                if (!in_array($vpnProtoPort, $specialTcpPorts, true)) {
+                if (!\in_array($vpnProtoPort, $specialTcpPorts, true)) {
                     $normalTcpPorts[] = $vpnProtoPort;
                 } else {
                     $tcpPorts[] = $vpnProtoPort;
@@ -169,18 +169,18 @@ class ClientConfig
         }
 
         // pick one normal UDP port, if available
-        if (0 !== count($normalUdpPorts)) {
+        if (0 !== \count($normalUdpPorts)) {
             if ($shufflePorts) {
-                $udpPorts[] = $normalUdpPorts[random_int(0, count($normalUdpPorts) - 1)];
+                $udpPorts[] = $normalUdpPorts[random_int(0, \count($normalUdpPorts) - 1)];
             } else {
                 $udpPorts[] = reset($normalUdpPorts);
             }
         }
 
         // pick one normal TCP port, if available
-        if (0 !== count($normalTcpPorts)) {
+        if (0 !== \count($normalTcpPorts)) {
             if ($shufflePorts) {
-                $tcpPorts[] = $normalTcpPorts[random_int(0, count($normalTcpPorts) - 1)];
+                $tcpPorts[] = $normalTcpPorts[random_int(0, \count($normalTcpPorts) - 1)];
             } else {
                 $tcpPorts[] = reset($normalTcpPorts);
             }

@@ -89,7 +89,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
-                if (0 === count($motdMessages)) {
+                if (0 === \count($motdMessages)) {
                     $motdMessage = false;
                 } else {
                     $motdMessage = $motdMessages[0];
@@ -125,12 +125,12 @@ class VpnPortalModule implements ServiceModuleInterface
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
                 // better prevent it early
-                if (!in_array($profileId, array_keys($profileList), true)) {
+                if (!\in_array($profileId, array_keys($profileList), true)) {
                     throw new HttpException('no permission to download a configuration for this profile', 400);
                 }
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
-                if (0 === count($motdMessages)) {
+                if (0 === \count($motdMessages)) {
                     $motdMessage = false;
                 } else {
                     $motdMessage = $motdMessages[0];
@@ -258,7 +258,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 foreach ($authorizedClients as $k => $v) {
                     // false means no longer registered
                     $displayName = false;
-                    if (false !== $clientInfo = call_user_func($this->getClientInfo, $v['client_id'])) {
+                    if (false !== $clientInfo = \call_user_func($this->getClientInfo, $v['client_id'])) {
                         // client_id as name in case no 'display_name' is provided
                         $displayName = $v['client_id'];
                         if (null !== $clientInfo->getDisplayName()) {
@@ -406,7 +406,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // if any of the groups in userGroups is part of aclGroupList return
         // true, otherwise false
         foreach ($userGroups as $userGroup) {
-            if (in_array($userGroup['id'], $aclGroupList, true)) {
+            if (\in_array($userGroup['id'], $aclGroupList, true)) {
                 return true;
             }
         }
