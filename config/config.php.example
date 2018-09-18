@@ -56,8 +56,10 @@ return [
     // SAML
     'MellonAuthentication' => [
         'attribute' => 'MELLON_NAME_ID',
-        //'attribute' => 'MELLON_eduPersonTargetedID',
-        //'attribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6', // OID for eduPersonPrincipalName
+        // 'OID for eduPersonTargetedID
+        //'attribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
+        // OID for eduPersonPrincipalName
+        //'attribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6',
 
         // add the entityID of the IdP to the user ID. This MUST be enabled
         // if multiple IdPs are used *and* the attribute used for the user ID 
@@ -65,8 +67,8 @@ return [
         'addEntityID' => false,
 
         // ** AUTHORIZATION | ENTITLEMENT **
-        //'entitlementAttribute' => 'MELLON_eduPersonEntitlement',
-        //'entitlementAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7' // OID for eduPersonEntitlement
+        // OID for eduPersonEntitlement
+        //'entitlementAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7'
     ],
 
     // Connection to vpn-server-api
