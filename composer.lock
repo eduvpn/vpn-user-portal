@@ -162,11 +162,11 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-oauth2-server",
-                "reference": "f53c76db1b4e522d96c20f44e9e3d7db02035b03"
+                "reference": "daeee9d226c8329be2f708ce9746b7f738d30e49"
             },
             "require": {
                 "ext-date": "*",
@@ -174,7 +174,7 @@
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-pdo": "*",
-                "paragonie/constant_time_encoding": "^1|^2",
+                "paragonie/constant_time_encoding": "^1.0.3|^2.2.0",
                 "paragonie/random_compat": ">=1",
                 "php": ">=5.4",
                 "symfony/polyfill-php56": "^1"
@@ -214,7 +214,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-oauth2-server"
             },
-            "time": "2018-06-08T14:10:39+00:00"
+            "time": "2018-09-21T17:02:56+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -1224,20 +1224,23 @@
         },
         {
             "name": "phpunit/php-file-iterator",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
-                "reference": "cecbc684605bb0cc288828eb5d65d93d5c676d3c"
+                "reference": "050bedf145a257b1ff02746c31894800e5122946"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/cecbc684605bb0cc288828eb5d65d93d5c676d3c",
-                "reference": "cecbc684605bb0cc288828eb5d65d93d5c676d3c",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/050bedf145a257b1ff02746c31894800e5122946",
+                "reference": "050bedf145a257b1ff02746c31894800e5122946",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.1"
             },
             "type": "library",
             "extra": {
@@ -1267,7 +1270,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2018-06-11T11:44:00+00:00"
+            "time": "2018-09-13T20:33:42+00:00"
         },
         {
             "name": "phpunit/php-text-template",
