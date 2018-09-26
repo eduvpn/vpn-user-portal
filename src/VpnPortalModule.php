@@ -19,6 +19,7 @@ use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use SURFnet\VPN\Common\Http\UserInfo;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\TplInterface;
 
@@ -85,7 +86,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->cachedUserGroups($userInfo->id());
+                $userGroups = $this->cachedUserGroups($userInfo);
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
@@ -119,7 +120,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->cachedUserGroups($userInfo->id());
+                $userGroups = $this->cachedUserGroups($userInfo);
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 // make sure the profileId is in the list of allowed profiles for this
@@ -251,7 +252,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $yubiKeyId = $this->serverClient->getRequireBool('yubi_key_id', ['user_id' => $userInfo->id()]);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->cachedUserGroups($userInfo->id());
+                $userGroups = $this->cachedUserGroups($userInfo);
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $authorizedClients = $this->storage->getAuthorizations($userInfo->id());
@@ -445,21 +446,25 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string $userId
+     * @param \SURFnet\VPN\Common\Http\UserInfo $userInfo
      *
      * @return array
      */
-    private function cachedUserGroups($userId)
+    private function cachedUserGroups(UserInfo $userInfo)
     {
         if ($this->session->has('_cached_groups_user_id')) {
             // does it match the current userId?
-            if ($userId === $this->session->get('_cached_groups_user_id')) {
+            if ($userInfo->id() === $this->session->get('_cached_groups_user_id')) {
                 return $this->session->get('_cached_groups');
             }
         }
 
-        $this->session->set('_cached_groups_user_id', $userId);
-        $this->session->set('_cached_groups', $this->serverClient->getRequireArray('user_groups', ['user_id' => $userId]));
+        $entitlementList = $userInfo->entitlementList();
+        $groupList = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userInfo->id()]);
+        $combinedList = array_merge($entitlementList, $groupList);
+
+        $this->session->set('_cached_groups_user_id', $userInfo->id());
+        $this->session->set('_cached_groups', $combinedList);
 
         return $this->session->get('_cached_groups');
     }

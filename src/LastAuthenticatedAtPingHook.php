@@ -60,7 +60,13 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
         }
 
         $userInfo = $hookData['auth'];
-        $this->serverClient->post('last_authenticated_at_ping', ['user_id' => $userInfo->id()]);
+        $this->serverClient->post(
+            'last_authenticated_at_ping',
+            [
+                'user_id' => $userInfo->id(),
+                'entitlement_list' => json_encode($userInfo->entitlementList()),
+            ]
+        );
         $this->session->set('_last_authenticated_at_ping_sent', true);
     }
 }
