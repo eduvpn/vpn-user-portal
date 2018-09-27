@@ -360,6 +360,28 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
+     * @return bool
+     */
+    public static function isMemberOrEntitled(array $aclGroupList, array $userGroups, array $entitlementList)
+    {
+        // if any of the entitlements is part of aclGroupList return true
+        foreach ($entitlementList as $entitlementEntry) {
+            if (\in_array($entitlementEntry, $aclGroupList, true)) {
+                return true;
+            }
+        }
+
+        // if any of the groups is part of aclGroupList return true
+        foreach ($userGroups as $userGroup) {
+            if (\in_array($userGroup['id'], $aclGroupList, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param string $serverName
      * @param string $profileId
      * @param string $userId
@@ -399,28 +421,6 @@ class VpnPortalModule implements ServiceModuleInterface
         $response->setBody($clientConfig);
 
         return $response;
-    }
-
-    /**
-     * @return bool
-     */
-    private static function isMemberOrEntitled(array $aclGroupList, array $userGroups, array $entitlementList)
-    {
-        // if any of the entitlements is part of aclGroupList return true
-        foreach ($entitlementList as $entitlementEntry) {
-            if (\in_array($entitlementEntry, $aclGroupList, true)) {
-                return true;
-            }
-        }
-
-        // if any of the groups is part of aclGroupList return true
-        foreach ($userGroups as $userGroup) {
-            if (\in_array($userGroup['id'], $aclGroupList, true)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
