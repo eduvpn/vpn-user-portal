@@ -14,6 +14,7 @@ use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Common\Json;
 
 /**
  * This hook is used to record the time stamp of the last user authentication
@@ -64,7 +65,7 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
             'last_authenticated_at_ping',
             [
                 'user_id' => $userInfo->id(),
-                'entitlement_list' => json_encode($userInfo->entitlementList()),
+                'entitlement_list' => Json::encode($userInfo->entitlementList()),
             ]
         );
         $this->session->set('_last_authenticated_at_ping_sent', true);

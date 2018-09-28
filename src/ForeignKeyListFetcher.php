@@ -13,6 +13,7 @@ use fkooman\OAuth\Client\Http\HttpClientInterface;
 use fkooman\OAuth\Client\Http\Request;
 use ParagonIE\ConstantTime\Base64;
 use RuntimeException;
+use SURFnet\VPN\Common\Json;
 
 class ForeignKeyListFetcher
 {
@@ -53,7 +54,7 @@ class ForeignKeyListFetcher
         $seq = 0;
         if (false !== $fileContent = @file_get_contents($this->filePath)) {
             // extract the "seq" field to see if we got a newer version
-            $jsonData = self::jsonDecode($fileContent);
+            $jsonData = Json::decode($fileContent);
             $seq = (int) $jsonData['seq'];
         }
 
@@ -77,7 +78,7 @@ class ForeignKeyListFetcher
             return [];
         }
 
-        $jsonData = self::jsonDecode($fileContent);
+        $jsonData = Json::decode($fileContent);
 
         $entryList = [];
         foreach ($jsonData['instances'] as $instance) {
@@ -107,19 +108,5 @@ class ForeignKeyListFetcher
         }
 
         return $httpResponse;
-    }
-
-    /**
-     * @param string $jsonText
-     *
-     * @return array
-     */
-    private static function jsonDecode($jsonText)
-    {
-        if (null === $jsonData = json_decode($jsonText, true)) {
-            throw new RuntimeException('unable to decode JSON');
-        }
-
-        return $jsonData;
     }
 }
