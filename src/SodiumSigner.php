@@ -15,6 +15,7 @@ use fkooman\OAuth\Server\SignerInterface;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\ConstantTime\Binary;
 use RangeException;
+use SURFnet\VPN\Common\Exception\JsonException;
 use SURFnet\VPN\Common\Json;
 
 class SodiumSigner implements SignerInterface
@@ -104,6 +105,8 @@ class SodiumSigner implements SignerInterface
             }
 
             return false;
+        } catch (JsonException $e) {
+            throw new InvalidRequestException('unable to decode JSON');
         } catch (RangeException $e) {
             // this indicates the provided Base64 encoded token is malformed,
             // this is an "user" error!
