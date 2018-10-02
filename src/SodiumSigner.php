@@ -68,16 +68,37 @@ class SodiumSigner implements SignerInterface
     public function verify($inputTokenStr)
     {
         try {
+            $publicKeyHint = null;
+            // determine a public key hint encoded in the footer, if it is
+            // there we use it to quickly select the public key for decoding
+            // this token, NOTE: we only use this as a "hint", so it MUST still
+            // verify properly.
+            if (false !== strpos($inputTokenStr, '.')) {
+                // we have a footer with token issuer
+                list($inputTokenStr, $tokenFooter) = explode('.', $inputTokenStr);
+                $footerData = Json::decode(Base64UrlSafe::decode($tokenFooter));
+                if (isset($footerData['iss'])) {
+                    $publicKeyHint = $footerData['iss'];
+                }
+            }
+
             $decodedTokenStr = Base64UrlSafe::decode(
                 self::toUrlSafeUnpadded($inputTokenStr)
             );
 
-            foreach ($this->publicKeyList as $keyId => $publicKey) {
-                $jsonString = \sodium_crypto_sign_open($decodedTokenStr, $publicKey);
-                if (false !== $jsonString) {
-                    $listOfClaims = Json::decode($jsonString);
-                    $listOfClaims['key_id'] = $keyId;
+            // try the public key belonging to the hint
+            if (null !== $publicKeyHint) {
+                if (array_key_exists($publicKeyHint, $this->publicKeyList)) {
+                    return self::decodeToken($decodedTokenStr, $publicKeyHint, $this->publicKeyList[$publicKeyHint]);
+                }
 
+                // we don't have this public key registered
+                return false;
+            }
+
+            // no hint, so try all public keys...
+            foreach ($this->publicKeyList as $tokenIssuer => $publicKey) {
+                if (false !== $listOfClaims = self::decodeToken($decodedTokenStr, $tokenIssuer, $publicKey)) {
                     return $listOfClaims;
                 }
             }
@@ -105,5 +126,24 @@ class SodiumSigner implements SignerInterface
             ['-', '_', ''],
             $str
         );
+    }
+
+    /**
+     * @param string $decodedTokenStr
+     * @param string $publicKey
+     * @param mixed  $tokenIssuer
+     *
+     * @return false|array
+     */
+    private static function decodeToken($decodedTokenStr, $tokenIssuer, $publicKey)
+    {
+        if (false === $jsonString = \sodium_crypto_sign_open($decodedTokenStr, $publicKey)) {
+            return false;
+        }
+
+        $listOfClaims = Json::decode($jsonString);
+        $listOfClaims['key_id'] = $tokenIssuer;
+
+        return $listOfClaims;
     }
 }
