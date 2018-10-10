@@ -58,6 +58,10 @@ class ClientConfig
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
 
+            // only allow AES-256-GCM
+            'ncp-ciphers AES-256-GCM',
+            'cipher AES-256-GCM',
+
             '<ca>',
             trim($serverInfo['ca']),
             '</ca>',
@@ -81,19 +85,16 @@ class ClientConfig
         }
 
         if ('tls-crypt' === self::getTlsProtection($profileConfig)) {
-            // >= 2.4
             $clientConfig = array_merge(
                 $clientConfig,
                 [
                     '<tls-crypt>',
                     trim($serverInfo['ta']),
                     '</tls-crypt>',
+                    'auth none',
                 ]
             );
-            $clientConfig[] = 'cipher AES-256-GCM';
-            $clientConfig[] = 'auth SHA256';
         } elseif ('tls-auth' === self::getTlsProtection($profileConfig)) {
-            // < 2.4
             $clientConfig = array_merge(
                 $clientConfig,
                 [
@@ -101,14 +102,12 @@ class ClientConfig
                     '<tls-auth>',
                     trim($serverInfo['ta']),
                     '</tls-auth>',
+                    'auth SHA256',
                 ]
             );
-            $clientConfig[] = 'cipher AES-256-CBC';
-            $clientConfig[] = 'auth SHA256';
         } else {
             // no tls-auth, no tls-crypt
-            $clientConfig[] = 'cipher AES-256-CBC';
-            $clientConfig[] = 'auth SHA256';
+            $clientConfig[] = 'auth none';
         }
 
         // --comp-lzo

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.8.3 (...)
+- drop support for OpenVPN 2.3 clients
+
 ## 1.8.2 (2018-10-10)
 - update `da_DK` translation (by Sanne Holm)
 - also consider entitlements when showing list of profiles
