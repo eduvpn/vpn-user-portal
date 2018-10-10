@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.8.2 (...)
+## 1.8.2 (2018-10-10)
 - update `da_DK` translation (by Sanne Holm)
 - also consider entitlements when showing list of profiles
 - cache entitlements on the server as well as part of `LastAuthenticatedAtPing`
