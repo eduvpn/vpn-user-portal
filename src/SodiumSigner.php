@@ -88,12 +88,12 @@ class SodiumSigner implements SignerInterface
 
             // try the public key belonging to the hint
             if (null !== $publicKeyHint) {
-                if (!array_key_exists($publicKeyHint, $this->publicKeyList)) {
-                    // we don't have this public key registered
-                    return false;
+                if (array_key_exists($publicKeyHint, $this->publicKeyList)) {
+                    return self::decodeToken($decodedTokenStr, $publicKeyHint, $this->publicKeyList[$publicKeyHint]);
                 }
 
-                return self::decodeToken($decodedTokenStr, $publicKeyHint, $this->publicKeyList[$publicKeyHint]);
+                // we don't have this public key registered
+                return false;
             }
 
             // no hint, so try all public keys...
@@ -130,8 +130,8 @@ class SodiumSigner implements SignerInterface
 
     /**
      * @param string $decodedTokenStr
-     * @param string $tokenIssuer
      * @param string $publicKey
+     * @param mixed  $tokenIssuer
      *
      * @return false|array
      */
