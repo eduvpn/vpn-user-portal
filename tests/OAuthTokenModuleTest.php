@@ -13,6 +13,7 @@ use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +21,6 @@ use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Portal\OAuthTokenModule;
-use SURFnet\VPN\Portal\SodiumSigner;
 
 class OAuthTokenModuleTest extends TestCase
 {

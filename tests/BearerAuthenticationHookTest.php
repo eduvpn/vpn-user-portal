@@ -12,13 +12,13 @@ namespace SURFnet\VPN\Portal\Tests;
 use DateTime;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\ClientInfo;
+use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Portal\BearerAuthenticationHook;
-use SURFnet\VPN\Portal\SodiumSigner;
 
 class BearerAuthenticationHookTest extends TestCase
 {

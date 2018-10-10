@@ -11,6 +11,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
 use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
@@ -21,7 +22,6 @@ use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\OAuthTokenModule;
-use SURFnet\VPN\Portal\SodiumSigner;
 
 $logger = new Logger('vpn-user-portal');
 
