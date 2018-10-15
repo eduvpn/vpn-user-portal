@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.8.3 (...)
+## 1.8.3 (2018-10-15)
 - drop support for OpenVPN 2.3 clients
 
 ## 1.8.2 (2018-10-10)
