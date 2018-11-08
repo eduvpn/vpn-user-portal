@@ -12,6 +12,7 @@ namespace SURFnet\VPN\Portal\Tests;
 use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -31,6 +32,7 @@ class VpnPortalModuleTest extends TestCase
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(
+            new Config([]),
             new JsonTpl(),
             new ServerClient($httpClient, 'serverClient'),
             new TestSession(),
@@ -93,6 +95,10 @@ class VpnPortalModuleTest extends TestCase
                     'userInfo' => [],
                     'userGroups' => [],
                     'authorizedClients' => [],
+                    'twoFactorMethods' => [
+                        'totp',
+                        'yubi',
+                    ],
                 ],
             ],
             $this->makeRequest('GET', '/account')
