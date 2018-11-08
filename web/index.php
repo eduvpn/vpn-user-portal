@@ -305,13 +305,20 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         ]
     );
 
+    $twoFactorMethods = $config->optionalItem('twoFactorMethods', ['yubi', 'totp']);
+
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
-    $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
+    if (0 !== count($twoFactorMethods)) {
+        $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
+    }
+
     $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
 
     // two factor module
-    $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
-    $service->addModule($twoFactorModule);
+    if (0 !== count($twoFactorMethods)) {
+        $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
+        $service->addModule($twoFactorModule);
+    }
 
     // voot module
     if ($config->getItem('enableVoot')) {
@@ -343,6 +350,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
+        $config,
         $tpl,
         $serverClient,
         $session,
@@ -351,19 +359,23 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     );
     $service->addModule($vpnPortalModule);
 
-    // TOTP module
-    $totpModule = new TotpModule(
-        $tpl,
-        $serverClient
-    );
-    $service->addModule($totpModule);
+    if (in_array('totp', $twoFactorMethods, true)) {
+        // TOTP module
+        $totpModule = new TotpModule(
+            $tpl,
+            $serverClient
+        );
+        $service->addModule($totpModule);
+    }
 
-    // Yubi module
-    $yubiModule = new YubiModule(
-        $tpl,
-        $serverClient
-    );
-    $service->addModule($yubiModule);
+    if (in_array('yubi', $twoFactorMethods, true)) {
+        // Yubi module
+        $yubiModule = new YubiModule(
+            $tpl,
+            $serverClient
+        );
+        $service->addModule($yubiModule);
+    }
 
     // OAuth module
     if ($config->hasSection('Api')) {

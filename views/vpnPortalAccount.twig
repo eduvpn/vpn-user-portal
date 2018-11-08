@@ -45,10 +45,12 @@
         {% endif %}
     </table>
 
+    {% if twoFactorMethods is not empty %}
     <h2>{% trans "Two-factor Authentication" %}</h2>
 
     <table>
 
+        {% if "totp" in twoFactorMethods %}
         <tr>
             <th>{% trans "TOTP" %}</th>
             <td>
@@ -59,7 +61,9 @@
                 {% endif %}
             </td>
         </tr>
+        {% endif %}
 
+        {% if "yubi" in twoFactorMethods %}
         <tr>
             <th>{% trans "YubiKey" %}</th>
             <td>
@@ -71,6 +75,7 @@
                 {% endif %}
             </td>
         </tr>
+        {% endif %}
 
         {% if twoFactorEnabledProfiles is not empty %}
         <tr>
@@ -85,6 +90,7 @@
         </tr>
         {% endif %}
     </table>
+    {% endif %}
 
     {% if authorizedClients is not empty %}
     <h2>{% trans "Authorized Applications" %}</h2>

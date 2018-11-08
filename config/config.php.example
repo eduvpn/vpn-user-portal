@@ -94,6 +94,10 @@ return [
         //'fr_FR' => 'Français',
     ],
 
+    'twoFactorMethods' => ['totp'],
+    //'twoFactorMethods' => [],
+    //'twoFactorMethods' => ['totp', 'yubi'],
+
     'Api' => [
         // access_tokens expire after 1 hour
         'tokenExpiry' => 3600,

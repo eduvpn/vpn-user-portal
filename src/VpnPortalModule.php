@@ -11,6 +11,7 @@ namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Server\Storage;
 use fkooman\SeCookie\SessionInterface;
+use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\InputValidation;
@@ -24,6 +25,9 @@ use SURFnet\VPN\Common\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
+    /** @var \SURFnet\VPN\Common\Config */
+    private $config;
+
     /** @var \SURFnet\VPN\Common\TplInterface */
     private $tpl;
 
@@ -42,8 +46,9 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, callable $getClientInfo)
+    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, callable $getClientInfo)
     {
+        $this->config = $config;
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
         $this->session = $session;
@@ -290,6 +295,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'userInfo' => $userInfo,
                             'userGroups' => $userGroups,
                             'authorizedClients' => $authorizedClients,
+                            'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp', 'yubi']),
                         ]
                     )
                 );
