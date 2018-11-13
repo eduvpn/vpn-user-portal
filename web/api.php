@@ -10,6 +10,7 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use DateInterval;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
@@ -91,7 +92,8 @@ try {
 
         // api module
         $vpnApiModule = new VpnApiModule(
-            $serverClient
+            $serverClient,
+            new DateInterval($config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P1Y')
         );
         $service->addModule($vpnApiModule);
     }
