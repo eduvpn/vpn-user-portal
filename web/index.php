@@ -381,7 +381,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
 
         $oauthServer->setRefreshTokenExpiry(
             new DateInterval(
-                $config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P1Y'
+                $config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P90D'
             )
         );
         $oauthServer->setAccessTokenExpiry(
