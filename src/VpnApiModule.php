@@ -9,6 +9,7 @@
 
 namespace SURFnet\VPN\Portal;
 
+use DateInterval;
 use DateTime;
 use DateTimeZone;
 use fkooman\OAuth\Server\TokenInfo;
@@ -30,13 +31,16 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var bool */
-    private $shuffleHosts;
+    /** @var \DateInterval */
+    private $refreshTokenExpiry;
 
-    public function __construct(ServerClient $serverClient)
+    /** @var bool */
+    private $shuffleHosts = true;
+
+    public function __construct(ServerClient $serverClient, DateInterval $refreshTokenExpiry)
     {
         $this->serverClient = $serverClient;
-        $this->shuffleHosts = true;
+        $this->refreshTokenExpiry = $refreshTokenExpiry;
     }
 
     /**
@@ -137,7 +141,10 @@ class VpnApiModule implements ServiceModuleInterface
 
                 try {
                     $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
-                    $clientCertificate = $this->getCertificate($tokenInfo, $displayName);
+                    if (false === $certExpiresDays = self::toExpireDays(new DateTime(), $this->refreshTokenExpiry, $userInfo->authTime())) {
+                        return new ApiErrorResponse('create_keypair', 'authTime in the future');
+                    }
+                    $clientCertificate = $this->getCertificate($tokenInfo, $displayName, $certExpiresDays);
 
                     return new ApiResponse(
                         'create_keypair',
@@ -229,8 +236,11 @@ class VpnApiModule implements ServiceModuleInterface
                 try {
                     $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
                     $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
+                    if (false === $certExpiresDays = self::toExpireDays(new DateTime(), $this->refreshTokenExpiry, $userInfo->authTime())) {
+                        return new ApiErrorResponse('create_config', 'authTime in the future');
+                    }
 
-                    return $this->getConfig($request->getServerName(), $profileId, $tokenInfo, $displayName);
+                    return $this->getConfig($request->getServerName(), $profileId, $tokenInfo, $displayName, $certExpiresDays);
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('create_config', $e->getMessage());
                 }
@@ -345,14 +355,35 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
+     * @return false|int
+     */
+    public static function toExpireDays(DateTime $dateTime, DateInterval $dateInterval, DateTime $authTime)
+    {
+        if ($authTime >= $dateTime) {
+            return false;
+        }
+
+        $authTimeDiff = date_diff(
+            date_add(clone $authTime, $dateInterval),
+            date_add(clone $dateTime, $dateInterval)
+        );
+
+        $dateIntervalDays = (int) $dateInterval->format('%d');
+        $daysElapsed = (int) $authTimeDiff->format('%a');
+
+        return $dateIntervalDays - $daysElapsed;
+    }
+
+    /**
      * @param string                          $serverName
      * @param string                          $profileId
      * @param \fkooman\OAuth\Server\TokenInfo $tokenInfo
      * @param string                          $displayName
+     * @param int                             $certExpiresDays
      *
      * @return Response
      */
-    private function getConfig($serverName, $profileId, TokenInfo $tokenInfo, $displayName)
+    private function getConfig($serverName, $profileId, TokenInfo $tokenInfo, $displayName, $certExpiresDays)
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
@@ -360,7 +391,7 @@ class VpnApiModule implements ServiceModuleInterface
         $profileData = $profileList[$profileId];
 
         // create a certificate
-        $clientCertificate = $this->getCertificate($tokenInfo, $displayName);
+        $clientCertificate = $this->getCertificate($tokenInfo, $displayName, $certExpiresDays);
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info');
 
@@ -400,10 +431,11 @@ class VpnApiModule implements ServiceModuleInterface
     /**
      * @param \fkooman\OAuth\Server\TokenInfo $tokenInfo
      * @param string                          $displayName
+     * @param int                             $certExpiresDays
      *
      * @return array
      */
-    private function getCertificate(TokenInfo $tokenInfo, $displayName)
+    private function getCertificate(TokenInfo $tokenInfo, $displayName, $certExpiresDays)
     {
         // create a certificate
         return $this->serverClient->postRequireArray(
@@ -412,6 +444,7 @@ class VpnApiModule implements ServiceModuleInterface
                 'user_id' => $this->tokenInfoToUserInfo($tokenInfo)->id(),
                 'display_name' => $displayName,
                 'client_id' => $tokenInfo->getClientId(),
+                'cert_expires_days' => $certExpiresDays,
             ]
         );
     }
@@ -473,13 +506,20 @@ class VpnApiModule implements ServiceModuleInterface
                     preg_replace('/__*/', '_', preg_replace('/[^A-Za-z0-9.]/', '_', $keyId)),
                     $tokenInfo->getUserId()
                 ),
-                []  // no entitlements for remote users
+                // no entitlements for remote users
+                [],
+                // we can't determine the time the user last authenticated
+                // through the remote instance, so we just use current time for
+                // now until we propagate this through the OAuth token
+                new DateTime()
             );
         }
 
         $userId = $tokenInfo->getUserId();
         $entitlementList = $this->serverClient->getRequireArray('user_entitlement_list', ['user_id' => $userId]);
+        $authTimeStr = $this->serverClient->get('user_last_authenticated_at', ['user_id' => $userId]);
+        $authTime = !\is_string($authTimeStr) ? new DateTime() : new DateTime($authTimeStr);
 
-        return new UserInfo($userId, $entitlementList);
+        return new UserInfo($userId, $entitlementList, $authTime);
     }
 }

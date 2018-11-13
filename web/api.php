@@ -91,7 +91,8 @@ try {
 
         // api module
         $vpnApiModule = new VpnApiModule(
-            $serverClient
+            $serverClient,
+            new DateInterval($config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P90D')
         );
         $service->addModule($vpnApiModule);
     }
