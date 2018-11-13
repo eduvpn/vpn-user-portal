@@ -10,7 +10,6 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use DateInterval;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
