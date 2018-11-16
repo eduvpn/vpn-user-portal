@@ -3,8 +3,12 @@
 ## 1.8.4 (...)
 - deal with `authTime` in `UserInfo` object. Obtain it from the 
   `last_authenticated_at` information retained by the server
-- certificates issued through the API will now expire on the same day as the
+- certificates issued through the API will now expire on the same moment as the
   refresh token
+- remove `Api/refreshTokenExpiry` from config template, replaced by 
+  `sessionExpiry`
+- remove `Api/accessTokenExpiry` from config template, overriding it will still 
+  work, but don't advertise this
 
 ## 1.8.3 (2018-10-15)
 - drop support for OpenVPN 2.3 clients

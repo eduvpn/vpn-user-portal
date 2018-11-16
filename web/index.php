@@ -341,12 +341,24 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
 
     $clientFetcher = new ClientFetcher($config);
 
+    // determine sessionExpiry, use the new configuration option if it is there
+    // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
+    // hard coded 90 days
+    if ($config->hasItem('sessionExpiry')) {
+        $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
+    } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
+        $sessionExpiry = new DateInterval($config->getSection('Api')->getItem('refreshTokenExpiry'));
+    } else {
+        $sessionExpiry = new DateInterval('P90D');
+    }
+
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $tpl,
         $serverClient,
         $session,
         $storage,
+        $sessionExpiry,
         [$clientFetcher, 'get']
     );
     $service->addModule($vpnPortalModule);
@@ -379,14 +391,10 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
             )
         );
 
-        $oauthServer->setRefreshTokenExpiry(
-            new DateInterval(
-                $config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P90D'
-            )
-        );
+        $oauthServer->setRefreshTokenExpiry($sessionExpiry);
         $oauthServer->setAccessTokenExpiry(
             new DateInterval(
-                sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry'))
+                $config->getSection('Api')->getItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
             )
         );
 

@@ -89,10 +89,21 @@ try {
             $config->getItem('apiUri')
         );
 
+        // determine sessionExpiry, use the new configuration option if it is there
+        // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
+        // hard coded 90 days
+        if ($config->hasItem('sessionExpiry')) {
+            $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
+        } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
+            $sessionExpiry = new DateInterval($config->getSection('Api')->getItem('refreshTokenExpiry'));
+        } else {
+            $sessionExpiry = new DateInterval('P90D');
+        }
+
         // api module
         $vpnApiModule = new VpnApiModule(
             $serverClient,
-            new DateInterval($config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P90D')
+            $sessionExpiry
         );
         $service->addModule($vpnApiModule);
     }

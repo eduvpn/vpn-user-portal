@@ -9,6 +9,7 @@
 
 namespace SURFnet\VPN\Portal\Tests;
 
+use DateInterval;
 use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -35,6 +36,7 @@ class VpnPortalModuleTest extends TestCase
             new ServerClient($httpClient, 'serverClient'),
             new TestSession(),
             $storage,
+            new DateInterval('P90D'),
             function ($clientId) {
                 return false;
             }

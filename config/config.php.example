@@ -94,11 +94,13 @@ return [
         //'fr_FR' => 'Français',
     ],
 
+    // Session Expiry
+    // - OAuth (refresh_token) validity
+    // - X.509 Client Certificate "Not After" 
+    //   (time of authorization + sessionExpiry)
+    'sessionExpiry' => 'P90D',
+
     'Api' => [
-        // access_tokens expire after 1 hour
-        'tokenExpiry' => 3600,
-        // refresh_tokens expire after 90 days
-        'refreshTokenExpiry' => 'P90D',
         'consumerList' => [
             //'_CLIENT_ID_' => [
             //    'redirect_uri_list' => [

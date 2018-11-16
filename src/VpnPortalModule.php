@@ -9,6 +9,8 @@
 
 namespace SURFnet\VPN\Portal;
 
+use DateInterval;
+use DateTime;
 use fkooman\OAuth\Server\Storage;
 use fkooman\SeCookie\SessionInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
@@ -36,18 +38,22 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \fkooman\OAuth\Server\Storage */
     private $storage;
 
+    /** @var \DateInterval */
+    private $sessionExpiry;
+
     /** @var callable */
     private $getClientInfo;
 
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, callable $getClientInfo)
+    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, DateInterval $sessionExpiry, callable $getClientInfo)
     {
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
         $this->session = $session;
         $this->storage = $storage;
+        $this->sessionExpiry = $sessionExpiry;
         $this->getClientInfo = $getClientInfo;
     }
 
@@ -155,8 +161,9 @@ class VpnPortalModule implements ServiceModuleInterface
                         );
                     }
                 }
+                $expiresAt = date_add(clone $userInfo->authTime(), $this->sessionExpiry);
 
-                return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName);
+                return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName, $expiresAt);
             }
         );
 
@@ -382,17 +389,25 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string $serverName
-     * @param string $profileId
-     * @param string $userId
-     * @param string $displayName
+     * @param string    $serverName
+     * @param string    $profileId
+     * @param string    $userId
+     * @param string    $displayName
+     * @param \DateTime $expiresAt
      *
      * @return \SURFnet\VPN\Common\Http\Response
      */
-    private function getConfig($serverName, $profileId, $userId, $displayName)
+    private function getConfig($serverName, $profileId, $userId, $displayName, DateTime $expiresAt)
     {
         // create a certificate
-        $clientCertificate = $this->serverClient->postRequireArray('add_client_certificate', ['user_id' => $userId, 'display_name' => $displayName]);
+        $clientCertificate = $this->serverClient->postRequireArray(
+            'add_client_certificate',
+            [
+                'user_id' => $userId,
+                'display_name' => $displayName,
+                'expires_at' => $expiresAt->format(DateTime::ATOM),
+            ]
+        );
 
         $serverProfiles = $this->serverClient->getRequireArray('profile_list');
         $profileData = $serverProfiles[$profileId];
