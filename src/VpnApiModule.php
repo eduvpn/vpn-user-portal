@@ -494,6 +494,12 @@ class VpnApiModule implements ServiceModuleInterface
 
         $userId = $tokenInfo->getUserId();
         $entitlementList = $this->serverClient->getRequireArray('user_entitlement_list', ['user_id' => $userId]);
+        // the response is possibly NULL in case the user didn't authenticate
+        // since the token was issued and the database changed recording the
+        // user_last_authenticate_at... we still want to accept those tokens
+        // as well, but ideally we no longer accept this at some point!
+        // XXX save this for "mass revocation of tokens" planned some time in
+        // the future
         $authTimeStr = $this->serverClient->get('user_last_authenticated_at', ['user_id' => $userId]);
         $authTime = !\is_string($authTimeStr) ? new DateTime() : new DateTime($authTimeStr);
 
