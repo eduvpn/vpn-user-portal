@@ -85,6 +85,17 @@ try {
         $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
+    // determine sessionExpiry, use the new configuration option if it is there
+    // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
+    // hard coded 90 days
+    if ($config->hasItem('sessionExpiry')) {
+        $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
+    } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
+        $sessionExpiry = new DateInterval($config->getSection('Api')->getItem('refreshTokenExpiry'));
+    } else {
+        $sessionExpiry = new DateInterval('P90D');
+    }
+
     $cookie = new Cookie(
         [
             'SameSite' => 'Lax',
@@ -98,6 +109,7 @@ try {
             'SessionName' => 'SID',
             'DomainBinding' => $request->getServerName(),
             'PathBinding' => $request->getRoot(),
+            'SessionExpiry' => $sessionExpiry,
         ],
         new Cookie(
             [
@@ -340,17 +352,6 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     $storage->init();
 
     $clientFetcher = new ClientFetcher($config);
-
-    // determine sessionExpiry, use the new configuration option if it is there
-    // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
-    // hard coded 90 days
-    if ($config->hasItem('sessionExpiry')) {
-        $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
-    } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
-        $sessionExpiry = new DateInterval($config->getSection('Api')->getItem('refreshTokenExpiry'));
-    } else {
-        $sessionExpiry = new DateInterval('P90D');
-    }
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
