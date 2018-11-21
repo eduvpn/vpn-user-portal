@@ -9,6 +9,8 @@
 
 namespace SURFnet\VPN\Portal;
 
+use fkooman\OAuth\Client\OAuthClient;
+use fkooman\OAuth\Client\Provider;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\RedirectResponse;
@@ -24,9 +26,27 @@ class VootTokenHook implements BeforeHookInterface
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    public function __construct(ServerClient $serverClient)
+    /** @var \fkooman\OAuth\Client\OAuthClient */
+    private $client;
+
+    /** @var \fkooman\OAuth\Client\Provider */
+    private $provider;
+
+    /** @var string */
+    private $vootUri;
+
+    /**
+     * @param \SURFnet\VPN\Common\HttpClient\ServerClient $serverClient
+     * @param \fkooman\OAuth\Client\OAuthClient           $client
+     * @param \fkooman\OAuth\Client\Provider              $provider
+     * @param string                                      $vootUri
+     */
+    public function __construct(ServerClient $serverClient, OAuthClient $client, Provider $provider, $vootUri)
     {
         $this->serverClient = $serverClient;
+        $this->client = $client;
+        $this->provider = $provider;
+        $this->vootUri = $vootUri;
     }
 
     /**
@@ -61,7 +81,15 @@ class VootTokenHook implements BeforeHookInterface
             return false;
         }
 
-        if (!$this->serverClient->get('has_voot_token', ['user_id' => $userInfo->id()])) {
+        if (false === $response = $this->client->get($this->provider, $userInfo->id(), 'groups', $this->vootUri)) {
+            // "false" is returned for a number of reasons:
+            // * no access_token yet for this user ID / scope
+            // * access_token expired (and no refresh_token available)
+            // * access_token was not accepted (revoked?)
+            // * refresh_token was rejected (revoked?)
+            //
+            // we need to re-request authorization at the OAuth server, redirect
+            // the browser to the authorization endpoint (with a 302)
             return new RedirectResponse(
                 sprintf(
                     '%s_voot/authorize?%s',
@@ -74,6 +102,37 @@ class VootTokenHook implements BeforeHookInterface
             );
         }
 
+        if (!$response->isOkay()) {
+            // VOOT responses should be HTTP 200 responses... there is
+            // something else wrong...
+            // XXX we should probably die here!
+            return false;
+        }
+
+        $hookData['auth']->addEntitlements(self::extractMembership($response->json()));
+
         return true;
+    }
+
+    /**
+     * @return array<string>
+     */
+    private static function extractMembership(array $responseData)
+    {
+        $memberOf = [];
+        foreach ($responseData as $groupEntry) {
+            if (!\is_array($groupEntry)) {
+                continue;
+            }
+            if (!array_key_exists('id', $groupEntry)) {
+                continue;
+            }
+            if (!\is_string($groupEntry['id'])) {
+                continue;
+            }
+            $memberOf[] = $groupEntry['id'];
+        }
+
+        return $memberOf;
     }
 }

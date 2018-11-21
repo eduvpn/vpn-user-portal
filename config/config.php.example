@@ -83,6 +83,7 @@ return [
         'clientSecret' => 'my_client_secret',
         'authorizationEndpoint' => 'https://authz.surfconext.nl/oauth/authorize',
         'tokenEndpoint' => 'https://authz.surfconext.nl/oauth/token',
+        'apiUrl' => 'https://voot.surfconext.nl/me/groups',
     ],
 
     // supported languages in the UI, the first one mentioned is the default

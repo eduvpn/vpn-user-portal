@@ -11,7 +11,6 @@ namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Client\AccessToken;
 use fkooman\OAuth\Client\TokenStorageInterface;
-use RuntimeException;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 
 class VootTokenStorage implements TokenStorageInterface
@@ -27,12 +26,33 @@ class VootTokenStorage implements TokenStorageInterface
     /**
      * @param string $userId
      *
-     * @return array
+     * @return array<AccessToken>
      */
     public function getAccessTokenList($userId)
     {
-        // vpn-user-portal will never use this
-        throw new RuntimeException('not implemented');
+        // figure out if we have a VOOT token
+        $hasVootToken = $this->serverClient->getRequireBool(
+            'has_voot_token',
+            [
+                'user_id' => $userId,
+            ]
+        );
+        if (false === $hasVootToken) {
+            // no VOOT token, return empty list
+            return [];
+        }
+
+        // yes VOOT token
+        $vootToken = $this->serverClient->getRequireString(
+            'get_voot_token',
+            [
+                'user_id' => $userId,
+            ]
+        );
+
+        return [
+            AccessToken::fromJson($vootToken),
+        ];
     }
 
     /**
@@ -60,7 +80,11 @@ class VootTokenStorage implements TokenStorageInterface
      */
     public function deleteAccessToken($userId, AccessToken $accessToken)
     {
-        // vpn-user-portal will never use this
-        throw new RuntimeException('not implemented');
+        $this->serverClient->post(
+            'delete_voot_token',
+            [
+                'user_id' => $userId,
+            ]
+        );
     }
 }

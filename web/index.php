@@ -327,7 +327,6 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
 
     // voot module
     if ($config->getItem('enableVoot')) {
-        $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
         $oauthClient = new OAuthClient(
             new VootTokenStorage($serverClient),
             new OAuthCurlHttpClient([], $logger)
@@ -338,6 +337,9 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
             $config->getSection('Voot')->getItem('authorizationEndpoint'),
             $config->getSection('Voot')->getItem('tokenEndpoint')
         );
+        // we now also require apiUrl here! XXX handle it not being there more gracefully!
+        $service->addBeforeHook('voot_token', new VootTokenHook($serverClient, $oauthClient, $provider, $config->getSection('Voot')->getItem('apiUrl')));
+
         $vootModule = new VootModule(
             $oauthClient,
             $provider,
