@@ -16,20 +16,6 @@
             </tr>
         {% endif %}
 
-        {% if userInfo.entitlementList() is not empty %}
-        <tr>
-            <th>{% trans "Entitlement(s)" %}</th>
-            <td>
-                <ul class="simple">
-                    {% for entitlement in userInfo.entitlementList() %}
-                        <li title="{{ entitlement }}">{{ entitlement }}</li>
-                    {% endfor %}
-                </ul>
-            </td>
-            <td></td>
-        </tr>
-        {% endif %}
-
         {% if userGroups is not empty %}
         <tr>
             <th>{% trans "Group Membership(s)" %}</th>

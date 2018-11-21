@@ -92,8 +92,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
-                $entitlementList = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups, $entitlementList);
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
                 if (0 === \count($motdMessages)) {
@@ -127,8 +126,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
-                $entitlementList = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups, $entitlementList);
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
@@ -261,8 +259,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
-                $entitlementList = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups, $entitlementList);
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $authorizedClients = $this->storage->getAuthorizations($userInfo->id());
                 foreach ($authorizedClients as $k => $v) {
@@ -369,15 +366,8 @@ class VpnPortalModule implements ServiceModuleInterface
     /**
      * @return bool
      */
-    public static function isMemberOrEntitled(array $aclGroupList, array $userGroups, array $entitlementList)
+    public static function isMember(array $aclGroupList, array $userGroups)
     {
-        // if any of the entitlements is part of aclGroupList return true
-        foreach ($entitlementList as $entitlementEntry) {
-            if (\in_array($entitlementEntry, $aclGroupList, true)) {
-                return true;
-            }
-        }
-
         // if any of the groups is part of aclGroupList return true
         foreach ($userGroups as $userGroup) {
             if (\in_array($userGroup['id'], $aclGroupList, true)) {
@@ -445,7 +435,7 @@ class VpnPortalModule implements ServiceModuleInterface
      *
      * @return array
      */
-    private static function getProfileList(array $serverProfiles, array $userGroups, array $entitlementList)
+    private static function getProfileList(array $serverProfiles, array $userGroups)
     {
         $profileList = [];
         foreach ($serverProfiles as $profileId => $profileData) {
@@ -454,7 +444,7 @@ class VpnPortalModule implements ServiceModuleInterface
             }
             if ($profileData['enableAcl']) {
                 // is the user member of the aclGroupList?
-                if (!self::isMemberOrEntitled($profileData['aclGroupList'], $userGroups, $entitlementList)) {
+                if (!self::isMember($profileData['aclGroupList'], $userGroups)) {
                     continue;
                 }
             }

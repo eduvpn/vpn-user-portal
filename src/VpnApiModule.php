@@ -77,7 +77,7 @@ class VpnApiModule implements ServiceModuleInterface
                     $profileConfig = new ProfileConfig($profileData);
                     if ($profileConfig->getItem('enableAcl')) {
                         // is the user member of the aclGroupList?
-                        if (!VpnPortalModule::isMemberOrEntitled($profileConfig->getSection('aclGroupList')->toArray(), $userGroups, $userInfo->entitlementList())) {
+                        if (!VpnPortalModule::isMember($profileConfig->getSection('aclGroupList')->toArray(), $userGroups)) {
                             continue;
                         }
                     }
@@ -202,7 +202,7 @@ class VpnApiModule implements ServiceModuleInterface
                         $profileConfig = new ProfileConfig($profileData);
                         if ($profileConfig->getItem('enableAcl')) {
                             // is the user member of the aclGroupList?
-                            if (!VpnPortalModule::isMemberOrEntitled($profileConfig->getSection('aclGroupList')->toArray(), $userGroups, $userInfo->entitlementList())) {
+                            if (!VpnPortalModule::isMember($profileConfig->getSection('aclGroupList')->toArray(), $userGroups)) {
                                 continue;
                             }
                         }
