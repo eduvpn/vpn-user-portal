@@ -76,7 +76,7 @@ try {
         $oauthServer->setRefreshTokenExpiry($sessionExpiry);
         $oauthServer->setAccessTokenExpiry(
             new DateInterval(
-                $config->getSection('Api')->getItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
+                $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
             )
         );
 
