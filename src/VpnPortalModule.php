@@ -370,7 +370,7 @@ class VpnPortalModule implements ServiceModuleInterface
     {
         // if any of the groups is part of aclGroupList return true
         foreach ($userGroups as $userGroup) {
-            if (\in_array($userGroup['id'], $aclGroupList, true)) {
+            if (\in_array($userGroup, $aclGroupList, true)) {
                 return true;
             }
         }

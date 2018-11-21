@@ -21,8 +21,8 @@
             <th>{% trans "Group Membership(s)" %}</th>
             <td>
                 <ul class="simple">
-                    {% for group in userGroups %}
-                        <li title="{{ group.id }}">{{ group.displayName }}</li>
+                    {% for userGroup in userGroups %}
+                        <li>{{ userGroup }}</li>
                     {% endfor %}
                 </ul>
             </td>
