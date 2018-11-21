@@ -468,6 +468,15 @@ class VpnPortalModule implements ServiceModuleInterface
         if ($this->session->has('_cached_groups_user_id')) {
             // does it match the current userId?
             if ($userId === $this->session->get('_cached_groups_user_id')) {
+                $cachedGroups = $this->session->get('_cached_groups');
+                // support old format with id/displayName keys of simple array<string>
+                if (0 === \count($cachedGroups) || \is_string($cachedGroups[0])) {
+                    // no entries, or already new format
+                    return $cachedGroups;
+                }
+
+                $this->session->set('_cached_groups', $this->serverClient->getRequireArray('user_groups', ['user_id' => $userId]));
+
                 return $this->session->get('_cached_groups');
             }
         }
