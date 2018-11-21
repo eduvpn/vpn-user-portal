@@ -319,7 +319,6 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
-    $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
 
     // two factor module
     $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
@@ -348,6 +347,8 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         );
         $service->addModule($vootModule);
     }
+
+    $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
 
     // OAuth tokens
     $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
