@@ -43,6 +43,7 @@ use SURFnet\VPN\Common\TwigTpl;
 use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
+use SURFnet\VPN\Portal\LegacyVootTokenHook;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\PasswdModule;
 use SURFnet\VPN\Portal\RegistrationHook;
@@ -336,8 +337,16 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
             $config->getSection('Voot')->getItem('authorizationEndpoint'),
             $config->getSection('Voot')->getItem('tokenEndpoint')
         );
-        // we now also require apiUrl here! XXX handle it not being there more gracefully!
-        $service->addBeforeHook('voot_token', new VootTokenHook($serverClient, $oauthClient, $provider, $config->getSection('Voot')->getItem('apiUrl')));
+
+        if ($config->getSection('Voot')->hasItem('apiUrl')) {
+            // if the API URL is specified here, we assume we use the "frontend"
+            // way of fetching the VOOT group membership
+            $service->addBeforeHook('voot_token', new VootTokenHook($serverClient, $oauthClient, $provider, $config->getSection('Voot')->getItem('apiUrl')));
+        } else {
+            // if the API URL is NOT specified, we assume we use the legacy
+            // way of obtaining VOOT groups through the backend... **DEPRECATED**
+            $service->addBeforeHook('voot_token', new LegacyVootTokenHook($serverClient));
+        }
 
         $vootModule = new VootModule(
             $oauthClient,
