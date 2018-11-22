@@ -7,8 +7,13 @@
   refresh token
 - remove `Api/refreshTokenExpiry` from config template, replaced by 
   `sessionExpiry`
-- remove `Api/accessTokenExpiry` from config template, overriding it will still 
+- remove `Api/tokenExpiry` from config template, overriding it will still 
   work, but don't advertise this
+- remove "Entitlements" from Account page, merged with "Group Membership(s)"
+- browser session also linked to `sessionExpiry`, authentication is triggerd
+  after the session expires (instead of always after 8 hours)
+- add "VOOT membership" retrieval through "frontend" obsoleting the VOOT 
+  backend handling in vpn-server-api and making VOOT integration more robust
 
 ## 1.8.3 (2018-10-15)
 - drop support for OpenVPN 2.3 clients
