@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.8.4 (...)
+## 1.8.4 (2018-11-22)
 - use `UserInfo::authTime`. Obtain it from the `last_authenticated_at` 
   information retained by the server in case of API requests
 - synchronize expiry of browser session, X.509 client certificate and OAuth 
