@@ -3,15 +3,13 @@
 ## 1.8.4 (...)
 - use `UserInfo::authTime`. Obtain it from the `last_authenticated_at` 
   information retained by the server in case of API requests
-- certificates issued through the API will now expire on the same moment as the
-  refresh token
+- synchronize expiry of browser session, X.509 client certificate and OAuth 
+  refresh_token so they all expire at the same time
 - remove `Api/refreshTokenExpiry` from config template, replaced by 
   `sessionExpiry`
 - remove `Api/tokenExpiry` from config template, overriding it will still 
   work, but don't advertise this
 - remove "Entitlements" from Account page, merged with "Group Membership(s)"
-- browser session also linked to `sessionExpiry`, authentication is triggered
-  after the session expires (instead of always after 8 hours)
 - add "VOOT membership" retrieval through "frontend". Deprecates the VOOT 
   backend handling through vpn-server-api and making VOOT integration more 
   robust
