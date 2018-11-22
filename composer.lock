@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "cc35ad3436278d38e1357df4142e8cab818ea8dd"
+                "reference": "74c9e7c802a7e70f1c77b9193642551f1a559f19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/cc35ad3436278d38e1357df4142e8cab818ea8dd",
-                "reference": "cc35ad3436278d38e1357df4142e8cab818ea8dd",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/74c9e7c802a7e70f1c77b9193642551f1a559f19",
+                "reference": "74c9e7c802a7e70f1c77b9193642551f1a559f19",
                 "shasum": ""
             },
             "require": {
@@ -113,7 +113,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2018-11-21T19:11:37+00:00"
+            "time": "2018-11-22T16:02:11+00:00"
         },
         {
             "name": "fkooman/oauth2-client",

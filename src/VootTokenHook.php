@@ -11,6 +11,7 @@ namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
+use fkooman\SeCookie\SessionInterface;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\RedirectResponse;
@@ -23,6 +24,9 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
  */
 class VootTokenHook implements BeforeHookInterface
 {
+    /** @var \fkooman\SeCookie\SessionInterface */
+    private $session;
+
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
@@ -36,13 +40,15 @@ class VootTokenHook implements BeforeHookInterface
     private $vootUri;
 
     /**
+     * @param \fkooman\SeCookie\SessionInterface          $session
      * @param \SURFnet\VPN\Common\HttpClient\ServerClient $serverClient
      * @param \fkooman\OAuth\Client\OAuthClient           $client
      * @param \fkooman\OAuth\Client\Provider              $provider
      * @param string                                      $vootUri
      */
-    public function __construct(ServerClient $serverClient, OAuthClient $client, Provider $provider, $vootUri)
+    public function __construct(SessionInterface $session, ServerClient $serverClient, OAuthClient $client, Provider $provider, $vootUri)
     {
+        $this->session = $session;
         $this->serverClient = $serverClient;
         $this->client = $client;
         $this->provider = $provider;
@@ -66,6 +72,18 @@ class VootTokenHook implements BeforeHookInterface
             throw new HttpException('authentication hook did not run before', 500);
         }
         $userInfo = $hookData['auth'];
+
+        // check if we have the group info in the cache
+        if ($this->session->has('_cached_voot_groups')) {
+            // does it match the current userId?
+            if ($userInfo->id() === $this->session->get('_cached_voot_groups_user_id')) {
+                $vootGroups = $this->session->get('_cached_voot_groups');
+                $hookData['auth']->addEntitlements($vootGroups);
+
+                return true;
+            }
+            // does not match expected user... fetch again!
+        }
 
         // do not get involved in POST requests, only in GETs
         if ('GET' !== $request->getRequestMethod()) {
@@ -109,7 +127,10 @@ class VootTokenHook implements BeforeHookInterface
             return false;
         }
 
-        $hookData['auth']->addEntitlements(self::extractMembership($response->json()));
+        $vootGroups = self::extractMembership($response->json());
+        $this->session->set('_cached_voot_groups', $vootGroups);
+        $this->session->set('_cached_voot_groups_user_id', $userInfo->id());
+        $hookData['auth']->addEntitlements($vootGroups);
 
         return true;
     }

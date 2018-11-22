@@ -341,7 +341,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         if ($config->getSection('Voot')->hasItem('apiUrl')) {
             // if the API URL is specified here, we assume we use the "frontend"
             // way of fetching the VOOT group membership
-            $service->addBeforeHook('voot_token', new VootTokenHook($serverClient, $oauthClient, $provider, $config->getSection('Voot')->getItem('apiUrl')));
+            $service->addBeforeHook('voot_token', new VootTokenHook($session, $serverClient, $oauthClient, $provider, $config->getSection('Voot')->getItem('apiUrl')));
         } else {
             // if the API URL is NOT specified, we assume we use the legacy
             // way of obtaining VOOT groups through the backend... **DEPRECATED**
