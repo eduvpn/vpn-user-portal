@@ -16,6 +16,13 @@ return [
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
     //'authMethod' => 'MellonAuthentication',       // SAML
 
+    // Session Expiry
+    // - OAuth (refresh_token) validity
+    // - X.509 Client Certificate "Not After" 
+    //   (time of authentication + sessionExpiry)
+    // - Browser Session Expiry
+    'sessionExpiry' => 'P90D',
+
     // PDO (database)
     'FormPdoAuthentication' => [
         // allow users to register themselves using a voucher provided to them
@@ -94,12 +101,6 @@ return [
         //'da_DK' => 'Dansk',
         //'fr_FR' => 'Français',
     ],
-
-    // Session Expiry
-    // - OAuth (refresh_token) validity
-    // - X.509 Client Certificate "Not After" 
-    //   (time of authorization + sessionExpiry)
-    'sessionExpiry' => 'P90D',
 
     'Api' => [
         'consumerList' => [
