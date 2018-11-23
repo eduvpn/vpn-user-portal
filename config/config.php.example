@@ -83,16 +83,6 @@ return [
     'apiPass' => 'XXX-vpn-user-portal/vpn-server-api-XXX',
     'apiUri' => 'http://localhost/vpn-server-api/api.php',
 
-    'enableVoot' => false,
-    //'enableVoot' => true,
-    'Voot' => [
-        'clientId' => 'my_client_id',
-        'clientSecret' => 'my_client_secret',
-        'authorizationEndpoint' => 'https://authz.surfconext.nl/oauth/authorize',
-        'tokenEndpoint' => 'https://authz.surfconext.nl/oauth/token',
-        'apiUrl' => 'https://voot.surfconext.nl/me/groups',
-    ],
-
     // supported languages in the UI, the first one mentioned is the default
     'supportedLanguages' => [
         'en_US' => 'English',
