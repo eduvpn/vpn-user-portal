@@ -134,6 +134,7 @@ class VpnApiModule implements ServiceModuleInterface
                         'user_id' => $userInfo->id(),
                         'two_factor_enrolled' => $hasYubiKeyId || $hasTotpSecret,
                         'two_factor_enrolled_with' => $twoFactorTypes,
+                        'two_factor_supported_methods' => $this->config->optionalItem('twoFactorMethods', ['yubi', 'totp']),
                         'is_disabled' => $isDisabledUser,
                     ]
                 );
