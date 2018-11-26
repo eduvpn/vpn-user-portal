@@ -13,6 +13,7 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use fkooman\OAuth\Server\TokenInfo;
+use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\ApiErrorResponse;
 use SURFnet\VPN\Common\Http\ApiResponse;
 use SURFnet\VPN\Common\Http\Exception\InputValidationException;
@@ -28,6 +29,9 @@ use SURFnet\VPN\Common\ProfileConfig;
 
 class VpnApiModule implements ServiceModuleInterface
 {
+    /** @var \SURFnet\VPN\Common\Config */
+    private $config;
+
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
@@ -37,8 +41,14 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(ServerClient $serverClient, DateInterval $sessionExpiry)
+    /**
+     * @param \SURFnet\VPN\Common\Config                  $config
+     * @param \SURFnet\VPN\Common\HttpClient\ServerClient $serverClient
+     * @param \DateInterval                               $sessionExpiry
+     */
+    public function __construct(Config $config, ServerClient $serverClient, DateInterval $sessionExpiry)
     {
+        $this->config = $config;
         $this->serverClient = $serverClient;
         $this->sessionExpiry = $sessionExpiry;
     }
@@ -58,6 +68,8 @@ class VpnApiModule implements ServiceModuleInterface
      */
     public function init(Service $service)
     {
+        $twoFactorMethods = $this->config->optionalItem('twoFactorMethods', ['yubi', 'totp']);
+
         // API 1, 2
         $service->get(
             '/profile_list',
@@ -244,63 +256,67 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
-        $service->post(
-            '/two_factor_enroll_yubi',
-            /**
-             * @return \SURFnet\VPN\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                /** @var \fkooman\OAuth\Server\TokenInfo */
-                $tokenInfo = $hookData['auth'];
-                $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
+        if (\in_array('yubi', $twoFactorMethods, true)) {
+            $service->post(
+                '/two_factor_enroll_yubi',
+                /**
+                 * @return \SURFnet\VPN\Common\Http\Response
+                 */
+                function (Request $request, array $hookData) {
+                    /** @var \fkooman\OAuth\Server\TokenInfo */
+                    $tokenInfo = $hookData['auth'];
+                    $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
 
-                try {
+                    try {
+                        $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
+                        $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
+                        if ($hasYubiKeyId || $hasTotpSecret) {
+                            return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
+                        }
+                        $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
+                        $this->serverClient->post('set_yubi_key_id', ['user_id' => $userInfo->id(), 'yubi_key_otp' => $yubiKeyOtp]);
+
+                        return new ApiResponse('two_factor_enroll_yubi');
+                    } catch (ApiException $e) {
+                        return new ApiErrorResponse('two_factor_enroll_yubi', $e->getMessage());
+                    } catch (InputValidationException $e) {
+                        return new ApiErrorResponse('two_factor_enroll_yubi', $e->getMessage());
+                    }
+                }
+            );
+        }
+
+        if (\in_array('totp', $twoFactorMethods, true)) {
+            $service->post(
+                '/two_factor_enroll_totp',
+                /**
+                 * @return \SURFnet\VPN\Common\Http\Response
+                 */
+                function (Request $request, array $hookData) {
+                    /** @var \fkooman\OAuth\Server\TokenInfo */
+                    $tokenInfo = $hookData['auth'];
+                    $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
+
                     $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
                     $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
                     if ($hasYubiKeyId || $hasTotpSecret) {
-                        return new ApiErrorResponse('two_factor_enroll_yubi', 'user already enrolled');
+                        return new ApiErrorResponse('two_factor_enroll_totp', 'user already enrolled');
                     }
-                    $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
-                    $this->serverClient->post('set_yubi_key_id', ['user_id' => $userInfo->id(), 'yubi_key_otp' => $yubiKeyOtp]);
 
-                    return new ApiResponse('two_factor_enroll_yubi');
-                } catch (ApiException $e) {
-                    return new ApiErrorResponse('two_factor_enroll_yubi', $e->getMessage());
-                } catch (InputValidationException $e) {
-                    return new ApiErrorResponse('two_factor_enroll_yubi', $e->getMessage());
+                    try {
+                        $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
+                        $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
+                        $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                    } catch (ApiException $e) {
+                        return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
+                    } catch (InputValidationException $e) {
+                        return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
+                    }
+
+                    return new ApiResponse('two_factor_enroll_totp');
                 }
-            }
-        );
-
-        $service->post(
-            '/two_factor_enroll_totp',
-            /**
-             * @return \SURFnet\VPN\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                /** @var \fkooman\OAuth\Server\TokenInfo */
-                $tokenInfo = $hookData['auth'];
-                $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
-
-                $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
-                if ($hasYubiKeyId || $hasTotpSecret) {
-                    return new ApiErrorResponse('two_factor_enroll_totp', 'user already enrolled');
-                }
-
-                try {
-                    $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
-                    $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
-                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
-                } catch (ApiException $e) {
-                    return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
-                } catch (InputValidationException $e) {
-                    return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
-                }
-
-                return new ApiResponse('two_factor_enroll_totp');
-            }
-        );
+            );
+        }
 
         // API 1, 2
         $service->get(
