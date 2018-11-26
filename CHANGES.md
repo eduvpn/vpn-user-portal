@@ -1,10 +1,22 @@
 # Changelog
 
-## 1.8.4 (...)
-- deal with `authTime` in `UserInfo` object. Obtain it from the 
-  `last_authenticated_at` information retained by the server
-- certificates issued through the API will now expire on the same day as the
-  refresh token
+## 1.8.5 (...)
+- no longer allow clients to obtain new access tokens using the refresh token 
+  when the user account is disabled
+
+## 1.8.4 (2018-11-22)
+- use `UserInfo::authTime`. Obtain it from the `last_authenticated_at` 
+  information retained by the server in case of API requests
+- synchronize expiry of browser session, X.509 client certificate and OAuth 
+  refresh_token so they all expire at the same time
+- remove `Api/refreshTokenExpiry` from config template, replaced by 
+  `sessionExpiry`
+- remove `Api/tokenExpiry` from config template, overriding it will still 
+  work, but don't advertise this
+- remove "Entitlements" from Account page, merged with "Group Membership(s)"
+- add "VOOT membership" retrieval through "frontend". Deprecates the VOOT 
+  backend handling through vpn-server-api and making VOOT integration more 
+  robust
 
 ## 1.8.3 (2018-10-15)
 - drop support for OpenVPN 2.3 clients

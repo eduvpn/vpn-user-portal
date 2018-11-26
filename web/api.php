@@ -12,7 +12,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\OAuth\Server\Storage;
 use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
@@ -25,6 +24,7 @@ use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\BearerAuthenticationHook;
 use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\ForeignKeyListFetcher;
+use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
@@ -47,7 +47,15 @@ try {
     $service = new Service();
 
     if ($config->hasSection('Api')) {
-        $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+        $serverClient = new ServerClient(
+            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
+            $config->getItem('apiUri')
+        );
+
+        $storage = new OAuthStorage(
+            new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
+            $serverClient
+        );
         $storage->init();
 
         $clientFetcher = new ClientFetcher($config);
@@ -84,15 +92,21 @@ try {
             )
         );
 
-        $serverClient = new ServerClient(
-            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-            $config->getItem('apiUri')
-        );
+        // determine sessionExpiry, use the new configuration option if it is there
+        // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
+        // hard coded 90 days
+        if ($config->hasItem('sessionExpiry')) {
+            $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
+        } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
+            $sessionExpiry = new DateInterval($config->getSection('Api')->getItem('refreshTokenExpiry'));
+        } else {
+            $sessionExpiry = new DateInterval('P90D');
+        }
 
         // api module
         $vpnApiModule = new VpnApiModule(
             $serverClient,
-            new DateInterval($config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P90D')
+            $sessionExpiry
         );
         $service->addModule($vpnApiModule);
     }

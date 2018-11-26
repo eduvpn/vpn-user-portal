@@ -12,15 +12,17 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\OAuth\Server\Storage;
 use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\ClientFetcher;
+use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\OAuthTokenModule;
 
 $logger = new Logger('vpn-user-portal');
@@ -42,8 +44,16 @@ try {
     $config = Config::fromFile(sprintf('%s/config/%s/config.php', $baseDir, $instanceId));
     $service = new Service();
 
+    $serverClient = new ServerClient(
+        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
+        $config->getItem('apiUri')
+    );
+
     // OAuth tokens
-    $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+    $storage = new OAuthStorage(
+        new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
+        $serverClient
+    );
     $storage->init();
 
     $clientFetcher = new ClientFetcher($config);
@@ -62,14 +72,21 @@ try {
             )
         );
 
-        $oauthServer->setRefreshTokenExpiry(
-            new DateInterval(
-                $config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P90D'
-            )
-        );
+        // determine sessionExpiry, use the new configuration option if it is there
+        // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
+        // hard coded 90 days
+        if ($config->hasItem('sessionExpiry')) {
+            $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
+        } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
+            $sessionExpiry = new DateInterval($config->getSection('Api')->getItem('refreshTokenExpiry'));
+        } else {
+            $sessionExpiry = new DateInterval('P90D');
+        }
+
+        $oauthServer->setRefreshTokenExpiry($sessionExpiry);
         $oauthServer->setAccessTokenExpiry(
             new DateInterval(
-                sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry'))
+                $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
             )
         );
 

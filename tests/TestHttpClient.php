@@ -59,6 +59,8 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('yubi_key_id', false);
             case 'serverClient/has_totp_secret?user_id=foo':
                 return self::wrap('has_totp_secret', false);
+            case 'serverClient/is_disabled_user?user_id=foo':
+                return self::wrap('is_disabled_user', false);
             case 'serverClient/user_groups?user_id=foo':
                 return self::wrap('user_groups', []);
             case 'serverClient/client_certificate_info?common_name=12345678901234567890123456789012':

@@ -15,7 +15,6 @@ use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\OAuth\Server\Storage;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use ParagonIE\ConstantTime\Base64;
@@ -43,7 +42,9 @@ use SURFnet\VPN\Common\TwigTpl;
 use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
+use SURFnet\VPN\Portal\LegacyVootTokenHook;
 use SURFnet\VPN\Portal\OAuthModule;
+use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\PasswdModule;
 use SURFnet\VPN\Portal\RegistrationHook;
 use SURFnet\VPN\Portal\TotpModule;
@@ -85,6 +86,17 @@ try {
         $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
+    // determine sessionExpiry, use the new configuration option if it is there
+    // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
+    // hard coded 90 days
+    if ($config->hasItem('sessionExpiry')) {
+        $sessionExpiry = $config->getItem('sessionExpiry');
+    } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
+        $sessionExpiry = $config->getSection('Api')->getItem('refreshTokenExpiry');
+    } else {
+        $sessionExpiry = 'P90D';
+    }
+
     $cookie = new Cookie(
         [
             'SameSite' => 'Lax',
@@ -98,6 +110,7 @@ try {
             'SessionName' => 'SID',
             'DomainBinding' => $request->getServerName(),
             'PathBinding' => $request->getRoot(),
+            'SessionExpiry' => $sessionExpiry,
         ],
         new Cookie(
             [
@@ -306,12 +319,11 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     );
 
     $twoFactorMethods = $config->optionalItem('twoFactorMethods', ['yubi', 'totp']);
-
-    $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     if (0 !== count($twoFactorMethods)) {
         $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
     }
 
+    $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
 
     // two factor module
@@ -322,7 +334,6 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
 
     // voot module
     if ($config->getItem('enableVoot')) {
-        $service->addBeforeHook('voot_token', new VootTokenHook($serverClient));
         $oauthClient = new OAuthClient(
             new VootTokenStorage($serverClient),
             new OAuthCurlHttpClient([], $logger)
@@ -333,6 +344,17 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
             $config->getSection('Voot')->getItem('authorizationEndpoint'),
             $config->getSection('Voot')->getItem('tokenEndpoint')
         );
+
+        if ($config->getSection('Voot')->hasItem('apiUrl')) {
+            // if the API URL is specified here, we assume we use the "frontend"
+            // way of fetching the VOOT group membership
+            $service->addBeforeHook('voot_token', new VootTokenHook($session, $serverClient, $oauthClient, $provider, $config->getSection('Voot')->getItem('apiUrl')));
+        } else {
+            // if the API URL is NOT specified, we assume we use the legacy
+            // way of obtaining VOOT groups through the backend... **DEPRECATED**
+            $service->addBeforeHook('voot_token', new LegacyVootTokenHook($serverClient));
+        }
+
         $vootModule = new VootModule(
             $oauthClient,
             $provider,
@@ -342,8 +364,13 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         $service->addModule($vootModule);
     }
 
+    $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
+
     // OAuth tokens
-    $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+    $storage = new OAuthStorage(
+        new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
+        $serverClient
+    );
     $storage->init();
 
     $clientFetcher = new ClientFetcher($config);
@@ -355,6 +382,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         $serverClient,
         $session,
         $storage,
+        new DateInterval($sessionExpiry),
         [$clientFetcher, 'get']
     );
     $service->addModule($vpnPortalModule);
@@ -391,14 +419,10 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
             )
         );
 
-        $oauthServer->setRefreshTokenExpiry(
-            new DateInterval(
-                $config->getSection('Api')->hasItem('refreshTokenExpiry') ? $config->getSection('Api')->getItem('refreshTokenExpiry') : 'P90D'
-            )
-        );
+        $oauthServer->setRefreshTokenExpiry(new DateInterval($sessionExpiry));
         $oauthServer->setAccessTokenExpiry(
             new DateInterval(
-                sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry'))
+                $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
             )
         );
 

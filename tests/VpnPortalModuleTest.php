@@ -9,7 +9,7 @@
 
 namespace SURFnet\VPN\Portal\Tests;
 
-use fkooman\OAuth\Server\Storage;
+use DateInterval;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Common\Config;
@@ -17,6 +17,7 @@ use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
+use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\VpnPortalModule;
 
 class VpnPortalModuleTest extends TestCase
@@ -27,16 +28,17 @@ class VpnPortalModuleTest extends TestCase
     public function setUp()
     {
         $httpClient = new TestHttpClient();
-
-        $storage = new Storage(new PDO('sqlite::memory:'));
+        $serverClient = new ServerClient($httpClient, 'serverClient');
+        $storage = new OAuthStorage(new PDO('sqlite::memory:'), $serverClient);
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(
             new Config([]),
             new JsonTpl(),
-            new ServerClient($httpClient, 'serverClient'),
+            $serverClient,
             new TestSession(),
             $storage,
+            new DateInterval('P90D'),
             function ($clientId) {
                 return false;
             }

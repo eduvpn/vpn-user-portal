@@ -9,7 +9,8 @@
 
 namespace SURFnet\VPN\Portal;
 
-use fkooman\OAuth\Server\Storage;
+use DateInterval;
+use DateTime;
 use fkooman\SeCookie\SessionInterface;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
@@ -37,8 +38,11 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \fkooman\OAuth\Server\Storage */
+    /** @var \SURFnet\VPN\Portal\OAuthStorage */
     private $storage;
+
+    /** @var \DateInterval */
+    private $sessionExpiry;
 
     /** @var callable */
     private $getClientInfo;
@@ -46,13 +50,14 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, callable $getClientInfo)
+    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, OAuthStorage $storage, DateInterval $sessionExpiry, callable $getClientInfo)
     {
         $this->config = $config;
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
         $this->session = $session;
         $this->storage = $storage;
+        $this->sessionExpiry = $sessionExpiry;
         $this->getClientInfo = $getClientInfo;
     }
 
@@ -91,8 +96,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
-                $entitlementList = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups, $entitlementList);
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
                 if (0 === \count($motdMessages)) {
@@ -126,8 +130,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
-                $entitlementList = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups, $entitlementList);
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
@@ -160,8 +163,9 @@ class VpnPortalModule implements ServiceModuleInterface
                         );
                     }
                 }
+                $expiresAt = date_add(clone $userInfo->authTime(), $this->sessionExpiry);
 
-                return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName);
+                return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName, $expiresAt);
             }
         );
 
@@ -259,8 +263,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
-                $entitlementList = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups, $entitlementList);
+                $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $authorizedClients = $this->storage->getAuthorizations($userInfo->id());
                 foreach ($authorizedClients as $k => $v) {
@@ -291,7 +294,6 @@ class VpnPortalModule implements ServiceModuleInterface
                             'twoFactorEnabledProfiles' => $twoFactorEnabledProfiles,
                             'yubiKeyId' => $yubiKeyId,
                             'hasTotpSecret' => $hasTotpSecret,
-//                            'userId' => $userInfo->id(),
                             'userInfo' => $userInfo,
                             'userGroups' => $userGroups,
                             'authorizedClients' => $authorizedClients,
@@ -368,18 +370,11 @@ class VpnPortalModule implements ServiceModuleInterface
     /**
      * @return bool
      */
-    public static function isMemberOrEntitled(array $aclGroupList, array $userGroups, array $entitlementList)
+    public static function isMember(array $aclGroupList, array $userGroups)
     {
-        // if any of the entitlements is part of aclGroupList return true
-        foreach ($entitlementList as $entitlementEntry) {
-            if (\in_array($entitlementEntry, $aclGroupList, true)) {
-                return true;
-            }
-        }
-
         // if any of the groups is part of aclGroupList return true
         foreach ($userGroups as $userGroup) {
-            if (\in_array($userGroup['id'], $aclGroupList, true)) {
+            if (\in_array($userGroup, $aclGroupList, true)) {
                 return true;
             }
         }
@@ -388,17 +383,25 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string $serverName
-     * @param string $profileId
-     * @param string $userId
-     * @param string $displayName
+     * @param string    $serverName
+     * @param string    $profileId
+     * @param string    $userId
+     * @param string    $displayName
+     * @param \DateTime $expiresAt
      *
      * @return \SURFnet\VPN\Common\Http\Response
      */
-    private function getConfig($serverName, $profileId, $userId, $displayName)
+    private function getConfig($serverName, $profileId, $userId, $displayName, DateTime $expiresAt)
     {
         // create a certificate
-        $clientCertificate = $this->serverClient->postRequireArray('add_client_certificate', ['user_id' => $userId, 'display_name' => $displayName]);
+        $clientCertificate = $this->serverClient->postRequireArray(
+            'add_client_certificate',
+            [
+                'user_id' => $userId,
+                'display_name' => $displayName,
+                'expires_at' => $expiresAt->format(DateTime::ATOM),
+            ]
+        );
 
         $serverProfiles = $this->serverClient->getRequireArray('profile_list');
         $profileData = $serverProfiles[$profileId];
@@ -436,7 +439,7 @@ class VpnPortalModule implements ServiceModuleInterface
      *
      * @return array
      */
-    private static function getProfileList(array $serverProfiles, array $userGroups, array $entitlementList)
+    private static function getProfileList(array $serverProfiles, array $userGroups)
     {
         $profileList = [];
         foreach ($serverProfiles as $profileId => $profileData) {
@@ -445,7 +448,7 @@ class VpnPortalModule implements ServiceModuleInterface
             }
             if ($profileData['enableAcl']) {
                 // is the user member of the aclGroupList?
-                if (!self::isMemberOrEntitled($profileData['aclGroupList'], $userGroups, $entitlementList)) {
+                if (!self::isMember($profileData['aclGroupList'], $userGroups)) {
                     continue;
                 }
             }
@@ -469,6 +472,15 @@ class VpnPortalModule implements ServiceModuleInterface
         if ($this->session->has('_cached_groups_user_id')) {
             // does it match the current userId?
             if ($userId === $this->session->get('_cached_groups_user_id')) {
+                $cachedGroups = $this->session->get('_cached_groups');
+                // support old format with id/displayName keys of simple array<string>
+                if (0 === \count($cachedGroups) || \is_string($cachedGroups[0])) {
+                    // no entries, or already new format
+                    return $cachedGroups;
+                }
+
+                $this->session->set('_cached_groups', $this->serverClient->getRequireArray('user_groups', ['user_id' => $userId]));
+
                 return $this->session->get('_cached_groups');
             }
         }

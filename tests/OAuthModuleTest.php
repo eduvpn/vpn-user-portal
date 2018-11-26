@@ -14,14 +14,15 @@ use DateTime;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\NullAuthenticationHook;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Portal\OAuthModule;
+use SURFnet\VPN\Portal\OAuthStorage;
 
 class OAuthModuleTest extends TestCase
 {
@@ -41,7 +42,9 @@ class OAuthModuleTest extends TestCase
             ]
         );
 
-        $storage = new Storage(new PDO('sqlite::memory:'));
+        $httpClient = new TestHttpClient();
+        $serverClient = new ServerClient($httpClient, 'serverClient');
+        $storage = new OAuthStorage(new PDO('sqlite::memory:'), $serverClient);
         $storage->init();
 
         $oauthServer = new OAuthServer(

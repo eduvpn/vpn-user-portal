@@ -1,20 +1,11 @@
 <?xml version="1.0"?>
-<psalm
-    totallyTyped="false"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config file:///home/fkooman/.config/composer/vendor/vimeo/psalm/config.xsd"
->
-    <projectFiles>
-        <directory name="bin" />
-        <directory name="src" />
-        <directory name="web" />
-        <ignoreFiles>
-            <directory name="vendor" />
-        </ignoreFiles>
-    </projectFiles>
-
-    <issueHandlers>
-        <LessSpecificReturnType errorLevel="info" />
-    </issueHandlers>
+<psalm totallyTyped="false" useDocblockTypes="true">
+  <projectFiles>
+    <directory name="bin"/>
+    <directory name="src"/>
+    <directory name="web"/>
+    <ignoreFiles>
+      <directory name="vendor"/>
+    </ignoreFiles>
+  </projectFiles>
 </psalm>
