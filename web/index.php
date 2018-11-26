@@ -364,8 +364,6 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         $service->addModule($vootModule);
     }
 
-    $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
-
     // OAuth tokens
     $storage = new OAuthStorage(
         new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
