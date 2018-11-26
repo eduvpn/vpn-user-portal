@@ -3,6 +3,9 @@
 ## 1.8.5 (...)
 - no longer allow clients to obtain new access tokens using the refresh token 
   when the user account is disabled
+- add ability to disable 2FA or select which methods are supported
+  - new default is TOTP only
+  - YubiKey OTP is **DEPRECATED**
 
 ## 1.8.4 (2018-11-22)
 - use `UserInfo::authTime`. Obtain it from the `last_authenticated_at` 
