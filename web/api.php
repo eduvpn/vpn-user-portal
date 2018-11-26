@@ -12,7 +12,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\OAuth\Server\Storage;
 use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
@@ -25,6 +24,7 @@ use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\BearerAuthenticationHook;
 use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\ForeignKeyListFetcher;
+use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
@@ -47,7 +47,15 @@ try {
     $service = new Service();
 
     if ($config->hasSection('Api')) {
-        $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+        $serverClient = new ServerClient(
+            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
+            $config->getItem('apiUri')
+        );
+
+        $storage = new OAuthStorage(
+            new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
+            $serverClient
+        );
         $storage->init();
 
         $clientFetcher = new ClientFetcher($config);
@@ -82,11 +90,6 @@ try {
             new BearerAuthenticationHook(
                 $bearerValidator
             )
-        );
-
-        $serverClient = new ServerClient(
-            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-            $config->getItem('apiUri')
         );
 
         // determine sessionExpiry, use the new configuration option if it is there

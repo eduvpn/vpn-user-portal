@@ -12,15 +12,17 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\OAuth\Server\Storage;
 use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\JsonResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
+use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Portal\ClientFetcher;
+use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\OAuthTokenModule;
 
 $logger = new Logger('vpn-user-portal');
@@ -42,8 +44,16 @@ try {
     $config = Config::fromFile(sprintf('%s/config/%s/config.php', $baseDir, $instanceId));
     $service = new Service();
 
+    $serverClient = new ServerClient(
+        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
+        $config->getItem('apiUri')
+    );
+
     // OAuth tokens
-    $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+    $storage = new OAuthStorage(
+        new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
+        $serverClient
+    );
     $storage->init();
 
     $clientFetcher = new ClientFetcher($config);

@@ -15,7 +15,6 @@ use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\OAuth\Server\Storage;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use ParagonIE\ConstantTime\Base64;
@@ -45,6 +44,7 @@ use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
 use SURFnet\VPN\Portal\LegacyVootTokenHook;
 use SURFnet\VPN\Portal\OAuthModule;
+use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\PasswdModule;
 use SURFnet\VPN\Portal\RegistrationHook;
 use SURFnet\VPN\Portal\TotpModule;
@@ -360,7 +360,10 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
 
     // OAuth tokens
-    $storage = new Storage(new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)));
+    $storage = new OAuthStorage(
+        new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
+        $serverClient
+    );
     $storage->init();
 
     $clientFetcher = new ClientFetcher($config);

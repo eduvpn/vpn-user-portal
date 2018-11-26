@@ -11,7 +11,6 @@ namespace SURFnet\VPN\Portal;
 
 use DateInterval;
 use DateTime;
-use fkooman\OAuth\Server\Storage;
 use fkooman\SeCookie\SessionInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\HtmlResponse;
@@ -35,7 +34,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \fkooman\OAuth\Server\Storage */
+    /** @var \SURFnet\VPN\Portal\OAuthStorage */
     private $storage;
 
     /** @var \DateInterval */
@@ -47,7 +46,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, DateInterval $sessionExpiry, callable $getClientInfo)
+    public function __construct(TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, OAuthStorage $storage, DateInterval $sessionExpiry, callable $getClientInfo)
     {
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;

@@ -13,12 +13,13 @@ use DateTime;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\OAuth\Server\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Portal\BearerAuthenticationHook;
+use SURFnet\VPN\Portal\OAuthStorage;
 
 class BearerAuthenticationHookTest extends TestCase
 {
@@ -46,7 +47,9 @@ class BearerAuthenticationHookTest extends TestCase
             ]
         );
 
-        $this->storage = new Storage(new PDO('sqlite::memory:'));
+        $httpClient = new TestHttpClient();
+        $serverClient = new ServerClient($httpClient, 'serverClient');
+        $this->storage = new OAuthStorage(new PDO('sqlite::memory:'), $serverClient);
         $this->storage->init();
         $this->storage->storeAuthorization('foo', 'code-client', 'config', 'random_1');
         $this->getClientInfo = function ($clientId) use ($config) {

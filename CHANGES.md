@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.5 (...)
+- no longer allow clients to obtain new access tokens using the refresh token 
+  when the user account is disabled
+
 ## 1.8.4 (2018-11-22)
 - use `UserInfo::authTime`. Obtain it from the `last_authenticated_at` 
   information retained by the server in case of API requests
