@@ -6,7 +6,7 @@
 - add ability to disable 2FA or select which methods are supported
   - new default is TOTP only
   - YubiKey OTP is **DEPRECATED**
-- implement SAML logout (`MellonAuthentication`)
+- implement SAML logout for `MellonAuthentication`
 
 ## 1.8.4 (2018-11-22)
 - use `UserInfo::authTime`. Obtain it from the `last_authenticated_at` 

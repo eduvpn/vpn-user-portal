@@ -137,6 +137,11 @@ try {
     $tpl->addDefault(
         [
             'supportedLanguages' => $supportedLanguages,
+            // since we now also support SAML / Mellon logout we *always* show
+            // the logout button (except when showing the login page for
+            // Form*Authentication (to remain backwards compatible with old
+            // "base.twig")
+            '_show_logout' => true,
         ]
     );
 
