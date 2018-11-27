@@ -333,7 +333,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     }
 
     // voot module
-    if ($config->getItem('enableVoot')) {
+    if ($config->hasItem('enableVoot') && $config->getItem('enableVoot')) {
         $oauthClient = new OAuthClient(
             new VootTokenStorage($serverClient),
             new OAuthCurlHttpClient([], $logger)
