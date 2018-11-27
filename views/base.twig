@@ -29,8 +29,8 @@
             </form>
         {% endif %}
 
-        {% if _show_logout is defined and _form_auth_login_page is not defined %}
-            <form method="post" action="{{ requestRoot }}_form/auth/logout">
+        {% if _form_auth_login_page is not defined %}
+            <form method="post" action="{{ requestRoot }}_logout">
                 <button type="submit">{% trans "Sign Out" %}</button>
             </form>
         {% endif %}
