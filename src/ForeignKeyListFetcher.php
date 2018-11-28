@@ -50,13 +50,7 @@ class ForeignKeyListFetcher
             throw new RuntimeException('unable to verify signature');
         }
 
-        // check if we already have a file from a previous run
-        $seq = 0;
-        if (false !== $fileContent = @file_get_contents($this->filePath)) {
-            // extract the "seq" field to see if we got a newer version
-            $jsonData = Json::decode($fileContent);
-            $seq = (int) $jsonData['seq'];
-        }
+        $seq = self::getSequence($this->filePath);
 
         $discoveryData = $discoveryResponse->json();
         if ($discoveryData['seq'] < $seq) {
@@ -64,7 +58,7 @@ class ForeignKeyListFetcher
         }
 
         // all fine, write file
-        if (false === @file_put_contents($this->filePath, $discoveryBody)) {
+        if (false === file_put_contents($this->filePath, $discoveryBody)) {
             throw new RuntimeException(sprintf('unable to write file "%s"', $this->filePath));
         }
     }
@@ -74,7 +68,7 @@ class ForeignKeyListFetcher
      */
     public function extract()
     {
-        if (false === $fileContent = @file_get_contents($this->filePath)) {
+        if (false === $fileContent = file_get_contents($this->filePath)) {
             return [];
         }
 
@@ -108,5 +102,25 @@ class ForeignKeyListFetcher
         }
 
         return $httpResponse;
+    }
+
+    /**
+     * @param string $filePath
+     *
+     * @return int
+     */
+    private static function getSequence($filePath)
+    {
+        if (!file_exists($filePath)) {
+            return 0;
+        }
+
+        if (false === $fileContent = file_get_contents($filePath)) {
+            return 0;
+        }
+
+        $jsonData = Json::decode($fileContent);
+
+        return (int) $jsonData['seq'];
     }
 }
