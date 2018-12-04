@@ -62,19 +62,6 @@
             </td>
         </tr>
         {% endif %}
-
-        {% if twoFactorEnabledProfiles is not empty %}
-        <tr>
-            <th>{% trans "Profiles" %}</th>
-            <td>
-                <ul class="simple">
-                {% for twoFactorEnabledProfile in twoFactorEnabledProfiles %}
-                    <li>{{ twoFactorEnabledProfile }}</li>
-                {% endfor %}
-                </ul>
-            </td>
-        </tr>
-        {% endif %}
     </table>
     {% endif %}
 
