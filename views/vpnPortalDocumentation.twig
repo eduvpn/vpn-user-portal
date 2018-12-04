@@ -61,18 +61,12 @@
         Linux distributions. The following distributions were tested and work:
     </p>
     <ul>
-        <li><a href="https://getfedora.org/">Fedora</a> >= 24;</li>
+        <li><a href="https://getfedora.org/">Fedora</a> >= 28;</li>
         <li><a href="https://www.centos.org/">CentOS</a> >= 7 (<code>yum install NetworkManager-openvpn-gnome</code>);</li>
         <li><a href="https://www.debian.org/">Debian</a> >= 9 (<code>apt install network-manager-openvpn-gnome</code>);</li>
-        <li><a href="https://www.ubuntu.com/">Ubuntu</a> >= 17.10 (<code>apt install network-manager-openvpn-gnome</code>);</li>
+        <li><a href="https://www.ubuntu.com/">Ubuntu</a> >= 18.04 LTS (<code>apt install network-manager-openvpn-gnome</code>);</li>
     </ul>
     
-    <p>
-        NetworkManager does have some issues with 
-        <a href="https://en.wikipedia.org/wiki/DNS_leak">leaking DNS</a> for 
-        which currently no easy work-around is available.
-    </p>
-
     <h2>Two-factor Authentication</h2>
     <p>
         Two-factor authentication (2FA) can be used to protect your account from 
@@ -125,28 +119,30 @@
 
     <h2>Recommendations for using the VPN</h2>
     <p>
-        At the very least, use the latest version of 
+        Install the latest version of 
         <a href="https://getfirefox.com">Mozilla Firefox</a> to browse the 
-        web, and use the following add-ons:
+        web, and install ONLY the following extensions. Remove ALL other 
+        installed extensions!
     </p>
 
     <ul>
         <li>
-            <a href="https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/">uBlock Origin</a> 
-            to block web trackers and advertisements to limit the exposure 
-            to malware;
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/">uBlock Origin</a>: 
+            "An efficient blocker: easy on memory and CPU footprint, and yet can 
+            load and enforce thousands more filters than other popular blockers 
+            out there."
         </li>
         <li>
-            <a href="https://addons.mozilla.org/en-US/firefox/addon/https-everywhere/">HTTPS Everywhere</a> 
-            to use HTTPS whenever possible when the sites themselves 
-            provide HTTPS, but by default do not send the browser to the 
-            HTTPS version of the site.
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/https-everywhere/">HTTPS Everywhere</a>: 
+            "...protect your communications by enabling HTTPS encryption 
+            automatically on sites that are known to support it, even when you 
+            type URLs or follow links that omit the https: prefix."
         </li>
         <li>
-            <strong>ADVANCED</strong>: <a href="https://addons.mozilla.org/en-US/firefox/addon/umatrix/">uMatrix</a> 
-            to block third party JavaScript/CSS/images. Blocks many domains 
-            by default. May break some (popular) sites you have to then manually 
-            fix.
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/noscript/">NoScript Security Suite</a> (<em>Advanced Users</em>): 
+            "Allow active content to run only from sites you trust, and protect 
+            yourself against XSS and Clickjacking attacks, "Spectre", 
+            "Meltdown" and other JavaScript exploits."
         </li>
     </ul>
 
