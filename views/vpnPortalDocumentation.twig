@@ -66,56 +66,44 @@
         <li><a href="https://www.debian.org/">Debian</a> >= 9 (<code>apt install network-manager-openvpn-gnome</code>);</li>
         <li><a href="https://www.ubuntu.com/">Ubuntu</a> >= 18.04 LTS (<code>apt install network-manager-openvpn-gnome</code>);</li>
     </ul>
-    
-    <h2>Two-factor Authentication</h2>
-    <p>
-        Two-factor authentication (2FA) can be used to protect your account from 
-        unauthorized access. It works by asking for an additional <em>key</em>
-        that needs to be provided on every login to the portal. In addition,
-        administrators can also enable 2FA for connecting to the VPN, requiring
-        you to provide the 2FA key when connecting to the VPN.
-    </p>    
-    <p>
-        When connecting to a 2FA enabled 
-        VPN, use the user name <code>totp</code> (for TOTP), or <code>yubi</code> 
-        (for a YubiKey) depending
-        on which 2FA method is used, and provide the generated key as 
-        the password. Do <em>not</em> store the password, as it will be 
-        different every time the connection is established.
-    </p>
-    <p class="plain">
-        If you enroll with both TOTP and a YubiKey, the YubiKey will be used 
-        for authenticating to the portal!
-    </p>
-    <p>
-        Contact support if you lost your second factor.
-    </p>
 
-    <h3>TOTP</h3> 
-    <p>
-        The TOTP method works by registering a <em>secret</em> in an 
-        application, e.g. running on your mobile phone. There are various 
-        applications to choose from, but at the moment we recommend FreeOTP.
-    </p>
-    
-    <ul>
-        <li>Android (<a target="_blank" href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp">Google Play Store</a>, <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=org.fedorahosted.freeotp">F-Droid</a>)</li>
-        <li>iOS (<a target="_blank" href="https://itunes.apple.com/us/app/freeotp/id872559395">iTunes</a>)</li>
-    </ul>
+    {% if twoFactorMethods is not empty %}    
+        <h2>Two-factor Authentication</h2>
+        <p>
+            Two-factor authentication (2FA) can be used to protect your account from 
+            unauthorized access. It works by asking for an additional <em>key</em>
+            that needs to be provided on every login to the portal.
+        </p>    
+        <p class="warning">
+            2FA can only be removed by administrators. Contact support if you lost 
+            (access to) your second factor.
+        </p>
+        <p>
+            Enroll for 2FA <a href="two_factor_enroll">here</a>.
+        </p>
 
-    <p>
-        Enroll for TOTP <a href="totp">here</a>.
-    </p>
+        {% if "totp" in twoFactorMethods %}
+            <h3>TOTP</h3> 
+            <p>
+                The TOTP method works by registering a <em>secret</em> in an 
+                application, e.g. running on your mobile phone. There are various 
+                applications to choose from, but at the moment we recommend FreeOTP.
+            </p>
+            
+            <ul>
+                <li>Android (<a target="_blank" href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp">Google Play Store</a>, <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=org.fedorahosted.freeotp">F-Droid</a>)</li>
+                <li>iOS (<a target="_blank" href="https://itunes.apple.com/us/app/freeotp/id872559395">iTunes</a>)</li>
+            </ul>
+        {% endif %}
 
-    <h3>YubiKey</h3>
-    <p>
-        YubiKeys are physical tokens that need to be plugged into the USB port
-        of a computer. They have a button that will provide a OTP when pressed.
-    </p>
-
-    <p>
-        Enroll with a YubiKey <a href="yubi">here</a>.
-    </p>
+        {% if "yubi" in twoFactorMethods %}
+            <h3>YubiKey</h3>
+            <p>
+                YubiKeys are physical tokens that need to be plugged into the USB port
+                of a computer. They have a button that will provide a OTP when pressed.
+            </p>
+        {% endif %}
+    {% endif %}
 
     <h2>Recommendations for using the VPN</h2>
     <p>

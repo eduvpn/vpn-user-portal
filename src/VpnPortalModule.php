@@ -343,7 +343,14 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function () {
-                return new HtmlResponse($this->tpl->render('vpnPortalDocumentation', []));
+                return new HtmlResponse(
+                    $this->tpl->render(
+                        'vpnPortalDocumentation',
+                        [
+                            'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp', 'yubi']),
+                        ]
+                    )
+                );
             }
         );
     }

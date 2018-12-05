@@ -5,6 +5,7 @@
 - rework 2FA enrollment, enrollment goes through `/two_factor_enroll` now
 - no longer show which profiles have 2FA enabled, no longer relevant as
   2FA through OpenVPN will be removed in the near future
+- update 2FA documentation
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 
