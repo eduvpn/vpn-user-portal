@@ -48,13 +48,12 @@ use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\PasswdModule;
 use SURFnet\VPN\Portal\RegistrationHook;
-use SURFnet\VPN\Portal\TotpModule;
+use SURFnet\VPN\Portal\TwoFactorEnrollModule;
 use SURFnet\VPN\Portal\VootModule;
 use SURFnet\VPN\Portal\VootTokenHook;
 use SURFnet\VPN\Portal\VootTokenStorage;
 use SURFnet\VPN\Portal\Voucher;
 use SURFnet\VPN\Portal\VpnPortalModule;
-use SURFnet\VPN\Portal\YubiModule;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -386,22 +385,9 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     );
     $service->addModule($vpnPortalModule);
 
-    if (in_array('totp', $twoFactorMethods, true)) {
-        // TOTP module
-        $totpModule = new TotpModule(
-            $tpl,
-            $serverClient
-        );
-        $service->addModule($totpModule);
-    }
-
-    if (in_array('yubi', $twoFactorMethods, true)) {
-        // Yubi module
-        $yubiModule = new YubiModule(
-            $tpl,
-            $serverClient
-        );
-        $service->addModule($yubiModule);
+    if (0 !== count($twoFactorMethods)) {
+        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $tpl, $serverClient);
+        $service->addModule($twoFactorEnrollModule);
     }
 
     // OAuth module

@@ -259,7 +259,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
-                $yubiKeyId = $this->serverClient->getRequireBool('yubi_key_id', ['user_id' => $userInfo->id()]);
+                $yubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());

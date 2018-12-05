@@ -29,41 +29,22 @@
             <td></td>
         </tr>
         {% endif %}
-    </table>
 
-    {% if twoFactorMethods is not empty %}
-    <h2>{% trans "Two-factor Authentication" %}</h2>
-
-    <table>
-
-        {% if "totp" in twoFactorMethods %}
+        {% if twoFactorMethods is not empty %}
         <tr>
-            <th>{% trans "TOTP" %}</th>
+            <th>{% trans "Two-factor Authentication" %}</th>
             <td>
                 {% if hasTotpSecret %}
-                    <span class="success">{% trans "Enrolled" %}</span>
+                    <span class="plain">{% trans "TOTP" %}</span>
+                {% elseif yubiKeyId %}
+                    <span class="plain">{% trans "YubiKey" %}</span>
                 {% else %}
-                    <a href="totp">{% trans "Enroll" %}</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endif %}
-
-        {% if "yubi" in twoFactorMethods %}
-        <tr>
-            <th>{% trans "YubiKey" %}</th>
-            <td>
-                {% if yubiKeyId %}
-                    <span class="success">{% trans "Enrolled" %}</span>
-                    <span title="Registered YubiKey ID" class="plain">{{ yubiKeyId }}</span>
-                {% else %}
-                    <a href="yubi">{% trans "Enroll" %}</a>
+                    <a href="two_factor_enroll">{% trans "Enroll" %}</a>
                 {% endif %}
             </td>
         </tr>
         {% endif %}
     </table>
-    {% endif %}
 
     {% if authorizedClients is not empty %}
     <h2>{% trans "Authorized Applications" %}</h2>
