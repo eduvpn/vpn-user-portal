@@ -20,58 +20,9 @@ msgstr "Erreur"
 msgid "An error occurred."
 msgstr "Une erreur est survenue."
 
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:40
-msgid "You are already enrolled with a YubiKey."
-msgstr "Vous êtes déjà inscrit avec un YubiKey."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:49
-msgid ""
-"Here you can enroll for two-factor authentication (2FA) using a YubiKey One-"
-"time Password (OTP)."
-msgstr ""
-"Sur cette page, vous pouvez vous inscrire à l'authentification à deux "
-"facteurs (2FA) à l'aide d'un mot de passe unique (OTP) YubiKey."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:52
-msgid ""
-"See the <a href=\"documentation\">documentation</a> for more information on "
-"2FA."
-msgstr ""
-"Voir la <a href=\"documentation\">documentation</a> pour plus d'informations "
-"sur 2FA."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:59
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:59
-msgid "Only an administrator can remove 2FA from your account!"
-msgstr ""
-"Seul un administrateur peut supprimer l’authentification à deux facteurs de "
-"votre compte !"
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:66
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:41
-msgid "Please attach your YubiKey and press its button."
-msgstr "Insérez votre YubiKey et appuyez sur son bouton."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:78
-msgid "The YubiKey OTP is not valid."
-msgstr "Le mot de passe à usage unique YubiKey n’est pas valide."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:97
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:68
-msgid "YubiKey OTP"
-msgstr "Mot de passe à usage unique YubiKey"
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:104
-#: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:79
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:121
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:79
-msgid "Verify"
-msgstr "Vérifier"
-
 #: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:34
 #: /tmp/cache/d5/d550441ea5960e047f750185db140d0eed7acc741dd551cc49da3131b1787f69.php:34
 #: /tmp/cache/d5/d550441ea5960e047f750185db140d0eed7acc741dd551cc49da3131b1787f69.php:115
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:34
 msgid "Sign In"
 msgstr "Se connecter"
 
@@ -84,16 +35,21 @@ msgid "The TOTP you provided is incorrect."
 msgstr "Le TOTP que vous avez saisi est incorrect."
 
 #: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:68
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:110
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:62
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:114
 msgid "TOTP"
 msgstr "TOTP"
+
+#: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:79
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:132
+msgid "Verify"
+msgstr "Vérifier"
 
 #: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:87
 msgid "Contact support if you lost your TOTP."
 msgstr "Contactez le service d’aide si vous n’avez plus votre TOTP."
 
 #: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:92
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:92
 msgid "Your ID is <code>%_two_factor_user_id%</code>."
 msgstr "Votre identifiant est <code>%_two_factor_user_id%</code>."
 
@@ -160,48 +116,6 @@ msgstr "Oui"
 msgid "No"
 msgstr "Non"
 
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:40
-msgid "You are already enrolled for TOTP."
-msgstr "Vous êtes déjà inscrit pour TOTP."
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:49
-msgid ""
-"Here you can enroll for two-factor authentication (2FA) using a Time-based "
-"One-time Password (TOTP)."
-msgstr ""
-"Ici, vous pouvez vous inscrire à l'authentification à deux facteurs (2FA) à "
-"l'aide d'un mot de passe unique basé sur le temps (TOTP)."
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:52
-msgid ""
-"See the <a href=\"documentation\">documentation</a> for more information on "
-"2FA and a list of applications to use."
-msgstr ""
-"Consultez la <a href=\"documentation\">documentation</a> pour plus "
-"d'informations sur 2FA et une liste d'applications à utiliser."
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:66
-msgid "Secret"
-msgstr "Secret"
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:82
-msgid ""
-"Scan the QR code using your 2FA application, or import the secret manually. "
-"Confirm the successful configuration by entering a 6 digit OTP generated by "
-"the application below."
-msgstr ""
-"Scannez le code QR à l'aide de votre application 2FA, ou importez le secret "
-"manuellement. Vérifiez la configuration en saisissant un mot de passe à "
-"usage unique (OTP) à 6 chiffres généré par l'application ci-dessous."
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:94
-msgid ""
-"The OTP key you entered does not match the expected value for this OTP "
-"secret."
-msgstr ""
-"La clé OTP que vous avez saisie ne correspond pas à la valeur attendue pour "
-"ce secret OTP."
-
 #: /tmp/cache/3e/3e2bd55d8bc4be2d55435468bbefa3e228a6cacd68e05068a20fc5267f59219a.php:45
 #: /tmp/cache/90/900701fcdce202bf0e4aac8570fd3ff734888343d48d716f3563c73fe34240e2.php:34
 msgid "Approval"
@@ -260,6 +174,54 @@ msgstr "Message"
 msgid "Type"
 msgstr "Type"
 
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:40
+msgid "Two-factor authentication (2FA) is disabled by the administrator."
+msgstr ""
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:52
+#, fuzzy
+#| msgid "You are already enrolled for TOTP."
+msgid "You are already enrolled for Two-factor authentication (2FA)."
+msgstr "Vous êtes déjà inscrit pour TOTP."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:67
+msgid ""
+"Here you can enroll for two-factor authentication (2FA) using a Time-based "
+"One-time Password (TOTP)."
+msgstr ""
+"Ici, vous pouvez vous inscrire à l'authentification à deux facteurs (2FA) à "
+"l'aide d'un mot de passe unique basé sur le temps (TOTP)."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:70
+msgid ""
+"See the <a href=\"documentation\">documentation</a> for more information on "
+"2FA and a list of applications to use."
+msgstr ""
+"Consultez la <a href=\"documentation\">documentation</a> pour plus "
+"d'informations sur 2FA et une liste d'applications à utiliser."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:77
+msgid "Secret"
+msgstr "Secret"
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:93
+msgid ""
+"Scan the QR code using your 2FA application, or import the secret manually. "
+"Confirm the successful configuration by entering a 6 digit OTP generated by "
+"the application below."
+msgstr ""
+"Scannez le code QR à l'aide de votre application 2FA, ou importez le secret "
+"manuellement. Vérifiez la configuration en saisissant un mot de passe à "
+"usage unique (OTP) à 6 chiffres généré par l'application ci-dessous."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:105
+msgid ""
+"The OTP key you entered does not match the expected value for this OTP "
+"secret."
+msgstr ""
+"La clé OTP que vous avez saisie ne correspond pas à la valeur attendue pour "
+"ce secret OTP."
+
 #: /tmp/cache/33/3336174cfa9e38bd86b258082c2cf234b8ff0431d9a94b423945d4f7f71caf6a.php:37
 msgid "Here you can change the password for your account."
 msgstr ""
@@ -294,14 +256,6 @@ msgstr "Nouveau mot de passe (confirmer)"
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:52
-msgid "The YubiKey OTP you provided is not correct."
-msgstr "Le mot de passe à usage unique (OTP) YubiKey n’est pas correct."
-
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:87
-msgid "Contact support if you lost your YubiKey."
-msgstr "Contactez le service d’aide si vous avez perdu votre YubiKey."
-
 #: /tmp/cache/62/6298c29d4e94700c94637dd8c084e9ed86f5a72251aeb1c8f27eebacc7eee81a.php:51
 msgid ""
 "Either, no VPN profiles are defined, or this account does not have the "
@@ -333,7 +287,7 @@ msgstr "Profil"
 #: /tmp/cache/62/6298c29d4e94700c94637dd8c084e9ed86f5a72251aeb1c8f27eebacc7eee81a.php:137
 #: /tmp/cache/62/6298c29d4e94700c94637dd8c084e9ed86f5a72251aeb1c8f27eebacc7eee81a.php:141
 #: /tmp/cache/a8/a8cbab7e40d704ed712eb0c7ac215a83147dec776176e785a7c3be6914207274.php:50
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:206
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:143
 msgid "Name"
 msgstr "Nom"
 
@@ -402,32 +356,18 @@ msgstr "Modifier le mot de passe"
 msgid "Group Membership(s)"
 msgstr "Appartenance(s) à un ou des groupe(s)"
 
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:102
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:106
 msgid "Two-factor Authentication"
 msgstr "Authentification à deux facteurs"
 
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:118
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:143
-msgid "Enrolled"
-msgstr "Inscrit"
-
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:124
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:153
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:120
 msgid "Enroll"
 msgstr "S’inscrire"
 
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:135
-msgid "YubiKey"
-msgstr "YubiKey"
-
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:168
-msgid "Profiles"
-msgstr "Profiles"
-
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:200
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:137
 msgid "Authorized Applications"
 msgstr "Applications autorisées"
 
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:239
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:176
 msgid "Revoke"
 msgstr "Révoquer"

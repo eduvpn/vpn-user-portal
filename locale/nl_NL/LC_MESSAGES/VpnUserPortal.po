@@ -21,56 +21,9 @@ msgstr "Fout"
 msgid "An error occurred."
 msgstr "Er is een fout opgetreden."
 
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:40
-msgid "You are already enrolled with a YubiKey."
-msgstr "Je bent al aangemeld met een YubiKey OTP."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:49
-msgid ""
-"Here you can enroll for two-factor authentication (2FA) using a YubiKey One-"
-"time Password (OTP)."
-msgstr ""
-"Hier kun je je aanmelden voor twee-factor authenticatie (2FA) met een "
-"YubiKey."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:52
-msgid ""
-"See the <a href=\"documentation\">documentation</a> for more information on "
-"2FA."
-msgstr ""
-"Zie de <a href=\"documentation\">documentatie</a> voor meer informatie over "
-"2FA."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:59
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:59
-msgid "Only an administrator can remove 2FA from your account!"
-msgstr "Alleen een beheerder kan 2FA van het account halen!"
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:66
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:41
-msgid "Please attach your YubiKey and press its button."
-msgstr "Stop de YubiKey in de USB-poort en druk op de knop."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:78
-msgid "The YubiKey OTP is not valid."
-msgstr "De YubiKey OTP is ongeldig."
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:97
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:68
-msgid "YubiKey OTP"
-msgstr "YubiKey OTP"
-
-#: /tmp/cache/43/430597bf2a357a2d577c545b4a77c8bfcd27a3c7795af9762ac0629b1cdec59e.php:104
-#: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:79
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:121
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:79
-msgid "Verify"
-msgstr "Verifiëren"
-
 #: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:34
 #: /tmp/cache/d5/d550441ea5960e047f750185db140d0eed7acc741dd551cc49da3131b1787f69.php:34
 #: /tmp/cache/d5/d550441ea5960e047f750185db140d0eed7acc741dd551cc49da3131b1787f69.php:115
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:34
 msgid "Sign In"
 msgstr "Inloggen"
 
@@ -83,16 +36,21 @@ msgid "The TOTP you provided is incorrect."
 msgstr "De TOTP-code is ongeldig."
 
 #: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:68
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:110
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:62
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:114
 msgid "TOTP"
 msgstr "TOTP"
+
+#: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:79
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:132
+msgid "Verify"
+msgstr "Verifiëren"
 
 #: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:87
 msgid "Contact support if you lost your TOTP."
 msgstr "Neem contact op met de helpdesk als je je TOTP verloren bent."
 
 #: /tmp/cache/4b/4bbb5db1b520e2de4608d2b2edeb4a2abc9e70ef9e032bd8b2399da25dc24382.php:92
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:92
 msgid "Your ID is <code>%_two_factor_user_id%</code>."
 msgstr "Je ID is <code>%_two_factor_user_id%</code>."
 
@@ -158,47 +116,6 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nee"
 
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:40
-msgid "You are already enrolled for TOTP."
-msgstr "Je bent al aangemeld voor TOTP."
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:49
-msgid ""
-"Here you can enroll for two-factor authentication (2FA) using a Time-based "
-"One-time Password (TOTP)."
-msgstr ""
-"Hier kun je je aanmelden voor twee-factor authenticatie (2FA) met TOTP."
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:52
-msgid ""
-"See the <a href=\"documentation\">documentation</a> for more information on "
-"2FA and a list of applications to use."
-msgstr ""
-"Zie de <a href=\"documentation\">documentation</a> voor meer informatie over "
-"2FA en een lijst met applicaties die gebruikt kunnen worden."
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:66
-msgid "Secret"
-msgstr "Sleutel"
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:82
-msgid ""
-"Scan the QR code using your 2FA application, or import the secret manually. "
-"Confirm the successful configuration by entering a 6 digit OTP generated by "
-"the application below."
-msgstr ""
-"Scan de QR-code met een 2FA-applicatie, of importeer de sleutel handmatig. "
-"Bevestig de configuratie door een door de 2FA-applicatie gegenereerde 6-"
-"cijferige OTP-code in te vullen."
-
-#: /tmp/cache/f1/f1b346a156891245c9c44fe4b8b7a09f3a3452b0130e565c2a4b092f829bfacb.php:94
-msgid ""
-"The OTP key you entered does not match the expected value for this OTP "
-"secret."
-msgstr ""
-"De OTP-code die je invoerde komt niet overeen met de verwachtte waarde voor "
-"deze OTP-sleutel."
-
 #: /tmp/cache/3e/3e2bd55d8bc4be2d55435468bbefa3e228a6cacd68e05068a20fc5267f59219a.php:45
 #: /tmp/cache/90/900701fcdce202bf0e4aac8570fd3ff734888343d48d716f3563c73fe34240e2.php:34
 msgid "Approval"
@@ -257,6 +174,51 @@ msgstr "Bericht"
 msgid "Type"
 msgstr "Type"
 
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:40
+msgid "Two-factor authentication (2FA) is disabled by the administrator."
+msgstr "Twee-factor authenticatie (2FA) is uitgeschakeld door de beheerder."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:52
+msgid "You are already enrolled for Two-factor authentication (2FA)."
+msgstr "Je bent al aangemeld voor twee-factor authenticatie (2FA)."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:67
+msgid ""
+"Here you can enroll for two-factor authentication (2FA) using a Time-based "
+"One-time Password (TOTP)."
+msgstr ""
+"Hier kun je je aanmelden voor twee-factor authenticatie (2FA) met TOTP."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:70
+msgid ""
+"See the <a href=\"documentation\">documentation</a> for more information on "
+"2FA and a list of applications to use."
+msgstr ""
+"Zie de <a href=\"documentation\">documentation</a> voor meer informatie over "
+"2FA en een lijst met applicaties die gebruikt kunnen worden."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:77
+msgid "Secret"
+msgstr "Sleutel"
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:93
+msgid ""
+"Scan the QR code using your 2FA application, or import the secret manually. "
+"Confirm the successful configuration by entering a 6 digit OTP generated by "
+"the application below."
+msgstr ""
+"Scan de QR-code met een 2FA-applicatie, of importeer de sleutel handmatig. "
+"Bevestig de configuratie door een door de 2FA-applicatie gegenereerde 6-"
+"cijferige OTP-code in te vullen."
+
+#: /tmp/cache/9d/9db491da620371427b58c84c8b8f7fdd2a463143712f50a61ff230878d55ce61.php:105
+msgid ""
+"The OTP key you entered does not match the expected value for this OTP "
+"secret."
+msgstr ""
+"De OTP-code die je invoerde komt niet overeen met de verwachtte waarde voor "
+"deze OTP-sleutel."
+
 #: /tmp/cache/33/3336174cfa9e38bd86b258082c2cf234b8ff0431d9a94b423945d4f7f71caf6a.php:37
 msgid "Here you can change the password for your account."
 msgstr "Hier kun je het wachtwoord van je account wijzigen."
@@ -287,14 +249,6 @@ msgstr "Nieuw wachtwoord (bevestigen)"
 #: /tmp/cache/33/3336174cfa9e38bd86b258082c2cf234b8ff0431d9a94b423945d4f7f71caf6a.php:114
 msgid "Confirm"
 msgstr "Bevestig"
-
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:52
-msgid "The YubiKey OTP you provided is not correct."
-msgstr "De YubiKey OTP is ongeldig."
-
-#: /tmp/cache/49/492e0066876f512487185f8eb2bc63fe371872efdfb232246ab36fa06852708e.php:87
-msgid "Contact support if you lost your YubiKey."
-msgstr "Neem contact op met de helpdesk als je je YubiKey verloren bent."
 
 #: /tmp/cache/62/6298c29d4e94700c94637dd8c084e9ed86f5a72251aeb1c8f27eebacc7eee81a.php:51
 msgid ""
@@ -327,7 +281,7 @@ msgstr "Profiel"
 #: /tmp/cache/62/6298c29d4e94700c94637dd8c084e9ed86f5a72251aeb1c8f27eebacc7eee81a.php:137
 #: /tmp/cache/62/6298c29d4e94700c94637dd8c084e9ed86f5a72251aeb1c8f27eebacc7eee81a.php:141
 #: /tmp/cache/a8/a8cbab7e40d704ed712eb0c7ac215a83147dec776176e785a7c3be6914207274.php:50
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:206
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:143
 msgid "Name"
 msgstr "Naam"
 
@@ -396,32 +350,18 @@ msgstr "Wijzig wachtwoord"
 msgid "Group Membership(s)"
 msgstr "Groeplidmaatschap(pen)"
 
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:102
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:106
 msgid "Two-factor Authentication"
 msgstr "Twee-factor authenticatie"
 
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:118
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:143
-msgid "Enrolled"
-msgstr "Geactiveerd"
-
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:124
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:153
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:120
 msgid "Enroll"
 msgstr "Aanmelden"
 
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:135
-msgid "YubiKey"
-msgstr "YubiKey"
-
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:168
-msgid "Profiles"
-msgstr "Profielen"
-
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:200
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:137
 msgid "Authorized Applications"
 msgstr "Geautoriseerde applicaties"
 
-#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:239
+#: /tmp/cache/12/12323067c9a6ff0932ebc45001bada463c0a8e9cb311ef778b7760e0b927646c.php:176
 msgid "Revoke"
 msgstr "Intrekken"
