@@ -7,6 +7,9 @@
   2FA through OpenVPN will be removed in the near future
 - update 2FA documentation
 - no longer ask for confirmation when deleting a certificate (#107)
+- remove VOOT support
+- force user to enroll for 2FA when 2FA is required
+- remove YubiKey support
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 
