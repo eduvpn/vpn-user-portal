@@ -27,7 +27,7 @@
                     <dt>{% trans "Secret" %}</dt>
                     <dd><code>{{ totpSecret }}</code></dd>
                     <dt>QR</dt>
-                    <dd><img src="totp/qr-code?totp_secret={{ totpSecret }}"></dd>
+                    <dd><img src="two_factor_enroll_qr?totp_secret={{ totpSecret }}"></dd>
                 </dl>
 
                 <p>
@@ -42,7 +42,7 @@
                     {% endif %}
                 {% endif %}
 
-                <form method="post" action="totp">
+                <form method="post">
                     <fieldset>
                         <label for="otp_key">OTP</label>
                         <input type="text" id="totp_key" inputmode="numeric" name="totp_key" autocomplete="off" maxlength="6" required pattern="[0-9]{6}" autofocus>

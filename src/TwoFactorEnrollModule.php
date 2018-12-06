@@ -73,70 +73,69 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
             }
         );
 
-        if (\in_array('totp', $this->twoFactorMethods, true)) {
-            $service->post(
-                '/totp',
-                /**
-                 * @return \SURFnet\VPN\Common\Http\Response
-                 */
-                function (Request $request, array $hookData) {
-                    $userInfo = $hookData['auth'];
+        $service->post(
+            '/two_factor_enroll',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                $userInfo = $hookData['auth'];
 
-                    $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
-                    $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
+                $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
+                $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
 
-                    try {
-                        $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
-                    } catch (ApiException $e) {
-                        // we were unable to set the OTP secret
-                        $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
+                try {
+                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                } catch (ApiException $e) {
+                    // we were unable to set the OTP secret
+                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
 
-                        return new HtmlResponse(
-                            $this->tpl->render(
-                                'vpnPortalEnrollTwoFactor',
-                                [
-                                    'hasTotpSecret' => $hasTotpSecret,
-                                    'totpSecret' => $totpSecret,
-                                    'error_code' => 'invalid_otp_code',
-                                ]
-                            )
-                        );
-                    }
-
-                    return new RedirectResponse($request->getRootUri().'account', 302);
-                }
-            );
-
-            $service->get(
-                '/totp/qr-code',
-                /**
-                 * @return \SURFnet\VPN\Common\Http\Response
-                 */
-                function (Request $request, array $hookData) {
-                    $userInfo = $hookData['auth'];
-
-                    $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));
-
-                    $otpAuthUrl = sprintf(
-                        'otpauth://totp/%s:%s?secret=%s&issuer=%s',
-                        $request->getServerName(),
-                        $userInfo->id(),
-                        $totpSecret,
-                        $request->getServerName()
+                    return new HtmlResponse(
+                        $this->tpl->render(
+                            'vpnPortalEnrollTwoFactor',
+                            [
+                                'twoFactorMethods' => $this->twoFactorMethods,
+                                'hasTotpSecret' => $hasTotpSecret,
+                                'totpSecret' => $totpSecret,
+                                'error_code' => 'invalid_otp_code',
+                            ]
+                        )
                     );
-
-                    $renderer = new Png();
-                    $renderer->setHeight(256);
-                    $renderer->setWidth(256);
-                    $writer = new Writer($renderer);
-                    $qrCode = $writer->writeString($otpAuthUrl);
-
-                    $response = new Response(200, 'image/png');
-                    $response->setBody($qrCode);
-
-                    return $response;
                 }
-            );
-        }
+
+                return new RedirectResponse($request->getRootUri().'account', 302);
+            }
+        );
+
+        $service->get(
+            '/two_factor_enroll_qr',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                $userInfo = $hookData['auth'];
+
+                $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));
+
+                $otpAuthUrl = sprintf(
+                    'otpauth://totp/%s:%s?secret=%s&issuer=%s',
+                    $request->getServerName(),
+                    $userInfo->id(),
+                    $totpSecret,
+                    $request->getServerName()
+                );
+
+                $renderer = new Png();
+                $renderer->setHeight(256);
+                $renderer->setWidth(256);
+                $writer = new Writer($renderer);
+                $qrCode = $writer->writeString($otpAuthUrl);
+
+                $response = new Response(200, 'image/png');
+                $response->setBody($qrCode);
+
+                return $response;
+            }
+        );
     }
 }
