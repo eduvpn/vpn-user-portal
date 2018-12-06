@@ -83,10 +83,8 @@ return [
     ],
 
     // Available 2FA methods
-    'twoFactorMethods' => ['totp'],             // only TOTP
-    //'twoFactorMethods' => [],                 // no 2FA method
-    //                                          // YubiKey OTP is **DEPRECATED**
-    //'twoFactorMethods' => ['totp', 'yubi'],   // both TOTP and YubiKey OTP
+    'twoFactorMethods' => ['totp'],             // TOTP
+    //'twoFactorMethods' => [],                 // 2FA disabled
 
     // Connection to vpn-server-api
     'apiUser' => 'vpn-user-portal',

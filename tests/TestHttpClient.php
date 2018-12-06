@@ -53,8 +53,6 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('user_messages', []);
             case 'serverClient/system_messages?message_type=motd':
                 return self::wrap('system_messages', [['id' => 1, 'message_type' => 'motd', 'message_body' => 'Hello World!']]);
-            case 'serverClient/has_yubi_key_id?user_id=foo':
-                return self::wrap('has_yubi_key_id', false);
             case 'serverClient/has_totp_secret?user_id=foo':
                 return self::wrap('has_totp_secret', false);
             case 'serverClient/is_disabled_user?user_id=foo':

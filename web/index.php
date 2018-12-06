@@ -318,7 +318,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         ]
     );
 
-    $twoFactorMethods = $config->optionalItem('twoFactorMethods', ['yubi', 'totp']);
+    $twoFactorMethods = $config->optionalItem('twoFactorMethods', ['totp']);
     if (0 !== count($twoFactorMethods)) {
         $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
     }

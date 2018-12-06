@@ -36,8 +36,6 @@
             <td>
                 {% if hasTotpSecret %}
                     <span class="plain">{% trans "TOTP" %}</span>
-                {% elseif yubiKeyId %}
-                    <span class="plain">{% trans "YubiKey" %}</span>
                 {% else %}
                     <a href="two_factor_enroll">{% trans "Enroll" %}</a>
                 {% endif %}

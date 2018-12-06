@@ -148,8 +148,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 if ($profileList[$profileId]['twoFactor']) {
                     $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
-                    $hasYubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-                    if (!$hasTotpSecret && !$hasYubiKeyId) {
+                    if (!$hasTotpSecret) {
                         return new HtmlResponse(
                             $this->tpl->render(
                                 'vpnPortalNew',
@@ -257,10 +256,7 @@ class VpnPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
-
                 $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
-                $yubiKeyId = $this->serverClient->getRequireBool('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userGroups = $this->cachedUserGroups($userInfo->id());
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
@@ -292,12 +288,11 @@ class VpnPortalModule implements ServiceModuleInterface
                         'vpnPortalAccount',
                         [
                             'twoFactorEnabledProfiles' => $twoFactorEnabledProfiles,
-                            'yubiKeyId' => $yubiKeyId,
                             'hasTotpSecret' => $hasTotpSecret,
                             'userInfo' => $userInfo,
                             'userGroups' => $userGroups,
                             'authorizedClients' => $authorizedClients,
-                            'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp', 'yubi']),
+                            'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp']),
                         ]
                     )
                 );
@@ -347,7 +342,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalDocumentation',
                         [
-                            'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp', 'yubi']),
+                            'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp']),
                         ]
                     )
                 );

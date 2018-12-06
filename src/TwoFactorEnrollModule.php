@@ -58,9 +58,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
-
                 $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
-                $hasYubiId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -68,7 +66,6 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                         [
                             'twoFactorMethods' => $this->twoFactorMethods,
                             'hasTotpSecret' => $hasTotpSecret,
-                            'hasYubiId' => $hasYubiId,
                             'totpSecret' => Base32::encodeUpper(random_bytes(20)),
                         ]
                     )
@@ -138,39 +135,6 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                     $response->setBody($qrCode);
 
                     return $response;
-                }
-            );
-        }
-
-        if (\in_array('yubi', $this->twoFactorMethods, true)) {
-            $service->post(
-                '/yubi',
-                /**
-                 * @return \SURFnet\VPN\Common\Http\Response
-                 */
-                function (Request $request, array $hookData) {
-                    $userInfo = $hookData['auth'];
-
-                    $yubiKeyOtp = InputValidation::yubiKeyOtp($request->getPostParameter('yubi_key_otp'));
-
-                    try {
-                        $this->serverClient->post('set_yubi_key_id', ['user_id' => $userInfo->id(), 'yubi_key_otp' => $yubiKeyOtp]);
-                    } catch (ApiException $e) {
-                        // we were unable to set the Yubi ID
-                        $hasYubiId = $this->serverClient->get('has_yubi_key_id', ['user_id' => $userInfo->id()]);
-
-                        return new HtmlResponse(
-                            $this->tpl->render(
-                                'vpnPortalEnrollTwoFactor',
-                                [
-                                    'hasYubiId' => $hasYubiId,
-                                    'error_code' => 'invalid_yubi_key_otp',
-                                ]
-                            )
-                        );
-                    }
-
-                    return new RedirectResponse($request->getRootUri().'account', 302);
                 }
             );
         }
