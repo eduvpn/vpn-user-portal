@@ -103,19 +103,6 @@ msgstr "Log in met je gebruikersnaam en wachtwoord."
 msgid "The credentials you provided were not correct."
 msgstr "De inloggegevens zijn niet correct."
 
-#: /tmp/cache/38/38fa4efd290b74d35edc08a673be48130be03817312cb3a78dd1298a1c183790.php:37
-msgid "Are you sure you want to delete <em>%displayName%</em>?"
-msgstr ""
-"Weet je zeker dat je de configuratie <em>%displayName%</em> wilt verwijderen?"
-
-#: /tmp/cache/38/38fa4efd290b74d35edc08a673be48130be03817312cb3a78dd1298a1c183790.php:49
-msgid "Yes"
-msgstr "Ja"
-
-#: /tmp/cache/38/38fa4efd290b74d35edc08a673be48130be03817312cb3a78dd1298a1c183790.php:53
-msgid "No"
-msgstr "Nee"
-
 #: /tmp/cache/3e/3e2bd55d8bc4be2d55435468bbefa3e228a6cacd68e05068a20fc5267f59219a.php:45
 #: /tmp/cache/90/900701fcdce202bf0e4aac8570fd3ff734888343d48d716f3563c73fe34240e2.php:34
 msgid "Approval"
