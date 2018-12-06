@@ -11,6 +11,7 @@ namespace SURFnet\VPN\Portal;
 
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
+use fkooman\SeCookie\SessionInterface;
 use ParagonIE\ConstantTime\Base32;
 use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\InputValidation;
@@ -28,6 +29,9 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     /** @var array<string> */
     private $twoFactorMethods;
 
+    /** @var \fkooman\SeCookie\SessionInterface */
+    private $session;
+
     /** @var \SURFnet\VPN\Common\TplInterface */
     private $tpl;
 
@@ -36,12 +40,14 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
     /**
      * @param array<string>                               $twoFactorMethods
+     * @param \fkooman\SeCookie\SessionInterface          $session
      * @param \SURFnet\VPN\Common\TplInterface            $tpl
      * @param \SURFnet\VPN\Common\HttpClient\ServerClient $serverClient
      */
-    public function __construct(array $twoFactorMethods, TplInterface $tpl, ServerClient $serverClient)
+    public function __construct(array $twoFactorMethods, SessionInterface $session, TplInterface $tpl, ServerClient $serverClient)
     {
         $this->twoFactorMethods = $twoFactorMethods;
+        $this->session = $session;
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
     }
@@ -64,6 +70,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalEnrollTwoFactor',
                         [
+                            'requireTwoFactorEnrollment' => $this->session->has('_two_factor_enroll_redirect_to'),
                             'twoFactorMethods' => $this->twoFactorMethods,
                             'hasTotpSecret' => $hasTotpSecret,
                             'totpSecret' => Base32::encodeUpper(random_bytes(20)),
@@ -83,6 +90,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
                 $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
                 $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
+                $hasTwoFactorEnrollRedirectTo = $this->session->has('_two_factor_enroll_redirect_to');
 
                 try {
                     $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
@@ -94,6 +102,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                         $this->tpl->render(
                             'vpnPortalEnrollTwoFactor',
                             [
+                                'requireTwoFactorEnrollment' => $hasTwoFactorEnrollRedirectTo,
                                 'twoFactorMethods' => $this->twoFactorMethods,
                                 'hasTotpSecret' => $hasTotpSecret,
                                 'totpSecret' => $totpSecret,
@@ -101,6 +110,17 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                             ]
                         )
                     );
+                }
+
+                if ($hasTwoFactorEnrollRedirectTo) {
+                    $twoFactorEnrollRedirectTo = $this->session->get('_two_factor_enroll_redirect_to');
+                    $this->session->delete('_two_factor_enroll_redirect_to');
+
+                    // mark as 2FA verified
+                    $this->session->regenerate(true);
+                    $this->session->set('_two_factor_verified', $userInfo->id());
+
+                    return new RedirectResponse($twoFactorEnrollRedirectTo);
                 }
 
                 return new RedirectResponse($request->getRootUri().'account', 302);

@@ -1,6 +1,21 @@
-{% set activeItem = 'account' %}
+{% if not requireTwoFactorEnrollment %}
+    {% set activeItem = 'account' %}
+{% endif %}
 {% extends "base.twig" %}
 {% block content %}
+    {% if requireTwoFactorEnrollment %}
+        <ul class="menu">
+            <li class="active"><span>{% trans "Two-factor Enrollment" %}</span></li>
+        </ul>
+
+        <p class="success">
+            {% trans %}
+                In order to continue, you must first enroll for Two-factor authentication!
+            {% endtrans %}
+        </p>
+
+    {% endif%} 
+
     {% if twoFactorMethods is empty %}
         <p>
             {% trans "Two-factor authentication (2FA) is disabled by the administrator." %}
@@ -12,7 +27,6 @@
             </p>
         {% else %}
             {% if "totp" in twoFactorMethods %}
-                <h2>{% trans "TOTP" %}</h2>
                 <p>
                     {% trans "Here you can enroll for two-factor authentication (2FA) using a Time-based One-time Password (TOTP)." %}
                     {% trans %}See the <a href="documentation">documentation</a> for more information on 2FA and a list of applications to use.{% endtrans %}

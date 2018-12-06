@@ -320,7 +320,15 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
 
     $twoFactorMethods = $config->optionalItem('twoFactorMethods', ['totp']);
     if (0 !== count($twoFactorMethods)) {
-        $service->addBeforeHook('two_factor', new TwoFactorHook($session, $tpl, $serverClient));
+        $service->addBeforeHook(
+            'two_factor',
+            new TwoFactorHook(
+                $session,
+                $tpl,
+                $serverClient,
+                $config->hasItem('requireTwoFactor') ? $config->getItem('requireTwoFactor') : false
+            )
+        );
     }
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
@@ -386,7 +394,7 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     $service->addModule($vpnPortalModule);
 
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $tpl, $serverClient);
+        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $session, $tpl, $serverClient);
         $service->addModule($twoFactorEnrollModule);
     }
 
