@@ -194,35 +194,8 @@ class VpnPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
-                $certInfo = $this->serverClient->getRequireArray('client_certificate_info', ['common_name' => $commonName]);
-
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalConfirmDelete',
-                        [
-                            'commonName' => $commonName,
-                            'displayName' => $certInfo['display_name'],
-                        ]
-                    )
-                );
-            }
-        );
-
-        $service->post(
-            '/deleteCertificateConfirm',
-            /**
-             * @return \SURFnet\VPN\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
-
-                // no need to validate as we do strict string compare below
-                $confirmDelete = $request->getPostParameter('confirmDelete');
-
-                if ('yes' === $confirmDelete) {
-                    $this->serverClient->post('delete_client_certificate', ['common_name' => $commonName]);
-                    $this->serverClient->post('kill_client', ['common_name' => $commonName]);
-                }
+                $this->serverClient->post('delete_client_certificate', ['common_name' => $commonName]);
+                $this->serverClient->post('kill_client', ['common_name' => $commonName]);
 
                 return new RedirectResponse($request->getRootUri().'certificates', 302);
             }

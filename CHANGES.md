@@ -6,6 +6,7 @@
 - no longer show which profiles have 2FA enabled, no longer relevant as
   2FA through OpenVPN will be removed in the near future
 - update 2FA documentation
+- no longer ask for confirmation when deleting a certificate (#107)
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 

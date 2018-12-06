@@ -123,24 +123,11 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
-    public function testDisable()
-    {
-        $this->assertSame(
-            [
-                'vpnPortalConfirmDelete' => [
-                    'commonName' => '12345678901234567890123456789012',
-                    'displayName' => 'Foo',
-                ],
-            ],
-            $this->makeRequest('POST', '/deleteCertificate', [], ['commonName' => '12345678901234567890123456789012'])
-        );
-    }
-
     public function testDisableConfirm()
     {
         $this->assertSame(
             302,
-            $this->makeRequest('POST', '/deleteCertificateConfirm', [], ['commonName' => '12345678901234567890123456789012', 'confirmDelete' => 'yes'], true)->getStatusCode()
+            $this->makeRequest('POST', '/deleteCertificate', [], ['commonName' => '12345678901234567890123456789012'], true)->getStatusCode()
         );
     }
 
