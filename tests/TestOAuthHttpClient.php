@@ -38,17 +38,6 @@ class TestOAuthHttpClient implements HttpClientInterface
                     file_get_contents(sprintf('%s/data/federation.json.wrong', __DIR__)),
                     ['Content-Type' => 'application/json']
                 );
-            case 'https://example.org/token':
-                return new Response(
-                    200,
-                    json_encode(
-                        [
-                            'access_token' => 'X',
-                            'token_type' => 'bearer',
-                        ]
-                    ),
-                    ['Content-Type' => 'application/json']
-                );
             default:
                 throw new RuntimeException('no such requestUri');
         }

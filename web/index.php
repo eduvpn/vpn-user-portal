@@ -10,9 +10,6 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
-use fkooman\OAuth\Client\OAuthClient;
-use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\SeCookie\Cookie;
@@ -43,15 +40,11 @@ use SURFnet\VPN\Common\TwigTpl;
 use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
-use SURFnet\VPN\Portal\LegacyVootTokenHook;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\PasswdModule;
 use SURFnet\VPN\Portal\RegistrationHook;
 use SURFnet\VPN\Portal\TwoFactorEnrollModule;
-use SURFnet\VPN\Portal\VootModule;
-use SURFnet\VPN\Portal\VootTokenHook;
-use SURFnet\VPN\Portal\VootTokenStorage;
 use SURFnet\VPN\Portal\Voucher;
 use SURFnet\VPN\Portal\VpnPortalModule;
 
@@ -338,38 +331,6 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
     if (0 !== count($twoFactorMethods)) {
         $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
         $service->addModule($twoFactorModule);
-    }
-
-    // voot module
-    if ($config->hasItem('enableVoot') && $config->getItem('enableVoot')) {
-        $oauthClient = new OAuthClient(
-            new VootTokenStorage($serverClient),
-            new OAuthCurlHttpClient([], $logger)
-        );
-        $provider = new Provider(
-            $config->getSection('Voot')->getItem('clientId'),
-            $config->getSection('Voot')->getItem('clientSecret'),
-            $config->getSection('Voot')->getItem('authorizationEndpoint'),
-            $config->getSection('Voot')->getItem('tokenEndpoint')
-        );
-
-        if ($config->getSection('Voot')->hasItem('apiUrl')) {
-            // if the API URL is specified here, we assume we use the "frontend"
-            // way of fetching the VOOT group membership
-            $service->addBeforeHook('voot_token', new VootTokenHook($session, $serverClient, $oauthClient, $provider, $config->getSection('Voot')->getItem('apiUrl')));
-        } else {
-            // if the API URL is NOT specified, we assume we use the legacy
-            // way of obtaining VOOT groups through the backend... **DEPRECATED**
-            $service->addBeforeHook('voot_token', new LegacyVootTokenHook($serverClient));
-        }
-
-        $vootModule = new VootModule(
-            $oauthClient,
-            $provider,
-            $serverClient,
-            $session
-        );
-        $service->addModule($vootModule);
     }
 
     // OAuth tokens
