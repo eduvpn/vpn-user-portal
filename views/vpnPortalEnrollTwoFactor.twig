@@ -11,11 +11,6 @@
                 {% trans "You are already enrolled for Two-factor authentication (2FA)." %}
             </p>
         {% else %}
-
-            <p class="warning">
-                {% trans %}Only an administrator can remove 2FA from your account!{% endtrans %}
-            </p>
-
             {% if "totp" in twoFactorMethods %}
                 <h2>{% trans "TOTP" %}</h2>
                 <p>
