@@ -159,12 +159,26 @@ class VpnPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
+                $userCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->id()]);
+
+                // if query parameter "all" is set, show all certificates, also
+                // those issued to OAuth clients
+                $showAll = null !== $request->getQueryParameter('all', false);
+
+                $manualCertificateList = [];
+                if (false === $showAll) {
+                    foreach ($userCertificateList as $userCertificate) {
+                        if (null === $userCertificate['client_id']) {
+                            $manualCertificateList[] = $userCertificate;
+                        }
+                    }
+                }
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalCertificates',
                         [
-                            'userCertificateList' => $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->id()]),
+                            'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
                         ]
                     )
                 );

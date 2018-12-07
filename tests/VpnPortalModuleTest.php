@@ -113,6 +113,7 @@ class VpnPortalModuleTest extends TestCase
                             'display_name' => 'Foo',
                             'valid_from' => 123456,
                             'valid_to' => 2345567,
+                            'client_id' => null,
                         ],
                     ],
                 ],
