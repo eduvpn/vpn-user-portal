@@ -23,7 +23,6 @@ use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 use SURFnet\VPN\Common\Http\UserInfo;
-use SURFnet\VPN\Common\HttpClient\Exception\ApiException;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\ProfileConfig;
 
@@ -68,8 +67,6 @@ class VpnApiModule implements ServiceModuleInterface
      */
     public function init(Service $service)
     {
-        $twoFactorMethods = $this->config->optionalItem('twoFactorMethods', ['totp']);
-
         // API 1, 2
         $service->get(
             '/profile_list',
@@ -97,7 +94,9 @@ class VpnApiModule implements ServiceModuleInterface
                     $userProfileList[] = [
                         'profile_id' => $profileId,
                         'display_name' => $profileConfig->getItem('displayName'),
-                        'two_factor' => $profileConfig->getItem('twoFactor'),
+                        // 2FA is now decided by vpn-user-portal setting, so
+                        // we "lie" here to the client
+                        'two_factor' => false,
                     ];
                 }
 
@@ -106,6 +105,7 @@ class VpnApiModule implements ServiceModuleInterface
         );
 
         // API 2
+        // DEPRECATED, this whole call is useless now!
         $service->get(
             '/user_info',
             /**
@@ -115,22 +115,19 @@ class VpnApiModule implements ServiceModuleInterface
                 /** @var \fkooman\OAuth\Server\TokenInfo */
                 $tokenInfo = $hookData['auth'];
                 $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
-                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
-                $isDisabledUser = $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userInfo->id()]);
-
-                $twoFactorTypes = [];
-                if ($hasTotpSecret) {
-                    $twoFactorTypes[] = 'totp';
-                }
 
                 return new ApiResponse(
                     'user_info',
                     [
                         'user_id' => $userInfo->id(),
-                        'two_factor_enrolled' => $hasTotpSecret,
-                        'two_factor_enrolled_with' => $twoFactorTypes,
-                        'two_factor_supported_methods' => $this->config->optionalItem('twoFactorMethods', ['totp']),
-                        'is_disabled' => $isDisabledUser,
+                        // as 2FA works through the portal now, lie here to the
+                        // clients so they won't try to enroll the user
+                        'two_factor_enrolled' => false,
+                        'two_factor_enrolled_with' => [],
+                        'two_factor_supported_methods' => [],
+                        // if the user is disabled, the access_token no longer
+                        // works, so this is bogus
+                        'is_disabled' => false,
                     ]
                 );
             }
@@ -148,10 +145,8 @@ class VpnApiModule implements ServiceModuleInterface
                 $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
 
                 try {
-                    $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
-
                     $expiresAt = date_add(clone $userInfo->authTime(), $this->sessionExpiry);
-                    $clientCertificate = $this->getCertificate($tokenInfo, $displayName, $expiresAt);
+                    $clientCertificate = $this->getCertificate($tokenInfo, $expiresAt);
 
                     return new ApiResponse(
                         'create_keypair',
@@ -229,60 +224,6 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
-        // API 1
-        $service->post(
-            '/create_config',
-            /**
-             * @return \SURFnet\VPN\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                /** @var \fkooman\OAuth\Server\TokenInfo */
-                $tokenInfo = $hookData['auth'];
-                $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
-
-                try {
-                    $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
-                    $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
-                    $expiresAt = date_add(clone $userInfo->authTime(), $this->sessionExpiry);
-
-                    return $this->getConfig($request->getServerName(), $profileId, $tokenInfo, $displayName, $expiresAt);
-                } catch (InputValidationException $e) {
-                    return new ApiErrorResponse('create_config', $e->getMessage());
-                }
-            }
-        );
-
-        if (\in_array('totp', $twoFactorMethods, true)) {
-            $service->post(
-                '/two_factor_enroll_totp',
-                /**
-                 * @return \SURFnet\VPN\Common\Http\Response
-                 */
-                function (Request $request, array $hookData) {
-                    /** @var \fkooman\OAuth\Server\TokenInfo */
-                    $tokenInfo = $hookData['auth'];
-                    $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
-
-                    $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
-                    if ($hasTotpSecret) {
-                        return new ApiErrorResponse('two_factor_enroll_totp', 'user already enrolled');
-                    }
-
-                    try {
-                        $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
-                        $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
-                        $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
-                    } catch (ApiException $e) {
-                        return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
-                    } catch (InputValidationException $e) {
-                        return new ApiErrorResponse('two_factor_enroll_totp', $e->getMessage());
-                    }
-
-                    return new ApiResponse('two_factor_enroll_totp');
-                }
-            );
-        }
-
         // API 1, 2
         $service->get(
             '/user_messages',
@@ -333,36 +274,6 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string                          $serverName
-     * @param string                          $profileId
-     * @param \fkooman\OAuth\Server\TokenInfo $tokenInfo
-     * @param string                          $displayName
-     * @param \DateTime                       $expiresAt
-     *
-     * @return Response
-     */
-    private function getConfig($serverName, $profileId, TokenInfo $tokenInfo, $displayName, DateTime $expiresAt)
-    {
-        // obtain information about this profile to be able to construct
-        // a client configuration file
-        $profileList = $this->serverClient->getRequireArray('profile_list');
-        $profileData = $profileList[$profileId];
-
-        // create a certificate
-        $clientCertificate = $this->getCertificate($tokenInfo, $displayName, $expiresAt);
-        // get the CA & tls-auth
-        $serverInfo = $this->serverClient->getRequireArray('server_info');
-
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
-        $clientConfig = str_replace("\n", "\r\n", $clientConfig);
-
-        $response = new Response(200, 'application/x-openvpn-profile');
-        $response->setBody($clientConfig);
-
-        return $response;
-    }
-
-    /**
      * @param string $profileId
      *
      * @return Response
@@ -388,19 +299,21 @@ class VpnApiModule implements ServiceModuleInterface
 
     /**
      * @param \fkooman\OAuth\Server\TokenInfo $tokenInfo
-     * @param string                          $displayName
      * @param \DateTime                       $expiresAt
      *
      * @return array
      */
-    private function getCertificate(TokenInfo $tokenInfo, $displayName, DateTime $expiresAt)
+    private function getCertificate(TokenInfo $tokenInfo, DateTime $expiresAt)
     {
         // create a certificate
         return $this->serverClient->postRequireArray(
             'add_client_certificate',
             [
                 'user_id' => $this->tokenInfoToUserInfo($tokenInfo)->id(),
-                'display_name' => $displayName,
+                // we won't show the Certificate entry anyway on the
+                // "Certificates" page for certificates downloaded through the
+                // API
+                'display_name' => $tokenInfo->getClientId(),
                 'client_id' => $tokenInfo->getClientId(),
                 'expires_at' => $expiresAt->format(DateTime::ATOM),
             ]
@@ -421,10 +334,6 @@ class VpnApiModule implements ServiceModuleInterface
             // CA
             $isValid = false;
             $reason = 'certificate_missing';
-        } elseif ($clientCertificateInfo['user_is_disabled']) {
-            // user account disabled by admin
-            $isValid = false;
-            $reason = 'user_disabled';
         } elseif (new DateTime($clientCertificateInfo['valid_from']) > new DateTime()) {
             // certificate not yet valid
             $isValid = false;
