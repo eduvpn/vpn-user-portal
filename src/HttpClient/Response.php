@@ -19,40 +19,19 @@ class Response
     /** @var string */
     private $responseBody;
 
-    /** @var array */
+    /** @var array<string,string> */
     private $responseHeaders;
 
     /**
-     * @param int    $statusCode
-     * @param string $responseBody
+     * @param int                  $statusCode
+     * @param string               $responseBody
+     * @param array<string,string> $responseHeaders
      */
     public function __construct($statusCode, $responseBody, array $responseHeaders = [])
     {
         $this->statusCode = $statusCode;
         $this->responseBody = $responseBody;
         $this->responseHeaders = $responseHeaders;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        $fmtHdrs = '';
-        foreach ($this->responseHeaders as $k => $v) {
-            $fmtHdrs .= \sprintf('%s: %s', $k, $v).PHP_EOL;
-        }
-
-        return \implode(
-            PHP_EOL,
-            [
-                $this->statusCode,
-                '',
-                $fmtHdrs,
-                '',
-                $this->responseBody,
-            ]
-        );
     }
 
     /**
@@ -72,7 +51,7 @@ class Response
     }
 
     /**
-     * @return array
+     * @return array<string,string>
      */
     public function getHeaders()
     {
@@ -82,7 +61,7 @@ class Response
     /**
      * @param string $key
      *
-     * @return string|null
+     * @return null|string
      */
     public function getHeader($key)
     {

@@ -12,8 +12,8 @@ namespace SURFnet\VPN\Portal\HttpClient;
 interface HttpClientInterface
 {
     /**
-     * @param string                $requestUri
-     * @param array<string, string> $requestHeaders
+     * @param string               $requestUri
+     * @param array<string,string> $requestHeaders
      *
      * @return Response
      */

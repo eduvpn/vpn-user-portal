@@ -16,16 +16,10 @@ class CurlHttpClient implements HttpClientInterface
     /** @var resource */
     private $curlChannel;
 
-    /** @var bool */
-    private $httpsOnly = true;
-
     public function __construct(array $configData = [])
     {
         if (false === $this->curlChannel = \curl_init()) {
             throw new RuntimeException('unable to create cURL channel');
-        }
-        if (\array_key_exists('httpsOnly', $configData)) {
-            $this->httpsOnly = (bool) $configData['httpsOnly'];
         }
     }
 
@@ -61,13 +55,14 @@ class CurlHttpClient implements HttpClientInterface
         // reset all cURL options
         $this->curlReset();
 
+        /** @var array<string,string> */
         $headerList = [];
 
         $defaultCurlOptions = [
             CURLOPT_HEADER => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true, // follow redirects
-            CURLOPT_PROTOCOLS => $this->httpsOnly ? CURLPROTO_HTTPS : CURLPROTO_HTTPS | CURLPROTO_HTTP,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
             CURLOPT_HEADERFUNCTION => /**
              * @param resource $curlChannel
              * @param string   $headerData
