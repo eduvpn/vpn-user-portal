@@ -18,7 +18,7 @@ class ForeignKeyListFetcherTest extends TestCase
     {
         $tmpFile = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
         $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpFile);
-        $foreignKeyListFetcher->update(new TestOAuthHttpClient(), 'https://example.org/federation.json', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
+        $foreignKeyListFetcher->update(new TestForeignKeyHttpClient(), 'https://example.org/federation.json', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
         $this->assertSame(
             [
                 'labrat.eduvpn.nl' => base64_decode('wGos0zPERxPYZHyJXQXz/OOSCWWej27PEScjScJzXQ8=', true),
@@ -33,7 +33,7 @@ class ForeignKeyListFetcherTest extends TestCase
         $tmpFile = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
         copy(sprintf('%s/data/federation.json', __DIR__), $tmpFile);
         $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpFile);
-        $foreignKeyListFetcher->update(new TestOAuthHttpClient(), 'https://example.org/federation.json', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
+        $foreignKeyListFetcher->update(new TestForeignKeyHttpClient(), 'https://example.org/federation.json', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
         $this->assertSame(
             [
                 'labrat.eduvpn.nl' => base64_decode('wGos0zPERxPYZHyJXQXz/OOSCWWej27PEScjScJzXQ8=', true),
@@ -51,7 +51,7 @@ class ForeignKeyListFetcherTest extends TestCase
     {
         $tmpFile = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
         $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpFile);
-        $foreignKeyListFetcher->update(new TestOAuthHttpClient(), 'https://example.org/federation.json.wrong', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
+        $foreignKeyListFetcher->update(new TestForeignKeyHttpClient(), 'https://example.org/federation.json.wrong', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
     }
 
     public function testFetchReplay()

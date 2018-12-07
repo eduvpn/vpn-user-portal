@@ -41,7 +41,6 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
-        "fkooman/oauth2-client": "^7",
         "fkooman/oauth2-server": "^3",
         "fkooman/secookie": "^2",
         "paragonie/constant_time_encoding": "^1|^2",

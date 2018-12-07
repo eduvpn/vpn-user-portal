@@ -11,10 +11,10 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\OAuth\Client\Http\CurlHttpClient;
 use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Portal\ForeignKeyListFetcher;
+use SURFnet\VPN\Portal\HttpClient\CurlHttpClient;
 
 try {
     $p = new CliParser(

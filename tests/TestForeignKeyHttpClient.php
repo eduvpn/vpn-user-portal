@@ -9,16 +9,21 @@
 
 namespace SURFnet\VPN\Portal\Tests;
 
-use fkooman\OAuth\Client\Http\HttpClientInterface;
-use fkooman\OAuth\Client\Http\Request;
-use fkooman\OAuth\Client\Http\Response;
 use RuntimeException;
+use SURFnet\VPN\Portal\HttpClient\HttpClientInterface;
+use SURFnet\VPN\Portal\HttpClient\Response;
 
-class TestOAuthHttpClient implements HttpClientInterface
+class TestForeignKeyHttpClient implements HttpClientInterface
 {
-    public function send(Request $request)
+    /**
+     * @param string                $requestUri
+     * @param array<string, string> $requestHeaders
+     *
+     * @return Response
+     */
+    public function get($requestUri, array $requestHeaders = [])
     {
-        switch ($request->getUri()) {
+        switch ($requestUri) {
             case 'https://example.org/federation.json':
                 return new Response(
                     200,

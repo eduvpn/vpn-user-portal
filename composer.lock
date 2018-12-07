@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9599ecfefb914b05a2bf18560fabd935",
+    "content-hash": "0e664ffc8ed5731d45f1d28b3ca1041e",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "6cfac34ae5799c23973e317497955f3bdbf6ea0b"
+                "reference": "59b56e4b0a9247782c71b9d698eda8d15a022123"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/6cfac34ae5799c23973e317497955f3bdbf6ea0b",
-                "reference": "6cfac34ae5799c23973e317497955f3bdbf6ea0b",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/59b56e4b0a9247782c71b9d698eda8d15a022123",
+                "reference": "59b56e4b0a9247782c71b9d698eda8d15a022123",
                 "shasum": ""
             },
             "require": {
@@ -113,52 +113,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2018-12-06T22:22:03+00:00"
-        },
-        {
-            "name": "fkooman/oauth2-client",
-            "version": "7.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://git.tuxed.net/fkooman/php-oauth2-client",
-                "reference": "3d96587ed78b1ecd72085847cae779b6edeb4526"
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-date": "*",
-                "ext-hash": "*",
-                "ext-json": "*",
-                "ext-pcre": "*",
-                "ext-pdo": "*",
-                "ext-session": "*",
-                "ext-spl": "*",
-                "paragonie/constant_time_encoding": "^1|^2",
-                "paragonie/random_compat": "^1|^2",
-                "php": ">=5.4",
-                "psr/log": "^1.0",
-                "symfony/polyfill-php56": "^1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5|^6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "fkooman\\OAuth\\Client\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net"
-                }
-            ],
-            "description": "Very simple OAuth 2.0 client",
-            "time": "2018-06-02T00:36:19+00:00"
+            "time": "2018-12-07T11:30:39+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -1413,16 +1368,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.4.5",
+            "version": "7.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "61d34e8dd6eb3555900f0f2a2fa9e7e570730102"
+                "reference": "520723129e2b3fc1dc4c0953e43c9d40e1ecb352"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/61d34e8dd6eb3555900f0f2a2fa9e7e570730102",
-                "reference": "61d34e8dd6eb3555900f0f2a2fa9e7e570730102",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/520723129e2b3fc1dc4c0953e43c9d40e1ecb352",
+                "reference": "520723129e2b3fc1dc4c0953e43c9d40e1ecb352",
                 "shasum": ""
             },
             "require": {
@@ -1467,7 +1422,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "7.4-dev"
+                    "dev-master": "7.5-dev"
                 }
             },
             "autoload": {
@@ -1493,7 +1448,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-12-03T05:01:24+00:00"
+            "time": "2018-12-07T07:08:12+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

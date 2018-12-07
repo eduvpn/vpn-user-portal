@@ -9,11 +9,10 @@
 
 namespace SURFnet\VPN\Portal;
 
-use fkooman\OAuth\Client\Http\HttpClientInterface;
-use fkooman\OAuth\Client\Http\Request;
 use ParagonIE\ConstantTime\Base64;
 use RuntimeException;
-use SURFnet\VPN\Common\Json;
+use SURFnet\VPN\Common\FileIO;
+use SURFnet\VPN\Portal\HttpClient\HttpClientInterface;
 
 class ForeignKeyListFetcher
 {
@@ -29,9 +28,9 @@ class ForeignKeyListFetcher
     }
 
     /**
-     * @param HttpClientInterface $httpClient
-     * @param string              $discoveryUrl
-     * @param string              $encodedPublicKey
+     * @param HttpClient\HttpClientInterface $httpClient
+     * @param string                         $discoveryUrl
+     * @param string                         $encodedPublicKey
      *
      * @return void
      */
@@ -40,8 +39,8 @@ class ForeignKeyListFetcher
         $publicKey = Base64::decode($encodedPublicKey);
         $discoverySignatureUrl = sprintf('%s.sig', $discoveryUrl);
 
-        $discoveryResponse = $this->httpGet($httpClient, $discoveryUrl);
-        $discoverySignatureResponse = $this->httpGet($httpClient, $discoverySignatureUrl);
+        $discoveryResponse = $httpClient->get($discoveryUrl);
+        $discoverySignatureResponse = $httpClient->get($discoverySignatureUrl);
 
         $discoverySignature = Base64::decode($discoverySignatureResponse->getBody());
         $discoveryBody = $discoveryResponse->getBody();
@@ -52,15 +51,18 @@ class ForeignKeyListFetcher
 
         $seq = self::getSequence($this->filePath);
 
+        // check whether "seq" was lower than current version
         $discoveryData = $discoveryResponse->json();
         if ($discoveryData['seq'] < $seq) {
             throw new RuntimeException('rollback, this is really unexpected!');
         }
 
-        // all fine, write file
-        if (false === file_put_contents($this->filePath, $discoveryBody)) {
-            throw new RuntimeException(sprintf('unable to write file "%s"', $this->filePath));
+        // write file when "seq" was incremented
+        if ($discoveryData['seq'] > $seq) {
+            FileIO::writeFile($this->filePath, $discoveryBody);
         }
+
+        // do nothing when "seq" is the same
     }
 
     /**
@@ -68,12 +70,10 @@ class ForeignKeyListFetcher
      */
     public function extract()
     {
-        if (false === $fileContent = file_get_contents($this->filePath)) {
+        if (false === FileIO::hasFile($this->filePath)) {
             return [];
         }
-
-        $jsonData = Json::decode($fileContent);
-
+        $jsonData = FileIO::readJsonFile($this->filePath);
         $entryList = [];
         foreach ($jsonData['instances'] as $instance) {
             // convert base_uri to FQDN
@@ -89,37 +89,19 @@ class ForeignKeyListFetcher
     }
 
     /**
-     * @param HttpClientInterface $httpClient
-     * @param string              $requestUrl
-     *
-     * @return \fkooman\OAuth\Client\Http\Response
-     */
-    private function httpGet(HttpClientInterface $httpClient, $requestUrl)
-    {
-        $httpResponse = $httpClient->send(Request::get($requestUrl));
-        if (!$httpResponse->isOkay()) {
-            throw new RuntimeException(sprintf('unable to fetch "%s"', $requestUrl));
-        }
-
-        return $httpResponse;
-    }
-
-    /**
      * @param string $filePath
      *
      * @return int
      */
     private static function getSequence($filePath)
     {
-        if (!file_exists($filePath)) {
+        if (false === FileIO::hasFile($filePath)) {
             return 0;
         }
-
-        if (false === $fileContent = file_get_contents($filePath)) {
-            return 0;
+        $jsonData = FileIO::readJsonFile($filePath);
+        if (!array_key_exists('seq', $jsonData)) {
+            throw new RuntimeException('unable to extract "seq" from file');
         }
-
-        $jsonData = Json::decode($fileContent);
 
         return (int) $jsonData['seq'];
     }
