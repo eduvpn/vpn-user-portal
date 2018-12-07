@@ -10,6 +10,13 @@
 - remove VOOT support
 - force user to enroll for 2FA when 2FA is required
 - remove YubiKey support
+- only show certificates manually issued on "Certificates" page, not the ones 
+  issued to OAuth clients
+- rewrite `ForeignKeyListFetcher` to no longer require `fkooman/oauth2-client`
+- remove `/create_config` (was not used by any client anymore)
+- lie about 2FA to the API client so client never will try to enroll the user
+- no longer use `display_name` parameter for `/create_keypair`, just use the 
+  OAuth `client_id` of the client as display name
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 
