@@ -58,7 +58,6 @@ class VpnPortalModuleTest extends TestCase
                     'profileList' => [
                         'internet' => [
                             'displayName' => 'Internet Access',
-                            'twoFactor' => false,
                         ],
                     ],
                     'motdMessage' => [
@@ -91,7 +90,6 @@ class VpnPortalModuleTest extends TestCase
         $this->assertSame(
             [
                 'vpnPortalAccount' => [
-                    'twoFactorEnabledProfiles' => [],
                     'hasTotpSecret' => false,
                     'userInfo' => [],
                     'userGroups' => [],

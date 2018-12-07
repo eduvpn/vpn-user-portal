@@ -146,22 +146,6 @@ class VpnPortalModule implements ServiceModuleInterface
                     $motdMessage = $motdMessages[0];
                 }
 
-                if ($profileList[$profileId]['twoFactor']) {
-                    $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
-                    if (!$hasTotpSecret) {
-                        return new HtmlResponse(
-                            $this->tpl->render(
-                                'vpnPortalNew',
-                                [
-                                    'profileId' => $profileId,
-                                    'errorCode' => 'otpRequired',
-                                    'profileList' => $visibleProfileList,
-                                    'motdMessage' => $motdMessage,
-                                ]
-                            )
-                        );
-                    }
-                }
                 $expiresAt = date_add(clone $userInfo->authTime(), $this->sessionExpiry);
 
                 return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName, $expiresAt);
@@ -248,19 +232,10 @@ class VpnPortalModule implements ServiceModuleInterface
                     $authorizedClients[$k]['display_name'] = $displayName;
                 }
 
-                $twoFactorEnabledProfiles = [];
-                foreach ($visibleProfileList as $profileId => $profileData) {
-                    if ($profileData['twoFactor']) {
-                        // XXX we have to make sure displayName is always set...
-                        $twoFactorEnabledProfiles[] = $profileData['displayName'];
-                    }
-                }
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalAccount',
                         [
-                            'twoFactorEnabledProfiles' => $twoFactorEnabledProfiles,
                             'hasTotpSecret' => $hasTotpSecret,
                             'userInfo' => $userInfo,
                             'userGroups' => $userGroups,
@@ -430,7 +405,6 @@ class VpnPortalModule implements ServiceModuleInterface
 
             $profileList[$profileId] = [
                 'displayName' => $profileData['displayName'],
-                'twoFactor' => $profileData['twoFactor'],
             ];
         }
 

@@ -116,11 +116,6 @@ class ClientConfig
             $clientConfig[] = 'comp-lzo';
         }
 
-        // 2FA
-        if ($profileConfig['twoFactor']) {
-            $clientConfig[] = 'auth-user-pass';
-        }
-
         // remote entries
         foreach ($remoteProtoPortList as $remoteProtoPort) {
             $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
