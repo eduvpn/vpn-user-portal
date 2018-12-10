@@ -26,13 +26,6 @@ return [
     //'sessionExpiry' => 'P1D',     // 1 day
     //'sessionExpiry' => 'PT12H',   // 12 hours
 
-    // PDO (database)
-    'FormPdoAuthentication' => [
-        // allow users to register themselves using a voucher provided to them
-        // by the administrator
-        'allowRegistration' => false,
-    ],
-
     // LDAP
     'FormLdapAuthentication' => [
         'ldapUri' => 'ldaps://ipa.example.org',
