@@ -14,6 +14,7 @@ return [
 
     'authMethod' => 'FormPdoAuthentication',        // PDO (database)
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
+    //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
     //'authMethod' => 'MellonAuthentication',       // SAML
 
     // Session Expiry
@@ -90,11 +91,6 @@ return [
     'twoFactorMethods' => ['totp'],             // TOTP
     //'twoFactorMethods' => [],                 // 2FA disabled
 
-    // Connection to vpn-server-api
-    'apiUser' => 'vpn-user-portal',
-    'apiPass' => 'XXX-vpn-user-portal/vpn-server-api-XXX',
-    'apiUri' => 'http://localhost/vpn-server-api/api.php',
-
     // supported languages in the UI, the first one mentioned is the default
     'supportedLanguages' => [
         'en_US' => 'English',
@@ -134,4 +130,9 @@ return [
         //'foreignKeyListSource' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
         //'foreignKeyListPublicKey' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
     ],
+
+    // Connection to vpn-server-api
+    'apiUser' => 'vpn-user-portal',
+    'apiPass' => 'XXX-vpn-user-portal/vpn-server-api-XXX',
+    'apiUri' => 'http://localhost/vpn-server-api/api.php',
 ];
