@@ -33,19 +33,11 @@ class DisabledUserHook implements BeforeHookInterface
         if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
             return false;
         }
-        if ('POST' === $request->getRequestMethod() && '/_oauth/token' === $request->getPathInfo()) {
-            return false;
-        }
-
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
+        /** @var \SURFnet\VPN\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
-        // XXX can this actually be null?
-        if (null === $userInfo) {
-            throw new HttpException('unable to determine user ID', 500);
-        }
-
         if ($this->serverClient->get('is_disabled_user', ['user_id' => $userInfo->id()])) {
             // user is disabled, show a special message
             throw new HttpException('account disabled', 403);

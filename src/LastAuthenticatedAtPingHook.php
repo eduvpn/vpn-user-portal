@@ -51,7 +51,6 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
             // request
             return false;
         }
-
         if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
             return false;
         }
@@ -59,7 +58,7 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-
+        /** @var \SURFnet\VPN\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
         $this->serverClient->post(
             'last_authenticated_at_ping',
