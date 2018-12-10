@@ -70,7 +70,7 @@ class ForeignKeyListFetcher
      */
     public function extract()
     {
-        if (false === FileIO::hasFile($this->filePath)) {
+        if (false === FileIO::exists($this->filePath)) {
             return [];
         }
         $jsonData = FileIO::readJsonFile($this->filePath);
@@ -95,7 +95,7 @@ class ForeignKeyListFetcher
      */
     private static function getSequence($filePath)
     {
-        if (false === FileIO::hasFile($filePath)) {
+        if (false === FileIO::exists($filePath)) {
             return 0;
         }
         $jsonData = FileIO::readJsonFile($filePath);
