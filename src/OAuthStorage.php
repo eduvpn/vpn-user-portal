@@ -10,6 +10,7 @@
 namespace SURFnet\VPN\Portal;
 
 use fkooman\OAuth\Server\Storage;
+use fkooman\SqliteMigrate\Migration;
 use PDO;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 
@@ -23,17 +24,24 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
  */
 class OAuthStorage extends Storage
 {
+    const CURRENT_SCHEMA_VERSION = '0000000000';
+
     /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
     private $serverClient;
 
+    /** @var \fkooman\SqliteMigrate\Migration */
+    private $migration;
+
     /**
      * @param \PDO                                        $db
+     * @param string                                      $schemaDir
      * @param \SURFnet\VPN\Common\HttpClient\ServerClient $serverClient
      */
-    public function __construct(PDO $db, ServerClient $serverClient)
+    public function __construct(PDO $db, $schemaDir, ServerClient $serverClient)
     {
         parent::__construct($db);
         $this->serverClient = $serverClient;
+        $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
     }
 
     /**
@@ -66,5 +74,21 @@ class OAuthStorage extends Storage
 
         // authorization exists, and user is not disabled
         return true;
+    }
+
+    /**
+     * @return void
+     */
+    public function init()
+    {
+        $this->migration->init();
+    }
+
+    /**
+     * @return void
+     */
+    public function update()
+    {
+        $this->migration->run();
     }
 }

@@ -34,6 +34,7 @@ class BearerAuthenticationHookTest extends TestCase
 
     public function setUp()
     {
+        $schemaDir = \dirname(__DIR__).'/schema';
         $config = new Config(
             [
                 'apiConsumers' => [
@@ -49,7 +50,7 @@ class BearerAuthenticationHookTest extends TestCase
 
         $httpClient = new TestHttpClient();
         $serverClient = new ServerClient($httpClient, 'serverClient');
-        $this->storage = new OAuthStorage(new PDO('sqlite::memory:'), $serverClient);
+        $this->storage = new OAuthStorage(new PDO('sqlite::memory:'), $schemaDir, $serverClient);
         $this->storage->init();
         $this->storage->storeAuthorization('foo', 'code-client', 'config', 'random_1');
         $this->getClientInfo = function ($clientId) use ($config) {

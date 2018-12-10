@@ -51,9 +51,10 @@ try {
 
         $storage = new OAuthStorage(
             new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
+            sprintf('%s/schema', $baseDir),
             $serverClient
         );
-        $storage->init();
+        $storage->update();
 
         $clientFetcher = new ClientFetcher($config);
 

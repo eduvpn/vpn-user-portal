@@ -27,9 +27,10 @@ class VpnPortalModuleTest extends TestCase
 
     public function setUp()
     {
+        $schemaDir = \dirname(__DIR__).'/schema';
         $httpClient = new TestHttpClient();
         $serverClient = new ServerClient($httpClient, 'serverClient');
-        $storage = new OAuthStorage(new PDO('sqlite::memory:'), $serverClient);
+        $storage = new OAuthStorage(new PDO('sqlite::memory:'), $schemaDir, $serverClient);
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(

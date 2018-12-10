@@ -31,6 +31,7 @@ class OAuthModuleTest extends TestCase
 
     public function setUp()
     {
+        $schemaDir = \dirname(__DIR__).'/schema';
         $config = new Config(
             [
                 'apiConsumers' => [
@@ -44,7 +45,7 @@ class OAuthModuleTest extends TestCase
 
         $httpClient = new TestHttpClient();
         $serverClient = new ServerClient($httpClient, 'serverClient');
-        $storage = new OAuthStorage(new PDO('sqlite::memory:'), $serverClient);
+        $storage = new OAuthStorage(new PDO('sqlite::memory:'), $schemaDir, $serverClient);
         $storage->init();
 
         $oauthServer = new OAuthServer(
