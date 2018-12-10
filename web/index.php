@@ -43,9 +43,7 @@ use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\PasswdModule;
-use SURFnet\VPN\Portal\RegistrationHook;
 use SURFnet\VPN\Portal\TwoFactorEnrollModule;
-use SURFnet\VPN\Portal\Voucher;
 use SURFnet\VPN\Portal\VpnPortalModule;
 
 $logger = new Logger('vpn-user-portal');
@@ -190,27 +188,6 @@ try {
                     sprintf('sqlite://%s/data/%s/userdb.sqlite', $baseDir, $instanceId)
                 )
             );
-
-            // if we allow registration, enable that module as well, but
-            // before the authentication module as to not require to authenticate
-            // before registration can take place
-            if ($config->getSection('FormPdoAuthentication')->getItem('allowRegistration')) {
-                $voucher = new Voucher(
-                    new PDO(
-                        sprintf('sqlite://%s/data/%s/vouchers.sqlite', $baseDir, $instanceId)
-                    )
-                );
-
-                // registration enabled
-                $service->addBeforeHook(
-                    'registration',
-                    new RegistrationHook(
-                        $tpl,
-                        $userAuth,
-                        $voucher
-                    )
-                );
-            }
 
             $service->addBeforeHook(
                 'auth',
