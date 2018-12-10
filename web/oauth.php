@@ -35,11 +35,7 @@ try {
     }
 
     $dataDir = sprintf('%s/data/%s', $baseDir, $instanceId);
-    if (!file_exists($dataDir)) {
-        if (false === mkdir($dataDir, 0700, true)) {
-            throw new RuntimeException(sprintf('unable to create folder "%s"', $dataDir));
-        }
-    }
+    FileIO::createDir($dataDir, 0700);
 
     $config = Config::fromFile(sprintf('%s/config/%s/config.php', $baseDir, $instanceId));
     $service = new Service();
