@@ -97,7 +97,7 @@ try {
             'SessionName' => 'SID',
             'DomainBinding' => $request->getServerName(),
             'PathBinding' => $request->getRoot(),
-            'SessionExpiry' => $sessionExpiry,
+            'SessionExpiry' => 'PT8H',
         ],
         new Cookie(
             [
