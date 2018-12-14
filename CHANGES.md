@@ -19,6 +19,7 @@
   OAuth `client_id` of the client as display name
 - implement database migration support for OAuth tokens
 - remove user registration with vouchers for `PdoAuth`
+- remove Twig, switch to Tpl
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 
