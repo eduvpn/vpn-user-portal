@@ -37,15 +37,11 @@
         {
             "type": "vcs",
             "url": "https://git.tuxed.net/fkooman/php-sqlite-migrate"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.tuxed.net/fkooman/php-tpl"
         }
     ],
     "require": {
         "bacon/bacon-qr-code": "^1.0",
-        "eduvpn/common": "dev-simple-tpl",
+        "eduvpn/common": "dev-master",
         "ext-date": "*",
         "ext-json": "*",
         "ext-pcre": "*",
