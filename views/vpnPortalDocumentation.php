@@ -1,6 +1,5 @@
-{% set activeItem = 'documentation' %}
-{% extends "base.twig" %}
-{% block content %}
+<?php $this->layout('base', ['activeItem' => 'documentation']); ?>
+<?php $this->start('content'); ?>
     <h2>Getting Started</h2>
     <p>
         Follow these steps:
@@ -67,7 +66,7 @@
         <li><a href="https://www.ubuntu.com/">Ubuntu</a> >= 18.04 LTS (<code>apt install network-manager-openvpn-gnome</code>);</li>
     </ul>
 
-    {% if twoFactorMethods is not empty %}    
+    <?php if (0 !== $twoFactorMethods): ?>
         <h2>Two-factor Authentication</h2>
         <p>
             Two-factor authentication (2FA) can be used to protect your account from 
@@ -78,7 +77,7 @@
             Enroll for 2FA <a href="two_factor_enroll">here</a>.
         </p>
 
-        {% if "totp" in twoFactorMethods %}
+        <?php if (in_array('totp', $twoFactorMethods, true)): ?>
             <h3>TOTP</h3> 
             <p>
                 The TOTP method works by registering a <em>secret</em> in an 
@@ -90,8 +89,8 @@
                 <li>Android (<a target="_blank" href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp">Google Play Store</a>, <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=org.fedorahosted.freeotp">F-Droid</a>)</li>
                 <li>iOS (<a target="_blank" href="https://itunes.apple.com/us/app/freeotp/id872559395">iTunes</a>)</li>
             </ul>
-        {% endif %}
-    {% endif %}
+        <?php endif; ?>
+    <?php endif; ?>
 
     <h2>Recommendations for using the VPN</h2>
     <p>
@@ -152,4 +151,4 @@
         This is <strong>NOT</strong> recommended! On a computer this can be 
         dealt with by using Tails mentioned above.
     </p>
-{% endblock %}
+<?php $this->stop(); ?>

@@ -4,9 +4,6 @@ return [
     // set secureCookie flag, so browser only sends them over HTTPS
     'secureCookie' => true,
 
-    // template caching for performance improvements
-    'enableTemplateCache' => true,
-
     // override default branding style (templates/CSS) with custom style.
     // NOTE: the styling/branding MUST be installed for this to work!
     //'styleName' => 'eduVPN',
@@ -21,7 +18,6 @@ return [
     // - OAuth (refresh_token) validity
     // - X.509 Client Certificate "Not After" 
     //   (time of authentication + sessionExpiry)
-    // - Browser Session Expiry
     'sessionExpiry' => 'P90D',
     //'sessionExpiry' => 'P1D',     // 1 day
     //'sessionExpiry' => 'PT12H',   // 12 hours

@@ -36,7 +36,7 @@ use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\LdapClient;
 use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Common\TwigTpl;
+use SURFnet\VPN\Common\Tpl;
 use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\DisabledUserHook;
 use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
@@ -66,11 +66,6 @@ try {
     ];
     if ($config->hasItem('styleName')) {
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $config->getItem('styleName'));
-    }
-
-    $templateCache = null;
-    if ($config->getItem('enableTemplateCache')) {
-        $templateCache = sprintf('%s/tpl', $dataDir);
     }
 
     // determine sessionExpiry, use the new configuration option if it is there
@@ -111,8 +106,15 @@ try {
         )
     );
 
-    $tpl = new TwigTpl($templateDirs, $baseDir.'/locale', 'VpnUserPortal', $templateCache);
-    $tpl->setDefault(
+    $languageFile = null;
+    if (array_key_exists('ui_lang', $_COOKIE)) {
+        $uiLang = $_COOKIE['ui_lang'];
+        if ('en_US' !== $uiLang) {
+            $languageFile = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
+        }
+    }
+    $tpl = new Tpl($templateDirs, $languageFile);
+    $tpl->addDefault(
         [
             'requestUri' => $request->getUri(),
             'requestRoot' => $request->getRoot(),

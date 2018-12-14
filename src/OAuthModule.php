@@ -95,30 +95,12 @@ class OAuthModule implements ServiceModuleInterface
      */
     private function prepareReturnResponse(OAuthResponse $authorizeResponse)
     {
-        $htmlResponse = Response::import(
+        return Response::import(
             [
                 'statusCode' => $authorizeResponse->getStatusCode(),
                 'responseHeaders' => $authorizeResponse->getHeaders(),
                 'responseBody' => $authorizeResponse->getBody(),
             ]
-        );
-
-        // if we have a non-HTTP or HTTPS return address we want
-        // to show a special page as to inform the user that they
-        // can close the browser after the OAuth authorization
-        // completed...
-        $locationHeader = $htmlResponse->getHeader('Location');
-        if (null === $locationHeader || 0 === strpos($locationHeader, 'https://') || 0 === strpos($locationHeader, 'http://')) {
-            return $htmlResponse;
-        }
-
-        return new HtmlResponse(
-            $this->tpl->render(
-                'closeBrowserOAuth',
-                [
-                    'refreshUrl' => $locationHeader,
-                ]
-            )
         );
     }
 }

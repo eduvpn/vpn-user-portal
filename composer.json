@@ -21,7 +21,9 @@
     },
     "description": "VPN User Portal",
     "license": "AGPL-3.0-or-later",
+    "minimum-stability": "dev",
     "name": "eduvpn/vpn-user-portal",
+    "prefer-stable": true,
     "repositories": [
         {
             "no-api": true,
@@ -35,11 +37,15 @@
         {
             "type": "vcs",
             "url": "https://git.tuxed.net/fkooman/php-sqlite-migrate"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.tuxed.net/fkooman/php-tpl"
         }
     ],
     "require": {
         "bacon/bacon-qr-code": "^1.0",
-        "eduvpn/common": "dev-master",
+        "eduvpn/common": "dev-simple-tpl",
         "ext-date": "*",
         "ext-json": "*",
         "ext-pcre": "*",

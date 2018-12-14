@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "41b03f1aa6e5a19c76289120c4d97406",
+    "content-hash": "e65396f03db6b68ef487534a1a367488",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "dev-master",
+            "version": "dev-simple-tpl",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "d67eea36820f7e80f71397014885193fc133ecfd"
+                "reference": "6bc10b1e6dd78182ac47f02c2351e08ecdb744b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/d67eea36820f7e80f71397014885193fc133ecfd",
-                "reference": "d67eea36820f7e80f71397014885193fc133ecfd",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/6bc10b1e6dd78182ac47f02c2351e08ecdb744b2",
+                "reference": "6bc10b1e6dd78182ac47f02c2351e08ecdb744b2",
                 "shasum": ""
             },
             "require": {
@@ -80,6 +80,7 @@
                 "ext-radius": "*",
                 "ext-spl": "*",
                 "fkooman/secookie": "^2",
+                "fkooman/tpl": "dev-master",
                 "ircmaxell/password-compat": "^1",
                 "paragonie/constant_time_encoding": "^1|^2",
                 "paragonie/random_compat": "^1|^2",
@@ -113,7 +114,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2018-12-10T18:35:16+00:00"
+            "time": "2018-12-14T15:11:07+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -249,6 +250,47 @@
                 "source": "https://git.tuxed.net/fkooman/php-sqlite-migrate"
             },
             "time": "2018-06-26T07:47:46+00:00"
+        },
+        {
+            "name": "fkooman/tpl",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://git.tuxed.net/fkooman/php-tpl",
+                "reference": "d68d323b20b901a3655fdd04e0242b0cc74c64ba"
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|^5|^6|^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fkooman\\Tpl\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "fkooman\\Tpl\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "Very simple native PHP template engine",
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.tuxed.net/fkooman/php-tpl"
+            },
+            "time": "2018-12-14T14:42:15+00:00"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -2149,11 +2191,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "eduvpn/common": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "ext-date": "*",
