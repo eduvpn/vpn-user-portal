@@ -1,7 +1,7 @@
 <?php $this->layout('base', ['activeItem' => 'new']); ?>
 <?php $this->start('content'); ?>
     <?php if ($motdMessage): ?>
-        <p class="plain"><?=$this->e($motdMessage['message'], 'nl2br'); ?></p>
+        <p class="plain"><?=$this->batch($motdMessage['message'], 'escape|nl2br'); ?></p>
     <?php endif; ?>
        
     <?php if (0 === count($profileList)): ?>
