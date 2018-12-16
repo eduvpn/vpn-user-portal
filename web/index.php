@@ -67,7 +67,6 @@ try {
     if ($config->hasItem('styleName')) {
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $config->getItem('styleName'));
     }
-    $templateDirs = array_reverse($templateDirs);
 
     // determine sessionExpiry, use the new configuration option if it is there
     // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
