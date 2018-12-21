@@ -98,6 +98,15 @@ try {
         $sessionExpiry = 'P90D';
     }
 
+    // we always want browser session to expiry after PT8H hours, *EXCEPT* when
+    // the configured "sessionExpiry" is < PT8H, then we want to follow that
+    // setting...
+    $browserSessionExpiry = 'PT8H';
+    $dateTime = new DateTime();
+    if (date_add(clone $dateTime, new DateInterval($browserSessionExpiry)) > date_add(clone $dateTime, new DateInterval($sessionExpiry))) {
+        $browserSessionExpiry = $sessionExpiry;
+    }
+
     $cookie = new Cookie(
         [
             'SameSite' => 'Lax',
@@ -111,7 +120,7 @@ try {
             'SessionName' => 'SID',
             'DomainBinding' => $request->getServerName(),
             'PathBinding' => $request->getRoot(),
-            'SessionExpiry' => $sessionExpiry,
+            'SessionExpiry' => $browserSessionExpiry,
         ],
         new Cookie(
             [
