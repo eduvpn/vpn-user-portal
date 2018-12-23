@@ -5,13 +5,11 @@
         <tr>
             <th><?=$this->t('ID'); ?></th>
             <td><code><?=$this->e($userInfo->id()); ?></code></td>
-            <td></td>
         </tr>
         <?php if ('FormPdoAuthentication' === $authMethod): ?>
             <tr>
                 <th></th>
                 <td><a href="passwd"><?=$this->t('Change Password'); ?></a></td>
-                <td></td>
             </tr>
         <?php endif; ?>
 
@@ -25,7 +23,6 @@
                     <?php endforeach; ?>
                 </ul>
             </td>
-            <td></td>
         </tr>
         <?php endif; ?>
 
