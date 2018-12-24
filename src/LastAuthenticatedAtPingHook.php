@@ -46,15 +46,18 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
+        if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
+            return false;
+        }
+        if ('POST' === $request->getRequestMethod() && '/_logout' === $request->getPathInfo()) {
+            return false;
+        }
+
         if ($this->session->has('_last_authenticated_at_ping_sent')) {
             // only sent the ping once per browser session, not on every
             // request
             return false;
         }
-        if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
-            return false;
-        }
-
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
