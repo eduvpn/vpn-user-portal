@@ -21,18 +21,6 @@ class OAuthClientInfo
     public static function getClient($clientId)
     {
         $clientInfo = [
-            // org.eduvpn.app is DEPRECATED and will be removed once all
-            // clients use their new client_id, but we'd have to wait for a
-            // new release of those apps
-            'org.eduvpn.app' => [
-                'redirect_uri_list' => [
-                    'org.eduvpn.app:/api/callback',
-                    'http://127.0.0.1:{PORT}/callback',
-                    'http://[::1]:{PORT}/callback',
-                ],
-                'display_name' => 'eduVPN (legacy)',
-                'require_approval' => true,
-            ],
             // Windows
             'org.eduvpn.app.windows' => [
                 'redirect_uri_list' => [
