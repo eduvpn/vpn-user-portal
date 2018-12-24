@@ -95,7 +95,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->cachedUserGroups($userInfo->id());
+                $userGroups = $userInfo->entitlementList();
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
@@ -129,7 +129,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->cachedUserGroups($userInfo->id());
+                $userGroups = $userInfo->entitlementList();
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 // make sure the profileId is in the list of allowed profiles for this
@@ -229,7 +229,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->cachedUserGroups($userInfo->id());
+                $userGroups = $userInfo->entitlementList();
                 $visibleProfileList = self::getProfileList($profileList, $userGroups);
 
                 $authorizedClients = $this->storage->getAuthorizations($userInfo->id());
@@ -423,34 +423,5 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return $profileList;
-    }
-
-    /**
-     * @param string $userId
-     *
-     * @return array
-     */
-    private function cachedUserGroups($userId)
-    {
-        if ($this->session->has('_cached_groups_user_id')) {
-            // does it match the current userId?
-            if ($userId === $this->session->get('_cached_groups_user_id')) {
-                $cachedGroups = $this->session->get('_cached_groups');
-                // support old format with id/displayName keys of simple array<string>
-                if (0 === \count($cachedGroups) || \is_string($cachedGroups[0])) {
-                    // no entries, or already new format
-                    return $cachedGroups;
-                }
-
-                $this->session->set('_cached_groups', $this->serverClient->getRequireArray('user_groups', ['user_id' => $userId]));
-
-                return $this->session->get('_cached_groups');
-            }
-        }
-
-        $this->session->set('_cached_groups_user_id', $userId);
-        $this->session->set('_cached_groups', $this->serverClient->getRequireArray('user_groups', ['user_id' => $userId]));
-
-        return $this->session->get('_cached_groups');
     }
 }

@@ -58,8 +58,6 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('has_totp_secret', false);
             case 'serverClient/is_disabled_user?user_id=foo':
                 return self::wrap('is_disabled_user', false);
-            case 'serverClient/user_groups?user_id=foo':
-                return self::wrap('user_groups', []);
             case 'serverClient/client_certificate_info?common_name=12345678901234567890123456789012':
                 return self::wrap('client_certificate_info', ['display_name' => 'Foo']);
             case 'serverClient/server_info':

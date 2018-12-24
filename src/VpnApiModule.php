@@ -79,7 +79,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $userInfo = $this->tokenInfoToUserInfo($tokenInfo);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userInfo->id()]);
+                $userGroups = $this->serverClient->getRequireArray('user_entitlement_list', ['user_id' => $userInfo->id()]);
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -198,7 +198,7 @@ class VpnApiModule implements ServiceModuleInterface
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
 
                     $profileList = $this->serverClient->getRequireArray('profile_list');
-                    $userGroups = $this->serverClient->getRequireArray('user_groups', ['user_id' => $userInfo->id()]);
+                    $userGroups = $this->serverClient->getRequireArray('user_entitlement_list', ['user_id' => $userInfo->id()]);
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
