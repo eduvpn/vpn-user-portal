@@ -37,6 +37,10 @@
         {
             "type": "vcs",
             "url": "https://git.tuxed.net/fkooman/php-sqlite-migrate"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.tuxed.net/fkooman/php-saml-sp"
         }
     ],
     "require": {
@@ -52,6 +56,7 @@
         "fkooman/sqlite-migrate": "^0",
         "paragonie/constant_time_encoding": "^1|^2",
         "paragonie/random_compat": "^1|^2",
+        "fkooman/php-saml-sp": "dev-master",
         "php": ">=5.4.0"
     },
     "require-dev": {

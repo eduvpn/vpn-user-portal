@@ -12,6 +12,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
+use fkooman\SAML\SP\IdPInfo;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use ParagonIE\ConstantTime\Base64;
@@ -43,6 +44,8 @@ use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\OAuthStorage;
 use SURFnet\VPN\Portal\PasswdModule;
+use SURFnet\VPN\Portal\SamlAuthenticationHook;
+use SURFnet\VPN\Portal\SamlModule;
 use SURFnet\VPN\Portal\TwoFactorEnrollModule;
 use SURFnet\VPN\Portal\VpnPortalModule;
 
@@ -155,6 +158,34 @@ try {
     $authMethod = $config->getItem('authMethod');
     $service->addModule(new LogoutModule($session, 'MellonAuthentication' === $authMethod));
     switch ($authMethod) {
+        case 'SamlAuthentication':
+            $service->addBeforeHook(
+                'auth',
+                new SamlAuthenticationHook(
+                    $session,
+                    $config->getSection('SamlAuthentication')->getItem('attribute'),
+                    $config->getSection('SamlAuthentication')->getItem('addEntityID'),
+                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute')
+                )
+            );
+
+            $idpList = $config->getSection('SamlAuthentication')->getSection('idpList')->toArray();
+            $entityIdList = array_keys($idpList);
+
+            $service->addModule(
+                new SamlModule(
+                    $session,
+                    new IdPInfo(
+                        // hard code the first IdP from the list, we only
+                        // support 1 for now!
+                        $entityIdList[0],
+                        $idpList[$entityIdList[0]]['ssoUrl'],
+                        $idpList[$entityIdList[0]]['publicKey']
+                    )
+                )
+            );
+
+            break;
         case 'MellonAuthentication':
             $service->addBeforeHook(
                 'auth',

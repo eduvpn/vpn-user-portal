@@ -12,7 +12,8 @@ return [
     'authMethod' => 'FormPdoAuthentication',        // PDO (database)
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
     //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
-    //'authMethod' => 'MellonAuthentication',       // SAML
+    //'authMethod' => 'MellonAuthentication',       // SAML (mod_auth_mellon)
+    //'authMethod' => 'SamlAuthentication',         // SAML
 
     // Session Expiry
     // - OAuth (refresh_token) validity
@@ -70,6 +71,32 @@ return [
         //'entitlementAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
         // OID for eduPersonAffiliation
         //'entitlementAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_1',
+    ],
+
+    // SAML
+    'SamlAuthentication' => [
+        // 'OID for eduPersonTargetedID
+        'attribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
+        // OID for eduPersonPrincipalName
+        //'attribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
+
+        // add the entityID of the IdP to the user ID. This MUST be enabled
+        // if multiple IdPs are used *and* the attribute used for the user ID
+        // is not enforced to be unique among the different IdPs
+        'addEntityID' => false,
+
+        // ** AUTHORIZATION | ENTITLEMENT **
+        // OID for eduPersonEntitlement
+        //'entitlementAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.7',
+        // OID for eduPersonAffiliation
+        //'entitlementAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
+
+        'idpList' => [
+            'https://idp.example.org/saml' => [
+                'ssoUrl' => 'https://idp.example.org/saml/sso',
+                'publicKey' => 'ABCDEF=',
+            ]
+        ],
     ],
 
     // Require Users to use 2FA
