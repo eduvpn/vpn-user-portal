@@ -174,7 +174,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "2b5b425b08adb8dd9657e7f5fc64a53bb1f31596"
+                "reference": "28f798dbbcdcad245b778bd22291e4b00b01e5e3"
             },
             "require": {
                 "ext-date": "*",
@@ -215,9 +215,9 @@
             "description": "SAML Service Provider library",
             "support": {
                 "email": "fkooman@tuxed.net",
-                "source": "https://git.tuxed.net/fkooman/php-oauth2-server"
+                "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-01-06T12:33:45+00:00"
+            "time": "2019-01-06T21:39:13+00:00"
         },
         {
             "name": "fkooman/secookie",

@@ -9,9 +9,9 @@
 
 namespace SURFnet\VPN\Portal;
 
-use fkooman\SAML\SP\IdPInfo;
 use fkooman\SAML\SP\SP;
 use fkooman\SeCookie\SessionInterface;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -22,13 +22,22 @@ class SamlModule implements ServiceModuleInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \fkooman\SAML\SP\IdPInfo */
-    private $idpInfo;
+    /** @var array<string,\fkooman\SAML\SP\IdPInfo> */
+    private $idpInfoList;
 
-    public function __construct(SessionInterface $session, IdPInfo $idpInfo)
+    /** @var null|string */
+    private $discoUrl;
+
+    /**
+     * @param \fkooman\SeCookie\SessionInterface $session
+     * @param array                              $idpInfoList
+     * @param null|string                        $discoUrl
+     */
+    public function __construct(SessionInterface $session, array $idpInfoList, $discoUrl)
     {
         $this->session = $session;
-        $this->idpInfo = $idpInfo;
+        $this->idpInfoList = $idpInfoList;
+        $this->discoUrl = $discoUrl;
     }
 
     /**
@@ -48,7 +57,31 @@ class SamlModule implements ServiceModuleInterface
                 // XXX we have to figure out if this works with a 'discovery' service
                 $relayState = $this->session->get('_saml_auth_return_to');
 
-                return new RedirectResponse($sp->login($this->idpInfo, $relayState));
+                // determine the IdP, if there is only 1 it is easy...
+                if (1 === \count($this->idpInfoList)) {
+                    $idpInfo = $this->idpInfoList[array_keys($this->idpInfoList)[0]];
+                } else {
+                    if (null === $idpEntityId = $request->getQueryParameter('IdP', false)) {
+                        // we don't know which IdP to forward the user to...
+                        // perform discovery if discoUrl is set
+                        if (null !== $this->discoUrl) {
+                            $discoQuery = http_build_query(
+                                [
+                                    'entityID' => $request->getRootUri().'_saml/metadata',
+                                    'returnIDParam' => 'IdP',
+                                    'return' => $request->getRootUri().'_saml/login?foo=bar',
+                                ]
+                            );
+
+                            return new RedirectResponse($this->discoUrl.'?'.$discoQuery);
+                        }
+
+                        throw new HttpException('missing "IdP" query parameter', 400);
+                    }
+                    $idpInfo = $this->idpInfoList[$idpEntityId];
+                }
+
+                return new RedirectResponse($sp->login($idpInfo, $relayState));
             }
         );
 
@@ -62,7 +95,6 @@ class SamlModule implements ServiceModuleInterface
                 $acsUrl = $request->getRootUri().'_saml/acs';
                 $sp = new SP($entityId, $acsUrl);
                 $sp->handleResponse(
-                    $this->idpInfo,
                     $request->getPostParameter('SAMLResponse')
                 );
 

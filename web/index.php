@@ -168,20 +168,16 @@ try {
                     $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute')
                 )
             );
-
-            $idpList = $config->getSection('SamlAuthentication')->getSection('idpList')->toArray();
-            $entityIdList = array_keys($idpList);
-
+            $idpInfoList = [];
+            $idpConfig = $config->getSection('SamlAuthentication')->getSection('idpList')->toArray();
+            foreach ($idpConfig as $idpEntityId => $idpInfo) {
+                $idpInfoList[$idpEntityId] = new IdPInfo($idpEntityId, $idpInfo['ssoUrl'], $idpInfo['publicKey']);
+            }
             $service->addModule(
                 new SamlModule(
                     $session,
-                    new IdPInfo(
-                        // hard code the first IdP from the list, we only
-                        // support 1 for now!
-                        $entityIdList[0],
-                        $idpList[$entityIdList[0]]['ssoUrl'],
-                        $idpList[$entityIdList[0]]['publicKey']
-                    )
+                    $idpInfoList,
+                    $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
                 )
             );
 

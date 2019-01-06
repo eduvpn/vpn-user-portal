@@ -91,6 +91,8 @@ return [
         // OID for eduPersonAffiliation
         //'entitlementAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
 
+//        'discoUrl' => 'http://disco.example.org/index.php',
+
         'idpList' => [
             'https://idp.example.org/saml' => [
                 'ssoUrl' => 'https://idp.example.org/saml/sso',
