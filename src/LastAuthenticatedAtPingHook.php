@@ -13,6 +13,7 @@ use fkooman\SeCookie\SessionInterface;
 use SURFnet\VPN\Common\Http\BeforeHookInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\Json;
 
@@ -46,19 +47,18 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
-        if ('POST' === $request->getRequestMethod() && '/_form/auth/verify' === $request->getPathInfo()) {
-            return false;
-        }
-        if ('POST' === $request->getRequestMethod() && '/_saml/acs' === $request->getPathInfo()) {
-            return false;
-        }
-        if ('GET' === $request->getRequestMethod() && '/_saml/login' === $request->getPathInfo()) {
-            return false;
-        }
-        if ('GET' === $request->getRequestMethod() && '/_saml/logout' === $request->getPathInfo()) {
-            return false;
-        }
-        if ('POST' === $request->getRequestMethod() && '/_logout' === $request->getPathInfo()) {
+        $whiteList = [
+            'POST' => [
+                '/_form/auth/verify',
+                '/_saml/acs',
+                '/_logout',
+            ],
+            'GET' => [
+                '/_saml/login',
+                '/_saml/logout',
+            ],
+        ];
+        if (Service::isWhitelisted($request, $whiteList)) {
             return false;
         }
 
