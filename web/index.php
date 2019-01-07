@@ -12,7 +12,9 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\SAML\SP\IdPInfo;
+use fkooman\SAML\SP\ArrayIdpInfoSource;
+use fkooman\SAML\SP\SP;
+use fkooman\SAML\SP\SpInfo;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use ParagonIE\ConstantTime\Base64;
@@ -156,7 +158,17 @@ try {
 
     // Authentication
     $authMethod = $config->getItem('authMethod');
-    $service->addModule(new LogoutModule($session, 'MellonAuthentication' === $authMethod));
+
+    $logoutUrl = null;
+    if ('MellonAuthentication' === $authMethod) {
+        // mod_auth_mellon
+        $logoutUrl = $request->getAuthority().'/saml/logout';
+    }
+    if ('SamlAuthentication' === $authMethod) {
+        $logoutUrl = $request->getRootUri().'_saml/logout';
+    }
+
+    $service->addModule(new LogoutModule($session, $logoutUrl));
     switch ($authMethod) {
         case 'SamlAuthentication':
             $service->addBeforeHook(
@@ -168,15 +180,18 @@ try {
                     $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute')
                 )
             );
-            $idpInfoList = [];
-            $idpConfig = $config->getSection('SamlAuthentication')->getSection('idpList')->toArray();
-            foreach ($idpConfig as $idpEntityId => $idpInfo) {
-                $idpInfoList[$idpEntityId] = new IdPInfo($idpEntityId, $idpInfo['ssoUrl'], $idpInfo['publicKey']);
-            }
             $service->addModule(
                 new SamlModule(
                     $session,
-                    $idpInfoList,
+                    new SP(
+                        new SpInfo(
+                            $request->getRootUri().'_saml/metadata',
+                            $request->getRootUri().'_saml/acs',
+                            $request->getRootUri().'_saml/logout',
+                            FileIO::readFile(sprintf('%s/config/%s/sp.key', $baseDir, $instanceId))
+                        ),
+                        new ArrayIdpInfoSource($config->getSection('SamlAuthentication')->getSection('idpList')->toArray())
+                    ),
                     $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
                 )
             );

@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "d590b9a6272927d6bd5adcc7a632574326a4318b"
+                "reference": "1a1acf06d38e429d956ea7d957631f5df0c53cf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/d590b9a6272927d6bd5adcc7a632574326a4318b",
-                "reference": "d590b9a6272927d6bd5adcc7a632574326a4318b",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/1a1acf06d38e429d956ea7d957631f5df0c53cf0",
+                "reference": "1a1acf06d38e429d956ea7d957631f5df0c53cf0",
                 "shasum": ""
             },
             "require": {
@@ -110,7 +110,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-01-04T10:38:31+00:00"
+            "time": "2019-01-07T20:58:07+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -174,7 +174,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "28f798dbbcdcad245b778bd22291e4b00b01e5e3"
+                "reference": "d04a94eb34b6b82633fb1a0ce8f391826fd08359"
             },
             "require": {
                 "ext-date": "*",
@@ -217,7 +217,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-01-06T21:39:13+00:00"
+            "time": "2019-01-07T20:09:38+00:00"
         },
         {
             "name": "fkooman/secookie",

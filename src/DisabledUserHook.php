@@ -42,6 +42,10 @@ class DisabledUserHook implements BeforeHookInterface
         if ('POST' === $request->getRequestMethod() && '/_logout' === $request->getPathInfo()) {
             return false;
         }
+        if ('GET' === $request->getRequestMethod() && '/_saml/logout' === $request->getPathInfo()) {
+            return false;
+        }
+
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }

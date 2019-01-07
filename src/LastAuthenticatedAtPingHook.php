@@ -55,6 +55,9 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
         if ('GET' === $request->getRequestMethod() && '/_saml/login' === $request->getPathInfo()) {
             return false;
         }
+        if ('GET' === $request->getRequestMethod() && '/_saml/logout' === $request->getPathInfo()) {
+            return false;
+        }
         if ('POST' === $request->getRequestMethod() && '/_logout' === $request->getPathInfo()) {
             return false;
         }
