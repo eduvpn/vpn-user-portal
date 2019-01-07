@@ -69,11 +69,17 @@ class SamlAuthenticationHook implements BeforeHookInterface
 
         if (!$this->session->has('_saml_auth_assertion')) {
             // user not (yet) authenticated, redirect to "login" endpoint
+            $returnToQuery = http_build_query(
+                [
+                    'ReturnTo' => $request->getUri(),
+                ]
+            );
+
             return new RedirectResponse(
                 sprintf(
-                    '%s_saml/login?ReturnTo=%s',
+                    '%s_saml/login?%s',
                     $request->getRootUri(),
-                    $request->getUri()
+                    $returnToQuery
                 )
             );
         }
