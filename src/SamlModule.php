@@ -11,6 +11,7 @@ namespace SURFnet\VPN\Portal;
 
 use fkooman\SAML\SP\SP;
 use fkooman\SeCookie\SessionInterface;
+use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
@@ -24,18 +25,23 @@ class SamlModule implements ServiceModuleInterface
     /** @var \fkooman\SAML\SP\SP */
     private $sp;
 
-    /** @var string */
+    /** @var null|string */
     private $discoUrl;
+
+    /** @var null|string */
+    private $idpEntityId;
 
     /**
      * @param \fkooman\SeCookie\SessionInterface $session
      * @param \fkooman\SAML\SP\SP                $sp
-     * @param string                             $discoUrl
+     * @param null|string                        $idpEntityId
+     * @param null|string                        $discoUrl
      */
-    public function __construct(SessionInterface $session, SP $sp, $discoUrl)
+    public function __construct(SessionInterface $session, SP $sp, $idpEntityId, $discoUrl)
     {
         $this->session = $session;
         $this->sp = $sp;
+        $this->idpEntityId = $idpEntityId;
         $this->discoUrl = $discoUrl;
     }
 
@@ -50,26 +56,44 @@ class SamlModule implements ServiceModuleInterface
              * @return \SURFnet\VPN\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                // assume we have disco for now!
-                if (null === $idpEntityId = $request->getQueryParameter('IdP', false)) {
-                    // go to disco
-                    $discoQuery = http_build_query(
-                        [
-                            // XXX entityID from SP object
-                            'entityID' => $request->getRootUri().'_saml/metadata',
-                            'returnIDParam' => 'IdP',
-                            'return' => $request->getUri(),
-                        ]
-                    );
-
-                    // XXX figure out the query separator
-                    return new RedirectResponse($this->discoUrl.'?'.$discoQuery);
-                }
-
-                // we figured out which IdP to use!
                 $relayState = $request->getQueryParameter('ReturnTo');
 
-                return new RedirectResponse($this->sp->login($idpEntityId, $relayState));
+                // if and entityId is specified, run with it
+                if (null !== $this->idpEntityId) {
+                    return new RedirectResponse($this->sp->login($this->idpEntityId, $relayState));
+                }
+
+                // we didn't get an IdP entityId so we MUST perform discovery
+                if (null === $this->discoUrl) {
+                    throw new HttpException('no IdP specified, and no discovery service configured', 500);
+                }
+
+                if (null !== $idpEntityId = $request->getQueryParameter('IdP', false)) {
+                    // we already came back from the discovery service, use
+                    // this IdP
+                    return new RedirectResponse($this->sp->login($idpEntityId, $relayState));
+                }
+
+                // we didn't come back from discovery, so send the browser there
+                $discoQuery = http_build_query(
+                    [
+                        // XXX get the SP entityID from SP object...
+                        'entityID' => $request->getRootUri().'_saml/metadata',
+                        'returnIDParam' => 'IdP',
+                        'return' => $request->getUri(),
+                    ]
+                );
+
+                $querySeparator = false === strpos($this->discoUrl, '?') ? '?' : '&';
+
+                return new RedirectResponse(
+                    sprintf(
+                        '%s%s%s',
+                        $this->discoUrl,
+                        $querySeparator,
+                        $discoQuery
+                    )
+                );
             }
         );
 
@@ -94,7 +118,9 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 if (null === $samlResponse = $request->getQueryParameter('SAMLResponse', false)) {
-                    // this is NOT a response coming from an IdP, so it is triggered by the app
+                    // this is NOT a response coming from an IdP, so we got
+                    // redirected here because the user pused the "Logout"
+                    // button...
                     $logoutUrl = $this->sp->logout($request->getQueryParameter('ReturnTo'));
 
                     return new RedirectResponse($logoutUrl);

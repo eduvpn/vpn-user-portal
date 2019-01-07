@@ -192,6 +192,7 @@ try {
                         ),
                         new ArrayIdpInfoSource($config->getSection('SamlAuthentication')->getSection('idpList')->toArray())
                     ),
+                    $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
                     $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
                 )
             );

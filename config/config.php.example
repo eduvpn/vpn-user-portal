@@ -91,11 +91,18 @@ return [
         // OID for eduPersonAffiliation
         //'entitlementAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
 
-//        'discoUrl' => 'http://disco.example.org/index.php',
+        // set a fixed IdP for use with this service, it MUST be listed in 
+        // the idpList below!
+        'idpEntityId' => 'https://idp.example.org/saml',
+
+        // set a URL that performs IdP discovery, all IdPs listed in the 
+        // discovery service MUST also be listed below in the idpList!
+        //'discoUrl' => 'http://disco.example.org/index.php',
 
         'idpList' => [
             'https://idp.example.org/saml' => [
                 'ssoUrl' => 'https://idp.example.org/saml/sso',
+                'sloUrl' => 'https://idp.example.org/saml/slo',
                 'publicKey' => 'ABCDEF=',
             ]
         ],
