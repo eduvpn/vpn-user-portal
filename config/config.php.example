@@ -99,8 +99,8 @@ return [
         // discovery service MUST also be available in the IdP metadata file
         //'discoUrl' => 'http://disco.example.org/index.php',
 
-        // list of SAML metadata files containing the IdP metadata that are 
-        // allowed to access this service
+        // list of SAML metadata files containing the IdP metadata of IdPs that 
+        // are allowed to access this service
         'idpMetadata' => [
             '/path/to/idp/metadata.xml',
         ]
