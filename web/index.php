@@ -12,9 +12,9 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
-use fkooman\SAML\SP\ArrayIdpInfoSource;
 use fkooman\SAML\SP\SP;
 use fkooman\SAML\SP\SpInfo;
+use fkooman\SAML\SP\XmlIdpInfoSource;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use ParagonIE\ConstantTime\Base64;
@@ -190,7 +190,7 @@ try {
                             $request->getRootUri().'_saml/logout',
                             FileIO::readFile(sprintf('%s/config/%s/sp.key', $baseDir, $instanceId))
                         ),
-                        new ArrayIdpInfoSource($config->getSection('SamlAuthentication')->getSection('idpList')->toArray())
+                        new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata')->toArray())
                     ),
                     $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
                     $config->getSection('SamlAuthentication')->optionalItem('discoUrl')

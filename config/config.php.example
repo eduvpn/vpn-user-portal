@@ -91,21 +91,19 @@ return [
         // OID for eduPersonAffiliation
         //'entitlementAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
 
-        // set a fixed IdP for use with this service, it MUST be listed in 
-        // the idpList below!
+        // set a fixed IdP for use with this service, it MUST be available in
+        // the IdP metadata file
         'idpEntityId' => 'https://idp.example.org/saml',
 
         // set a URL that performs IdP discovery, all IdPs listed in the 
-        // discovery service MUST also be listed below in the idpList!
+        // discovery service MUST also be available in the IdP metadata file
         //'discoUrl' => 'http://disco.example.org/index.php',
 
-        'idpList' => [
-            'https://idp.example.org/saml' => [
-                'ssoUrl' => 'https://idp.example.org/saml/sso',
-                'sloUrl' => 'https://idp.example.org/saml/slo',
-                'publicKey' => 'ABCDEF=',
-            ]
-        ],
+        // list of SAML metadata files containing the IdP metadata that are 
+        // allowed to access this service
+        'idpMetadata' => [
+            '/path/to/idp/metadata.xml',
+        ]
     ],
 
     // Require Users to use 2FA
