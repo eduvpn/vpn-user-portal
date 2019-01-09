@@ -40,8 +40,11 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Common\LdapClient;
 use SURFnet\VPN\Common\Logger;
 use SURFnet\VPN\Common\Tpl;
+use SURFnet\VPN\Portal\AdminHook;
+use SURFnet\VPN\Portal\AdminPortalModule;
 use SURFnet\VPN\Portal\ClientFetcher;
 use SURFnet\VPN\Portal\DisabledUserHook;
+use SURFnet\VPN\Portal\Graph;
 use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
 use SURFnet\VPN\Portal\OAuthModule;
 use SURFnet\VPN\Portal\OAuthStorage;
@@ -52,6 +55,15 @@ use SURFnet\VPN\Portal\TwoFactorEnrollModule;
 use SURFnet\VPN\Portal\VpnPortalModule;
 
 $logger = new Logger('vpn-user-portal');
+
+// on various systems we have various font locations
+// XXX move this to configuration
+$fontList = [
+    '/usr/share/fonts/google-roboto/Roboto-Regular.ttf', // Fedora (google-roboto-fonts)
+    '/usr/share/fonts/roboto_fontface/roboto/Roboto-Regular.ttf', // Fedora (roboto-fontface-fonts)
+    '/usr/share/fonts/roboto_fontface/Roboto-Regular.ttf', // CentOS (roboto-fontface-fonts)
+    '/usr/share/fonts-roboto-fontface/fonts/Roboto-Regular.ttf', // Debian (fonts-roboto-fontface)
+];
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
@@ -180,17 +192,18 @@ try {
                     $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute')
                 )
             );
+            $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
             $service->addModule(
                 new SamlModule(
                     $session,
                     new SP(
                         new SpInfo(
-                            $request->getRootUri().'_saml/metadata',
+                            $spEntityId,
                             $request->getRootUri().'_saml/acs',
                             $request->getRootUri().'_saml/logout',
                             FileIO::readFile(sprintf('%s/config/%s/sp.key', $baseDir, $instanceId))
                         ),
-                        new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata')->toArray())
+                        new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
                     ),
                     $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
                     $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
@@ -360,6 +373,15 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         $service->addModule($twoFactorModule);
     }
 
+    // isAdmin
+    $service->addBeforeHook(
+        'is_admin',
+        new AdminHook(
+            $config->optionalItem('adminEntitlementList', ['admin']),
+            $tpl
+        )
+    );
+
     // OAuth tokens
     $storage = new OAuthStorage(
         new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
@@ -381,6 +403,22 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
         [$clientFetcher, 'get']
     );
     $service->addModule($vpnPortalModule);
+
+    // admin module
+    $graph = new Graph();
+    $graph->setFontList($fontList);
+    if ($config->hasSection('statsConfig')) {
+        if ($config->getSection('statsConfig')->hasItem('barColor')) {
+            $graph->setBarColor($config->getSection('statsConfig')->getItem('barColor'));
+        }
+    }
+
+    $adminPortalModule = new AdminPortalModule(
+        $tpl,
+        $serverClient,
+        $graph
+    );
+    $service->addModule($adminPortalModule);
 
     if (0 !== count($twoFactorMethods)) {
         $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $session, $tpl, $serverClient);
