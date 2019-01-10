@@ -196,6 +196,7 @@ try {
             $service->addModule(
                 new SamlModule(
                     $session,
+                    $spEntityId,
                     new SP(
                         new SpInfo(
                             $spEntityId,

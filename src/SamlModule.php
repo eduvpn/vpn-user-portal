@@ -22,6 +22,9 @@ class SamlModule implements ServiceModuleInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
+    /** @var string */
+    private $spEntityId;
+
     /** @var \fkooman\SAML\SP\SP */
     private $sp;
 
@@ -33,13 +36,15 @@ class SamlModule implements ServiceModuleInterface
 
     /**
      * @param \fkooman\SeCookie\SessionInterface $session
+     * @param string                             $spEntityId
      * @param \fkooman\SAML\SP\SP                $sp
      * @param null|string                        $idpEntityId
      * @param null|string                        $discoUrl
      */
-    public function __construct(SessionInterface $session, SP $sp, $idpEntityId, $discoUrl)
+    public function __construct(SessionInterface $session, $spEntityId, SP $sp, $idpEntityId, $discoUrl)
     {
         $this->session = $session;
+        $this->spEntityId = $spEntityId;
         $this->sp = $sp;
         $this->idpEntityId = $idpEntityId;
         $this->discoUrl = $discoUrl;
@@ -77,8 +82,7 @@ class SamlModule implements ServiceModuleInterface
                 // we didn't come back from discovery, so send the browser there
                 $discoQuery = http_build_query(
                     [
-                        // XXX get the SP entityID from SP object...
-                        'entityID' => $request->getRootUri().'_saml/metadata',
+                        'entityID' => $this->spEntityId,
                         'returnIDParam' => 'IdP',
                         'return' => $request->getUri(),
                     ]
