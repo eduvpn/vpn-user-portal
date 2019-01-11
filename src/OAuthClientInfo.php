@@ -72,20 +72,21 @@ class OAuthClientInfo
             // iOS
             'org.eduvpn.app.ios' => [
                 'redirect_uri_list' => [
+                    'org.eduvpn.app.ios:/api/callback',
+                    // current app store app uses the link below, keep it until
+                    // it is no longer used
                     'https://ios.app.eduvpn.org/auth/app/redirect/',
-                    'https://ios.app.eduvpn.org/auth/app/redirect/development/',
                 ],
                 'display_name' => 'eduVPN for iOS',
-                'require_approval' => false,
+                'require_approval' => true,
             ],
             // iOS (LC)
             'org.letsconnect-vpn.app.ios' => [
                 'redirect_uri_list' => [
-                    'https://ios.app.letsconnect-vpn.org/auth/app/redirect/',
-                    'https://ios.app.letsconnect-vpn.org/auth/app/redirect/development/',
+                    'org.letsconnect-vpn.app.ios:/api/callback',
                 ],
                 'display_name' => 'Let\'s Connect! for iOS',
-                'require_approval' => false,
+                'require_approval' => true,
             ],
             // macOS
             'org.eduvpn.app.macos' => [

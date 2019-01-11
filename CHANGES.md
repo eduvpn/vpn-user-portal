@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.6 (...)
+- update the iOS applications `redirect_uri_list` and enable "approval"
+- make sure browser session expiry has a maximum of 8 hours
+
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 
   when the user account is disabled
