@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.8.6 (...)
+## 1.8.6 (2019-01-11)
 - update the iOS applications `redirect_uri_list` and enable "approval"
 - make sure browser session expiry has a maximum of 8 hours
 
