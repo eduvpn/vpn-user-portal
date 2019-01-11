@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.8.6 (...)
+## 2.0.0 (...)
 - remove PHP error suppression
 - rework 2FA enrollment, enrollment goes through `/two_factor_enroll` now
 - no longer show which profiles have 2FA enabled, no longer relevant as
