@@ -126,7 +126,9 @@ try {
                 // authentication mechanism will set a cookie for
                 // {ROOT}/_form/auth/
                 'Path' => $request->getRoot(),
-                'SameSite' => 'Lax',
+                // we can't set "SameSite" to Lax if we want to support the
+                // SAML HTTP-POST binding...
+                'SameSite' => null,
                 'Secure' => $config->getItem('secureCookie'),
             ]
         )
