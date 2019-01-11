@@ -40,6 +40,7 @@ class DisabledUserHook implements BeforeHookInterface
             'GET' => [
                 '/_saml/login',
                 '/_saml/logout',
+                '/_saml/metadata',
             ],
         ];
         if (Service::isWhitelisted($request, $whiteList)) {

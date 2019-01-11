@@ -14,6 +14,7 @@ use fkooman\SeCookie\SessionInterface;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
 use SURFnet\VPN\Common\Http\RedirectResponse;
 use SURFnet\VPN\Common\Http\Request;
+use SURFnet\VPN\Common\Http\Response;
 use SURFnet\VPN\Common\Http\Service;
 use SURFnet\VPN\Common\Http\ServiceModuleInterface;
 
@@ -138,6 +139,19 @@ class SamlModule implements ServiceModuleInterface
                 );
 
                 return new RedirectResponse($request->getQueryParameter('RelayState'));
+            }
+        );
+
+        $service->get(
+            '/_saml/metadata',
+            /**
+             * @return \SURFnet\VPN\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                $response = new Response(200, 'application/samlmetadata+xml');
+                $response->setBody($this->sp->metadata());
+
+                return $response;
             }
         );
     }

@@ -55,6 +55,7 @@ class AdminHook implements BeforeHookInterface
             'GET' => [
                 '/_saml/logout',
                 '/_saml/login',
+                '/_saml/metadata',
             ],
         ];
         if (Service::isWhitelisted($request, $whiteList)) {
