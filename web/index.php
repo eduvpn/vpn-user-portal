@@ -202,7 +202,8 @@ try {
                             $spEntityId,
                             $request->getRootUri().'_saml/acs',
                             $request->getRootUri().'_saml/logout',
-                            FileIO::readFile(sprintf('%s/config/%s/sp.key', $baseDir, $instanceId))
+                            FileIO::readFile(sprintf('%s/config/%s/sp.key', $baseDir, $instanceId)),
+                            FileIO::readFile(sprintf('%s/config/%s/sp.crt', $baseDir, $instanceId))
                         ),
                         new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
                     ),
