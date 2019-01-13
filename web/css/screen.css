@@ -93,12 +93,11 @@ ul.simple {
 }
 
 ul.menu {
-    margin-bottom: 2em;
     padding: 0;
 }
 
 ul.menu li {
-    display: inline;
+    display: inline-block;
     font-weight: bold;
 }
 
