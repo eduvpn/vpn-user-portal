@@ -1,8 +1,6 @@
 <?php $this->layout('base'); ?>
 <?php $this->start('content'); ?>
-    <ul class="menu">
-        <li class="active"><span><?=$this->t('Sign In'); ?></span></li>
-    </ul>
+    <h2><?=$this->t('Sign In'); ?></h2>
 
     <p>
         <?=$this->t('Please sign in with your username and password.'); ?>

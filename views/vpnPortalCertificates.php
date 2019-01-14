@@ -16,9 +16,9 @@
                     <td><?=$this->e($userCertificate['valid_from']); ?></td>
                     <td><?=$this->e($userCertificate['valid_to']); ?></td>
                     <td class="text-right">
-                        <form method="post" class="inline" action="deleteCertificate">
+                        <form method="post" action="deleteCertificate">
                             <input type="hidden" name="commonName" value="<?=$this->e($userCertificate['common_name']); ?>">
-                            <button type="submit" class="error"><?=$this->t('Delete'); ?></button>
+                            <button type="submit"><?=$this->t('Delete'); ?></button>
                         </form>
                     </td>
                 </tr>

@@ -23,7 +23,7 @@
                         <span title="<?=$this->e($connection['common_name']); ?>"><?=$this->e($connection['display_name']); ?></span>
                     </td>
                     <td>
-                        <ul class="simple">
+                        <ul>
                             <?php foreach ($connection['virtual_address'] as $ip): ?>
                             <li><code><?=$this->e($ip); ?></code></li>
                             <?php endforeach; ?>

@@ -1,8 +1,6 @@
 <?php $this->layout('base'); ?>
 <?php $this->start('content'); ?>
-    <ul class="menu">
-        <li class="active"><span><?=$this->t('Sign In'); ?></span></li>
-    </ul>
+    <h2><?=$this->t('Two-factor Authentication'); ?></h2>
 
     <p>
         <?=$this->t('Please provide your TOTP.'); ?>

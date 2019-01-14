@@ -1,18 +1,11 @@
 <?php $this->layout('base'); ?>
 <?php $this->start('content'); ?>
-    <ul class="menu">
-        <li class="active"><span><?=$this->t('Error'); ?></span></li>
-    </ul>
+    <h2><?=$this->t('Error'); ?></h2>
+    <h3><?=$this->e($code); ?></h3>
 
-    <h2><?=$this->e($code); ?></h2>
-
-    <p>
-    <?=$this->t('An error occurred.'); ?>
-    </p>
+    <p><?=$this->t('An error occurred.'); ?></p>
 
     <p class="error">
-        <code>
-            <?=$this->e($message); ?>
-        </code>
+        <code><?=$this->e($message); ?></code>
     </p>
 <?php $this->stop(); ?>

@@ -1,8 +1,6 @@
 <?php $this->layout('base'); ?>
 <?php $this->start('content'); ?>
-    <ul class="menu">
-        <li class="active"><span><?=$this->t('Approval'); ?></span></li>
-    </ul>
+    <h2><?=$this->t('Application Approval'); ?></h2>
     
     <?php if (null === $display_name): ?>
         <?php $display_name = $client_id; ?>
@@ -13,7 +11,7 @@
     </p>
 
     <form method="post">
-        <button class="error" type="submit" name="approve" value="no"><?=$this->t('Reject'); ?></button>
-        <button class="success" type="submit" name="approve" value="yes"><?=$this->t('Approve'); ?></button>
+        <button type="submit" name="approve" value="no"><?=$this->t('Reject'); ?></button>
+        <button type="submit" name="approve" value="yes"><?=$this->t('Approve'); ?></button>
     </form>
 <?php $this->stop(); ?>

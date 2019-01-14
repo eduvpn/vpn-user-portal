@@ -43,7 +43,7 @@
                     </tr>
                     <tr>
                         <th><?=$this->t('IPs'); ?></th>
-                        <td><ul class="simple"><li><?=$this->e($result['ip4']); ?></li><li><?=$this->e($result['ip6']); ?></li></ul></td>
+                        <td><ul><li><?=$this->e($result['ip4']); ?></li><li><?=$this->e($result['ip6']); ?></li></ul></td>
                     </tr>
                     <tr>
                         <th><?=$this->t('Connected'); ?> (<?=$this->e(date('T')); ?>)</th>

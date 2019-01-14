@@ -9,7 +9,7 @@
                         <th><?=$this->e($k); ?></th>
                         <?php if (is_array($v) && 0 !== count($v)): ?>
                             <td>
-                            <ul class="simple">
+                            <ul>
                                 <?php foreach ($v as $vv): ?>
                                     <li><?=$this->e($vv); ?></li>
                                 <?php endforeach; ?>

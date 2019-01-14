@@ -39,7 +39,7 @@
         <?php foreach ($stats['profiles'] as $k => $v): ?>
             <?php if (array_key_exists($k, $idNameMapping)): ?>
                 <h3><?=$this->e($idNameMapping[$k]); ?></h3>
-                <img class="stats" src="stats/traffic?profile_id=<?=$this->e($k); ?>">
+                <img src="stats/traffic?profile_id=<?=$this->e($k); ?>">
             <?php endif; ?>
         <?php endforeach; ?>
 
@@ -50,7 +50,7 @@
         <?php foreach ($stats['profiles'] as $k => $v): ?>
             <?php if (array_key_exists($k, $idNameMapping)): ?>
                 <h3><?=$this->e($idNameMapping[$k]); ?></h3>
-                <img class="stats" src="stats/users?profile_id=<?=$this->e($k); ?>">
+                <img src="stats/users?profile_id=<?=$this->e($k); ?>">
             <?php endif; ?>
         <?php endforeach; ?>
     <?php endif; ?>

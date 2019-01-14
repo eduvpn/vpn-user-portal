@@ -17,7 +17,7 @@
         <tr>
             <th><?=$this->t('Group Membership(s)'); ?></th>
             <td>
-                <ul class="simple">
+                <ul>
                     <?php foreach ($userGroups as $userGroup): ?>
                         <li><?=$this->e($userGroup); ?></li>
                     <?php endforeach; ?>
@@ -54,7 +54,7 @@
                     <form method="post" action="removeClientAuthorization">
                         <input type="hidden" name="client_id" value="<?=$this->e($client['client_id']); ?>">
                         <input type="hidden" name="scope" value="<?=$this->e($client['scope']); ?>">
-                        <button class="error"><?=$this->t('Revoke'); ?></button>
+                        <button><?=$this->t('Revoke'); ?></button>
                     </form>
                 </td>
             </tr>

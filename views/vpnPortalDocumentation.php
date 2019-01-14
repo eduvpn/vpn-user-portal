@@ -67,7 +67,7 @@
     </ul>
 
     <?php if (0 !== $twoFactorMethods): ?>
-        <h2>Two-factor Authentication</h2>
+        <h2 id="2fa">Two-factor Authentication</h2>
         <p>
             Two-factor authentication (2FA) can be used to protect your account from 
             unauthorized access. It works by asking for an additional <em>key</em>

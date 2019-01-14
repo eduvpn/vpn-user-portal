@@ -8,12 +8,12 @@
         <fieldset>
             <input type="hidden" name="user_id" value="<?=$this->e($userId); ?>">
             <?php if ($isDisabled): ?>
-                <button name="user_action" value="enableUser" class="success"><?=$this->t('Enable User'); ?></button>
+                <button name="user_action" value="enableUser"><?=$this->t('Enable User'); ?></button>
             <?php else: ?>
-                <button name="user_action" value="disableUser" class="error"><?=$this->t('Disable User'); ?></button>
+                <button name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
             <?php endif; ?>
             <?php if ($hasTotpSecret): ?>
-                <button name="user_action" value="deleteTotpSecret" class="error"><?=$this->t('Delete TOTP Secret'); ?></button>
+                <button name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
             <?php endif; ?>
         </fieldset>
     </form>

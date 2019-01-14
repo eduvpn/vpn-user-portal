@@ -1,13 +1,8 @@
-<?php if ($requireTwoFactorEnrollment): ?>
-    <?php $this->layout('base'); ?>
-<?php else: ?>
-    <?php $this->layout('base', ['activeItem' => 'account']); ?>
-<?php endif; ?>
+<?php $this->layout('base', ['activeItem' => 'account']); ?>
 <?php $this->start('content'); ?>
+    <h2><?=$this->t('Two-factor Enrollment'); ?></h2>
+
     <?php if ($requireTwoFactorEnrollment): ?>
-        <ul class="menu">
-            <li class="active"><span><?=$this->t('Two-factor Enrollment'); ?></span></li>
-        </ul>
         <p class="success">
             <?=$this->t('In order to continue, you must first enroll for Two-factor authentication!'); ?>
         </p>
@@ -26,7 +21,7 @@
             <?php if (in_array('totp', $twoFactorMethods, true)): ?>
                 <p>
                     <?=$this->t('Here you can enroll for two-factor authentication (2FA) using a Time-based One-time Password (TOTP).'); ?>
-                    <?=$this->t('See the <a href="documentation">documentation</a> for more information on 2FA and a list of applications to use.'); ?>
+                    <?=$this->t('See the <a href="documentation#2fa">documentation</a> for more information on 2FA and a list of applications to use.'); ?>
                 </p>
 
                 <dl>
