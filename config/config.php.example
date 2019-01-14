@@ -1,9 +1,6 @@
 <?php
 
 return [
-    // set secureCookie flag, so browser only sends them over HTTPS
-    'secureCookie' => true,
-
     // override default branding style (templates/CSS) with custom style.
     // NOTE: the styling/branding MUST be installed for this to work!
     //'styleName' => 'eduVPN',
@@ -13,7 +10,7 @@ return [
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
     //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
     //'authMethod' => 'MellonAuthentication',       // SAML (mod_auth_mellon)
-    //'authMethod' => 'SamlAuthentication',         // SAML
+    //'authMethod' => 'SamlAuthentication',         // SAML (php-saml-sp)
 
     // Session Expiry
     // - OAuth (refresh_token) validity

@@ -105,10 +105,12 @@ try {
         $browserSessionExpiry = $sessionExpiry;
     }
 
+    $secureCookie = $config->hasItem('secureCookie') ? $config->getItem('secureCookie') : true;
+
     $cookie = new Cookie(
         [
             'SameSite' => 'Lax',
-            'Secure' => $config->getItem('secureCookie'),
+            'Secure' => $secureCookie,
             'Max-Age' => 60 * 60 * 24 * 90,   // 90 days
         ]
     );
@@ -129,7 +131,7 @@ try {
                 // we can't set "SameSite" to Lax if we want to support the
                 // SAML HTTP-POST binding...
                 'SameSite' => null,
-                'Secure' => $config->getItem('secureCookie'),
+                'Secure' => $secureCookie,
             ]
         )
     );
