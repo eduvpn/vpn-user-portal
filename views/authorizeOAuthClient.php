@@ -1,6 +1,6 @@
 <?php $this->layout('base'); ?>
 <?php $this->start('content'); ?>
-    <h2><?=$this->t('Application Approval'); ?></h2>
+    <h2><?=$this->t('Approve Application'); ?></h2>
     
     <?php if (null === $display_name): ?>
         <?php $display_name = $client_id; ?>
