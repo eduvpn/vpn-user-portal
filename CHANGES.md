@@ -20,6 +20,8 @@
 - implement database migration support for OAuth tokens
 - remove user registration with vouchers for `PdoAuth`
 - remove Twig, switch to Tpl
+- remove compression framing support
+- remove tls-auth support
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 

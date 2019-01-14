@@ -61,6 +61,7 @@ class ClientConfig
             // only allow AES-256-GCM
             'ncp-ciphers AES-256-GCM',
             'cipher AES-256-GCM',
+            'auth none',
 
             '<ca>',
             trim($serverInfo['ca']),
@@ -84,36 +85,15 @@ class ClientConfig
             );
         }
 
-        if ('tls-crypt' === self::getTlsProtection($profileConfig)) {
+        if ('tls-crypt' === $profileConfig['tlsProtection']) {
             $clientConfig = array_merge(
                 $clientConfig,
                 [
                     '<tls-crypt>',
                     trim($serverInfo['ta']),
                     '</tls-crypt>',
-                    'auth none',
                 ]
             );
-        } elseif ('tls-auth' === self::getTlsProtection($profileConfig)) {
-            $clientConfig = array_merge(
-                $clientConfig,
-                [
-                    'key-direction 1',
-                    '<tls-auth>',
-                    trim($serverInfo['ta']),
-                    '</tls-auth>',
-                    'auth SHA256',
-                ]
-            );
-        } else {
-            // no tls-auth, no tls-crypt
-            $clientConfig[] = 'auth none';
-        }
-
-        // --comp-lzo
-        if ($profileConfig['enableCompression']) {
-            // adaptive compression, allow server to override using push
-            $clientConfig[] = 'comp-lzo';
         }
 
         // remote entries
@@ -195,23 +175,5 @@ class ClientConfig
         }
 
         return $protoPortList;
-    }
-
-    /**
-     * @param array $profileConfig
-     *
-     * @return false|string
-     */
-    private static function getTlsProtection(array $profileConfig)
-    {
-        if (array_key_exists('tlsCrypt', $profileConfig)) {
-            if ($profileConfig['tlsCrypt']) {
-                return 'tls-crypt';
-            }
-
-            return 'tls-auth';
-        }
-
-        return $profileConfig['tlsProtection'];
     }
 }
