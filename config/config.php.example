@@ -89,7 +89,7 @@ return [
         //'entitlementAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
 
         // override the SP entityId
-        'spEntityId' => 'https://vpn.example.org/saml',
+        //'spEntityId' => 'https://vpn.example.org/saml',
 
         // set a fixed IdP for use with this service, it MUST be available in
         // the IdP metadata file
