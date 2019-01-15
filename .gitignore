@@ -2,5 +2,3 @@
 /data
 /config/*.php
 /config/views
-/config/*/*.php
-/config/*/views

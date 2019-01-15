@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "9dfc5177551e63be77d4205028473317fc76940d"
+                "reference": "b04fb4e20b70f6870cc2d038954a123ec0472721"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/9dfc5177551e63be77d4205028473317fc76940d",
-                "reference": "9dfc5177551e63be77d4205028473317fc76940d",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/b04fb4e20b70f6870cc2d038954a123ec0472721",
+                "reference": "b04fb4e20b70f6870cc2d038954a123ec0472721",
                 "shasum": ""
             },
             "require": {
@@ -110,7 +110,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-01-14T14:11:46+00:00"
+            "time": "2019-01-15T16:35:23+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -174,7 +174,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "5635f8aa4eef0480ab3b22c79ece46c3bb2128f5"
+                "reference": "3b8f0f53a32314375360503f6021c92398443891"
             },
             "require": {
                 "ext-date": "*",
@@ -217,7 +217,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-01-14T11:20:07+00:00"
+            "time": "2019-01-15T13:52:01+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -1281,16 +1281,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.1",
+            "version": "7.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c23d78776ad415d5506e0679723cb461d71f488f"
+                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c23d78776ad415d5506e0679723cb461d71f488f",
-                "reference": "c23d78776ad415d5506e0679723cb461d71f488f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7c89093bd00f7d5ddf0ab81dee04f801416b4944",
+                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944",
                 "shasum": ""
             },
             "require": {
@@ -1361,7 +1361,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-12-12T07:20:32+00:00"
+            "time": "2019-01-15T08:19:08+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

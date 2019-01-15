@@ -32,7 +32,6 @@ use SURFnet\VPN\Common\Http\PdoAuth;
 use SURFnet\VPN\Common\Http\RadiusAuth;
 use SURFnet\VPN\Common\Http\Request;
 use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\SimpleAuth;
 use SURFnet\VPN\Common\Http\TwoFactorHook;
 use SURFnet\VPN\Common\Http\TwoFactorModule;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
@@ -68,18 +67,14 @@ $fontList = [
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
-    if (false === $instanceId = getenv('VPN_INSTANCE_ID')) {
-        $instanceId = $request->getServerName();
-    }
-
-    $dataDir = sprintf('%s/data/%s', $baseDir, $instanceId);
+    $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
 
-    $config = Config::fromFile(sprintf('%s/config/%s/config.php', $baseDir, $instanceId));
+    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
 
     $templateDirs = [
         sprintf('%s/views', $baseDir),
-        sprintf('%s/config/%s/views', $baseDir, $instanceId),
+        sprintf('%s/config/views', $baseDir),
     ];
     if ($config->hasItem('styleName')) {
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $config->getItem('styleName'));
@@ -206,8 +201,8 @@ try {
                             $spEntityId,
                             $request->getRootUri().'_saml/acs',
                             $request->getRootUri().'_saml/logout',
-                            FileIO::readFile(sprintf('%s/config/%s/sp.key', $baseDir, $instanceId)),
-                            FileIO::readFile(sprintf('%s/config/%s/sp.crt', $baseDir, $instanceId))
+                            FileIO::readFile(sprintf('%s/config/sp.key', $baseDir)),
+                            FileIO::readFile(sprintf('%s/config/sp.crt', $baseDir))
                         ),
                         new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
                     ),
@@ -258,7 +253,7 @@ try {
         case 'FormPdoAuthentication':
             $userAuth = new PdoAuth(
                 new PDO(
-                    sprintf('sqlite://%s/data/%s/userdb.sqlite', $baseDir, $instanceId)
+                    sprintf('sqlite://%s/data/userdb.sqlite', $baseDir)
                 )
             );
 
@@ -295,20 +290,7 @@ try {
                 )
             );
 
-            if ($config->getSection('FormRadiusAuthentication')->hasItem('serverList')) {
-                $serverList = $config->getSection('FormRadiusAuthentication')->getItem('serverList');
-            } else {
-                // legacy way of configuring RADIUS servers, only one specified here
-                // XXX remove for 2.0
-                $serverList = [
-                    [
-                        'host' => $config->getSection('FormRadiusAuthentication')->getItem('host'),
-                        'secret' => $config->getSection('FormRadiusAuthentication')->getItem('secret'),
-$config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getSection('FormRadiusAuthentication')->getItem('port') : 1812,
-                    ],
-                ];
-            }
-
+            $serverList = $config->getSection('FormRadiusAuthentication')->getItem('serverList');
             $userAuth = new RadiusAuth($logger, $serverList);
             if ($config->getSection('FormRadiusAuthentication')->hasItem('addRealm')) {
                 $userAuth->setRealm($config->getSection('FormRadiusAuthentication')->getItem('addRealm'));
@@ -317,27 +299,6 @@ $config->getSection('FormRadiusAuthentication')->hasItem('port') ? $config->getS
                 $userAuth->setNasIdentifier($config->getSection('FormRadiusAuthentication')->getItem('nasIdentifier'));
             }
 
-            $service->addModule(
-                new FormAuthenticationModule(
-                    $userAuth,
-                    $session,
-                    $tpl
-                )
-            );
-
-            break;
-        case 'FormAuthentication':
-            // XXX remove for 2.0
-            $service->addBeforeHook(
-                'auth',
-                new FormAuthenticationHook(
-                    $session,
-                    $tpl
-                )
-            );
-            $userAuth = new SimpleAuth(
-                $config->getSection('FormAuthentication')->toArray()
-            );
             $service->addModule(
                 new FormAuthenticationModule(
                     $userAuth,

@@ -11,25 +11,10 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\FileIO;
 
 try {
-    $p = new CliParser(
-        'Show the OAuth server\'s public key',
-        [
-            'instance' => ['the VPN instance', true, false],
-        ]
-    );
-
-    $opt = $p->parse($argv);
-    if ($opt->hasItem('help')) {
-        echo $p->help();
-        exit(0);
-    }
-
-    $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
-    $keyPairFile = sprintf('%s/data/%s/OAuth.key', $baseDir, $instanceId);
+    $keyPairFile = sprintf('%s/data/OAuth.key', $baseDir);
     echo base64_encode(
         sodium_crypto_sign_publickey(
             base64_decode(

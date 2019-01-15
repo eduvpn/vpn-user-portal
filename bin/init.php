@@ -11,28 +11,13 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use SURFnet\VPN\Common\CliParser;
 use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
 use SURFnet\VPN\Common\HttpClient\ServerClient;
 use SURFnet\VPN\Portal\OAuthStorage;
 
 try {
-    $p = new CliParser(
-        'Initialize the user portal',
-        [
-            'instance' => ['the VPN instance', true, false],
-        ]
-    );
-
-    $opt = $p->parse($argv);
-    if ($opt->hasItem('help')) {
-        echo $p->help();
-        exit(0);
-    }
-
-    $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
-    $dataDir = sprintf('%s/data/%s', $baseDir, $instanceId);
+    $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir);
     $keyPairData = base64_encode(sodium_crypto_sign_keypair());
     $keyPairFile = sprintf('%s/OAuth.key', $dataDir);

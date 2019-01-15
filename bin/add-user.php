@@ -20,7 +20,6 @@ try {
     $p = new CliParser(
         'Add a user to the portal',
         [
-            'instance' => ['the VPN instance', true, false],
             'user' => ['the username', true, false],
             'pass' => ['the password', true, false],
         ]
@@ -31,8 +30,6 @@ try {
         echo $p->help();
         exit(0);
     }
-
-    $instanceId = $opt->hasItem('instance') ? $opt->getItem('instance') : 'default';
 
     if ($opt->hasItem('user')) {
         $userId = $opt->getItem('user');
@@ -66,22 +63,13 @@ try {
         throw new RuntimeException('Password cannot be empty');
     }
 
-    $configFile = sprintf('%s/config/%s/config.php', $baseDir, $instanceId);
+    $configFile = sprintf('%s/config/config.php', $baseDir);
     $config = Config::fromFile($configFile);
 
     switch ($config->getItem('authMethod')) {
-        case 'FormAuthentication':
-            // users/hashes stored in configuration file
-            // XXX remove for 2.0!
-            $configData = $config->toArray();
-            $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
-            $configData['FormAuthentication'][$userId] = $passwordHash;
-            Config::toFile($configFile, $configData, 0644);
-
-            break;
         case 'FormPdoAuthentication':
             // users/hashes stored in DB
-            $dbFile = sprintf('%s/data/%s/userdb.sqlite', $baseDir, $instanceId);
+            $dbFile = sprintf('%s/data/userdb.sqlite', $baseDir);
             FileIO::createDir(dirname($dbFile), 0700);
             $pdoAuth = new PdoAuth(
                 new PDO(

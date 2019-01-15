@@ -30,14 +30,10 @@ $logger = new Logger('vpn-user-portal');
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
-    if (false === $instanceId = getenv('VPN_INSTANCE_ID')) {
-        $instanceId = $request->getServerName();
-    }
-
-    $dataDir = sprintf('%s/data/%s', $baseDir, $instanceId);
+    $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
 
-    $config = Config::fromFile(sprintf('%s/config/%s/config.php', $baseDir, $instanceId));
+    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
 
     $serverClient = new ServerClient(

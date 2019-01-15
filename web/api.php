@@ -32,14 +32,10 @@ $logger = new Logger('vpn-user-api');
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
-    if (false === $instanceId = getenv('VPN_INSTANCE_ID')) {
-        $instanceId = $request->getServerName();
-    }
-
-    $dataDir = sprintf('%s/data/%s', $baseDir, $instanceId);
+    $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
 
-    $config = Config::fromFile(sprintf('%s/config/%s/config.php', $baseDir, $instanceId));
+    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
 
     $service = new Service();
 
@@ -66,7 +62,7 @@ try {
         }
 
         if ($config->getSection('Api')->hasItem('foreignKeyListSource')) {
-            $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/%s/foreign_key_list.json', $baseDir, $instanceId));
+            $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/foreign_key_list.json', $baseDir));
             $foreignKeys = array_merge($foreignKeys, $foreignKeyListFetcher->extract());
         }
 
