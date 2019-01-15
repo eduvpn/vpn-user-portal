@@ -10,14 +10,13 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use fkooman\OAuth\Server\LocalSigner;
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\SAML\SP\SP;
 use fkooman\SAML\SP\SpInfo;
 use fkooman\SAML\SP\XmlIdpInfoSource;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
-use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
 use SURFnet\VPN\Common\Http\CsrfProtectionHook;
@@ -367,7 +366,7 @@ try {
         $session,
         $storage,
         new DateInterval($sessionExpiry),
-        [$clientFetcher, 'get']
+        $clientFetcher
     );
     $service->addModule($vpnPortalModule);
 
@@ -396,12 +395,10 @@ try {
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
             $storage,
-            [$clientFetcher, 'get'],
-            new SodiumSigner(
-                Base64::decode(
-                    FileIO::readFile(
-                        sprintf('%s/OAuth.key', $dataDir)
-                    )
+            $clientFetcher,
+            new LocalSigner(
+                FileIO::readFile(
+                    sprintf('%s/local_oauth.key', $dataDir)
                 )
             )
         );

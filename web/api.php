@@ -11,7 +11,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
-use fkooman\OAuth\Server\SodiumSigner;
+use fkooman\OAuth\Server\LocalSigner;
 use ParagonIE\ConstantTime\Base64;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\FileIO;
@@ -68,14 +68,11 @@ try {
 
         $bearerValidator = new BearerValidator(
             $storage,
-            [$clientFetcher, 'get'],
-            new SodiumSigner(
-                Base64::decode(
-                    FileIO::readFile(
-                        sprintf('%s/OAuth.key', $dataDir)
-                    )
-                ),
-                $foreignKeys
+            $clientFetcher,
+            new LocalSigner(
+                FileIO::readFile(
+                    sprintf('%s/local_oauth.key', $dataDir)
+                )
             )
         );
 

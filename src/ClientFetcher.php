@@ -9,10 +9,11 @@
 
 namespace SURFnet\VPN\Portal;
 
+use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\ClientInfo;
 use SURFnet\VPN\Common\Config;
 
-class ClientFetcher
+class ClientFetcher implements ClientDbInterface
 {
     /** @var \SURFnet\VPN\Common\Config */
     private $config;
@@ -45,6 +46,12 @@ class ClientFetcher
         }
         $clientInfoData['redirect_uri_list'] = $redirectUriList;
 
-        return new ClientInfo($clientInfoData);
+        return new ClientInfo(
+            $clientId,
+            $redirectUriList,
+            array_key_exists('client_secret', $clientInfoData) ? $clientInfoData['client_secret'] : null,
+            array_key_exists('display_name', $clientInfoData) ? $clientInfoData['display_name'] : null,
+            array_key_exists('require_approval', $clientInfoData) ? $clientInfoData['require_approval'] : true
+        );
     }
 }

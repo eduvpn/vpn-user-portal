@@ -26,7 +26,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @return \fkooman\OAuth\Server\TokenInfo|\SURFnet\VPN\Common\Http\Response
+     * @return \fkooman\OAuth\Server\AccessTokenInfo|\SURFnet\VPN\Common\Http\Response
      */
     public function executeBefore(Request $request, array $hookData)
     {
@@ -35,11 +35,11 @@ class BearerAuthenticationHook implements BeforeHookInterface
         }
 
         try {
-            $tokenInfo = $this->bearerValidator->validate($authorizationHeader);
+            $accessTokenInfo = $this->bearerValidator->validate($authorizationHeader);
             // require "config" scope
-            $tokenInfo->requireAllScope(['config']);
+            $accessTokenInfo->getScope()->requireAll(['config']);
 
-            return $tokenInfo;
+            return $accessTokenInfo;
         } catch (OAuthException $e) {
             $jsonResponse = $e->getJsonResponse();
 

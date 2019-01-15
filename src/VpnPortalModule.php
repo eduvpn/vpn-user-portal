@@ -11,6 +11,7 @@ namespace SURFnet\VPN\Portal;
 
 use DateInterval;
 use DateTime;
+use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\SeCookie\SessionInterface;
 use SURFnet\VPN\Common\Config;
 use SURFnet\VPN\Common\Http\Exception\HttpException;
@@ -44,13 +45,13 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \DateInterval */
     private $sessionExpiry;
 
-    /** @var callable */
-    private $getClientInfo;
+    /** @var \fkooman\OAuth\Server\ClientDbInterface */
+    private $clientDb;
 
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, OAuthStorage $storage, DateInterval $sessionExpiry, callable $getClientInfo)
+    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, OAuthStorage $storage, DateInterval $sessionExpiry, ClientDbInterface $clientDb)
     {
         $this->config = $config;
         $this->tpl = $tpl;
@@ -58,7 +59,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->session = $session;
         $this->storage = $storage;
         $this->sessionExpiry = $sessionExpiry;
-        $this->getClientInfo = $getClientInfo;
+        $this->clientDb = $clientDb;
     }
 
     /**
@@ -236,7 +237,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 foreach ($authorizedClients as $k => $v) {
                     // false means no longer registered
                     $displayName = false;
-                    if (false !== $clientInfo = \call_user_func($this->getClientInfo, $v['client_id'])) {
+                    if (false !== $clientInfo = $this->clientDb->get($v['client_id'])) {
                         // client_id as name in case no 'display_name' is provided
                         $displayName = $v['client_id'];
                         if (null !== $clientInfo->getDisplayName()) {

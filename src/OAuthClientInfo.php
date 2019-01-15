@@ -122,6 +122,12 @@ class OAuthClientInfo
             return false;
         }
 
-        return new ClientInfo($clientInfo[$clientId]);
+        return new ClientInfo(
+            $clientId,
+            $clientInfo[$clientId]['redirect_uri_list'],
+            null, // no predefined clients have a secret
+            $clientInfo[$clientId]['display_name'],
+            $clientInfo[$clientId]['require_approval']
+        );
     }
 }
