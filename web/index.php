@@ -188,7 +188,8 @@ try {
                     $session,
                     $config->getSection('SamlAuthentication')->getItem('attribute'),
                     $config->getSection('SamlAuthentication')->getItem('addEntityID'),
-                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute')
+                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute'),
+                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAuthnContextMapping', [])
                 )
             );
             $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');

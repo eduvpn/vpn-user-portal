@@ -32,23 +32,28 @@ class SamlAuthenticationHook implements BeforeHookInterface
     /** @var null|string */
     private $entitlementAttribute;
 
+    /** @var array<string,array<string>> */
+    private $entitlementAuthnContextMapping;
+
     /**
      * @param \fkooman\SeCookie\SessionInterface $session
      * @param string                             $userIdAttribute
      * @param bool                               $addEntityId
      * @param null|string                        $entitlementAttribute
+     * @param array<string,array<string>>        $entitlementAuthnContextMapping
      */
-    public function __construct(SessionInterface $session, $userIdAttribute, $addEntityId, $entitlementAttribute)
+    public function __construct(SessionInterface $session, $userIdAttribute, $addEntityId, $entitlementAttribute, array $entitlementAuthnContextMapping)
     {
         $this->session = $session;
         $this->userIdAttribute = $userIdAttribute;
         $this->addEntityId = $addEntityId;
         $this->entitlementAttribute = $entitlementAttribute;
+        $this->entitlementAuthnContextMapping = $entitlementAuthnContextMapping;
     }
 
     /**
-     * @param Request $request
-     * @param array   $hookData
+     * @param \SURFnet\VPN\Common\Http\Request $request
+     * @param array                            $hookData
      *
      * @return false|\SURFnet\VPN\Common\Http\RedirectResponse|\SURFnet\VPN\Common\Http\UserInfo
      */
@@ -71,19 +76,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
 
         if (!$this->session->has('_saml_auth_assertion')) {
             // user not (yet) authenticated, redirect to "login" endpoint
-            $returnToQuery = http_build_query(
-                [
-                    'ReturnTo' => $request->getUri(),
-                ]
-            );
-
-            return new RedirectResponse(
-                sprintf(
-                    '%s_saml/login?%s',
-                    $request->getRootUri(),
-                    $returnToQuery
-                )
-            );
+            return self::getLoginRedirect($request);
         }
 
         /** @var \fkooman\SAML\SP\Assertion */
@@ -113,13 +106,31 @@ class SamlAuthenticationHook implements BeforeHookInterface
             );
         }
 
-        // XXX we should get the time of the user authentication from the SAML
-        // assertion!
+        // XXX should we get the time of the user authentication from the SAML
+        // assertion?
         if ($this->session->has('_saml_auth_time')) {
             $authTime = new DateTime($this->session->get('_saml_auth_time'));
         } else {
             $authTime = new DateTime();
             $this->session->set('_saml_auth_time', $authTime->format(DateTime::ATOM));
+        }
+
+        $userAuthnContext = $samlAssertion->getAuthnContext();
+        if (null !== $this->entitlementAttribute) {
+            $userEntitlements = $samlAttributes[$this->entitlementAttribute];
+
+            // if we got an entitlement that's part of the
+            // entitlementAuthnContextMapping we have to make sure we have one of
+            // the listed AuthnContexts
+            foreach ($this->entitlementAuthnContextMapping as $entitlement => $authnContext) {
+                if (\in_array($entitlement, $userEntitlements, true)) {
+                    if (!\in_array($userAuthnContext, $authnContext, true)) {
+                        // we do not have the required AuthnContext, trigger login
+                        // and request the first acceptable AuthnContext
+                        return self::getLoginRedirect($request, $authnContext[0]);
+                    }
+                }
+            }
         }
 
         return new UserInfo($userId, $this->getEntitlementList($idpEntityId, $samlAttributes), $authTime);
@@ -152,5 +163,31 @@ class SamlAuthenticationHook implements BeforeHookInterface
         }
 
         return $returnEntitlementList;
+    }
+
+    /**
+     * @param \SURFnet\VPN\Common\Http\Request $request
+     * @param null|string                      $authnContext
+     *
+     * @return \SURFnet\VPN\Common\Http\RedirectResponse
+     */
+    private static function getLoginRedirect(Request $request, $authnContext = null)
+    {
+        // user not (yet) authenticated, redirect to "login" endpoint
+        $returnToQuery = [
+            'ReturnTo' => $request->getUri(),
+        ];
+
+        if (null !== $authnContext) {
+            $returnToQuery['AuthnContext'] = $authnContext;
+        }
+
+        return new RedirectResponse(
+            sprintf(
+                '%s_saml/login?%s',
+                $request->getRootUri(),
+                http_build_query($returnToQuery)
+            )
+        );
     }
 }

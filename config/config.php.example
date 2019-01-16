@@ -102,6 +102,13 @@ return [
         // (Aggregate) SAML metadata file containing the IdP metadata of IdPs 
         // that are allowed to access this service
         'idpMetadata' => '/path/to/idp/metadata.xml',
+
+        // Create a mapping between "entitlement values" and their required 
+        // AuthnContext. Users getting a certain "entitlement" can have a 
+        // "higher" LoA
+        //'entitlementAuthnContextMapping' => [
+        //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'],
+        //],
     ],
 
     // the "entitlement" required to be able to access the "admin" portion of

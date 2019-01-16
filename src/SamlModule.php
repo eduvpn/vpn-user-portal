@@ -63,10 +63,17 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $relayState = $request->getQueryParameter('ReturnTo');
+                // XXX maybe we should support requesting multiple AuthnContexts?
+                $authnContext = $request->getQueryParameter('AuthnContext', false);
+                if (null === $authnContext) {
+                    $authnContext = [];
+                } else {
+                    $authnContext = [$authnContext];
+                }
 
                 // if and entityId is specified, run with it
                 if (null !== $this->idpEntityId) {
-                    return new RedirectResponse($this->sp->login($this->idpEntityId, $relayState));
+                    return new RedirectResponse($this->sp->login($this->idpEntityId, $relayState, $authnContext));
                 }
 
                 // we didn't get an IdP entityId so we MUST perform discovery
@@ -77,7 +84,7 @@ class SamlModule implements ServiceModuleInterface
                 if (null !== $idpEntityId = $request->getQueryParameter('IdP', false)) {
                     // we already came back from the discovery service, use
                     // this IdP
-                    return new RedirectResponse($this->sp->login($idpEntityId, $relayState));
+                    return new RedirectResponse($this->sp->login($idpEntityId, $relayState, $authnContext));
                 }
 
                 // we didn't come back from discovery, so send the browser there
