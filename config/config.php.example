@@ -100,8 +100,8 @@ return [
     //'requireTwoFactor' => true,
 
     // Available 2FA methods
-    'twoFactorMethods' => ['totp'],             // TOTP
-    //'twoFactorMethods' => [],                 // 2FA disabled
+    //'twoFactorMethods' => ['totp'],         // TOTP
+    'twoFactorMethods' => [],                 // 2FA disabled
 
     // supported languages in the UI, the first one mentioned is the default
     'supportedLanguages' => [
