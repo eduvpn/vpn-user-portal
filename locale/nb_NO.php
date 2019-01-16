@@ -45,7 +45,7 @@ return [
     'Group Membership(s)' => 'Gruppetilhørighet',
     'Here you can change the password for your account.' => 'Her kan du endre passordet til kontoen din.',
     'Here you can enroll for two-factor authentication (2FA) using a Time-based One-time Password (TOTP).' => 'Her kan du registrere deg for to-factor autentisering (2FA) med TOTP.',
-    'Highest # Concurrent Connections' => 'Høyest # Samtidige Tilkoblinger'
+    'Highest # Concurrent Connections' => 'Høyest # Samtidige Tilkoblinger',
     'ID' => 'ID',
     'IP Address' => 'IP-Adresse',
     'IP address' => 'IP-adresse',
