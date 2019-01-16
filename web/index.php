@@ -27,7 +27,6 @@ use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\LanguageSwitcherHook;
 use SURFnet\VPN\Common\Http\LdapAuth;
 use SURFnet\VPN\Common\Http\LogoutModule;
-use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
 use SURFnet\VPN\Common\Http\PdoAuth;
 use SURFnet\VPN\Common\Http\RadiusAuth;
 use SURFnet\VPN\Common\Http\Request;
@@ -150,11 +149,6 @@ try {
     $tpl->addDefault(
         [
             'supportedLanguages' => $supportedLanguages,
-            // since we now also support SAML / Mellon logout we *always* show
-            // the logout button (except when showing the login page for
-            // Form*Authentication (to remain backwards compatible with old
-            // "base.twig")
-            '_show_logout' => true,
         ]
     );
 
@@ -171,10 +165,6 @@ try {
     $authMethod = $config->getItem('authMethod');
 
     $logoutUrl = null;
-    if ('MellonAuthentication' === $authMethod) {
-        // mod_auth_mellon
-        $logoutUrl = $request->getAuthority().'/saml/logout';
-    }
     if ('SamlAuthentication' === $authMethod) {
         $logoutUrl = $request->getRootUri().'_saml/logout';
     }
@@ -187,7 +177,7 @@ try {
                 new SamlAuthenticationHook(
                     $session,
                     $config->getSection('SamlAuthentication')->getItem('attribute'),
-                    $config->getSection('SamlAuthentication')->getItem('addEntityID'),
+                    $config->getSection('SamlAuthentication')->getItem('addEntityId'),
                     $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute'),
                     $config->getSection('SamlAuthentication')->optionalItem('entitlementAuthnContextMapping', [])
                 )
@@ -209,18 +199,6 @@ try {
                     ),
                     $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
                     $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
-                )
-            );
-
-            break;
-        case 'MellonAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new MellonAuthenticationHook(
-                    $session,
-                    $config->getSection('MellonAuthentication')->getItem('attribute'),
-                    $config->getSection('MellonAuthentication')->getItem('addEntityID'),
-                    $config->getSection('MellonAuthentication')->optionalItem('entitlementAttribute')
                 )
             );
 

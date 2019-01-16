@@ -9,8 +9,7 @@ return [
     'authMethod' => 'FormPdoAuthentication',        // PDO (database)
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
     //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
-    //'authMethod' => 'MellonAuthentication',       // SAML (mod_auth_mellon)
-    //'authMethod' => 'SamlAuthentication',         // SAML (php-saml-sp)
+    //'authMethod' => 'SamlAuthentication',         // SAML
 
     // Session Expiry
     // - OAuth (refresh_token) validity
@@ -51,26 +50,6 @@ return [
     ],
 
     // SAML
-    'MellonAuthentication' => [
-        'attribute' => 'MELLON_NAME_ID',
-        // 'OID for eduPersonTargetedID
-        //'attribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
-        // OID for eduPersonPrincipalName
-        //'attribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6',
-
-        // add the entityID of the IdP to the user ID. This MUST be enabled
-        // if multiple IdPs are used *and* the attribute used for the user ID
-        // is not enforced to be unique among the different IdPs
-        'addEntityID' => false,
-
-        // ** AUTHORIZATION | ENTITLEMENT **
-        // OID for eduPersonEntitlement
-        //'entitlementAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
-        // OID for eduPersonAffiliation
-        //'entitlementAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_1',
-    ],
-
-    // SAML
     'SamlAuthentication' => [
         // 'OID for eduPersonTargetedID
         'attribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
@@ -80,7 +59,7 @@ return [
         // add the entityID of the IdP to the user ID. This MUST be enabled
         // if multiple IdPs are used *and* the attribute used for the user ID
         // is not enforced to be unique among the different IdPs
-        'addEntityID' => false,
+        'addEntityId' => false,
 
         // ** AUTHORIZATION | ENTITLEMENT **
         // OID for eduPersonEntitlement
