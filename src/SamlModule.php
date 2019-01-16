@@ -29,18 +29,18 @@ class SamlModule implements ServiceModuleInterface
     /** @var \fkooman\SAML\SP\SP */
     private $sp;
 
-    /** @var null|string */
+    /** @var string|null */
     private $discoUrl;
 
-    /** @var null|string */
+    /** @var string|null */
     private $idpEntityId;
 
     /**
      * @param \fkooman\SeCookie\SessionInterface $session
      * @param string                             $spEntityId
      * @param \fkooman\SAML\SP\SP                $sp
-     * @param null|string                        $idpEntityId
-     * @param null|string                        $discoUrl
+     * @param string|null                        $idpEntityId
+     * @param string|null                        $discoUrl
      */
     public function __construct(SessionInterface $session, $spEntityId, SP $sp, $idpEntityId, $discoUrl)
     {

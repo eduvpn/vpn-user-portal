@@ -29,7 +29,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
     /** @var bool */
     private $addEntityId;
 
-    /** @var null|string */
+    /** @var string|null */
     private $entitlementAttribute;
 
     /** @var array<string,array<string>> */
@@ -39,7 +39,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
      * @param \fkooman\SeCookie\SessionInterface $session
      * @param string                             $userIdAttribute
      * @param bool                               $addEntityId
-     * @param null|string                        $entitlementAttribute
+     * @param string|null                        $entitlementAttribute
      * @param array<string,array<string>>        $entitlementAuthnContextMapping
      */
     public function __construct(SessionInterface $session, $userIdAttribute, $addEntityId, $entitlementAttribute, array $entitlementAuthnContextMapping)
@@ -167,7 +167,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
 
     /**
      * @param \SURFnet\VPN\Common\Http\Request $request
-     * @param null|string                      $authnContext
+     * @param string|null                      $authnContext
      *
      * @return \SURFnet\VPN\Common\Http\RedirectResponse
      */

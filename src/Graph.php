@@ -19,7 +19,7 @@ class Graph
     /** @var \DateTime */
     private $dateTime;
 
-    /** @var null|string */
+    /** @var string|null */
     private $fontFile = null;
 
     /** @var int */

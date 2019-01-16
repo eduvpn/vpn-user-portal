@@ -61,12 +61,12 @@ class Response
     /**
      * @param string $key
      *
-     * @return null|string
+     * @return string|null
      */
     public function getHeader($key)
     {
         foreach ($this->responseHeaders as $k => $v) {
-            if (\strtoupper($key) === \strtoupper($k)) {
+            if (strtoupper($key) === strtoupper($k)) {
                 return $v;
             }
         }
