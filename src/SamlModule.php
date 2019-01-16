@@ -63,13 +63,9 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $relayState = $request->getQueryParameter('ReturnTo');
-                // XXX maybe we should support requesting multiple AuthnContexts?
-                $authnContext = $request->getQueryParameter('AuthnContext', false);
-                if (null === $authnContext) {
-                    $authnContext = [];
-                } else {
-                    $authnContext = [$authnContext];
-                }
+
+                $authnContext = $this->session->has('_saml_auth_acr') ? $this->session->get('_saml_auth_acr') : [];
+                $this->session->delete('_saml_auth_acr');
 
                 // if and entityId is specified, run with it
                 if (null !== $this->idpEntityId) {

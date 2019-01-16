@@ -127,7 +127,9 @@ class SamlAuthenticationHook implements BeforeHookInterface
                     if (!\in_array($userAuthnContext, $authnContext, true)) {
                         // we do not have the required AuthnContext, trigger login
                         // and request the first acceptable AuthnContext
-                        return self::getLoginRedirect($request, $authnContext[0]);
+                        $this->session->set('_saml_auth_acr', $authnContext);
+
+                        return self::getLoginRedirect($request);
                     }
                 }
             }
@@ -167,26 +169,21 @@ class SamlAuthenticationHook implements BeforeHookInterface
 
     /**
      * @param \SURFnet\VPN\Common\Http\Request $request
-     * @param string|null                      $authnContext
      *
      * @return \SURFnet\VPN\Common\Http\RedirectResponse
      */
-    private static function getLoginRedirect(Request $request, $authnContext = null)
+    private static function getLoginRedirect(Request $request)
     {
         // user not (yet) authenticated, redirect to "login" endpoint
-        $returnToQuery = [
-            'ReturnTo' => $request->getUri(),
-        ];
-
-        if (null !== $authnContext) {
-            $returnToQuery['AuthnContext'] = $authnContext;
-        }
-
         return new RedirectResponse(
             sprintf(
                 '%s_saml/login?%s',
                 $request->getRootUri(),
-                http_build_query($returnToQuery)
+                http_build_query(
+                    [
+                        'ReturnTo' => $request->getUri(),
+                    ]
+                )
             )
         );
     }
