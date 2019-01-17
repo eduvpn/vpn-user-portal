@@ -3,16 +3,16 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use fkooman\OAuth\Server\Storage;
 use fkooman\SqliteMigrate\Migration;
+use LetsConnect\Common\HttpClient\ServerClient;
 use PDO;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
 
 /**
  * By using this class we make sure the user is not disabled by the admin when
@@ -26,7 +26,7 @@ class OAuthStorage extends Storage
 {
     const CURRENT_SCHEMA_VERSION = '0000000000';
 
-    /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
+    /** @var \LetsConnect\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /** @var \fkooman\SqliteMigrate\Migration */
@@ -35,7 +35,7 @@ class OAuthStorage extends Storage
     /**
      * @param \PDO                                        $db
      * @param string                                      $schemaDir
-     * @param \SURFnet\VPN\Common\HttpClient\ServerClient $serverClient
+     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
      */
     public function __construct(PDO $db, $schemaDir, ServerClient $serverClient)
     {

@@ -3,23 +3,23 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal\Tests;
+namespace LetsConnect\Portal\Tests;
 
 use DateTime;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\SodiumSigner;
+use LetsConnect\Common\Config;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Portal\BearerAuthenticationHook;
+use LetsConnect\Portal\OAuthStorage;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Portal\BearerAuthenticationHook;
-use SURFnet\VPN\Portal\OAuthStorage;
 
 class BearerAuthenticationHookTest extends TestCase
 {

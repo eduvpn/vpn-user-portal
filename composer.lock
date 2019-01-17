@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "07332b971d223e6615c9194ae2f81cf3be263c6d"
+                "reference": "1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/07332b971d223e6615c9194ae2f81cf3be263c6d",
-                "reference": "07332b971d223e6615c9194ae2f81cf3be263c6d",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238",
+                "reference": "1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238",
                 "shasum": ""
             },
             "require": {
@@ -92,8 +92,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "SURFnet\\VPN\\Common\\": "src/",
-                    "SURFnet\\VPN\\Common\\Tests\\": "tests/"
+                    "LetsConnect\\Common\\": "src/",
+                    "LetsConnect\\Common\\Tests\\": "tests/"
                 }
             },
             "license": [
@@ -110,7 +110,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-01-16T12:14:51+00:00"
+            "time": "2019-01-17T12:28:35+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -174,7 +174,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "5a582f5b94f72f5bbea8052fd9ed7944522149b3"
+                "reference": "1f389b92a509145fca60a3aeb53f7c8a125d01c5"
             },
             "require": {
                 "ext-date": "*",
@@ -217,7 +217,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-01-16T15:58:41+00:00"
+            "time": "2019-01-17T00:03:15+00:00"
         },
         {
             "name": "fkooman/secookie",

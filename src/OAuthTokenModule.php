@@ -3,18 +3,18 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Response;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Response;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\ServiceModuleInterface;
 
 class OAuthTokenModule implements ServiceModuleInterface
 {
@@ -34,7 +34,7 @@ class OAuthTokenModule implements ServiceModuleInterface
         $service->post(
             '/token',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 try {

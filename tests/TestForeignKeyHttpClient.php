@@ -3,15 +3,15 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal\Tests;
+namespace LetsConnect\Portal\Tests;
 
+use LetsConnect\Portal\HttpClient\HttpClientInterface;
+use LetsConnect\Portal\HttpClient\Response;
 use RuntimeException;
-use SURFnet\VPN\Portal\HttpClient\HttpClientInterface;
-use SURFnet\VPN\Portal\HttpClient\Response;
 
 class TestForeignKeyHttpClient implements HttpClientInterface
 {

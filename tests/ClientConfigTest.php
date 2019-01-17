@@ -3,14 +3,14 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal\Tests;
+namespace LetsConnect\Portal\Tests;
 
+use LetsConnect\Portal\ClientConfig;
 use PHPUnit\Framework\TestCase;
-use SURFnet\VPN\Portal\ClientConfig;
 
 class ClientConfigTest extends TestCase
 {

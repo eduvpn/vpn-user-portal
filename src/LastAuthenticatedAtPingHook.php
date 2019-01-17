@@ -3,19 +3,19 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use fkooman\SeCookie\SessionInterface;
-use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\Json;
+use LetsConnect\Common\Http\BeforeHookInterface;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Common\Json;
 
 /**
  * This hook is used to record the time stamp of the last user authentication
@@ -26,12 +26,12 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
+    /** @var \LetsConnect\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /**
      * @param \fkooman\SeCookie\SessionInterface          $session
-     * @param \SURFnet\VPN\Common\HttpClient\ServerClient $serverClient
+     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
      */
     public function __construct(SessionInterface $session, ServerClient $serverClient)
     {
@@ -40,7 +40,7 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
     }
 
     /**
-     * @param \SURFnet\VPN\Common\Http\Request $request
+     * @param \LetsConnect\Common\Http\Request $request
      * @param array                            $hookData
      *
      * @return false|void
@@ -71,7 +71,7 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-        /** @var \SURFnet\VPN\Common\Http\UserInfo */
+        /** @var \LetsConnect\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
         $this->serverClient->post(
             'last_authenticated_at_ping',

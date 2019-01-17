@@ -3,20 +3,20 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use fkooman\SAML\SP\SP;
 use fkooman\SeCookie\SessionInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Response;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\RedirectResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Response;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\ServiceModuleInterface;
 
 class SamlModule implements ServiceModuleInterface
 {
@@ -59,7 +59,7 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/login',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $relayState = $request->getQueryParameter('ReturnTo');
@@ -108,7 +108,7 @@ class SamlModule implements ServiceModuleInterface
         $service->post(
             '/_saml/acs',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $this->sp->handleResponse(
@@ -122,7 +122,7 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/logout',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 if (null === $samlResponse = $request->getQueryParameter('SAMLResponse', false)) {
@@ -148,7 +148,7 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/metadata',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $response = new Response(200, 'application/samlmetadata+xml');

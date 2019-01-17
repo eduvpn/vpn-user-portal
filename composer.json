@@ -11,12 +11,12 @@
             "src/sodium_compat.php"
         ],
         "psr-4": {
-            "SURFnet\\VPN\\Portal\\": "src/"
+            "LetsConnect\\Portal\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SURFnet\\VPN\\Portal\\Tests\\": "tests/"
+            "LetsConnect\\Portal\\Tests\\": "tests/"
         }
     },
     "description": "VPN User Portal",

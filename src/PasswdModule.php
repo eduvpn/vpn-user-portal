@@ -3,27 +3,27 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
-use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\InputValidation;
-use SURFnet\VPN\Common\Http\PdoAuth;
-use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\TplInterface;
+use LetsConnect\Common\Http\HtmlResponse;
+use LetsConnect\Common\Http\InputValidation;
+use LetsConnect\Common\Http\PdoAuth;
+use LetsConnect\Common\Http\RedirectResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\ServiceModuleInterface;
+use LetsConnect\Common\TplInterface;
 
 class PasswdModule implements ServiceModuleInterface
 {
-    /** @var \SURFnet\VPN\Common\TplInterface */
+    /** @var \LetsConnect\Common\TplInterface */
     private $tpl;
 
-    /** @var \SURFnet\VPN\Common\Http\PdoAuth */
+    /** @var \LetsConnect\Common\Http\PdoAuth */
     private $pdoAuth;
 
     public function __construct(TplInterface $tpl, PdoAuth $pdoAuth)
@@ -40,7 +40,7 @@ class PasswdModule implements ServiceModuleInterface
         $service->get(
             '/passwd',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -59,7 +59,7 @@ class PasswdModule implements ServiceModuleInterface
         $service->post(
             '/passwd',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];

@@ -3,16 +3,16 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use DateInterval;
 use DateTime;
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Portal\Exception\GraphException;
+use LetsConnect\Common\FileIO;
+use LetsConnect\Portal\Exception\GraphException;
 
 class Graph
 {
@@ -92,7 +92,7 @@ class Graph
         }
 
         if (null === $toHuman) {
-            $toHuman = ['\SURFnet\VPN\Portal\Graph', 'toHumanDummy'];
+            $toHuman = ['\LetsConnect\Portal\Graph', 'toHumanDummy'];
         }
 
         $dateList = $this->createDateList($dateInterval);

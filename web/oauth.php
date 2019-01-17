@@ -3,7 +3,7 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
@@ -12,18 +12,18 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
+use LetsConnect\Common\Config;
+use LetsConnect\Common\FileIO;
+use LetsConnect\Common\Http\JsonResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\HttpClient\CurlHttpClient;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Common\Logger;
+use LetsConnect\Portal\ClientFetcher;
+use LetsConnect\Portal\OAuthStorage;
+use LetsConnect\Portal\OAuthTokenModule;
 use ParagonIE\ConstantTime\Base64;
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\Http\JsonResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Portal\ClientFetcher;
-use SURFnet\VPN\Portal\OAuthStorage;
-use SURFnet\VPN\Portal\OAuthTokenModule;
 
 $logger = new Logger('vpn-user-portal');
 

@@ -3,20 +3,20 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use DateTime;
 use fkooman\SeCookie\SessionInterface;
-use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\UserInfo;
+use LetsConnect\Common\Http\BeforeHookInterface;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\RedirectResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\UserInfo;
 
 class SamlAuthenticationHook implements BeforeHookInterface
 {
@@ -52,10 +52,10 @@ class SamlAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param \SURFnet\VPN\Common\Http\Request $request
+     * @param \LetsConnect\Common\Http\Request $request
      * @param array                            $hookData
      *
-     * @return false|\SURFnet\VPN\Common\Http\RedirectResponse|\SURFnet\VPN\Common\Http\UserInfo
+     * @return false|\LetsConnect\Common\Http\RedirectResponse|\LetsConnect\Common\Http\UserInfo
      */
     public function executeBefore(Request $request, array $hookData)
     {
@@ -168,9 +168,9 @@ class SamlAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param \SURFnet\VPN\Common\Http\Request $request
+     * @param \LetsConnect\Common\Http\Request $request
      *
-     * @return \SURFnet\VPN\Common\Http\RedirectResponse
+     * @return \LetsConnect\Common\Http\RedirectResponse
      */
     private static function getLoginRedirect(Request $request)
     {

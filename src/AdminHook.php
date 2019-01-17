@@ -3,17 +3,17 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
-use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\TplInterface;
+use LetsConnect\Common\Http\BeforeHookInterface;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\TplInterface;
 
 /**
  * Augments the "template" with information about whether or not the user is
@@ -24,12 +24,12 @@ class AdminHook implements BeforeHookInterface
     /** @var array<string> */
     private $requiredEntitlementList;
 
-    /** @var \SURFnet\VPN\Common\TplInterface */
+    /** @var \LetsConnect\Common\TplInterface */
     private $tpl;
 
     /**
      * @param array<string>                    $requiredEntitlementList
-     * @param \SURFnet\VPN\Common\TplInterface $tpl
+     * @param \LetsConnect\Common\TplInterface $tpl
      */
     public function __construct(array $requiredEntitlementList, TplInterface &$tpl)
     {

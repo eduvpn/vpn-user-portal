@@ -3,42 +3,42 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use DateInterval;
 use DateTime;
 use fkooman\SeCookie\SessionInterface;
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\InputValidation;
-use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Response;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\TplInterface;
+use LetsConnect\Common\Config;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\HtmlResponse;
+use LetsConnect\Common\Http\InputValidation;
+use LetsConnect\Common\Http\RedirectResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Response;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\ServiceModuleInterface;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Common\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
-    /** @var \SURFnet\VPN\Common\Config */
+    /** @var \LetsConnect\Common\Config */
     private $config;
 
-    /** @var \SURFnet\VPN\Common\TplInterface */
+    /** @var \LetsConnect\Common\TplInterface */
     private $tpl;
 
-    /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
+    /** @var \LetsConnect\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \SURFnet\VPN\Portal\OAuthStorage */
+    /** @var \LetsConnect\Portal\OAuthStorage */
     private $storage;
 
     /** @var \DateInterval */
@@ -79,7 +79,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request) {
                 return new RedirectResponse($request->getRootUri().'new', 302);
@@ -89,7 +89,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/new',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -120,7 +120,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/new',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -155,7 +155,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/certificates',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -188,7 +188,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/deleteCertificate',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
@@ -202,7 +202,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/events',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -223,7 +223,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -264,7 +264,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/removeClientAuthorization',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -297,7 +297,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/documentation',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function () {
                 return new HtmlResponse(
@@ -353,7 +353,7 @@ class VpnPortalModule implements ServiceModuleInterface
      * @param string    $displayName
      * @param \DateTime $expiresAt
      *
-     * @return \SURFnet\VPN\Common\Http\Response
+     * @return \LetsConnect\Common\Http\Response
      */
     private function getConfig($serverName, $profileId, $userId, $displayName, DateTime $expiresAt)
     {

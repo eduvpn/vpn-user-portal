@@ -3,7 +3,7 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
@@ -17,40 +17,40 @@ use fkooman\SAML\SP\SpInfo;
 use fkooman\SAML\SP\XmlIdpInfoSource;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
+use LetsConnect\Common\Config;
+use LetsConnect\Common\FileIO;
+use LetsConnect\Common\Http\CsrfProtectionHook;
+use LetsConnect\Common\Http\FormAuthenticationHook;
+use LetsConnect\Common\Http\FormAuthenticationModule;
+use LetsConnect\Common\Http\HtmlResponse;
+use LetsConnect\Common\Http\LanguageSwitcherHook;
+use LetsConnect\Common\Http\LdapAuth;
+use LetsConnect\Common\Http\LogoutModule;
+use LetsConnect\Common\Http\PdoAuth;
+use LetsConnect\Common\Http\RadiusAuth;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\TwoFactorHook;
+use LetsConnect\Common\Http\TwoFactorModule;
+use LetsConnect\Common\HttpClient\CurlHttpClient;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Common\LdapClient;
+use LetsConnect\Common\Logger;
+use LetsConnect\Common\Tpl;
+use LetsConnect\Portal\AdminHook;
+use LetsConnect\Portal\AdminPortalModule;
+use LetsConnect\Portal\ClientFetcher;
+use LetsConnect\Portal\DisabledUserHook;
+use LetsConnect\Portal\Graph;
+use LetsConnect\Portal\LastAuthenticatedAtPingHook;
+use LetsConnect\Portal\OAuthModule;
+use LetsConnect\Portal\OAuthStorage;
+use LetsConnect\Portal\PasswdModule;
+use LetsConnect\Portal\SamlAuthenticationHook;
+use LetsConnect\Portal\SamlModule;
+use LetsConnect\Portal\TwoFactorEnrollModule;
+use LetsConnect\Portal\VpnPortalModule;
 use ParagonIE\ConstantTime\Base64;
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\Http\CsrfProtectionHook;
-use SURFnet\VPN\Common\Http\FormAuthenticationHook;
-use SURFnet\VPN\Common\Http\FormAuthenticationModule;
-use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\LanguageSwitcherHook;
-use SURFnet\VPN\Common\Http\LdapAuth;
-use SURFnet\VPN\Common\Http\LogoutModule;
-use SURFnet\VPN\Common\Http\PdoAuth;
-use SURFnet\VPN\Common\Http\RadiusAuth;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\TwoFactorHook;
-use SURFnet\VPN\Common\Http\TwoFactorModule;
-use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\LdapClient;
-use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Common\Tpl;
-use SURFnet\VPN\Portal\AdminHook;
-use SURFnet\VPN\Portal\AdminPortalModule;
-use SURFnet\VPN\Portal\ClientFetcher;
-use SURFnet\VPN\Portal\DisabledUserHook;
-use SURFnet\VPN\Portal\Graph;
-use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
-use SURFnet\VPN\Portal\OAuthModule;
-use SURFnet\VPN\Portal\OAuthStorage;
-use SURFnet\VPN\Portal\PasswdModule;
-use SURFnet\VPN\Portal\SamlAuthenticationHook;
-use SURFnet\VPN\Portal\SamlModule;
-use SURFnet\VPN\Portal\TwoFactorEnrollModule;
-use SURFnet\VPN\Portal\VpnPortalModule;
 
 $logger = new Logger('vpn-user-portal');
 
