@@ -13,7 +13,7 @@ return [
 
     // Session Expiry
     // - OAuth (refresh_token) validity
-    // - X.509 Client Certificate "Not After" 
+    // - X.509 Client Certificate "Not After"
     //   (time of authentication + sessionExpiry)
     'sessionExpiry' => 'P90D',
     //'sessionExpiry' => 'P1D',     // 1 day
@@ -74,24 +74,25 @@ return [
         // the IdP metadata file
         'idpEntityId' => 'https://idp.example.org/saml',
 
-        // set a URL that performs IdP discovery, all IdPs listed in the 
+        // set a URL that performs IdP discovery, all IdPs listed in the
         // discovery service MUST also be available in the IdP metadata file
         //'discoUrl' => 'http://disco.example.org/index.php',
 
-        // (Aggregate) SAML metadata file containing the IdP metadata of IdPs 
+        // (Aggregate) SAML metadata file containing the IdP metadata of IdPs
         // that are allowed to access this service
         'idpMetadata' => '/path/to/idp/metadata.xml',
 
-        // Create a mapping between "entitlement values" and their required 
-        // AuthnContext. Users getting a certain "entitlement" can have a 
-        // "higher" LoA
+        // Users with certain entitlements obtained through the
+        // "entitlementAttribute" MUST also have ANY of the listed
+        // AuthnContexts. If they currently don't, a new authentication is
+        // performed
         //'entitlementAuthnContextMapping' => [
-        //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'],
+        //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
     ],
 
     // the "entitlement" required to be able to access the "admin" portion of
-    // the portal, see "entitlementAttribute" in the authentication 
+    // the portal, see "entitlementAttribute" in the authentication
     // configuration sections
     'adminEntitlementList' => ['urn:example:LC-admin'],
 
