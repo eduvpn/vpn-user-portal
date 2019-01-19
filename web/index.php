@@ -191,7 +191,6 @@ try {
                         new SpInfo(
                             $spEntityId,
                             $request->getRootUri().'_saml/acs',
-                            $request->getRootUri().'_saml/logout',
                             FileIO::readFile(sprintf('%s/config/sp.key', $baseDir)),
                             FileIO::readFile(sprintf('%s/config/sp.crt', $baseDir))
                         ),

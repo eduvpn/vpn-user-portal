@@ -125,23 +125,9 @@ class SamlModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                if (null === $samlResponse = $request->getQueryParameter('SAMLResponse', false)) {
-                    // this is NOT a response coming from an IdP, so we got
-                    // redirected here because the user pused the "Logout"
-                    // button...
-                    $logoutUrl = $this->sp->logout($request->getQueryParameter('ReturnTo'));
+                $logoutUrl = $this->sp->logout($request->getQueryParameter('ReturnTo'));
 
-                    return new RedirectResponse($logoutUrl);
-                }
-
-                // response from IdP
-                $this->sp->handleLogoutResponse(
-                    $samlResponse,
-                    $request->getQueryParameter('RelayState'),
-                    $request->getQueryParameter('Signature')
-                );
-
-                return new RedirectResponse($request->getQueryParameter('RelayState'));
+                return new RedirectResponse($logoutUrl);
             }
         );
 
