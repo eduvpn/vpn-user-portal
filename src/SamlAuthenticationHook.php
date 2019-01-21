@@ -74,13 +74,13 @@ class SamlAuthenticationHook implements BeforeHookInterface
             return false;
         }
 
-        if (!$this->session->has('_saml_auth_assertion')) {
+        if (!$this->session->has('_fkooman_saml_sp_auth_assertion')) {
             // user not (yet) authenticated, redirect to "login" endpoint
             return self::getLoginRedirect($request);
         }
 
         /** @var \fkooman\SAML\SP\Assertion */
-        $samlAssertion = $this->session->get('_saml_auth_assertion');
+        $samlAssertion = $this->session->get('_fkooman_saml_sp_auth_assertion');
         $idpEntityId = $samlAssertion->getIssuer();
         $samlAttributes = $samlAssertion->getAttributes();
 
