@@ -12,14 +12,14 @@ $baseDir = dirname(__DIR__);
 
 use LetsConnect\Common\FileIO;
 use LetsConnect\Portal\Storage;
+use ParagonIE\ConstantTime\Base64;
 
 try {
     $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir);
-    $keyPairData = base64_encode(sodium_crypto_sign_keypair());
-    $keyPairFile = sprintf('%s/OAuth.key', $dataDir);
-    FileIO::writeFile($keyPairFile, $keyPairData);
-
+    $keyData = Base64::encode(random_bytes(32));
+    $keyFile = sprintf('%s/local.key', $dataDir);
+    FileIO::writeFile($keyFile, $keyData);
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),

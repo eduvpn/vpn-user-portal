@@ -70,8 +70,10 @@ try {
             $storage,
             $clientFetcher,
             new LocalSigner(
-                FileIO::readFile(
-                    sprintf('%s/local_oauth.key', $dataDir)
+                Base64::decode(
+                    FileIO::readFile(
+                        sprintf('%s/local.key', $dataDir)
+                    )
                 )
             )
         );

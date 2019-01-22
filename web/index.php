@@ -49,6 +49,7 @@ use LetsConnect\Portal\SamlModule;
 use LetsConnect\Portal\Storage;
 use LetsConnect\Portal\TwoFactorEnrollModule;
 use LetsConnect\Portal\VpnPortalModule;
+use ParagonIE\ConstantTime\Base64;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -366,8 +367,10 @@ try {
             $storage,
             $clientFetcher,
             new LocalSigner(
-                FileIO::readFile(
-                    sprintf('%s/local_oauth.key', $dataDir)
+                Base64::decode(
+                    FileIO::readFile(
+                        sprintf('%s/local.key', $dataDir)
+                    )
                 )
             )
         );

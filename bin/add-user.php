@@ -66,19 +66,16 @@ try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
     $config = Config::fromFile($configFile);
 
-    switch ($config->getItem('authMethod')) {
-        case 'FormPdoAuthentication':
-
-            $storage = new Storage(
-                new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-                sprintf('%s/schema', $baseDir),
-                new DateTime()
-            );
-            $storage->add($userId, $userPass);
-            break;
-        default:
-            throw new RuntimeException(sprintf('backend "%s" not supported for adding users', $config->getItem('authMethod')));
+    if ('FormPdoAuthentication' !== $config->getItem('authMethod')) {
+        echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->getItem('authMethod')).PHP_EOL;
     }
+
+    $storage = new Storage(
+        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+        sprintf('%s/schema', $baseDir),
+        new DateTime()
+    );
+    $storage->add($userId, $userPass);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
