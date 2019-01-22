@@ -10,7 +10,6 @@
 namespace LetsConnect\Portal;
 
 use fkooman\SAML\SP\SP;
-use fkooman\SeCookie\SessionInterface;
 use LetsConnect\Common\Http\Exception\HttpException;
 use LetsConnect\Common\Http\RedirectResponse;
 use LetsConnect\Common\Http\Request;
@@ -20,34 +19,19 @@ use LetsConnect\Common\Http\ServiceModuleInterface;
 
 class SamlModule implements ServiceModuleInterface
 {
-    /** @var \fkooman\SeCookie\SessionInterface */
-    private $session;
-
-    /** @var string */
-    private $spEntityId;
-
     /** @var \fkooman\SAML\SP\SP */
-    private $sp;
+    private $samlSp;
 
     /** @var string|null */
     private $discoUrl;
 
-    /** @var string|null */
-    private $idpEntityId;
-
     /**
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param string                             $spEntityId
-     * @param \fkooman\SAML\SP\SP                $sp
-     * @param string|null                        $idpEntityId
-     * @param string|null                        $discoUrl
+     * @param \fkooman\SAML\SP\SP $samlSp
+     * @param string|null         $discoUrl
      */
-    public function __construct(SessionInterface $session, $spEntityId, SP $sp, $idpEntityId, $discoUrl)
+    public function __construct(SP $samlSp, $discoUrl)
     {
-        $this->session = $session;
-        $this->spEntityId = $spEntityId;
-        $this->sp = $sp;
-        $this->idpEntityId = $idpEntityId;
+        $this->samlSp = $samlSp;
         $this->discoUrl = $discoUrl;
     }
 
@@ -63,13 +47,14 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $relayState = $request->getQueryParameter('ReturnTo');
+                $idpEntityId = $request->getQueryParameter('IdP', false);
+                $authnContextQuery = $request->getQueryParameter('AuthnContext', false);
+                // XXX is this safe (enough?)
+                $authnContext = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
 
-                $authnContext = $this->session->has('_saml_auth_acr') ? $this->session->get('_saml_auth_acr') : [];
-                $this->session->delete('_saml_auth_acr');
-
-                // if and entityId is specified, run with it
-                if (null !== $this->idpEntityId) {
-                    return new RedirectResponse($this->sp->login($this->idpEntityId, $relayState, $authnContext));
+                // if and entityId is specified, use it
+                if (null !== $idpEntityId) {
+                    return new RedirectResponse($this->samlSp->login($idpEntityId, $relayState, $authnContext));
                 }
 
                 // we didn't get an IdP entityId so we MUST perform discovery
@@ -77,16 +62,10 @@ class SamlModule implements ServiceModuleInterface
                     throw new HttpException('no IdP specified, and no discovery service configured', 500);
                 }
 
-                if (null !== $idpEntityId = $request->getQueryParameter('IdP', false)) {
-                    // we already came back from the discovery service, use
-                    // this IdP
-                    return new RedirectResponse($this->sp->login($idpEntityId, $relayState, $authnContext));
-                }
-
-                // we didn't come back from discovery, so send the browser there
+                // perform discovery
                 $discoQuery = http_build_query(
                     [
-                        'entityID' => $this->spEntityId,
+                        'entityID' => $this->samlSp->getSpInfo()->getEntityId(),
                         'returnIDParam' => 'IdP',
                         'return' => $request->getUri(),
                     ]
@@ -111,7 +90,7 @@ class SamlModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $this->sp->handleResponse(
+                $this->samlSp->handleResponse(
                     $request->getPostParameter('SAMLResponse')
                 );
 
@@ -125,7 +104,7 @@ class SamlModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $logoutUrl = $this->sp->logout($request->getQueryParameter('ReturnTo'));
+                $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
 
                 return new RedirectResponse($logoutUrl);
             }
@@ -138,7 +117,7 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $response = new Response(200, 'application/samlmetadata+xml');
-                $response->setBody($this->sp->metadata());
+                $response->setBody($this->samlSp->metadata());
 
                 return $response;
             }

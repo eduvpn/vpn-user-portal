@@ -172,31 +172,30 @@ try {
     $service->addModule(new LogoutModule($session, $logoutUrl));
     switch ($authMethod) {
         case 'SamlAuthentication':
+            $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
+            $samlSp = new SP(
+                new SpInfo(
+                    $spEntityId,
+                    $request->getRootUri().'_saml/acs',
+                    FileIO::readFile(sprintf('%s/config/sp.key', $baseDir)),
+                    FileIO::readFile(sprintf('%s/config/sp.crt', $baseDir))
+                ),
+                new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
+            );
             $service->addBeforeHook(
                 'auth',
                 new SamlAuthenticationHook(
-                    $session,
+                    $samlSp,
+                    $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
                     $config->getSection('SamlAuthentication')->getItem('attribute'),
                     $config->getSection('SamlAuthentication')->getItem('addEntityId'),
                     $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute'),
                     $config->getSection('SamlAuthentication')->optionalItem('entitlementAuthnContextMapping', [])
                 )
             );
-            $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
             $service->addModule(
                 new SamlModule(
-                    $session,
-                    $spEntityId,
-                    new SP(
-                        new SpInfo(
-                            $spEntityId,
-                            $request->getRootUri().'_saml/acs',
-                            FileIO::readFile(sprintf('%s/config/sp.key', $baseDir)),
-                            FileIO::readFile(sprintf('%s/config/sp.crt', $baseDir))
-                        ),
-                        new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
-                    ),
-                    $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
+                    $samlSp,
                     $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
                 )
             );
