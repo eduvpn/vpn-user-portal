@@ -3,32 +3,32 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use DateInterval;
 use DateTime;
-use SURFnet\VPN\Common\Http\AuthUtils;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\InputValidation;
-use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Response;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\TplInterface;
+use LetsConnect\Common\Http\AuthUtils;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\HtmlResponse;
+use LetsConnect\Common\Http\InputValidation;
+use LetsConnect\Common\Http\RedirectResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Response;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\ServiceModuleInterface;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Common\TplInterface;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
-    /** @var \SURFnet\VPN\Common\TplInterface */
+    /** @var \LetsConnect\Common\TplInterface */
     private $tpl;
 
-    /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
+    /** @var \LetsConnect\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /** @var Graph */
@@ -38,8 +38,8 @@ class AdminPortalModule implements ServiceModuleInterface
     private $dateTimeToday;
 
     /**
-     * @param \SURFnet\VPN\Common\TplInterface            $tpl
-     * @param \SURFnet\VPN\Common\HttpClient\ServerClient $serverClient
+     * @param \LetsConnect\Common\TplInterface            $tpl
+     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
      * @param Graph                                       $graph
      */
     public function __construct(TplInterface $tpl, ServerClient $serverClient, Graph $graph)
@@ -58,7 +58,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/connections',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -86,7 +86,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/info',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -105,7 +105,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/users',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -126,7 +126,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/user',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -155,7 +155,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/user',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -199,7 +199,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/log',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -220,7 +220,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -257,7 +257,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats/traffic',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -312,7 +312,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats/users',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -341,7 +341,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/messages',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -369,7 +369,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/messages',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -406,7 +406,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/log',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);

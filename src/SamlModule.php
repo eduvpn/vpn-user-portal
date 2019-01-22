@@ -3,51 +3,36 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
+use fkooman\SAML\SP\Exception\SamlException;
 use fkooman\SAML\SP\SP;
-use fkooman\SeCookie\SessionInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Response;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\RedirectResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Response;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\ServiceModuleInterface;
 
 class SamlModule implements ServiceModuleInterface
 {
-    /** @var \fkooman\SeCookie\SessionInterface */
-    private $session;
-
-    /** @var string */
-    private $spEntityId;
-
     /** @var \fkooman\SAML\SP\SP */
-    private $sp;
+    private $samlSp;
 
-    /** @var null|string */
+    /** @var string|null */
     private $discoUrl;
 
-    /** @var null|string */
-    private $idpEntityId;
-
     /**
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param string                             $spEntityId
-     * @param \fkooman\SAML\SP\SP                $sp
-     * @param null|string                        $idpEntityId
-     * @param null|string                        $discoUrl
+     * @param \fkooman\SAML\SP\SP $samlSp
+     * @param string|null         $discoUrl
      */
-    public function __construct(SessionInterface $session, $spEntityId, SP $sp, $idpEntityId, $discoUrl)
+    public function __construct(SP $samlSp, $discoUrl)
     {
-        $this->session = $session;
-        $this->spEntityId = $spEntityId;
-        $this->sp = $sp;
-        $this->idpEntityId = $idpEntityId;
+        $this->samlSp = $samlSp;
         $this->discoUrl = $discoUrl;
     }
 
@@ -59,97 +44,89 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/login',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $relayState = $request->getQueryParameter('ReturnTo');
+                try {
+                    $relayState = $request->getQueryParameter('ReturnTo');
+                    $idpEntityId = $request->getQueryParameter('IdP', false);
+                    $authnContextQuery = $request->getQueryParameter('AuthnContext', false);
+                    // XXX is this safe (enough?)
+                    $authnContext = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
 
-                // if and entityId is specified, run with it
-                if (null !== $this->idpEntityId) {
-                    return new RedirectResponse($this->sp->login($this->idpEntityId, $relayState));
+                    // if and entityId is specified, use it
+                    if (null !== $idpEntityId) {
+                        return new RedirectResponse($this->samlSp->login($idpEntityId, $relayState, $authnContext));
+                    }
+
+                    // we didn't get an IdP entityId so we MUST perform discovery
+                    if (null === $this->discoUrl) {
+                        throw new HttpException('no IdP specified, and no discovery service configured', 500);
+                    }
+
+                    // perform discovery
+                    $discoQuery = http_build_query(
+                        [
+                            'entityID' => $this->samlSp->getSpInfo()->getEntityId(),
+                            'returnIDParam' => 'IdP',
+                            'return' => $request->getUri(),
+                        ]
+                    );
+
+                    $querySeparator = false === strpos($this->discoUrl, '?') ? '?' : '&';
+
+                    return new RedirectResponse(
+                        sprintf(
+                            '%s%s%s',
+                            $this->discoUrl,
+                            $querySeparator,
+                            $discoQuery
+                        )
+                    );
+                } catch (SamlException $e) {
+                    throw new HttpException($e->getMessage(), 500, [], $e);
                 }
-
-                // we didn't get an IdP entityId so we MUST perform discovery
-                if (null === $this->discoUrl) {
-                    throw new HttpException('no IdP specified, and no discovery service configured', 500);
-                }
-
-                if (null !== $idpEntityId = $request->getQueryParameter('IdP', false)) {
-                    // we already came back from the discovery service, use
-                    // this IdP
-                    return new RedirectResponse($this->sp->login($idpEntityId, $relayState));
-                }
-
-                // we didn't come back from discovery, so send the browser there
-                $discoQuery = http_build_query(
-                    [
-                        'entityID' => $this->spEntityId,
-                        'returnIDParam' => 'IdP',
-                        'return' => $request->getUri(),
-                    ]
-                );
-
-                $querySeparator = false === strpos($this->discoUrl, '?') ? '?' : '&';
-
-                return new RedirectResponse(
-                    sprintf(
-                        '%s%s%s',
-                        $this->discoUrl,
-                        $querySeparator,
-                        $discoQuery
-                    )
-                );
             }
         );
 
         $service->post(
             '/_saml/acs',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $this->sp->handleResponse(
-                    $request->getPostParameter('SAMLResponse')
-                );
+                try {
+                    $this->samlSp->handleResponse(
+                        $request->getPostParameter('SAMLResponse')
+                    );
 
-                return new RedirectResponse($request->getPostParameter('RelayState'));
+                    return new RedirectResponse($request->getPostParameter('RelayState'));
+                } catch (SamlException $e) {
+                    throw new HttpException($e->getMessage(), 500, [], $e);
+                }
             }
         );
 
         $service->get(
             '/_saml/logout',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                if (null === $samlResponse = $request->getQueryParameter('SAMLResponse', false)) {
-                    // this is NOT a response coming from an IdP, so we got
-                    // redirected here because the user pused the "Logout"
-                    // button...
-                    $logoutUrl = $this->sp->logout($request->getQueryParameter('ReturnTo'));
+                $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
 
-                    return new RedirectResponse($logoutUrl);
-                }
-
-                // response from IdP
-                $this->sp->handleLogoutResponse(
-                    $samlResponse,
-                    $request->getQueryParameter('RelayState'),
-                    $request->getQueryParameter('Signature')
-                );
-
-                return new RedirectResponse($request->getQueryParameter('RelayState'));
+                return new RedirectResponse($logoutUrl);
             }
         );
 
         $service->get(
             '/_saml/metadata',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $response = new Response(200, 'application/samlmetadata+xml');
-                $response->setBody($this->sp->metadata());
+                $response->setBody($this->samlSp->metadata());
 
                 return $response;
             }

@@ -3,17 +3,17 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
-use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
+use LetsConnect\Common\Http\BeforeHookInterface;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\HttpClient\ServerClient;
 
 /**
  * This hook is used to check if a user is disabled before allowing any other
@@ -21,7 +21,7 @@ use SURFnet\VPN\Common\HttpClient\ServerClient;
  */
 class DisabledUserHook implements BeforeHookInterface
 {
-    /** @var \SURFnet\VPN\Common\HttpClient\ServerClient */
+    /** @var \LetsConnect\Common\HttpClient\ServerClient */
     private $serverClient;
 
     public function __construct(ServerClient $serverClient)
@@ -50,7 +50,7 @@ class DisabledUserHook implements BeforeHookInterface
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-        /** @var \SURFnet\VPN\Common\Http\UserInfo */
+        /** @var \LetsConnect\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
         if ($this->serverClient->get('is_disabled_user', ['user_id' => $userInfo->id()])) {
             // user is disabled, show a special message

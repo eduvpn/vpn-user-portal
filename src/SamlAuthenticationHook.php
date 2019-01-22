@@ -3,25 +3,27 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
-use DateTime;
-use fkooman\SeCookie\SessionInterface;
-use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\UserInfo;
+use fkooman\SAML\SP\SP;
+use LetsConnect\Common\Http\BeforeHookInterface;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\RedirectResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\UserInfo;
 
 class SamlAuthenticationHook implements BeforeHookInterface
 {
-    /** @var \fkooman\SeCookie\SessionInterface */
-    private $session;
+    /** @var \fkooman\SAML\SP\SP */
+    private $samlSp;
+
+    /** @var string|null */
+    private $idpEntityId;
 
     /** @var string */
     private $userIdAttribute;
@@ -29,28 +31,35 @@ class SamlAuthenticationHook implements BeforeHookInterface
     /** @var bool */
     private $addEntityId;
 
-    /** @var null|string */
+    /** @var string|null */
     private $entitlementAttribute;
 
+    /** @var array<string,array<string>> */
+    private $entitlementAuthnContextMapping;
+
     /**
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param string                             $userIdAttribute
-     * @param bool                               $addEntityId
-     * @param null|string                        $entitlementAttribute
+     * @param \fkooman\SAML\SP\SP         $samlSp
+     * @param string|null                 $idpEntityId
+     * @param string                      $userIdAttribute
+     * @param bool                        $addEntityId
+     * @param string|null                 $entitlementAttribute
+     * @param array<string,array<string>> $entitlementAuthnContextMapping
      */
-    public function __construct(SessionInterface $session, $userIdAttribute, $addEntityId, $entitlementAttribute)
+    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, $addEntityId, $entitlementAttribute, array $entitlementAuthnContextMapping)
     {
-        $this->session = $session;
+        $this->samlSp = $samlSp;
+        $this->idpEntityId = $idpEntityId;
         $this->userIdAttribute = $userIdAttribute;
         $this->addEntityId = $addEntityId;
         $this->entitlementAttribute = $entitlementAttribute;
+        $this->entitlementAuthnContextMapping = $entitlementAuthnContextMapping;
     }
 
     /**
-     * @param Request $request
-     * @param array   $hookData
+     * @param \LetsConnect\Common\Http\Request $request
+     * @param array                            $hookData
      *
-     * @return false|\SURFnet\VPN\Common\Http\RedirectResponse|\SURFnet\VPN\Common\Http\UserInfo
+     * @return false|\LetsConnect\Common\Http\RedirectResponse|\LetsConnect\Common\Http\UserInfo
      */
     public function executeBefore(Request $request, array $hookData)
     {
@@ -69,25 +78,11 @@ class SamlAuthenticationHook implements BeforeHookInterface
             return false;
         }
 
-        if (!$this->session->has('_saml_auth_assertion')) {
+        if (false === $samlAssertion = $this->samlSp->getAssertion()) {
             // user not (yet) authenticated, redirect to "login" endpoint
-            $returnToQuery = http_build_query(
-                [
-                    'ReturnTo' => $request->getUri(),
-                ]
-            );
-
-            return new RedirectResponse(
-                sprintf(
-                    '%s_saml/login?%s',
-                    $request->getRootUri(),
-                    $returnToQuery
-                )
-            );
+            return self::getLoginRedirect($request, $this->idpEntityId);
         }
 
-        /** @var \fkooman\SAML\SP\Assertion */
-        $samlAssertion = $this->session->get('_saml_auth_assertion');
         $idpEntityId = $samlAssertion->getIssuer();
         $samlAttributes = $samlAssertion->getAttributes();
 
@@ -113,16 +108,29 @@ class SamlAuthenticationHook implements BeforeHookInterface
             );
         }
 
-        // XXX we should get the time of the user authentication from the SAML
-        // assertion!
-        if ($this->session->has('_saml_auth_time')) {
-            $authTime = new DateTime($this->session->get('_saml_auth_time'));
-        } else {
-            $authTime = new DateTime();
-            $this->session->set('_saml_auth_time', $authTime->format(DateTime::ATOM));
+        $userAuthnContext = $samlAssertion->getAuthnContext();
+        if (null !== $this->entitlementAttribute) {
+            $userEntitlements = $samlAttributes[$this->entitlementAttribute];
+
+            // if we got an entitlement that's part of the
+            // entitlementAuthnContextMapping we have to make sure we have one of
+            // the listed AuthnContexts
+            foreach ($this->entitlementAuthnContextMapping as $entitlement => $authnContext) {
+                if (\in_array($entitlement, $userEntitlements, true)) {
+                    if (!\in_array($userAuthnContext, $authnContext, true)) {
+                        // we do not have the required AuthnContext, trigger login
+                        // and request the first acceptable AuthnContext
+                        return self::getLoginRedirect($request, $idpEntityId, $authnContext);
+                    }
+                }
+            }
         }
 
-        return new UserInfo($userId, $this->getEntitlementList($idpEntityId, $samlAttributes), $authTime);
+        return new UserInfo(
+            $userId,
+            $this->getEntitlementList($idpEntityId, $samlAttributes),
+            $samlAssertion->getAuthnInstant()
+        );
     }
 
     /**
@@ -152,5 +160,34 @@ class SamlAuthenticationHook implements BeforeHookInterface
         }
 
         return $returnEntitlementList;
+    }
+
+    /**
+     * @param \LetsConnect\Common\Http\Request $request
+     * @param string|null                      $idpEntityId
+     * @param array<string>                    $authnContext
+     *
+     * @return \LetsConnect\Common\Http\RedirectResponse
+     */
+    private static function getLoginRedirect(Request $request, $idpEntityId, array $authnContext = [])
+    {
+        $httpQuery = [
+            'ReturnTo' => $request->getUri(),
+        ];
+        if (null !== $idpEntityId) {
+            $httpQuery['IdP'] = $idpEntityId;
+        }
+        if (0 !== \count($authnContext)) {
+            $httpQuery['AuthnContext'] = implode(',', $authnContext);
+        }
+
+        // redirect to SamlModule "login" endpoint
+        return new RedirectResponse(
+            sprintf(
+                '%s_saml/login?%s',
+                $request->getRootUri(),
+                http_build_query($httpQuery)
+            )
+        );
     }
 }

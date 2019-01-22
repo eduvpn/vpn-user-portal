@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "b04fb4e20b70f6870cc2d038954a123ec0472721"
+                "reference": "1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/b04fb4e20b70f6870cc2d038954a123ec0472721",
-                "reference": "b04fb4e20b70f6870cc2d038954a123ec0472721",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238",
+                "reference": "1fdb9447cbfc41eeaad6abb5d7cac4bb1471e238",
                 "shasum": ""
             },
             "require": {
@@ -92,8 +92,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "SURFnet\\VPN\\Common\\": "src/",
-                    "SURFnet\\VPN\\Common\\Tests\\": "tests/"
+                    "LetsConnect\\Common\\": "src/",
+                    "LetsConnect\\Common\\Tests\\": "tests/"
                 }
             },
             "license": [
@@ -110,7 +110,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-01-15T16:35:23+00:00"
+            "time": "2019-01-17T12:28:35+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -118,7 +118,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-oauth2-server",
-                "reference": "e14721e48b123e6052a9fbd6a44794268c3ce764"
+                "reference": "585471ae731c9ef0fbc79579280a66bdc5f88f25"
             },
             "require": {
                 "ext-date": "*",
@@ -160,7 +160,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-oauth2-server"
             },
-            "time": "2018-11-26T20:47:20+00:00"
+            "time": "2019-01-22T20:08:12+00:00"
         },
         {
             "name": "fkooman/php-saml-sp",
@@ -168,7 +168,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "3b8f0f53a32314375360503f6021c92398443891"
+                "reference": "741ba5b21aee8e72ba02406eaebdb71966060d3a"
             },
             "require": {
                 "ext-date": "*",
@@ -211,7 +211,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-01-15T13:52:01+00:00"
+            "time": "2019-01-22T17:05:01+00:00"
         },
         {
             "name": "fkooman/secookie",

@@ -3,33 +3,32 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
-use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\InputValidation;
-use SURFnet\VPN\Common\Http\PdoAuth;
-use SURFnet\VPN\Common\Http\RedirectResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\TplInterface;
+use LetsConnect\Common\Http\HtmlResponse;
+use LetsConnect\Common\Http\InputValidation;
+use LetsConnect\Common\Http\RedirectResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\ServiceModuleInterface;
+use LetsConnect\Common\TplInterface;
 
 class PasswdModule implements ServiceModuleInterface
 {
-    /** @var \SURFnet\VPN\Common\TplInterface */
+    /** @var \LetsConnect\Common\TplInterface */
     private $tpl;
 
-    /** @var \SURFnet\VPN\Common\Http\PdoAuth */
-    private $pdoAuth;
+    /** @var \LetsConnect\Portal\Storage */
+    private $storage;
 
-    public function __construct(TplInterface $tpl, PdoAuth $pdoAuth)
+    public function __construct(TplInterface $tpl, Storage $storage)
     {
         $this->tpl = $tpl;
-        $this->pdoAuth = $pdoAuth;
+        $this->storage = $storage;
     }
 
     /**
@@ -40,7 +39,7 @@ class PasswdModule implements ServiceModuleInterface
         $service->get(
             '/passwd',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -59,7 +58,7 @@ class PasswdModule implements ServiceModuleInterface
         $service->post(
             '/passwd',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -68,7 +67,7 @@ class PasswdModule implements ServiceModuleInterface
                 $newUserPass = InputValidation::userPass($request->getPostParameter('newUserPass'));
                 $newUserPassConfirm = InputValidation::userPass($request->getPostParameter('newUserPassConfirm'));
 
-                if (!$this->pdoAuth->isValid($userInfo->id(), $userPass)) {
+                if (!$this->storage->isValid($userInfo->id(), $userPass)) {
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalPasswd',
@@ -92,7 +91,7 @@ class PasswdModule implements ServiceModuleInterface
                     );
                 }
 
-                if (!$this->pdoAuth->updatePassword($userInfo->id(), $newUserPass)) {
+                if (!$this->storage->updatePassword($userInfo->id(), $newUserPass)) {
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalPasswd',

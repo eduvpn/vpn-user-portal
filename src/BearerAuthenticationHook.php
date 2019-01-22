@@ -3,17 +3,17 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\OAuthException;
-use SURFnet\VPN\Common\Http\BeforeHookInterface;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Response;
+use LetsConnect\Common\Http\BeforeHookInterface;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Response;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
@@ -26,7 +26,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @return \fkooman\OAuth\Server\AccessTokenInfo|\SURFnet\VPN\Common\Http\Response
+     * @return \fkooman\OAuth\Server\AccessTokenInfo|\LetsConnect\Common\Http\Response
      */
     public function executeBefore(Request $request, array $hookData)
     {

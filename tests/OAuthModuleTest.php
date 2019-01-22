@@ -3,30 +3,30 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal\Tests;
+namespace LetsConnect\Portal\Tests;
 
 use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
+use LetsConnect\Common\Config;
+use LetsConnect\Common\Http\NullAuthenticationHook;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Portal\OAuthModule;
+use LetsConnect\Portal\OAuthStorage;
 use PDO;
 use PHPUnit\Framework\TestCase;
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\Http\NullAuthenticationHook;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Portal\OAuthModule;
-use SURFnet\VPN\Portal\OAuthStorage;
 
 class OAuthModuleTest extends TestCase
 {
-    /** @var \SURFnet\VPN\Common\Http\Service */
+    /** @var \LetsConnect\Common\Http\Service */
     private $service;
 
     public function setUp()

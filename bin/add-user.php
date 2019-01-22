@@ -1,22 +1,22 @@
-#!/usr/bin/env php
 <?php
 
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use SURFnet\VPN\Common\CliParser;
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\Http\PdoAuth;
+use LetsConnect\Common\CliParser;
+use LetsConnect\Common\Config;
+use LetsConnect\Portal\Storage;
 
 try {
+    $dataDir = sprintf('%s/data', $baseDir);
+
     $p = new CliParser(
         'Add a user to the portal',
         [
@@ -68,16 +68,13 @@ try {
 
     switch ($config->getItem('authMethod')) {
         case 'FormPdoAuthentication':
-            // users/hashes stored in DB
-            $dbFile = sprintf('%s/data/userdb.sqlite', $baseDir);
-            FileIO::createDir(dirname($dbFile), 0700);
-            $pdoAuth = new PdoAuth(
-                new PDO(
-                   sprintf('sqlite://%s', $dbFile)
-                )
+
+            $storage = new Storage(
+                new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+                sprintf('%s/schema', $baseDir),
+                new DateTime()
             );
-            $pdoAuth->init();
-            $pdoAuth->add($userId, $userPass);
+            $storage->add($userId, $userPass);
             break;
         default:
             throw new RuntimeException(sprintf('backend "%s" not supported for adding users', $config->getItem('authMethod')));

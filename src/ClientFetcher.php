@@ -3,19 +3,19 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\ClientInfo;
-use SURFnet\VPN\Common\Config;
+use LetsConnect\Common\Config;
 
 class ClientFetcher implements ClientDbInterface
 {
-    /** @var \SURFnet\VPN\Common\Config */
+    /** @var \LetsConnect\Common\Config */
     private $config;
 
     public function __construct(Config $config)

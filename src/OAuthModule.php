@@ -3,26 +3,26 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace SURFnet\VPN\Portal;
+namespace LetsConnect\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\Http\Response as OAuthResponse;
 use fkooman\OAuth\Server\OAuthServer;
-use SURFnet\VPN\Common\Http\Exception\HttpException;
-use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Response;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\ServiceModuleInterface;
-use SURFnet\VPN\Common\TplInterface;
+use LetsConnect\Common\Http\Exception\HttpException;
+use LetsConnect\Common\Http\HtmlResponse;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Response;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\ServiceModuleInterface;
+use LetsConnect\Common\TplInterface;
 
 class OAuthModule implements ServiceModuleInterface
 {
-    /** @var \SURFnet\VPN\Common\TplInterface */
+    /** @var \LetsConnect\Common\TplInterface */
     private $tpl;
 
     /** @var OAuthServer */
@@ -42,7 +42,7 @@ class OAuthModule implements ServiceModuleInterface
         $service->get(
             '/_oauth/authorize',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -68,7 +68,7 @@ class OAuthModule implements ServiceModuleInterface
         $service->post(
             '/_oauth/authorize',
             /**
-             * @return \SURFnet\VPN\Common\Http\Response
+             * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
@@ -91,7 +91,7 @@ class OAuthModule implements ServiceModuleInterface
     /**
      * @param \fkooman\OAuth\Server\Http\Response $authorizeResponse
      *
-     * @return \SURFnet\VPN\Common\Http\Response
+     * @return \LetsConnect\Common\Http\Response
      */
     private function prepareReturnResponse(OAuthResponse $authorizeResponse)
     {

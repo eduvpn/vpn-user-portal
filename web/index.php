@@ -3,7 +3,7 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
@@ -17,40 +17,38 @@ use fkooman\SAML\SP\SpInfo;
 use fkooman\SAML\SP\XmlIdpInfoSource;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
-use SURFnet\VPN\Common\Config;
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\Http\CsrfProtectionHook;
-use SURFnet\VPN\Common\Http\FormAuthenticationHook;
-use SURFnet\VPN\Common\Http\FormAuthenticationModule;
-use SURFnet\VPN\Common\Http\HtmlResponse;
-use SURFnet\VPN\Common\Http\LanguageSwitcherHook;
-use SURFnet\VPN\Common\Http\LdapAuth;
-use SURFnet\VPN\Common\Http\LogoutModule;
-use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
-use SURFnet\VPN\Common\Http\PdoAuth;
-use SURFnet\VPN\Common\Http\RadiusAuth;
-use SURFnet\VPN\Common\Http\Request;
-use SURFnet\VPN\Common\Http\Service;
-use SURFnet\VPN\Common\Http\TwoFactorHook;
-use SURFnet\VPN\Common\Http\TwoFactorModule;
-use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Common\LdapClient;
-use SURFnet\VPN\Common\Logger;
-use SURFnet\VPN\Common\Tpl;
-use SURFnet\VPN\Portal\AdminHook;
-use SURFnet\VPN\Portal\AdminPortalModule;
-use SURFnet\VPN\Portal\ClientFetcher;
-use SURFnet\VPN\Portal\DisabledUserHook;
-use SURFnet\VPN\Portal\Graph;
-use SURFnet\VPN\Portal\LastAuthenticatedAtPingHook;
-use SURFnet\VPN\Portal\OAuthModule;
-use SURFnet\VPN\Portal\OAuthStorage;
-use SURFnet\VPN\Portal\PasswdModule;
-use SURFnet\VPN\Portal\SamlAuthenticationHook;
-use SURFnet\VPN\Portal\SamlModule;
-use SURFnet\VPN\Portal\TwoFactorEnrollModule;
-use SURFnet\VPN\Portal\VpnPortalModule;
+use LetsConnect\Common\Config;
+use LetsConnect\Common\FileIO;
+use LetsConnect\Common\Http\CsrfProtectionHook;
+use LetsConnect\Common\Http\FormAuthenticationHook;
+use LetsConnect\Common\Http\FormAuthenticationModule;
+use LetsConnect\Common\Http\HtmlResponse;
+use LetsConnect\Common\Http\LanguageSwitcherHook;
+use LetsConnect\Common\Http\LdapAuth;
+use LetsConnect\Common\Http\LogoutModule;
+use LetsConnect\Common\Http\RadiusAuth;
+use LetsConnect\Common\Http\Request;
+use LetsConnect\Common\Http\Service;
+use LetsConnect\Common\Http\TwoFactorHook;
+use LetsConnect\Common\Http\TwoFactorModule;
+use LetsConnect\Common\HttpClient\CurlHttpClient;
+use LetsConnect\Common\HttpClient\ServerClient;
+use LetsConnect\Common\LdapClient;
+use LetsConnect\Common\Logger;
+use LetsConnect\Common\Tpl;
+use LetsConnect\Portal\AdminHook;
+use LetsConnect\Portal\AdminPortalModule;
+use LetsConnect\Portal\ClientFetcher;
+use LetsConnect\Portal\DisabledUserHook;
+use LetsConnect\Portal\Graph;
+use LetsConnect\Portal\LastAuthenticatedAtPingHook;
+use LetsConnect\Portal\OAuthModule;
+use LetsConnect\Portal\PasswdModule;
+use LetsConnect\Portal\SamlAuthenticationHook;
+use LetsConnect\Portal\SamlModule;
+use LetsConnect\Portal\Storage;
+use LetsConnect\Portal\TwoFactorEnrollModule;
+use LetsConnect\Portal\VpnPortalModule;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -149,11 +147,6 @@ try {
     $tpl->addDefault(
         [
             'supportedLanguages' => $supportedLanguages,
-            // since we now also support SAML / Mellon logout we *always* show
-            // the logout button (except when showing the login page for
-            // Form*Authentication (to remain backwards compatible with old
-            // "base.twig")
-            '_show_logout' => true,
         ]
     );
 
@@ -170,55 +163,45 @@ try {
     $authMethod = $config->getItem('authMethod');
 
     $logoutUrl = null;
-    if ('MellonAuthentication' === $authMethod) {
-        // mod_auth_mellon
-        $logoutUrl = $request->getAuthority().'/saml/logout';
-    }
     if ('SamlAuthentication' === $authMethod) {
         $logoutUrl = $request->getRootUri().'_saml/logout';
     }
 
+    $storage = new Storage(
+        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+        sprintf('%s/schema', $baseDir),
+        $dateTime
+    );
+    $storage->update();
+
     $service->addModule(new LogoutModule($session, $logoutUrl));
     switch ($authMethod) {
         case 'SamlAuthentication':
+            $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
+            $samlSp = new SP(
+                new SpInfo(
+                    $spEntityId,
+                    $request->getRootUri().'_saml/acs',
+                    FileIO::readFile(sprintf('%s/config/sp.key', $baseDir)),
+                    FileIO::readFile(sprintf('%s/config/sp.crt', $baseDir))
+                ),
+                new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
+            );
             $service->addBeforeHook(
                 'auth',
                 new SamlAuthenticationHook(
-                    $session,
+                    $samlSp,
+                    $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
                     $config->getSection('SamlAuthentication')->getItem('attribute'),
-                    $config->getSection('SamlAuthentication')->getItem('addEntityID'),
-                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute')
+                    $config->getSection('SamlAuthentication')->getItem('addEntityId'),
+                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute'),
+                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAuthnContextMapping', [])
                 )
             );
-            $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
             $service->addModule(
                 new SamlModule(
-                    $session,
-                    $spEntityId,
-                    new SP(
-                        new SpInfo(
-                            $spEntityId,
-                            $request->getRootUri().'_saml/acs',
-                            $request->getRootUri().'_saml/logout',
-                            FileIO::readFile(sprintf('%s/config/sp.key', $baseDir)),
-                            FileIO::readFile(sprintf('%s/config/sp.crt', $baseDir))
-                        ),
-                        new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
-                    ),
-                    $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
+                    $samlSp,
                     $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
-                )
-            );
-
-            break;
-        case 'MellonAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new MellonAuthenticationHook(
-                    $session,
-                    $config->getSection('MellonAuthentication')->getItem('attribute'),
-                    $config->getSection('MellonAuthentication')->getItem('addEntityID'),
-                    $config->getSection('MellonAuthentication')->optionalItem('entitlementAttribute')
                 )
             );
 
@@ -250,12 +233,6 @@ try {
 
             break;
         case 'FormPdoAuthentication':
-            $userAuth = new PdoAuth(
-                new PDO(
-                    sprintf('sqlite://%s/data/userdb.sqlite', $baseDir)
-                )
-            );
-
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
@@ -266,7 +243,7 @@ try {
 
             $service->addModule(
                 new FormAuthenticationModule(
-                    $userAuth,
+                    $storage,
                     $session,
                     $tpl
                 )
@@ -275,7 +252,7 @@ try {
             $service->addModule(
                 new PasswdModule(
                     $tpl,
-                    $userAuth
+                    $storage
                 )
             );
 
@@ -347,14 +324,6 @@ try {
             $tpl
         )
     );
-
-    // OAuth tokens
-    $storage = new OAuthStorage(
-        new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
-        sprintf('%s/schema', $baseDir),
-        $serverClient
-    );
-    $storage->update();
 
     $clientFetcher = new ClientFetcher($config);
 

@@ -1,20 +1,17 @@
-#!/usr/bin/env php
 <?php
 
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2018, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use SURFnet\VPN\Common\FileIO;
-use SURFnet\VPN\Common\HttpClient\CurlHttpClient;
-use SURFnet\VPN\Common\HttpClient\ServerClient;
-use SURFnet\VPN\Portal\OAuthStorage;
+use LetsConnect\Common\FileIO;
+use LetsConnect\Portal\Storage;
 
 try {
     $dataDir = sprintf('%s/data', $baseDir);
@@ -23,13 +20,10 @@ try {
     $keyPairFile = sprintf('%s/OAuth.key', $dataDir);
     FileIO::writeFile($keyPairFile, $keyPairData);
 
-    // OAuth tokens
-    $storage = new OAuthStorage(
-        new PDO(sprintf('sqlite://%s/tokens.sqlite', $dataDir)),
+    $storage = new Storage(
+        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        // here we create a "fake" ServerClient because the OAuthStorage
-        // class needs it (unfortunately)
-        new ServerClient(new CurlHttpClient([]), 'http://localhost')
+        new DateTime()
     );
     $storage->init();
 } catch (Exception $e) {
