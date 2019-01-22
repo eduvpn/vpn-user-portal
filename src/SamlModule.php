@@ -9,6 +9,7 @@
 
 namespace LetsConnect\Portal;
 
+use fkooman\SAML\SP\Exception\SamlException;
 use fkooman\SAML\SP\SP;
 use LetsConnect\Common\Http\Exception\HttpException;
 use LetsConnect\Common\Http\RedirectResponse;
@@ -46,41 +47,45 @@ class SamlModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $relayState = $request->getQueryParameter('ReturnTo');
-                $idpEntityId = $request->getQueryParameter('IdP', false);
-                $authnContextQuery = $request->getQueryParameter('AuthnContext', false);
-                // XXX is this safe (enough?)
-                $authnContext = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
+                try {
+                    $relayState = $request->getQueryParameter('ReturnTo');
+                    $idpEntityId = $request->getQueryParameter('IdP', false);
+                    $authnContextQuery = $request->getQueryParameter('AuthnContext', false);
+                    // XXX is this safe (enough?)
+                    $authnContext = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
 
-                // if and entityId is specified, use it
-                if (null !== $idpEntityId) {
-                    return new RedirectResponse($this->samlSp->login($idpEntityId, $relayState, $authnContext));
+                    // if and entityId is specified, use it
+                    if (null !== $idpEntityId) {
+                        return new RedirectResponse($this->samlSp->login($idpEntityId, $relayState, $authnContext));
+                    }
+
+                    // we didn't get an IdP entityId so we MUST perform discovery
+                    if (null === $this->discoUrl) {
+                        throw new HttpException('no IdP specified, and no discovery service configured', 500);
+                    }
+
+                    // perform discovery
+                    $discoQuery = http_build_query(
+                        [
+                            'entityID' => $this->samlSp->getSpInfo()->getEntityId(),
+                            'returnIDParam' => 'IdP',
+                            'return' => $request->getUri(),
+                        ]
+                    );
+
+                    $querySeparator = false === strpos($this->discoUrl, '?') ? '?' : '&';
+
+                    return new RedirectResponse(
+                        sprintf(
+                            '%s%s%s',
+                            $this->discoUrl,
+                            $querySeparator,
+                            $discoQuery
+                        )
+                    );
+                } catch (SamlException $e) {
+                    throw new HttpException($e->getMessage(), 500, [], $e);
                 }
-
-                // we didn't get an IdP entityId so we MUST perform discovery
-                if (null === $this->discoUrl) {
-                    throw new HttpException('no IdP specified, and no discovery service configured', 500);
-                }
-
-                // perform discovery
-                $discoQuery = http_build_query(
-                    [
-                        'entityID' => $this->samlSp->getSpInfo()->getEntityId(),
-                        'returnIDParam' => 'IdP',
-                        'return' => $request->getUri(),
-                    ]
-                );
-
-                $querySeparator = false === strpos($this->discoUrl, '?') ? '?' : '&';
-
-                return new RedirectResponse(
-                    sprintf(
-                        '%s%s%s',
-                        $this->discoUrl,
-                        $querySeparator,
-                        $discoQuery
-                    )
-                );
             }
         );
 
@@ -90,11 +95,15 @@ class SamlModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $this->samlSp->handleResponse(
-                    $request->getPostParameter('SAMLResponse')
-                );
+                try {
+                    $this->samlSp->handleResponse(
+                        $request->getPostParameter('SAMLResponse')
+                    );
 
-                return new RedirectResponse($request->getPostParameter('RelayState'));
+                    return new RedirectResponse($request->getPostParameter('RelayState'));
+                } catch (SamlException $e) {
+                    throw new HttpException($e->getMessage(), 500, [], $e);
+                }
             }
         );
 
