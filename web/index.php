@@ -46,6 +46,7 @@ use LetsConnect\Portal\OAuthModule;
 use LetsConnect\Portal\PasswdModule;
 use LetsConnect\Portal\SamlAuthenticationHook;
 use LetsConnect\Portal\SamlModule;
+use LetsConnect\Portal\ShibAuthenticationHook;
 use LetsConnect\Portal\Storage;
 use LetsConnect\Portal\TwoFactorEnrollModule;
 use LetsConnect\Portal\VpnPortalModule;
@@ -207,6 +208,14 @@ try {
                 )
             );
 
+            break;
+        case 'ShibAuthentication':
+            $service->addBeforeHook(
+                'auth',
+                new ShibAuthenticationHook(
+                    $config->getSection('ShibAuthentication')->getItem('attribute')
+                )
+            );
             break;
         case 'FormLdapAuthentication':
             $service->addBeforeHook(

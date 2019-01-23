@@ -10,6 +10,7 @@ return [
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
     //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
     //'authMethod' => 'SamlAuthentication',         // SAML
+    //'authMethod' => 'ShibAuthentication',         // SAML (Shibboleth)
 
     // Session Expiry
     // - OAuth (refresh_token) validity
@@ -92,6 +93,12 @@ return [
         //'entitlementAuthnContext' => [
         //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
+    ],
+
+    // Shibboleth SP
+    'ShibAuthentication' => [
+        'attribute' => 'persistent-id',
+        //'attribute' => 'eppn',
     ],
 
     // the "entitlement" required to be able to access the "admin" portion of
