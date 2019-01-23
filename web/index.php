@@ -196,7 +196,8 @@ try {
                     $config->getSection('SamlAuthentication')->getItem('attribute'),
                     $config->getSection('SamlAuthentication')->getItem('addEntityId'),
                     $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute'),
-                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAuthnContextMapping', [])
+                    $config->getSection('SamlAuthentication')->optionalItem('authnContext', []),
+                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAuthnContext', [])
                 )
             );
             $service->addModule(

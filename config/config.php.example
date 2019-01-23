@@ -82,11 +82,14 @@ return [
         // that are allowed to access this service
         'idpMetadata' => '/path/to/idp/metadata.xml',
 
+        // AuthnContext required for *all* users
+        //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+
         // Users with certain entitlements obtained through the
         // "entitlementAttribute" MUST also have ANY of the listed
         // AuthnContexts. If they currently don't, a new authentication is
         // performed
-        //'entitlementAuthnContextMapping' => [
+        //'entitlementAuthnContext' => [
         //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
     ],

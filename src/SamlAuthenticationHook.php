@@ -34,8 +34,11 @@ class SamlAuthenticationHook implements BeforeHookInterface
     /** @var string|null */
     private $entitlementAttribute;
 
+    /** @var array<string> */
+    private $authnContext;
+
     /** @var array<string,array<string>> */
-    private $entitlementAuthnContextMapping;
+    private $entitlementAuthnContext;
 
     /**
      * @param \fkooman\SAML\SP\SP         $samlSp
@@ -43,16 +46,18 @@ class SamlAuthenticationHook implements BeforeHookInterface
      * @param string                      $userIdAttribute
      * @param bool                        $addEntityId
      * @param string|null                 $entitlementAttribute
-     * @param array<string,array<string>> $entitlementAuthnContextMapping
+     * @param array<string>               $authnContext
+     * @param array<string,array<string>> $entitlementAuthnContext
      */
-    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, $addEntityId, $entitlementAttribute, array $entitlementAuthnContextMapping)
+    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, $addEntityId, $entitlementAttribute, array $authnContext, array $entitlementAuthnContext)
     {
         $this->samlSp = $samlSp;
         $this->idpEntityId = $idpEntityId;
         $this->userIdAttribute = $userIdAttribute;
         $this->addEntityId = $addEntityId;
         $this->entitlementAttribute = $entitlementAttribute;
-        $this->entitlementAuthnContextMapping = $entitlementAuthnContextMapping;
+        $this->authnContext = $authnContext;
+        $this->entitlementAuthnContext = $entitlementAuthnContext;
     }
 
     /**
@@ -80,7 +85,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
 
         if (false === $samlAssertion = $this->samlSp->getAssertion()) {
             // user not (yet) authenticated, redirect to "login" endpoint
-            return self::getLoginRedirect($request, $this->idpEntityId);
+            return self::getLoginRedirect($request, $this->idpEntityId, $this->authnContext);
         }
 
         $idpEntityId = $samlAssertion->getIssuer();
@@ -113,9 +118,9 @@ class SamlAuthenticationHook implements BeforeHookInterface
             $userEntitlements = $samlAttributes[$this->entitlementAttribute];
 
             // if we got an entitlement that's part of the
-            // entitlementAuthnContextMapping we have to make sure we have one of
+            // entitlementAuthnContext we have to make sure we have one of
             // the listed AuthnContexts
-            foreach ($this->entitlementAuthnContextMapping as $entitlement => $authnContext) {
+            foreach ($this->entitlementAuthnContext as $entitlement => $authnContext) {
                 if (\in_array($entitlement, $userEntitlements, true)) {
                     if (!\in_array($userAuthnContext, $authnContext, true)) {
                         // we do not have the required AuthnContext, trigger login
@@ -169,7 +174,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
      *
      * @return \LetsConnect\Common\Http\RedirectResponse
      */
-    private static function getLoginRedirect(Request $request, $idpEntityId, array $authnContext = [])
+    private static function getLoginRedirect(Request $request, $idpEntityId, array $authnContext)
     {
         $httpQuery = [
             'ReturnTo' => $request->getUri(),
