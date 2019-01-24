@@ -168,7 +168,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "741ba5b21aee8e72ba02406eaebdb71966060d3a"
+                "reference": "622ad7fd65232d21a69d48a8ecb32785983c5a89"
             },
             "require": {
                 "ext-date": "*",
@@ -211,7 +211,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-01-22T17:05:01+00:00"
+            "time": "2019-01-24T11:34:34+00:00"
         },
         {
             "name": "fkooman/secookie",
