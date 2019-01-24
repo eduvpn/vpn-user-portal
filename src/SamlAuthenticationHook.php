@@ -28,9 +28,6 @@ class SamlAuthenticationHook implements BeforeHookInterface
     /** @var string */
     private $userIdAttribute;
 
-    /** @var bool */
-    private $addEntityId;
-
     /** @var string|null */
     private $entitlementAttribute;
 
@@ -44,17 +41,15 @@ class SamlAuthenticationHook implements BeforeHookInterface
      * @param \fkooman\SAML\SP\SP         $samlSp
      * @param string|null                 $idpEntityId
      * @param string                      $userIdAttribute
-     * @param bool                        $addEntityId
      * @param string|null                 $entitlementAttribute
      * @param array<string>               $authnContext
      * @param array<string,array<string>> $entitlementAuthnContext
      */
-    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, $addEntityId, $entitlementAttribute, array $authnContext, array $entitlementAuthnContext)
+    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, $entitlementAttribute, array $authnContext, array $entitlementAuthnContext)
     {
         $this->samlSp = $samlSp;
         $this->idpEntityId = $idpEntityId;
         $this->userIdAttribute = $userIdAttribute;
-        $this->addEntityId = $addEntityId;
         $this->entitlementAttribute = $entitlementAttribute;
         $this->authnContext = $authnContext;
         $this->entitlementAuthnContext = $entitlementAuthnContext;
@@ -99,19 +94,6 @@ class SamlAuthenticationHook implements BeforeHookInterface
         // remove "NameID" XML construction if it is there, e.g. for
         // eduPersonTargetedID
         $userId = strip_tags($userId);
-
-        if ($this->addEntityId) {
-            // add the entity ID to the user ID, this is used when we have
-            // different IdPs that do not guarantee uniqueness among the used
-            // user identifier attribute, e.g. NAME_ID or uid
-            $userId = sprintf(
-                '%s_%s',
-                // strip out all "special" characters from the entityID, just
-                // like mod_auth_mellon does
-                preg_replace('/__*/', '_', preg_replace('/[^A-Za-z.]/', '_', $idpEntityId)),
-                $userId
-            );
-        }
 
         $userAuthnContext = $samlAssertion->getAuthnContext();
         if (null !== $this->entitlementAttribute) {
