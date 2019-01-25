@@ -12,6 +12,8 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\LocalSigner;
 use fkooman\OAuth\Server\OAuthServer;
+use fkooman\SAML\SP\PrivateKey;
+use fkooman\SAML\SP\PublicKey;
 use fkooman\SAML\SP\SP;
 use fkooman\SAML\SP\SpInfo;
 use fkooman\SAML\SP\XmlIdpInfoSource;
@@ -184,8 +186,8 @@ try {
                 new SpInfo(
                     $spEntityId,
                     $request->getRootUri().'_saml/acs',
-                    FileIO::readFile(sprintf('%s/config/sp.key', $baseDir)),
-                    FileIO::readFile(sprintf('%s/config/sp.crt', $baseDir))
+                    PrivateKey::fromFile(sprintf('%s/config/sp.key', $baseDir)),
+                    PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir))
                 ),
                 new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
             );
