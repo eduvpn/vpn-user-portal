@@ -28,6 +28,9 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var \LetsConnect\Common\TplInterface */
     private $tpl;
 
+    /** @var Storage */
+    private $storage;
+
     /** @var \LetsConnect\Common\HttpClient\ServerClient */
     private $serverClient;
 
@@ -39,12 +42,14 @@ class AdminPortalModule implements ServiceModuleInterface
 
     /**
      * @param \LetsConnect\Common\TplInterface            $tpl
+     * @param Storage                                     $storage
      * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
      * @param Graph                                       $graph
      */
-    public function __construct(TplInterface $tpl, ServerClient $serverClient, Graph $graph)
+    public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient, Graph $graph)
     {
         $this->tpl = $tpl;
+        $this->storage = $storage;
         $this->serverClient = $serverClient;
         $this->graph = $graph;
         $this->dateTimeToday = new DateTime('today');
@@ -168,9 +173,20 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 switch ($userAction) {
                     case 'disableUser':
-                        $this->serverClient->post('disable_user', ['user_id' => $userId]);
-                        // kill all active connections for this user
+                        // get active connections for this user
                         $clientConnections = $this->serverClient->getRequireArray('client_connections', ['user_id' => $userId]);
+
+                        // disable the user
+                        $this->serverClient->post('disable_user', ['user_id' => $userId]);
+                        // * revoke all OAuth clients of this user
+                        // * delete all client certificates associated with the OAuth clients of this user
+                        $clientAuthorizations = $this->storage->getAuthorizations($userId);
+                        foreach ($clientAuthorizations as $clientAuthorization) {
+                            $this->storage->deleteAuthorization($userId, $clientAuthorization['client_id'], $clientAuthorization['scope']);
+                            $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userId, 'client_id' => $clientAuthorization['client_id']]);
+                        }
+
+                        // kill all active connections for this user
                         foreach ($clientConnections as $profile) {
                             foreach ($profile['connections'] as $connection) {
                                 $this->serverClient->post('kill_client', ['common_name' => $connection['common_name']]);

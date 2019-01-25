@@ -361,6 +361,7 @@ try {
 
     $adminPortalModule = new AdminPortalModule(
         $tpl,
+        $storage,
         $serverClient,
         $graph
     );
