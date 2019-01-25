@@ -22,18 +22,23 @@ use LetsConnect\Common\TplInterface;
 class AdminHook implements BeforeHookInterface
 {
     /** @var array<string> */
-    private $requiredEntitlementList;
+    private $adminPermissionList;
+
+    /** @var array<string> */
+    private $adminUserIdList;
 
     /** @var \LetsConnect\Common\TplInterface */
     private $tpl;
 
     /**
-     * @param array<string>                    $requiredEntitlementList
+     * @param array<string>                    $adminPermissionList
+     * @param array<string>                    $adminUserIdList
      * @param \LetsConnect\Common\TplInterface $tpl
      */
-    public function __construct(array $requiredEntitlementList, TplInterface &$tpl)
+    public function __construct(array $adminPermissionList, array $adminUserIdList, TplInterface &$tpl)
     {
-        $this->requiredEntitlementList = $requiredEntitlementList;
+        $this->adminPermissionList = $adminPermissionList;
+        $this->adminUserIdList = $adminUserIdList;
         $this->tpl = $tpl;
     }
 
@@ -67,9 +72,18 @@ class AdminHook implements BeforeHookInterface
         }
 
         $userInfo = $hookData['auth'];
-        $userEntitlementList = $userInfo->entitlementList();
-        foreach ($userEntitlementList as $userEntitlement) {
-            if (\in_array($userEntitlement, $this->requiredEntitlementList, true)) {
+
+        // is the userId listed in the adminUserIdList?
+        if (\in_array($userInfo->id(), $this->adminUserIdList, true)) {
+            $this->tpl->addDefault(['isAdmin' => true]);
+
+            return true;
+        }
+
+        // is any of the user's permissions listed in adminPermissionList?
+        $userPermissionList = $userInfo->permissionList();
+        foreach ($userPermissionList as $userPermission) {
+            if (\in_array($userPermission, $this->adminPermissionList, true)) {
                 $this->tpl->addDefault(['isAdmin' => true]);
 
                 return true;

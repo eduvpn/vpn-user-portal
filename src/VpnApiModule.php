@@ -79,14 +79,14 @@ class VpnApiModule implements ServiceModuleInterface
                 $userInfo = $this->tokenInfoToUserInfo($accessTokenInfo);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $this->serverClient->getRequireArray('user_entitlement_list', ['user_id' => $userInfo->id()]);
+                $userPermissions = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $userInfo->id()]);
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
                     $profileConfig = new ProfileConfig($profileData);
                     if ($profileConfig->getItem('enableAcl')) {
-                        // is the user member of the aclGroupList?
-                        if (!VpnPortalModule::isMember($profileConfig->getSection('aclGroupList')->toArray(), $userGroups)) {
+                        // is the user member of the aclPermissionList?
+                        if (!VpnPortalModule::isMember($profileConfig->getSection('aclPermissionList')->toArray(), $userPermissions)) {
                             continue;
                         }
                     }
@@ -198,14 +198,14 @@ class VpnApiModule implements ServiceModuleInterface
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
 
                     $profileList = $this->serverClient->getRequireArray('profile_list');
-                    $userGroups = $this->serverClient->getRequireArray('user_entitlement_list', ['user_id' => $userInfo->id()]);
+                    $userPermissions = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $userInfo->id()]);
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
                         $profileConfig = new ProfileConfig($profileData);
                         if ($profileConfig->getItem('enableAcl')) {
-                            // is the user member of the aclGroupList?
-                            if (!VpnPortalModule::isMember($profileConfig->getSection('aclGroupList')->toArray(), $userGroups)) {
+                            // is the user member of the userPermissions?
+                            if (!VpnPortalModule::isMember($profileConfig->getSection('aclPermissionList')->toArray(), $userPermissions)) {
                                 continue;
                             }
                         }
@@ -365,9 +365,9 @@ class VpnApiModule implements ServiceModuleInterface
     private function tokenInfoToUserInfo(AccessTokenInfo $accessTokenInfo)
     {
         $userId = $accessTokenInfo->getUserId();
-        $entitlementList = $this->serverClient->getRequireArray('user_entitlement_list', ['user_id' => $userId]);
+        $permissionList = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $userId]);
         $authTime = new DateTime($this->serverClient->getRequireString('user_last_authenticated_at', ['user_id' => $userId]));
 
-        return new UserInfo($userId, $entitlementList, $authTime);
+        return new UserInfo($userId, $permissionList, $authTime);
     }
 }

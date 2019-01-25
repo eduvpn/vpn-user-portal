@@ -93,7 +93,7 @@ class VpnPortalModuleTest extends TestCase
                 'vpnPortalAccount' => [
                     'hasTotpSecret' => false,
                     'userInfo' => [],
-                    'userGroups' => [],
+                    'userPermissions' => [],
                     'authorizedClients' => [],
                     'twoFactorMethods' => [
                         'totp',

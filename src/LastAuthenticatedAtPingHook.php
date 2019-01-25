@@ -77,7 +77,7 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
             'last_authenticated_at_ping',
             [
                 'user_id' => $userInfo->id(),
-                'entitlement_list' => Json::encode($userInfo->entitlementList()),
+                'permission_list' => Json::encode($userInfo->permissionList()),
             ]
         );
         $this->session->set('_last_authenticated_at_ping_sent', true);

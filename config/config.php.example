@@ -29,12 +29,12 @@ return [
         // Active Directory
         //'userDnTemplate' => 'DOMAIN\{{UID}}',
 
-        // ** AUTHORIZATION | ENTITLEMENT **
+        // ** AUTHORIZATION | PERMISSIONS **
         // use eduPerson "eduPersonEntitlement"
-        //'entitlementAttribute' => 'eduPersonEntitlement',
+        //'permissionAttribute' => 'eduPersonEntitlement',
 
         // use LDAP "memberOf"
-        //'entitlementAttribute' => 'memberOf',
+        //'permissionAttribute' => 'memberOf',
     ],
 
     // RADIUS
@@ -53,18 +53,23 @@ return [
     // SAML
     'SamlAuthentication' => [
         // 'OID for eduPersonTargetedID
-        'attribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
+        'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
         // OID for eduPersonPrincipalName
-        //'attribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
+        //'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
 
-        // ** AUTHORIZATION | ENTITLEMENT **
+        // ** AUTHORIZATION | PERMISSIONS **
         // OID for eduPersonEntitlement
-        //'entitlementAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.7',
+        //'permissionAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.7',
         // OID for eduPersonAffiliation
-        //'entitlementAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
+        //'permissionAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
 
-        // override the SP entityId
+        // override the SP entityId, the default is:
+        // https://vpn.example.org/vpn-user-portal/_saml/metadata
         //'spEntityId' => 'https://vpn.example.org/saml',
+
+        // (Aggregate) SAML metadata file containing the IdP metadata of IdPs
+        // that are allowed to access this service
+        'idpMetadata' => '/path/to/idp/metadata.xml',
 
         // set a fixed IdP for use with this service, it MUST be available in
         // the IdP metadata file
@@ -72,34 +77,38 @@ return [
 
         // set a URL that performs IdP discovery, all IdPs listed in the
         // discovery service MUST also be available in the IdP metadata file
-        //'discoUrl' => 'http://disco.example.org/index.php',
-
-        // (Aggregate) SAML metadata file containing the IdP metadata of IdPs
-        // that are allowed to access this service
-        'idpMetadata' => '/path/to/idp/metadata.xml',
+        //'discoUrl' => 'http://vpn.example.org/php-saml-ds/index.php',
 
         // AuthnContext required for *all* users
         //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
 
-        // Users with certain entitlements obtained through the
-        // "entitlementAttribute" MUST also have ANY of the listed
+        // Users with certain permissions obtained through 
+        // "permissionAttribute" MUST also have ANY of the listed 
         // AuthnContexts. If they currently don't, a new authentication is
-        // performed
-        //'entitlementAuthnContext' => [
+        // triggered to obtain it
+        //'permissionAuthnContext' => [
         //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
     ],
 
     // Shibboleth SP
     'ShibAuthentication' => [
-        'attribute' => 'persistent-id',
-        //'attribute' => 'eppn',
+        'userIdAttribute' => 'persistent-id',
+        //'userIdAttribute' => 'eppn',
+
+        // ** AUTHORIZATION | PERMISSIONS **
+        //'permissionAttribute' => 'entitlement',
+        // OID for eduPersonAffiliation
+        //'permissionAttribute' => 'affiliation',
     ],
 
-    // the "entitlement" required to be able to access the "admin" portion of
-    // the portal, see "entitlementAttribute" in the authentication
+    // the permission required to be able to access the "admin" portion of
+    // the portal, see "permissionAttribute" in the authentication
     // configuration sections
-    'adminEntitlementList' => ['urn:example:LC-admin'],
+    //'adminPermissionList' => ['urn:example:LC-admin'],
+
+    // list of userIds that have access to the admin
+    'adminUserIdList' => ['admin'],
 
     // Require Users to use 2FA
     'requireTwoFactor' => false,

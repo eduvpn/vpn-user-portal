@@ -24,6 +24,8 @@
 - remove tls-auth support
 - remove "multi instance" support
 - update to version 4 of `fkooman/oauth2-server`
+- (re)introduce admin permission based on userId
+- rename "entitlement" to "permission"
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 

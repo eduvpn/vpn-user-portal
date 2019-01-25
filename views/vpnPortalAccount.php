@@ -13,13 +13,13 @@
             </tr>
         <?php endif; ?>
 
-        <?php if (0 !== count($userGroups)): ?>
+        <?php if (0 !== count($userPermissions)): ?>
         <tr>
-            <th><?=$this->t('Group Membership(s)'); ?></th>
+            <th><?=$this->t('Permission(s)'); ?></th>
             <td>
                 <ul>
-                    <?php foreach ($userGroups as $userGroup): ?>
-                        <li><?=$this->e($userGroup); ?></li>
+                    <?php foreach ($userPermissions as $userPermission): ?>
+                        <li><?=$this->e($userPermission); ?></li>
                     <?php endforeach; ?>
                 </ul>
             </td>

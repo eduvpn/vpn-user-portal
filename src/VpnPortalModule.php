@@ -96,8 +96,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups);
+                $userPermissions = $userInfo->permissionList();
+                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
                 if (0 === \count($motdMessages)) {
@@ -130,8 +130,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups);
+                $userPermissions = $userInfo->permissionList();
+                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
@@ -230,8 +230,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userGroups = $userInfo->entitlementList();
-                $visibleProfileList = self::getProfileList($profileList, $userGroups);
+                $userPermissions = $userInfo->permissionList();
+                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
                 $authorizedClients = $this->storage->getAuthorizations($userInfo->id());
                 foreach ($authorizedClients as $k => $v) {
@@ -253,7 +253,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         [
                             'hasTotpSecret' => $hasTotpSecret,
                             'userInfo' => $userInfo,
-                            'userGroups' => $userGroups,
+                            'userPermissions' => $userPermissions,
                             'authorizedClients' => $authorizedClients,
                             'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp']),
                         ]
@@ -335,11 +335,11 @@ class VpnPortalModule implements ServiceModuleInterface
     /**
      * @return bool
      */
-    public static function isMember(array $aclGroupList, array $userGroups)
+    public static function isMember(array $aclPermissionList, array $userPermissions)
     {
-        // if any of the groups is part of aclGroupList return true
-        foreach ($userGroups as $userGroup) {
-            if (\in_array($userGroup, $aclGroupList, true)) {
+        // if any of the permissions is part of aclPermissionList return true
+        foreach ($userPermissions as $userPermission) {
+            if (\in_array($userPermission, $aclPermissionList, true)) {
                 return true;
             }
         }
@@ -399,12 +399,11 @@ class VpnPortalModule implements ServiceModuleInterface
 
     /**
      * Filter the list of profiles by checking if the profile should be shown,
-     * and that the user is a member of the required groups in case ACLs are
-     * enabled.
+     * and that the user has the required permissions in case ACLs are enabled.
      *
      * @return array
      */
-    private static function getProfileList(array $serverProfiles, array $userGroups)
+    private static function getProfileList(array $serverProfiles, array $userPermissions)
     {
         $profileList = [];
         foreach ($serverProfiles as $profileId => $profileData) {
@@ -412,8 +411,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 continue;
             }
             if ($profileData['enableAcl']) {
-                // is the user member of the aclGroupList?
-                if (!self::isMember($profileData['aclGroupList'], $userGroups)) {
+                // is the user member of the aclPermissionList?
+                if (!self::isMember($profileData['aclPermissionList'], $userPermissions)) {
                     continue;
                 }
             }

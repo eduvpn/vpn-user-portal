@@ -194,10 +194,10 @@ try {
                 new SamlAuthenticationHook(
                     $samlSp,
                     $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
-                    $config->getSection('SamlAuthentication')->getItem('attribute'),
-                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAttribute'),
+                    $config->getSection('SamlAuthentication')->getItem('userIdAttribute'),
+                    $config->getSection('SamlAuthentication')->optionalItem('permissionAttribute'),
                     $config->getSection('SamlAuthentication')->optionalItem('authnContext', []),
-                    $config->getSection('SamlAuthentication')->optionalItem('entitlementAuthnContext', [])
+                    $config->getSection('SamlAuthentication')->optionalItem('permissionAuthnContext', [])
                 )
             );
             $service->addModule(
@@ -212,7 +212,7 @@ try {
             $service->addBeforeHook(
                 'auth',
                 new ShibAuthenticationHook(
-                    $config->getSection('ShibAuthentication')->getItem('attribute')
+                    $config->getSection('ShibAuthentication')->getItem('userIdAttribute')
                 )
             );
             break;
@@ -231,7 +231,7 @@ try {
                 $logger,
                 $ldapClient,
                 $config->getSection('FormLdapAuthentication')->getItem('userDnTemplate'),
-                $config->getSection('FormLdapAuthentication')->optionalItem('entitlementAttribute')
+                $config->getSection('FormLdapAuthentication')->optionalItem('permissionAttribute')
             );
             $service->addModule(
                 new FormAuthenticationModule(
@@ -330,7 +330,8 @@ try {
     $service->addBeforeHook(
         'is_admin',
         new AdminHook(
-            $config->optionalItem('adminEntitlementList', ['admin']),
+            $config->optionalItem('adminPermissionList', []),
+            $config->optionalItem('adminUserIdList', []),
             $tpl
         )
     );
