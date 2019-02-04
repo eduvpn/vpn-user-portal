@@ -52,7 +52,6 @@ use LetsConnect\Portal\ShibAuthenticationHook;
 use LetsConnect\Portal\Storage;
 use LetsConnect\Portal\TwoFactorEnrollModule;
 use LetsConnect\Portal\VpnPortalModule;
-use ParagonIE\ConstantTime\Base64;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
 $logger = new Logger('vpn-user-portal');
