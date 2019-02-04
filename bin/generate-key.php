@@ -23,7 +23,7 @@ try {
     }
     // only create key when there is no key yet
     $keyData = Base64UrlSafe::encodeUnpadded(random_bytes(32));
-    FileIO::writeFile($keyFile, $keyData);
+    FileIO::writeFile($keyFile, $keyData, 0644);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
