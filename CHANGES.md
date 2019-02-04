@@ -26,6 +26,7 @@
 - update to version 4 of `fkooman/oauth2-server`
 - (re)introduce admin permission based on userId
 - rename "entitlement" to "permission"
+- OAuth key moved to configuration directory instead of data directory
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 
