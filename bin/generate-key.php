@@ -11,19 +11,19 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LetsConnect\Common\FileIO;
-use ParagonIE\ConstantTime\Base64UrlSafe;
+use LetsConnect\Portal\OAuth\Keys\SecretKey;
 
 try {
     // generate OAuth key
     $configDir = sprintf('%s/config', $baseDir);
-    $keyFile = sprintf('%s/local.key', $configDir);
+    $keyFile = sprintf('%s/secret.key', $configDir);
     if (FileIO::exists($keyFile)) {
         echo '[INFO] OAuth key already exists!'.PHP_EOL;
         exit(0);
     }
     // only create key when there is no key yet
-    $keyData = Base64UrlSafe::encodeUnpadded(random_bytes(32));
-    FileIO::writeFile($keyFile, $keyData, 0644);
+    $secretKey = SecretKey::generate();
+    FileIO::writeFile($keyFile, $secretKey->encode(), 0644);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

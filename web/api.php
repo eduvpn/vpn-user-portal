@@ -11,7 +11,6 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
-use fkooman\OAuth\Server\LocalSigner;
 use LetsConnect\Common\Config;
 use LetsConnect\Common\FileIO;
 use LetsConnect\Common\Http\JsonResponse;
@@ -23,10 +22,11 @@ use LetsConnect\Common\Logger;
 use LetsConnect\Portal\BearerAuthenticationHook;
 use LetsConnect\Portal\ClientFetcher;
 use LetsConnect\Portal\ForeignKeyListFetcher;
+use LetsConnect\Portal\OAuth\Keys\SecretKey;
+use LetsConnect\Portal\OAuth\PublicSigner;
 use LetsConnect\Portal\Storage;
 use LetsConnect\Portal\VpnApiModule;
 use ParagonIE\ConstantTime\Base64;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 $logger = new Logger('vpn-user-api');
 
@@ -67,16 +67,15 @@ try {
             $foreignKeys = array_merge($foreignKeys, $foreignKeyListFetcher->extract());
         }
 
+        $secretKey = SecretKey::fromEncodedString(
+            FileIO::readFile(
+                sprintf('%s/config/secret.key', $baseDir)
+            )
+        );
         $bearerValidator = new BearerValidator(
             $storage,
             $clientFetcher,
-            new LocalSigner(
-                Base64UrlSafe::decode(
-                    FileIO::readFile(
-                        sprintf('%s/config/local.key', $baseDir)
-                    )
-                )
-            )
+            new PublicSigner($secretKey->getPublicKey())
         );
 
         $service->addBeforeHook(

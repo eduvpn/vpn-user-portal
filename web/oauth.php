@@ -10,7 +10,6 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\OAuth\Server\LocalSigner;
 use fkooman\OAuth\Server\OAuthServer;
 use LetsConnect\Common\Config;
 use LetsConnect\Common\FileIO;
@@ -21,9 +20,10 @@ use LetsConnect\Common\HttpClient\CurlHttpClient;
 use LetsConnect\Common\HttpClient\ServerClient;
 use LetsConnect\Common\Logger;
 use LetsConnect\Portal\ClientFetcher;
+use LetsConnect\Portal\OAuth\Keys\SecretKey;
+use LetsConnect\Portal\OAuth\PublicSigner;
 use LetsConnect\Portal\OAuthTokenModule;
 use LetsConnect\Portal\Storage;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -53,16 +53,15 @@ try {
 
     // OAuth module
     if ($config->hasSection('Api')) {
+        $secretKey = SecretKey::fromEncodedString(
+            FileIO::readFile(
+                sprintf('%s/config/secret.key', $baseDir)
+            )
+        );
         $oauthServer = new OAuthServer(
             $storage,
             $clientFetcher,
-            new LocalSigner(
-                Base64UrlSafe::decode(
-                    FileIO::readFile(
-                        sprintf('%s/config/local.key', $baseDir)
-                    )
-                )
-            )
+            new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
 
         // determine sessionExpiry, use the new configuration option if it is there

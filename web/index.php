@@ -10,7 +10,6 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\OAuth\Server\LocalSigner;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\SAML\SP\PrivateKey;
 use fkooman\SAML\SP\PublicKey;
@@ -44,6 +43,8 @@ use LetsConnect\Portal\ClientFetcher;
 use LetsConnect\Portal\DisabledUserHook;
 use LetsConnect\Portal\Graph;
 use LetsConnect\Portal\LastAuthenticatedAtPingHook;
+use LetsConnect\Portal\OAuth\Keys\SecretKey;
+use LetsConnect\Portal\OAuth\PublicSigner;
 use LetsConnect\Portal\OAuthModule;
 use LetsConnect\Portal\PasswdModule;
 use LetsConnect\Portal\SamlAuthenticationHook;
@@ -52,7 +53,6 @@ use LetsConnect\Portal\ShibAuthenticationHook;
 use LetsConnect\Portal\Storage;
 use LetsConnect\Portal\TwoFactorEnrollModule;
 use LetsConnect\Portal\VpnPortalModule;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -375,17 +375,16 @@ try {
     }
 
     // OAuth module
+    $secretKey = SecretKey::fromEncodedString(
+        FileIO::readFile(
+            sprintf('%s/config/secret.key', $baseDir)
+        )
+    );
     if ($config->hasSection('Api')) {
         $oauthServer = new OAuthServer(
             $storage,
             $clientFetcher,
-            new LocalSigner(
-                Base64UrlSafe::decode(
-                    FileIO::readFile(
-                        sprintf('%s/config/local.key', $baseDir)
-                    )
-                )
-            )
+            new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
 
         $oauthServer->setRefreshTokenExpiry(new DateInterval($sessionExpiry));
