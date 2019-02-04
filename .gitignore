@@ -2,3 +2,4 @@
 /data
 /config/*.php
 /config/views
+/config/*.key

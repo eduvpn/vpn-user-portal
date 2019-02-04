@@ -26,6 +26,7 @@ use LetsConnect\Portal\ForeignKeyListFetcher;
 use LetsConnect\Portal\Storage;
 use LetsConnect\Portal\VpnApiModule;
 use ParagonIE\ConstantTime\Base64;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 $logger = new Logger('vpn-user-api');
 
@@ -70,7 +71,7 @@ try {
             $storage,
             $clientFetcher,
             new LocalSigner(
-                Base64::decode(
+                Base64UrlSafe::decode(
                     FileIO::readFile(
                         sprintf('%s/config/local.key', $baseDir)
                     )
