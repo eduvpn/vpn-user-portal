@@ -382,7 +382,7 @@ try {
             new LocalSigner(
                 Base64::decode(
                     FileIO::readFile(
-                        sprintf('%s/local.key', $dataDir)
+                        sprintf('%s/config/local.key', $baseDir)
                     )
                 )
             )
