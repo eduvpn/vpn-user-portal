@@ -52,11 +52,8 @@ try {
 
         $clientFetcher = new ClientFetcher($config);
 
-        $remoteAccess = false;
         $keyInstanceMapping = [];
-        if ($config->getSection('Api')->hasItem('remoteAccess')) {
-            $remoteAccess = $config->getSection('Api')->getItem('remoteAccess');
-        }
+        $remoteAccess = $config->getSection('Api')->getItem('remoteAccess');
         if ($remoteAccess) {
             $keyInstanceMappingFile = sprintf('%s/key_instance_mapping.json', $dataDir);
             if (FileIO::exists($keyInstanceMappingFile)) {
