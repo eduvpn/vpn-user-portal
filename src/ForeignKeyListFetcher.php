@@ -14,6 +14,7 @@ use LetsConnect\Common\FileIO;
 use LetsConnect\Common\Json;
 use LetsConnect\Portal\HttpClient\HttpClientInterface;
 use ParagonIE\ConstantTime\Base64;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use RuntimeException;
 
 class ForeignKeyListFetcher
@@ -115,13 +116,15 @@ class ForeignKeyListFetcher
         $mappingData = [];
         foreach ($discoveryData as $sourceName => $sourceInfo) {
             foreach ($sourceInfo as $instanceInfo) {
-                $publicKey = new PublicKey(Base64::decode($instanceInfo['public_key']));
-                $baseUri = $instanceInfo['base_uri'];
-                $mappingData[$publicKey->getKeyId()] = [
-                    'public_key' => $publicKey->encode(),
-                    'base_uri' => $instanceInfo['base_uri'],
-                    'source_name' => $sourceName,
-                ];
+                foreach ($instanceInfo['public_key_list'] as $publicKeyStr) {
+                    $publicKey = new PublicKey(Base64UrlSafe::decode($publicKeyStr));
+                    $baseUri = $instanceInfo['base_uri'];
+                    $mappingData[$publicKey->getKeyId()] = [
+                        'public_key' => $publicKey->encode(),
+                        'base_uri' => $instanceInfo['base_uri'],
+                        'source_name' => $sourceName,
+                    ];
+                }
             }
         }
 

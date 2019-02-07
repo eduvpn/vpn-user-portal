@@ -22,23 +22,23 @@ class ForeignKeyListFetcherTest extends TestCase
         $foreignKeyListFetcher->update(
             new TestForeignKeyHttpClient(),
             [
-                'development' => [
-                    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
-                    'public_key' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
+                'development_v2' => [
+                    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev_v2.json',
+                    'public_key' => 's8YDiDF/6zN5cvdeHLaptla/ZWgr7MRCnrANQNKGWBE=',
                 ],
             ]
         );
         $this->assertSame(
             [
-                'Oec0kX4b9L1YRziz_Slw4Cm3xvItvWK5gMrmgEU9Bvk' => [
-                    'public_key' => 'YarxOioSoT1yRRhwkVI61fq-nCgzz75sZ39vVEFyoKo',
-                    'base_uri' => 'https://labrat.eduvpn.nl/',
-                    'source_name' => 'development',
+                'r-iSpOHTPKX_KCVr0P-J9OT-k9BcELdGYrpx4g7q0MM' => [
+                    'public_key' => 'bSWjOYkCI9kqRqTMRjAKPliwRMVt64BfirD_b35WBmc',
+                    'base_uri' => 'https://vpn01.tuxed.net/',
+                    'source_name' => 'development_v2',
                 ],
-                '8jO1a--VD_hbC7Iud2L5IbnRMtOEVbXuYtVNMtXz1S8' => [
-                    'public_key' => 'AV5A8J9miDPamzVKBr8rsuMPApt_5r9cHY-36dQJYAs',
-                    'base_uri' => 'https://fedora-vpn.tuxed.net/',
-                    'source_name' => 'development',
+                'Qtbplvcpf7aVGcDTpDuHZR6CQ3QtiZxrVI9fQHg0p60' => [
+                    'public_key' => 'H_dwogrDWgHucvIao7fXorO6RlNz8xi4tGCDzZGX-Sk',
+                    'base_uri' => 'https://vpn02.tuxed.net/',
+                    'source_name' => 'development_v2',
                 ],
             ],
             $foreignKeyListFetcher->extract()
@@ -57,9 +57,9 @@ class ForeignKeyListFetcherTest extends TestCase
         $foreignKeyListFetcher->update(
             new TestForeignKeyHttpClient(),
             [
-                'development' => [
-                    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev.wrong.json',
-                    'public_key' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
+                'development_v2' => [
+                    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev_v2.wrong.json',
+                    'public_key' => 's8YDiDF/6zN5cvdeHLaptla/ZWgr7MRCnrANQNKGWBE=',
                 ],
             ]
         );
