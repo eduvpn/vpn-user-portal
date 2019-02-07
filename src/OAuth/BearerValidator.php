@@ -11,7 +11,6 @@ namespace LetsConnect\Portal\OAuth;
 
 use DateTime;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
-use fkooman\OAuth\Server\AccessTokenInfo;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\Scope;
@@ -64,7 +63,7 @@ class BearerValidator
     /**
      * @param string $authorizationHeader
      *
-     * @return \fkooman\OAuth\Server\AccessTokenInfo
+     * @return VpnAccessTokenInfo
      */
     public function validate($authorizationHeader)
     {
@@ -125,11 +124,12 @@ class BearerValidator
             $userId = $baseUri.'!'.$userId;
         }
 
-        return new AccessTokenInfo(
+        return new VpnAccessTokenInfo(
             $userId,
             $accessTokenInfo['client_id'],
             new Scope($accessTokenInfo['scope']),
-            new DateTime($accessTokenInfo['authz_time'])
+            new DateTime($accessTokenInfo['authz_time']),
+            null !== $baseUri   // isLocal
         );
     }
 }

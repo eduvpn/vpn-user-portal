@@ -26,7 +26,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @return \fkooman\OAuth\Server\AccessTokenInfo|\LetsConnect\Common\Http\Response
+     * @return \LetsConnect\Portal\OAuth\VpnAccessTokenInfo|\LetsConnect\Common\Http\Response
      */
     public function executeBefore(Request $request, array $hookData)
     {
