@@ -129,7 +129,7 @@ class BearerValidator
             $accessTokenInfo['client_id'],
             new Scope($accessTokenInfo['scope']),
             new DateTime($accessTokenInfo['authz_time']),
-            null !== $baseUri   // isLocal
+            null === $baseUri   // isLocal
         );
     }
 }
