@@ -9,15 +9,15 @@
 
 namespace LetsConnect\Portal;
 
-use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\OAuthException;
 use LetsConnect\Common\Http\BeforeHookInterface;
 use LetsConnect\Common\Http\Request;
 use LetsConnect\Common\Http\Response;
+use LetsConnect\Portal\OAuth\BearerValidator;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
-    /** @var \fkooman\OAuth\Server\BearerValidator */
+    /** @var \LetsConnect\Portal\OAuth\BearerValidator */
     private $bearerValidator;
 
     public function __construct(BearerValidator $bearerValidator)

@@ -18,12 +18,14 @@ try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
     $config = Config::fromFile($configFile);
 
-    if ($config->getSection('Api')->hasItem('foreignKeyListSource')) {
-        $publicKeysSource = $config->getSection('Api')->getItem('foreignKeyListSource');
-        $publicKeysSourcePublicKey = $config->getSection('Api')->getItem('foreignKeyListPublicKey');
-
-        $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/foreign_key_list.json', $baseDir));
-        $foreignKeyListFetcher->update(new CurlHttpClient(), $publicKeysSource, $publicKeysSourcePublicKey);
+    if (false !== $config->getSection('Api')->getItem('remoteAccess')) {
+        $config->getSection('Api')->getItem('remoteAccessList');
+        $dataDir = sprintf('%s/data', $baseDir);
+        $foreignKeyListFetcher = new ForeignKeyListFetcher($dataDir);
+        $foreignKeyListFetcher->update(
+            new CurlHttpClient(),
+            $config->getSection('Api')->getSection('remoteAccessList')->toArray()
+        );
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;

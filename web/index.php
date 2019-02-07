@@ -10,6 +10,7 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\SAML\SP\PrivateKey;
 use fkooman\SAML\SP\PublicKey;
@@ -43,7 +44,6 @@ use LetsConnect\Portal\ClientFetcher;
 use LetsConnect\Portal\DisabledUserHook;
 use LetsConnect\Portal\Graph;
 use LetsConnect\Portal\LastAuthenticatedAtPingHook;
-use LetsConnect\Portal\OAuth\Keys\SecretKey;
 use LetsConnect\Portal\OAuth\PublicSigner;
 use LetsConnect\Portal\OAuthModule;
 use LetsConnect\Portal\PasswdModule;

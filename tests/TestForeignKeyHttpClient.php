@@ -24,24 +24,29 @@ class TestForeignKeyHttpClient implements HttpClientInterface
     public function get($requestUri, array $requestHeaders = [])
     {
         switch ($requestUri) {
-            case 'https://example.org/federation.json':
+            case 'https://static.eduvpn.nl/disco/secure_internet_dev.json':
                 return new Response(
                     200,
-                    file_get_contents(sprintf('%s/data/federation.json', __DIR__)),
+                    file_get_contents(sprintf('%s/data/secure_internet_dev.json', __DIR__)),
                     ['Content-Type' => 'application/json']
                 );
-            case 'https://example.org/federation.json.sig':
-            case 'https://example.org/federation.json.wrong.sig':
+            case 'https://static.eduvpn.nl/disco/secure_internet_dev.json.sig':
                 return new Response(
                     200,
-                    file_get_contents(sprintf('%s/data/federation.json.sig', __DIR__)),
+                    file_get_contents(sprintf('%s/data/secure_internet_dev.json.sig', __DIR__)),
+                    ['Content-Type' => 'application/pgp-signature']
+                );
+            case 'https://static.eduvpn.nl/disco/secure_internet_dev.wrong.json':
+                return new Response(
+                    200,
+                    file_get_contents(sprintf('%s/data/secure_internet_dev.wrong.json', __DIR__)),
                     ['Content-Type' => 'application/json']
                 );
-            case 'https://example.org/federation.json.wrong':
+            case 'https://static.eduvpn.nl/disco/secure_internet_dev.wrong.json.sig':
                 return new Response(
                     200,
-                    file_get_contents(sprintf('%s/data/federation.json.wrong', __DIR__)),
-                    ['Content-Type' => 'application/json']
+                    file_get_contents(sprintf('%s/data/secure_internet_dev.wrong.json.sig', __DIR__)),
+                    ['Content-Type' => 'application/pgp-signature']
                 );
             default:
                 throw new RuntimeException('no such requestUri');

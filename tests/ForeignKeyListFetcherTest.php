@@ -16,28 +16,30 @@ class ForeignKeyListFetcherTest extends TestCase
 {
     public function testFetch()
     {
-        $tmpFile = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
-        $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpFile);
-        $foreignKeyListFetcher->update(new TestForeignKeyHttpClient(), 'https://example.org/federation.json', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
-        $this->assertSame(
+        $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
+        mkdir($tmpDir);
+        $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpDir);
+        $foreignKeyListFetcher->update(
+            new TestForeignKeyHttpClient(),
             [
-                'labrat.eduvpn.nl' => base64_decode('wGos0zPERxPYZHyJXQXz/OOSCWWej27PEScjScJzXQ8=', true),
-                'vpn.tuxed.net' => base64_decode('cfkwpMo/btz/j/1YsQJRQ3izYPjn3wehfDSiSXeLFBs=', true),
-            ],
-            $foreignKeyListFetcher->extract()
+                'development' => [
+                    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
+                    'public_key' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
+                ],
+            ]
         );
-    }
-
-    public function testFetchUpdate()
-    {
-        $tmpFile = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
-        copy(sprintf('%s/data/federation.json', __DIR__), $tmpFile);
-        $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpFile);
-        $foreignKeyListFetcher->update(new TestForeignKeyHttpClient(), 'https://example.org/federation.json', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
         $this->assertSame(
             [
-                'labrat.eduvpn.nl' => base64_decode('wGos0zPERxPYZHyJXQXz/OOSCWWej27PEScjScJzXQ8=', true),
-                'vpn.tuxed.net' => base64_decode('cfkwpMo/btz/j/1YsQJRQ3izYPjn3wehfDSiSXeLFBs=', true),
+                'Oec0kX4b9L1YRziz_Slw4Cm3xvItvWK5gMrmgEU9Bvk' => [
+                    'public_key' => 'YarxOioSoT1yRRhwkVI61fq-nCgzz75sZ39vVEFyoKo',
+                    'base_uri' => 'https://labrat.eduvpn.nl/',
+                    'source_name' => 'development',
+                ],
+                '8jO1a--VD_hbC7Iud2L5IbnRMtOEVbXuYtVNMtXz1S8' => [
+                    'public_key' => 'AV5A8J9miDPamzVKBr8rsuMPApt_5r9cHY-36dQJYAs',
+                    'base_uri' => 'https://fedora-vpn.tuxed.net/',
+                    'source_name' => 'development',
+                ],
             ],
             $foreignKeyListFetcher->extract()
         );
@@ -49,12 +51,29 @@ class ForeignKeyListFetcherTest extends TestCase
      */
     public function testFetchWrongSignature()
     {
-        $tmpFile = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
-        $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpFile);
-        $foreignKeyListFetcher->update(new TestForeignKeyHttpClient(), 'https://example.org/federation.json.wrong', 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=');
+        $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
+        mkdir($tmpDir);
+        $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpDir);
+        $foreignKeyListFetcher->update(
+            new TestForeignKeyHttpClient(),
+            [
+                'development' => [
+                    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev.wrong.json',
+                    'public_key' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
+                ],
+            ]
+        );
     }
 
-    public function testFetchReplay()
+    public function testUpdateSameSeq()
+    {
+    }
+
+    public function testUpdateNewSeq()
+    {
+    }
+
+    public function testUpdateRollbackSeq()
     {
     }
 }

@@ -9,7 +9,9 @@
 
 namespace LetsConnect\Portal;
 
+use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use LetsConnect\Common\FileIO;
+use LetsConnect\Common\Json;
 use LetsConnect\Portal\HttpClient\HttpClientInterface;
 use ParagonIE\ConstantTime\Base64;
 use RuntimeException;
@@ -17,14 +19,14 @@ use RuntimeException;
 class ForeignKeyListFetcher
 {
     /** @var string */
-    private $filePath;
+    private $dataDir;
 
     /**
-     * @param string $filePath
+     * @param string $dataDir
      */
-    public function __construct($filePath)
+    public function __construct($dataDir)
     {
-        $this->filePath = $filePath;
+        $this->dataDir = $dataDir;
     }
 
     /**
@@ -34,35 +36,44 @@ class ForeignKeyListFetcher
      *
      * @return void
      */
-    public function update(HttpClientInterface $httpClient, $discoveryUrl, $encodedPublicKey)
+    public function update(HttpClientInterface $httpClient, array $remoteAccessList)
     {
-        $publicKey = Base64::decode($encodedPublicKey);
-        $discoverySignatureUrl = sprintf('%s.sig', $discoveryUrl);
+        $agreggateDiscoveryData = [];
+        foreach ($remoteAccessList as $sourceName => $sourceInfo) {
+            $discoveryUrl = $sourceInfo['discovery_url'];
+            $encodedPublicKey = $sourceInfo['public_key'];
 
-        $discoveryResponse = $httpClient->get($discoveryUrl);
-        $discoverySignatureResponse = $httpClient->get($discoverySignatureUrl);
+            $discoveryResponse = $httpClient->get($discoveryUrl);
+            $discoverySignatureResponse = $httpClient->get(sprintf('%s.sig', $discoveryUrl));
 
-        $discoverySignature = Base64::decode($discoverySignatureResponse->getBody());
-        $discoveryBody = $discoveryResponse->getBody();
+            $discoveryBody = $discoveryResponse->getBody();
+            $discoverySignatureBody = Base64::decode($discoverySignatureResponse->getBody());
 
-        if (!sodium_crypto_sign_verify_detached($discoverySignature, $discoveryBody, $publicKey)) {
-            throw new RuntimeException('unable to verify signature');
+            $publicKey = Base64::decode($encodedPublicKey);
+            if (!sodium_crypto_sign_verify_detached($discoverySignatureBody, $discoveryBody, $publicKey)) {
+                throw new RuntimeException('unable to verify signature');
+            }
+
+            // obtain the "seq" of the current stored discovery file
+            $currentSeq = $this->getCurrentSequence($sourceName);
+
+            $discoveryData = $discoveryResponse->json();
+            if ($discoveryData['seq'] < $currentSeq) {
+                throw new RuntimeException('existing "seq" is lower than "seq" of update!');
+            }
+
+            // write file when "seq" was incremented
+            if ($discoveryData['seq'] > $currentSeq) {
+                $discoveryFile = sprintf('%s/%s.json', $this->dataDir, $sourceName);
+                FileIO::writeFile($discoveryFile, $discoveryBody);
+            }
+            // do nothing when "seq" is the same as before
+            $agreggateDiscoveryData[$sourceName] = $discoveryData['instances'];
         }
 
-        $seq = self::getSequence($this->filePath);
-
-        // check whether "seq" was lower than current version
-        $discoveryData = $discoveryResponse->json();
-        if ($discoveryData['seq'] < $seq) {
-            throw new RuntimeException('rollback, this is really unexpected!');
-        }
-
-        // write file when "seq" was incremented
-        if ($discoveryData['seq'] > $seq) {
-            FileIO::writeFile($this->filePath, $discoveryBody);
-        }
-
-        // do nothing when "seq" is the same
+        // regenerate the mapping...
+        $mappingFile = sprintf('%s/key_instance_mapping.json', $this->dataDir);
+        FileIO::writeFile($mappingFile, Json::encode(self::generateMapping($agreggateDiscoveryData)));
     }
 
     /**
@@ -70,39 +81,50 @@ class ForeignKeyListFetcher
      */
     public function extract()
     {
-        if (false === FileIO::exists($this->filePath)) {
+        $mappingFile = sprintf('%s/key_instance_mapping.json', $this->dataDir);
+        if (false === FileIO::exists($mappingFile)) {
             return [];
         }
-        $jsonData = FileIO::readJsonFile($this->filePath);
-        $entryList = [];
-        foreach ($jsonData['instances'] as $instance) {
-            // convert base_uri to FQDN
-            $baseUri = $instance['base_uri'];
-            $hostName = parse_url($baseUri, PHP_URL_HOST);
-            if (!\is_string($hostName)) {
-                throw new RuntimeException('unable to extract host name from base_uri');
-            }
-            $entryList[$hostName] = Base64::decode($instance['public_key']);
-        }
 
-        return $entryList;
+        return FileIO::readJsonFile($mappingFile);
     }
 
     /**
-     * @param string $filePath
+     * @param string $remoteSourceName
      *
      * @return int
      */
-    private static function getSequence($filePath)
+    private function getCurrentSequence($remoteSourceName)
     {
-        if (false === FileIO::exists($filePath)) {
+        $discoveryFile = sprintf('%s/%s.json', $this->dataDir, $remoteSourceName);
+        if (false === FileIO::exists($discoveryFile)) {
             return 0;
         }
-        $jsonData = FileIO::readJsonFile($filePath);
-        if (!array_key_exists('seq', $jsonData)) {
-            throw new RuntimeException('unable to extract "seq" from file');
-        }
+        $jsonData = FileIO::readJsonFile($discoveryFile);
 
         return (int) $jsonData['seq'];
+    }
+
+    /**
+     * @param array $disoveryData
+     *
+     * @return array
+     */
+    private static function generateMapping(array $discoveryData)
+    {
+        $mappingData = [];
+        foreach ($discoveryData as $sourceName => $sourceInfo) {
+            foreach ($sourceInfo as $instanceInfo) {
+                $publicKey = new PublicKey(Base64::decode($instanceInfo['public_key']));
+                $baseUri = $instanceInfo['base_uri'];
+                $mappingData[$publicKey->getKeyId()] = [
+                    'public_key' => $publicKey->encode(),
+                    'base_uri' => $instanceInfo['base_uri'],
+                    'source_name' => $sourceName,
+                ];
+            }
+        }
+
+        return $mappingData;
     }
 }

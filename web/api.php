@@ -10,7 +10,7 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\OAuth\Server\BearerValidator;
+use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LetsConnect\Common\Config;
 use LetsConnect\Common\FileIO;
 use LetsConnect\Common\Http\JsonResponse;
@@ -21,12 +21,9 @@ use LetsConnect\Common\HttpClient\ServerClient;
 use LetsConnect\Common\Logger;
 use LetsConnect\Portal\BearerAuthenticationHook;
 use LetsConnect\Portal\ClientFetcher;
-use LetsConnect\Portal\ForeignKeyListFetcher;
-use LetsConnect\Portal\OAuth\Keys\SecretKey;
-use LetsConnect\Portal\OAuth\PublicSigner;
+use LetsConnect\Portal\OAuth\BearerValidator;
 use LetsConnect\Portal\Storage;
 use LetsConnect\Portal\VpnApiModule;
-use ParagonIE\ConstantTime\Base64;
 
 $logger = new Logger('vpn-user-api');
 
@@ -55,16 +52,16 @@ try {
 
         $clientFetcher = new ClientFetcher($config);
 
-        $foreignKeys = [];
-        if ($config->getSection('Api')->hasItem('foreignKeys')) {
-            foreach ($config->getSection('Api')->getItem('foreignKeys') as $keyId => $publicKey) {
-                $foreignKeys[$keyId] = Base64::decode($publicKey);
-            }
+        $remoteAccess = false;
+        $keyInstanceMapping = [];
+        if ($config->getSection('Api')->hasItem('remoteAccess')) {
+            $remoteAccess = $config->getSection('Api')->getItem('remoteAccess');
         }
-
-        if ($config->getSection('Api')->hasItem('foreignKeyListSource')) {
-            $foreignKeyListFetcher = new ForeignKeyListFetcher(sprintf('%s/data/foreign_key_list.json', $baseDir));
-            $foreignKeys = array_merge($foreignKeys, $foreignKeyListFetcher->extract());
+        if ($remoteAccess) {
+            $keyInstanceMappingFile = sprintf('%s/key_instance_mapping.json', $dataDir);
+            if (FileIO::exists($keyInstanceMappingFile)) {
+                $keyInstanceMapping = FileIO::readJsonFile($keyInstanceMappingFile);
+            }
         }
 
         $secretKey = SecretKey::fromEncodedString(
@@ -72,10 +69,12 @@ try {
                 sprintf('%s/config/secret.key', $baseDir)
             )
         );
+
         $bearerValidator = new BearerValidator(
             $storage,
             $clientFetcher,
-            new PublicSigner($secretKey->getPublicKey())
+            $secretKey->getPublicKey(),
+            $keyInstanceMapping
         );
 
         $service->addBeforeHook(

@@ -82,8 +82,8 @@ return [
         // AuthnContext required for *all* users
         //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
 
-        // Users with certain permissions obtained through 
-        // "permissionAttribute" MUST also have ANY of the listed 
+        // Users with certain permissions obtained through
+        // "permissionAttribute" MUST also have ANY of the listed
         // AuthnContexts. If they currently don't, a new authentication is
         // triggered to obtain it
         //'permissionAuthnContext' => [
@@ -140,22 +140,20 @@ return [
             //],
         ],
 
-        // List of foreign OAuth *PUBLIC* keys of VPN instances for which we
-        // want to allow guest usage
-        'foreignKeys' => [
-            //'vpn.example.org' => 'AABBCC==',
-            //'vpn.example.com' => 'BBCCDD==',
+        // Enable Remote Access, i.e. users from other VPN servers listed in
+        // the below remoteAccessList files to access this VPN server through
+        // the OAuth API
+        'remoteAccess' => false,
+        'remoteAccessList' => [
+            'production' => [
+                'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet.json',
+                'public_key' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
+            ],
+            //'development' => [
+            //    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
+            //    'public_key' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
+            //],
         ],
-
-        // Fetch a list of foreign public keys automatically
-        //
-        // ** Production **
-        //'foreignKeyListSource' => 'https://static.eduvpn.nl/disco/secure_internet.json',
-        //'foreignKeyListPublicKey' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
-        //
-        // ** Development **
-        //'foreignKeyListSource' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
-        //'foreignKeyListPublicKey' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
     ],
 
     // Connection to vpn-server-api

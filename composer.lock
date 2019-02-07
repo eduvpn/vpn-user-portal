@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "111568a75761fba8bb20ffa7a70a7de1",
+    "content-hash": "cd2a6bfa3580dcfc7d75a5d986277c28",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -113,6 +113,63 @@
             "time": "2019-01-25T10:33:39+00:00"
         },
         {
+            "name": "fkooman/jwt",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://git.tuxed.net/fkooman/php-jwt",
+                "reference": "654e2764447036e9cf4a57792cf8237026055b1b"
+            },
+            "require": {
+                "ext-date": "*",
+                "ext-hash": "*",
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "ext-spl": "*",
+                "paragonie/constant_time_encoding": "^1.0.3|^2.2.0",
+                "paragonie/random_compat": ">=1",
+                "php": ">= 5.4.8",
+                "symfony/polyfill-php56": "^1",
+                "symfony/polyfill-php70": "^1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4|^5|^6|^7"
+            },
+            "suggest": {
+                "ext-libsodium": "PHP < 7.2 sodium implementation",
+                "ext-sodium": "PHP >= 7.2 sodium implementation"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/sodium_compat.php"
+                ],
+                "psr-4": {
+                    "fkooman\\Jwt\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "fkooman\\Jwt\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "Simple and Secure JWT Signer/Verifier",
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.tuxed.net/fkooman/php-jwt"
+            },
+            "time": "2019-02-05T22:18:24+00:00"
+        },
+        {
             "name": "fkooman/oauth2-server",
             "version": "dev-master",
             "source": {
@@ -168,7 +225,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "4627882f8595d8c0c960c09a7104cd152e687b84"
+                "reference": "a3a31ab8788a4c2c5230c168443456f0848b585e"
             },
             "require": {
                 "ext-date": "*",
@@ -211,7 +268,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-02-04T13:34:57+00:00"
+            "time": "2019-02-05T21:43:07+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -539,6 +596,65 @@
                 }
             ],
             "description": "Symfony polyfill backporting some PHP 5.6+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2018-09-21T06:26:08+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php70",
+            "version": "v1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php70.git",
+                "reference": "6b88000cdd431cd2e940caa2cb569201f3f84224"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/6b88000cdd431cd2e940caa2cb569201f3f84224",
+                "reference": "6b88000cdd431cd2e940caa2cb569201f3f84224",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/random_compat": "~1.0|~2.0|~9.99",
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php70\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ],
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 7.0+ features to lower PHP versions",
             "homepage": "https://symfony.com",
             "keywords": [
                 "compatibility",
@@ -2077,6 +2193,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "eduvpn/common": 20,
+        "fkooman/jwt": 20,
         "fkooman/oauth2-server": 20,
         "fkooman/php-saml-sp": 20
     },
