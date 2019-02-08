@@ -12,6 +12,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LetsConnect\Common\FileIO;
+use LetsConnect\Portal\OAuth\PublicSigner;
 
 try {
     // generate OAuth key
@@ -22,7 +23,9 @@ try {
         exit(1);
     }
     $secretKey = SecretKey::fromEncodedString(FileIO::readFile($keyFile));
-    echo 'OAuth Public Key: '.$secretKey->getPublicKey()->encode().PHP_EOL;
+    echo 'OAuth Key'.PHP_EOL;
+    echo '    Public Key: '.$secretKey->getPublicKey()->encode().PHP_EOL;
+    echo '    Key ID    : '.PublicSigner::calculateKeyId($secretKey->getPublicKey()).PHP_EOL;
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
