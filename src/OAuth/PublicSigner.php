@@ -14,6 +14,7 @@ use fkooman\Jwt\Exception\JwtException;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\SignerInterface;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * JWT Signer, using EdDSA (Ed25519) algorithm.
@@ -30,7 +31,23 @@ class PublicSigner implements SignerInterface
     public function __construct(PublicKey $publicKey, SecretKey $secretKey = null)
     {
         $this->edDsa = new EdDSA($publicKey, $secretKey);
-        $this->edDsa->useKeyId(true);
+        $this->edDsa->setKeyId(self::calculateKeyId($publicKey));
+    }
+
+    /**
+     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey $publicKey
+     *
+     * @return string
+     */
+    public static function calculateKeyId(PublicKey $publicKey)
+    {
+        return Base64UrlSafe::encodeUnpadded(
+            hash(
+                'sha256',
+                $publicKey->raw(),
+                true
+            )
+        );
     }
 
     /**

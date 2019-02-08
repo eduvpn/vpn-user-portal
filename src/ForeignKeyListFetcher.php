@@ -13,6 +13,7 @@ use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use LetsConnect\Common\FileIO;
 use LetsConnect\Common\Json;
 use LetsConnect\Portal\HttpClient\HttpClientInterface;
+use LetsConnect\Portal\OAuth\PublicSigner;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use RuntimeException;
@@ -119,7 +120,7 @@ class ForeignKeyListFetcher
                 foreach ($instanceInfo['public_key_list'] as $publicKeyStr) {
                     $publicKey = new PublicKey(Base64UrlSafe::decode($publicKeyStr));
                     $baseUri = $instanceInfo['base_uri'];
-                    $mappingData[$publicKey->getKeyId()] = [
+                    $mappingData[PublicSigner::calculateKeyId($publicKey)] = [
                         'public_key' => $publicKey->encode(),
                         'base_uri' => $instanceInfo['base_uri'],
                         'source_name' => $sourceName,
