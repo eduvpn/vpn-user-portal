@@ -170,6 +170,9 @@ try {
     if ('SamlAuthentication' === $authMethod) {
         $logoutUrl = $request->getRootUri().'_saml/logout';
     }
+    if ('ShibAuthentication' === $authMethod) {
+        $logoutUrl = $request->getAuthority().'/Shibboleth.sso/Logout';
+    }
 
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
