@@ -218,7 +218,7 @@ try {
                 'auth',
                 new ShibAuthenticationHook(
                     $config->getSection('ShibAuthentication')->getItem('userIdAttribute'),
-                    $config->getSection('ShibAuthentication')->optionalItem('permissionAttribute', [])
+                    $config->getSection('ShibAuthentication')->optionalItem('permissionAttribute')
                 )
             );
             break;
