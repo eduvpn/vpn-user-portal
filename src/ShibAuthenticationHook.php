@@ -19,12 +19,17 @@ class ShibAuthenticationHook implements BeforeHookInterface
     /** @var string */
     private $userIdAttribute;
 
+    /** @var string|null */
+    private $permissionAttribute;
+
     /**
-     * @param string $userIdAttribute
+     * @param string      $userIdAttribute
+     * @param string|null $permissionAttribute
      */
-    public function __construct($userIdAttribute)
+    public function __construct($userIdAttribute, $permissionAttribute)
     {
         $this->userIdAttribute = $userIdAttribute;
+        $this->permissionAttribute = $permissionAttribute;
     }
 
     /**
@@ -35,9 +40,14 @@ class ShibAuthenticationHook implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
+        $userPermissions = [];
+        if (null !== $this->permissionAttribute) {
+            $userPermissions = explode(';', $request->requireHeader($this->permissionAttribute));
+        }
+
         return new UserInfo(
             $request->requireHeader($this->userIdAttribute),
-            [],
+            $userPermissions,
             new DateTime($request->requireHeader('Shib-Authentication-Instant'))
         );
     }
