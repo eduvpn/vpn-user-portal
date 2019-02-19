@@ -16,9 +16,9 @@ return [
     // - OAuth (refresh_token) validity
     // - X.509 Client Certificate "Not After"
     //   (time of authentication + sessionExpiry)
-    'sessionExpiry' => 'P90D',
-    //'sessionExpiry' => 'P1D',     // 1 day
+    'sessionExpiry' => 'P90D',      // 90 days
     //'sessionExpiry' => 'PT12H',   // 12 hours
+    //'sessionExpiry' => 'P1D',     // 1 day
 
     // LDAP
     'FormLdapAuthentication' => [
@@ -160,12 +160,4 @@ return [
     'apiUser' => 'vpn-user-portal',
     'apiPass' => 'XXX-vpn-user-portal/vpn-server-api-XXX',
     'apiUri' => 'http://localhost/vpn-server-api/api.php',
-
-    // configure the statistics
-    'statsConfig' => [
-        // override the color of the bars in the statistics graphs
-        //'barColor' => [0x55, 0x55, 0x55], // default (gray)
-        //'barColor' => [0x11, 0x93, 0xf5], // Let's Connect Blue
-        //'barColor' => [0xdf, 0x7f, 0x0c], // eduVPN orange
-    ],
 ];

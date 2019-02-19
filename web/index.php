@@ -77,8 +77,11 @@ try {
         sprintf('%s/views', $baseDir),
         sprintf('%s/config/views', $baseDir),
     ];
+    $styleConfig = null;
     if ($config->hasItem('styleName')) {
-        $templateDirs[] = sprintf('%s/views/%s', $baseDir, $config->getItem('styleName'));
+        $styleName = $config->getItem('styleName');
+        $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
+        $styleConfig = Config::fromFile(sprintf('%s/config/%s.php', $baseDir, $styleName));
     }
 
     // determine sessionExpiry, use the new configuration option if it is there
@@ -359,10 +362,8 @@ try {
     // admin module
     $graph = new Graph();
     $graph->setFontList($fontList);
-    if ($config->hasSection('statsConfig')) {
-        if ($config->getSection('statsConfig')->hasItem('barColor')) {
-            $graph->setBarColor($config->getSection('statsConfig')->getItem('barColor'));
-        }
+    if (null !== $styleConfig) {
+        $graph->setBarColor($styleConfig->getItem('barColor'));
     }
 
     $adminPortalModule = new AdminPortalModule(
