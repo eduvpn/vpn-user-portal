@@ -113,6 +113,42 @@ class SamlModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                try {
+                    $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
+
+                    return new RedirectResponse($logoutUrl);
+                } catch (SamlException $e) {
+                    throw new HttpException($e->getMessage(), 500, [], $e);
+                }
+            }
+        );
+
+        $service->get(
+            '/_saml/slo',
+            /**
+             * @return \LetsConnect\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                try {
+                    $this->samlSp->handleLogoutResponse(
+                        $request->getQueryParameter('SAMLResponse'),
+                        $request->getQueryParameter('RelayState'),
+                        $request->getQueryParameter('Signature')
+                    );
+
+                    return new RedirectResponse($request->getQueryParameter('RelayState'));
+                } catch (SamlException $e) {
+                    throw new HttpException($e->getMessage(), 500, [], $e);
+                }
+            }
+        );
+
+        $service->get(
+            '/_saml/logout',
+            /**
+             * @return \LetsConnect\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
                 $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
 
                 return new RedirectResponse($logoutUrl);

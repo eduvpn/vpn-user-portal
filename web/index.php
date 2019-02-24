@@ -192,7 +192,7 @@ try {
                 new SpInfo(
                     $spEntityId,
                     $request->getRootUri().'_saml/acs',
-                    null,
+                    $request->getRootUri().'_saml/slo',
                     PrivateKey::fromFile(sprintf('%s/config/sp.key', $baseDir)),
                     PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir))
                 ),
