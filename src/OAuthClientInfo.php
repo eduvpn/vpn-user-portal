@@ -118,7 +118,7 @@ class OAuthClientInfo
             ],
         ];
 
-        if (!array_key_exists($clientId, $clientInfo)) {
+        if (!\array_key_exists($clientId, $clientInfo)) {
             return false;
         }
 

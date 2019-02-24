@@ -99,7 +99,7 @@ class Graph
 
         // merge data
         foreach ($dateList as $k => $v) {
-            if (array_key_exists($k, $graphData)) {
+            if (\array_key_exists($k, $graphData)) {
                 $dateList[$k] = $graphData[$k];
             }
         }

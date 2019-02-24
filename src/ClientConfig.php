@@ -25,7 +25,7 @@ class ClientConfig
         $hostName = $profileConfig['hostName'];
 
         $vpnProtoPorts = $profileConfig['vpnProtoPorts'];
-        if (array_key_exists('exposedVpnProtoPorts', $profileConfig)) {
+        if (\array_key_exists('exposedVpnProtoPorts', $profileConfig)) {
             if (0 !== \count($profileConfig['exposedVpnProtoPorts'])) {
                 $vpnProtoPorts = $profileConfig['exposedVpnProtoPorts'];
             }

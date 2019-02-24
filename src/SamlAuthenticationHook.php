@@ -85,7 +85,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
 
         $samlAttributes = $samlAssertion->getAttributes();
 
-        if (!array_key_exists($this->userIdAttribute, $samlAttributes)) {
+        if (!\array_key_exists($this->userIdAttribute, $samlAttributes)) {
             throw new HttpException(sprintf('missing SAML user_id attribute "%s"', $this->userIdAttribute), 500);
         }
 
@@ -126,7 +126,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
         if (null === $this->permissionAttribute) {
             return [];
         }
-        if (!array_key_exists($this->permissionAttribute, $samlAttributes)) {
+        if (!\array_key_exists($this->permissionAttribute, $samlAttributes)) {
             return [];
         }
 

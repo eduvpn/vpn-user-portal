@@ -47,7 +47,7 @@ class DisabledUserHook implements BeforeHookInterface
             return false;
         }
 
-        if (!array_key_exists('auth', $hookData)) {
+        if (!\array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
         /** @var \LetsConnect\Common\Http\UserInfo */

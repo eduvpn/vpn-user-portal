@@ -38,10 +38,10 @@ class ClientFetcher implements ClientDbInterface
         // XXX switch to only support 'redirect_uri_list' for 2.0
         $clientInfoData = $this->config->getSection('Api')->getSection('consumerList')->getItem($clientId);
         $redirectUriList = [];
-        if (array_key_exists('redirect_uri_list', $clientInfoData)) {
+        if (\array_key_exists('redirect_uri_list', $clientInfoData)) {
             $redirectUriList = array_merge($redirectUriList, (array) $clientInfoData['redirect_uri_list']);
         }
-        if (array_key_exists('redirect_uri', $clientInfoData)) {
+        if (\array_key_exists('redirect_uri', $clientInfoData)) {
             $redirectUriList = array_merge($redirectUriList, (array) $clientInfoData['redirect_uri']);
         }
         $clientInfoData['redirect_uri_list'] = $redirectUriList;
@@ -49,9 +49,9 @@ class ClientFetcher implements ClientDbInterface
         return new ClientInfo(
             $clientId,
             $redirectUriList,
-            array_key_exists('client_secret', $clientInfoData) ? $clientInfoData['client_secret'] : null,
-            array_key_exists('display_name', $clientInfoData) ? $clientInfoData['display_name'] : null,
-            array_key_exists('require_approval', $clientInfoData) ? $clientInfoData['require_approval'] : true
+            \array_key_exists('client_secret', $clientInfoData) ? $clientInfoData['client_secret'] : null,
+            \array_key_exists('display_name', $clientInfoData) ? $clientInfoData['display_name'] : null,
+            \array_key_exists('require_approval', $clientInfoData) ? $clientInfoData['require_approval'] : true
         );
     }
 }

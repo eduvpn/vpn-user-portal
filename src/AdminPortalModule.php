@@ -242,7 +242,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 AuthUtils::requireAdmin($hookData);
 
                 $stats = $this->serverClient->get('stats');
-                if (!\is_array($stats) || !array_key_exists('profiles', $stats)) {
+                if (!\is_array($stats) || !\array_key_exists('profiles', $stats)) {
                     // this is an old "stats" format we no longer support,
                     // vpn-server-api-stats has to run again first, which is
                     // done by the crontab running at midnight...

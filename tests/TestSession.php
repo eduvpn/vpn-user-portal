@@ -69,7 +69,7 @@ class TestSession implements SessionInterface
      */
     public function has($key)
     {
-        return array_key_exists($key, $this->sessionData);
+        return \array_key_exists($key, $this->sessionData);
     }
 
     /**

@@ -80,7 +80,7 @@ class BearerValidator
 
         if ($keyId !== PublicSigner::calculateKeyId($this->localPublicKey)) {
             // NOT a local key, check the keyInstanceMapping if we know this key ID
-            if (!array_key_exists($keyId, $this->keyInstanceMapping)) {
+            if (!\array_key_exists($keyId, $this->keyInstanceMapping)) {
                 // we do not know this key ID...
                 throw new InvalidTokenException('unknown "kid", we do not trust this key');
             }
