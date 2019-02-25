@@ -131,9 +131,7 @@ class SamlModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 try {
                     $this->samlSp->handleLogoutResponse(
-                        $request->getQueryParameter('SAMLResponse'),
-                        $request->getQueryParameter('RelayState'),
-                        $request->getQueryParameter('Signature')
+                        $request->getQueryString()
                     );
 
                     return new RedirectResponse($request->getQueryParameter('RelayState'));
