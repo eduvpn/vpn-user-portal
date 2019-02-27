@@ -33,8 +33,7 @@ class ForeignKeyListFetcher
 
     /**
      * @param HttpClient\HttpClientInterface $httpClient
-     * @param string                         $discoveryUrl
-     * @param string                         $encodedPublicKey
+     * @param array $remoteAccessList
      *
      * @return void
      */
@@ -108,7 +107,7 @@ class ForeignKeyListFetcher
     }
 
     /**
-     * @param array $disoveryData
+     * @param array $discoveryData
      *
      * @return array
      */

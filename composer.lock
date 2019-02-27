@@ -225,7 +225,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "d62a358fd108ddedc55edb203d4deb7ecb065ee3"
+                "reference": "85e9893945492eba56d0efec591b7ceda648e70f"
             },
             "require": {
                 "ext-date": "*",
@@ -245,6 +245,9 @@
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/sodium_compat.php"
+                ],
                 "psr-4": {
                     "fkooman\\SAML\\SP\\": "src/"
                 }
@@ -268,7 +271,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-02-25T18:49:59+00:00"
+            "time": "2019-02-27T09:54:00+00:00"
         },
         {
             "name": "fkooman/secookie",
