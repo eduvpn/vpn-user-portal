@@ -33,7 +33,7 @@ class ForeignKeyListFetcher
 
     /**
      * @param HttpClient\HttpClientInterface $httpClient
-     * @param array $remoteAccessList
+     * @param array                          $remoteAccessList
      *
      * @return void
      */
