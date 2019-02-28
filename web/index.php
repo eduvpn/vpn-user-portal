@@ -188,14 +188,15 @@ try {
     switch ($authMethod) {
         case 'SamlAuthentication':
             $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
+            $spInfo = new SpInfo(
+                $spEntityId,
+                PrivateKey::fromFile(sprintf('%s/config/sp.key', $baseDir)),
+                PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir)),
+                $request->getRootUri().'_saml/acs'
+            );
+            $spInfo->setSloUrl($request->getRootUri().'_saml/slo');
             $samlSp = new SP(
-                new SpInfo(
-                    $spEntityId,
-                    $request->getRootUri().'_saml/acs',
-                    $request->getRootUri().'_saml/slo',
-                    PrivateKey::fromFile(sprintf('%s/config/sp.key', $baseDir)),
-                    PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir))
-                ),
+                $spInfo,
                 new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
             );
             $service->addBeforeHook(
