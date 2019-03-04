@@ -27,7 +27,6 @@ use LetsConnect\Common\Http\FormAuthenticationModule;
 use LetsConnect\Common\Http\HtmlResponse;
 use LetsConnect\Common\Http\LanguageSwitcherHook;
 use LetsConnect\Common\Http\LdapAuth;
-use LetsConnect\Common\Http\LogoutModule;
 use LetsConnect\Common\Http\RadiusAuth;
 use LetsConnect\Common\Http\Request;
 use LetsConnect\Common\Http\Service;
@@ -44,6 +43,7 @@ use LetsConnect\Portal\ClientFetcher;
 use LetsConnect\Portal\DisabledUserHook;
 use LetsConnect\Portal\Graph;
 use LetsConnect\Portal\LastAuthenticatedAtPingHook;
+use LetsConnect\Portal\LogoutModule;
 use LetsConnect\Portal\OAuth\PublicSigner;
 use LetsConnect\Portal\OAuthModule;
 use LetsConnect\Portal\PasswdModule;
@@ -170,11 +170,13 @@ try {
     $authMethod = $config->getItem('authMethod');
 
     $logoutUrl = null;
+    $returnParameter = 'ReturnTo';
     if ('SamlAuthentication' === $authMethod) {
         $logoutUrl = $request->getRootUri().'_saml/logout';
     }
     if ('ShibAuthentication' === $authMethod) {
         $logoutUrl = $request->getAuthority().'/Shibboleth.sso/Logout';
+        $returnParameter = 'return';
     }
 
     $storage = new Storage(
@@ -184,7 +186,7 @@ try {
     );
     $storage->update();
 
-    $service->addModule(new LogoutModule($session, $logoutUrl));
+    $service->addModule(new LogoutModule($session, $logoutUrl, $returnParameter));
     switch ($authMethod) {
         case 'SamlAuthentication':
             $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
