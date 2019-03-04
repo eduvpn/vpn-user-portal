@@ -188,12 +188,22 @@ try {
     switch ($authMethod) {
         case 'SamlAuthentication':
             $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
+            $serviceName = $config->getSection('SamlAuthentication')->optionalItem('serviceName', []);
+
+            $userIdAttribute = $config->getSection('SamlAuthentication')->getItem('userIdAttribute');
+            $permissionAttribute = $config->getSection('SamlAuthentication')->optionalItem('permissionAttribute');
+
             $spInfo = new SpInfo(
                 $spEntityId,
                 PrivateKey::fromFile(sprintf('%s/config/sp.key', $baseDir)),
                 PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir)),
                 $request->getRootUri().'_saml/acs'
             );
+            $spInfo->setRequiredAttributes([$userIdAttribute]);
+            if (null !== $permissionAttribute) {
+                $spInfo->setOptionalAttributes([$permissionAttribute]);
+            }
+            $spInfo->setServiceName($serviceName);
             $spInfo->setSloUrl($request->getRootUri().'_saml/slo');
             $samlSp = new SP(
                 $spInfo,
@@ -204,8 +214,8 @@ try {
                 new SamlAuthenticationHook(
                     $samlSp,
                     $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
-                    $config->getSection('SamlAuthentication')->getItem('userIdAttribute'),
-                    $config->getSection('SamlAuthentication')->optionalItem('permissionAttribute'),
+                    $userIdAttribute,
+                    $permissionAttribute,
                     $config->getSection('SamlAuthentication')->optionalItem('authnContext', []),
                     $config->getSection('SamlAuthentication')->optionalItem('permissionAuthnContext', [])
                 )

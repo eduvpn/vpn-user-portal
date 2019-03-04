@@ -52,6 +52,10 @@ return [
 
     // SAML
     'SamlAuthentication' => [
+        'serviceName' => [
+            'en' => 'VPN Service',
+        ],
+
         // 'OID for eduPersonTargetedID
         'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
         // OID for eduPersonPrincipalName
