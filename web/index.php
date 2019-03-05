@@ -201,11 +201,6 @@ try {
                 PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir)),
                 $request->getRootUri().'_saml/acs'
             );
-            $spInfo->setRequiredAttributes([$userIdAttribute]);
-            if (null !== $permissionAttribute) {
-                $spInfo->setOptionalAttributes([$permissionAttribute]);
-            }
-            $spInfo->setServiceName($serviceName);
             $spInfo->setSloUrl($request->getRootUri().'_saml/slo');
             $samlSp = new SP(
                 $spInfo,
