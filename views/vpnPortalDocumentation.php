@@ -18,7 +18,7 @@
         <li>Download the <a target="_blank" href="https://openvpn.net/index.php/open-source/downloads.html">OpenVPN Community client</a>
             <ul>
                 <li>Choose "Installer, Windows Vista and later";
-                <li>Make sure you have the installer from the 2.4 release, e.g. <code>openvpn-install-2.4.6-I602.exe</code>;</li>
+                <li>Make sure you have the installer from the 2.4 release, e.g. <code>openvpn-install-2.4.7-I603.exe</code>;</li>
                 <li>Keep your version updated, there may be (security) releases from time to time!</li>
             </ul>
         </li>
@@ -87,7 +87,8 @@
             
             <ul>
                 <li>Android (<a target="_blank" href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp">Google Play Store</a>, <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=org.fedorahosted.freeotp">F-Droid</a>)</li>
-                <li>iOS (<a target="_blank" href="https://itunes.apple.com/us/app/freeotp/id872559395">iTunes</a>)</li>
+                <li>iOS (<a target="_blank" href="https://itunes.apple.com/us/app/freeotp-authenticator/id872559395">iTunes</a>)</li>
+
             </ul>
         <?php endif; ?>
     <?php endif; ?>
