@@ -121,7 +121,7 @@ class BearerValidator
         if (null !== $baseUri) {
             // append the base_uri in front of the user_id to indicate this is
             // a "remote" user
-            $userId = $baseUri.'!'.$userId;
+            $userId = $baseUri.'!!'.$userId;
         }
 
         return new VpnAccessTokenInfo(
