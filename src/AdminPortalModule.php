@@ -151,7 +151,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'clientCertificateList' => $clientCertificateList,
                             'hasTotpSecret' => $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]),
                             'isDisabled' => $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]),
-                            'isSelf' => $adminUserId === $userId, // the admin is viewing his own user
+                            'isSelf' => $adminUserId === $userId, // the admin is viewing his own account
                         ]
                     )
                 );
