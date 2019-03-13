@@ -151,7 +151,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'clientCertificateList' => $clientCertificateList,
                             'hasTotpSecret' => $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]),
                             'isDisabled' => $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]),
-                            'isSelf' => $adminUserId === $userId, // the admin is viewing his own account
+                            'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
                         ]
                     )
                 );
@@ -172,7 +172,6 @@ class AdminPortalModule implements ServiceModuleInterface
                 // if the current user being managed is the account itself,
                 // do not allow this. We don't want admins allow to disable
                 // themselves or remove their own 2FA.
-
                 if ($adminUserId === $userId) {
                     throw new HttpException('cannot manage own account', 400);
                 }
