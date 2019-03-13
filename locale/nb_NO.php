@@ -118,6 +118,6 @@ return [
     'Verify' => 'Verifiser',
     'Yes' => 'Ja',
     'You are already enrolled for Two-factor authentication (2FA).' => 'Du er allerede registrert for TOTP.',
-    //'You cannot manager your own user account.' => '',
+    //'You cannot manage your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Din ID er <code>%_two_factor_user_id%</code>.',
 ];

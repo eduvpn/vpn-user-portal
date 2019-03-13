@@ -5,7 +5,7 @@
     </p>
 
     <?php if ($isSelf): ?>
-        <em><?=$this->t('You cannot manager your own user account.'); ?></em>
+        <em><?=$this->t('You cannot manage your own user account.'); ?></em>
     <?php endif; ?>
     
     <form method="post" action="<?=$this->e($requestRoot); ?>user">
