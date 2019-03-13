@@ -93,7 +93,10 @@ class SamlAuthenticationHook implements BeforeHookInterface
 
         $userAuthnContext = $samlAssertion->getAuthnContext();
         if (null !== $this->permissionAttribute) {
-            $userPermissions = $samlAttributes[$this->permissionAttribute];
+            $userPermissions = [];
+            if (\array_key_exists($this->permissionAttribute, $samlAttributes)) {
+                $userPermissions = $samlAttributes[$this->permissionAttribute];
+            }
 
             // if we got a permission that's part of the
             // permissionAuthnContext we have to make sure we have one of
