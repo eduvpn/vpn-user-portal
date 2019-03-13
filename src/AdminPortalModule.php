@@ -135,7 +135,7 @@ class AdminPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
-
+                $adminUserId = $hookData['auth']->id();
                 $userId = $request->getQueryParameter('user_id');
                 InputValidation::userId($userId);
 
@@ -151,6 +151,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'clientCertificateList' => $clientCertificateList,
                             'hasTotpSecret' => $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]),
                             'isDisabled' => $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]),
+                            'isSelf' => $adminUserId === $userId, // the admin is viewing his own user
                         ]
                     )
                 );
@@ -164,9 +165,18 @@ class AdminPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
-
+                $adminUserId = $hookData['auth']->id();
                 $userId = $request->getPostParameter('user_id');
                 InputValidation::userId($userId);
+
+                // if the current user being managed is the account itself,
+                // do not allow this. We don't want admins allow to disable
+                // themselves or remove their own 2FA.
+
+                if ($adminUserId === $userId) {
+                    throw new HttpException('cannot manage own account', 400);
+                }
+
                 $userAction = $request->getPostParameter('user_action');
                 // no need to explicitly validate userAction, as we will have
                 // switch below with whitelisted acceptable values

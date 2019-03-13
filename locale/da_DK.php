@@ -118,6 +118,6 @@ return [
     'Verify' => 'Bekræft',
     //'Yes' => '',
     'You are already enrolled for Two-factor authentication (2FA).' => 'Du er allerede tilmeldt TOTP.',
+    //'You cannot manager your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Dit ID er <code>%_two_factor_user_id%</code>.',
-    // [DELETED] 'Group Membership(s)' => 'Gruppemedlemsskab(er)',
 ];

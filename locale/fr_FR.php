@@ -118,6 +118,6 @@ return [
     'Verify' => 'Vérifier',
     //'Yes' => '',
     'You are already enrolled for Two-factor authentication (2FA).' => 'Vous êtes déjà inscrit pour TOTP.',
+    //'You cannot manager your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Votre identifiant est <code>%_two_factor_user_id%</code>.',
-    // [DELETED] 'Group Membership(s)' => 'Appartenance(s) à un ou des groupe(s)',
 ];

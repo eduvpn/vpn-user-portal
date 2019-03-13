@@ -3,17 +3,23 @@
     <p>
         <?=$this->t('Managing user <em>%userId%</em>.'); ?>
     </p>
+
+    <?php if ($isSelf): ?>
+        <em><?=$this->t('You cannot manager your own user account.'); ?></em>
+    <?php endif; ?>
     
     <form method="post" action="<?=$this->e($requestRoot); ?>user">
         <fieldset>
             <input type="hidden" name="user_id" value="<?=$this->e($userId); ?>">
-            <?php if ($isDisabled): ?>
-                <button name="user_action" value="enableUser"><?=$this->t('Enable User'); ?></button>
-            <?php else: ?>
-                <button name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
-            <?php endif; ?>
-            <?php if ($hasTotpSecret): ?>
-                <button name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
+            <?php if (!$isSelf): ?>
+                <?php if ($isDisabled): ?>
+                    <button name="user_action" value="enableUser"><?=$this->t('Enable User'); ?></button>
+                <?php else: ?>
+                    <button name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
+                <?php endif; ?>
+                <?php if ($hasTotpSecret): ?>
+                    <button name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
+                <?php endif; ?>
             <?php endif; ?>
         </fieldset>
     </form>

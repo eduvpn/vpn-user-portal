@@ -118,5 +118,6 @@ return [
     'Verify' => 'Verifiëren',
     'Yes' => 'Ja',
     'You are already enrolled for Two-factor authentication (2FA).' => 'Je bent al aangemeld voor twee-factor authenticatie (2FA).',
+    'You cannot manager your own user account.' => 'Je kunt niet je eigen account beheren.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Je ID is <code>%_two_factor_user_id%</code>.',
 ];
