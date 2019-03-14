@@ -42,7 +42,10 @@ class ShibAuthenticationHook implements BeforeHookInterface
     {
         $userPermissions = [];
         if (null !== $this->permissionAttribute) {
-            $userPermissions = explode(';', $request->requireHeader($this->permissionAttribute));
+            $permissionHeaderValue = $request->optionalHeader($this->permissionAttribute);
+            if (null !== $permissionHeaderValue) {
+                $userPermissions = explode(';', $permissionHeaderValue);
+            }
         }
 
         return new UserInfo(
