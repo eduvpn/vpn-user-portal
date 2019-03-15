@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "136ee36deb23e22e54c346af74d81009",
+    "content-hash": "c9fcf8cd62a721e14b98d1ba45cfbe85",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "2cb6316668dbfe913e37319b20cff7154181069c"
+                "reference": "4ae60056bc373fc7a9183ba32a497a70e43b03a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/2cb6316668dbfe913e37319b20cff7154181069c",
-                "reference": "2cb6316668dbfe913e37319b20cff7154181069c",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/4ae60056bc373fc7a9183ba32a497a70e43b03a1",
+                "reference": "4ae60056bc373fc7a9183ba32a497a70e43b03a1",
                 "shasum": ""
             },
             "require": {
@@ -110,7 +110,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-03-04T21:08:46+00:00"
+            "time": "2019-03-13T22:01:22+00:00"
         },
         {
             "name": "fkooman/jwt",
@@ -220,11 +220,11 @@
         },
         {
             "name": "fkooman/php-saml-sp",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "2339b46515b0ecc75f294ff10146055c18313889"
+                "reference": "d68c16dedc07b1a35377567c336373620fcfc254"
             },
             "require": {
                 "ext-date": "*",
@@ -276,7 +276,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-03-13T09:17:49+00:00"
+            "time": "2019-03-15T13:07:40+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -2141,8 +2141,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "eduvpn/common": 20,
-        "fkooman/php-saml-sp": 20
+        "eduvpn/common": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
