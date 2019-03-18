@@ -51,12 +51,34 @@ class SamlModule implements ServiceModuleInterface
                     $relayState = $request->getQueryParameter('ReturnTo');
                     $idpEntityId = $request->getQueryParameter('IdP', false);
                     $authnContextQuery = $request->getQueryParameter('AuthnContext', false);
-                    // XXX is this safe (enough?)
-                    $authnContext = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
+                    $authnContextList = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
+
+                    // verify the requested AuthnContext in the whitelist
+                    $acceptableAuthnContextList = [
+                        'urn:oasis:names:tc:SAML:2.0:ac:classes:Password',
+                        'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport',
+                        'urn:oasis:names:tc:SAML:2.0:ac:classes:X509',
+                        'urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken',
+                        // https://wiki.surfnet.nl/display/SsID/Using+Levels+of+Assurance+to+express+strength+of+authentication
+                        'http://test.surfconext.nl/assurance/loa1',
+                        'http://pilot.surfconext.nl/assurance/loa1',
+                        'http://surfconext.nl/assurance/loa1',
+                        'http://test.surfconext.nl/assurance/loa2',
+                        'http://pilot.surfconext.nl/assurance/loa2',
+                        'http://surfconext.nl/assurance/loa2',
+                        'http://test.surfconext.nl/assurance/loa3',
+                        'http://pilot.surfconext.nl/assurance/loa3',
+                        'http://surfconext.nl/assurance/loa3',
+                    ];
+                    foreach ($authnContextList as $authnContext) {
+                        if (!\in_array($authnContext, $acceptableAuthnContextList, true)) {
+                            throw new HttpException(sprintf('unsupported requested AuthnContext "%s"', $authnContext), 400);
+                        }
+                    }
 
                     // if an entityId is specified, use it
                     if (null !== $idpEntityId) {
-                        return new RedirectResponse($this->samlSp->login($idpEntityId, $relayState, $authnContext));
+                        return new RedirectResponse($this->samlSp->login($idpEntityId, $relayState, $authnContextList));
                     }
 
                     // we didn't get an IdP entityId so we MUST perform discovery
