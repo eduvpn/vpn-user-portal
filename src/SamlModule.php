@@ -54,7 +54,7 @@ class SamlModule implements ServiceModuleInterface
                     // XXX is this safe (enough?)
                     $authnContext = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
 
-                    // if and entityId is specified, use it
+                    // if an entityId is specified, use it
                     if (null !== $idpEntityId) {
                         return new RedirectResponse($this->samlSp->login($idpEntityId, $relayState, $authnContext));
                     }

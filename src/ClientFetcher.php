@@ -35,16 +35,11 @@ class ClientFetcher implements ClientDbInterface
             return OAuthClientInfo::getClient($clientId);
         }
 
-        // XXX switch to only support 'redirect_uri_list' for 2.0
         $clientInfoData = $this->config->getSection('Api')->getSection('consumerList')->getItem($clientId);
         $redirectUriList = [];
         if (\array_key_exists('redirect_uri_list', $clientInfoData)) {
-            $redirectUriList = array_merge($redirectUriList, (array) $clientInfoData['redirect_uri_list']);
+            $redirectUriList = $clientInfoData['redirect_uri_list'];
         }
-        if (\array_key_exists('redirect_uri', $clientInfoData)) {
-            $redirectUriList = array_merge($redirectUriList, (array) $clientInfoData['redirect_uri']);
-        }
-        $clientInfoData['redirect_uri_list'] = $redirectUriList;
 
         return new ClientInfo(
             $clientId,
