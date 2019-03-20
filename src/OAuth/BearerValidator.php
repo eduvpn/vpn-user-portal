@@ -133,7 +133,7 @@ class BearerValidator
         }
 
         return new VpnAccessTokenInfo(
-            new ResourceOwner($userId),
+            new ResourceOwner($userId, $resourceOwner->getExtData()),
             $accessTokenInfo['client_id'],
             new Scope($accessTokenInfo['scope']),
             new DateTime($accessTokenInfo['authz_expires_at']),
