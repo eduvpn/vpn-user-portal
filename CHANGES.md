@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.8.7 (...)
+- make sure certificate expiry is never set to a moment in the past
+
 ## 1.8.6 (2019-01-11)
 - update the iOS applications `redirect_uri_list` and enable "approval"
 - make sure browser session expiry has a maximum of 8 hours
