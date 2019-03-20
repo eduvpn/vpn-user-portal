@@ -13,6 +13,7 @@ use DateTime;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\Exception\InvalidTokenException;
+use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
@@ -93,6 +94,11 @@ class BearerValidator
             throw new InvalidTokenException('"access_token" has invalid signature');
         }
 
+        // check version
+        if (false === OAuthServer::checkTokenVersion($accessTokenInfo)) {
+            throw new InvalidTokenException('"access_token" has wrong version');
+        }
+
         // make sure we got an access_token
         if ('access_token' !== $accessTokenInfo['type']) {
             throw new InvalidTokenException(sprintf('expected "access_token", got "%s"', $accessTokenInfo['type']));
@@ -128,7 +134,7 @@ class BearerValidator
             $userId,
             $accessTokenInfo['client_id'],
             new Scope($accessTokenInfo['scope']),
-            new DateTime($accessTokenInfo['authz_time']),
+            new DateTime($accessTokenInfo['authz_expires_at']),
             null === $baseUri   // isLocal
         );
     }
