@@ -14,6 +14,7 @@ use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\OAuthServer;
+use fkooman\OAuth\Server\ResourceOwner;
 use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
@@ -123,7 +124,8 @@ class BearerValidator
             }
         }
 
-        $userId = $accessTokenInfo['user_id'];
+        $resourceOwner = ResourceOwner::fromEncodedString($accessTokenInfo['resource_owner']);
+        $userId = $resourceOwner->getUserId();
         if (null !== $baseUri) {
             // append the base_uri in front of the user_id to indicate this is
             // a "remote" user
@@ -131,7 +133,7 @@ class BearerValidator
         }
 
         return new VpnAccessTokenInfo(
-            $userId,
+            new ResourceOwner($userId),
             $accessTokenInfo['client_id'],
             new Scope($accessTokenInfo['scope']),
             new DateTime($accessTokenInfo['authz_expires_at']),
