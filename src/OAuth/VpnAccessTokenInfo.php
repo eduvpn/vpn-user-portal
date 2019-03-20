@@ -22,12 +22,12 @@ class VpnAccessTokenInfo extends AccessTokenInfo
      * @param string    $userId
      * @param string    $clientId
      * @param Scope     $scope
-     * @param \DateTime $authzTime
+     * @param \DateTime $authzExpiresAt
      * @param bool      $isLocal
      */
-    public function __construct($userId, $clientId, Scope $scope, DateTime $authzTime, $isLocal)
+    public function __construct($userId, $clientId, Scope $scope, DateTime $authzExpiresAt, $isLocal)
     {
-        parent::__construct($userId, $clientId, $scope, $authzTime);
+        parent::__construct($userId, $clientId, $scope, $authzExpiresAt);
         $this->isLocal = $isLocal;
     }
 

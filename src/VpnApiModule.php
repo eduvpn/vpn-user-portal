@@ -21,7 +21,6 @@ use LetsConnect\Common\Http\Request;
 use LetsConnect\Common\Http\Response;
 use LetsConnect\Common\Http\Service;
 use LetsConnect\Common\Http\ServiceModuleInterface;
-use LetsConnect\Common\Http\UserInfo;
 use LetsConnect\Common\HttpClient\ServerClient;
 use LetsConnect\Common\ProfileConfig;
 use LetsConnect\Portal\OAuth\VpnAccessTokenInfo;
@@ -76,10 +75,9 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
-                $userInfo = $this->tokenInfoToUserInfo($accessTokenInfo);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userPermissions = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $userInfo->id()]);
+                $userPermissions = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo->getUserId()]);
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -114,12 +112,11 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
-                $userInfo = $this->tokenInfoToUserInfo($accessTokenInfo);
 
                 return new ApiResponse(
                     'user_info',
                     [
-                        'user_id' => $userInfo->id(),
+                        'user_id' => $accessTokenInfo->getUserId(),
                         // as 2FA works through the portal now, lie here to the
                         // clients so they won't try to enroll the user
                         'two_factor_enrolled' => false,
@@ -142,11 +139,8 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
-                $userInfo = $this->tokenInfoToUserInfo($accessTokenInfo);
-
                 try {
-                    $expiresAt = date_add(clone $userInfo->authTime(), $this->sessionExpiry);
-                    $clientCertificate = $this->getCertificate($accessTokenInfo, $expiresAt);
+                    $clientCertificate = $this->getCertificate($accessTokenInfo);
 
                     return new ApiResponse(
                         'create_keypair',
@@ -170,8 +164,6 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
-                $userInfo = $this->tokenInfoToUserInfo($accessTokenInfo);
-
                 $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
                 $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
                 $responseData = self::validateCertificate($clientCertificateInfo);
@@ -192,13 +184,11 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
-                $userInfo = $this->tokenInfoToUserInfo($accessTokenInfo);
-
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
 
                     $profileList = $this->serverClient->getRequireArray('profile_list');
-                    $userPermissions = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $userInfo->id()]);
+                    $userPermissions = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo->getUserId()]);
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
@@ -231,14 +221,9 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
-                $userInfo = $hookData['auth'];
-
-                $msgList = [];
-
                 return new ApiResponse(
                     'user_messages',
-                    $msgList
+                    []
                 );
             }
         );
@@ -299,23 +284,22 @@ class VpnApiModule implements ServiceModuleInterface
 
     /**
      * @param \LetsConnect\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
-     * @param \DateTime                                    $expiresAt
      *
      * @return array
      */
-    private function getCertificate(VpnAccessTokenInfo $accessTokenInfo, DateTime $expiresAt)
+    private function getCertificate(VpnAccessTokenInfo $accessTokenInfo)
     {
         // create a certificate
         return $this->serverClient->postRequireArray(
             'add_client_certificate',
             [
-                'user_id' => $this->tokenInfoToUserInfo($accessTokenInfo)->id(),
+                'user_id' => $accessTokenInfo->getUserId(),
                 // we won't show the Certificate entry anyway on the
                 // "Certificates" page for certificates downloaded through the
                 // API
                 'display_name' => $accessTokenInfo->getClientId(),
                 'client_id' => $accessTokenInfo->getClientId(),
-                'expires_at' => $expiresAt->format(DateTime::ATOM),
+                'expires_at' => $accessTokenInfo->getAuthzExpiresAt()->format(DateTime::ATOM),
             ]
         );
     }
@@ -355,25 +339,5 @@ class VpnApiModule implements ServiceModuleInterface
         }
 
         return $responseData;
-    }
-
-    /**
-     * @param \LetsConnect\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
-     *
-     * @return \LetsConnect\Common\Http\UserInfo
-     */
-    private function tokenInfoToUserInfo(VpnAccessTokenInfo $accessTokenInfo)
-    {
-        $userId = $accessTokenInfo->getUserId();
-        $permissionList = [];
-        $authTime = $accessTokenInfo->getAuthzTime();
-        if ($accessTokenInfo->getIsLocal()) {
-            // for "local" users we get the information from the actual
-            // authentication and not from the OAuth token...
-            $permissionList = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $userId]);
-            $authTime = new DateTime($this->serverClient->getRequireString('user_last_authenticated_at', ['user_id' => $userId]));
-        }
-
-        return new UserInfo($userId, $permissionList, $authTime);
     }
 }

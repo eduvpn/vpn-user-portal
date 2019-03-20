@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9fcf8cd62a721e14b98d1ba45cfbe85",
+    "content-hash": "9bf4f6cceda65dd1736688d583433570",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -170,11 +170,11 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "4.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-oauth2-server",
-                "reference": "6f101f97135175ef69157a0202013f1b5351d40c"
+                "reference": "01d0a07848f9b27992391e3e429dfdddf84953cd"
             },
             "require": {
                 "ext-date": "*",
@@ -216,7 +216,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-oauth2-server"
             },
-            "time": "2019-03-06T14:54:41+00:00"
+            "time": "2019-03-20T14:46:39+00:00"
         },
         {
             "name": "fkooman/php-saml-sp",
@@ -1340,16 +1340,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.6",
+            "version": "7.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "09c85e14994df92e5ff1f5ec0b481bdb7d3d3df9"
+                "reference": "eb343b86753d26de07ecba7868fa983104361948"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/09c85e14994df92e5ff1f5ec0b481bdb7d3d3df9",
-                "reference": "09c85e14994df92e5ff1f5ec0b481bdb7d3d3df9",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/eb343b86753d26de07ecba7868fa983104361948",
+                "reference": "eb343b86753d26de07ecba7868fa983104361948",
                 "shasum": ""
             },
             "require": {
@@ -1367,7 +1367,7 @@
                 "phpunit/php-code-coverage": "^6.0.7",
                 "phpunit/php-file-iterator": "^2.0.1",
                 "phpunit/php-text-template": "^1.2.1",
-                "phpunit/php-timer": "^2.0",
+                "phpunit/php-timer": "^2.1",
                 "sebastian/comparator": "^3.0",
                 "sebastian/diff": "^3.0",
                 "sebastian/environment": "^4.0",
@@ -1420,7 +1420,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-02-18T09:24:50+00:00"
+            "time": "2019-03-16T07:31:17+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2141,7 +2141,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "eduvpn/common": 20
+        "eduvpn/common": 20,
+        "fkooman/oauth2-server": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

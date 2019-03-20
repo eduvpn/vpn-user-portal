@@ -56,7 +56,7 @@
         "ext-pdo": "*",
         "ext-spl": "*",
         "fkooman/jwt": "^1",
-        "fkooman/oauth2-server": "^4",
+        "fkooman/oauth2-server": "dev-master",
         "fkooman/php-saml-sp": "^0",
         "fkooman/secookie": "^2",
         "fkooman/sqlite-migrate": "^0",
