@@ -77,7 +77,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $accessTokenInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userPermissions = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo->getUserId()]);
+                $userPermissions = $accessTokenInfo->getPermissionList();
 
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -188,7 +188,7 @@ class VpnApiModule implements ServiceModuleInterface
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
 
                     $profileList = $this->serverClient->getRequireArray('profile_list');
-                    $userPermissions = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo->getUserId()]);
+                    $userPermissions = $accessTokenInfo->getPermissionList();
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {

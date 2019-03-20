@@ -11,6 +11,8 @@ namespace LetsConnect\Portal\OAuth;
 
 use DateTime;
 use fkooman\OAuth\Server\AccessTokenInfo;
+use fkooman\OAuth\Server\Json;
+use fkooman\OAuth\Server\ResourceOwner;
 use fkooman\OAuth\Server\Scope;
 
 class VpnAccessTokenInfo extends AccessTokenInfo
@@ -19,16 +21,41 @@ class VpnAccessTokenInfo extends AccessTokenInfo
     private $isLocal;
 
     /**
-     * @param string    $userId
-     * @param string    $clientId
-     * @param Scope     $scope
-     * @param \DateTime $authzExpiresAt
-     * @param bool      $isLocal
+     * @param \fkooman\OAuth\Server\ResourceOwner $resourceOwner
+     * @param string                              $clientId
+     * @param Scope                               $scope
+     * @param \DateTime                           $authzExpiresAt
+     * @param bool                                $isLocal
      */
-    public function __construct($userId, $clientId, Scope $scope, DateTime $authzExpiresAt, $isLocal)
+    public function __construct(ResourceOwner $resourceOwner, $clientId, Scope $scope, DateTime $authzExpiresAt, $isLocal)
     {
-        parent::__construct($userId, $clientId, $scope, $authzExpiresAt);
+        parent::__construct($resourceOwner, $clientId, $scope, $authzExpiresAt);
         $this->isLocal = $isLocal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->getResourceOwner()->getUserId();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPermissionList()
+    {
+        if (null === $extData = $this->getResourceOwner()->getExtData()) {
+            return [];
+        }
+
+        $permissionList = Json::decode($extData);
+        if (!\is_array($permissionList)) {
+            return [];
+        }
+
+        return $permissionList;
     }
 
     /**
