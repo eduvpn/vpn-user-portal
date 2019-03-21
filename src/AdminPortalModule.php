@@ -191,7 +191,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         // * delete all client certificates associated with the OAuth clients of this user
                         $clientAuthorizations = $this->storage->getAuthorizations($userId);
                         foreach ($clientAuthorizations as $clientAuthorization) {
-                            $this->storage->deleteAuthorization($userId, $clientAuthorization['client_id'], $clientAuthorization['scope']);
+                            $this->storage->deleteAuthorization($clientAuthorization['auth_key']);
                             $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userId, 'client_id' => $clientAuthorization['client_id']]);
                         }
 

@@ -269,10 +269,25 @@ class VpnPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
-                $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
-                $scope = self::validateScope($request->getPostParameter('scope'));
 
-                $this->storage->deleteAuthorization($userInfo->id(), $clientId, $scope);
+                // no need to validate the input as we do a strict string match...
+                $authKey = $request->getPostParameter('auth_key');
+                $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
+
+                // verify whether the user_id owns the specified auth_key
+                $authorizations = $this->storage->getAuthorizations($userInfo->id());
+
+                $authKeyFound = false;
+                foreach ($authorizations as $authorization) {
+                    if ($authorization['auth_key'] === $authKey && $authorization['client_id'] === $clientId) {
+                        $authKeyFound = true;
+                        $this->storage->deleteAuthorization($authKey);
+                    }
+                }
+
+                if (!$authKeyFound) {
+                    throw new HttpException('specified "auth_key" is either invalid or does not belong to this user', 400);
+                }
 
                 // get a list of connections for this user_id with the
                 // particular client_id

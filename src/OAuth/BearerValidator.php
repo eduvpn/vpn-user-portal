@@ -146,7 +146,7 @@ class BearerValidator
             if ($this->dateTime > $expiresAt) {
                 // we are not allowed to accept this access_token any longer
                 // user MUST authenticate again
-                $this->storage->deleteAuthorization($accessTokenInfo['user_id'], $accessTokenInfo['client_id'], $accessTokenInfo['scope']);
+                $this->storage->deleteAuthorization($accessTokenInfo['auth_key']);
 
                 throw new InvalidTokenException(sprintf('authorization for this user expired'));
             }
