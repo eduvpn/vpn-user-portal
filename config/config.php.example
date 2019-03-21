@@ -9,13 +9,10 @@ return [
     'authMethod' => 'FormPdoAuthentication',        // PDO (database)
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
     //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
-    //'authMethod' => 'SamlAuthentication',         // SAML
+    //'authMethod' => 'SamlAuthentication',         // SAML (php-saml-sp)
     //'authMethod' => 'ShibAuthentication',         // SAML (Shibboleth)
 
-    // Session Expiry
-    // - OAuth (refresh_token) validity
-    // - X.509 Client Certificate "Not After"
-    //   (time of authentication + sessionExpiry)
+    // Default Session Expiry
     'sessionExpiry' => 'P90D',      // 90 days
     //'sessionExpiry' => 'PT12H',   // 12 hours
     //'sessionExpiry' => 'P1D',     // 1 day
@@ -50,7 +47,7 @@ return [
         //'nasIdentifier' => 'vpn.example.org',
     ],
 
-    // SAML
+    // SAML (php-saml-sp)
     'SamlAuthentication' => [
         // 'OID for eduPersonTargetedID
         'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
@@ -91,7 +88,7 @@ return [
         //],
     ],
 
-    // Shibboleth SP
+    // SAML (Shibboleth)
     'ShibAuthentication' => [
         'userIdAttribute' => 'persistent-id',
         //'userIdAttribute' => 'eppn',

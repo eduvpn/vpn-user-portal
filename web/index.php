@@ -392,7 +392,6 @@ try {
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
 
-        $oauthServer->setRefreshTokenExpiry(new DateInterval($sessionExpiry));
         $oauthServer->setAccessTokenExpiry(
             new DateInterval(
                 $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
