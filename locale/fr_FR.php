@@ -15,6 +15,7 @@ return [
     'An error occurred.' => 'Une erreur est survenue.',
     'Approve' => 'Approuver',
     //'Approve Application' => '',
+    //'Authorized' => '',
     'Authorized Applications' => 'Applications autorisées',
     'Certificates' => 'Certificats',
     'Change Password' => 'Modifier le mot de passe',

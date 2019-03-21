@@ -15,6 +15,7 @@ return [
     'An error occurred.' => 'Der opstod en fejl.',
     'Approve' => 'Godkend',
     //'Approve Application' => '',
+    //'Authorized' => '',
     'Authorized Applications' => 'Autoriserede applikationer',
     'Certificates' => 'Certifikater',
     'Change Password' => 'Skift adgangskode',

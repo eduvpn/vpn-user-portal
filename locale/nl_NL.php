@@ -15,6 +15,7 @@ return [
     'An error occurred.' => 'Er is een fout opgetreden.',
     'Approve' => 'Toestaan',
     'Approve Application' => 'Applicatie toestaan',
+    'Authorized' => 'Geautoriseerd',
     'Authorized Applications' => 'Geautoriseerde applicaties',
     'Certificates' => 'Certificaten',
     'Change Password' => 'Wijzig wachtwoord',

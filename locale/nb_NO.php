@@ -15,6 +15,7 @@ return [
     'An error occurred.' => 'Noe har gått galt.',
     'Approve' => 'Tillat',
     'Approve Application' => 'Tillat Applikasjonen',
+    //'Authorized' => '',
     'Authorized Applications' => 'Autoriserte applikasjoner',
     'Certificates' => 'Sertifikater',
     'Change Password' => 'Passord',
