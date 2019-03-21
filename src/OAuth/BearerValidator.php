@@ -9,19 +9,26 @@
 
 namespace LetsConnect\Portal\OAuth;
 
+use DateInterval;
 use DateTime;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\OAuth\Server\ResourceOwner;
 use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
+use LetsConnect\Common\HttpClient\ServerClient;
 use ParagonIE\ConstantTime\Binary;
 
 class BearerValidator
 {
+    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    private $serverClient;
+
+    /** @var \DateInterval */
+    private $sessionExpiry;
+
     /** @var StorageInterface */
     private $storage;
 
@@ -38,13 +45,17 @@ class BearerValidator
     private $dateTime;
 
     /**
-     * @param \fkooman\OAuth\Server\StorageInterface  $storage
-     * @param \fkooman\OAuth\Server\ClientDbInterface $clientDb
-     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey       $localPublicKey
-     * @param array<string,array<string,string>>      $keyInstanceMapping
+     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
+     * @param \DateInterval                               $sessionExpiry
+     * @param \fkooman\OAuth\Server\StorageInterface      $storage
+     * @param \fkooman\OAuth\Server\ClientDbInterface     $clientDb
+     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey           $localPublicKey
+     * @param array<string,array<string,string>>          $keyInstanceMapping
      */
-    public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
+    public function __construct(ServerClient $serverClient, DateInterval $sessionExpiry, StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
     {
+        $this->serverClient = $serverClient;
+        $this->sessionExpiry = $sessionExpiry;
         $this->storage = $storage;
         $this->clientDb = $clientDb;
         $this->localPublicKey = $localPublicKey;
@@ -110,6 +121,10 @@ class BearerValidator
             throw new InvalidTokenException('"access_token" expired');
         }
 
+        // default expiresAt is NOW+sessionExpiry
+        $expiresAt = date_add(clone $this->dateTime, $this->sessionExpiry);
+        $permissionList = [];
+
         if (null === $baseUri) {
             // the token was signed by _US_...
             // the client MUST still be there
@@ -122,10 +137,25 @@ class BearerValidator
             if (!$this->storage->hasAuthorization($accessTokenInfo['auth_key'])) {
                 throw new InvalidTokenException(sprintf('authorization for client "%s" no longer exists', $accessTokenInfo['client_id']));
             }
+
+            // make sure user authenticated recently enough
+            // XXX server can also return null, then this fails!
+            $lastAuthenticatedAt = new DateTime($this->serverClient->getRequireString('user_last_authenticated_at', ['user_id' => $accessTokenInfo['user_id']]));
+
+            $expiresAt = date_add(clone $lastAuthenticatedAt, $this->sessionExpiry);
+            if ($this->dateTime > $expiresAt) {
+                // we are not allowed to accept this access_token any longer
+                // user MUST authenticate again
+                $this->storage->deleteAuthorization($accessTokenInfo['user_id'], $accessTokenInfo['client_id'], $accessTokenInfo['scope']);
+
+                throw new InvalidTokenException(sprintf('authorization for this user expired'));
+            }
+
+            // get the permissionList as well
+            $permissionList = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo['user_id']]);
         }
 
-        $resourceOwner = ResourceOwner::fromEncodedString($accessTokenInfo['resource_owner']);
-        $userId = $resourceOwner->getUserId();
+        $userId = $accessTokenInfo['user_id'];
         if (null !== $baseUri) {
             // append the base_uri in front of the user_id to indicate this is
             // a "remote" user
@@ -133,11 +163,11 @@ class BearerValidator
         }
 
         return new VpnAccessTokenInfo(
-            new ResourceOwner($userId, $resourceOwner->getExtData()),
+            $userId,
             $accessTokenInfo['client_id'],
             new Scope($accessTokenInfo['scope']),
-            new DateTime($accessTokenInfo['authz_expires_at']),
-            null === $baseUri   // isLocal
+            $permissionList,
+            $expiresAt
         );
     }
 }

@@ -67,7 +67,11 @@ try {
             )
         );
 
+        $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
+
         $bearerValidator = new BearerValidator(
+            $serverClient,
+            $sessionExpiry,
             $storage,
             $clientFetcher,
             $secretKey->getPublicKey(),
@@ -80,17 +84,6 @@ try {
                 $bearerValidator
             )
         );
-
-        // determine sessionExpiry, use the new configuration option if it is there
-        // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
-        // hard coded 90 days
-        if ($config->hasItem('sessionExpiry')) {
-            $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
-        } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
-            $sessionExpiry = new DateInterval($config->getSection('Api')->getItem('refreshTokenExpiry'));
-        } else {
-            $sessionExpiry = new DateInterval('P90D');
-        }
 
         // api module
         $vpnApiModule = new VpnApiModule(

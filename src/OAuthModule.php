@@ -11,9 +11,7 @@ namespace LetsConnect\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\Http\Response as OAuthResponse;
-use fkooman\OAuth\Server\Json;
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\OAuth\Server\ResourceOwner;
 use LetsConnect\Common\Http\Exception\HttpException;
 use LetsConnect\Common\Http\HtmlResponse;
 use LetsConnect\Common\Http\Request;
@@ -49,7 +47,7 @@ class OAuthModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 $userInfo = $hookData['auth'];
                 try {
-                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), new ResourceOwner($userInfo->id(), Json::encode($userInfo->permissionList())))) {
+                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userInfo->id())) {
                         // optimization where we do not ask for approval
                         return $this->prepareReturnResponse($authorizeResponse);
                     }
@@ -79,7 +77,7 @@ class OAuthModule implements ServiceModuleInterface
                     $authorizeResponse = $this->oauthServer->postAuthorize(
                         $request->getQueryParameters(),
                         $request->getPostParameters(),
-                        new ResourceOwner($userInfo->id(), Json::encode($userInfo->permissionList()))
+                        $userInfo->id()
                     );
 
                     return $this->prepareReturnResponse($authorizeResponse);

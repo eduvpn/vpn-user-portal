@@ -15,11 +15,10 @@ use fkooman\SqliteMigrate\Migration;
 use LetsConnect\Common\Http\CredentialValidatorInterface;
 use LetsConnect\Common\Http\UserInfo;
 use PDO;
-use PDOException;
 
 class Storage implements CredentialValidatorInterface, StorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '0000000000';
+    const CURRENT_SCHEMA_VERSION = '2019032100';
 
     /** @var \PDO */
     private $db;
@@ -152,36 +151,6 @@ class Storage implements CredentialValidatorInterface, StorageInterface
      *
      * @return bool
      */
-    public function logAuthKey($authKey)
-    {
-        // we will attempt to store the authKey in the database, there is a
-        // duplicate contraint, so it will fail if the identical authKey is
-        // already there
-        try {
-            $stmt = $this->db->prepare(
-                'INSERT INTO auth_key_log (
-                    auth_key
-                 ) 
-                 VALUES(
-                    :auth_key
-                 )'
-            );
-
-            $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
-            $stmt->execute();
-
-            return true;
-        } catch (PDOException $e) {
-            // insert failed, so this is a replay of the authorization code
-            return false;
-        }
-    }
-
-    /**
-     * @param string $authKey
-     *
-     * @return bool
-     */
     public function hasAuthorization($authKey)
     {
         $stmt = $this->db->prepare(
@@ -199,27 +168,33 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     }
 
     /**
-     * @param string $userId
-     * @param string $clientId
-     * @param string $scope
-     * @param string $authKey
+     * @param string    $userId
+     * @param string    $clientId
+     * @param string    $scope
+     * @param string    $authKey
+     * @param \DateTime $authTime
      *
      * @return void
      */
-    public function storeAuthorization($userId, $clientId, $scope, $authKey)
+    public function storeAuthorization($userId, $clientId, $scope, $authKey, DateTime $authTime)
     {
+        // the "authorizations" table has the UNIQUE constraint on the
+        // "auth_key" column, thus preventing multiple entries with the same
+        // "auth_key" to make absolutely sure "auth_keys" cannot be replayed
         $stmt = $this->db->prepare(
             'INSERT INTO authorizations (
                 auth_key,
                 user_id,
                 client_id,
-                scope
+                scope,
+                auth_time
              ) 
              VALUES(
                 :auth_key,
                 :user_id, 
                 :client_id,
-                :scope
+                :scope,
+                :auth_time
              )'
         );
 
@@ -227,6 +202,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
         $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
+        $stmt->bindValue(':auth_time', $authTime->format(DateTime::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -237,15 +213,31 @@ class Storage implements CredentialValidatorInterface, StorageInterface
      */
     public function getAuthorizations($userId)
     {
+        // we need a subquery because the same user_id/client_id/scope can have
+        // multiple entries and we want to obtain the auth_time from the _last_
+        // authorization for this user_id/client_id/scope pair
         $stmt = $this->db->prepare(
             'SELECT
-                auth_key,
                 client_id,
-                scope
-             FROM authorizations
+                scope,
+                (
+                    SELECT
+                        auth_time
+                    FROM
+                        authorizations
+                    WHERE
+                        user_id = :user_id
+                    AND
+                        a.client_id = client_id
+                    AND
+                        a.scope = scope
+                    ORDER BY auth_time DESC
+                ) AS auth_time
+             FROM authorizations a
              WHERE
                 user_id = :user_id
-             GROUP BY client_id, scope'
+             GROUP BY
+                client_id, scope'
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);

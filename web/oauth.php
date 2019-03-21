@@ -75,7 +75,7 @@ try {
             $sessionExpiry = new DateInterval('P90D');
         }
 
-        $oauthServer->setAuthzExpiry($sessionExpiry);
+        $oauthServer->setRefreshTokenExpiry($sessionExpiry);
         $oauthServer->setAccessTokenExpiry(
             new DateInterval(
                 $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'

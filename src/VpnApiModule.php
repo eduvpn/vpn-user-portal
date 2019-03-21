@@ -299,7 +299,7 @@ class VpnApiModule implements ServiceModuleInterface
                 // API
                 'display_name' => $accessTokenInfo->getClientId(),
                 'client_id' => $accessTokenInfo->getClientId(),
-                'expires_at' => $accessTokenInfo->getAuthzExpiresAt()->format(DateTime::ATOM),
+                'expires_at' => $accessTokenInfo->getExpiresAt()->format(DateTime::ATOM),
             ]
         );
     }

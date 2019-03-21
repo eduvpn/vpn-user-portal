@@ -11,34 +11,28 @@ namespace LetsConnect\Portal\OAuth;
 
 use DateTime;
 use fkooman\OAuth\Server\AccessTokenInfo;
-use fkooman\OAuth\Server\Json;
-use fkooman\OAuth\Server\ResourceOwner;
 use fkooman\OAuth\Server\Scope;
 
 class VpnAccessTokenInfo extends AccessTokenInfo
 {
-    /** @var bool */
-    private $isLocal;
+    /** @var array<string> */
+    private $permissionList;
+
+    /** @var \DateTime */
+    private $expiresAt;
 
     /**
-     * @param \fkooman\OAuth\Server\ResourceOwner $resourceOwner
-     * @param string                              $clientId
-     * @param Scope                               $scope
-     * @param \DateTime                           $authzExpiresAt
-     * @param bool                                $isLocal
+     * @param string        $userId
+     * @param string        $clientId
+     * @param Scope         $scope
+     * @param array<string> $permissionList
+     * @param \DateTime     $expiresAt
      */
-    public function __construct(ResourceOwner $resourceOwner, $clientId, Scope $scope, DateTime $authzExpiresAt, $isLocal)
+    public function __construct($userId, $clientId, Scope $scope, array $permissionList, DateTime $expiresAt)
     {
-        parent::__construct($resourceOwner, $clientId, $scope, $authzExpiresAt);
-        $this->isLocal = $isLocal;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserId()
-    {
-        return $this->getResourceOwner()->getUserId();
+        parent::__construct($userId, $clientId, $scope);
+        $this->permissionList = $permissionList;
+        $this->expiresAt = $expiresAt;
     }
 
     /**
@@ -46,23 +40,14 @@ class VpnAccessTokenInfo extends AccessTokenInfo
      */
     public function getPermissionList()
     {
-        if (null === $extData = $this->getResourceOwner()->getExtData()) {
-            return [];
-        }
-
-        $permissionList = Json::decode($extData);
-        if (!\is_array($permissionList)) {
-            return [];
-        }
-
-        return $permissionList;
+        return $this->permissionList;
     }
 
     /**
-     * @return bool
+     * @return \DateTime
      */
-    public function getIsLocal()
+    public function getExpiresAt()
     {
-        return $this->isLocal;
+        return $this->expiresAt;
     }
 }

@@ -84,16 +84,7 @@ try {
         $styleConfig = Config::fromFile(sprintf('%s/config/%s.php', $baseDir, $styleName));
     }
 
-    // determine sessionExpiry, use the new configuration option if it is there
-    // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
-    // hard coded 90 days
-    if ($config->hasItem('sessionExpiry')) {
-        $sessionExpiry = $config->getItem('sessionExpiry');
-    } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
-        $sessionExpiry = $config->getSection('Api')->getItem('refreshTokenExpiry');
-    } else {
-        $sessionExpiry = 'P90D';
-    }
+    $sessionExpiry = $config->getItem('sessionExpiry');
 
     // we always want browser session to expiry after PT8H hours, *EXCEPT* when
     // the configured "sessionExpiry" is < PT8H, then we want to follow that
@@ -401,7 +392,7 @@ try {
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
 
-        $oauthServer->setAuthzExpiry(new DateInterval($sessionExpiry));
+        $oauthServer->setRefreshTokenExpiry(new DateInterval($sessionExpiry));
         $oauthServer->setAccessTokenExpiry(
             new DateInterval(
                 $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
