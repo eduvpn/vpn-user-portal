@@ -44,16 +44,17 @@
     <h2><?=$this->t('Authorized Applications'); ?></h2>
     <table>
         <thead>
-            <tr><th><?=$this->t('Name'); ?></th><th></th></tr>
+            <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Authorized'); ?> (<?=$this->e(date('T')); ?>)</th><th></th></tr>
         </thead>
         <tbody>
             <?php foreach ($authorizedClients as $client): ?>
             <tr>
                 <td><span title="<?=$this->e($client['client_id']); ?>"><?php if ($client['display_name']): ?><?=$this->e($client['display_name']); ?><?php else: ?><em><?=$this->t('Unregistered Client'); ?></em><?php endif; ?></span></td>
+                <td><?=$this->e($client['auth_time']); ?></td>
                 <td class="text-right">
                     <form method="post" action="removeClientAuthorization">
                         <input type="hidden" name="client_id" value="<?=$this->e($client['client_id']); ?>">
-                        <input type="hidden" name="scope" value="<?=$this->e($client['scope']); ?>">
+                        <input type="hidden" name="auth_key" value="<?=$this->e($client['auth_key']); ?>">
                         <button><?=$this->t('Revoke'); ?></button>
                     </form>
                 </td>

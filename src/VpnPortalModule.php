@@ -244,6 +244,8 @@ class VpnPortalModule implements ServiceModuleInterface
                             $displayName = $clientInfo->getDisplayName();
                         }
                     }
+                    // format the date
+                    $authorizedClients[$k]['auth_time'] = date_format(new DateTime($v['auth_time']), 'Y-m-d H:i:s');
                     $authorizedClients[$k]['display_name'] = $displayName;
                 }
 
