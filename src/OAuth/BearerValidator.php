@@ -9,7 +9,6 @@
 
 namespace LetsConnect\Portal\OAuth;
 
-use DateInterval;
 use DateTime;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\OAuth\Server\ClientDbInterface;
@@ -18,17 +17,14 @@ use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
-use LetsConnect\Common\HttpClient\ServerClient;
 use ParagonIE\ConstantTime\Binary;
 
+/**
+ * Copy of fkooman/oauth2-server src/BearerValidator.php to support public
+ * key crypto (EdDSA JWT) tokens and also remote tokens from other servers.
+ */
 class BearerValidator
 {
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
-    private $serverClient;
-
-    /** @var \DateInterval */
-    private $sessionExpiry;
-
     /** @var StorageInterface */
     private $storage;
 
@@ -45,17 +41,13 @@ class BearerValidator
     private $dateTime;
 
     /**
-     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
-     * @param \DateInterval                               $sessionExpiry
-     * @param \fkooman\OAuth\Server\StorageInterface      $storage
-     * @param \fkooman\OAuth\Server\ClientDbInterface     $clientDb
-     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey           $localPublicKey
-     * @param array<string,array<string,string>>          $keyInstanceMapping
+     * @param \fkooman\OAuth\Server\StorageInterface  $storage
+     * @param \fkooman\OAuth\Server\ClientDbInterface $clientDb
+     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey       $localPublicKey
+     * @param array<string,array<string,string>>      $keyInstanceMapping
      */
-    public function __construct(ServerClient $serverClient, DateInterval $sessionExpiry, StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
+    public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
     {
-        $this->serverClient = $serverClient;
-        $this->sessionExpiry = $sessionExpiry;
         $this->storage = $storage;
         $this->clientDb = $clientDb;
         $this->localPublicKey = $localPublicKey;
@@ -121,8 +113,6 @@ class BearerValidator
             throw new InvalidTokenException('"access_token" expired');
         }
 
-        $permissionList = [];
-
         if (null === $baseUri) {
             // the token was signed by _US_...
             // the client MUST still be there
@@ -135,9 +125,6 @@ class BearerValidator
             if (!$this->storage->hasAuthorization($accessTokenInfo['auth_key'])) {
                 throw new InvalidTokenException(sprintf('authorization for client "%s" no longer exists', $accessTokenInfo['client_id']));
             }
-
-            // get the permissionList as well
-            $permissionList = $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo['user_id']]);
         }
 
         $userId = $accessTokenInfo['user_id'];
@@ -147,14 +134,12 @@ class BearerValidator
             $userId = $baseUri.'!!'.$userId;
         }
 
-        $expiresAt = date_add(new DateTime($accessTokenInfo['auth_time']), $this->sessionExpiry);
-
         return new VpnAccessTokenInfo(
             $userId,
             $accessTokenInfo['client_id'],
             new Scope($accessTokenInfo['scope']),
-            $permissionList,
-            $expiresAt
+            // isLocal
+            null === $baseUri
         );
     }
 }

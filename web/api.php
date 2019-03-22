@@ -70,8 +70,6 @@ try {
         $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
 
         $bearerValidator = new BearerValidator(
-            $serverClient,
-            $sessionExpiry,
             $storage,
             $clientFetcher,
             $secretKey->getPublicKey(),

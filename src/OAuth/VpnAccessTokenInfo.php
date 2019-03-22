@@ -9,45 +9,31 @@
 
 namespace LetsConnect\Portal\OAuth;
 
-use DateTime;
 use fkooman\OAuth\Server\AccessTokenInfo;
 use fkooman\OAuth\Server\Scope;
 
 class VpnAccessTokenInfo extends AccessTokenInfo
 {
-    /** @var array<string> */
-    private $permissionList;
-
-    /** @var \DateTime */
-    private $expiresAt;
+    /** @var bool */
+    private $isLocal;
 
     /**
-     * @param string        $userId
-     * @param string        $clientId
-     * @param Scope         $scope
-     * @param array<string> $permissionList
-     * @param \DateTime     $expiresAt
+     * @param string $userId
+     * @param string $clientId
+     * @param Scope  $scope
+     * @param bool   $isLocal
      */
-    public function __construct($userId, $clientId, Scope $scope, array $permissionList, DateTime $expiresAt)
+    public function __construct($userId, $clientId, Scope $scope, $isLocal)
     {
         parent::__construct($userId, $clientId, $scope);
-        $this->permissionList = $permissionList;
-        $this->expiresAt = $expiresAt;
+        $this->isLocal = $isLocal;
     }
 
     /**
-     * @return array<string>
+     * @return bool
      */
-    public function getPermissionList()
+    public function getIsLocal()
     {
-        return $this->permissionList;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getExpiresAt()
-    {
-        return $this->expiresAt;
+        return $this->isLocal;
     }
 }

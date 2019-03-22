@@ -39,6 +39,9 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
+    /** @var \DateTime */
+    private $dateTime;
+
     /**
      * @param \LetsConnect\Common\Config                  $config
      * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
@@ -49,6 +52,7 @@ class VpnApiModule implements ServiceModuleInterface
         $this->config = $config;
         $this->serverClient = $serverClient;
         $this->sessionExpiry = $sessionExpiry;
+        $this->dateTime = new DateTime();
     }
 
     /**
@@ -77,8 +81,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $accessTokenInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userPermissions = $accessTokenInfo->getPermissionList();
-
+                $userPermissions = $this->getPermissionList($accessTokenInfo);
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
                     $profileConfig = new ProfileConfig($profileData);
@@ -166,7 +169,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $accessTokenInfo = $hookData['auth'];
                 $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
                 $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
-                $responseData = self::validateCertificate($clientCertificateInfo);
+                $responseData = $this->validateCertificate($clientCertificateInfo);
 
                 return new ApiResponse(
                     'check_certificate',
@@ -186,9 +189,8 @@ class VpnApiModule implements ServiceModuleInterface
                 $accessTokenInfo = $hookData['auth'];
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
-
                     $profileList = $this->serverClient->getRequireArray('profile_list');
-                    $userPermissions = $accessTokenInfo->getPermissionList();
+                    $userPermissions = $this->getPermissionList($accessTokenInfo);
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
@@ -299,7 +301,7 @@ class VpnApiModule implements ServiceModuleInterface
                 // API
                 'display_name' => $accessTokenInfo->getClientId(),
                 'client_id' => $accessTokenInfo->getClientId(),
-                'expires_at' => $accessTokenInfo->getExpiresAt()->format(DateTime::ATOM),
+                'expires_at' => $this->getExpiresAt($accessTokenInfo)->format(DateTime::ATOM),
             ]
         );
     }
@@ -309,7 +311,7 @@ class VpnApiModule implements ServiceModuleInterface
      *
      * @return array<string, bool|string>
      */
-    private static function validateCertificate($clientCertificateInfo)
+    private function validateCertificate($clientCertificateInfo)
     {
         $reason = '';
         if (false === $clientCertificateInfo) {
@@ -318,11 +320,11 @@ class VpnApiModule implements ServiceModuleInterface
             // CA
             $isValid = false;
             $reason = 'certificate_missing';
-        } elseif (new DateTime($clientCertificateInfo['valid_from']) > new DateTime()) {
+        } elseif (new DateTime($clientCertificateInfo['valid_from']) > $this->dateTime) {
             // certificate not yet valid
             $isValid = false;
             $reason = 'certificate_not_yet_valid';
-        } elseif (new DateTime($clientCertificateInfo['valid_to']) < new DateTime()) {
+        } elseif (new DateTime($clientCertificateInfo['valid_to']) < $this->dateTime) {
             // certificate not valid anymore
             $isValid = false;
             $reason = 'certificate_expired';
@@ -339,5 +341,34 @@ class VpnApiModule implements ServiceModuleInterface
         }
 
         return $responseData;
+    }
+
+    /**
+     * @param \LetsConnect\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
+     *
+     * @return array<string>
+     */
+    private function getPermissionList(VpnAccessTokenInfo $accessTokenInfo)
+    {
+        if (!$accessTokenInfo->getIsLocal()) {
+            return [];
+        }
+
+        return $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo->getUserId()]);
+    }
+
+    /**
+     * @param \LetsConnect\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
+     *
+     * @return \DateTime
+     */
+    private function getExpiresAt(VpnAccessTokenInfo $accessTokenInfo)
+    {
+        if (!$accessTokenInfo->getIsLocal()) {
+            return date_add(clone $this->dateTime, $this->sessionExpiry);
+        }
+        $authTime = new DateTime($this->serverClient->getRequireString('user_last_authenticated_at', ['user_id' => $accessTokenInfo->getUserId()]));
+
+        return date_add(clone $authTime, $this->sessionExpiry);
     }
 }

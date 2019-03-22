@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Common\Tests\Http;
+namespace LetsConnect\Portal\Tests;
 
 use DateInterval;
 use DateTime;
