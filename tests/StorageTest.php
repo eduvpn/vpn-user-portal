@@ -78,4 +78,22 @@ class StorageTest extends TestCase
         $this->assertFalse($this->storage->updatePassword('bar', 'baz'));
         $this->assertInstanceOf('\LetsConnect\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
+
+    public function testNonExpiredHasAuthorization()
+    {
+        $this->assertFalse($this->storage->hasAuthorization('random_1'));
+
+        // non-expired authorization
+        $this->storage->storeAuthorization('foo', 'client_id', 'scope', 'random_1', new DateTime('2018-01-01'));
+        $this->assertTrue($this->storage->hasAuthorization('random_1'));
+    }
+
+    public function testExpiredHasAuthorization()
+    {
+        $this->assertFalse($this->storage->hasAuthorization('random_1'));
+
+        // expired authorization
+        $this->storage->storeAuthorization('foo', 'client_id', 'scope', 'random_1', new DateTime('2017-01-01'));
+        $this->assertFalse($this->storage->hasAuthorization('random_1'));
+    }
 }

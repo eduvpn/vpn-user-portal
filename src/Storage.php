@@ -187,7 +187,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $authTime = new DateTime($authTimeStr);
         $expiresAt = date_add(clone $authTime, $this->sessionExpiry);
 
-        return $expiresAt < $this->dateTime;
+        return $expiresAt > $this->dateTime;
     }
 
     /**
