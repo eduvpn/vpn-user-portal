@@ -173,7 +173,7 @@ try {
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        $dateTime
+        new DateInterval($config->getItem('sessionExpiry'))
     );
     $storage->update();
 

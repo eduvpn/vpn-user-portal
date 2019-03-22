@@ -121,8 +121,6 @@ class BearerValidator
             throw new InvalidTokenException('"access_token" expired');
         }
 
-        // default expiresAt is NOW+sessionExpiry
-        $expiresAt = date_add(clone $this->dateTime, $this->sessionExpiry);
         $permissionList = [];
 
         if (null === $baseUri) {
@@ -132,23 +130,10 @@ class BearerValidator
                 throw new InvalidTokenException(sprintf('client "%s" no longer registered', $accessTokenInfo['client_id']));
             }
 
-            // the authorization MUST exist in the DB as well, otherwise it was
-            // revoked...
+            // the authorization MUST exist in the DB as well *and* not
+            // expired...
             if (!$this->storage->hasAuthorization($accessTokenInfo['auth_key'])) {
                 throw new InvalidTokenException(sprintf('authorization for client "%s" no longer exists', $accessTokenInfo['client_id']));
-            }
-
-            // make sure user authenticated recently enough
-            // XXX server can also return null, then this fails!
-            $lastAuthenticatedAt = new DateTime($this->serverClient->getRequireString('user_last_authenticated_at', ['user_id' => $accessTokenInfo['user_id']]));
-
-            $expiresAt = date_add(clone $lastAuthenticatedAt, $this->sessionExpiry);
-            if ($this->dateTime > $expiresAt) {
-                // we are not allowed to accept this access_token any longer
-                // user MUST authenticate again
-                $this->storage->deleteAuthorization($accessTokenInfo['auth_key']);
-
-                throw new InvalidTokenException(sprintf('authorization for this user expired'));
             }
 
             // get the permissionList as well
@@ -161,6 +146,8 @@ class BearerValidator
             // a "remote" user
             $userId = $baseUri.'!!'.$userId;
         }
+
+        $expiresAt = date_add(new DateTime($accessTokenInfo['auth_time']), $this->sessionExpiry);
 
         return new VpnAccessTokenInfo(
             $userId,
