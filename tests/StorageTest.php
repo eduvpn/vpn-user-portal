@@ -95,5 +95,6 @@ class StorageTest extends TestCase
         // expired authorization
         $this->storage->storeAuthorization('foo', 'client_id', 'scope', 'random_1', new DateTime('2017-01-01'));
         $this->assertFalse($this->storage->hasAuthorization('random_1'));
+        $this->assertSame([], $this->storage->getAuthorizations('foo'));
     }
 }
