@@ -198,15 +198,14 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     }
 
     /**
-     * @param string    $userId
-     * @param string    $clientId
-     * @param string    $scope
-     * @param string    $authKey
-     * @param \DateTime $authTime
+     * @param string $userId
+     * @param string $clientId
+     * @param string $scope
+     * @param string $authKey
      *
      * @return void
      */
-    public function storeAuthorization($userId, $clientId, $scope, $authKey, DateTime $authTime)
+    public function storeAuthorization($userId, $clientId, $scope, $authKey)
     {
         // the "authorizations" table has the UNIQUE constraint on the
         // "auth_key" column, thus preventing multiple entries with the same
@@ -232,7 +231,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
         $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
-        $stmt->bindValue(':auth_time', $authTime->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':auth_time', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 

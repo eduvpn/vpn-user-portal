@@ -174,7 +174,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-oauth2-server",
-                "reference": "accadf6f773a7a598d71ab4f3aed0e84096fdf3c"
+                "reference": "03fde2b20a4a1c8742ee3e27178ab5287f888a8c"
             },
             "require": {
                 "ext-date": "*",
@@ -216,7 +216,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-oauth2-server"
             },
-            "time": "2019-03-21T21:02:19+00:00"
+            "time": "2019-03-25T15:09:53+00:00"
         },
         {
             "name": "fkooman/php-saml-sp",
