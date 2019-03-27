@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9bf4f6cceda65dd1736688d583433570",
+    "content-hash": "458787ddc90d67d389cce9300d66c4c9",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "4ae60056bc373fc7a9183ba32a497a70e43b03a1"
+                "reference": "cc96643dd2576add6690849e21e2221d850b2dea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/4ae60056bc373fc7a9183ba32a497a70e43b03a1",
-                "reference": "4ae60056bc373fc7a9183ba32a497a70e43b03a1",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/cc96643dd2576add6690849e21e2221d850b2dea",
+                "reference": "cc96643dd2576add6690849e21e2221d850b2dea",
                 "shasum": ""
             },
             "require": {
@@ -110,7 +110,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-03-13T22:01:22+00:00"
+            "time": "2019-03-26T14:33:07+00:00"
         },
         {
             "name": "fkooman/jwt",
@@ -170,11 +170,11 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "dev-master",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-oauth2-server",
-                "reference": "03fde2b20a4a1c8742ee3e27178ab5287f888a8c"
+                "reference": "4b793ab79dff67cfb678bc8e3b9fa0fbe586448f"
             },
             "require": {
                 "ext-date": "*",
@@ -216,7 +216,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-oauth2-server"
             },
-            "time": "2019-03-25T15:09:53+00:00"
+            "time": "2019-03-27T11:28:45+00:00"
         },
         {
             "name": "fkooman/php-saml-sp",
@@ -1342,16 +1342,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.7",
+            "version": "7.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "eb343b86753d26de07ecba7868fa983104361948"
+                "reference": "c29c0525cf4572c11efe1db49a8b8aee9dfac58a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/eb343b86753d26de07ecba7868fa983104361948",
-                "reference": "eb343b86753d26de07ecba7868fa983104361948",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c29c0525cf4572c11efe1db49a8b8aee9dfac58a",
+                "reference": "c29c0525cf4572c11efe1db49a8b8aee9dfac58a",
                 "shasum": ""
             },
             "require": {
@@ -1422,7 +1422,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-03-16T07:31:17+00:00"
+            "time": "2019-03-26T13:23:54+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2143,8 +2143,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "eduvpn/common": 20,
-        "fkooman/oauth2-server": 20
+        "eduvpn/common": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
