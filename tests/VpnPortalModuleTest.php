@@ -32,7 +32,7 @@ class VpnPortalModuleTest extends TestCase
     {
         $schemaDir = \dirname(__DIR__).'/schema';
         $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');
-        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir);
+        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir, $serverClient);
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(
