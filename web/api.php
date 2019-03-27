@@ -45,7 +45,8 @@ try {
 
         $storage = new Storage(
             new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-            sprintf('%s/schema', $baseDir)
+            sprintf('%s/schema', $baseDir),
+            $serverClient
         );
         $storage->update();
 
@@ -69,7 +70,6 @@ try {
         $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
 
         $bearerValidator = new BearerValidator(
-            $serverClient,
             $storage,
             $clientFetcher,
             $secretKey->getPublicKey(),

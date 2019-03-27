@@ -46,7 +46,8 @@ class BearerValidatorTest extends TestCase
 
         $storage = new Storage(
             new PDO('sqlite::memory:'),
-            \dirname(\dirname(__DIR__)).'/schema'
+            \dirname(\dirname(__DIR__)).'/schema',
+            new ServerClient(new TestHttpClient(), 'serverClient')
         );
         $storage->setDateTime($this->dateTime);
         $storage->init();
@@ -62,7 +63,6 @@ class BearerValidatorTest extends TestCase
         ];
 
         $this->bearerValidator = new BearerValidator(
-            new ServerClient(new TestHttpClient(), 'serverClient'),
             $storage,
             $clientDb,
             $this->secretKey->getPublicKey(),
