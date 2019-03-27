@@ -133,8 +133,6 @@ class BearerValidator
 
             $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $accessTokenInfo['user_id']]));
             if ($expiresAt < $this->dateTime) {
-                $this->storage->deleteAuthorization($accessTokenInfo['auth_key']);
-
                 throw new InvalidTokenException('user session expired');
             }
         }
