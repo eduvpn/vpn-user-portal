@@ -10,7 +10,6 @@
 namespace LetsConnect\Portal\Tests;
 
 use DateTime;
-use LetsConnect\Common\HttpClient\ServerClient;
 use LetsConnect\Portal\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +26,7 @@ class StorageTest extends TestCase
     {
         $dateTime = new DateTime('2018-01-01 13:37:00');
         $db = new PDO('sqlite::memory:');
-        $this->storage = new Storage($db, \dirname(__DIR__).'/schema', new ServerClient(new TestHttpClient(), 'serverClient'));
+        $this->storage = new Storage($db, \dirname(__DIR__).'/schema');
         $this->storage->setDateTime($dateTime);
         $this->storage->init();
     }
