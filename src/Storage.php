@@ -16,6 +16,7 @@ use LetsConnect\Common\Http\CredentialValidatorInterface;
 use LetsConnect\Common\Http\UserInfo;
 use LetsConnect\Common\HttpClient\ServerClient;
 use PDO;
+use RuntimeException;
 
 class Storage implements CredentialValidatorInterface, StorageInterface
 {
@@ -30,15 +31,15 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     /** @var \fkooman\SqliteMigrate\Migration */
     private $migration;
 
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    /** @var \LetsConnect\Common\HttpClient\ServerClient|null */
     private $serverClient;
 
     /**
-     * @param \PDO                                        $db
-     * @param string                                      $schemaDir
-     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
+     * @param \PDO                                             $db
+     * @param string                                           $schemaDir
+     * @param \LetsConnect\Common\HttpClient\ServerClient|null $serverClient
      */
-    public function __construct(PDO $db, $schemaDir, ServerClient $serverClient)
+    public function __construct(PDO $db, $schemaDir, ServerClient $serverClient = null)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
@@ -168,9 +169,6 @@ class Storage implements CredentialValidatorInterface, StorageInterface
      */
     public function hasAuthorization($authKey)
     {
-        // XXX we MUST check session_expires_at here to make sure it didn't
-        // expire yet
-
         $stmt = $this->db->prepare(
             'SELECT
                 user_id
@@ -184,6 +182,15 @@ class Storage implements CredentialValidatorInterface, StorageInterface
 
         if (false === $userId = $stmt->fetchColumn()) {
             return false;
+        }
+
+        // this is very ugly, but we MUST know the user_session_expires_at here
+        // to be able to prevent *both* the acceptance of Bearer tokens as well
+        // as whether or not to accept refresh_tokens for this particular
+        // user. This will go away once we merge vpn-user-portal and
+        // vpn-server-api...
+        if (null === $this->serverClient) {
+            throw new RuntimeException('MUST have serverClient set!');
         }
 
         $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userId]));
