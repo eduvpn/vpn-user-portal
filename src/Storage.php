@@ -9,7 +9,6 @@
 
 namespace LetsConnect\Portal;
 
-use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\SqliteMigrate\Migration;
@@ -27,25 +26,20 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     /** @var \DateTime */
     private $dateTime;
 
-    /** @var \DateInterval */
-    private $sessionExpiry;
-
     /** @var \fkooman\SqliteMigrate\Migration */
     private $migration;
 
     /**
-     * @param \PDO          $db
-     * @param string        $schemaDir
-     * @param \DateInterval $sessionExpiry
+     * @param \PDO   $db
+     * @param string $schemaDir
      */
-    public function __construct(PDO $db, $schemaDir, DateInterval $sessionExpiry)
+    public function __construct(PDO $db, $schemaDir)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             $db->exec('PRAGMA foreign_keys = ON');
         }
         $this->db = $db;
-        $this->sessionExpiry = $sessionExpiry;
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
         $this->dateTime = new DateTime();
     }
@@ -170,7 +164,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     {
         $stmt = $this->db->prepare(
             'SELECT
-                auth_time
+                COUNT(*)
              FROM authorizations
              WHERE
                 auth_key = :auth_key'
@@ -179,22 +173,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
 
-        if (false === $authTimeStr = $stmt->fetchColumn()) {
-            // authorization does not exist
-            return false;
-        }
-
-        $authTime = new DateTime($authTimeStr);
-        $expiresAt = date_add(clone $authTime, $this->sessionExpiry);
-
-        if ($expiresAt > $this->dateTime) {
-            return true;
-        }
-
-        // delete authorization as we won't need it anymore
-        $this->deleteAuthorization($authKey);
-
-        return false;
+        return 1 === (int) $stmt->fetchColumn(0);
     }
 
     /**
@@ -274,26 +253,6 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         );
 
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    /**
-     * Remove old OAuth authorizations that are no longer valid.
-     *
-     * @return void
-     */
-    public function cleanAuthorizations()
-    {
-        $dateTime = date_sub(clone $this->dateTime, $this->sessionExpiry);
-
-        $stmt = $this->db->prepare(
-            'DELETE FROM
-                authorizations
-             WHERE
-                auth_time <= :date_time'
-        );
-
-        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 

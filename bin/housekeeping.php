@@ -21,11 +21,8 @@ try {
     $db = new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir));
     $storage = new Storage(
         $db,
-        sprintf('%s/schema', $baseDir),
-        new DateInterval($config->getItem('sessionExpiry'))
+        sprintf('%s/schema', $baseDir)
     );
-
-    $storage->cleanAuthorizations();
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);
