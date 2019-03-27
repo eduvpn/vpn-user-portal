@@ -14,7 +14,6 @@ use fkooman\OAuth\Server\StorageInterface;
 use fkooman\SqliteMigrate\Migration;
 use LetsConnect\Common\Http\CredentialValidatorInterface;
 use LetsConnect\Common\Http\UserInfo;
-use LetsConnect\Common\HttpClient\ServerClient;
 use PDO;
 
 class Storage implements CredentialValidatorInterface, StorageInterface
@@ -30,15 +29,11 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     /** @var \fkooman\SqliteMigrate\Migration */
     private $migration;
 
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
-    private $serverClient;
-
     /**
-     * @param \PDO                                        $db
-     * @param string                                      $schemaDir
-     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
+     * @param \PDO   $db
+     * @param string $schemaDir
      */
-    public function __construct(PDO $db, $schemaDir, ServerClient $serverClient)
+    public function __construct(PDO $db, $schemaDir)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
@@ -46,7 +41,6 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         }
         $this->db = $db;
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
-        $this->serverClient = $serverClient;
         $this->dateTime = new DateTime();
     }
 
@@ -168,12 +162,9 @@ class Storage implements CredentialValidatorInterface, StorageInterface
      */
     public function hasAuthorization($authKey)
     {
-        // XXX we MUST check session_expires_at here to make sure it didn't
-        // expire yet
-
         $stmt = $this->db->prepare(
             'SELECT
-                user_id
+                COUNT(*)
              FROM authorizations
              WHERE
                 auth_key = :auth_key'
@@ -182,13 +173,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
 
-        if (false === $userId = $stmt->fetchColumn()) {
-            return false;
-        }
-
-        $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userId]));
-
-        return $expiresAt > $this->dateTime;
+        return 1 === (int) $stmt->fetchColumn(0);
     }
 
     /**

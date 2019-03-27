@@ -17,6 +17,7 @@ use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
+use LetsConnect\Common\HttpClient\ServerClient;
 use ParagonIE\ConstantTime\Binary;
 
 /**
@@ -40,14 +41,19 @@ class BearerValidator
     /** @var \DateTime */
     private $dateTime;
 
+    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    private $serverClient;
+
     /**
-     * @param \fkooman\OAuth\Server\StorageInterface  $storage
-     * @param \fkooman\OAuth\Server\ClientDbInterface $clientDb
-     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey       $localPublicKey
-     * @param array<string,array<string,string>>      $keyInstanceMapping
+     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
+     * @param \fkooman\OAuth\Server\StorageInterface      $storage
+     * @param \fkooman\OAuth\Server\ClientDbInterface     $clientDb
+     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey           $localPublicKey
+     * @param array<string,array<string,string>>          $keyInstanceMapping
      */
-    public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
+    public function __construct(ServerClient $serverClient, StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
     {
+        $this->serverClient = $serverClient;
         $this->storage = $storage;
         $this->clientDb = $clientDb;
         $this->localPublicKey = $localPublicKey;
@@ -120,10 +126,14 @@ class BearerValidator
                 throw new InvalidTokenException(sprintf('client "%s" no longer registered', $accessTokenInfo['client_id']));
             }
 
-            // the authorization MUST exist in the DB as well *and* not
-            // expired...
+            // the authorization MUST exist in the DB as well...
             if (!$this->storage->hasAuthorization($accessTokenInfo['auth_key'])) {
                 throw new InvalidTokenException(sprintf('authorization for client "%s" no longer exists', $accessTokenInfo['client_id']));
+            }
+
+            $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $accessTokenInfo['user_id']]));
+            if ($expiresAt < $this->dateTime) {
+                throw new InvalidTokenException('user session expired');
             }
         }
 
