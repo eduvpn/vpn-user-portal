@@ -25,12 +25,14 @@ class VpnPortalModuleTest extends TestCase
     /** @var \LetsConnect\Common\Http\Service */
     private $service;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $schemaDir = \dirname(__DIR__).'/schema';
-        $httpClient = new TestHttpClient();
-        $serverClient = new ServerClient($httpClient, 'serverClient');
-        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir);
+        $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');
+        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir, $serverClient);
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(
@@ -48,6 +50,9 @@ class VpnPortalModuleTest extends TestCase
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
     }
 
+    /**
+     * @return void
+     */
     public function testNewGet()
     {
         $this->assertSame(
@@ -69,6 +74,9 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testNewPost()
     {
         $this->assertSame(
@@ -83,6 +91,9 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testAccount()
     {
         $this->assertSame(
@@ -101,6 +112,9 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testCertificates()
     {
         $this->assertSame(
@@ -120,6 +134,9 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testDisableConfirm()
     {
         $this->assertSame(
@@ -128,6 +145,15 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
+    /**
+     * @param string               $requestMethod
+     * @param string               $pathInfo
+     * @param array<string,string> $getData
+     * @param array<string,string> $postData
+     * @param bool                 $returnResponseObj
+     *
+     * @return \LetsConnect\Common\Http\Response
+     */
     private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $returnResponseObj = false)
     {
         $response = $this->service->run(

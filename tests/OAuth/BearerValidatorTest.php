@@ -14,10 +14,12 @@ use DateTime;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
 use LetsConnect\Common\Config;
+use LetsConnect\Common\HttpClient\ServerClient;
 use LetsConnect\Portal\ClientFetcher;
 use LetsConnect\Portal\OAuth\BearerValidator;
 use LetsConnect\Portal\OAuth\PublicSigner;
 use LetsConnect\Portal\Storage;
+use LetsConnect\Portal\Tests\TestHttpClient;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
@@ -45,11 +47,11 @@ class BearerValidatorTest extends TestCase
         $storage = new Storage(
             new PDO('sqlite::memory:'),
             \dirname(\dirname(__DIR__)).'/schema',
-            new DateInterval('P90D')
+            new ServerClient(new TestHttpClient(), 'serverClient')
         );
         $storage->setDateTime($this->dateTime);
         $storage->init();
-        $storage->storeAuthorization('foo', 'org.letsconnect-vpn.app.windows', 'config', 'random_1', $this->dateTime);
+        $storage->storeAuthorization('foo', 'org.letsconnect-vpn.app.windows', 'config', 'random_1');
         $clientDb = new ClientFetcher(new Config(['Api' => ['consumerList' => []]]));
         $this->secretKey = SecretKey::generate();
         $this->remoteSecretKey = SecretKey::generate();
@@ -69,6 +71,9 @@ class BearerValidatorTest extends TestCase
         $this->bearerValidator->setDateTime($this->dateTime);
     }
 
+    /**
+     * @return void
+     */
     public function testLocalToken()
     {
         $signer = new PublicSigner($this->secretKey->getPublicKey(), $this->secretKey);
@@ -91,6 +96,9 @@ class BearerValidatorTest extends TestCase
         $this->assertTrue($accessTokenInfo->getIsLocal());
     }
 
+    /**
+     * @return void
+     */
     public function testRemoteToken()
     {
         $signer = new PublicSigner($this->remoteSecretKey->getPublicKey(), $this->remoteSecretKey);

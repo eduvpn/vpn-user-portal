@@ -15,6 +15,9 @@ use PHPUnit\Framework\TestCase;
 
 class LogoutModuleTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testVerifyLogout()
     {
         $session = new TestSession();
@@ -35,6 +38,9 @@ class LogoutModuleTest extends TestCase
         $this->assertSame('http://example.org/foo', $response->getHeader('Location'));
     }
 
+    /**
+     * @return void
+     */
     public function testVerifyMellonLogoutWithUrl()
     {
         $session = new TestSession();

@@ -14,6 +14,9 @@ use PHPUnit\Framework\TestCase;
 
 class ClientConfigTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testDefault()
     {
         $this->assertSame(
@@ -34,6 +37,9 @@ class ClientConfigTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testFourPorts()
     {
         $this->assertSame(
@@ -54,6 +60,9 @@ class ClientConfigTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testFourPortsWithTcp443()
     {
         $this->assertSame(
@@ -78,6 +87,9 @@ class ClientConfigTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testFourPortsWithUdp53()
     {
         $this->assertSame(
@@ -102,6 +114,9 @@ class ClientConfigTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testEightPorts()
     {
         $this->assertSame(

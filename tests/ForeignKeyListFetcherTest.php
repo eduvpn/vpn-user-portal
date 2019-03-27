@@ -14,6 +14,9 @@ use PHPUnit\Framework\TestCase;
 
 class ForeignKeyListFetcherTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testFetch()
     {
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
@@ -47,7 +50,10 @@ class ForeignKeyListFetcherTest extends TestCase
 
     /**
      * @expectedException \RuntimeException
+     *
      * @expectedExceptionMessage unable to verify signature
+     *
+     * @return void
      */
     public function testFetchWrongSignature()
     {
@@ -65,14 +71,23 @@ class ForeignKeyListFetcherTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testUpdateSameSeq()
     {
     }
 
+    /**
+     * @return void
+     */
     public function testUpdateNewSeq()
     {
     }
 
+    /**
+     * @return void
+     */
     public function testUpdateRollbackSeq()
     {
     }
