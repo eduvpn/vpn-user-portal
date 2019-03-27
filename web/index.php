@@ -353,7 +353,6 @@ try {
         $serverClient,
         $session,
         $storage,
-        new DateInterval($sessionExpiry),
         $clientFetcher
     );
     $service->addModule($vpnPortalModule);

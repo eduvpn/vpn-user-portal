@@ -9,7 +9,6 @@
 
 namespace LetsConnect\Portal\Tests;
 
-use DateInterval;
 use LetsConnect\Common\Config;
 use LetsConnect\Common\Http\NullAuthenticationHook;
 use LetsConnect\Common\Http\Request;
@@ -31,7 +30,7 @@ class VpnPortalModuleTest extends TestCase
         $schemaDir = \dirname(__DIR__).'/schema';
         $httpClient = new TestHttpClient();
         $serverClient = new ServerClient($httpClient, 'serverClient');
-        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir, new DateInterval('P90D'));
+        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir);
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(
@@ -40,7 +39,6 @@ class VpnPortalModuleTest extends TestCase
             $serverClient,
             new TestSession(),
             $storage,
-            new DateInterval('P90D'),
             new ClientFetcher(new Config(['Api' => []]))
         );
         $vpnPortalModule->setShuffleHosts(false);

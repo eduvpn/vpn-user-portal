@@ -9,6 +9,8 @@
 
 namespace LetsConnect\Portal\Tests;
 
+use DateInterval;
+use DateTime;
 use LetsConnect\Common\HttpClient\HttpClientInterface;
 use RuntimeException;
 
@@ -16,6 +18,8 @@ class TestHttpClient implements HttpClientInterface
 {
     public function get($requestUri, array $getData = [], array $requestHeaders = [])
     {
+        $dateTime = date_add(clone new DateTime(), new DateInterval('P90D'));
+
         switch ($requestUri) {
             case 'serverClient/profile_list':
                 return self::wrap(
@@ -50,6 +54,8 @@ class TestHttpClient implements HttpClientInterface
                         ],
                     ]
                 );
+            case 'serverClient/user_session_expires_at?user_id=foo':
+                return self::wrap('user_session_expires_at', $dateTime->format(DateTime::ATOM));
             case 'serverClient/user_messages?user_id=foo':
                 return self::wrap('user_messages', []);
             case 'serverClient/system_messages?message_type=motd':

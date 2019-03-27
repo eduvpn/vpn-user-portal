@@ -9,7 +9,6 @@
 
 namespace LetsConnect\Portal;
 
-use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\SeCookie\SessionInterface;
@@ -42,23 +41,19 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LetsConnect\Portal\Storage */
     private $storage;
 
-    /** @var \DateInterval */
-    private $sessionExpiry;
-
     /** @var \fkooman\OAuth\Server\ClientDbInterface */
     private $clientDb;
 
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, DateInterval $sessionExpiry, ClientDbInterface $clientDb)
+    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, ClientDbInterface $clientDb)
     {
         $this->config = $config;
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
         $this->session = $session;
         $this->storage = $storage;
-        $this->sessionExpiry = $sessionExpiry;
         $this->clientDb = $clientDb;
     }
 
@@ -147,7 +142,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $motdMessage = $motdMessages[0];
                 }
 
-                $expiresAt = date_add(clone $userInfo->authTime(), $this->sessionExpiry);
+                $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userInfo->id()]));
 
                 return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName, $expiresAt);
             }
