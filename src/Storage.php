@@ -18,7 +18,7 @@ use PDO;
 
 class Storage implements CredentialValidatorInterface, StorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2019032100';
+    const CURRENT_SCHEMA_VERSION = '2019032701';
 
     /** @var \PDO */
     private $db;

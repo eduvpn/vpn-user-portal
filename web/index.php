@@ -42,7 +42,6 @@ use LetsConnect\Portal\AdminPortalModule;
 use LetsConnect\Portal\ClientFetcher;
 use LetsConnect\Portal\DisabledUserHook;
 use LetsConnect\Portal\Graph;
-use LetsConnect\Portal\LastAuthenticatedAtPingHook;
 use LetsConnect\Portal\LogoutModule;
 use LetsConnect\Portal\OAuth\PublicSigner;
 use LetsConnect\Portal\OAuthModule;
@@ -52,6 +51,7 @@ use LetsConnect\Portal\SamlModule;
 use LetsConnect\Portal\ShibAuthenticationHook;
 use LetsConnect\Portal\Storage;
 use LetsConnect\Portal\TwoFactorEnrollModule;
+use LetsConnect\Portal\UpdateSessionInfoHook;
 use LetsConnect\Portal\VpnPortalModule;
 
 $logger = new Logger('vpn-user-portal');
@@ -326,7 +326,7 @@ try {
     }
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
-    $service->addBeforeHook('last_authenticated_at_ping', new LastAuthenticatedAtPingHook($session, $serverClient));
+    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($session, $serverClient, new DateInterval($sessionExpiry)));
 
     // two factor module
     if (0 !== count($twoFactorMethods)) {

@@ -9,6 +9,8 @@
 
 namespace LetsConnect\Portal;
 
+use DateInterval;
+use DateTime;
 use fkooman\SeCookie\SessionInterface;
 use LetsConnect\Common\Http\BeforeHookInterface;
 use LetsConnect\Common\Http\Exception\HttpException;
@@ -18,10 +20,9 @@ use LetsConnect\Common\HttpClient\ServerClient;
 use LetsConnect\Common\Json;
 
 /**
- * This hook is used to record the time stamp of the last user authentication
- * The VPN server wants to know the "last_authenticated_at" time of the user.
+ * This hook is used to update the session info in vpn-server-api.
  */
-class LastAuthenticatedAtPingHook implements BeforeHookInterface
+class UpdateSessionInfoHook implements BeforeHookInterface
 {
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
@@ -29,14 +30,22 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
     /** @var \LetsConnect\Common\HttpClient\ServerClient */
     private $serverClient;
 
+    /** @var \DateTime */
+    private $dateTime;
+
+    /** @var \DateInterval */
+    private $sessionExpiry;
+
     /**
      * @param \fkooman\SeCookie\SessionInterface          $session
      * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
      */
-    public function __construct(SessionInterface $session, ServerClient $serverClient)
+    public function __construct(SessionInterface $session, ServerClient $serverClient, DateInterval $sessionExpiry)
     {
         $this->session = $session;
         $this->serverClient = $serverClient;
+        $this->dateTime = new DateTime();
+        $this->sessionExpiry = $sessionExpiry;
     }
 
     /**
@@ -63,23 +72,26 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
             return false;
         }
 
-        if ($this->session->has('_last_authenticated_at_ping_sent')) {
+        if ($this->session->has('_update_session_info')) {
             // only sent the ping once per browser session, not on every
             // request
             return false;
         }
+
         if (!\array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
+
         /** @var \LetsConnect\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
         $this->serverClient->post(
-            'last_authenticated_at_ping',
+            'user_update_session_info',
             [
                 'user_id' => $userInfo->id(),
+                'session_expires_at' => date_add(clone $this->dateTime, $this->sessionExpiry)->format(DateTime::ATOM),
                 'permission_list' => Json::encode($userInfo->permissionList()),
             ]
         );
-        $this->session->set('_last_authenticated_at_ping_sent', true);
+        $this->session->set('_update_session_info', true);
     }
 }

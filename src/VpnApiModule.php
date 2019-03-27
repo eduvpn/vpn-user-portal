@@ -367,8 +367,7 @@ class VpnApiModule implements ServiceModuleInterface
         if (!$accessTokenInfo->getIsLocal()) {
             return date_add(clone $this->dateTime, $this->sessionExpiry);
         }
-        $authTime = new DateTime($this->serverClient->getRequireString('user_last_authenticated_at', ['user_id' => $accessTokenInfo->getUserId()]));
 
-        return date_add(clone $authTime, $this->sessionExpiry);
+        return new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $accessTokenInfo->getUserId()]));
     }
 }
