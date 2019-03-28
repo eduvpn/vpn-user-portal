@@ -87,9 +87,9 @@ class UpdateSessionInfoHook implements BeforeHookInterface
         $this->serverClient->post(
             'user_update_session_info',
             [
-                'user_id' => $userInfo->id(),
+                'user_id' => $userInfo->getUserId(),
                 'session_expires_at' => date_add(clone $this->dateTime, $this->sessionExpiry)->format(DateTime::ATOM),
-                'permission_list' => Json::encode($userInfo->permissionList()),
+                'permission_list' => Json::encode($userInfo->getPermissionList()),
             ]
         );
         $this->session->set('_update_session_info', true);

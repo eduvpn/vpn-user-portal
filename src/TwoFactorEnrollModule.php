@@ -63,8 +63,9 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
+                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -86,6 +87,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
@@ -93,10 +95,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 $hasTwoFactorEnrollRedirectTo = $this->session->has('_two_factor_enroll_redirect_to');
 
                 try {
-                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->id(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
+                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->getUserId(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
                 } catch (ApiException $e) {
                     // we were unable to set the OTP secret
-                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->id()]);
+                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
 
                     return new HtmlResponse(
                         $this->tpl->render(
@@ -118,7 +120,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
                     // mark as 2FA verified
                     $this->session->regenerate(true);
-                    $this->session->set('_two_factor_verified', $userInfo->id());
+                    $this->session->set('_two_factor_verified', $userInfo->getUserId());
 
                     return new RedirectResponse($twoFactorEnrollRedirectTo);
                 }
@@ -133,6 +135,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));
@@ -140,7 +143,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 $otpAuthUrl = sprintf(
                     'otpauth://totp/%s:%s?secret=%s&issuer=%s',
                     $request->getServerName(),
-                    $userInfo->id(),
+                    $userInfo->getUserId(),
                     $totpSecret,
                     $request->getServerName()
                 );

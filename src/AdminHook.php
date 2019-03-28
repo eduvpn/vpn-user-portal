@@ -70,18 +70,18 @@ class AdminHook implements BeforeHookInterface
         if (!\array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-
+        /** @var \LetsConnect\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
 
         // is the userId listed in the adminUserIdList?
-        if (\in_array($userInfo->id(), $this->adminUserIdList, true)) {
+        if (\in_array($userInfo->getUserId(), $this->adminUserIdList, true)) {
             $this->tpl->addDefault(['isAdmin' => true]);
 
             return true;
         }
 
         // is any of the user's permissions listed in adminPermissionList?
-        $userPermissionList = $userInfo->permissionList();
+        $userPermissionList = $userInfo->getPermissionList();
         foreach ($userPermissionList as $userPermission) {
             if (\in_array($userPermission, $this->adminPermissionList, true)) {
                 $this->tpl->addDefault(['isAdmin' => true]);

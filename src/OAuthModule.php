@@ -45,9 +45,10 @@ class OAuthModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 try {
-                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userInfo->id())) {
+                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userInfo->getUserId())) {
                         // optimization where we do not ask for approval
                         return $this->prepareReturnResponse($authorizeResponse);
                     }
@@ -71,13 +72,14 @@ class OAuthModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 try {
                     $authorizeResponse = $this->oauthServer->postAuthorize(
                         $request->getQueryParameters(),
                         $request->getPostParameters(),
-                        $userInfo->id()
+                        $userInfo->getUserId()
                     );
 
                     return $this->prepareReturnResponse($authorizeResponse);

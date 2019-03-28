@@ -88,10 +88,11 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userPermissions = $userInfo->permissionList();
+                $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
@@ -119,13 +120,14 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $displayName = InputValidation::displayName($request->getPostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userPermissions = $userInfo->permissionList();
+                $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
                 // make sure the profileId is in the list of allowed profiles for this
@@ -142,9 +144,9 @@ class VpnPortalModule implements ServiceModuleInterface
                     $motdMessage = $motdMessages[0];
                 }
 
-                $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userInfo->id()]));
+                $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userInfo->getUserId()]));
 
-                return $this->getConfig($request->getServerName(), $profileId, $userInfo->id(), $displayName, $expiresAt);
+                return $this->getConfig($request->getServerName(), $profileId, $userInfo->getUserId(), $displayName, $expiresAt);
             }
         );
 
@@ -154,8 +156,9 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
-                $userCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->id()]);
+                $userCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->getUserId()]);
 
                 // if query parameter "all" is set, show all certificates, also
                 // those issued to OAuth clients
@@ -201,9 +204,10 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
-                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->id()]);
+                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->getUserId()]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -222,13 +226,14 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
-                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->id()]);
+                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userPermissions = $userInfo->permissionList();
+                $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
-                $authorizedClients = $this->storage->getAuthorizations($userInfo->id());
+                $authorizedClients = $this->storage->getAuthorizations($userInfo->getUserId());
                 foreach ($authorizedClients as $k => $v) {
                     // false means no longer registered
                     $displayName = false;
@@ -265,6 +270,7 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LetsConnect\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LetsConnect\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 // no need to validate the input as we do a strict string match...
@@ -272,7 +278,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
 
                 // verify whether the user_id owns the specified auth_key
-                $authorizations = $this->storage->getAuthorizations($userInfo->id());
+                $authorizations = $this->storage->getAuthorizations($userInfo->getUserId());
 
                 $authKeyFound = false;
                 foreach ($authorizations as $authorization) {
@@ -291,10 +297,10 @@ class VpnPortalModule implements ServiceModuleInterface
                 // NOTE: we have to get the list first before deleting the
                 // certificates, otherwise the clients no longer show up the
                 // list... this is NOT good, possible race condition...
-                $clientConnections = $this->serverClient->getRequireArray('client_connections', ['client_id' => $clientId, 'user_id' => $userInfo->id()]);
+                $clientConnections = $this->serverClient->getRequireArray('client_connections', ['client_id' => $clientId, 'user_id' => $userInfo->getUserId()]);
 
                 // delete the certificates from the server
-                $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userInfo->id(), 'client_id' => $clientId]);
+                $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userInfo->getUserId(), 'client_id' => $clientId]);
 
                 // kill the connections
                 foreach ($clientConnections as $profile) {

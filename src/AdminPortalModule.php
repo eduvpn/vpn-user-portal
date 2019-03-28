@@ -135,7 +135,10 @@ class AdminPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
-                $adminUserId = $hookData['auth']->id();
+
+                /** @var \LetsConnect\Common\Http\UserInfo */
+                $userInfo = $hookData['auth'];
+                $adminUserId = $userInfo->getUserId();
                 $userId = $request->getQueryParameter('user_id');
                 InputValidation::userId($userId);
 
@@ -165,7 +168,9 @@ class AdminPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
-                $adminUserId = $hookData['auth']->id();
+                /** @var \LetsConnect\Common\Http\UserInfo */
+                $userInfo = $hookData['auth'];
+                $adminUserId = $userInfo->getUserId();
                 $userId = $request->getPostParameter('user_id');
                 InputValidation::userId($userId);
 

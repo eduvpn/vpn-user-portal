@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "90021719bda86e482fcd85ced18945c5f54320af"
+                "reference": "3045f770a078e3da0fc03b3d38ca327bd51d3591"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/90021719bda86e482fcd85ced18945c5f54320af",
-                "reference": "90021719bda86e482fcd85ced18945c5f54320af",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/3045f770a078e3da0fc03b3d38ca327bd51d3591",
+                "reference": "3045f770a078e3da0fc03b3d38ca327bd51d3591",
                 "shasum": ""
             },
             "require": {
@@ -110,7 +110,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-03-28T09:36:29+00:00"
+            "time": "2019-03-28T15:37:42+00:00"
         },
         {
             "name": "fkooman/jwt",

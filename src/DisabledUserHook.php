@@ -52,7 +52,7 @@ class DisabledUserHook implements BeforeHookInterface
         }
         /** @var \LetsConnect\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
-        if ($this->serverClient->get('is_disabled_user', ['user_id' => $userInfo->id()])) {
+        if ($this->serverClient->get('is_disabled_user', ['user_id' => $userInfo->getUserId()])) {
             // user is disabled, show a special message
             throw new HttpException('account disabled', 403);
         }
