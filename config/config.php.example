@@ -72,7 +72,9 @@ return [
         'idpEntityId' => 'https://idp.example.org/saml',
 
         // set a URL that performs IdP discovery, all IdPs listed in the
-        // discovery service MUST also be available in the IdP metadata file
+        // discovery service MUST also be available in the IdP metadata file,
+        // NOTE: do NOT enable idpEntityId as it will take precedence over
+        // using discovery...
         //'discoUrl' => 'http://vpn.example.org/php-saml-ds/index.php',
 
         // AuthnContext required for *all* users
@@ -86,9 +88,11 @@ return [
         //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
 
-        'permissionSessionExpiry' => [
-            'urn:example:LC-admin' => 'PT12H',
-        ],
+        // Allow for overriding global sessionExpiry based on SAML
+        // "permissionAttribute" value(s)
+        //'permissionSessionExpiry' => [
+        //    'urn:example:LC-admin' => 'PT12H',
+        //],
     ],
 
     // SAML (Shibboleth)
