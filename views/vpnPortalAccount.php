@@ -4,7 +4,7 @@
     <table>
         <tr>
             <th><?=$this->t('ID'); ?></th>
-            <td><code><?=$this->e($userInfo->id()); ?></code></td>
+            <td><code><?=$this->e($userInfo->getUserId()); ?></code></td>
         </tr>
         <?php if ('FormPdoAuthentication' === $authMethod): ?>
             <tr>
