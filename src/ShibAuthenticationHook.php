@@ -9,7 +9,6 @@
 
 namespace LetsConnect\Portal;
 
-use DateTime;
 use LetsConnect\Common\Http\BeforeHookInterface;
 use LetsConnect\Common\Http\Request;
 use LetsConnect\Common\Http\UserInfo;
@@ -50,8 +49,7 @@ class ShibAuthenticationHook implements BeforeHookInterface
 
         return new UserInfo(
             $request->requireHeader($this->userIdAttribute),
-            $userPermissions,
-            new DateTime($request->requireHeader('Shib-Authentication-Instant'))
+            $userPermissions
         );
     }
 }

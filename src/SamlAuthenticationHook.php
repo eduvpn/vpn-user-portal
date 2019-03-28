@@ -111,8 +111,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
 
         return new UserInfo(
             $userId,
-            $this->getPermissionList($samlAttributes),
-            $samlAssertion->getAuthnInstant()
+            $this->getPermissionList($samlAttributes)
         );
     }
 

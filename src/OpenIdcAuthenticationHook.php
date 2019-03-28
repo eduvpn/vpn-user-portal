@@ -9,7 +9,6 @@
 
 namespace LetsConnect\Portal;
 
-use DateTime;
 use LetsConnect\Common\Http\BeforeHookInterface;
 use LetsConnect\Common\Http\Request;
 use LetsConnect\Common\Http\UserInfo;
@@ -37,8 +36,7 @@ class OpenIdcAuthenticationHook implements BeforeHookInterface
     {
         return new UserInfo(
             $request->requireHeader($this->userIdAttribute),
-            [],
-            new DateTime()
+            []
         );
     }
 }

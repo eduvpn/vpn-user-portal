@@ -239,7 +239,9 @@ try {
             $userAuth = new LdapAuth(
                 $logger,
                 $ldapClient,
-                $config->getSection('FormLdapAuthentication')->getItem('userDnTemplate'),
+                $config->getSection('FormLdapAuthentication')->getItem('bindDnTemplate'),
+                $config->getSection('FormLdapAuthentication')->optionalItem('baseDn'),
+                $config->getSection('FormLdapAuthentication')->optionalItem('userFilterTemplate'),
                 $config->getSection('FormLdapAuthentication')->optionalItem('permissionAttribute')
             );
             $service->addModule(

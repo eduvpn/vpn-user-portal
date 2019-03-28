@@ -82,7 +82,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $dbHash = $stmt->fetchColumn(0);
         $isVerified = password_verify($authPass, $dbHash);
         if ($isVerified) {
-            return new UserInfo($authUser, [], new DateTime());
+            return new UserInfo($authUser, []);
         }
 
         return false;

@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "cc96643dd2576add6690849e21e2221d850b2dea"
+                "reference": "90021719bda86e482fcd85ced18945c5f54320af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/cc96643dd2576add6690849e21e2221d850b2dea",
-                "reference": "cc96643dd2576add6690849e21e2221d850b2dea",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/90021719bda86e482fcd85ced18945c5f54320af",
+                "reference": "90021719bda86e482fcd85ced18945c5f54320af",
                 "shasum": ""
             },
             "require": {
@@ -81,7 +81,7 @@
                 "fkooman/secookie": "^2",
                 "ircmaxell/password-compat": "^1",
                 "paragonie/constant_time_encoding": "^1|^2",
-                "paragonie/random_compat": "^1|^2",
+                "paragonie/random_compat": ">=1",
                 "php": ">= 5.4",
                 "psr/log": "^1.0",
                 "symfony/polyfill-php56": "^1"
@@ -110,7 +110,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-03-26T14:33:07+00:00"
+            "time": "2019-03-28T09:36:29+00:00"
         },
         {
             "name": "fkooman/jwt",
