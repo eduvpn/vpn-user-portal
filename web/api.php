@@ -67,8 +67,6 @@ try {
             )
         );
 
-        $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
-
         $bearerValidator = new BearerValidator(
             $storage,
             $clientFetcher,
@@ -87,7 +85,7 @@ try {
         $vpnApiModule = new VpnApiModule(
             $config,
             $serverClient,
-            $sessionExpiry
+            new DateInterval($config->getItem('sessionExpiry'))
         );
         $service->addModule($vpnApiModule);
     }

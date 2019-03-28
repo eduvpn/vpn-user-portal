@@ -64,20 +64,9 @@ try {
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
 
-        // determine sessionExpiry, use the new configuration option if it is there
-        // or fall back to Api 'refreshTokenExpiry', or "worst case" fall back to
-        // hard coded 90 days
-        if ($config->hasItem('sessionExpiry')) {
-            $sessionExpiry = new DateInterval($config->getItem('sessionExpiry'));
-        } elseif ($config->getSection('Api')->hasItem('refreshTokenExpiry')) {
-            $sessionExpiry = new DateInterval($config->getSection('Api')->getItem('refreshTokenExpiry'));
-        } else {
-            $sessionExpiry = new DateInterval('P90D');
-        }
-
         $oauthServer->setAccessTokenExpiry(
             new DateInterval(
-                $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
+                $config->getSection('Api')->hasItem('tokenExpiry') ? $config->getSection('Api')->getItem('tokenExpiry') : 'PT1H'
             )
         );
 
