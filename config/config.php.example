@@ -13,6 +13,9 @@ return [
     //'authMethod' => 'ShibAuthentication',         // SAML (Shibboleth)
 
     // Default Session Expiry
+    // The session expiry will be used to determine the "Not After" of the 
+    // issued X.509 certificates and the moment at which to start rejecting
+    // the OAuth tokens.
     'sessionExpiry' => 'P90D',      // 90 days
     //'sessionExpiry' => 'PT12H',   // 12 hours
     //'sessionExpiry' => 'P1D',     // 1 day
