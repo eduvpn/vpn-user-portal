@@ -205,7 +205,8 @@ try {
                     $userIdAttribute,
                     $permissionAttribute,
                     $config->getSection('SamlAuthentication')->optionalItem('authnContext', []),
-                    $config->getSection('SamlAuthentication')->optionalItem('permissionAuthnContext', [])
+                    $config->getSection('SamlAuthentication')->optionalItem('permissionAuthnContext', []),
+                    $config->getSection('SamlAuthentication')->optionalItem('permissionSessionExpiry', [])
                 )
             );
             $service->addModule(

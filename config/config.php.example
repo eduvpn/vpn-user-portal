@@ -85,6 +85,10 @@ return [
         //'permissionAuthnContext' => [
         //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
+
+        'permissionSessionExpiry' => [
+            'urn:example:LC-admin' => 'PT12H',
+        ],
     ],
 
     // SAML (Shibboleth)

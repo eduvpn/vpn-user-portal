@@ -9,6 +9,8 @@
 
 namespace LetsConnect\Portal;
 
+use DateInterval;
+use DateTime;
 use fkooman\SAML\SP\SP;
 use LetsConnect\Common\Http\BeforeHookInterface;
 use LetsConnect\Common\Http\Exception\HttpException;
@@ -37,6 +39,12 @@ class SamlAuthenticationHook implements BeforeHookInterface
     /** @var array<string,array<string>> */
     private $permissionAuthnContext;
 
+    /** @var array<string,string> */
+    private $permissionSessionExpiry;
+
+    /** @var \DateTime */
+    private $dateTime;
+
     /**
      * @param \fkooman\SAML\SP\SP         $samlSp
      * @param string|null                 $idpEntityId
@@ -44,8 +52,9 @@ class SamlAuthenticationHook implements BeforeHookInterface
      * @param string|null                 $permissionAttribute
      * @param array<string>               $authnContext
      * @param array<string,array<string>> $permissionAuthnContext
+     * @param array<string,string>        $permissionSessionExpiry
      */
-    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, $permissionAttribute, array $authnContext, array $permissionAuthnContext)
+    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, $permissionAttribute, array $authnContext, array $permissionAuthnContext, array $permissionSessionExpiry)
     {
         $this->samlSp = $samlSp;
         $this->idpEntityId = $idpEntityId;
@@ -53,6 +62,8 @@ class SamlAuthenticationHook implements BeforeHookInterface
         $this->permissionAttribute = $permissionAttribute;
         $this->authnContext = $authnContext;
         $this->permissionAuthnContext = $permissionAuthnContext;
+        $this->permissionSessionExpiry = $permissionSessionExpiry;
+        $this->dateTime = new DateTime();
     }
 
     /**
@@ -90,6 +101,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
         }
 
         $userId = $samlAttributes[$this->userIdAttribute][0];
+        $sessionExpiresAt = null;
 
         $userAuthnContext = $samlAssertion->getAuthnContext();
         if (null !== $this->permissionAttribute) {
@@ -107,12 +119,28 @@ class SamlAuthenticationHook implements BeforeHookInterface
                     }
                 }
             }
+
+            // if we got a permission that's part of the
+            // permissionSessionExpiry we use it to determine the time we want
+            // the session to expire
+            foreach ($this->permissionSessionExpiry as $permission => $sessionExpiry) {
+                if (\in_array($permission, $userPermissions, true)) {
+                    // XXX make sure we use the lowest sessionExpiry from the list...
+                    $sessionExpiresAt = date_add(clone $this->dateTime, new DateInterval($sessionExpiry));
+                }
+            }
         }
 
-        return new UserInfo(
+        $userInfo = new UserInfo(
             $userId,
             $this->getPermissionList($samlAttributes)
         );
+
+        if (null !== $sessionExpiresAt) {
+            $userInfo->setSessionExpiresAt($sessionExpiresAt);
+        }
+
+        return $userInfo;
     }
 
     /**
