@@ -123,12 +123,23 @@ class SamlAuthenticationHook implements BeforeHookInterface
             // if we got a permission that's part of the
             // permissionSessionExpiry we use it to determine the time we want
             // the session to expire
+            $minSessionExpiresAt = null;
             foreach ($this->permissionSessionExpiry as $permission => $sessionExpiry) {
                 if (\in_array($permission, $userPermissions, true)) {
-                    // XXX make sure we use the lowest sessionExpiry from the list...
-                    $sessionExpiresAt = date_add(clone $this->dateTime, new DateInterval($sessionExpiry));
+                    // make sure we take the sessionExpiresAt belonging to the
+                    // permission that has the shortest expiry configured
+                    $tmpSessionExpiresAt = date_add(clone $this->dateTime, new DateInterval($sessionExpiry));
+                    if (null === $minSessionExpiresAt) {
+                        $minSessionExpiresAt = $tmpSessionExpiresAt;
+                    }
+                    if ($tmpSessionExpiresAt < $minSessionExpiresAt) {
+                        $minSessionExpiresAt = $tmpSessionExpiresAt;
+                    }
                 }
             }
+
+            // take the minimum
+            $sessionExpiresAt = $minSessionExpiresAt;
         }
 
         $userInfo = new UserInfo(
