@@ -55,7 +55,7 @@ try {
     if ($config->hasSection('Api')) {
         $secretKey = SecretKey::fromEncodedString(
             FileIO::readFile(
-                sprintf('%s/config/secret.key', $baseDir)
+                sprintf('%s/config/oauth.key', $baseDir)
             )
         );
         $oauthServer = new OAuthServer(

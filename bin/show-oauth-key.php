@@ -17,7 +17,7 @@ use LC\Portal\OAuth\PublicSigner;
 try {
     // generate OAuth key
     $configDir = sprintf('%s/config', $baseDir);
-    $keyFile = sprintf('%s/secret.key', $configDir);
+    $keyFile = sprintf('%s/oauth.key', $configDir);
     if (!FileIO::exists($keyFile)) {
         echo '[INFO] OAuth key does not (ye) exist!'.PHP_EOL;
         exit(1);

@@ -394,7 +394,7 @@ try {
     // OAuth module
     $secretKey = SecretKey::fromEncodedString(
         FileIO::readFile(
-            sprintf('%s/config/secret.key', $baseDir)
+            sprintf('%s/config/oauth.key', $baseDir)
         )
     );
     if ($config->hasSection('Api')) {

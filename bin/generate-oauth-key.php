@@ -16,7 +16,7 @@ use LC\Common\FileIO;
 try {
     // generate OAuth key
     $configDir = sprintf('%s/config', $baseDir);
-    $keyFile = sprintf('%s/secret.key', $configDir);
+    $keyFile = sprintf('%s/oauth.key', $configDir);
     if (FileIO::exists($keyFile)) {
         echo '[INFO] OAuth key already exists!'.PHP_EOL;
         exit(0);
