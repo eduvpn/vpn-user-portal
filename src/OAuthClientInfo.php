@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use fkooman\OAuth\Server\ClientInfo;
 

@@ -7,17 +7,17 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
-use LetsConnect\Common\Http\BeforeHookInterface;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Response;
-use LetsConnect\Portal\OAuth\BearerValidator;
+use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Request;
+use LC\Common\Http\Response;
+use LC\Portal\OAuth\BearerValidator;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
-    /** @var \LetsConnect\Portal\OAuth\BearerValidator */
+    /** @var \LC\Portal\OAuth\BearerValidator */
     private $bearerValidator;
 
     public function __construct(BearerValidator $bearerValidator)
@@ -26,7 +26,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @return \LetsConnect\Portal\OAuth\VpnAccessTokenInfo|\LetsConnect\Common\Http\Response
+     * @return \LC\Portal\OAuth\VpnAccessTokenInfo|\LC\Common\Http\Response
      */
     public function executeBefore(Request $request, array $hookData)
     {

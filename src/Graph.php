@@ -7,12 +7,12 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
-use LetsConnect\Common\FileIO;
-use LetsConnect\Portal\Exception\GraphException;
+use LC\Common\FileIO;
+use LC\Portal\Exception\GraphException;
 
 class Graph
 {
@@ -92,7 +92,7 @@ class Graph
         }
 
         if (null === $toHuman) {
-            $toHuman = ['\LetsConnect\Portal\Graph', 'toHumanDummy'];
+            $toHuman = ['\LC\Portal\Graph', 'toHumanDummy'];
         }
 
         $dateList = $this->createDateList($dateInterval);

@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\HttpClient;
+namespace LC\Portal\HttpClient;
 
-use LetsConnect\Common\Json;
+use LC\Common\Json;
 
 class Response
 {

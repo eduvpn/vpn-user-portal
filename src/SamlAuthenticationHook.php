@@ -7,17 +7,17 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
 use fkooman\SAML\SP\SP;
-use LetsConnect\Common\Http\BeforeHookInterface;
-use LetsConnect\Common\Http\Exception\HttpException;
-use LetsConnect\Common\Http\RedirectResponse;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\Http\UserInfo;
+use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Exception\HttpException;
+use LC\Common\Http\RedirectResponse;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\Http\UserInfo;
 
 class SamlAuthenticationHook implements BeforeHookInterface
 {
@@ -67,10 +67,10 @@ class SamlAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LetsConnect\Common\Http\Request $request
-     * @param array                            $hookData
+     * @param \LC\Common\Http\Request $request
+     * @param array                   $hookData
      *
-     * @return false|\LetsConnect\Common\Http\RedirectResponse|\LetsConnect\Common\Http\UserInfo
+     * @return false|\LC\Common\Http\RedirectResponse|\LC\Common\Http\UserInfo
      */
     public function executeBefore(Request $request, array $hookData)
     {
@@ -172,10 +172,10 @@ class SamlAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LetsConnect\Common\Http\Request $request
-     * @param array<string>                    $authnContext
+     * @param \LC\Common\Http\Request $request
+     * @param array<string>           $authnContext
      *
-     * @return \LetsConnect\Common\Http\RedirectResponse
+     * @return \LC\Common\Http\RedirectResponse
      */
     private function getLoginRedirect(Request $request, array $authnContext)
     {

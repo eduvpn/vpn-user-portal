@@ -7,10 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\Tests;
+namespace LC\Portal\Tests;
 
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Portal\LogoutModule;
+use LC\Common\Http\Service;
+use LC\Portal\LogoutModule;
 use PHPUnit\Framework\TestCase;
 
 class LogoutModuleTest extends TestCase

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\Tests;
+namespace LC\Portal\Tests;
 
 use fkooman\SeCookie\Exception\SessionException;
 use fkooman\SeCookie\SessionInterface;

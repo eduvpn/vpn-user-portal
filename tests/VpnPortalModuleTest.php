@@ -7,22 +7,22 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\Tests;
+namespace LC\Portal\Tests;
 
-use LetsConnect\Common\Config;
-use LetsConnect\Common\Http\NullAuthenticationHook;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Portal\ClientFetcher;
-use LetsConnect\Portal\Storage;
-use LetsConnect\Portal\VpnPortalModule;
+use LC\Common\Config;
+use LC\Common\Http\NullAuthenticationHook;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\HttpClient\ServerClient;
+use LC\Portal\ClientFetcher;
+use LC\Portal\Storage;
+use LC\Portal\VpnPortalModule;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
 class VpnPortalModuleTest extends TestCase
 {
-    /** @var \LetsConnect\Common\Http\Service */
+    /** @var \LC\Common\Http\Service */
     private $service;
 
     /**
@@ -152,7 +152,7 @@ class VpnPortalModuleTest extends TestCase
      * @param array<string,string> $postData
      * @param bool                 $returnResponseObj
      *
-     * @return \LetsConnect\Common\Http\Response
+     * @return \LC\Common\Http\Response
      */
     private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $returnResponseObj = false)
     {

@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\Exception;
+namespace LC\Portal\Exception;
 
 use Exception;
 

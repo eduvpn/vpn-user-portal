@@ -7,25 +7,25 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\OAuth\Tests;
+namespace LC\Portal\OAuth\Tests;
 
 use DateInterval;
 use DateTime;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
-use LetsConnect\Common\Config;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Portal\ClientFetcher;
-use LetsConnect\Portal\OAuth\BearerValidator;
-use LetsConnect\Portal\OAuth\PublicSigner;
-use LetsConnect\Portal\Storage;
-use LetsConnect\Portal\Tests\TestHttpClient;
+use LC\Common\Config;
+use LC\Common\HttpClient\ServerClient;
+use LC\Portal\ClientFetcher;
+use LC\Portal\OAuth\BearerValidator;
+use LC\Portal\OAuth\PublicSigner;
+use LC\Portal\Storage;
+use LC\Portal\Tests\TestHttpClient;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
 class BearerValidatorTest extends TestCase
 {
-    /** @var \LetsConnect\Portal\OAuth\BearerValidator */
+    /** @var \LC\Portal\OAuth\BearerValidator */
     private $bearerValidator;
 
     /** @var \fkooman\Jwt\Keys\EdDSA\SecretKey */

@@ -7,10 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\Tests;
+namespace LC\Portal\Tests;
 
-use LetsConnect\Portal\HttpClient\HttpClientInterface;
-use LetsConnect\Portal\HttpClient\Response;
+use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\HttpClient\Response;
 use RuntimeException;
 
 class TestForeignKeyHttpClient implements HttpClientInterface

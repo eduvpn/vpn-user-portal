@@ -7,38 +7,38 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use DateTime;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\SeCookie\SessionInterface;
-use LetsConnect\Common\Config;
-use LetsConnect\Common\Http\Exception\HttpException;
-use LetsConnect\Common\Http\HtmlResponse;
-use LetsConnect\Common\Http\InputValidation;
-use LetsConnect\Common\Http\RedirectResponse;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Response;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\Http\ServiceModuleInterface;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\TplInterface;
+use LC\Common\Config;
+use LC\Common\Http\Exception\HttpException;
+use LC\Common\Http\HtmlResponse;
+use LC\Common\Http\InputValidation;
+use LC\Common\Http\RedirectResponse;
+use LC\Common\Http\Request;
+use LC\Common\Http\Response;
+use LC\Common\Http\Service;
+use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
-    /** @var \LetsConnect\Common\Config */
+    /** @var \LC\Common\Config */
     private $config;
 
-    /** @var \LetsConnect\Common\TplInterface */
+    /** @var \LC\Common\TplInterface */
     private $tpl;
 
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \LetsConnect\Portal\Storage */
+    /** @var \LC\Portal\Storage */
     private $storage;
 
     /** @var \fkooman\OAuth\Server\ClientDbInterface */
@@ -75,7 +75,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request) {
                 return new RedirectResponse($request->getRootUri().'new', 302);
@@ -85,10 +85,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/new',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
@@ -117,10 +117,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/new',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $displayName = InputValidation::displayName($request->getPostParameter('displayName'));
@@ -153,10 +153,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/certificates',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $userCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->getUserId()]);
 
@@ -187,7 +187,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/deleteCertificate',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
@@ -201,10 +201,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/events',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->getUserId()]);
@@ -223,10 +223,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
                 $profileList = $this->serverClient->getRequireArray('profile_list');
@@ -267,10 +267,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/removeClientAuthorization',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 // no need to validate the input as we do a strict string match...
@@ -316,7 +316,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/documentation',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function () {
                 return new HtmlResponse(
@@ -372,7 +372,7 @@ class VpnPortalModule implements ServiceModuleInterface
      * @param string    $displayName
      * @param \DateTime $expiresAt
      *
-     * @return \LetsConnect\Common\Http\Response
+     * @return \LC\Common\Http\Response
      */
     private function getConfig($serverName, $profileId, $userId, $displayName, DateTime $expiresAt)
     {

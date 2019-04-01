@@ -7,31 +7,31 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
-use LetsConnect\Common\Http\AuthUtils;
-use LetsConnect\Common\Http\Exception\HttpException;
-use LetsConnect\Common\Http\HtmlResponse;
-use LetsConnect\Common\Http\InputValidation;
-use LetsConnect\Common\Http\RedirectResponse;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Response;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\Http\ServiceModuleInterface;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\TplInterface;
+use LC\Common\Http\AuthUtils;
+use LC\Common\Http\Exception\HttpException;
+use LC\Common\Http\HtmlResponse;
+use LC\Common\Http\InputValidation;
+use LC\Common\Http\RedirectResponse;
+use LC\Common\Http\Request;
+use LC\Common\Http\Response;
+use LC\Common\Http\Service;
+use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\TplInterface;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
-    /** @var \LetsConnect\Common\TplInterface */
+    /** @var \LC\Common\TplInterface */
     private $tpl;
 
     /** @var Storage */
     private $storage;
 
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /** @var Graph */
@@ -41,10 +41,10 @@ class AdminPortalModule implements ServiceModuleInterface
     private $dateTimeToday;
 
     /**
-     * @param \LetsConnect\Common\TplInterface            $tpl
-     * @param Storage                                     $storage
-     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
-     * @param Graph                                       $graph
+     * @param \LC\Common\TplInterface            $tpl
+     * @param Storage                            $storage
+     * @param \LC\Common\HttpClient\ServerClient $serverClient
+     * @param Graph                              $graph
      */
     public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient, Graph $graph)
     {
@@ -63,7 +63,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/connections',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -91,7 +91,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/info',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -110,7 +110,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/users',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -131,12 +131,12 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/user',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
                 $userId = $request->getQueryParameter('user_id');
@@ -164,11 +164,11 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/user',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
                 $userId = $request->getPostParameter('user_id');
@@ -229,7 +229,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/log',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -250,7 +250,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -287,7 +287,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats/traffic',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -342,7 +342,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats/users',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -371,7 +371,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/messages',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -399,7 +399,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/messages',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -436,7 +436,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/log',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);

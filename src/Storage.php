@@ -7,14 +7,14 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use DateTime;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\SqliteMigrate\Migration;
-use LetsConnect\Common\Http\CredentialValidatorInterface;
-use LetsConnect\Common\Http\UserInfo;
-use LetsConnect\Common\HttpClient\ServerClient;
+use LC\Common\Http\CredentialValidatorInterface;
+use LC\Common\Http\UserInfo;
+use LC\Common\HttpClient\ServerClient;
 use PDO;
 use RuntimeException;
 
@@ -31,13 +31,13 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     /** @var \fkooman\SqliteMigrate\Migration */
     private $migration;
 
-    /** @var \LetsConnect\Common\HttpClient\ServerClient|null */
+    /** @var \LC\Common\HttpClient\ServerClient|null */
     private $serverClient;
 
     /**
-     * @param \PDO                                             $db
-     * @param string                                           $schemaDir
-     * @param \LetsConnect\Common\HttpClient\ServerClient|null $serverClient
+     * @param \PDO                                    $db
+     * @param string                                  $schemaDir
+     * @param \LC\Common\HttpClient\ServerClient|null $serverClient
      */
     public function __construct(PDO $db, $schemaDir, ServerClient $serverClient = null)
     {

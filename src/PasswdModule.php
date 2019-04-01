@@ -7,22 +7,22 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
-use LetsConnect\Common\Http\HtmlResponse;
-use LetsConnect\Common\Http\InputValidation;
-use LetsConnect\Common\Http\RedirectResponse;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\Http\ServiceModuleInterface;
-use LetsConnect\Common\TplInterface;
+use LC\Common\Http\HtmlResponse;
+use LC\Common\Http\InputValidation;
+use LC\Common\Http\RedirectResponse;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\TplInterface;
 
 class PasswdModule implements ServiceModuleInterface
 {
-    /** @var \LetsConnect\Common\TplInterface */
+    /** @var \LC\Common\TplInterface */
     private $tpl;
 
-    /** @var \LetsConnect\Portal\Storage */
+    /** @var \LC\Portal\Storage */
     private $storage;
 
     public function __construct(TplInterface $tpl, Storage $storage)
@@ -39,10 +39,10 @@ class PasswdModule implements ServiceModuleInterface
         $service->get(
             '/passwd',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 return new HtmlResponse(
@@ -59,10 +59,10 @@ class PasswdModule implements ServiceModuleInterface
         $service->post(
             '/passwd',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $userPass = $request->getPostParameter('userPass');

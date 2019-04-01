@@ -7,13 +7,13 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
-use LetsConnect\Common\Http\BeforeHookInterface;
-use LetsConnect\Common\Http\Exception\HttpException;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\HttpClient\ServerClient;
+use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Exception\HttpException;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\HttpClient\ServerClient;
 
 /**
  * This hook is used to check if a user is disabled before allowing any other
@@ -21,7 +21,7 @@ use LetsConnect\Common\HttpClient\ServerClient;
  */
 class DisabledUserHook implements BeforeHookInterface
 {
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
     public function __construct(ServerClient $serverClient)
@@ -50,7 +50,7 @@ class DisabledUserHook implements BeforeHookInterface
         if (!\array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-        /** @var \LetsConnect\Common\Http\UserInfo */
+        /** @var \LC\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
         if ($this->serverClient->get('is_disabled_user', ['user_id' => $userInfo->getUserId()])) {
             // user is disabled, show a special message

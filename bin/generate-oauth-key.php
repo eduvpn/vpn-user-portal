@@ -11,7 +11,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
-use LetsConnect\Common\FileIO;
+use LC\Common\FileIO;
 
 try {
     // generate OAuth key

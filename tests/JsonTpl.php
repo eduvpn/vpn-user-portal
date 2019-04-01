@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\Tests;
+namespace LC\Portal\Tests;
 
-use LetsConnect\Common\TplInterface;
+use LC\Common\TplInterface;
 
 class JsonTpl implements TplInterface
 {

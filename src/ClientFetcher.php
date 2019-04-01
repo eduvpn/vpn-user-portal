@@ -7,15 +7,15 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\ClientInfo;
-use LetsConnect\Common\Config;
+use LC\Common\Config;
 
 class ClientFetcher implements ClientDbInterface
 {
-    /** @var \LetsConnect\Common\Config */
+    /** @var \LC\Common\Config */
     private $config;
 
     public function __construct(Config $config)

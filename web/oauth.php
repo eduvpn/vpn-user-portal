@@ -12,18 +12,18 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
-use LetsConnect\Common\Config;
-use LetsConnect\Common\FileIO;
-use LetsConnect\Common\Http\JsonResponse;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\HttpClient\CurlHttpClient;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\Logger;
-use LetsConnect\Portal\ClientFetcher;
-use LetsConnect\Portal\OAuth\PublicSigner;
-use LetsConnect\Portal\OAuthTokenModule;
-use LetsConnect\Portal\Storage;
+use LC\Common\Config;
+use LC\Common\FileIO;
+use LC\Common\Http\JsonResponse;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\HttpClient\CurlHttpClient;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\Logger;
+use LC\Portal\ClientFetcher;
+use LC\Portal\OAuth\PublicSigner;
+use LC\Portal\OAuthTokenModule;
+use LC\Portal\Storage;
 
 $logger = new Logger('vpn-user-portal');
 

@@ -7,11 +7,11 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\Tests;
+namespace LC\Portal\Tests;
 
 use DateInterval;
 use DateTime;
-use LetsConnect\Common\HttpClient\HttpClientInterface;
+use LC\Common\HttpClient\HttpClientInterface;
 use RuntimeException;
 
 class TestHttpClient implements HttpClientInterface

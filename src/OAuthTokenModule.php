@@ -7,14 +7,14 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Response;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\Http\ServiceModuleInterface;
+use LC\Common\Http\Request;
+use LC\Common\Http\Response;
+use LC\Common\Http\Service;
+use LC\Common\Http\ServiceModuleInterface;
 
 class OAuthTokenModule implements ServiceModuleInterface
 {
@@ -34,7 +34,7 @@ class OAuthTokenModule implements ServiceModuleInterface
         $service->post(
             '/token',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 try {

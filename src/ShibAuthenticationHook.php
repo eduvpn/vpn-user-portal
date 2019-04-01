@@ -7,11 +7,11 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
-use LetsConnect\Common\Http\BeforeHookInterface;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\UserInfo;
+use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Request;
+use LC\Common\Http\UserInfo;
 
 class ShibAuthenticationHook implements BeforeHookInterface
 {

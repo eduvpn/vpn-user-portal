@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\OAuth;
+namespace LC\Portal\OAuth;
 
 use fkooman\Jwt\EdDSA;
 use fkooman\Jwt\Exception\JwtException;

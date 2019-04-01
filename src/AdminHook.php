@@ -7,13 +7,13 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
-use LetsConnect\Common\Http\BeforeHookInterface;
-use LetsConnect\Common\Http\Exception\HttpException;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\TplInterface;
+use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Exception\HttpException;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\TplInterface;
 
 /**
  * Augments the "template" with information about whether or not the user is
@@ -27,13 +27,13 @@ class AdminHook implements BeforeHookInterface
     /** @var array<string> */
     private $adminUserIdList;
 
-    /** @var \LetsConnect\Common\TplInterface */
+    /** @var \LC\Common\TplInterface */
     private $tpl;
 
     /**
-     * @param array<string>                    $adminPermissionList
-     * @param array<string>                    $adminUserIdList
-     * @param \LetsConnect\Common\TplInterface $tpl
+     * @param array<string>           $adminPermissionList
+     * @param array<string>           $adminUserIdList
+     * @param \LC\Common\TplInterface $tpl
      */
     public function __construct(array $adminPermissionList, array $adminUserIdList, TplInterface &$tpl)
     {
@@ -70,7 +70,7 @@ class AdminHook implements BeforeHookInterface
         if (!\array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-        /** @var \LetsConnect\Common\Http\UserInfo */
+        /** @var \LC\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
 
         // is the userId listed in the adminUserIdList?

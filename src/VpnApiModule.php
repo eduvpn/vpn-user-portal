@@ -7,30 +7,30 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
 use DateTimeZone;
-use LetsConnect\Common\Config;
-use LetsConnect\Common\Http\ApiErrorResponse;
-use LetsConnect\Common\Http\ApiResponse;
-use LetsConnect\Common\Http\Exception\InputValidationException;
-use LetsConnect\Common\Http\InputValidation;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Response;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\Http\ServiceModuleInterface;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\ProfileConfig;
-use LetsConnect\Portal\OAuth\VpnAccessTokenInfo;
+use LC\Common\Config;
+use LC\Common\Http\ApiErrorResponse;
+use LC\Common\Http\ApiResponse;
+use LC\Common\Http\Exception\InputValidationException;
+use LC\Common\Http\InputValidation;
+use LC\Common\Http\Request;
+use LC\Common\Http\Response;
+use LC\Common\Http\Service;
+use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\ProfileConfig;
+use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
 {
-    /** @var \LetsConnect\Common\Config */
+    /** @var \LC\Common\Config */
     private $config;
 
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /** @var \DateInterval */
@@ -43,9 +43,9 @@ class VpnApiModule implements ServiceModuleInterface
     private $dateTime;
 
     /**
-     * @param \LetsConnect\Common\Config                  $config
-     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
-     * @param \DateInterval                               $sessionExpiry
+     * @param \LC\Common\Config                  $config
+     * @param \LC\Common\HttpClient\ServerClient $serverClient
+     * @param \DateInterval                      $sessionExpiry
      */
     public function __construct(Config $config, ServerClient $serverClient, DateInterval $sessionExpiry)
     {
@@ -77,7 +77,7 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
+                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
@@ -113,7 +113,7 @@ class VpnApiModule implements ServiceModuleInterface
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
+                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
 
                 return new ApiResponse(
@@ -137,10 +137,10 @@ class VpnApiModule implements ServiceModuleInterface
         $service->post(
             '/create_keypair',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
+                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 try {
                     $clientCertificate = $this->getCertificate($accessTokenInfo);
@@ -162,10 +162,10 @@ class VpnApiModule implements ServiceModuleInterface
         $service->get(
             '/check_certificate',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
+                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
                 $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
@@ -182,10 +182,10 @@ class VpnApiModule implements ServiceModuleInterface
         $service->get(
             '/profile_config',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Portal\OAuth\VpnAccessTokenInfo */
+                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
@@ -285,7 +285,7 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \LetsConnect\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
+     * @param \LC\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
      *
      * @return array
      */
@@ -344,7 +344,7 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \LetsConnect\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
+     * @param \LC\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
      *
      * @return array<string>
      */
@@ -358,7 +358,7 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \LetsConnect\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
+     * @param \LC\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
      *
      * @return \DateTime
      */

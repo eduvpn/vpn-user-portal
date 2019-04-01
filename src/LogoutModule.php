@@ -7,13 +7,13 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use fkooman\SeCookie\SessionInterface;
-use LetsConnect\Common\Http\RedirectResponse;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\Http\ServiceModuleInterface;
+use LC\Common\Http\RedirectResponse;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\Http\ServiceModuleInterface;
 
 class LogoutModule implements ServiceModuleInterface
 {
@@ -39,7 +39,7 @@ class LogoutModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \LetsConnect\Common\Http\Service $service
+     * @param \LC\Common\Http\Service $service
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class LogoutModule implements ServiceModuleInterface
         $service->post(
             '/_logout',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
                 $httpReferrer = $request->requireHeader('HTTP_REFERER');

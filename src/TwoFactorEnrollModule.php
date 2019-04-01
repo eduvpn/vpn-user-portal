@@ -7,21 +7,21 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
 use fkooman\SeCookie\SessionInterface;
-use LetsConnect\Common\Http\HtmlResponse;
-use LetsConnect\Common\Http\InputValidation;
-use LetsConnect\Common\Http\RedirectResponse;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Response;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\Http\ServiceModuleInterface;
-use LetsConnect\Common\HttpClient\Exception\ApiException;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\TplInterface;
+use LC\Common\Http\HtmlResponse;
+use LC\Common\Http\InputValidation;
+use LC\Common\Http\RedirectResponse;
+use LC\Common\Http\Request;
+use LC\Common\Http\Response;
+use LC\Common\Http\Service;
+use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\HttpClient\Exception\ApiException;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\TplInterface;
 use ParagonIE\ConstantTime\Base32;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
@@ -32,17 +32,17 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \LetsConnect\Common\TplInterface */
+    /** @var \LC\Common\TplInterface */
     private $tpl;
 
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /**
-     * @param array<string>                               $twoFactorMethods
-     * @param \fkooman\SeCookie\SessionInterface          $session
-     * @param \LetsConnect\Common\TplInterface            $tpl
-     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
+     * @param array<string>                      $twoFactorMethods
+     * @param \fkooman\SeCookie\SessionInterface $session
+     * @param \LC\Common\TplInterface            $tpl
+     * @param \LC\Common\HttpClient\ServerClient $serverClient
      */
     public function __construct(array $twoFactorMethods, SessionInterface $session, TplInterface $tpl, ServerClient $serverClient)
     {
@@ -60,10 +60,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
         $service->get(
             '/two_factor_enroll',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
 
@@ -84,10 +84,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
         $service->post(
             '/two_factor_enroll',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
@@ -132,10 +132,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
         $service->get(
             '/two_factor_enroll_qr',
             /**
-             * @return \LetsConnect\Common\Http\Response
+             * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LetsConnect\Common\Http\UserInfo */
+                /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));

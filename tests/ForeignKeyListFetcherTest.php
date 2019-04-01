@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal\Tests;
+namespace LC\Portal\Tests;
 
-use LetsConnect\Portal\ForeignKeyListFetcher;
+use LC\Portal\ForeignKeyListFetcher;
 use PHPUnit\Framework\TestCase;
 
 class ForeignKeyListFetcherTest extends TestCase

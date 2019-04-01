@@ -11,19 +11,19 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
-use LetsConnect\Common\Config;
-use LetsConnect\Common\FileIO;
-use LetsConnect\Common\Http\JsonResponse;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\HttpClient\CurlHttpClient;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\Logger;
-use LetsConnect\Portal\BearerAuthenticationHook;
-use LetsConnect\Portal\ClientFetcher;
-use LetsConnect\Portal\OAuth\BearerValidator;
-use LetsConnect\Portal\Storage;
-use LetsConnect\Portal\VpnApiModule;
+use LC\Common\Config;
+use LC\Common\FileIO;
+use LC\Common\Http\JsonResponse;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\HttpClient\CurlHttpClient;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\Logger;
+use LC\Portal\BearerAuthenticationHook;
+use LC\Portal\ClientFetcher;
+use LC\Portal\OAuth\BearerValidator;
+use LC\Portal\Storage;
+use LC\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
 

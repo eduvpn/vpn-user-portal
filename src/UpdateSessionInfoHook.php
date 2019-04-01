@@ -7,17 +7,17 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
 use fkooman\SeCookie\SessionInterface;
-use LetsConnect\Common\Http\BeforeHookInterface;
-use LetsConnect\Common\Http\Exception\HttpException;
-use LetsConnect\Common\Http\Request;
-use LetsConnect\Common\Http\Service;
-use LetsConnect\Common\HttpClient\ServerClient;
-use LetsConnect\Common\Json;
+use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Exception\HttpException;
+use LC\Common\Http\Request;
+use LC\Common\Http\Service;
+use LC\Common\HttpClient\ServerClient;
+use LC\Common\Json;
 
 /**
  * This hook is used to update the session info in vpn-server-api.
@@ -27,7 +27,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \LetsConnect\Common\HttpClient\ServerClient */
+    /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
     /** @var \DateTime */
@@ -37,8 +37,8 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     private $sessionExpiry;
 
     /**
-     * @param \fkooman\SeCookie\SessionInterface          $session
-     * @param \LetsConnect\Common\HttpClient\ServerClient $serverClient
+     * @param \fkooman\SeCookie\SessionInterface $session
+     * @param \LC\Common\HttpClient\ServerClient $serverClient
      */
     public function __construct(SessionInterface $session, ServerClient $serverClient, DateInterval $sessionExpiry)
     {
@@ -49,8 +49,8 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LetsConnect\Common\Http\Request $request
-     * @param array                            $hookData
+     * @param \LC\Common\Http\Request $request
+     * @param array                   $hookData
      *
      * @return false|void
      */
@@ -82,7 +82,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
             throw new HttpException('authentication hook did not run before', 500);
         }
 
-        /** @var \LetsConnect\Common\Http\UserInfo */
+        /** @var \LC\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
 
         // check if the authentication backend wants to override the sessionExpiry

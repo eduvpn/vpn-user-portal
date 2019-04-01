@@ -7,13 +7,13 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LetsConnect\Portal;
+namespace LC\Portal;
 
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
-use LetsConnect\Common\FileIO;
-use LetsConnect\Common\Json;
-use LetsConnect\Portal\HttpClient\HttpClientInterface;
-use LetsConnect\Portal\OAuth\PublicSigner;
+use LC\Common\FileIO;
+use LC\Common\Json;
+use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\OAuth\PublicSigner;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use RuntimeException;
