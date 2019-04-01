@@ -10,10 +10,11 @@ return [
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
     //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
     //'authMethod' => 'SamlAuthentication',         // SAML (php-saml-sp)
+    //'authMethod' => 'MellonAuthentication',       // SAML (mod_auth_mellon)
     //'authMethod' => 'ShibAuthentication',         // SAML (Shibboleth)
 
     // Default Session Expiry
-    // The session expiry will be used to determine the "Not After" of the 
+    // The session expiry will be used to determine the "Not After" of the
     // issued X.509 certificates and the moment at which to start rejecting
     // the OAuth tokens.
     'sessionExpiry' => 'P90D',      // 90 days
@@ -98,6 +99,20 @@ return [
         //],
     ],
 
+    // SAML (mod_auth_mellon)
+    'MellonAuthentication' => [
+        // OID for eduPersonTargetedId
+        'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
+        // OID for eduPersonPrincipalName
+        //'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6',
+
+        // ** AUTHORIZATION | PERMISSIONS **
+        // OID for eduPersonEntitlement
+        //'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
+        // OID for eduPersonAffiliation
+        //'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_1',
+    ],
+
     // SAML (Shibboleth)
     'ShibAuthentication' => [
         'userIdAttribute' => 'persistent-id',
@@ -105,7 +120,6 @@ return [
 
         // ** AUTHORIZATION | PERMISSIONS **
         //'permissionAttribute' => 'entitlement',
-        // OID for eduPersonAffiliation
         //'permissionAttribute' => 'affiliation',
     ],
 

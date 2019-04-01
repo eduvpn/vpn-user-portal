@@ -43,6 +43,7 @@ use LC\Portal\ClientFetcher;
 use LC\Portal\DisabledUserHook;
 use LC\Portal\Graph;
 use LC\Portal\LogoutModule;
+use LC\Portal\MellonAuthenticationHook;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
 use LC\Portal\PasswdModule;
@@ -216,6 +217,15 @@ try {
                 )
             );
 
+            break;
+        case 'MellonAuthentication':
+            $service->addBeforeHook(
+                'auth',
+                new MellonAuthenticationHook(
+                    $config->getSection('MellonAuthentication')->getItem('userIdAttribute'),
+                    $config->getSection('MellonAuthentication')->optionalItem('permissionAttribute')
+                )
+            );
             break;
         case 'ShibAuthentication':
             $service->addBeforeHook(
