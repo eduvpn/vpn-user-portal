@@ -112,7 +112,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
-        $stmt->bindValue(':created_at', $this->dateTime->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $stmt->bindValue(':created_at', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 

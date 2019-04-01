@@ -47,13 +47,13 @@
                     </tr>
                     <tr>
                         <th><?=$this->t('Connected'); ?> (<?=$this->e(date('T')); ?>)</th>
-                        <td><?=$this->e($result['connected_at']); ?></td>
+                        <td><?=$this->d($result['connected_at']); ?></td>
                     </tr>
                     <tr>
                         <th><?=$this->t('Disconnected'); ?> (<?=$this->e(date('T')); ?>)</th>
                         <td>
                             <?php if ($result['disconnected_at']): ?>
-                                <?=$this->e($result['disconnected_at']); ?>
+                                <?=$this->d($result['disconnected_at']); ?>
                             <?php else: ?>
                                 <em><?=$this->t('N/A'); ?></em>
                             <?php endif; ?>

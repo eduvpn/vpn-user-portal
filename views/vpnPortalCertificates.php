@@ -13,8 +13,8 @@
             <?php foreach ($userCertificateList as $userCertificate): ?>
                 <tr>
                     <td><?=$this->e($userCertificate['display_name']); ?></td>
-                    <td><?=$this->e($userCertificate['valid_from']); ?></td>
-                    <td><?=$this->e($userCertificate['valid_to']); ?></td>
+                    <td><?=$this->d($userCertificate['valid_from']); ?></td>
+                    <td><?=$this->d($userCertificate['valid_to']); ?></td>
                     <td class="text-right">
                         <form method="post" action="deleteCertificate">
                             <input type="hidden" name="commonName" value="<?=$this->e($userCertificate['common_name']); ?>">

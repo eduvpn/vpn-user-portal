@@ -345,12 +345,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "9dbc471c11c5dae5d0fb55e7547602bf164e351e"
+                "reference": "76304267df66fedcd94b20aef154739c418fd8e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/9dbc471c11c5dae5d0fb55e7547602bf164e351e",
-                "reference": "9dbc471c11c5dae5d0fb55e7547602bf164e351e",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/76304267df66fedcd94b20aef154739c418fd8e3",
+                "reference": "76304267df66fedcd94b20aef154739c418fd8e3",
                 "shasum": ""
             },
             "require": {
@@ -379,7 +379,11 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "LC\\Common\\": "src/",
+                    "LC\\Common\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
                     "LC\\Common\\Tests\\": "tests/"
                 }
             },
@@ -397,7 +401,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2019-04-01T09:33:37+00:00"
+            "time": "2019-04-01T16:59:44+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",

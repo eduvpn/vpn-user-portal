@@ -39,8 +39,8 @@
             <?php foreach ($clientCertificateList as $clientCertificate): ?>
                 <tr>
                     <td><?=$this->e($clientCertificate['display_name']); ?></td>
-                    <td><?=$this->e($clientCertificate['valid_from']); ?></td>
-                    <td><?=$this->e($clientCertificate['valid_to']); ?></td>
+                    <td><?=$this->d($clientCertificate['valid_from']); ?></td>
+                    <td><?=$this->d($clientCertificate['valid_to']); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -61,7 +61,7 @@
             <tbody>
                 <?php foreach ($userMessages as $message): ?>
                     <tr>
-                        <td><?=$this->e($message['date_time']); ?></td>
+                        <td><?=$this->d($message['date_time']); ?></td>
                         <td><?=$this->e($message['message']); ?></td>
                         <td><span class="plain"><?=$this->e($message['type']); ?></span></td>
                     </tr>

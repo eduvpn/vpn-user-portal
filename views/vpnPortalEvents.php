@@ -14,7 +14,7 @@
             <tbody>
                 <?php foreach ($userMessages as $message): ?>
                     <tr>
-                        <td><?=$this->e($message['date_time']); ?></td>
+                        <td><?=$this->d($message['date_time']); ?></td>
                         <td><?=$this->e($message['message']); ?></td>
                         <td><span class="plain"><?=$this->e($message['type']); ?></span></td>
                     </tr>
