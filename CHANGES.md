@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (...)
+## 2.0.0 (2019-04-01)
 - remove PHP error suppression
 - rework 2FA enrollment, enrollment goes through `/two_factor_enroll` now
 - no longer show which profiles have 2FA enabled, no longer relevant as
@@ -27,6 +27,9 @@
 - (re)introduce admin permission based on userId
 - rename "entitlement" to "permission"
 - OAuth key moved to configuration directory instead of data directory
+- implement `SamlAuthentication` support (php-saml-sp)
+- implement `ShibAuthentication` support (Shibboleth SP)
+- implement user session expiry
 
 ## 1.8.5 (2018-11-28)
 - no longer allow clients to obtain new access tokens using the refresh token 
