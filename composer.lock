@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "84faec58bf3ce2b4ed47b071eb45df06",
+    "content-hash": "15d6a7ee2bf459e97e9e25b01a561c0f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -341,17 +341,11 @@
         },
         {
             "name": "lc/common",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "e9c8a688c2c18966b978f29fb31e2ab8f97fa229"
-            },
+            "version": "dev-master",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/e9c8a688c2c18966b978f29fb31e2ab8f97fa229",
-                "reference": "e9c8a688c2c18966b978f29fb31e2ab8f97fa229",
-                "shasum": ""
+                "type": "path",
+                "url": "../vpn-lib-common",
+                "reference": "e9c8a688c2c18966b978f29fb31e2ab8f97fa229"
             },
             "require": {
                 "ext-curl": "*",
@@ -400,8 +394,7 @@
             "support": {
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
-            },
-            "time": "2019-04-01T20:26:29+00:00"
+            }
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -729,16 +722,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.8.1",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8"
+                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
-                "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
+                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
                 "shasum": ""
             },
             "require": {
@@ -773,7 +766,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2018-06-11T23:09:50+00:00"
+            "time": "2019-04-07T13:18:21+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -2054,16 +2047,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.1.0",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "cb2f008f3f05af2893a87208fe6a6c4985483f8b"
+                "reference": "1c42705be2b6c1de5904f8afacef5895cab44bf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/cb2f008f3f05af2893a87208fe6a6c4985483f8b",
-                "reference": "cb2f008f3f05af2893a87208fe6a6c4985483f8b",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/1c42705be2b6c1de5904f8afacef5895cab44bf8",
+                "reference": "1c42705be2b6c1de5904f8afacef5895cab44bf8",
                 "shasum": ""
             },
             "require": {
@@ -2090,7 +2083,7 @@
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
-            "time": "2017-04-07T12:08:54+00:00"
+            "time": "2019-04-04T09:56:43+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -2146,8 +2139,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
-    "prefer-stable": true,
+    "stability-flags": {
+        "lc/common": 20
+    },
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "ext-date": "*",
