@@ -21,7 +21,11 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\ProfileConfig;
+use LC\Common\Random;
 use LC\Common\TplInterface;
+use LC\Portal\CA\CaInterface;
+use LC\Portal\OpenVpn\ServerManager;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -37,19 +41,35 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LC\Portal\Storage */
     private $storage;
 
+    /** @var CA\CaInterface */
+    private $ca;
+
+    /** @var TlsAuth */
+    private $tlsAuth;
+
+    /** @var \LC\Portal\OpenVpn\ServerManager */
+    private $serverManager;
+
     /** @var \fkooman\OAuth\Server\ClientDbInterface */
     private $clientDb;
+
+    /** @var \LC\Common\RandomInterface */
+    private $random;
 
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, Storage $storage, ClientDbInterface $clientDb)
+    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, Storage $storage, CaInterface $ca, TlsAuth $tlsAuth, ServerManager $serverManager, ClientDbInterface $clientDb)
     {
         $this->config = $config;
         $this->tpl = $tpl;
         $this->session = $session;
         $this->storage = $storage;
+        $this->ca = $ca;
+        $this->tlsAuth = $tlsAuth;
+        $this->serverManager = $serverManager;
         $this->clientDb = $clientDb;
+        $this->random = new Random();
     }
 
     /**
@@ -86,11 +106,11 @@ class VpnPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->getServerProfileList();
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
-                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
+                $motdMessages = $this->storage->systemMessages('motd');
                 if (0 === \count($motdMessages)) {
                     $motdMessage = false;
                 } else {
@@ -121,7 +141,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $displayName = InputValidation::displayName($request->getPostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->getServerProfileList();
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
@@ -132,14 +152,14 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to download a configuration for this profile', 400);
                 }
 
-                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
+                $motdMessages = $this->storage->systemMessages('motd');
                 if (0 === \count($motdMessages)) {
                     $motdMessage = false;
                 } else {
                     $motdMessage = $motdMessages[0];
                 }
 
-                $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userInfo->getUserId()]));
+                $expiresAt = new DateTime($this->storage->getSessionExpiresAt($userInfo->getUserId()));
 
                 return $this->getConfig($request->getServerName(), $profileId, $userInfo->getUserId(), $displayName, $expiresAt);
             }
@@ -153,7 +173,8 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
-                $userCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->getUserId()]);
+
+                $userCertificateList = $this->storage->getCertificates($userInfo->getUserId());
 
                 // if query parameter "all" is set, show all certificates, also
                 // those issued to OAuth clients
@@ -185,9 +206,30 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                /** @var \LC\Common\Http\UserInfo */
+                $userInfo = $hookData['auth'];
                 $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
-                $this->serverClient->post('delete_client_certificate', ['common_name' => $commonName]);
-                $this->serverClient->post('kill_client', ['common_name' => $commonName]);
+
+                if (false === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
+                    throw new HttpException('certificate does not exist', 404);
+                }
+
+                // make sure the user owns the certificate
+                if ($certInfo['user_id'] !== $userInfo->getUserId()) {
+                    throw new HttpException('user does not own this certificate', 403);
+                }
+
+                $this->storage->addUserMessage(
+                    $certInfo['user_id'],
+                    'notification',
+                    sprintf('certificate "%s" deleted', $certInfo['display_name'])
+                );
+
+                // delete the certificate
+                $this->storage->deleteCertificate($commonName);
+
+                // disconnect the client(s) using this certificate
+                $this->serverManager->kill($commonName);
 
                 return new RedirectResponse($request->getRootUri().'certificates', 302);
             }
@@ -202,7 +244,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
-                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->getUserId()]);
+                $userMessages = $this->storage->userMessages($userInfo->getUserId());
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -223,8 +265,8 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
-                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
+                $profileList = $this->getServerProfileList();
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
@@ -265,13 +307,14 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
+                $userId = $userInfo->getUserId();
 
                 // no need to validate the input as we do a strict string match...
                 $authKey = $request->getPostParameter('auth_key');
                 $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
 
                 // verify whether the user_id owns the specified auth_key
-                $authorizations = $this->storage->getAuthorizations($userInfo->getUserId());
+                $authorizations = $this->storage->getAuthorizations($userId);
 
                 $authKeyFound = false;
                 foreach ($authorizations as $authorization) {
@@ -285,21 +328,40 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('specified "auth_key" is either invalid or does not belong to this user', 400);
                 }
 
-                // get a list of connections for this user_id with the
-                // particular client_id
-                // NOTE: we have to get the list first before deleting the
-                // certificates, otherwise the clients no longer show up the
-                // list... this is NOT good, possible race condition...
-                $clientConnections = $this->serverClient->getRequireArray('client_connections', ['client_id' => $clientId, 'user_id' => $userInfo->getUserId()]);
-
-                // delete the certificates from the server
-                $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userInfo->getUserId(), 'client_id' => $clientId]);
-
-                // kill the connections
-                foreach ($clientConnections as $profile) {
-                    foreach ($profile['connections'] as $connection) {
-                        $this->serverClient->post('kill_client', ['common_name' => $connection['common_name']]);
+                // look for all connections that use a certificate bound to a
+                // particular client_id and user_id and add them to the kill
+                // list...
+                $killList = [];
+                $clientConnectionProfileList = $this->serverManager->connections();
+                foreach ($clientConnectionProfileList as $clientConnectionList) {
+                    foreach ($clientConnectionList['connections'] as $clientConnection) {
+                        if (false !== $certInfo = $this->storage->getUserCertificateInfo($clientConnection['common_name'])) {
+                            // if client_id and user_id match...
+                            if ($userId === $clientConnection['user_id'] && $clientId === $clientConnection['client_id']) {
+                                // add it to the kill list and do not disconnect
+                                // immediately, as we want to "revoke" the
+                                // certificates first before disconnecting as
+                                // to prevent reconnects before the certificates
+                                // are deleted...
+                                $killList[] = $clientConnection['common_name'];
+                            }
+                        }
+                        // if the certificate is no longer there, the connection
+                        // will be terminated by the periodic cronjob...
+                        // XXX is this actually true?
                     }
+                }
+
+                $this->storage->addUserMessage(
+                    $userId,
+                    'notification',
+                    sprintf('certificates for OAuth client "%s" deleted', $clientId)
+                );
+
+                $this->storage->deleteCertificatesOfClientId($userId, $clientId);
+
+                foreach ($killList as $commonName) {
+                    $this->serverManager->kill($commonName);
                 }
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
@@ -369,21 +431,31 @@ class VpnPortalModule implements ServiceModuleInterface
      */
     private function getConfig($serverName, $profileId, $userId, $displayName, DateTime $expiresAt)
     {
+        // XXX this is also more or less duplicated in VpnApiModule, try to
+        // merge...
+
         // create a certificate
-        $clientCertificate = $this->serverClient->postRequireArray(
-            'add_client_certificate',
-            [
-                'user_id' => $userId,
-                'display_name' => $displayName,
-                'expires_at' => $expiresAt->format(DateTime::ATOM),
-            ]
+        // generate a random string as the certificate's CN
+        $commonName = $this->random->get(16);
+        $clientCertificate = $this->ca->clientCert($commonName, $expiresAt);
+
+        $this->storage->addCertificate(
+            $userId,
+            $commonName,
+            $displayName,
+            new DateTime(sprintf('@%d', $clientCertificate['valid_from'])),
+            new DateTime(sprintf('@%d', $clientCertificate['valid_to'])),
+            null
         );
 
-        $serverProfiles = $this->serverClient->getRequireArray('profile_list');
+        $serverProfiles = $this->getServerProfileList();
         $profileData = $serverProfiles[$profileId];
 
         // get the CA & tls-auth
-        $serverInfo = $this->serverClient->getRequireArray('server_info');
+        $serverInfo = [
+            'ta' => $this->tlsAuth->get(),
+            'ca' => $this->ca->caCert(),
+        ];
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
 
@@ -431,6 +503,24 @@ class VpnPortalModule implements ServiceModuleInterface
             $profileList[$profileId] = [
                 'displayName' => $profileData['displayName'],
             ];
+        }
+
+        return $profileList;
+    }
+
+    /**
+     * XXX duplicate in VpnApiModule.
+     *
+     * @return array
+     */
+    private function getServerProfileList()
+    {
+        $profileList = [];
+        foreach ($this->config->getSection('vpnProfiles')->toArray() as $profileId => $profileData) {
+            $profileConfig = new ProfileConfig($profileData);
+            $profileConfigArray = $profileConfig->toArray();
+            ksort($profileConfigArray);
+            $profileList[$profileId] = $profileConfigArray;
         }
 
         return $profileList;
