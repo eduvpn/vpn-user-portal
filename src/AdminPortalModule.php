@@ -11,6 +11,8 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
+use LC\Common\Config;
+use LC\Common\FileIO;
 use LC\Common\Http\AuthUtils;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\HtmlResponse;
@@ -20,10 +22,19 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\ProfileConfig;
 use LC\Common\TplInterface;
+use LC\Portal\OpenVpn\ServerManager;
+use RuntimeException;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
+    /** @var string */
+    private $dataDir;
+
+    /** @var \LC\Common\Config */
+    private $config;
+
     /** @var \LC\Common\TplInterface */
     private $tpl;
 
@@ -33,18 +44,27 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var Graph */
     private $graph;
 
+    /** @var \LC\Portal\OpenVpn\ServerManager */
+    private $serverManager;
+
     /** @var \DateTime */
     private $dateTimeToday;
 
     /**
-     * @param \LC\Common\TplInterface $tpl
-     * @param Storage                 $storage
-     * @param Graph                   $graph
+     * @param string                           $dataDir
+     * @param \LC\Common\Config                $config
+     * @param \LC\Common\TplInterface          $tpl
+     * @param Storage                          $storage
+     * @param \LC\Portal\OpenVpn\ServerManager $serverManager
+     * @param Graph                            $graph
      */
-    public function __construct(TplInterface $tpl, Storage $storage, Graph $graph)
+    public function __construct($dataDir, Config $config, TplInterface $tpl, Storage $storage, ServerManager $serverManager, Graph $graph)
     {
+        $this->dataDir = $dataDir;
+        $this->config = $config;
         $this->tpl = $tpl;
         $this->storage = $storage;
+        $this->serverManager = $serverManager;
         $this->graph = $graph;
         $this->dateTimeToday = new DateTime('today');
     }
@@ -63,11 +83,27 @@ class AdminPortalModule implements ServiceModuleInterface
                 AuthUtils::requireAdmin($hookData);
 
                 // get the fancy profile name
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->getProfileList();
 
                 $idNameMapping = [];
+                $profileConnectionList = [];
                 foreach ($profileList as $profileId => $profileData) {
                     $idNameMapping[$profileId] = $profileData['displayName'];
+                    $profileConnectionList[$profileId] = [];
+                }
+
+                // here we need to "enrich" the clientConnectionList, i.e. add
+                // the user_id and display_name to the list
+                $clientConnectionProfileList = $this->serverManager->connections();
+                foreach ($clientConnectionProfileList as $clientConnectionList) {
+                    foreach ($clientConnectionList['connections'] as $clientConnection) {
+                        if (false === $certInfo = $this->storage->getUserCertificateInfo($clientConnection['common_name'])) {
+                            // XXX come up with a way to show connections where the certificate was already deleted...
+                            continue;
+                        }
+                        $profileId = $clientConnectionList['id'];
+                        $profileConnectionList[$profileId][] = array_merge($clientConnection, $certInfo);
+                    }
                 }
 
                 return new HtmlResponse(
@@ -75,7 +111,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminConnections',
                         [
                             'idNameMapping' => $idNameMapping,
-                            'connections' => $this->serverClient->getRequireArray('client_connections'),
+                            'profileConnectionList' => $profileConnectionList,
                         ]
                     )
                 );
@@ -94,7 +130,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
-                            'profileList' => $this->serverClient->getRequireArray('profile_list'),
+                            'profileList' => $this->getProfileList(),
                         ]
                     )
                 );
@@ -109,7 +145,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $userList = $this->serverClient->getRequireArray('user_list');
+                $userList = $this->storage->getUsers();
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -136,8 +172,8 @@ class AdminPortalModule implements ServiceModuleInterface
                 $userId = $request->getQueryParameter('user_id');
                 InputValidation::userId($userId);
 
-                $clientCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userId]);
-                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userId]);
+                $clientCertificateList = $this->storage->getCertificates($userId);
+                $userMessages = $this->storage->userMessages($userId);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -146,8 +182,8 @@ class AdminPortalModule implements ServiceModuleInterface
                             'userId' => $userId,
                             'userMessages' => $userMessages,
                             'clientCertificateList' => $clientCertificateList,
-                            'hasTotpSecret' => $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]),
-                            'isDisabled' => $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]),
+                            'hasTotpSecret' => false !== $this->storage->getOtpSecret($userId),
+                            'isDisabled' => $this->storage->isDisabledUser($userId),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
                         ]
                     )
@@ -185,7 +221,8 @@ class AdminPortalModule implements ServiceModuleInterface
                         $clientConnections = $this->serverClient->getRequireArray('client_connections', ['user_id' => $userId]);
 
                         // disable the user
-                        $this->serverClient->post('disable_user', ['user_id' => $userId]);
+                        $this->storage->disableUser($userId);
+                        $this->storage->addUserMessage($userId, 'notification', 'account disabled');
                         // * revoke all OAuth clients of this user
                         // * delete all client certificates associated with the OAuth clients of this user
                         $clientAuthorizations = $this->storage->getAuthorizations($userId);
@@ -203,11 +240,13 @@ class AdminPortalModule implements ServiceModuleInterface
                         break;
 
                     case 'enableUser':
-                        $this->serverClient->post('enable_user', ['user_id' => $userId]);
+                        $this->storage->enableUser($userId);
+                        $this->storage->addUserMessage($userId, 'notification', 'account (re)enabled');
                         break;
 
                     case 'deleteTotpSecret':
-                        $this->serverClient->post('delete_totp_secret', ['user_id' => $userId]);
+                        $this->storage->deleteOtpSecret($userId);
+                        $this->storage->addUserMessage($userId, 'notification', 'TOTP secret deleted');
                         break;
 
                     default:
@@ -249,7 +288,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $stats = $this->serverClient->get('stats');
+                $stats = $this->getStats();
                 if (!\is_array($stats) || !\array_key_exists('profiles', $stats)) {
                     // this is an old "stats" format we no longer support,
                     // vpn-server-api-stats has to run again first, which is
@@ -257,7 +296,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $stats = false;
                 }
                 // get the fancy profile name
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->getProfileList();
 
                 $idNameMapping = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -292,7 +331,9 @@ class AdminPortalModule implements ServiceModuleInterface
                     'image/png'
                 );
 
-                $stats = $this->serverClient->getRequireArray('stats');
+                if (false === $stats = $this->getStats()) {
+                    throw new HttpException('no stats available', 400);
+                }
                 $dateByteList = [];
                 foreach ($stats['profiles'][$profileId]['days'] as $v) {
                     $dateByteList[$v['date']] = $v['bytes_transferred'];
@@ -347,7 +388,9 @@ class AdminPortalModule implements ServiceModuleInterface
                     'image/png'
                 );
 
-                $stats = $this->serverClient->getRequireArray('stats');
+                if (false === $stats = $this->getStats()) {
+                    throw new HttpException('no stats available', 400);
+                }
                 $dateUsersList = [];
                 foreach ($stats['profiles'][$profileId]['days'] as $v) {
                     $dateUsersList[$v['date']] = $v['unique_user_count'];
@@ -370,7 +413,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
+                $motdMessages = $this->storage->systemMessages('motd');
 
                 // we only want the first one
                 if (0 === \count($motdMessages)) {
@@ -403,19 +446,18 @@ class AdminPortalModule implements ServiceModuleInterface
                     case 'set':
                         // we can only have one "motd", so remove the ones that
                         // already exist
-                        $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
+                        $motdMessages = $this->storage->systemMessages('motd');
                         foreach ($motdMessages as $motdMessage) {
-                            $this->serverClient->post('delete_system_message', ['message_id' => $motdMessage['id']]);
+                            $this->storage->deleteSystemMessage($motdMessage['id']);
                         }
 
                         // no need to validate, we accept everything
                         $messageBody = $request->getPostParameter('message_body');
-                        $this->serverClient->post('add_system_message', ['message_type' => 'motd', 'message_body' => $messageBody]);
+                        $this->storage->addSystemMessage('motd', $messageBody);
                         break;
                     case 'delete':
                         $messageId = InputValidation::messageId($request->getPostParameter('message_id'));
-
-                        $this->serverClient->post('delete_system_message', ['message_id' => $messageId]);
+                        $this->storage->deleteSystemMessage($messageId);
                         break;
                     default:
                         throw new HttpException('unsupported "message_action"', 400);
@@ -440,6 +482,8 @@ class AdminPortalModule implements ServiceModuleInterface
                 $ipAddress = $request->getPostParameter('ip_address');
                 InputValidation::ipAddress($ipAddress);
 
+                $logData = $this->storage->getLogEntry($dateTime, $ipAddress);
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminLog',
@@ -447,7 +491,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'currentDate' => date('Y-m-d H:i:s'),
                             'date_time' => $dateTime,
                             'ip_address' => $ipAddress,
-                            'result' => $this->serverClient->getRequireArrayOrFalse('log', ['date_time' => $dateTime, 'ip_address' => $ipAddress]),
+                            'result' => $logData,
                         ]
                     )
                 );
@@ -474,5 +518,35 @@ class AdminPortalModule implements ServiceModuleInterface
         }
 
         return $dateList;
+    }
+
+    /**
+     * @return array
+     */
+    private function getProfileList()
+    {
+        $profileList = [];
+        foreach ($this->config->getSection('vpnProfiles')->toArray() as $profileId => $profileData) {
+            $profileConfig = new ProfileConfig($profileData);
+            $profileConfigArray = $profileConfig->toArray();
+            ksort($profileConfigArray);
+            $profileList[$profileId] = $profileConfigArray;
+        }
+
+        return $profileList;
+    }
+
+    /**
+     * @return false|array
+     */
+    private function getStats()
+    {
+        $statsFile = sprintf('%s/stats.json', $this->dataDir);
+        try {
+            return FileIO::readJsonFile($statsFile);
+        } catch (RuntimeException $e) {
+            // no stats file available yet
+            return false;
+        }
     }
 }

@@ -1,8 +1,8 @@
 <?php $this->layout('base', ['activeItem' => 'connections']); ?>
 <?php $this->start('content'); ?>
-    <?php foreach ($connections as $profile): ?>
-        <h2 id="<?=$this->e($profile['id']); ?>"><?=$this->e($idNameMapping[$profile['id']]); ?></h2>
-        <?php if (0 === count($profile['connections'])): ?>
+    <?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
+        <h2 id="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></h2>
+        <?php if (0 === count($connectionList)): ?>
             <p class="plain"><?=$this->t('No clients connected.'); ?></p>
         <?php else: ?>
             <table>
@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($profile['connections'] as $connection): ?>
+                <?php foreach ($connectionList as $connection): ?>
                 <tr>
                     <td>
                         <a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($connection['user_id'], 'rawurlencode'); ?>"><?=$this->e($connection['user_id']); ?></a>
