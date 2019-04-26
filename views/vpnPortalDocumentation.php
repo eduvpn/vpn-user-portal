@@ -66,7 +66,7 @@
         <li><a href="https://www.ubuntu.com/">Ubuntu</a> >= 18.04 LTS (<code>apt install network-manager-openvpn-gnome</code>);</li>
     </ul>
 
-    <?php if (0 !== \sizeof($twoFactorMethods)): ?>
+    <?php if (0 !== \count($twoFactorMethods)): ?>
         <h2 id="2fa">Two-factor Authentication</h2>
         <p>
             Two-factor authentication (2FA) can be used to protect your account from 
