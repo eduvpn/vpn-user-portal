@@ -11,6 +11,8 @@ namespace LC\Portal;
 
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
+use fkooman\Otp\Exception\OtpException;
+use fkooman\Otp\Totp;
 use fkooman\SeCookie\SessionInterface;
 use LC\Common\Http\HtmlResponse;
 use LC\Common\Http\InputValidation;
@@ -19,13 +21,14 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\HttpClient\Exception\ApiException;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\TplInterface;
 use ParagonIE\ConstantTime\Base32;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
 {
+    /** @var Storage */
+    private $storage;
+
     /** @var array<string> */
     private $twoFactorMethods;
 
@@ -35,21 +38,18 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     /** @var \LC\Common\TplInterface */
     private $tpl;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
-
     /**
+     * @param Storage                            $storage
      * @param array<string>                      $twoFactorMethods
      * @param \fkooman\SeCookie\SessionInterface $session
      * @param \LC\Common\TplInterface            $tpl
-     * @param \LC\Common\HttpClient\ServerClient $serverClient
      */
-    public function __construct(array $twoFactorMethods, SessionInterface $session, TplInterface $tpl, ServerClient $serverClient)
+    public function __construct(Storage $storage, array $twoFactorMethods, SessionInterface $session, TplInterface $tpl)
     {
+        $this->storage = $storage;
         $this->twoFactorMethods = $twoFactorMethods;
         $this->session = $session;
         $this->tpl = $tpl;
-        $this->serverClient = $serverClient;
     }
 
     /**
@@ -65,7 +65,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
+                $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -89,16 +89,17 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
+                $userId = $userInfo->getUserId();
 
                 $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
                 $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
                 $hasTwoFactorEnrollRedirectTo = $this->session->has('_two_factor_enroll_redirect_to');
 
                 try {
-                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->getUserId(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
-                } catch (ApiException $e) {
-                    // we were unable to set the OTP secret
-                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
+                    $totp = new Totp($this->storage);
+                    $totp->register($userId, $totpSecret, $totpKey);
+                } catch (OtpException $e) {
+                    $hasTotpSecret = false !== $this->storage->getOtpSecret($userId);
 
                     return new HtmlResponse(
                         $this->tpl->render(
@@ -108,6 +109,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                                 'twoFactorMethods' => $this->twoFactorMethods,
                                 'hasTotpSecret' => $hasTotpSecret,
                                 'totpSecret' => $totpSecret,
+                                // XXX the error can be more specific here from the OtpException!
                                 'error_code' => 'invalid_otp_code',
                             ]
                         )
@@ -120,7 +122,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
                     // mark as 2FA verified
                     $this->session->regenerate(true);
-                    $this->session->set('_two_factor_verified', $userInfo->getUserId());
+                    $this->session->set('_two_factor_verified', $userId);
 
                     return new RedirectResponse($twoFactorEnrollRedirectTo);
                 }

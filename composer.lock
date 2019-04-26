@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "15d6a7ee2bf459e97e9e25b01a561c0f",
+    "content-hash": "464f5e7334d342ee0c1107437ea89122",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -159,12 +159,60 @@
             "time": "2019-03-27T11:28:45+00:00"
         },
         {
+            "name": "fkooman/otp-verifier",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://git.tuxed.net/fkooman/php-otp-verifier",
+                "reference": "c3bb40147bce7dba26fc6c259943ec285adba3e8"
+            },
+            "require": {
+                "ext-date": "*",
+                "ext-hash": "*",
+                "ext-pdo": "*",
+                "ext-spl": "*",
+                "paragonie/constant_time_encoding": "^1|^2",
+                "paragonie/random_compat": ">=1",
+                "php": ">= 5.4",
+                "symfony/polyfill-php56": "^1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4|^5|^6|^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fkooman\\Otp\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "fkooman\\Otp\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "OTP Validation Library",
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.tuxed.net/fkooman/php-otp-verifier"
+            },
+            "time": "2019-04-26T08:06:06+00:00"
+        },
+        {
             "name": "fkooman/php-saml-sp",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "d68c16dedc07b1a35377567c336373620fcfc254"
+                "reference": "fc90ce97ca34ae6ee31af168d169d705a95e6c22"
             },
             "require": {
                 "ext-date": "*",
@@ -216,7 +264,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-03-15T13:07:40+00:00"
+            "time": "2019-04-23T14:27:47+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -345,7 +393,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "e9c8a688c2c18966b978f29fb31e2ab8f97fa229"
+                "reference": "827c51ccd81308e4c53bef483680a63db49ab769"
             },
             "require": {
                 "ext-curl": "*",
@@ -395,6 +443,48 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             }
+        },
+        {
+            "name": "lc/openvpn-connection-manager",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://git.tuxed.net/LC/php-openvpn-connection-manager",
+                "reference": "9712e920bdeefba455f7191f5ce7d1a61d81b708"
+            },
+            "require": {
+                "php": ">=5.4",
+                "psr/log": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4|^5|^6|^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LC\\OpenVpn\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "LC\\OpenVpn\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "AGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "Manage client connections to OpenVPN processes",
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.tuxed.net/LC/php-openvpn-connection-manager"
+            },
+            "time": "2019-04-01T10:09:14+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -1339,16 +1429,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.8",
+            "version": "7.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c29c0525cf4572c11efe1db49a8b8aee9dfac58a"
+                "reference": "134669cf0eeac3f79bc7f0c793efbc158bffc160"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c29c0525cf4572c11efe1db49a8b8aee9dfac58a",
-                "reference": "c29c0525cf4572c11efe1db49a8b8aee9dfac58a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/134669cf0eeac3f79bc7f0c793efbc158bffc160",
+                "reference": "134669cf0eeac3f79bc7f0c793efbc158bffc160",
                 "shasum": ""
             },
             "require": {
@@ -1419,7 +1509,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-03-26T13:23:54+00:00"
+            "time": "2019-04-19T15:50:46+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1588,16 +1678,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "4.1.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "6fda8ce1974b62b14935adc02a9ed38252eca656"
+                "reference": "3095910f0f0fb155ac4021fc51a4a7a39ac04e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/6fda8ce1974b62b14935adc02a9ed38252eca656",
-                "reference": "6fda8ce1974b62b14935adc02a9ed38252eca656",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/3095910f0f0fb155ac4021fc51a4a7a39ac04e8a",
+                "reference": "3095910f0f0fb155ac4021fc51a4a7a39ac04e8a",
                 "shasum": ""
             },
             "require": {
@@ -1612,7 +1702,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.2-dev"
                 }
             },
             "autoload": {
@@ -1637,7 +1727,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2019-02-01T05:27:49+00:00"
+            "time": "2019-04-25T07:55:20+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -2140,6 +2230,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "fkooman/otp-verifier": 20,
         "lc/common": 20
     },
     "prefer-stable": false,

@@ -16,19 +16,17 @@ use LC\Common\Http\BeforeHookInterface;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
-use LC\Common\HttpClient\ServerClient;
-use LC\Common\Json;
 
 /**
  * This hook is used to update the session info in vpn-server-api.
  */
 class UpdateSessionInfoHook implements BeforeHookInterface
 {
+    /** @var Storage */
+    private $storage;
+
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
-
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
 
     /** @var \DateTime */
     private $dateTime;
@@ -37,15 +35,16 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     private $sessionExpiry;
 
     /**
+     * @param Storage                            $storage
      * @param \fkooman\SeCookie\SessionInterface $session
-     * @param \LC\Common\HttpClient\ServerClient $serverClient
+     * @param \DateInterval                      $sessionExpiry
      */
-    public function __construct(SessionInterface $session, ServerClient $serverClient, DateInterval $sessionExpiry)
+    public function __construct(Storage $storage, SessionInterface $session, DateInterval $sessionExpiry)
     {
+        $this->storage = $storage;
         $this->session = $session;
-        $this->serverClient = $serverClient;
-        $this->dateTime = new DateTime();
         $this->sessionExpiry = $sessionExpiry;
+        $this->dateTime = new DateTime();
     }
 
     /**
@@ -90,14 +89,8 @@ class UpdateSessionInfoHook implements BeforeHookInterface
             $sessionExpiresAt = date_add(clone $this->dateTime, $this->sessionExpiry);
         }
 
-        $this->serverClient->post(
-            'user_update_session_info',
-            [
-                'user_id' => $userInfo->getUserId(),
-                'session_expires_at' => $sessionExpiresAt->format(DateTime::ATOM),
-                'permission_list' => Json::encode($userInfo->getPermissionList()),
-            ]
-        );
+        // XXX we can just provide the UserInfo object to the method perhaps?
+        $this->storage->updateSessionInfo($userInfo->getUserId(), $sessionExpiresAt, $userInfo->getPermissionList());
         $this->session->set('_update_session_info', true);
     }
 }

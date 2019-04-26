@@ -10,29 +10,20 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\FileIO;
-use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Storage;
-use LC\Portal\TlsAuth;
 
 try {
-    $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
-    $easyRsaDataDir = sprintf('%s/data/easy-rsa', $baseDir);
-
-    // implicit CA init
-    $ca = new EasyRsaCa($easyRsaDir, $easyRsaDataDir);
-
-    // initialize database
     $dataDir = sprintf('%s/data', $baseDir);
-    FileIO::createDir($dataDir);
+    $db = new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir));
     $storage = new Storage(
-        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+        $db,
         sprintf('%s/schema', $baseDir)
     );
-    $storage->init();
 
-    $tlsAuth = new TlsAuth($dataDir);
-    $tlsAuth->init();
+    $storage->cleanConnectionLog(new DateTime('now -32 days'));
+    $storage->cleanExpiredCertificates(new DateTime('now -7 days'));
+    $storage->cleanOtpLog(new DateTime('now -5 minutes'));
+    $storage->cleanUserMessages(new DateTime('now -32 days'));
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

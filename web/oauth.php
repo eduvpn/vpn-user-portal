@@ -17,8 +17,6 @@ use LC\Common\FileIO;
 use LC\Common\Http\JsonResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
 use LC\Portal\ClientFetcher;
 use LC\Portal\OAuth\PublicSigner;
@@ -36,16 +34,10 @@ try {
     $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
 
-    $serverClient = new ServerClient(
-        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-        $config->getItem('apiUri')
-    );
-
     // OAuth tokens
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-        sprintf('%s/schema', $baseDir),
-        $serverClient
+        sprintf('%s/schema', $baseDir)
     );
     $storage->update();
 

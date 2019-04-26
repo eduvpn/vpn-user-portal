@@ -21,7 +21,6 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
@@ -31,9 +30,6 @@ class VpnPortalModule implements ServiceModuleInterface
 
     /** @var \LC\Common\TplInterface */
     private $tpl;
-
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
 
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
@@ -47,11 +43,10 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, ClientDbInterface $clientDb)
+    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, Storage $storage, ClientDbInterface $clientDb)
     {
         $this->config = $config;
         $this->tpl = $tpl;
-        $this->serverClient = $serverClient;
         $this->session = $session;
         $this->storage = $storage;
         $this->clientDb = $clientDb;

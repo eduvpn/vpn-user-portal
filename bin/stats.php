@@ -10,29 +10,33 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use LC\Common\Config;
 use LC\Common\FileIO;
-use LC\Portal\CA\EasyRsaCa;
+use LC\Portal\Stats;
 use LC\Portal\Storage;
-use LC\Portal\TlsAuth;
 
 try {
-    $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
-    $easyRsaDataDir = sprintf('%s/data/easy-rsa', $baseDir);
+    $configFile = sprintf('%s/config/config.php', $baseDir);
+    $config = Config::fromFile($configFile);
 
-    // implicit CA init
-    $ca = new EasyRsaCa($easyRsaDir, $easyRsaDataDir);
-
-    // initialize database
     $dataDir = sprintf('%s/data', $baseDir);
-    FileIO::createDir($dataDir);
+    $db = new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir));
     $storage = new Storage(
-        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+        $db,
         sprintf('%s/schema', $baseDir)
     );
-    $storage->init();
 
-    $tlsAuth = new TlsAuth($dataDir);
-    $tlsAuth->init();
+    $outFile = sprintf('%s/stats.json', $dataDir);
+
+    $stats = new Stats($storage, new DateTime());
+    $statsData = $stats->get(
+        array_keys($config->getSection('vpnProfiles')->toArray())
+    );
+
+    FileIO::writeJsonFile(
+        $outFile,
+        $statsData
+    );
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

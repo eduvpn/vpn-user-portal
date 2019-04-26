@@ -20,7 +20,6 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\TplInterface;
 
 class AdminPortalModule implements ServiceModuleInterface
@@ -31,9 +30,6 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var Storage */
     private $storage;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
-
     /** @var Graph */
     private $graph;
 
@@ -41,16 +37,14 @@ class AdminPortalModule implements ServiceModuleInterface
     private $dateTimeToday;
 
     /**
-     * @param \LC\Common\TplInterface            $tpl
-     * @param Storage                            $storage
-     * @param \LC\Common\HttpClient\ServerClient $serverClient
-     * @param Graph                              $graph
+     * @param \LC\Common\TplInterface $tpl
+     * @param Storage                 $storage
+     * @param Graph                   $graph
      */
-    public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient, Graph $graph)
+    public function __construct(TplInterface $tpl, Storage $storage, Graph $graph)
     {
         $this->tpl = $tpl;
         $this->storage = $storage;
-        $this->serverClient = $serverClient;
         $this->graph = $graph;
         $this->dateTimeToday = new DateTime('today');
     }

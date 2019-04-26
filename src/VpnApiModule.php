@@ -21,17 +21,24 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
+use LC\Common\Random;
+use LC\Portal\CA\CaInterface;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
 {
+    /** @var Storage */
+    private $storage;
+
     /** @var \LC\Common\Config */
     private $config;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
+    /** @var CA\CaInterface */
+    private $ca;
+
+    /** @var TlsAuth */
+    private $tlsAuth;
 
     /** @var \DateInterval */
     private $sessionExpiry;
@@ -42,17 +49,23 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
+    /** @var \LC\Common\RandomInterface */
+    private $random;
+
     /**
-     * @param \LC\Common\Config                  $config
-     * @param \LC\Common\HttpClient\ServerClient $serverClient
-     * @param \DateInterval                      $sessionExpiry
+     * @param Storage           $storage
+     * @param \LC\Common\Config $config
+     * @param \DateInterval     $sessionExpiry
      */
-    public function __construct(Config $config, ServerClient $serverClient, DateInterval $sessionExpiry)
+    public function __construct(Storage $storage, Config $config, CaInterface $ca, TlsAuth $tlsAuth, DateInterval $sessionExpiry)
     {
+        $this->storage = $storage;
         $this->config = $config;
-        $this->serverClient = $serverClient;
+        $this->ca = $ca;
+        $this->tlsAuth = $tlsAuth;
         $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = new DateTime();
+        $this->random = new Random();
     }
 
     /**
@@ -80,7 +93,7 @@ class VpnApiModule implements ServiceModuleInterface
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
 
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->getProfileList();
                 $userPermissions = $this->getPermissionList($accessTokenInfo);
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -168,7 +181,7 @@ class VpnApiModule implements ServiceModuleInterface
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
-                $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
+                $clientCertificateInfo = $this->storage->getUserCertificateInfo($commonName);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
 
                 return new ApiResponse(
@@ -189,7 +202,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $accessTokenInfo = $hookData['auth'];
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
-                    $profileList = $this->serverClient->getRequireArray('profile_list');
+                    $profileList = $this->getProfileList();
                     $userPermissions = $this->getPermissionList($accessTokenInfo);
 
                     $availableProfiles = [];
@@ -238,8 +251,7 @@ class VpnApiModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $msgList = [];
-
-                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
+                $motdMessages = $this->storage->systemMessages('motd');
                 foreach ($motdMessages as $motdMessage) {
                     $dateTime = new DateTime($motdMessage['date_time']);
                     $dateTime->setTimezone(new DateTimeZone('UTC'));
@@ -269,11 +281,13 @@ class VpnApiModule implements ServiceModuleInterface
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
-        $profileList = $this->serverClient->getRequireArray('profile_list');
+        $profileList = $this->getProfileList();
         $profileData = $profileList[$profileId];
 
-        // get the CA & tls-auth
-        $serverInfo = $this->serverClient->getRequireArray('server_info');
+        $serverInfo = [
+            'ta' => $this->tlsAuth->get(),
+            'ca' => $this->ca->caCert(),
+        ];
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
@@ -291,19 +305,26 @@ class VpnApiModule implements ServiceModuleInterface
      */
     private function getCertificate(VpnAccessTokenInfo $accessTokenInfo)
     {
-        // create a certificate
-        return $this->serverClient->postRequireArray(
-            'add_client_certificate',
-            [
-                'user_id' => $accessTokenInfo->getUserId(),
-                // we won't show the Certificate entry anyway on the
-                // "Certificates" page for certificates downloaded through the
-                // API
-                'display_name' => $accessTokenInfo->getClientId(),
-                'client_id' => $accessTokenInfo->getClientId(),
-                'expires_at' => $this->getExpiresAt($accessTokenInfo)->format(DateTime::ATOM),
-            ]
+        // generate a random string as the certificate's CN
+        $commonName = $this->random->get(16);
+        $certInfo = $this->ca->clientCert($commonName, $this->getExpiresAt($accessTokenInfo));
+
+        $this->storage->addCertificate(
+            $accessTokenInfo->getUserId(),
+            $commonName,
+            $accessTokenInfo->getClientId(),
+            new DateTime(sprintf('@%d', $certInfo['valid_from'])),
+            new DateTime(sprintf('@%d', $certInfo['valid_to'])),
+            $accessTokenInfo->getClientId()
         );
+
+        $this->storage->addUserMessage(
+            $accessTokenInfo->getUserId(),
+            'notification',
+            sprintf('new certificate generated by application "%s"', $accessTokenInfo->getClientId())
+        );
+
+        return $certInfo;
     }
 
     /**
@@ -354,7 +375,7 @@ class VpnApiModule implements ServiceModuleInterface
             return [];
         }
 
-        return $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo->getUserId()]);
+        return $this->storage->getPermissionList($accessTokenInfo->getUserId());
     }
 
     /**
@@ -368,6 +389,22 @@ class VpnApiModule implements ServiceModuleInterface
             return date_add(clone $this->dateTime, $this->sessionExpiry);
         }
 
-        return new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $accessTokenInfo->getUserId()]));
+        return new DateTime($this->storage->getSessionExpiresAt($accessTokenInfo->getUserId()));
+    }
+
+    /**
+     * @return array
+     */
+    private function getProfileList()
+    {
+        $profileList = [];
+        foreach ($this->config->getSection('vpnProfiles')->toArray() as $profileId => $profileData) {
+            $profileConfig = new ProfileConfig($profileData);
+            $profileConfigArray = $profileConfig->toArray();
+            ksort($profileConfigArray);
+            $profileList[$profileId] = $profileConfigArray;
+        }
+
+        return $profileList;
     }
 }

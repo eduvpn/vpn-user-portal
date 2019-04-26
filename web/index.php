@@ -30,10 +30,6 @@ use LC\Common\Http\LdapAuth;
 use LC\Common\Http\RadiusAuth;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
-use LC\Common\Http\TwoFactorHook;
-use LC\Common\Http\TwoFactorModule;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\LdapClient;
 use LC\Common\Logger;
 use LC\Common\Tpl;
@@ -52,6 +48,8 @@ use LC\Portal\SamlModule;
 use LC\Portal\ShibAuthenticationHook;
 use LC\Portal\Storage;
 use LC\Portal\TwoFactorEnrollModule;
+use LC\Portal\TwoFactorHook;
+use LC\Portal\TwoFactorModule;
 use LC\Portal\UpdateSessionInfoHook;
 use LC\Portal\VpnPortalModule;
 
@@ -149,11 +147,6 @@ try {
         ]
     );
 
-    $serverClient = new ServerClient(
-        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-        $config->getItem('apiUri')
-    );
-
     $service = new Service($tpl);
     $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());
     $service->addBeforeHook('language_switcher', new LanguageSwitcherHook(array_keys($supportedLanguages), $cookie));
@@ -173,8 +166,7 @@ try {
 
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-        sprintf('%s/schema', $baseDir),
-        $serverClient
+        sprintf('%s/schema', $baseDir)
     );
     $storage->update();
 
@@ -333,18 +325,17 @@ try {
             new TwoFactorHook(
                 $session,
                 $tpl,
-                $serverClient,
                 $config->hasItem('requireTwoFactor') ? $config->getItem('requireTwoFactor') : false
             )
         );
     }
 
-    $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
-    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($session, $serverClient, new DateInterval($sessionExpiry)));
+    $service->addBeforeHook('disabled_user', new DisabledUserHook());
+    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($session, new DateInterval($sessionExpiry)));
 
     // two factor module
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
+        $twoFactorModule = new TwoFactorModule($session, $tpl);
         $service->addModule($twoFactorModule);
     }
 
@@ -364,7 +355,6 @@ try {
     $vpnPortalModule = new VpnPortalModule(
         $config,
         $tpl,
-        $serverClient,
         $session,
         $storage,
         $clientFetcher
@@ -381,13 +371,12 @@ try {
     $adminPortalModule = new AdminPortalModule(
         $tpl,
         $storage,
-        $serverClient,
         $graph
     );
     $service->addModule($adminPortalModule);
 
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $session, $tpl, $serverClient);
+        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $session, $tpl);
         $service->addModule($twoFactorEnrollModule);
     }
 
