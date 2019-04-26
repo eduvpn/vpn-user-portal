@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1 (2019-04-26)
+- update tests to deal with updates internal API error messages 
+  (vpn-lib-common)
+- fix bug where 2FA documentation was shown even when 2FA is disabled (PR #122)
+
 ## 2.0.0 (2019-04-01)
 - remove PHP error suppression
 - rework 2FA enrollment, enrollment goes through `/two_factor_enroll` now
