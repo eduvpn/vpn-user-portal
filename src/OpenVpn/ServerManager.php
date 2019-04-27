@@ -37,7 +37,7 @@ class ServerManager
     }
 
     /**
-     * @return array
+     * @return array<string,array>
      */
     public function connections()
     {
@@ -61,7 +61,7 @@ class ServerManager
 
             $connectionManager = new ConnectionManager($socketAddressList, $this->logger, $this->managementSocket);
             $profileConnections += $connectionManager->connections();
-            $clientConnections[] = ['id' => $profileId, 'connections' => $profileConnections];
+            $clientConnections[$profileId] = $profileConnections;
         }
 
         return $clientConnections;

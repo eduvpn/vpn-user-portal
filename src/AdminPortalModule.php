@@ -94,17 +94,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 // here we need to "enrich" the clientConnectionList, i.e. add
                 // the user_id and display_name to the list
-                $clientConnectionProfileList = $this->serverManager->connections();
-                foreach ($clientConnectionProfileList as $clientConnectionList) {
-                    foreach ($clientConnectionList['connections'] as $clientConnection) {
-                        if (false === $certInfo = $this->storage->getUserCertificateInfo($clientConnection['common_name'])) {
-                            // XXX come up with a way to show connections where the certificate was already deleted...
-                            continue;
-                        }
-                        $profileId = $clientConnectionList['id'];
-                        $profileConnectionList[$profileId][] = array_merge($clientConnection, $certInfo);
-                    }
-                }
+                $profileConnectionList = $this->getClientConnectionProfileList(null);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -218,7 +208,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 switch ($userAction) {
                     case 'disableUser':
                         // get active connections for this user
-                        $clientConnections = $this->serverClient->getRequireArray('client_connections', ['user_id' => $userId]);
+                        $clientConnections = $this->getClientConnectionProfileList($userId);
 
                         // disable the user
                         $this->storage->disableUser($userId);
@@ -228,13 +218,13 @@ class AdminPortalModule implements ServiceModuleInterface
                         $clientAuthorizations = $this->storage->getAuthorizations($userId);
                         foreach ($clientAuthorizations as $clientAuthorization) {
                             $this->storage->deleteAuthorization($clientAuthorization['auth_key']);
-                            $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userId, 'client_id' => $clientAuthorization['client_id']]);
+                            $this->storage->deleteCertificatesOfClientId($userId, $clientAuthorization['client_id']);
                         }
 
                         // kill all active connections for this user
-                        foreach ($clientConnections as $profile) {
-                            foreach ($profile['connections'] as $connection) {
-                                $this->serverClient->post('kill_client', ['common_name' => $connection['common_name']]);
+                        foreach ($clientConnections as $profileId => $connectionList) {
+                            foreach ($connectionList as $connection) {
+                                $this->serverManager->kill($connection['common_name']);
                             }
                         }
                         break;
@@ -548,5 +538,36 @@ class AdminPortalModule implements ServiceModuleInterface
             // no stats file available yet
             return false;
         }
+    }
+
+    /**
+     * @param string|null $userId
+     *
+     * @return array
+     */
+    private function getClientConnectionProfileList($userId)
+    {
+        // here we need to "enrich" the clientConnectionList, i.e. add
+        // the user_id and display_name to the list
+        $enrichedClientConnectionList = [];
+        foreach ($this->serverManager->connections() as $profileId => $clientConnectionList) {
+            $enrichedClientConnectionList[$profileId] = [];
+            foreach ($clientConnectionList as $clientConnection) {
+                if (false === $certInfo = $this->storage->getUserCertificateInfo($clientConnection['common_name'])) {
+                    // XXX come up with a way to show connections where the certificate was already deleted...
+                    continue;
+                }
+
+                // only include entries for a particular user_id
+                if (null !== $userId) {
+                    if ($certInfo['user_id'] !== $userId) {
+                        continue;
+                    }
+                }
+                $enrichedClientConnectionList[$profileId][] = array_merge($clientConnection, $certInfo);
+            }
+        }
+
+        return $enrichedClientConnectionList;
     }
 }

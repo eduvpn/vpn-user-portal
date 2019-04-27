@@ -332,9 +332,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 // particular client_id and user_id and add them to the kill
                 // list...
                 $killList = [];
-                $clientConnectionProfileList = $this->serverManager->connections();
-                foreach ($clientConnectionProfileList as $clientConnectionList) {
-                    foreach ($clientConnectionList['connections'] as $clientConnection) {
+                foreach ($this->serverManager->connections() as $profileId => $clientConnectionList) {
+                    foreach ($clientConnectionList as $clientConnection) {
                         if (false !== $certInfo = $this->storage->getUserCertificateInfo($clientConnection['common_name'])) {
                             // if client_id and user_id match...
                             if ($userId === $clientConnection['user_id'] && $clientId === $clientConnection['client_id']) {
