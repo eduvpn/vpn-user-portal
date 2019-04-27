@@ -19,7 +19,6 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\ProfileConfig;
-use LC\Common\ProfileConfig;
 use LC\Portal\CA\CaInterface;
 
 class InternalApiModule implements ServiceModuleInterface
