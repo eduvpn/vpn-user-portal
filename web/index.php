@@ -33,8 +33,10 @@ use LC\Common\Http\Service;
 use LC\Common\LdapClient;
 use LC\Common\Logger;
 use LC\Common\Tpl;
+use LC\OpenVpn\ManagementSocket;
 use LC\Portal\AdminHook;
 use LC\Portal\AdminPortalModule;
+use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\ClientFetcher;
 use LC\Portal\DisabledUserHook;
 use LC\Portal\Graph;
@@ -42,11 +44,13 @@ use LC\Portal\LogoutModule;
 use LC\Portal\MellonAuthenticationHook;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
+use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\PasswdModule;
 use LC\Portal\SamlAuthenticationHook;
 use LC\Portal\SamlModule;
 use LC\Portal\ShibAuthenticationHook;
 use LC\Portal\Storage;
+use LC\Portal\TlsAuth;
 use LC\Portal\TwoFactorEnrollModule;
 use LC\Portal\TwoFactorHook;
 use LC\Portal\TwoFactorModule;
@@ -323,6 +327,7 @@ try {
         $service->addBeforeHook(
             'two_factor',
             new TwoFactorHook(
+                $storage,
                 $session,
                 $tpl,
                 $config->hasItem('requireTwoFactor') ? $config->getItem('requireTwoFactor') : false
@@ -330,12 +335,12 @@ try {
         );
     }
 
-    $service->addBeforeHook('disabled_user', new DisabledUserHook());
-    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($session, new DateInterval($sessionExpiry)));
+    $service->addBeforeHook('disabled_user', new DisabledUserHook($storage));
+    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($storage, $session, new DateInterval($sessionExpiry)));
 
     // two factor module
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorModule = new TwoFactorModule($session, $tpl);
+        $twoFactorModule = new TwoFactorModule($storage, $session, $tpl);
         $service->addModule($twoFactorModule);
     }
 
@@ -349,6 +354,14 @@ try {
         )
     );
 
+    $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
+    $easyRsaDataDir = sprintf('%s/easy-rsa', $dataDir);
+    $easyRsaCa = new EasyRsaCa(
+        $easyRsaDir,
+        $easyRsaDataDir
+    );
+    $tlsAuth = new TlsAuth($dataDir);
+    $serverManager = new ServerManager($config, $logger, new ManagementSocket());
     $clientFetcher = new ClientFetcher($config);
 
     // portal module
@@ -357,6 +370,9 @@ try {
         $tpl,
         $session,
         $storage,
+        $easyRsaCa,
+        $tlsAuth,
+        $serverManager,
         $clientFetcher
     );
     $service->addModule($vpnPortalModule);
@@ -369,14 +385,17 @@ try {
     }
 
     $adminPortalModule = new AdminPortalModule(
+        $dataDir,
+        $config,
         $tpl,
         $storage,
+        $serverManager,
         $graph
     );
     $service->addModule($adminPortalModule);
 
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $session, $tpl);
+        $twoFactorEnrollModule = new TwoFactorEnrollModule($storage, $twoFactorMethods, $session, $tpl);
         $service->addModule($twoFactorEnrollModule);
     }
 
