@@ -7,13 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use fkooman\SeCookie\SessionInterface;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
 
 class LogoutModule implements ServiceModuleInterface
 {

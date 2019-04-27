@@ -7,14 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
-use LC\Portal\Http\HtmlResponse;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
+use LC\Portal\Storage;
+use LC\Portal\TplInterface;
 
 class PasswdModule implements ServiceModuleInterface
 {

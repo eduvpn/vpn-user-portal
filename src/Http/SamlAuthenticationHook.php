@@ -7,17 +7,12 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTime;
 use fkooman\SAML\SP\SP;
-use LC\Portal\Http\BeforeHookInterface;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\UserInfo;
 
 class SamlAuthenticationHook implements BeforeHookInterface
 {

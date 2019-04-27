@@ -7,12 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
-use LC\Portal\Http\BeforeHookInterface;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
+use LC\Portal\Storage;
 
 /**
  * This hook is used to check if a user is disabled before allowing any other
@@ -20,7 +18,7 @@ use LC\Portal\Http\Service;
  */
 class DisabledUserHook implements BeforeHookInterface
 {
-    /** @var Storage */
+    /** @var \LC\Portal\Storage */
     private $storage;
 
     public function __construct(Storage $storage)

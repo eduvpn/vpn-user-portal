@@ -7,34 +7,33 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTime;
 use DateTimeZone;
 use LC\Portal\CA\CaInterface;
-use LC\Portal\Http\ApiErrorResponse;
-use LC\Portal\Http\ApiResponse;
+use LC\Portal\ClientConfig;
+use LC\Portal\Config;
 use LC\Portal\Http\Exception\InputValidationException;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
+use LC\Portal\ProfileConfig;
+use LC\Portal\Random;
+use LC\Portal\Storage;
+use LC\Portal\TlsAuth;
 
 class VpnApiModule implements ServiceModuleInterface
 {
-    /** @var Storage */
+    /** @var \LC\Portal\Storage */
     private $storage;
 
     /** @var \LC\Portal\Config */
     private $config;
 
-    /** @var CA\CaInterface */
+    /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
-    /** @var TlsAuth */
+    /** @var \LC\Portal\TlsAuth */
     private $tlsAuth;
 
     /** @var \DateInterval */

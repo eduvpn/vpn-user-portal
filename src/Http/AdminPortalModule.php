@@ -7,20 +7,18 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTime;
-use LC\Portal\Http\AuthUtils;
+use LC\Portal\Config;
+use LC\Portal\FileIO;
+use LC\Portal\Graph;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\HtmlResponse;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OpenVpn\ServerManager;
+use LC\Portal\ProfileConfig;
+use LC\Portal\Storage;
+use LC\Portal\TplInterface;
 use RuntimeException;
 
 class AdminPortalModule implements ServiceModuleInterface
@@ -34,10 +32,10 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var \LC\Portal\TplInterface */
     private $tpl;
 
-    /** @var Storage */
+    /** @var \LC\Portal\Storage */
     private $storage;
 
-    /** @var Graph */
+    /** @var \LC\Portal\Graph */
     private $graph;
 
     /** @var \LC\Portal\OpenVpn\ServerManager */

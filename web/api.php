@@ -11,19 +11,19 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
-use LC\Portal\BearerAuthenticationHook;
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\ClientFetcher;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
+use LC\Portal\Http\BearerAuthenticationHook;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
+use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Logger;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\Storage;
 use LC\Portal\TlsAuth;
-use LC\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
 

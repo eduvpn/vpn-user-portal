@@ -7,22 +7,20 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTime;
 use fkooman\SeCookie\SessionInterface;
-use LC\Portal\Http\BeforeHookInterface;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
+use LC\Portal\Storage;
 
 /**
  * This hook is used to update the session info in vpn-server-api.
  */
 class UpdateSessionInfoHook implements BeforeHookInterface
 {
-    /** @var Storage */
+    /** @var \LC\Portal\Storage */
     private $storage;
 
     /** @var \fkooman\SeCookie\SessionInterface */

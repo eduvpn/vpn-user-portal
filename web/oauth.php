@@ -16,11 +16,11 @@ use LC\Portal\ClientFetcher;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
 use LC\Portal\Http\JsonResponse;
+use LC\Portal\Http\OAuthTokenModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Logger;
 use LC\Portal\OAuth\PublicSigner;
-use LC\Portal\OAuthTokenModule;
 use LC\Portal\Storage;
 
 $logger = new Logger('vpn-user-portal');

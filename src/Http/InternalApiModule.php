@@ -7,17 +7,14 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateTime;
 use LC\Portal\CA\CaInterface;
-use LC\Portal\Http\ApiErrorResponse;
-use LC\Portal\Http\ApiResponse;
-use LC\Portal\Http\AuthUtils;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
+use LC\Portal\Config;
+use LC\Portal\ProfileConfig;
+use LC\Portal\Storage;
+use LC\Portal\TlsAuth;
 
 class InternalApiModule implements ServiceModuleInterface
 {

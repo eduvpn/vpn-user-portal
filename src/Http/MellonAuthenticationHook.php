@@ -7,11 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
-
-use LC\Portal\Http\BeforeHookInterface;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\UserInfo;
+namespace LC\Portal\Http;
 
 class MellonAuthenticationHook implements BeforeHookInterface
 {

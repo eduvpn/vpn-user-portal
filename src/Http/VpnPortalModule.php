@@ -7,21 +7,21 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateTime;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\SeCookie\SessionInterface;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\ClientConfig;
+use LC\Portal\Config;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\HtmlResponse;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OpenVpn\ServerManager;
+use LC\Portal\ProfileConfig;
+use LC\Portal\Random;
+use LC\Portal\Storage;
+use LC\Portal\TlsAuth;
+use LC\Portal\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -37,10 +37,10 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LC\Portal\Storage */
     private $storage;
 
-    /** @var CA\CaInterface */
+    /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
-    /** @var TlsAuth */
+    /** @var \LC\Portal\TlsAuth */
     private $tlsAuth;
 
     /** @var \LC\Portal\OpenVpn\ServerManager */

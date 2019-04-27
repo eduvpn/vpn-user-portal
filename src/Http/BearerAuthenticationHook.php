@@ -7,12 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
-use LC\Portal\Http\BeforeHookInterface;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
 use LC\Portal\OAuth\BearerValidator;
 
 class BearerAuthenticationHook implements BeforeHookInterface

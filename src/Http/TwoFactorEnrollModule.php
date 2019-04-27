@@ -7,25 +7,20 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
 use fkooman\Otp\Exception\OtpException;
 use fkooman\Otp\Totp;
 use fkooman\SeCookie\SessionInterface;
-use LC\Portal\Http\HtmlResponse;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
+use LC\Portal\Storage;
+use LC\Portal\TplInterface;
 use ParagonIE\ConstantTime\Base32;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
 {
-    /** @var Storage */
+    /** @var \LC\Portal\Storage */
     private $storage;
 
     /** @var array<string> */

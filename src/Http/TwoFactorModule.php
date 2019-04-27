@@ -7,24 +7,18 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use fkooman\Otp\Exception\OtpException;
 use fkooman\Otp\Totp;
 use fkooman\SeCookie\SessionInterface;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\HtmlResponse;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
-use LC\Portal\Http\UserInfo;
+use LC\Portal\Storage;
+use LC\Portal\TplInterface;
 
 class TwoFactorModule implements ServiceModuleInterface
 {
-    /** @var Storage */
+    /** @var \LC\Portal\Storage */
     private $storage;
 
     /** @var \fkooman\SeCookie\SessionInterface */
