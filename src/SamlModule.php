@@ -11,12 +11,12 @@ namespace LC\Portal;
 
 use fkooman\SAML\SP\Exception\SamlException;
 use fkooman\SAML\SP\SP;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 
 class SamlModule implements ServiceModuleInterface
 {
@@ -44,7 +44,7 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/login',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 try {
@@ -114,7 +114,7 @@ class SamlModule implements ServiceModuleInterface
         $service->post(
             '/_saml/acs',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 try {
@@ -132,7 +132,7 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/logout',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 try {
@@ -148,7 +148,7 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/slo',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 try {
@@ -166,7 +166,7 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/logout',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
@@ -178,7 +178,7 @@ class SamlModule implements ServiceModuleInterface
         $service->get(
             '/_saml/metadata',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $response = new Response(200, 'application/samlmetadata+xml');

@@ -10,9 +10,9 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\CliParser;
-use LC\Common\Config;
-use LC\Common\FileIO;
+use LC\Portal\CliParser;
+use LC\Portal\Config;
+use LC\Portal\FileIO;
 
 $credentials = [
     'vpn-server-node' => bin2hex(random_bytes(16)),

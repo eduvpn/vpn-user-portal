@@ -10,10 +10,10 @@
 namespace LC\Portal;
 
 use fkooman\SeCookie\SessionInterface;
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 
 class LogoutModule implements ServiceModuleInterface
 {
@@ -39,7 +39,7 @@ class LogoutModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \LC\Common\Http\Service $service
+     * @param \LC\Portal\Http\Service $service
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class LogoutModule implements ServiceModuleInterface
         $service->post(
             '/_logout',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $httpReferrer = $request->requireHeader('HTTP_REFERER');

@@ -12,18 +12,15 @@ namespace LC\Portal;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
-use LC\Common\Config;
-use LC\Common\Http\ApiErrorResponse;
-use LC\Common\Http\ApiResponse;
-use LC\Common\Http\Exception\InputValidationException;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\ProfileConfig;
-use LC\Common\Random;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\Http\ApiErrorResponse;
+use LC\Portal\Http\ApiResponse;
+use LC\Portal\Http\Exception\InputValidationException;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
@@ -31,7 +28,7 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var Storage */
     private $storage;
 
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
     /** @var CA\CaInterface */
@@ -49,12 +46,12 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    /** @var \LC\Common\RandomInterface */
+    /** @var \LC\Portal\RandomInterface */
     private $random;
 
     /**
      * @param Storage           $storage
-     * @param \LC\Common\Config $config
+     * @param \LC\Portal\Config $config
      * @param \DateInterval     $sessionExpiry
      */
     public function __construct(Storage $storage, Config $config, CaInterface $ca, TlsAuth $tlsAuth, DateInterval $sessionExpiry)
@@ -150,7 +147,7 @@ class VpnApiModule implements ServiceModuleInterface
         $service->post(
             '/create_keypair',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
@@ -175,7 +172,7 @@ class VpnApiModule implements ServiceModuleInterface
         $service->get(
             '/check_certificate',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
@@ -195,7 +192,7 @@ class VpnApiModule implements ServiceModuleInterface
         $service->get(
             '/profile_config',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */

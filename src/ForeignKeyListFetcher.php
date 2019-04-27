@@ -10,8 +10,6 @@
 namespace LC\Portal;
 
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
-use LC\Common\FileIO;
-use LC\Common\Json;
 use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\OAuth\PublicSigner;
 use ParagonIE\ConstantTime\Base64;

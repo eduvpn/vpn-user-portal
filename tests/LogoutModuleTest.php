@@ -9,7 +9,7 @@
 
 namespace LC\Portal\Tests;
 
-use LC\Common\Http\Service;
+use LC\Portal\Http\Service;
 use LC\Portal\LogoutModule;
 use PHPUnit\Framework\TestCase;
 

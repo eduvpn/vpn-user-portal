@@ -14,14 +14,13 @@ use BaconQrCode\Writer;
 use fkooman\Otp\Exception\OtpException;
 use fkooman\Otp\Totp;
 use fkooman\SeCookie\SessionInterface;
-use LC\Common\Http\HtmlResponse;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\TplInterface;
+use LC\Portal\Http\HtmlResponse;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 use ParagonIE\ConstantTime\Base32;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
@@ -35,14 +34,14 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \LC\Common\TplInterface */
+    /** @var \LC\Portal\TplInterface */
     private $tpl;
 
     /**
      * @param Storage                            $storage
      * @param array<string>                      $twoFactorMethods
      * @param \fkooman\SeCookie\SessionInterface $session
-     * @param \LC\Common\TplInterface            $tpl
+     * @param \LC\Portal\TplInterface            $tpl
      */
     public function __construct(Storage $storage, array $twoFactorMethods, SessionInterface $session, TplInterface $tpl)
     {
@@ -60,10 +59,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
         $service->get(
             '/two_factor_enroll',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
 
@@ -84,10 +83,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
         $service->post(
             '/two_factor_enroll',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $userId = $userInfo->getUserId();
 
@@ -134,10 +133,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
         $service->get(
             '/two_factor_enroll_qr',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));

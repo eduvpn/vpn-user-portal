@@ -12,12 +12,12 @@ namespace LC\Portal;
 use DateInterval;
 use DateTime;
 use fkooman\SAML\SP\SP;
-use LC\Common\Http\BeforeHookInterface;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\Http\UserInfo;
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\UserInfo;
 
 class SamlAuthenticationHook implements BeforeHookInterface
 {
@@ -67,10 +67,10 @@ class SamlAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LC\Common\Http\Request $request
+     * @param \LC\Portal\Http\Request $request
      * @param array                   $hookData
      *
-     * @return false|\LC\Common\Http\RedirectResponse|\LC\Common\Http\UserInfo
+     * @return false|\LC\Portal\Http\RedirectResponse|\LC\Portal\Http\UserInfo
      */
     public function executeBefore(Request $request, array $hookData)
     {
@@ -172,10 +172,10 @@ class SamlAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LC\Common\Http\Request $request
+     * @param \LC\Portal\Http\Request $request
      * @param array<string>           $authnContext
      *
-     * @return \LC\Common\Http\RedirectResponse
+     * @return \LC\Portal\Http\RedirectResponse
      */
     private function getLoginRedirect(Request $request, array $authnContext)
     {

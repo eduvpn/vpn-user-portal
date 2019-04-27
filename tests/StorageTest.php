@@ -10,7 +10,7 @@
 namespace LC\Portal\Tests;
 
 use DateTime;
-use LC\Common\HttpClient\ServerClient;
+use LC\Portal\HttpClient\ServerClient;
 use LC\Portal\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -38,7 +38,7 @@ class StorageTest extends TestCase
     public function testValid()
     {
         $this->storage->add('foo', 'bar');
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
 
     /**
@@ -75,7 +75,7 @@ class StorageTest extends TestCase
     {
         $this->storage->add('foo', 'bar');
         $this->assertTrue($this->storage->updatePassword('foo', 'baz'));
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'baz'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'baz'));
     }
 
     /**
@@ -103,7 +103,7 @@ class StorageTest extends TestCase
     {
         $this->storage->add('foo', 'bar');
         $this->assertFalse($this->storage->updatePassword('bar', 'baz'));
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
 
     /**

@@ -9,7 +9,6 @@
 
 namespace LC\Portal;
 
-use LC\Common\FileIO;
 use RuntimeException;
 
 class TlsAuth

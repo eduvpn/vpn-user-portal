@@ -12,10 +12,10 @@ namespace LC\Portal;
 use DateInterval;
 use DateTime;
 use fkooman\SeCookie\SessionInterface;
-use LC\Common\Http\BeforeHookInterface;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
 
 /**
  * This hook is used to update the session info in vpn-server-api.
@@ -48,7 +48,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LC\Common\Http\Request $request
+     * @param \LC\Portal\Http\Request $request
      * @param array                   $hookData
      *
      * @return false|void
@@ -81,7 +81,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
             throw new HttpException('authentication hook did not run before', 500);
         }
 
-        /** @var \LC\Common\Http\UserInfo */
+        /** @var \LC\Portal\Http\UserInfo */
         $userInfo = $hookData['auth'];
 
         // check if the authentication backend wants to override the sessionExpiry

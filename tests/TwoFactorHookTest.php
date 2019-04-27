@@ -9,9 +9,9 @@
 
 namespace LC\Portal\Tests\Http;
 
-use LC\Common\Http\TwoFactorHook;
-use LC\Common\Http\UserInfo;
-use LC\Common\Tests\TestTpl;
+use LC\Portal\Http\TwoFactorHook;
+use LC\Portal\Http\UserInfo;
+use LC\Portal\Tests\TestTpl;
 use PHPUnit\Framework\TestCase;
 
 class TwoFactorHookTest extends TestCase
@@ -70,7 +70,7 @@ class TwoFactorHookTest extends TestCase
     }
 
     /**
-     * @expectedException \LC\Common\Http\Exception\HttpException
+     * @expectedException \LC\Portal\Http\Exception\HttpException
      *
      * @expectedExceptionMessage two-factor code not bound to authenticated user
      *

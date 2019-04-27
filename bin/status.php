@@ -10,9 +10,9 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
-use LC\Common\Logger;
 use LC\OpenVpn\ManagementSocket;
+use LC\Portal\Config;
+use LC\Portal\Logger;
 use LC\Portal\OpenVpn\ServerManager;
 
 try {

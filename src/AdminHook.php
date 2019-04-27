@@ -9,11 +9,10 @@
 
 namespace LC\Portal;
 
-use LC\Common\Http\BeforeHookInterface;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\TplInterface;
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
 
 /**
  * Augments the "template" with information about whether or not the user is
@@ -27,13 +26,13 @@ class AdminHook implements BeforeHookInterface
     /** @var array<string> */
     private $adminUserIdList;
 
-    /** @var \LC\Common\TplInterface */
+    /** @var \LC\Portal\TplInterface */
     private $tpl;
 
     /**
      * @param array<string>           $adminPermissionList
      * @param array<string>           $adminUserIdList
-     * @param \LC\Common\TplInterface $tpl
+     * @param \LC\Portal\TplInterface $tpl
      */
     public function __construct(array $adminPermissionList, array $adminUserIdList, TplInterface &$tpl)
     {
@@ -70,7 +69,7 @@ class AdminHook implements BeforeHookInterface
         if (!\array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-        /** @var \LC\Common\Http\UserInfo */
+        /** @var \LC\Portal\Http\UserInfo */
         $userInfo = $hookData['auth'];
 
         // is the userId listed in the adminUserIdList?

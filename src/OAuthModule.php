@@ -12,17 +12,16 @@ namespace LC\Portal;
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\Http\Response as OAuthResponse;
 use fkooman\OAuth\Server\OAuthServer;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\HtmlResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\TplInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\HtmlResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 
 class OAuthModule implements ServiceModuleInterface
 {
-    /** @var \LC\Common\TplInterface */
+    /** @var \LC\Portal\TplInterface */
     private $tpl;
 
     /** @var \fkooman\OAuth\Server\OAuthServer */
@@ -42,10 +41,10 @@ class OAuthModule implements ServiceModuleInterface
         $service->get(
             '/_oauth/authorize',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 try {
                     if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userInfo->getUserId())) {
@@ -69,10 +68,10 @@ class OAuthModule implements ServiceModuleInterface
         $service->post(
             '/_oauth/authorize',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 try {
@@ -93,7 +92,7 @@ class OAuthModule implements ServiceModuleInterface
     /**
      * @param \fkooman\OAuth\Server\Http\Response $authorizeResponse
      *
-     * @return \LC\Common\Http\Response
+     * @return \LC\Portal\Http\Response
      */
     private function prepareReturnResponse(OAuthResponse $authorizeResponse)
     {

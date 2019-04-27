@@ -14,9 +14,8 @@ use fkooman\OAuth\Server\StorageInterface;
 use fkooman\Otp\OtpInfo;
 use fkooman\Otp\OtpStorageInterface;
 use fkooman\SqliteMigrate\Migration;
-use LC\Common\Http\CredentialValidatorInterface;
-use LC\Common\Http\UserInfo;
-use LC\Common\Json;
+use LC\Portal\Http\CredentialValidatorInterface;
+use LC\Portal\Http\UserInfo;
 use PDO;
 
 class Storage implements CredentialValidatorInterface, StorageInterface, OtpStorageInterface

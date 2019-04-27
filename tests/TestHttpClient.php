@@ -11,7 +11,7 @@ namespace LC\Portal\Tests;
 
 use DateInterval;
 use DateTime;
-use LC\Common\HttpClient\HttpClientInterface;
+use LC\Portal\HttpClient\HttpClientInterface;
 use RuntimeException;
 
 class TestHttpClient implements HttpClientInterface

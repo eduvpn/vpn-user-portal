@@ -10,8 +10,8 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\FileIO;
 use LC\Portal\CA\EasyRsaCa;
+use LC\Portal\FileIO;
 use LC\Portal\Storage;
 use LC\Portal\TlsAuth;
 

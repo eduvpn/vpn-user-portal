@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "464f5e7334d342ee0c1107437ea89122",
+    "content-hash": "e999b0d41eaa67c6b2a556a59d231d69",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -344,105 +344,6 @@
                 "source": "https://git.tuxed.net/fkooman/php-sqlite-migrate"
             },
             "time": "2018-06-26T07:47:46+00:00"
-        },
-        {
-            "name": "ircmaxell/password-compat",
-            "version": "v1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ircmaxell/password_compat.git",
-                "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ircmaxell/password_compat/zipball/5c5cde8822a69545767f7c7f3058cb15ff84614c",
-                "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/password.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anthony Ferrara",
-                    "email": "ircmaxell@php.net",
-                    "homepage": "http://blog.ircmaxell.com"
-                }
-            ],
-            "description": "A compatibility library for the proposed simplified password hashing algorithm: https://wiki.php.net/rfc/password_hash",
-            "homepage": "https://github.com/ircmaxell/password_compat",
-            "keywords": [
-                "hashing",
-                "password"
-            ],
-            "time": "2014-11-20T16:49:30+00:00"
-        },
-        {
-            "name": "lc/common",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "../vpn-lib-common",
-                "reference": "827c51ccd81308e4c53bef483680a63db49ab769"
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-date": "*",
-                "ext-filter": "*",
-                "ext-hash": "*",
-                "ext-json": "*",
-                "ext-ldap": "*",
-                "ext-mbstring": "*",
-                "ext-pcre": "*",
-                "ext-pdo": "*",
-                "ext-radius": "*",
-                "ext-spl": "*",
-                "fkooman/secookie": "^2",
-                "ircmaxell/password-compat": "^1",
-                "paragonie/constant_time_encoding": "^1|^2",
-                "paragonie/random_compat": ">=1",
-                "php": ">= 5.4",
-                "psr/log": "^1.0",
-                "symfony/polyfill-php56": "^1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5|^6|^7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "LC\\Common\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "LC\\Common\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "AGPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "email": "fkooman@tuxed.net",
-                    "name": "François Kooman"
-                }
-            ],
-            "description": "Common VPN library",
-            "support": {
-                "email": "eduvpn@surfnet.nl",
-                "source": "https://github.com/eduvpn/vpn-lib-common"
-            }
         },
         {
             "name": "lc/openvpn-connection-manager",
@@ -2122,7 +2023,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -2230,8 +2131,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fkooman/otp-verifier": 20,
-        "lc/common": 20
+        "fkooman/otp-verifier": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

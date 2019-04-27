@@ -11,7 +11,6 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
-use LC\Common\FileIO;
 use LC\Portal\Exception\GraphException;
 
 class Graph

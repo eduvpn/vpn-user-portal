@@ -10,15 +10,15 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
-use LC\Common\Http\BasicAuthenticationHook;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Json;
-use LC\Common\Logger;
 use LC\Portal\CA\EasyRsaCa;
+use LC\Portal\Config;
+use LC\Portal\Http\BasicAuthenticationHook;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
 use LC\Portal\InternalApiModule;
+use LC\Portal\Json;
+use LC\Portal\Logger;
 use LC\Portal\Storage;
 use LC\Portal\TlsAuth;
 

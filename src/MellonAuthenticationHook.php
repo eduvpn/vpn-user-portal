@@ -9,9 +9,9 @@
 
 namespace LC\Portal;
 
-use LC\Common\Http\BeforeHookInterface;
-use LC\Common\Http\Request;
-use LC\Common\Http\UserInfo;
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\UserInfo;
 
 class MellonAuthenticationHook implements BeforeHookInterface
 {

@@ -24,10 +24,6 @@
     "name": "lc/vpn-user-portal",
     "repositories": [
         {
-            "type": "path",
-            "url": "../vpn-lib-common"
-        },
-        {
             "type": "vcs",
             "url": "https://git.tuxed.net/LC/php-openvpn-connection-manager"
         },
@@ -65,7 +61,6 @@
         "fkooman/php-saml-sp": "^0",
         "fkooman/secookie": "^2",
         "fkooman/sqlite-migrate": "^0",
-        "lc/common": "dev-master",
         "lc/openvpn-connection-manager": "^1",
         "paragonie/constant_time_encoding": "^1|^2",
         "paragonie/random_compat": "^1|^2",

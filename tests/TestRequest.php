@@ -9,7 +9,7 @@
 
 namespace LC\Portal\Tests;
 
-use LC\Common\Http\Request;
+use LC\Portal\Http\Request;
 
 class TestRequest extends Request
 {

@@ -11,19 +11,15 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
-use LC\Common\Config;
-use LC\Common\FileIO;
-use LC\Common\Http\AuthUtils;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\HtmlResponse;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\ProfileConfig;
-use LC\Common\TplInterface;
+use LC\Portal\Http\AuthUtils;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\HtmlResponse;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OpenVpn\ServerManager;
 use RuntimeException;
 
@@ -32,10 +28,10 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var string */
     private $dataDir;
 
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
-    /** @var \LC\Common\TplInterface */
+    /** @var \LC\Portal\TplInterface */
     private $tpl;
 
     /** @var Storage */
@@ -52,8 +48,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
     /**
      * @param string                           $dataDir
-     * @param \LC\Common\Config                $config
-     * @param \LC\Common\TplInterface          $tpl
+     * @param \LC\Portal\Config                $config
+     * @param \LC\Portal\TplInterface          $tpl
      * @param Storage                          $storage
      * @param \LC\Portal\OpenVpn\ServerManager $serverManager
      * @param Graph                            $graph
@@ -77,7 +73,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/connections',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -111,7 +107,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/info',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -130,7 +126,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/users',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -151,12 +147,12 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/user',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
                 $userId = $request->getQueryParameter('user_id');
@@ -184,11 +180,11 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/user',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
                 $userId = $request->getPostParameter('user_id');
@@ -252,7 +248,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/log',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -273,7 +269,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -310,7 +306,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats/traffic',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -367,7 +363,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats/users',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -398,7 +394,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/messages',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -426,7 +422,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/messages',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
@@ -462,7 +458,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/log',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);

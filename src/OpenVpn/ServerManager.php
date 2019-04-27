@@ -9,10 +9,10 @@
 
 namespace LC\Portal\OpenVpn;
 
-use LC\Common\Config;
-use LC\Common\ProfileConfig;
 use LC\OpenVpn\ConnectionManager;
 use LC\OpenVpn\ManagementSocketInterface;
+use LC\Portal\Config;
+use LC\Portal\ProfileConfig;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
  */
 class ServerManager
 {
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
     /** @var \Psr\Log\LoggerInterface */

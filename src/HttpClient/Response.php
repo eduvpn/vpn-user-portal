@@ -9,7 +9,7 @@
 
 namespace LC\Portal\HttpClient;
 
-use LC\Common\Json;
+use LC\Portal\Json;
 
 class Response
 {

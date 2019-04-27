@@ -10,16 +10,14 @@
 namespace LC\Portal;
 
 use DateTime;
-use LC\Common\Config;
-use LC\Common\Http\ApiErrorResponse;
-use LC\Common\Http\ApiResponse;
-use LC\Common\Http\AuthUtils;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\ProfileConfig;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\Http\ApiErrorResponse;
+use LC\Portal\Http\ApiResponse;
+use LC\Portal\Http\AuthUtils;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 
 class InternalApiModule implements ServiceModuleInterface
 {
@@ -29,7 +27,7 @@ class InternalApiModule implements ServiceModuleInterface
     /** @var \LC\Portal\TlsAuth */
     private $tlsAuth;
 
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
     /** @var \LC\Portal\Storage */
@@ -51,7 +49,7 @@ class InternalApiModule implements ServiceModuleInterface
         $service->post(
             '/connect',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireUser($hookData, ['vpn-server-node']);
@@ -63,7 +61,7 @@ class InternalApiModule implements ServiceModuleInterface
         $service->post(
             '/disconnect',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireUser($hookData, ['vpn-server-node']);
@@ -75,7 +73,7 @@ class InternalApiModule implements ServiceModuleInterface
         $service->post(
             '/add_server_certificate',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireUser($hookData, ['vpn-server-node']);
@@ -94,7 +92,7 @@ class InternalApiModule implements ServiceModuleInterface
         $service->get(
             '/profile_list',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 AuthUtils::requireUser($hookData, ['vpn-user-portal', 'vpn-server-node']);
@@ -113,7 +111,7 @@ class InternalApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @return \LC\Common\Http\Response
+     * @return \LC\Portal\Http\Response
      */
     public function connect(Request $request)
     {
@@ -133,7 +131,7 @@ class InternalApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @return \LC\Common\Http\Response
+     * @return \LC\Portal\Http\Response
      */
     public function disconnect(Request $request)
     {
@@ -155,7 +153,7 @@ class InternalApiModule implements ServiceModuleInterface
      * @param string $profileId
      * @param string $commonName
      *
-     * @return \LC\Common\Http\ApiErrorResponse|null
+     * @return \LC\Portal\Http\ApiErrorResponse|null
      */
     private function verifyConnection($profileId, $commonName)
     {
@@ -181,7 +179,7 @@ class InternalApiModule implements ServiceModuleInterface
      * @param string $profileId
      * @param string $externalUserId
      *
-     * @return \LC\Common\Http\ApiErrorResponse|null
+     * @return \LC\Portal\Http\ApiErrorResponse|null
      */
     private function verifyAcl($profileId, $externalUserId)
     {

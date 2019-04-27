@@ -12,16 +12,15 @@ namespace LC\Portal;
 use fkooman\Otp\Exception\OtpException;
 use fkooman\Otp\Totp;
 use fkooman\SeCookie\SessionInterface;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\HtmlResponse;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\Http\UserInfo;
-use LC\Common\TplInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\HtmlResponse;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
+use LC\Portal\Http\UserInfo;
 
 class TwoFactorModule implements ServiceModuleInterface
 {
@@ -31,13 +30,13 @@ class TwoFactorModule implements ServiceModuleInterface
     /** @var \fkooman\SeCookie\SessionInterface */
     private $session;
 
-    /** @var \LC\Common\TplInterface */
+    /** @var \LC\Portal\TplInterface */
     private $tpl;
 
     /**
      * @param Storage                            $storage
      * @param \fkooman\SeCookie\SessionInterface $session
-     * @param \LC\Common\TplInterface            $tpl
+     * @param \LC\Portal\TplInterface            $tpl
      */
     public function __construct(Storage $storage, SessionInterface $session, TplInterface $tpl)
     {
