@@ -18,9 +18,11 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Logger;
 use LC\Portal\BearerAuthenticationHook;
+use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\ClientFetcher;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\Storage;
+use LC\Portal\TlsAuth;
 use LC\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
@@ -73,9 +75,20 @@ try {
             )
         );
 
+        $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
+        $easyRsaDataDir = sprintf('%s/easy-rsa', $dataDir);
+        $easyRsaCa = new EasyRsaCa(
+            $easyRsaDir,
+            $easyRsaDataDir
+        );
+        $tlsAuth = new TlsAuth($dataDir);
+
         // api module
         $vpnApiModule = new VpnApiModule(
+            $storage,
             $config,
+            $easyRsaCa,
+            $tlsAuth,
             new DateInterval($config->getItem('sessionExpiry'))
         );
         $service->addModule($vpnApiModule);
