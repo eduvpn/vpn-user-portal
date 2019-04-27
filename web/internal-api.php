@@ -17,7 +17,6 @@ use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Json;
 use LC\Common\Logger;
-use LC\Common\Random;
 use LC\Portal\Api\CertificatesModule;
 use LC\Portal\Api\ConnectionsModule;
 use LC\Portal\CA\EasyRsaCa;
@@ -72,9 +71,7 @@ try {
     $service->addModule(
         new CertificatesModule(
             $easyRsaCa,
-            $storage,
-            $tlsAuth,
-            new Random()
+            $tlsAuth
         )
     );
 
