@@ -17,9 +17,8 @@ use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Json;
 use LC\Common\Logger;
-use LC\Portal\Api\CertificatesModule;
-use LC\Portal\Api\ConnectionsModule;
 use LC\Portal\CA\EasyRsaCa;
+use LC\Portal\InternalApiModule;
 use LC\Portal\Storage;
 use LC\Portal\TlsAuth;
 
@@ -51,13 +50,6 @@ try {
     );
     $storage->update();
 
-    $service->addModule(
-        new ConnectionsModule(
-            $config,
-            $storage
-        )
-    );
-
     $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
     $easyRsaDataDir = sprintf('%s/easy-rsa', $dataDir);
 
@@ -67,11 +59,12 @@ try {
     );
     $tlsAuth = new TlsAuth($dataDir);
 
-    // XXX for generating server certificate... (bin/server-config.php)
     $service->addModule(
-        new CertificatesModule(
+        new InternalApiModule(
             $easyRsaCa,
-            $tlsAuth
+            $tlsAuth,
+            $config,
+            $storage
         )
     );
 
