@@ -11,7 +11,7 @@ namespace LC\Portal\Tests\Http;
 
 use LC\Portal\Http\TwoFactorHook;
 use LC\Portal\Http\UserInfo;
-use LC\Portal\Tests\TestTpl;
+use LC\Portal\Tests\Http\TestTpl;
 use PHPUnit\Framework\TestCase;
 
 class TwoFactorHookTest extends TestCase

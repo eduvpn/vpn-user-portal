@@ -7,10 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace LC\Portal\Tests\Http;
 
+use LC\Portal\Http\LogoutModule;
 use LC\Portal\Http\Service;
-use LC\Portal\LogoutModule;
 use PHPUnit\Framework\TestCase;
 
 class LogoutModuleTest extends TestCase

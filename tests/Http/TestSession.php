@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace LC\Portal\Tests\Http;
 
 use fkooman\SeCookie\Exception\SessionException;
 use fkooman\SeCookie\SessionInterface;

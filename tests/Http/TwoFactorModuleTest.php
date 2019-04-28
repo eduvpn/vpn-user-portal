@@ -12,7 +12,6 @@ namespace LC\Portal\Tests\Http;
 use LC\Portal\Http\NullAuthenticationHook;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\TwoFactorModule;
-use LC\Portal\Tests\TestTpl;
 use PHPUnit\Framework\TestCase;
 
 class TwoFactorModuleTest extends TestCase
@@ -31,9 +30,7 @@ class TwoFactorModuleTest extends TestCase
             $tpl
         );
         $service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
-
         $service->addModule($twoFactorModule);
-
         $request = new TestRequest(
             [
                 'REQUEST_METHOD' => 'POST',
