@@ -11,19 +11,19 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
-use LC\Common\Config;
-use LC\Common\FileIO;
-use LC\Common\Http\JsonResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\ServerClient;
-use LC\Common\Logger;
-use LC\Portal\BearerAuthenticationHook;
+use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\ClientFetcher;
+use LC\Portal\Config;
+use LC\Portal\FileIO;
+use LC\Portal\Http\BearerAuthenticationHook;
+use LC\Portal\Http\JsonResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\VpnApiModule;
+use LC\Portal\Logger;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\Storage;
-use LC\Portal\VpnApiModule;
+use LC\Portal\TlsAuth;
 
 $logger = new Logger('vpn-user-api');
 
@@ -38,15 +38,9 @@ try {
     $service = new Service();
 
     if ($config->hasSection('Api')) {
-        $serverClient = new ServerClient(
-            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-            $config->getItem('apiUri')
-        );
-
         $storage = new Storage(
             new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-            sprintf('%s/schema', $baseDir),
-            $serverClient
+            sprintf('%s/schema', $baseDir)
         );
         $storage->update();
 
@@ -81,10 +75,20 @@ try {
             )
         );
 
+        $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
+        $easyRsaDataDir = sprintf('%s/easy-rsa', $dataDir);
+        $easyRsaCa = new EasyRsaCa(
+            $easyRsaDir,
+            $easyRsaDataDir
+        );
+        $tlsAuth = new TlsAuth($dataDir);
+
         // api module
         $vpnApiModule = new VpnApiModule(
+            $storage,
             $config,
-            $serverClient,
+            $easyRsaCa,
+            $tlsAuth,
             new DateInterval($config->getItem('sessionExpiry'))
         );
         $service->addModule($vpnApiModule);

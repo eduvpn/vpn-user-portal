@@ -10,7 +10,7 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
+use LC\Portal\Config;
 use LC\Portal\ForeignKeyListFetcher;
 use LC\Portal\HttpClient\CurlHttpClient;
 

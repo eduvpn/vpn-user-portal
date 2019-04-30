@@ -10,13 +10,17 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
-use LC\Common\FileIO;
+use LC\Portal\CA\EasyRsaCa;
+use LC\Portal\FileIO;
 use LC\Portal\Storage;
+use LC\Portal\TlsAuth;
 
 try {
-    $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
+    $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
+    $easyRsaDataDir = sprintf('%s/data/easy-rsa', $baseDir);
+
+    // implicit CA init
+    $ca = new EasyRsaCa($easyRsaDir, $easyRsaDataDir);
 
     // initialize database
     $dataDir = sprintf('%s/data', $baseDir);
@@ -26,6 +30,9 @@ try {
         sprintf('%s/schema', $baseDir)
     );
     $storage->init();
+
+    $tlsAuth = new TlsAuth($dataDir);
+    $tlsAuth->init();
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

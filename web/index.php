@@ -19,41 +19,43 @@ use fkooman\SAML\SP\SpInfo;
 use fkooman\SAML\SP\XmlIdpInfoSource;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
-use LC\Common\Config;
-use LC\Common\FileIO;
-use LC\Common\Http\CsrfProtectionHook;
-use LC\Common\Http\FormAuthenticationHook;
-use LC\Common\Http\FormAuthenticationModule;
-use LC\Common\Http\HtmlResponse;
-use LC\Common\Http\LanguageSwitcherHook;
-use LC\Common\Http\LdapAuth;
-use LC\Common\Http\RadiusAuth;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\Http\TwoFactorHook;
-use LC\Common\Http\TwoFactorModule;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\ServerClient;
-use LC\Common\LdapClient;
-use LC\Common\Logger;
-use LC\Common\Tpl;
-use LC\Portal\AdminHook;
-use LC\Portal\AdminPortalModule;
+use LC\OpenVpn\ManagementSocket;
+use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\ClientFetcher;
-use LC\Portal\DisabledUserHook;
+use LC\Portal\Config;
+use LC\Portal\FileIO;
 use LC\Portal\Graph;
-use LC\Portal\LogoutModule;
-use LC\Portal\MellonAuthenticationHook;
+use LC\Portal\Http\AdminHook;
+use LC\Portal\Http\AdminPortalModule;
+use LC\Portal\Http\CsrfProtectionHook;
+use LC\Portal\Http\DisabledUserHook;
+use LC\Portal\Http\FormAuthenticationHook;
+use LC\Portal\Http\FormAuthenticationModule;
+use LC\Portal\Http\HtmlResponse;
+use LC\Portal\Http\LanguageSwitcherHook;
+use LC\Portal\Http\LdapAuth;
+use LC\Portal\Http\LogoutModule;
+use LC\Portal\Http\MellonAuthenticationHook;
+use LC\Portal\Http\OAuthModule;
+use LC\Portal\Http\PasswdModule;
+use LC\Portal\Http\RadiusAuth;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\SamlAuthenticationHook;
+use LC\Portal\Http\SamlModule;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ShibAuthenticationHook;
+use LC\Portal\Http\TwoFactorEnrollModule;
+use LC\Portal\Http\TwoFactorHook;
+use LC\Portal\Http\TwoFactorModule;
+use LC\Portal\Http\UpdateSessionInfoHook;
+use LC\Portal\Http\VpnPortalModule;
+use LC\Portal\LdapClient;
+use LC\Portal\Logger;
 use LC\Portal\OAuth\PublicSigner;
-use LC\Portal\OAuthModule;
-use LC\Portal\PasswdModule;
-use LC\Portal\SamlAuthenticationHook;
-use LC\Portal\SamlModule;
-use LC\Portal\ShibAuthenticationHook;
+use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\Storage;
-use LC\Portal\TwoFactorEnrollModule;
-use LC\Portal\UpdateSessionInfoHook;
-use LC\Portal\VpnPortalModule;
+use LC\Portal\TlsAuth;
+use LC\Portal\Tpl;
 
 $logger = new Logger('vpn-user-portal');
 
@@ -149,11 +151,6 @@ try {
         ]
     );
 
-    $serverClient = new ServerClient(
-        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-        $config->getItem('apiUri')
-    );
-
     $service = new Service($tpl);
     $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());
     $service->addBeforeHook('language_switcher', new LanguageSwitcherHook(array_keys($supportedLanguages), $cookie));
@@ -173,8 +170,7 @@ try {
 
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-        sprintf('%s/schema', $baseDir),
-        $serverClient
+        sprintf('%s/schema', $baseDir)
     );
     $storage->update();
 
@@ -331,20 +327,20 @@ try {
         $service->addBeforeHook(
             'two_factor',
             new TwoFactorHook(
+                $storage,
                 $session,
                 $tpl,
-                $serverClient,
                 $config->hasItem('requireTwoFactor') ? $config->getItem('requireTwoFactor') : false
             )
         );
     }
 
-    $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
-    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($session, $serverClient, new DateInterval($sessionExpiry)));
+    $service->addBeforeHook('disabled_user', new DisabledUserHook($storage));
+    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($storage, $session, new DateInterval($sessionExpiry)));
 
     // two factor module
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
+        $twoFactorModule = new TwoFactorModule($storage, $session, $tpl);
         $service->addModule($twoFactorModule);
     }
 
@@ -358,15 +354,25 @@ try {
         )
     );
 
+    $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
+    $easyRsaDataDir = sprintf('%s/easy-rsa', $dataDir);
+    $easyRsaCa = new EasyRsaCa(
+        $easyRsaDir,
+        $easyRsaDataDir
+    );
+    $tlsAuth = new TlsAuth($dataDir);
+    $serverManager = new ServerManager($config, $logger, new ManagementSocket());
     $clientFetcher = new ClientFetcher($config);
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $config,
         $tpl,
-        $serverClient,
         $session,
         $storage,
+        $easyRsaCa,
+        $tlsAuth,
+        $serverManager,
         $clientFetcher
     );
     $service->addModule($vpnPortalModule);
@@ -379,15 +385,17 @@ try {
     }
 
     $adminPortalModule = new AdminPortalModule(
+        $dataDir,
+        $config,
         $tpl,
         $storage,
-        $serverClient,
+        $serverManager,
         $graph
     );
     $service->addModule($adminPortalModule);
 
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $session, $tpl, $serverClient);
+        $twoFactorEnrollModule = new TwoFactorEnrollModule($storage, $twoFactorMethods, $session, $tpl);
         $service->addModule($twoFactorEnrollModule);
     }
 

@@ -9,7 +9,7 @@
 
 namespace LC\Portal\Tests;
 
-use LC\Common\TplInterface;
+use LC\Portal\TplInterface;
 
 class JsonTpl implements TplInterface
 {

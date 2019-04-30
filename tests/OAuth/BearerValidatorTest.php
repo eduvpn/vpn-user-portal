@@ -13,13 +13,11 @@ use DateInterval;
 use DateTime;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
-use LC\Common\Config;
-use LC\Common\HttpClient\ServerClient;
 use LC\Portal\ClientFetcher;
+use LC\Portal\Config;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\Storage;
-use LC\Portal\Tests\TestHttpClient;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
@@ -46,11 +44,11 @@ class BearerValidatorTest extends TestCase
 
         $storage = new Storage(
             new PDO('sqlite::memory:'),
-            \dirname(\dirname(__DIR__)).'/schema',
-            new ServerClient(new TestHttpClient(), 'serverClient')
+            \dirname(\dirname(__DIR__)).'/schema'
         );
         $storage->setDateTime($this->dateTime);
         $storage->init();
+        $storage->updateSessionInfo('foo', new DateTime('2018-01-05'), []);
         $storage->storeAuthorization('foo', 'org.letsconnect-vpn.app.windows', 'config', 'random_1');
         $clientDb = new ClientFetcher(new Config(['Api' => ['consumerList' => []]]));
         $this->secretKey = SecretKey::generate();

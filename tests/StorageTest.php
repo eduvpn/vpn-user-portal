@@ -10,7 +10,6 @@
 namespace LC\Portal\Tests;
 
 use DateTime;
-use LC\Common\HttpClient\ServerClient;
 use LC\Portal\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +26,7 @@ class StorageTest extends TestCase
     {
         $dateTime = new DateTime('2018-01-01 13:37:00');
         $db = new PDO('sqlite::memory:');
-        $this->storage = new Storage($db, \dirname(__DIR__).'/schema', new ServerClient(new TestHttpClient(), 'serverClient'));
+        $this->storage = new Storage($db, \dirname(__DIR__).'/schema');
         $this->storage->setDateTime($dateTime);
         $this->storage->init();
     }
@@ -38,7 +37,7 @@ class StorageTest extends TestCase
     public function testValid()
     {
         $this->storage->add('foo', 'bar');
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
 
     /**
@@ -75,7 +74,7 @@ class StorageTest extends TestCase
     {
         $this->storage->add('foo', 'bar');
         $this->assertTrue($this->storage->updatePassword('foo', 'baz'));
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'baz'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'baz'));
     }
 
     /**
@@ -103,7 +102,7 @@ class StorageTest extends TestCase
     {
         $this->storage->add('foo', 'bar');
         $this->assertFalse($this->storage->updatePassword('bar', 'baz'));
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
 
     /**
@@ -113,6 +112,7 @@ class StorageTest extends TestCase
     {
         $this->assertFalse($this->storage->hasAuthorization('random_1'));
         $this->storage->storeAuthorization('foo', 'client_id', 'scope', 'random_1');
+        $this->storage->updateSessionInfo('foo', new DateTime('2018-01-05'), []);
         $this->assertTrue($this->storage->hasAuthorization('random_1'));
     }
 }

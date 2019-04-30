@@ -11,11 +11,10 @@ namespace LC\Portal;
 
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\ClientInfo;
-use LC\Common\Config;
 
 class ClientFetcher implements ClientDbInterface
 {
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
     public function __construct(Config $config)
