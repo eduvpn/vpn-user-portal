@@ -23,7 +23,7 @@ use ParagonIE\ConstantTime\Binary;
  * Copy of fkooman/oauth2-server src/BearerValidator.php to support public
  * key crypto (EdDSA JWT) tokens and also remote tokens from other servers.
  */
-class BearerValidator
+class BearerValidator implements BearerValidatorInterface
 {
     /** @var StorageInterface */
     private $storage;

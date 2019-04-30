@@ -14,15 +14,15 @@ use LC\Portal\CA\CaInterface;
 use LC\Portal\Config;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
-use LC\Portal\TlsAuth;
+use LC\Portal\TlsCrypt;
 
 class InternalApiModule implements ServiceModuleInterface
 {
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
-    /** @var \LC\Portal\TlsAuth */
-    private $tlsAuth;
+    /** @var \LC\Portal\TlsCrypt */
+    private $tlsCrypt;
 
     /** @var \LC\Portal\Config */
     private $config;
@@ -30,10 +30,10 @@ class InternalApiModule implements ServiceModuleInterface
     /** @var \LC\Portal\Storage */
     private $storage;
 
-    public function __construct(CaInterface $ca, TlsAuth $tlsAuth, Config $config, Storage $storage)
+    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, Config $config, Storage $storage)
     {
         $this->ca = $ca;
-        $this->tlsAuth = $tlsAuth;
+        $this->tlsCrypt = $tlsCrypt;
         $this->config = $config;
         $this->storage = $storage;
     }
@@ -79,7 +79,7 @@ class InternalApiModule implements ServiceModuleInterface
 
                 $certInfo = $this->ca->serverCert($commonName);
                 // add TLS Auth
-                $certInfo['ta'] = $this->tlsAuth->get();
+                $certInfo['ta'] = $this->tlsCrypt->get();
                 $certInfo['ca'] = $this->ca->caCert();
 
                 return new ApiResponse('add_server_certificate', $certInfo, 201);

@@ -11,7 +11,7 @@ namespace LC\Portal;
 
 use RuntimeException;
 
-class TlsAuth
+class TlsCrypt
 {
     /** @var string */
     private $dataDir;
@@ -29,11 +29,11 @@ class TlsAuth
      */
     public function init()
     {
-        $taFile = sprintf('%s/ta.key', $this->dataDir);
+        $tlsCryptFile = sprintf('%s/tls-crypt.key', $this->dataDir);
 
-        // generate the TA file if it does not exist
-        if (false === FileIO::exists($taFile)) {
-            $this->execOpenVpn(['--genkey', '--secret', $taFile]);
+        // generate the tls-crypt file if it does not exist
+        if (false === FileIO::exists($tlsCryptFile)) {
+            $this->execOpenVpn(['--genkey', '--secret', $tlsCryptFile]);
         }
     }
 
@@ -42,9 +42,9 @@ class TlsAuth
      */
     public function get()
     {
-        $taFile = sprintf('%s/ta.key', $this->dataDir);
+        $tlsCryptFile = sprintf('%s/tls-crypt.key', $this->dataDir);
 
-        return FileIO::readFile($taFile);
+        return FileIO::readFile($tlsCryptFile);
     }
 
     /**

@@ -20,7 +20,7 @@ use LC\Portal\Http\Service;
 use LC\Portal\Json;
 use LC\Portal\Logger;
 use LC\Portal\Storage;
-use LC\Portal\TlsAuth;
+use LC\Portal\TlsCrypt;
 
 $logger = new Logger('vpn-server-api');
 
@@ -57,12 +57,12 @@ try {
         $easyRsaDir,
         $easyRsaDataDir
     );
-    $tlsAuth = new TlsAuth($dataDir);
+    $tlsCrypt = new TlsCrypt($dataDir);
 
     $service->addModule(
         new InternalApiModule(
             $easyRsaCa,
-            $tlsAuth,
+            $tlsCrypt,
             $config,
             $storage
         )

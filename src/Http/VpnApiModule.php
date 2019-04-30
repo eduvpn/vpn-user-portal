@@ -20,7 +20,7 @@ use LC\Portal\OAuth\VpnAccessTokenInfo;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Random;
 use LC\Portal\Storage;
-use LC\Portal\TlsAuth;
+use LC\Portal\TlsCrypt;
 
 class VpnApiModule implements ServiceModuleInterface
 {
@@ -33,8 +33,8 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
-    /** @var \LC\Portal\TlsAuth */
-    private $tlsAuth;
+    /** @var \LC\Portal\TlsCrypt */
+    private $tlsCrypt;
 
     /** @var \DateInterval */
     private $sessionExpiry;
@@ -53,12 +53,12 @@ class VpnApiModule implements ServiceModuleInterface
      * @param \LC\Portal\Config $config
      * @param \DateInterval     $sessionExpiry
      */
-    public function __construct(Storage $storage, Config $config, CaInterface $ca, TlsAuth $tlsAuth, DateInterval $sessionExpiry)
+    public function __construct(Storage $storage, Config $config, CaInterface $ca, TlsCrypt $tlsCrypt, DateInterval $sessionExpiry)
     {
         $this->storage = $storage;
         $this->config = $config;
         $this->ca = $ca;
-        $this->tlsAuth = $tlsAuth;
+        $this->tlsCrypt = $tlsCrypt;
         $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = new DateTime();
         $this->random = new Random();
@@ -281,7 +281,7 @@ class VpnApiModule implements ServiceModuleInterface
         $profileData = $profileList[$profileId];
 
         $serverInfo = [
-            'ta' => $this->tlsAuth->get(),
+            'ta' => $this->tlsCrypt->get(),
             'ca' => $this->ca->caCert(),
         ];
 

@@ -20,7 +20,7 @@ use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Random;
 use LC\Portal\Storage;
-use LC\Portal\TlsAuth;
+use LC\Portal\TlsCrypt;
 use LC\Portal\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
@@ -40,8 +40,8 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
-    /** @var \LC\Portal\TlsAuth */
-    private $tlsAuth;
+    /** @var \LC\Portal\TlsCrypt */
+    private $tlsCrypt;
 
     /** @var \LC\Portal\OpenVpn\ServerManager */
     private $serverManager;
@@ -55,14 +55,14 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, Storage $storage, CaInterface $ca, TlsAuth $tlsAuth, ServerManager $serverManager, ClientDbInterface $clientDb)
+    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, Storage $storage, CaInterface $ca, TlsCrypt $tlsCrypt, ServerManager $serverManager, ClientDbInterface $clientDb)
     {
         $this->config = $config;
         $this->tpl = $tpl;
         $this->session = $session;
         $this->storage = $storage;
         $this->ca = $ca;
-        $this->tlsAuth = $tlsAuth;
+        $this->tlsCrypt = $tlsCrypt;
         $this->serverManager = $serverManager;
         $this->clientDb = $clientDb;
         $this->random = new Random();
@@ -448,7 +448,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // get the CA & tls-auth
         $serverInfo = [
-            'ta' => $this->tlsAuth->get(),
+            'ta' => $this->tlsCrypt->get(),
             'ca' => $this->ca->caCert(),
         ];
 

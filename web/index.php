@@ -52,7 +52,7 @@ use LC\Portal\Logger;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\Storage;
-use LC\Portal\TlsAuth;
+use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
 
 $logger = new Logger('vpn-user-portal');
@@ -336,7 +336,7 @@ try {
         $easyRsaDir,
         $easyRsaDataDir
     );
-    $tlsAuth = new TlsAuth($dataDir);
+    $tlsCrypt = new TlsCrypt($dataDir);
     $serverManager = new ServerManager($config, $logger, new ManagementSocket());
     $clientFetcher = new ClientFetcher($config);
 
@@ -347,7 +347,7 @@ try {
         $session,
         $storage,
         $easyRsaCa,
-        $tlsAuth,
+        $tlsCrypt,
         $serverManager,
         $clientFetcher
     );

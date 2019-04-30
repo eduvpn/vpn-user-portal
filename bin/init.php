@@ -13,7 +13,7 @@ $baseDir = dirname(__DIR__);
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\FileIO;
 use LC\Portal\Storage;
-use LC\Portal\TlsAuth;
+use LC\Portal\TlsCrypt;
 
 try {
     $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
@@ -31,8 +31,8 @@ try {
     );
     $storage->init();
 
-    $tlsAuth = new TlsAuth($dataDir);
-    $tlsAuth->init();
+    $tlsCrypt = new TlsCrypt($dataDir);
+    $tlsCrypt->init();
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

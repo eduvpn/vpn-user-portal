@@ -10,14 +10,14 @@
 namespace LC\Portal\Http;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
-use LC\Portal\OAuth\BearerValidator;
+use LC\Portal\OAuth\BearerValidatorInterface;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
-    /** @var \LC\Portal\OAuth\BearerValidator */
+    /** @var \LC\Portal\OAuth\BearerValidatorInterface */
     private $bearerValidator;
 
-    public function __construct(BearerValidator $bearerValidator)
+    public function __construct(BearerValidatorInterface $bearerValidator)
     {
         $this->bearerValidator = $bearerValidator;
     }
