@@ -26,6 +26,9 @@ class VpnApiModuleTest extends TestCase
     /** @var \LC\Portal\Http\Service */
     private $service;
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $storage = new Storage(new PDO('sqlite::memory:'), \dirname(\dirname(__DIR__)).'/schema');
@@ -43,6 +46,9 @@ class VpnApiModuleTest extends TestCase
         $vpnApiModule->init($this->service);
     }
 
+    /**
+     * @return void
+     */
     public function testProfileList()
     {
         $request = new Request(
