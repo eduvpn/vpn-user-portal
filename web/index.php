@@ -172,8 +172,6 @@ try {
     switch ($authMethod) {
         case 'SamlAuthentication':
             $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
-            $serviceName = $config->getSection('SamlAuthentication')->optionalItem('serviceName', []);
-
             $userIdAttribute = $config->getSection('SamlAuthentication')->getItem('userIdAttribute');
             $permissionAttribute = $config->getSection('SamlAuthentication')->optionalItem('permissionAttribute');
 

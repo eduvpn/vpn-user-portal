@@ -30,7 +30,6 @@ class EasyRsaCa implements CaInterface
     {
         $this->easyRsaDir = $easyRsaDir;
         $this->easyRsaDataDir = $easyRsaDataDir;
-        $this->init();
     }
 
     /**

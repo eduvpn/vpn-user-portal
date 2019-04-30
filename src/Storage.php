@@ -377,26 +377,6 @@ SQL
     }
 
     /**
-     * @param string $userId
-     *
-     * @return void
-     */
-    public function deleteUser($userId)
-    {
-        $this->addUser($userId);
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-    DELETE FROM 
-        users 
-    WHERE 
-        user_id = :user_id
-SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    /**
      * @param string        $userId
      * @param \DateTime     $sessionExpiresAt
      * @param array<string> $permissionList

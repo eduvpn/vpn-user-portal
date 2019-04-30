@@ -19,8 +19,8 @@ try {
     $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
     $easyRsaDataDir = sprintf('%s/data/easy-rsa', $baseDir);
 
-    // implicit CA init
     $ca = new EasyRsaCa($easyRsaDir, $easyRsaDataDir);
+    $ca->init();
 
     // initialize database
     $dataDir = sprintf('%s/data', $baseDir);
