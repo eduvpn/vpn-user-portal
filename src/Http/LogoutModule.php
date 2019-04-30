@@ -41,7 +41,7 @@ class LogoutModule implements ServiceModuleInterface
      */
     public function init(Service $service)
     {
-        // new URL since we introduce SAML / Mellon logout
+        // new URL since we introduce SAML logout
         $service->post(
             '/_logout',
             /**
@@ -56,15 +56,13 @@ class LogoutModule implements ServiceModuleInterface
                     $this->session->delete('_update_session_info');
                     $this->session->delete('_saml_auth_time');
                     $this->session->delete('_two_factor_verified');
-                    $this->session->delete('_mellon_auth_user');
-                    $this->session->delete('_mellon_auth_time');
                     $this->session->delete('_two_factor_enroll_redirect_to');
                     $this->session->delete('_two_factor_verified');
                     $this->session->delete('_form_auth_user');
                     $this->session->delete('_form_auth_permission_list');
                     $this->session->delete('_form_auth_time');
 
-                    // a logout URL is defined, this is used by SAML/Mellon
+                    // a logout URL is defined, this is used by SAML
                     return new RedirectResponse(
                         sprintf(
                             '%s?%s',

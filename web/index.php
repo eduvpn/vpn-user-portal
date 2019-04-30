@@ -35,7 +35,6 @@ use LC\Portal\Http\HtmlResponse;
 use LC\Portal\Http\LanguageSwitcherHook;
 use LC\Portal\Http\LdapAuth;
 use LC\Portal\Http\LogoutModule;
-use LC\Portal\Http\MellonAuthenticationHook;
 use LC\Portal\Http\OAuthModule;
 use LC\Portal\Http\PasswdModule;
 use LC\Portal\Http\RadiusAuth;
@@ -43,7 +42,6 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\SamlAuthenticationHook;
 use LC\Portal\Http\SamlModule;
 use LC\Portal\Http\Service;
-use LC\Portal\Http\ShibAuthenticationHook;
 use LC\Portal\Http\TwoFactorEnrollModule;
 use LC\Portal\Http\TwoFactorHook;
 use LC\Portal\Http\TwoFactorModule;
@@ -163,10 +161,6 @@ try {
     if ('SamlAuthentication' === $authMethod) {
         $logoutUrl = $request->getRootUri().'_saml/logout';
     }
-    if ('ShibAuthentication' === $authMethod) {
-        $logoutUrl = $request->getAuthority().'/Shibboleth.sso/Logout';
-        $returnParameter = 'return';
-    }
 
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
@@ -213,24 +207,6 @@ try {
                 )
             );
 
-            break;
-        case 'MellonAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new MellonAuthenticationHook(
-                    $config->getSection('MellonAuthentication')->getItem('userIdAttribute'),
-                    $config->getSection('MellonAuthentication')->optionalItem('permissionAttribute')
-                )
-            );
-            break;
-        case 'ShibAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new ShibAuthenticationHook(
-                    $config->getSection('ShibAuthentication')->getItem('userIdAttribute'),
-                    $config->getSection('ShibAuthentication')->optionalItem('permissionAttribute')
-                )
-            );
             break;
         case 'FormLdapAuthentication':
             $service->addBeforeHook(
