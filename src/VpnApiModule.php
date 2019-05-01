@@ -85,6 +85,9 @@ class VpnApiModule implements ServiceModuleInterface
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
                     $profileConfig = new ProfileConfig($profileData);
+                    if ($profileConfig->getItem('hideProfile')) {
+                        continue;
+                    }
                     if ($profileConfig->getItem('enableAcl')) {
                         // is the user member of the aclPermissionList?
                         if (!VpnPortalModule::isMember($profileConfig->getSection('aclPermissionList')->toArray(), $userPermissions)) {

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.2 (2019-05-01)
+- do not list hidden profile in `/profile_list` API call
+
 ## 2.0.1 (2019-04-26)
 - update tests to deal with updates internal API error messages 
   (vpn-lib-common)
