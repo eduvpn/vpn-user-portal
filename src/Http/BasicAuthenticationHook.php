@@ -13,14 +13,15 @@ use LC\Portal\Http\Exception\HttpException;
 
 class BasicAuthenticationHook implements BeforeHookInterface
 {
-    /** @var array */
+    /** @var array<string,string> */
     private $userPass;
 
     /** @var string */
     private $realm;
 
     /**
-     * @param string $realm
+     * @param array<string,string> $userPass
+     * @param string               $realm
      */
     public function __construct(array $userPass, $realm = 'Protected Area')
     {

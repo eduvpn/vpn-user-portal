@@ -12,6 +12,7 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config;
+use LC\Portal\FileIO;
 use LC\Portal\Http\BasicAuthenticationHook;
 use LC\Portal\Http\InternalApiModule;
 use LC\Portal\Http\Request;
@@ -22,7 +23,7 @@ use LC\Portal\Logger;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 
-$logger = new Logger('vpn-server-api');
+$logger = new Logger('vpn-user-portal');
 
 try {
     // this is provided by Apache, using CanonicalName
@@ -37,8 +38,10 @@ try {
 
     $service = new Service();
     $basicAuthentication = new BasicAuthenticationHook(
-        $config->getSection('apiConsumers')->toArray(),
-        'vpn-server-backend'
+        [
+            'vpn-server-node' => FileIO::readFile(sprintf('%s/internal-api.key', $configDir)),
+        ],
+        'Internal API'
     );
     $service->addBeforeHook('auth', $basicAuthentication);
 

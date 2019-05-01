@@ -249,9 +249,4 @@ return [
             //'tlsProtection' => false,
         ],
     ],
-
-    // API consumers & credentials
-    'apiConsumers' => [
-        'vpn-server-node' => 'XXX-vpn-server-node/vpn-server-api-XXX',
-    ],
 ];
