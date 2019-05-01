@@ -3,6 +3,7 @@
 ## 3.0.0 (...)
 - merge `vpn-lib-common` and `vpn-server-api` in `vpn-user-portal`
 - drop `MellonAuthentication` and `ShibAuthentication` modules
+- do not export hidden profiles through API call, issue #126
 
 ## 2.0.1 (2019-04-26)
 - update tests to deal with updates internal API error messages 
