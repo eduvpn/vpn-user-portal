@@ -117,6 +117,12 @@ class Service
             }
 
             $requestMethod = $request->getRequestMethod();
+            // if we get a HEAD request, that is just the same for us as a GET
+            // request, the web server will strip the data...
+            if ('HEAD' === $requestMethod) {
+                $requestMethod = 'GET';
+            }
+
             $pathInfo = $request->getPathInfo();
 
             if (!\array_key_exists($requestMethod, $this->routes)) {
