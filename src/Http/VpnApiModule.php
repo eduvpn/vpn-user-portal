@@ -396,6 +396,9 @@ class VpnApiModule implements ServiceModuleInterface
         $profileList = [];
         foreach ($this->config->getSection('vpnProfiles')->toArray() as $profileId => $profileData) {
             $profileConfig = new ProfileConfig($profileData);
+            if ($profileConfig->getItem('hideProfile')) {
+                continue;
+            }
             $profileConfigArray = $profileConfig->toArray();
             ksort($profileConfigArray);
             $profileList[$profileId] = $profileConfigArray;
