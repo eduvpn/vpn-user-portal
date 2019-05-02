@@ -122,16 +122,4 @@ class Config
     {
         return $this->configData;
     }
-
-    /**
-     * @param string $configFile
-     * @param int    $mode
-     *
-     * @return void
-     */
-    public static function toFile($configFile, array $configData, $mode = 0600)
-    {
-        $fileData = sprintf('<?php return %s;', var_export($configData, true));
-        FileIO::writeFile($configFile, $fileData, $mode);
-    }
 }
