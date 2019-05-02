@@ -3,7 +3,11 @@
 ## 3.0.0 (...)
 - merge `vpn-lib-common` and `vpn-server-api` in `vpn-user-portal`
 - drop `MellonAuthentication` and `ShibAuthentication` modules
-- do not export hidden profiles through API call, issue #126
+- do not export hidden profiles through API call (#126)
+- support multiple permission attributes in SAML and LDAP backends (#121)
+- move a bunch of scripts to `libexec`, clean them up and remove some obsolete
+  ones
+- update Norwegian translation
 
 ## 2.0.1 (2019-04-26)
 - update tests to deal with updates internal API error messages 
