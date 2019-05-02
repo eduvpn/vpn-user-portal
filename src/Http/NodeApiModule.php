@@ -16,7 +16,7 @@ use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 
-class InternalApiModule implements ServiceModuleInterface
+class NodeApiModule implements ServiceModuleInterface
 {
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;

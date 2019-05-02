@@ -14,7 +14,7 @@ use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
 use LC\Portal\Http\BasicAuthenticationHook;
-use LC\Portal\Http\InternalApiModule;
+use LC\Portal\Http\NodeApiModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
@@ -39,9 +39,9 @@ try {
     $service = new Service();
     $basicAuthentication = new BasicAuthenticationHook(
         [
-            'vpn-server-node' => FileIO::readFile(sprintf('%s/internal-api.key', $configDir)),
+            'vpn-server-node' => FileIO::readFile(sprintf('%s/node-api.key', $configDir)),
         ],
-        'Internal API'
+        'Node API'
     );
     $service->addBeforeHook('auth', $basicAuthentication);
 
@@ -63,7 +63,7 @@ try {
     $tlsCrypt = new TlsCrypt($dataDir);
 
     $service->addModule(
-        new InternalApiModule(
+        new NodeApiModule(
             $easyRsaCa,
             $tlsCrypt,
             $config,
