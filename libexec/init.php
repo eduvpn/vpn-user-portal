@@ -46,8 +46,8 @@ try {
         FileIO::writeFile($oauthKeyFile, $secretKey->encode(), 0640);
     }
 
-    // Internal API Key
-    $apiKeyFile = sprintf('%s/internal-api.key', $configDir);
+    // Node API Key
+    $apiKeyFile = sprintf('%s/node-api.key', $configDir);
     if (!FileIO::exists($apiKeyFile)) {
         $apiKey = Base64UrlSafe::encodeUnpadded(random_bytes(32));
         FileIO::writeFile($apiKeyFile, $apiKey, 0640);
