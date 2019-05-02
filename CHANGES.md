@@ -8,6 +8,7 @@
 - move a bunch of scripts to `libexec`, clean them up and remove some obsolete
   ones
 - update Norwegian translation
+- included scripts no longer modify the configuration files (#120)
 
 ## 2.0.1 (2019-04-26)
 - update tests to deal with updates internal API error messages 
