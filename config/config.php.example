@@ -24,15 +24,15 @@ return [
         // *** OpenLDAP / FreeIPA ***
         'ldapUri' => 'ldaps://ipa.example.org',
         'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
-        //'permissionAttribute' => 'eduPersonEntitlement',
-        //'permissionAttribute' => 'memberOf',
+        //'permissionAttributeList' => ['eduPersonEntitlement'],
+        //'permissionAttributeList' => ['memberOf'],
 
         // *** Active Directory ***
         //'ldapUri' => 'ldap://ad.example.org',
         //'bindDnTemplate' => 'DOMAIN\{{UID}}',
         //'baseDn' => 'dc=example,dc=org',
         //'userFilterTemplate' => '(sAMAccountName={{UID}})',
-        //'permissionAttribute' => 'memberOf',
+        //'permissionAttributeList' => ['memberOf'],
     ],
 
     // RADIUS
@@ -57,9 +57,9 @@ return [
 
         // ** AUTHORIZATION | PERMISSIONS **
         // OID for eduPersonEntitlement
-        //'permissionAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.7',
+        //'permissionAttributeList' => ['urn:oid:1.3.6.1.4.1.5923.1.1.1.7'],
         // OID for eduPersonAffiliation
-        //'permissionAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
+        //'permissionAttributeList' => ['urn:oid:1.3.6.1.4.1.5923.1.1.1.1'],
 
         // override the SP entityId, the default is:
         // https://vpn.example.org/vpn-user-portal/_saml/metadata
@@ -83,24 +83,24 @@ return [
         //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
 
         // Users with certain permissions obtained through
-        // "permissionAttribute" MUST also have ANY of the listed
+        // "permissionAttributeList" MUST also have ANY of the listed
         // AuthnContexts. If they currently don't, a new authentication is
         // triggered to obtain it
         //'permissionAuthnContext' => [
-        //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+        //    'urn:oid:1.3.6.1.4.1.5923.1.1.1.7!urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
 
         // Allow for overriding global sessionExpiry based on SAML
-        // "permissionAttribute" value(s)
+        // "permissionAttributeList" value(s)
         //'permissionSessionExpiry' => [
-        //    'urn:example:LC-admin' => 'PT12H',
+        //    'urn:oid:1.3.6.1.4.1.5923.1.1.1.7!urn:example:LC-admin' => 'PT12H',
         //],
     ],
 
     // the permission required to be able to access the "admin" portion of
-    // the portal, see "permissionAttribute" in the authentication
+    // the portal, see "permissionAttributeList" in the authentication
     // configuration sections
-    //'adminPermissionList' => ['urn:example:LC-admin'],
+    //'adminPermissionList' => ['urn:oid:1.3.6.1.4.1.5923.1.1.1.7!urn:example:LC-admin'],
 
     // list of userIds that have access to the admin
     'adminUserIdList' => ['admin'],

@@ -30,8 +30,8 @@ class LdapAuth implements CredentialValidatorInterface
     /** @var string|null */
     private $userFilterTemplate;
 
-    /** @var string|null */
-    private $permissionAttribute;
+    /** @var array<string> */
+    private $permissionAttributeList;
 
     /**
      * @param \Psr\Log\LoggerInterface $logger
@@ -39,16 +39,16 @@ class LdapAuth implements CredentialValidatorInterface
      * @param string                   $bindDnTemplate
      * @param string|null              $baseDn
      * @param string|null              $userFilterTemplate
-     * @param string|null              $permissionAttribute
+     * @param array<string>            $permissionAttributeList
      */
-    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $permissionAttribute)
+    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, array $permissionAttributeList)
     {
         $this->logger = $logger;
         $this->ldapClient = $ldapClient;
         $this->bindDnTemplate = $bindDnTemplate;
         $this->baseDn = $baseDn;
         $this->userFilterTemplate = $userFilterTemplate;
-        $this->permissionAttribute = $permissionAttribute;
+        $this->permissionAttributeList = $permissionAttributeList;
     }
 
     /**
@@ -91,14 +91,14 @@ class LdapAuth implements CredentialValidatorInterface
      */
     private function getPermissionList($baseDn, $userFilter)
     {
-        if (null === $this->permissionAttribute) {
+        if (0 === \count($this->permissionAttributeList)) {
             return [];
         }
 
         $ldapEntries = $this->ldapClient->search(
             $baseDn,
             $userFilter,
-            [$this->permissionAttribute]
+            $this->permissionAttributeList
         );
 
         if (0 === $ldapEntries['count']) {
@@ -106,7 +106,14 @@ class LdapAuth implements CredentialValidatorInterface
             return [];
         }
 
-        return self::extractPermission($ldapEntries, $this->permissionAttribute);
+        $permissionList = [];
+        foreach ($this->permissionAttributeList as $permissionAttribute) {
+            foreach (self::extractPermission($ldapEntries, $permissionAttribute) as $attributeValue) {
+                $permissionList[] = sprintf('%s!%s', $permissionAttribute, $attributeValue);
+            }
+        }
+
+        return $permissionList;
     }
 
     /**

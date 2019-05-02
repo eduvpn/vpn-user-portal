@@ -173,7 +173,7 @@ try {
         case 'SamlAuthentication':
             $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
             $userIdAttribute = $config->getSection('SamlAuthentication')->getItem('userIdAttribute');
-            $permissionAttribute = $config->getSection('SamlAuthentication')->optionalItem('permissionAttribute');
+            $permissionAttributeList = $config->getSection('SamlAuthentication')->optionalItem('permissionAttributeList');
 
             $spInfo = new SpInfo(
                 $spEntityId,
@@ -192,7 +192,7 @@ try {
                     $samlSp,
                     $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
                     $userIdAttribute,
-                    $permissionAttribute,
+                    $permissionAttributeList,
                     $config->getSection('SamlAuthentication')->optionalItem('authnContext', []),
                     $config->getSection('SamlAuthentication')->optionalItem('permissionAuthnContext', []),
                     $config->getSection('SamlAuthentication')->optionalItem('permissionSessionExpiry', [])
@@ -223,7 +223,7 @@ try {
                 $config->getSection('FormLdapAuthentication')->getItem('bindDnTemplate'),
                 $config->getSection('FormLdapAuthentication')->optionalItem('baseDn'),
                 $config->getSection('FormLdapAuthentication')->optionalItem('userFilterTemplate'),
-                $config->getSection('FormLdapAuthentication')->optionalItem('permissionAttribute')
+                $config->getSection('FormLdapAuthentication')->optionalItem('permissionAttributeList')
             );
             $service->addModule(
                 new FormAuthenticationModule(

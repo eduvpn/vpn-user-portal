@@ -25,8 +25,8 @@ class SamlAuthenticationHook implements BeforeHookInterface
     /** @var string */
     private $userIdAttribute;
 
-    /** @var string|null */
-    private $permissionAttribute;
+    /** @var array<string> */
+    private $permissionAttributeList;
 
     /** @var array<string> */
     private $authnContext;
@@ -44,17 +44,17 @@ class SamlAuthenticationHook implements BeforeHookInterface
      * @param \fkooman\SAML\SP\SP         $samlSp
      * @param string|null                 $idpEntityId
      * @param string                      $userIdAttribute
-     * @param string|null                 $permissionAttribute
+     * @param array<string>               $permissionAttributeList
      * @param array<string>               $authnContext
      * @param array<string,array<string>> $permissionAuthnContext
      * @param array<string,string>        $permissionSessionExpiry
      */
-    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, $permissionAttribute, array $authnContext, array $permissionAuthnContext, array $permissionSessionExpiry)
+    public function __construct(SP $samlSp, $idpEntityId, $userIdAttribute, array $permissionAttributeList, array $authnContext, array $permissionAuthnContext, array $permissionSessionExpiry)
     {
         $this->samlSp = $samlSp;
         $this->idpEntityId = $idpEntityId;
         $this->userIdAttribute = $userIdAttribute;
-        $this->permissionAttribute = $permissionAttribute;
+        $this->permissionAttributeList = $permissionAttributeList;
         $this->authnContext = $authnContext;
         $this->permissionAuthnContext = $permissionAuthnContext;
         $this->permissionSessionExpiry = $permissionSessionExpiry;
@@ -99,7 +99,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
         $sessionExpiresAt = null;
 
         $userAuthnContext = $samlAssertion->getAuthnContext();
-        if (null !== $this->permissionAttribute) {
+        if (0 !== \count($this->permissionAttributeList)) {
             $userPermissions = $this->getPermissionList($samlAttributes);
 
             // if we got a permission that's part of the
@@ -156,14 +156,20 @@ class SamlAuthenticationHook implements BeforeHookInterface
      */
     private function getPermissionList(array $samlAttributes)
     {
-        if (null === $this->permissionAttribute) {
-            return [];
-        }
-        if (!\array_key_exists($this->permissionAttribute, $samlAttributes)) {
+        if (0 === \count($this->permissionAttributeList)) {
             return [];
         }
 
-        return $samlAttributes[$this->permissionAttribute];
+        $permissionList = [];
+        foreach ($this->permissionAttributeList as $permissionAttribute) {
+            if (\array_key_exists($permissionAttribute, $samlAttributes)) {
+                foreach ($samlAttributes[$permissionAttribute] as $samlAttributeValue) {
+                    $permissionList[] = sprintf('%s!%s', $permissionAttribute, $samlAttributeValue);
+                }
+            }
+        }
+
+        return $permissionList;
     }
 
     /**
