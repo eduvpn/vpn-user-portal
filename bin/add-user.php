@@ -31,6 +31,13 @@ try {
         exit(0);
     }
 
+    $configFile = sprintf('%s/config/config.php', $baseDir);
+    $config = Config::fromFile($configFile);
+
+    if ('FormPdoAuthentication' !== $config->getItem('authMethod')) {
+        throw new RuntimeException('Only "FormPdoAuthentication" backend is supported');
+    }
+
     if ($opt->hasItem('user')) {
         $userId = $opt->getItem('user');
     } else {
@@ -61,13 +68,6 @@ try {
 
     if (empty($userPass)) {
         throw new RuntimeException('Password cannot be empty');
-    }
-
-    $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
-
-    if ('FormPdoAuthentication' !== $config->getItem('authMethod')) {
-        echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->getItem('authMethod')).PHP_EOL;
     }
 
     $storage = new Storage(
