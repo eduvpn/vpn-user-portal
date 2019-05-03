@@ -22,9 +22,9 @@ class ProfileConfig extends Config
     public static function defaultConfig()
     {
         return [
-            'defaultGateway' => false,
+            'defaultGateway' => true,
             'routes' => [],
-            'dns' => [],
+            'dns' => ['9.9.9.9', '2620:fe::fe'],
             'clientToClient' => false,
             'listen' => '::',
             'enableLog' => false,
@@ -38,7 +38,7 @@ class ProfileConfig extends Config
             'exposedVpnProtoPorts' => [],
             'hideProfile' => false,
             'tlsProtection' => 'tls-crypt',
-            'blockLan' => false,
+            'blockLan' => true,
         ];
     }
 }

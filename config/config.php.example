@@ -184,11 +184,11 @@ return [
             'managementIp' => '127.0.0.1',
 
             // Whether or not to route all traffic from the client over the VPN
-            // DEFAULT = false
+            // DEFAULT = true
             'defaultGateway' => true,
 
             // Block access to local LAN when VPN is active
-            // DEFAULT = false
+            // DEFAULT = true
             'blockLan' => true,
 
             // IPv4 and IPv6 routes to push to the client, only used when
@@ -200,7 +200,7 @@ return [
             ],
 
             // IPv4 and IPv6 address of DNS server(s) to push to the client
-            // DEFAULT  = []
+            // DEFAULT  = ['9.9.9.9', '2620:fe::fe']
             // Quad9 (https://www.quad9.net)
             'dns' => ['9.9.9.9', '2620:fe::fe'],
 
