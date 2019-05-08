@@ -25,9 +25,8 @@
     "prefer-stable": true,
     "repositories": [
         {
-            "no-api": true,
-            "type": "vcs",
-            "url": "https://github.com/eduvpn/vpn-lib-common"
+            "type": "path",
+            "url": "../vpn-lib-common"
         },
         {
             "type": "vcs",
@@ -58,7 +57,7 @@
         "fkooman/php-saml-sp": "^0",
         "fkooman/secookie": "^2",
         "fkooman/sqlite-migrate": "^0",
-        "lc/common": "^2",
+        "lc/common": "dev-master",
         "paragonie/constant_time_encoding": "^1|^2",
         "paragonie/random_compat": "^1|^2",
         "php": ">=5.4.0"
