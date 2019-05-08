@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81de419fe1e3668650b1809291fb7667",
+    "content-hash": "4635edcf628e191bf95af2a1fcad3845",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -341,7 +341,7 @@
         },
         {
             "name": "lc/common",
-            "version": "dev-master",
+            "version": "2.x-dev",
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
