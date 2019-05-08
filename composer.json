@@ -24,9 +24,8 @@
     "name": "eduvpn/vpn-user-portal",
     "repositories": [
         {
-            "no-api": true,
-            "type": "vcs",
-            "url": "https://github.com/eduvpn/vpn-lib-common"
+            "type": "path",
+            "url": "../vpn-lib-common"
         },
         {
             "type": "vcs",
@@ -35,7 +34,7 @@
     ],
     "require": {
         "bacon/bacon-qr-code": "^1.0",
-        "eduvpn/common": "^1",
+        "eduvpn/common": "v1.x-dev",
         "ext-date": "*",
         "ext-json": "*",
         "ext-pcre": "*",
