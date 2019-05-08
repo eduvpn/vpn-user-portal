@@ -278,7 +278,7 @@ class VpnApiModule implements ServiceModuleInterface
         // obtain information about this profile to be able to construct
         // a client configuration file
         $serverInfo = [
-            'ta' => $this->tlsCrypt->get(),
+            'tls_crypt' => $this->tlsCrypt->get(),
             'ca' => $this->ca->caCert(),
         ];
 

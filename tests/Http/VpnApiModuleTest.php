@@ -66,6 +66,6 @@ class VpnApiModuleTest extends TestCase
         $httpResponse = $this->service->run($request);
         $this->assertSame(200, $httpResponse->getStatusCode());
         $this->assertSame(['Content-Type' => 'application/json'], $httpResponse->getHeaders());
-        $this->assertSame('{"profile_list":{"ok":true,"data":[{"profile_id":"internet","display_name":"Internet Access","two_factor":false}]}}', $httpResponse->getBody());
+        $this->assertSame('{"profile_list":{"ok":true,"data":[{"profile_id":"default","display_name":"Default Profile","two_factor":false}]}}', $httpResponse->getBody());
     }
 }

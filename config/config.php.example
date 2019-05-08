@@ -161,7 +161,7 @@ return [
 
             // The name of the profile as shown in the user and admin portals
             // REQUIRED
-            'displayName' => 'Default',
+            'displayName' => 'Default Profile',
 
             // The IPv4 range of the network that will be assigned to clients
             // REQUIRED

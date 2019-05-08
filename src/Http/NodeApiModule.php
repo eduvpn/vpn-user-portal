@@ -80,7 +80,7 @@ class NodeApiModule implements ServiceModuleInterface
 
                 $certInfo = $this->ca->serverCert($commonName);
                 // add TLS Auth
-                $certInfo['ta'] = $this->tlsCrypt->get();
+                $certInfo['tls_crypt'] = $this->tlsCrypt->get();
                 $certInfo['ca'] = $this->ca->caCert();
 
                 return new ApiResponse('add_server_certificate', $certInfo, 201);

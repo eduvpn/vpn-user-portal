@@ -447,7 +447,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // get the CA & tls-auth
         $serverInfo = [
-            'ta' => $this->tlsCrypt->get(),
+            'tls_crypt' => $this->tlsCrypt->get(),
             'ca' => $this->ca->caCert(),
         ];
 
