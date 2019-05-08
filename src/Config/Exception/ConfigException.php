@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Exception;
+namespace LC\Portal\Config\Exception;
 
 use Exception;
 

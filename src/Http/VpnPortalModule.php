@@ -14,10 +14,9 @@ use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\SeCookie\SessionInterface;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\OpenVpn\ServerManager;
-use LC\Portal\ProfileConfig;
 use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
@@ -25,8 +24,8 @@ use LC\Portal\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
-    /** @var \LC\Portal\Config */
-    private $config;
+    /** @var \LC\Portal\Config\PortalConfig */
+    private $portalConfig;
 
     /** @var \LC\Portal\TplInterface */
     private $tpl;
@@ -55,9 +54,9 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, Storage $storage, CaInterface $ca, TlsCrypt $tlsCrypt, ServerManager $serverManager, ClientDbInterface $clientDb)
+    public function __construct(PortalConfig $portalConfig, TplInterface $tpl, SessionInterface $session, Storage $storage, CaInterface $ca, TlsCrypt $tlsCrypt, ServerManager $serverManager, ClientDbInterface $clientDb)
     {
-        $this->config = $config;
+        $this->portalConfig = $portalConfig;
         $this->tpl = $tpl;
         $this->session = $session;
         $this->storage = $storage;
@@ -102,7 +101,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
-                $profileList = $this->getServerProfileList();
+                $profileList = $this->portalConfig->getProfileConfigList();
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
@@ -137,7 +136,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $displayName = InputValidation::displayName($request->getPostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
 
-                $profileList = $this->getServerProfileList();
+                $profileList = $this->portalConfig->getProfileConfigList();
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
@@ -262,7 +261,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
-                $profileList = $this->getServerProfileList();
+                $profileList = $this->portalConfig->getProfileConfigList();
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
@@ -288,7 +287,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'userInfo' => $userInfo,
                             'userPermissions' => $userPermissions,
                             'authorizedClients' => $authorizedClients,
-                            'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp']),
+                            'twoFactorMethods' => $this->portalConfig->getTwoFactorMethods(),
                         ]
                     )
                 );
@@ -373,7 +372,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalDocumentation',
                         [
-                            'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp']),
+                            'twoFactorMethods' => $this->portalConfig->getTwoFactorMethods(),
                         ]
                     )
                 );
@@ -443,8 +442,8 @@ class VpnPortalModule implements ServiceModuleInterface
             null
         );
 
-        $serverProfiles = $this->getServerProfileList();
-        $profileData = $serverProfiles[$profileId];
+        $serverProfiles = $this->portalConfig->getProfileConfigList();
+        $profileConfig = $serverProfiles[$profileId];
 
         // get the CA & tls-auth
         $serverInfo = [
@@ -452,7 +451,7 @@ class VpnPortalModule implements ServiceModuleInterface
             'ca' => $this->ca->caCert(),
         ];
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $clientCertificate, $this->shuffleHosts);
 
         // convert the OpenVPN file to "Windows" format, no platform cares, but
         // in Notepad on Windows it looks not so great everything on one line
@@ -481,41 +480,23 @@ class VpnPortalModule implements ServiceModuleInterface
      *
      * @return array
      */
-    private static function getProfileList(array $serverProfiles, array $userPermissions)
+    private static function getProfileList(array $profileConfigList, array $userPermissions)
     {
         $profileList = [];
-        foreach ($serverProfiles as $profileId => $profileData) {
-            if ($profileData['hideProfile']) {
+        foreach ($profileConfigList as $profileId => $profileConfig) {
+            if ($profileConfig->getHideProfile()) {
                 continue;
             }
-            if ($profileData['enableAcl']) {
+            if ($profileConfig->getEnableAcl()) {
                 // is the user member of the aclPermissionList?
-                if (!self::isMember($profileData['aclPermissionList'], $userPermissions)) {
+                if (!self::isMember($profileConfig->getAclPermissionList(), $userPermissions)) {
                     continue;
                 }
             }
 
             $profileList[$profileId] = [
-                'displayName' => $profileData['displayName'],
+                'displayName' => $profileConfig->getDisplayName(),
             ];
-        }
-
-        return $profileList;
-    }
-
-    /**
-     * XXX duplicate in VpnApiModule.
-     *
-     * @return array
-     */
-    private function getServerProfileList()
-    {
-        $profileList = [];
-        foreach ($this->config->getSection('vpnProfiles')->toArray() as $profileId => $profileData) {
-            $profileConfig = new ProfileConfig($profileData);
-            $profileConfigArray = $profileConfig->toArray();
-            ksort($profileConfigArray);
-            $profileList[$profileId] = $profileConfigArray;
         }
 
         return $profileList;

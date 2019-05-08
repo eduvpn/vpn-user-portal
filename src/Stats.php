@@ -26,6 +26,8 @@ class Stats
     }
 
     /**
+     * @param array<string> $profileIdList
+     *
      * @return array
      */
     public function get(array $profileIdList)

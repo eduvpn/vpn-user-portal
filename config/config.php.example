@@ -6,10 +6,10 @@ return [
     //'styleName' => 'eduVPN',
     //'styleName' => 'LC',
 
-    'authMethod' => 'FormPdoAuthentication',        // PDO (database)
-    //'authMethod' => 'FormLdapAuthentication',     // LDAP
-    //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
-    //'authMethod' => 'SamlAuthentication',         // SAML
+    'authMethod' => 'DbAuthentication',       // Local User Database
+    //'authMethod' => 'LdapAuthentication',   // LDAP
+    //'authMethod' => 'RadiusAuthentication', // RADIUS
+    //'authMethod' => 'SamlAuthentication',   // SAML
 
     // Default Session Expiry
     // The session expiry will be used to determine the "Not After" of the
@@ -20,7 +20,7 @@ return [
     //'sessionExpiry' => 'P1D',     // 1 day
 
     // LDAP
-    'FormLdapAuthentication' => [
+    'LdapAuthentication' => [
         // *** OpenLDAP / FreeIPA ***
         'ldapUri' => 'ldaps://ipa.example.org',
         'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
@@ -36,7 +36,7 @@ return [
     ],
 
     // RADIUS
-    'FormRadiusAuthentication' => [
+    'RadiusAuthentication' => [
         'serverList' => [
             [
                 'host' => 'radius.example.org',
@@ -44,7 +44,7 @@ return [
                 //'port' => 1812,
             ],
         ],
-        //'addRealm' => 'example.org',
+        //'realm' => 'example.org',
         //'nasIdentifier' => 'vpn.example.org',
     ],
 
@@ -153,23 +153,23 @@ return [
 
     // List of VPN profiles
     'vpnProfiles' => [
-        'internet' => [
-            // The number of this profile, every profile per instance has a 
+        'default' => [
+            // The number of this profile, every profile per instance has a
             // unique number
             // REQUIRED
             'profileNumber' => 1,
 
             // The name of the profile as shown in the user and admin portals
             // REQUIRED
-            'displayName' => 'Internet Access',
+            'displayName' => 'Default',
 
             // The IPv4 range of the network that will be assigned to clients
             // REQUIRED
-            'range' => '10.0.0.0/25',
+            'range' => '10.42.42.0/25',
 
             // The IPv6 range of the network that will be assigned to clients
             // REQUIRED
-            'range6' => 'fd00:4242:4242:4242::/64',
+            'range6' => 'fd42:4242:4242:4242::/64',
 
             // The hostname the VPN client(s) will connect to
             // REQUIRED
@@ -177,76 +177,71 @@ return [
 
             // The address the OpenVPN processes will listen on
             // DEFAULT = '::'
-            'listen' => '::',
+            //'listen' => '::',
 
             // The IP address to use for connecting to OpenVPN processes
             // DEFAULT = '127.0.0.1'
-            'managementIp' => '127.0.0.1',
+            //'managementIp' => '127.0.0.1',
 
             // Whether or not to route all traffic from the client over the VPN
             // DEFAULT = true
-            'defaultGateway' => true,
+            //'defaultGateway' => true,
 
             // Block access to local LAN when VPN is active
-            // DEFAULT = true
-            'blockLan' => true,
+            // DEFAULT = false
+            //'blockLan' => false,
 
             // IPv4 and IPv6 routes to push to the client, only used when
             // defaultGateway is false
             // DEFAULT = []
-            'routes' => [
-                //'192.168.1.0/24',
-                //'fd01:1:1:1::/64',
-            ],
+            //'routes' => [
+            //    '192.168.1.0/24',
+            //    'fd01:1:1:1::/64',
+            //],
 
             // IPv4 and IPv6 address of DNS server(s) to push to the client
             // DEFAULT  = ['9.9.9.9', '2620:fe::fe']
             // Quad9 (https://www.quad9.net)
-            'dns' => ['9.9.9.9', '2620:fe::fe'],
+            //'dns' => ['9.9.9.9', '2620:fe::fe'],
 
             // Whether or not to allow client-to-client traffic
             // DEFAULT = false
-            'clientToClient' => false,
+            //'clientToClient' => false,
 
             // Whether or not to enable OpenVPN logging
             // DEFAULT = false
-            'enableLog' => false,
+            //'enableLog' => false,
 
             // Whether or not to enable ACLs for controlling who can connect
             // DEFAULT = false
-            'enableAcl' => false,
+            //'enableAcl' => false,
 
-            // The list of permissions to allow access, requires enableAcl to 
+            // The list of permissions to allow access, requires enableAcl to
             // be true
             // DEFAULT  = []
-            'aclPermissionList' => [],
+            //'aclPermissionList' => [],
 
-            // The protocols and ports the OpenVPN processes should use, MUST 
+            // The protocols and ports the OpenVPN processes should use, MUST
             // be either 1, 2, 4, 8 or 16 proto/port combinations
             // DEFAULT = ['udp/1194', 'tcp/1194']
-            'vpnProtoPorts' => [
-                'udp/1194',
-                'tcp/1194',
-            ],
+            //'vpnProtoPorts' => [
+            //    'udp/1194',
+            //    'tcp/1194',
+            //],
 
             // List the protocols and ports exposed to the VPN clients. Useful
-            // for OpenVPN port sharing. When empty (or missing), uses list 
+            // for OpenVPN port sharing. When empty (or missing), uses list
             // from vpnProtoPorts
             // DEFAULT = []
-            'exposedVpnProtoPorts' => [
-                // 'udp/1194',
-                // 'tcp/443'
-            ],
+            //'exposedVpnProtoPorts' => [
+            //    'udp/1194',
+            //    'tcp/443'
+            //],
 
-            // Hide the profile from the user portal, i.e. do not allow the 
+            // Hide the profile from the user portal, i.e. do not allow the
             // user to choose it
             // DEFAULT = false
-            'hideProfile' => false,
-
-            // Protect to TLS control channel with PSK
-            // DEFAULT = tls-crypt
-            'tlsProtection' => 'tls-crypt',
-            //'tlsProtection' => false,
+            //'hideProfile' => false,
         ],
     ],
 ];

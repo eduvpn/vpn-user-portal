@@ -11,8 +11,6 @@ namespace LC\Portal\Http;
 
 use DateTime;
 use LC\Portal\CA\CaInterface;
-use LC\Portal\Config;
-use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 
@@ -24,17 +22,20 @@ class NodeApiModule implements ServiceModuleInterface
     /** @var \LC\Portal\TlsCrypt */
     private $tlsCrypt;
 
-    /** @var \LC\Portal\Config */
-    private $config;
+    /** @var array<string,\LC\Portal\Config\ProfileConfig> */
+    private $profileConfigList;
 
     /** @var \LC\Portal\Storage */
     private $storage;
 
-    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, Config $config, Storage $storage)
+    /**
+     * @param array<string,\LC\Portal\Config\ProfileConfig> $profileConfigList
+     */
+    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, array $profileConfigList, Storage $storage)
     {
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
-        $this->config = $config;
+        $this->profileConfigList = $profileConfigList;
         $this->storage = $storage;
     }
 
@@ -95,8 +96,7 @@ class NodeApiModule implements ServiceModuleInterface
                 AuthUtils::requireUser($hookData, ['vpn-user-portal', 'vpn-server-node']);
 
                 $profileList = [];
-                foreach ($this->config->getSection('vpnProfiles')->toArray() as $profileId => $profileData) {
-                    $profileConfig = new ProfileConfig($profileData);
+                foreach ($this->profileConfigList as $profileId => $profileConfig) {
                     $profileConfigArray = $profileConfig->toArray();
                     ksort($profileConfigArray);
                     $profileList[$profileId] = $profileConfigArray;
@@ -181,11 +181,12 @@ class NodeApiModule implements ServiceModuleInterface
     private function verifyAcl($profileId, $externalUserId)
     {
         // verify ACL
-        $profileConfig = new ProfileConfig($this->config->getSection('vpnProfiles')->getSection($profileId)->toArray());
-        if ($profileConfig->getItem('enableAcl')) {
+        // XXX make sure the profile exists!
+        $profileConfig = $this->profileConfigList[$profileId];
+        if ($profileConfig->getEnableAcl()) {
             // ACL enabled
             $userPermissionList = $this->storage->getPermissionList($externalUserId);
-            if (false === self::hasPermission($userPermissionList, $profileConfig->getSection('aclPermissionList')->toArray())) {
+            if (false === self::hasPermission($userPermissionList, $profileConfig->getAclPermissionList())) {
                 $msg = '[VPN] unable to connect, user does not have required permissions';
                 $this->storage->addUserMessage($externalUserId, 'notification', $msg);
 

@@ -13,7 +13,7 @@ $baseDir = dirname(__DIR__);
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\ClientFetcher;
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Http\BearerAuthenticationHook;
 use LC\Portal\Http\JsonResponse;
@@ -33,21 +33,20 @@ try {
     $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
 
-    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
-
+    $portalConfig = PortalConfig::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
 
-    if ($config->hasSection('Api')) {
+    if (false !== $apiConfig = $portalConfig->getApiConfig()) {
         $storage = new Storage(
             new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
             sprintf('%s/schema', $baseDir)
         );
         $storage->update();
 
-        $clientFetcher = new ClientFetcher($config);
+        $clientFetcher = new ClientFetcher($apiConfig->getClientInfoList());
 
         $keyInstanceMapping = [];
-        $remoteAccess = $config->getSection('Api')->getItem('remoteAccess');
+        $remoteAccess = $apiConfig->getRemoteAccess();
         if ($remoteAccess) {
             $keyInstanceMappingFile = sprintf('%s/key_instance_mapping.json', $dataDir);
             if (FileIO::exists($keyInstanceMappingFile)) {
@@ -86,10 +85,10 @@ try {
         // api module
         $vpnApiModule = new VpnApiModule(
             $storage,
-            $config,
+            $portalConfig->getProfileConfigList(),
             $easyRsaCa,
             $tlsCrypt,
-            new DateInterval($config->getItem('sessionExpiry'))
+            $portalConfig->getSessionExpiry()
         );
         $service->addModule($vpnApiModule);
     }

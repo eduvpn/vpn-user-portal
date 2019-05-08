@@ -11,12 +11,10 @@ namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTime;
-use LC\Portal\Config;
 use LC\Portal\FileIO;
 use LC\Portal\Graph;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\OpenVpn\ServerManager;
-use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 use RuntimeException;
@@ -26,8 +24,8 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var string */
     private $dataDir;
 
-    /** @var \LC\Portal\Config */
-    private $config;
+    /** @var array<string,\LC\Portal\Config\ProfileConfig> */
+    private $profileConfigList;
 
     /** @var \LC\Portal\TplInterface */
     private $tpl;
@@ -45,17 +43,17 @@ class AdminPortalModule implements ServiceModuleInterface
     private $dateTimeToday;
 
     /**
-     * @param string                           $dataDir
-     * @param \LC\Portal\Config                $config
-     * @param \LC\Portal\TplInterface          $tpl
-     * @param Storage                          $storage
-     * @param \LC\Portal\OpenVpn\ServerManager $serverManager
-     * @param Graph                            $graph
+     * @param string                                        $dataDir
+     * @param array<string,\LC\Portal\Config\ProfileConfig> $profileConfigList
+     * @param \LC\Portal\TplInterface                       $tpl
+     * @param Storage                                       $storage
+     * @param \LC\Portal\OpenVpn\ServerManager              $serverManager
+     * @param Graph                                         $graph
      */
-    public function __construct($dataDir, Config $config, TplInterface $tpl, Storage $storage, ServerManager $serverManager, Graph $graph)
+    public function __construct($dataDir, array $profileConfigList, TplInterface $tpl, Storage $storage, ServerManager $serverManager, Graph $graph)
     {
         $this->dataDir = $dataDir;
-        $this->config = $config;
+        $this->profileConfigList = $profileConfigList;
         $this->tpl = $tpl;
         $this->storage = $storage;
         $this->serverManager = $serverManager;
@@ -76,18 +74,16 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                // get the fancy profile name
-                $profileList = $this->getProfileList();
-
                 $idNameMapping = [];
                 $profileConnectionList = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $idNameMapping[$profileId] = $profileData['displayName'];
+                foreach ($this->profileConfigList as $profileId => $profileConfig) {
+                    $idNameMapping[$profileId] = $profileConfig->getDisplayName();
                     $profileConnectionList[$profileId] = [];
                 }
 
                 // here we need to "enrich" the clientConnectionList, i.e. add
                 // the user_id and display_name to the list
+                // XXX can we get rid of this somehow?!
                 $profileConnectionList = $this->getClientConnectionProfileList(null);
 
                 return new HtmlResponse(
@@ -114,7 +110,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
-                            'profileList' => $this->getProfileList(),
+                            'profileConfigList' => $this->profileConfigList,
                         ]
                     )
                 );
@@ -279,12 +275,9 @@ class AdminPortalModule implements ServiceModuleInterface
                     // done by the crontab running at midnight...
                     $stats = false;
                 }
-                // get the fancy profile name
-                $profileList = $this->getProfileList();
-
                 $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $idNameMapping[$profileId] = $profileData['displayName'];
+                foreach ($this->profileConfigList as $profileId => $profileConfig) {
+                    $idNameMapping[$profileId] = $profileConfig->getDisplayName();
                 }
 
                 return new HtmlResponse(
@@ -502,22 +495,6 @@ class AdminPortalModule implements ServiceModuleInterface
         }
 
         return $dateList;
-    }
-
-    /**
-     * @return array
-     */
-    private function getProfileList()
-    {
-        $profileList = [];
-        foreach ($this->config->getSection('vpnProfiles')->toArray() as $profileId => $profileData) {
-            $profileConfig = new ProfileConfig($profileData);
-            $profileConfigArray = $profileConfig->toArray();
-            ksort($profileConfigArray);
-            $profileList[$profileId] = $profileConfigArray;
-        }
-
-        return $profileList;
     }
 
     /**

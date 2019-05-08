@@ -13,7 +13,7 @@ $baseDir = dirname(__DIR__);
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
 use LC\Portal\ClientFetcher;
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\OAuthTokenModule;
@@ -31,7 +31,7 @@ try {
     $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
 
-    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
+    $portalConfig = PortalConfig::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
 
     // OAuth tokens
@@ -41,10 +41,9 @@ try {
     );
     $storage->update();
 
-    $clientFetcher = new ClientFetcher($config);
-
     // OAuth module
-    if ($config->hasSection('Api')) {
+    if (false !== $apiConfig = $portalConfig->getApiConfig()) {
+        $clientFetcher = new ClientFetcher($apiConfig->getClientInfoList());
         $secretKey = SecretKey::fromEncodedString(
             FileIO::readFile(
                 sprintf('%s/config/oauth.key', $baseDir)
@@ -56,12 +55,7 @@ try {
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
 
-        $oauthServer->setAccessTokenExpiry(
-            new DateInterval(
-                $config->getSection('Api')->hasItem('tokenExpiry') ? $config->getSection('Api')->getItem('tokenExpiry') : 'PT1H'
-            )
-        );
-
+        $oauthServer->setAccessTokenExpiry($apiConfig->getTokenExpiry());
         $oauthModule = new OAuthTokenModule(
             $oauthServer
         );

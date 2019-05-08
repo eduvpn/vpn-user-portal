@@ -4,7 +4,7 @@
     <directory name="bin"/>
     <directory name="src"/>
     <directory name="web"/>
-    <directory name="tests"/>
+<!--    <directory name="tests"/> -->
     <ignoreFiles>
       <directory name="vendor"/>
     </ignoreFiles>

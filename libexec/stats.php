@@ -10,14 +10,14 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Stats;
 use LC\Portal\Storage;
 
 try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
+    $portalConfig = PortalConfig::fromFile($configFile);
 
     $dataDir = sprintf('%s/data', $baseDir);
     $db = new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir));
@@ -30,7 +30,7 @@ try {
 
     $stats = new Stats($storage, new DateTime());
     $statsData = $stats->get(
-        array_keys($config->getSection('vpnProfiles')->toArray())
+        array_keys($portalConfig->getProfileConfigList())
     );
 
     FileIO::writeJsonFile(

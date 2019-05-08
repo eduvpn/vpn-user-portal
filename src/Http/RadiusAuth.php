@@ -9,6 +9,7 @@
 
 namespace LC\Portal\Http;
 
+use LC\Portal\Config\RadiusAuthenticationConfig;
 use LC\Portal\Http\Exception\RadiusException;
 use Psr\Log\LoggerInterface;
 
@@ -17,43 +18,17 @@ class RadiusAuth implements CredentialValidatorInterface
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    /** @var array */
-    private $serverList;
-
-    /** @var string|null */
-    private $realm = null;
-
-    /** @var string|null */
-    private $nasIdentifier = null;
+    /** @var \LC\Portal\Config\RadiusAuthenticationConfig */
+    private $radiusAuthenticationConfig;
 
     /**
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param array                    $serverList
+     * @param \Psr\Log\LoggerInterface                     $logger
+     * @param \LC\Portal\Config\RadiusAuthenticationConfig $radiusAuthenticationConfig
      */
-    public function __construct(LoggerInterface $logger, array $serverList)
+    public function __construct(LoggerInterface $logger, RadiusAuthenticationConfig $radiusAuthenticationConfig)
     {
         $this->logger = $logger;
-        $this->serverList = $serverList;
-    }
-
-    /**
-     * @param string $realm
-     *
-     * @return void
-     */
-    public function setRealm($realm)
-    {
-        $this->realm = $realm;
-    }
-
-    /**
-     * @param string $nasIdentifier
-     *
-     * @return void
-     */
-    public function setNasIdentifier($nasIdentifier)
-    {
-        $this->nasIdentifier = $nasIdentifier;
+        $this->radiusAuthenticationConfig = $radiusAuthenticationConfig;
     }
 
     /**
@@ -65,18 +40,18 @@ class RadiusAuth implements CredentialValidatorInterface
     public function isValid($authUser, $authPass)
     {
         // add realm if requested
-        if (null !== $this->realm) {
-            $authUser = sprintf('%s@%s', $authUser, $this->realm);
+        if (null !== $realm = $this->radiusAuthenticationConfig->getRealm()) {
+            $authUser = sprintf('%s@%s', $authUser, $realm);
         }
 
         $radiusAuth = radius_auth_open();
 
-        foreach ($this->serverList as $radiusServer) {
+        foreach ($this->radiusAuthenticationConfig->getServerList() as $radiusServerConfig) {
             if (false === radius_add_server(
                 $radiusAuth,
-                $radiusServer['host'],
-                \array_key_exists('port', $radiusServer) ? $radiusServer['port'] : 1812,
-                $radiusServer['secret'],
+                $radiusServerConfig->getHost(),
+                $radiusServerConfig->getPort(),
+                $radiusServerConfig->getSecret(),
                 5,  // timeout
                 3   // max_tries
             )) {
@@ -96,8 +71,8 @@ class RadiusAuth implements CredentialValidatorInterface
 
         radius_put_attr($radiusAuth, RADIUS_USER_NAME, $authUser);
         radius_put_attr($radiusAuth, RADIUS_USER_PASSWORD, $authPass);
-        if (null !== $this->nasIdentifier) {
-            radius_put_attr($radiusAuth, RADIUS_NAS_IDENTIFIER, $this->nasIdentifier);
+        if (null !== $nasIdentifier = $this->radiusAuthenticationConfig->getNasIdentifier()) {
+            radius_put_attr($radiusAuth, RADIUS_NAS_IDENTIFIER, $nasIdentifier);
         }
 
         if (RADIUS_ACCESS_ACCEPT === radius_send_request($radiusAuth)) {

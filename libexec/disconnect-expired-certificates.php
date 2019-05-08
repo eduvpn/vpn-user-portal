@@ -11,7 +11,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\OpenVpn\ManagementSocket;
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\Logger;
 use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\Storage;
@@ -19,7 +19,7 @@ use LC\Portal\Storage;
 try {
     $dateTime = new DateTime();
     $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
+    $portalConfig = PortalConfig::fromFile($configFile);
 
     $dataDir = sprintf('%s/data', $baseDir);
     $storage = new Storage(
@@ -30,7 +30,7 @@ try {
     );
 
     $serverManager = new ServerManager(
-        $config,
+        $portalConfig->getProfileConfigList(),
         new Logger($argv[0]),
         new ManagementSocket()
     );

@@ -10,16 +10,18 @@
 namespace LC\Portal;
 
 use fkooman\OAuth\Server\ClientDbInterface;
-use fkooman\OAuth\Server\ClientInfo;
 
 class ClientFetcher implements ClientDbInterface
 {
-    /** @var \LC\Portal\Config */
-    private $config;
+    /** @var array<string,\fkooman\OAuth\Server\ClientInfo> */
+    private $clientInfoList;
 
-    public function __construct(Config $config)
+    /**
+     * @param array<string,\fkooman\OAuth\Server\ClientInfo> $clientInfoList
+     */
+    public function __construct(array $clientInfoList)
     {
-        $this->config = $config;
+        $this->clientInfoList = $clientInfoList;
     }
 
     /**
@@ -29,23 +31,11 @@ class ClientFetcher implements ClientDbInterface
      */
     public function get($clientId)
     {
-        if (false === $this->config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
+        if (!\array_key_exists($clientId, $this->clientInfoList)) {
             // if not in configuration file, check if it is in the hardcoded list
             return OAuthClientInfo::getClient($clientId);
         }
 
-        $clientInfoData = $this->config->getSection('Api')->getSection('consumerList')->getItem($clientId);
-        $redirectUriList = [];
-        if (\array_key_exists('redirect_uri_list', $clientInfoData)) {
-            $redirectUriList = $clientInfoData['redirect_uri_list'];
-        }
-
-        return new ClientInfo(
-            $clientId,
-            $redirectUriList,
-            \array_key_exists('client_secret', $clientInfoData) ? $clientInfoData['client_secret'] : null,
-            \array_key_exists('display_name', $clientInfoData) ? $clientInfoData['display_name'] : null,
-            \array_key_exists('require_approval', $clientInfoData) ? $clientInfoData['require_approval'] : true
-        );
+        return $this->clientInfoList[$clientId];
     }
 }

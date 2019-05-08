@@ -1,10 +1,10 @@
 <?php $this->layout('base', ['activeItem' => 'info']); ?>
 <?php $this->start('content'); ?>
-    <?php foreach ($profileList as $profile): ?>
-        <h2><?=$this->e($profile['displayName']); ?></h2>
+    <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
+        <h2><?=$this->e($profileConfig->getDisplayName()); ?></h2>
         <table>
             <tbody>
-                <?php foreach ($profile as $k => $v): ?>
+                <?php foreach ($profileConfig->toArray() as $k => $v): ?>
                     <tr>
                         <th><?=$this->e($k); ?></th>
                         <?php if (is_array($v) && 0 !== count($v)): ?>

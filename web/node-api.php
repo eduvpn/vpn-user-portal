@@ -11,7 +11,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\CA\EasyRsaCa;
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Http\BasicAuthenticationHook;
 use LC\Portal\Http\NodeApiModule;
@@ -32,7 +32,7 @@ try {
     $dataDir = sprintf('%s/data', $baseDir);
     $configDir = sprintf('%s/config', $baseDir);
 
-    $config = Config::fromFile(
+    $portalConfig = PortalConfig::fromFile(
         sprintf('%s/config.php', $configDir)
     );
 
@@ -66,7 +66,7 @@ try {
         new NodeApiModule(
             $easyRsaCa,
             $tlsCrypt,
-            $config,
+            $portalConfig->getProfileConfigList(),
             $storage
         )
     );

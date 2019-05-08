@@ -10,22 +10,23 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\ForeignKeyListFetcher;
 use LC\Portal\HttpClient\CurlHttpClient;
 
 try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
+    $portalConfig = PortalConfig::fromFile($configFile);
 
-    if (false !== $config->getSection('Api')->getItem('remoteAccess')) {
-        $config->getSection('Api')->getItem('remoteAccessList');
-        $dataDir = sprintf('%s/data', $baseDir);
-        $foreignKeyListFetcher = new ForeignKeyListFetcher($dataDir);
-        $foreignKeyListFetcher->update(
-            new CurlHttpClient(),
-            $config->getSection('Api')->getSection('remoteAccessList')->toArray()
-        );
+    if (false !== $apiConfig = $portalConfig->getApiConfig()) {
+        if (false !== $apiConfig->getRemoteAccess()) {
+            $dataDir = sprintf('%s/data', $baseDir);
+            $foreignKeyListFetcher = new ForeignKeyListFetcher($dataDir);
+            $foreignKeyListFetcher->update(
+                new CurlHttpClient(),
+                $apiConfig->getRemoteAccessList()
+            );
+        }
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;

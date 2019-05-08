@@ -22,7 +22,7 @@ use fkooman\SeCookie\Session;
 use LC\OpenVpn\ManagementSocket;
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\ClientFetcher;
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Graph;
 use LC\Portal\Http\AdminHook;
@@ -72,31 +72,31 @@ try {
     $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
 
-    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
+    $portalConfig = PortalConfig::fromFile(sprintf('%s/config/config.php', $baseDir));
 
     $templateDirs = [
         sprintf('%s/views', $baseDir),
         sprintf('%s/config/views', $baseDir),
     ];
+
     $styleConfig = null;
-    if ($config->hasItem('styleName')) {
-        $styleName = $config->getItem('styleName');
+    if (null !== $styleName = $portalConfig->getStyleName()) {
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
-        $styleConfig = Config::fromFile(sprintf('%s/config/%s.php', $baseDir, $styleName));
+        //        $styleConfig = Config::fromFile(sprintf('%s/config/%s.php', $baseDir, $styleName));
     }
 
-    $sessionExpiry = $config->getItem('sessionExpiry');
+    $sessionExpiry = $portalConfig->getSessionExpiry();
 
     // we always want browser session to expiry after PT8H hours, *EXCEPT* when
     // the configured "sessionExpiry" is < PT8H, then we want to follow that
     // setting...
     $browserSessionExpiry = 'PT8H';
     $dateTime = new DateTime();
-    if (date_add(clone $dateTime, new DateInterval($browserSessionExpiry)) > date_add(clone $dateTime, new DateInterval($sessionExpiry))) {
+    if (date_add(clone $dateTime, new DateInterval($browserSessionExpiry)) > date_add(clone $dateTime, $sessionExpiry)) {
         $browserSessionExpiry = $sessionExpiry;
     }
 
-    $secureCookie = $config->hasItem('secureCookie') ? $config->getItem('secureCookie') : true;
+    $secureCookie = $portalConfig->getSecureCookie();
 
     $cookie = new Cookie(
         [
@@ -142,7 +142,7 @@ try {
             'requestRootUri' => $request->getRootUri(),
         ]
     );
-    $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
+    $supportedLanguages = $portalConfig->getSupportedLanguages();
     $tpl->addDefault(
         [
             'supportedLanguages' => $supportedLanguages,
@@ -154,7 +154,7 @@ try {
     $service->addBeforeHook('language_switcher', new LanguageSwitcherHook(array_keys($supportedLanguages), $cookie));
 
     // Authentication
-    $authMethod = $config->getItem('authMethod');
+    $authMethod = $portalConfig->getAuthMethod();
 
     $logoutUrl = null;
     $returnParameter = 'ReturnTo';
@@ -171,42 +171,45 @@ try {
     $service->addModule(new LogoutModule($session, $logoutUrl, $returnParameter));
     switch ($authMethod) {
         case 'SamlAuthentication':
-            $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
-            $userIdAttribute = $config->getSection('SamlAuthentication')->getItem('userIdAttribute');
-            $permissionAttributeList = $config->getSection('SamlAuthentication')->optionalItem('permissionAttributeList');
-
+            $samlAuthenticationConfig = $portalConfig->getSamlAuthenticationConfig();
+            if (null === $spEntityId = $samlAuthenticationConfig->getSpEntityId()) {
+                $spEntityId = $request->getRootUri().'_saml/metadata';
+            }
+            $userIdAttribute = $samlAuthenticationConfig->getUserIdAttribute();
+            $permissionAttributeList = $samlAuthenticationConfig->getPermissionAttributeList();
             $spInfo = new SpInfo(
                 $spEntityId,
-                PrivateKey::fromFile(sprintf('%s/config/sp.key', $baseDir)),
-                PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir)),
+                PrivateKey::fromFile(sprintf('%s/config/saml.key', $baseDir)),
+                PublicKey::fromFile(sprintf('%s/config/saml.crt', $baseDir)),
                 $request->getRootUri().'_saml/acs'
             );
             $spInfo->setSloUrl($request->getRootUri().'_saml/slo');
             $samlSp = new SP(
                 $spInfo,
-                new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
+                new XmlIdpInfoSource($samlAuthenticationConfig->requireString('idpMetadata'))
             );
             $service->addBeforeHook(
                 'auth',
                 new SamlAuthenticationHook(
                     $samlSp,
-                    $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
+                    $samlAuthenticationConfig->getIdpEntityId(),
                     $userIdAttribute,
                     $permissionAttributeList,
-                    $config->getSection('SamlAuthentication')->optionalItem('authnContext', []),
-                    $config->getSection('SamlAuthentication')->optionalItem('permissionAuthnContext', []),
-                    $config->getSection('SamlAuthentication')->optionalItem('permissionSessionExpiry', [])
+                    $samlAuthenticationConfig->getAuthnContext(),
+                    $samlAuthenticationConfig->getPermissionAuthnContext(),
+                    $samlAuthenticationConfig->getPermissionSessionExpiry()
                 )
             );
             $service->addModule(
                 new SamlModule(
                     $samlSp,
-                    $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
+                    $samlAuthenticationConfig->getDiscoUrl()
                 )
             );
 
             break;
-        case 'FormLdapAuthentication':
+        case 'LdapAuthentication':
+            $ldapAuthenticationConfig = $portalConfig->getLdapAuthenticationConfig();
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
@@ -215,15 +218,15 @@ try {
                 )
             );
             $ldapClient = new LdapClient(
-                $config->getSection('FormLdapAuthentication')->getItem('ldapUri')
+                $ldapAuthenticationConfig->getLdapUri()
             );
             $userAuth = new LdapAuth(
                 $logger,
                 $ldapClient,
-                $config->getSection('FormLdapAuthentication')->getItem('bindDnTemplate'),
-                $config->getSection('FormLdapAuthentication')->optionalItem('baseDn'),
-                $config->getSection('FormLdapAuthentication')->optionalItem('userFilterTemplate'),
-                $config->getSection('FormLdapAuthentication')->optionalItem('permissionAttributeList')
+                $ldapAuthenticationConfig->getBindDnTemplate(),
+                $ldapAuthenticationConfig->getBaseDn(),
+                $ldapAuthenticationConfig->getUserFilterTemplate(),
+                $ldapAuthenticationConfig->getPermissionAttributeList()
             );
             $service->addModule(
                 new FormAuthenticationModule(
@@ -234,7 +237,7 @@ try {
             );
 
             break;
-        case 'FormPdoAuthentication':
+        case 'DbAuthentication':
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
@@ -259,7 +262,8 @@ try {
             );
 
             break;
-        case 'FormRadiusAuthentication':
+        case 'RadiusAuthentication':
+            $radiusAuthenticationConfig = $portalConfig->getRadiusAuthenticationConfig();
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
@@ -267,16 +271,10 @@ try {
                     $tpl
                 )
             );
-
-            $serverList = $config->getSection('FormRadiusAuthentication')->getItem('serverList');
-            $userAuth = new RadiusAuth($logger, $serverList);
-            if ($config->getSection('FormRadiusAuthentication')->hasItem('addRealm')) {
-                $userAuth->setRealm($config->getSection('FormRadiusAuthentication')->getItem('addRealm'));
-            }
-            if ($config->getSection('FormRadiusAuthentication')->hasItem('nasIdentifier')) {
-                $userAuth->setNasIdentifier($config->getSection('FormRadiusAuthentication')->getItem('nasIdentifier'));
-            }
-
+            $userAuth = new RadiusAuth(
+                $logger,
+                $radiusAuthenticationConfig
+            );
             $service->addModule(
                 new FormAuthenticationModule(
                     $userAuth,
@@ -296,7 +294,7 @@ try {
         ]
     );
 
-    $twoFactorMethods = $config->optionalItem('twoFactorMethods', ['totp']);
+    $twoFactorMethods = $portalConfig->getTwoFactorMethods();
     if (0 !== count($twoFactorMethods)) {
         $service->addBeforeHook(
             'two_factor',
@@ -304,13 +302,13 @@ try {
                 $storage,
                 $session,
                 $tpl,
-                $config->hasItem('requireTwoFactor') ? $config->getItem('requireTwoFactor') : false
+                $portalConfig->getRequireTwoFactor()
             )
         );
     }
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($storage));
-    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($storage, $session, new DateInterval($sessionExpiry)));
+    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($storage, $session, $sessionExpiry));
 
     // two factor module
     if (0 !== count($twoFactorMethods)) {
@@ -322,8 +320,8 @@ try {
     $service->addBeforeHook(
         'is_admin',
         new AdminHook(
-            $config->optionalItem('adminPermissionList', []),
-            $config->optionalItem('adminUserIdList', []),
+            $portalConfig->getAdminPermissionList(),
+            $portalConfig->getAdminUserIdList(),
             $tpl
         )
     );
@@ -335,12 +333,16 @@ try {
         $easyRsaDataDir
     );
     $tlsCrypt = new TlsCrypt($dataDir);
-    $serverManager = new ServerManager($config, $logger, new ManagementSocket());
-    $clientFetcher = new ClientFetcher($config);
+    $serverManager = new ServerManager($portalConfig->getProfileConfigList(), $logger, new ManagementSocket());
+
+    $apiConfig = $portalConfig->getApiConfig();
+    $clientInfoList = false !== $apiConfig ? $apiConfig->getClientInfoList() : [];
+
+    $clientFetcher = new ClientFetcher($clientInfoList);
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
-        $config,
+        $portalConfig,
         $tpl,
         $session,
         $storage,
@@ -360,7 +362,7 @@ try {
 
     $adminPortalModule = new AdminPortalModule(
         $dataDir,
-        $config,
+        $portalConfig->getProfileConfigList(),
         $tpl,
         $storage,
         $serverManager,
@@ -379,19 +381,13 @@ try {
             sprintf('%s/config/oauth.key', $baseDir)
         )
     );
-    if ($config->hasSection('Api')) {
+    if (false !== $apiConfig) {
         $oauthServer = new OAuthServer(
             $storage,
             $clientFetcher,
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
-
-        $oauthServer->setAccessTokenExpiry(
-            new DateInterval(
-                $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
-            )
-        );
-
+        $oauthServer->setAccessTokenExpiry($apiConfig->getTokenExpiry());
         $oauthModule = new OAuthModule(
             $tpl,
             $oauthServer

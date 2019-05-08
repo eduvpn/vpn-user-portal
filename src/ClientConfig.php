@@ -9,26 +9,27 @@
 
 namespace LC\Portal;
 
+use LC\Portal\Config\ProfileConfig;
+
 class ClientConfig
 {
     /**
-     * @param array $profileConfig
-     * @param array $serverInfo
-     * @param array $clientCertificate
-     * @param bool  $shufflePorts
+     * @param \LC\Portal\Config\ProfileConfig $profileConfig
+     * @param array                           $serverInfo
+     * @param array                           $clientCertificate
+     * @param bool                            $shufflePorts
      *
      * @return string
      */
-    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts)
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts)
     {
         // make a list of ports/proto to add to the configuration file
-        $hostName = $profileConfig['hostName'];
+        $hostName = $profileConfig->getHostname();
 
-        $vpnProtoPorts = $profileConfig['vpnProtoPorts'];
-        if (\array_key_exists('exposedVpnProtoPorts', $profileConfig)) {
-            if (0 !== \count($profileConfig['exposedVpnProtoPorts'])) {
-                $vpnProtoPorts = $profileConfig['exposedVpnProtoPorts'];
-            }
+        $vpnProtoPorts = $profileConfig->getVpnProtoPorts();
+        $exposedVpnProtoPorts = $profileConfig->getExposedVpnProtoPorts();
+        if (0 !== \count($exposedVpnProtoPorts)) {
+            $vpnProtoPorts = $exposedVpnProtoPorts;
         }
 
         $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $shufflePorts);
@@ -66,6 +67,9 @@ class ClientConfig
             '<ca>',
             trim($serverInfo['ca']),
             '</ca>',
+            '<tls-crypt>',
+            trim($serverInfo['ta']),
+            '</tls-crypt>',
         ];
 
         // API 1, if clientCertificate is provided, we add it directly to the
@@ -81,17 +85,6 @@ class ClientConfig
                     '<key>',
                     $clientCertificate['private_key'],
                     '</key>',
-                ]
-            );
-        }
-
-        if ('tls-crypt' === $profileConfig['tlsProtection']) {
-            $clientConfig = array_merge(
-                $clientConfig,
-                [
-                    '<tls-crypt>',
-                    trim($serverInfo['ta']),
-                    '</tls-crypt>',
                 ]
             );
         }

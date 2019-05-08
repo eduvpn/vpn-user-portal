@@ -14,10 +14,9 @@ use DateTime;
 use DateTimeZone;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
-use LC\Portal\Config;
+use LC\Portal\Config\ProfileConfig;
 use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
-use LC\Portal\ProfileConfig;
 use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
@@ -27,8 +26,8 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \LC\Portal\Storage */
     private $storage;
 
-    /** @var \LC\Portal\Config */
-    private $config;
+    /** @var array<string,\LC\Portal\Config\ProfileConfig> */
+    private $profileConfigList;
 
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;
@@ -49,14 +48,14 @@ class VpnApiModule implements ServiceModuleInterface
     private $random;
 
     /**
-     * @param Storage           $storage
-     * @param \LC\Portal\Config $config
-     * @param \DateInterval     $sessionExpiry
+     * @param Storage                                       $storage
+     * @param array<string,\LC\Portal\Config\ProfileConfig> $profileConfigList
+     * @param \DateInterval                                 $sessionExpiry
      */
-    public function __construct(Storage $storage, Config $config, CaInterface $ca, TlsCrypt $tlsCrypt, DateInterval $sessionExpiry)
+    public function __construct(Storage $storage, array $profileConfigList, CaInterface $ca, TlsCrypt $tlsCrypt, DateInterval $sessionExpiry)
     {
         $this->storage = $storage;
-        $this->config = $config;
+        $this->profileConfigList = $profileConfigList;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
         $this->sessionExpiry = $sessionExpiry;
@@ -88,22 +87,22 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
-
-                $profileList = $this->getProfileList();
                 $userPermissions = $this->getPermissionList($accessTokenInfo);
                 $userProfileList = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $profileConfig = new ProfileConfig($profileData);
-                    if ($profileConfig->getItem('enableAcl')) {
+                foreach ($this->profileConfigList as $profileId => $profileConfig) {
+                    if ($profileConfig->getHideProfile()) {
+                        continue;
+                    }
+                    if ($profileConfig->getEnableAcl()) {
                         // is the user member of the aclPermissionList?
-                        if (!VpnPortalModule::isMember($profileConfig->getSection('aclPermissionList')->toArray(), $userPermissions)) {
+                        if (!VpnPortalModule::isMember($profileConfig->getAclPermissionList(), $userPermissions)) {
                             continue;
                         }
                     }
 
                     $userProfileList[] = [
                         'profile_id' => $profileId,
-                        'display_name' => $profileConfig->getItem('displayName'),
+                        'display_name' => $profileConfig->getDisplayName(),
                         // 2FA is now decided by vpn-user-portal setting, so
                         // we "lie" here to the client
                         'two_factor' => false,
@@ -198,15 +197,16 @@ class VpnApiModule implements ServiceModuleInterface
                 $accessTokenInfo = $hookData['auth'];
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
-                    $profileList = $this->getProfileList();
                     $userPermissions = $this->getPermissionList($accessTokenInfo);
 
                     $availableProfiles = [];
-                    foreach ($profileList as $profileId => $profileData) {
-                        $profileConfig = new ProfileConfig($profileData);
-                        if ($profileConfig->getItem('enableAcl')) {
+                    foreach ($this->profileConfigList as $profileId => $profileConfig) {
+                        if ($profileConfig->getHideProfile()) {
+                            continue;
+                        }
+                        if ($profileConfig->getEnableAcl()) {
                             // is the user member of the userPermissions?
-                            if (!VpnPortalModule::isMember($profileConfig->getSection('aclPermissionList')->toArray(), $userPermissions)) {
+                            if (!VpnPortalModule::isMember($profileConfig->getAclPermissionList(), $userPermissions)) {
                                 continue;
                             }
                         }
@@ -218,7 +218,7 @@ class VpnApiModule implements ServiceModuleInterface
                         return new ApiErrorResponse('profile_config', 'user has no access to this profile');
                     }
 
-                    return $this->getConfigOnly($requestedProfileId);
+                    return $this->getConfigOnly($this->profileConfigList[$requestedProfileId]);
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('profile_config', $e->getMessage());
                 }
@@ -269,23 +269,20 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string $profileId
+     * @param ProfileConfig $profileId
      *
      * @return Response
      */
-    private function getConfigOnly($profileId)
+    private function getConfigOnly(ProfileConfig $profileConfig)
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
-        $profileList = $this->getProfileList();
-        $profileData = $profileList[$profileId];
-
         $serverInfo = [
             'ta' => $this->tlsCrypt->get(),
             'ca' => $this->ca->caCert(),
         ];
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, [], $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');
@@ -386,24 +383,5 @@ class VpnApiModule implements ServiceModuleInterface
         }
 
         return new DateTime($this->storage->getSessionExpiresAt($accessTokenInfo->getUserId()));
-    }
-
-    /**
-     * @return array
-     */
-    private function getProfileList()
-    {
-        $profileList = [];
-        foreach ($this->config->getSection('vpnProfiles')->toArray() as $profileId => $profileData) {
-            $profileConfig = new ProfileConfig($profileData);
-            if ($profileConfig->getItem('hideProfile')) {
-                continue;
-            }
-            $profileConfigArray = $profileConfig->toArray();
-            ksort($profileConfigArray);
-            $profileList[$profileId] = $profileConfigArray;
-        }
-
-        return $profileList;
     }
 }

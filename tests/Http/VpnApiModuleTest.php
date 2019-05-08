@@ -11,7 +11,7 @@ namespace LC\Portal\Tests\Http;
 
 use DateInterval;
 use LC\Portal\CA\EasyRsaCa;
-use LC\Portal\Config;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\Http\BearerAuthenticationHook;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
@@ -33,14 +33,14 @@ class VpnApiModuleTest extends TestCase
     {
         $storage = new Storage(new PDO('sqlite::memory:'), \dirname(\dirname(__DIR__)).'/schema');
         $storage->init();
-        $config = Config::fromFile(\dirname(\dirname(__DIR__)).'/config/config.php.example');
+        $portalConfig = PortalConfig::fromFile(\dirname(\dirname(__DIR__)).'/config/config.php.example');
         $tmpDir = sys_get_temp_dir().'/'.bin2hex(random_bytes(16));
         mkdir($tmpDir);
         $ca = new EasyRsaCa(\dirname(\dirname(__DIR__)).'/easy-rsa', $tmpDir);
         $ca->init();
         $tlsCrypt = new TlsCrypt(__DIR__.'/data');
         $sessionExpiry = new DateInterval('P90D');
-        $vpnApiModule = new VpnApiModule($storage, $config, $ca, $tlsCrypt, $sessionExpiry);
+        $vpnApiModule = new VpnApiModule($storage, $portalConfig->getProfileConfigList(), $ca, $tlsCrypt, $sessionExpiry);
         $this->service = new Service();
         $this->service->addBeforeHook('auth', new BearerAuthenticationHook(new TestBearerValidator()));
         $vpnApiModule->init($this->service);
