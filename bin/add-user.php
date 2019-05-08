@@ -23,25 +23,38 @@ try {
         throw new RuntimeException('Only "DbAuthentication" backend is supported');
     }
 
-    echo 'User ID: ';
-    $userId = trim(fgets(STDIN));
+    // if there are parameters, interpret them as username & password
+    $userId = null;
+    $userPass = null;
+    if ($argc > 1) {
+        $userId = $argv[1];
+    }
+    if ($argc > 2) {
+        $userPass = $argv[2];
+    }
+
+    if (null === $userId) {
+        echo 'User ID: ';
+        $userId = trim(fgets(STDIN));
+    }
     if (empty($userId)) {
         throw new RuntimeException('User ID cannot be empty');
     }
 
-    echo sprintf('Setting password for user "%s"', $userId).PHP_EOL;
-    // ask for password
-    exec('stty -echo');
-    echo 'Password: ';
-    $userPass = trim(fgets(STDIN));
-    echo PHP_EOL.'Password (repeat): ';
-    $userPassRepeat = trim(fgets(STDIN));
-    exec('stty echo');
-    echo PHP_EOL;
-    if ($userPass !== $userPassRepeat) {
-        throw new RuntimeException('specified passwords do not match');
+    if (null === $userPass) {
+        echo sprintf('Setting password for user "%s"', $userId).PHP_EOL;
+        // ask for password
+        exec('stty -echo');
+        echo 'Password: ';
+        $userPass = trim(fgets(STDIN));
+        echo PHP_EOL.'Password (repeat): ';
+        $userPassRepeat = trim(fgets(STDIN));
+        exec('stty echo');
+        echo PHP_EOL;
+        if ($userPass !== $userPassRepeat) {
+            throw new RuntimeException('specified passwords do not match');
+        }
     }
-
     if (empty($userPass)) {
         throw new RuntimeException('Password cannot be empty');
     }
