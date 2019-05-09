@@ -36,7 +36,7 @@ return [
     'Documentation' => 'Dokumentation',
     'Download' => 'Download',
     'Download a new VPN configuration by choosing a profile and a name, e.g. <em>Phone</em>.' => 'Opret en ny VPN-konfiguration ved at vælge en profil og et navn, f.eks. <em>Mobil</em>.',
-    'Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.' => 'Der er enten ikke defineret en VPN-profil, eller også har denne konto ikke de nødvendige tilladelser til at lave en ny VPN-konfiguration for de tilgængelige profiler.',
+    //'Either, no VPN profiles are configured, or this account does not have the required permissions to access any of the available profiles.' => '',
     //'Enable User' => '',
     'Enroll' => 'Tilmeld',
     'Error' => 'Fejl',
@@ -65,6 +65,7 @@ return [
     'New Password (confirm)' => 'Ny adgangskode (bekræft)',
     'New Password and New Password (confirm) MUST match!' => 'Den nye adgangskode og den nye adgangskode (bekræft) skal være identiske!',
     //'No' => '',
+    //'No VPN profiles configured.' => '',
     //'No clients connected.' => '',
     'No events yet.' => 'Endnu ingen begivenheder.',
     //'Number of unique users of the VPN service over the last month.' => '',
@@ -121,4 +122,5 @@ return [
     'You are already enrolled for Two-factor authentication (2FA).' => 'Du er allerede tilmeldt TOTP.',
     //'You cannot manage your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Dit ID er <code>%_two_factor_user_id%</code>.',
+    // [DELETED] 'Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.' => 'Der er enten ikke defineret en VPN-profil, eller også har denne konto ikke de nødvendige tilladelser til at lave en ny VPN-konfiguration for de tilgængelige profiler.',
 ];

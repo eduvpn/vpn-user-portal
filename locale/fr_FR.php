@@ -36,7 +36,7 @@ return [
     'Documentation' => 'Documentation',
     'Download' => 'Télécharger',
     'Download a new VPN configuration by choosing a profile and a name, e.g. <em>Phone</em>.' => 'Téléchargez une nouvelle configuration VPN en choisissant un profil et un nom, par example <em>Téléphone</em>.',
-    'Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.' => 'Aucun profil n\'a été défini ou ce compte ne dispose pas des permissions requises pour accéder aux profils disponibles.',
+    //'Either, no VPN profiles are configured, or this account does not have the required permissions to access any of the available profiles.' => '',
     //'Enable User' => '',
     'Enroll' => 'S\'inscrire',
     'Error' => 'Erreur',
@@ -65,6 +65,7 @@ return [
     'New Password (confirm)' => 'Nouveau mot de passe (confirmer)',
     'New Password and New Password (confirm) MUST match!' => 'Nouveau mot de passe et nouveau mot de passe (confirmer) DOIVENT être identiques !',
     //'No' => '',
+    //'No VPN profiles configured.' => '',
     //'No clients connected.' => '',
     'No events yet.' => 'Aucun évènement.',
     //'Number of unique users of the VPN service over the last month.' => '',
@@ -121,4 +122,5 @@ return [
     'You are already enrolled for Two-factor authentication (2FA).' => 'Vous êtes déjà inscrit pour TOTP.',
     //'You cannot manage your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Votre identifiant est <code>%_two_factor_user_id%</code>.',
+    // [DELETED] 'Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.' => 'Aucun profil n\'a été défini ou ce compte ne dispose pas des permissions requises pour accéder aux profils disponibles.',
 ];

@@ -1,5 +1,8 @@
 <?php $this->layout('base', ['activeItem' => 'connections']); ?>
 <?php $this->start('content'); ?>
+    <?php if (0 === count($profileConnectionList)): ?>
+        <p class="warning"><?=$this->t('No VPN profiles configured.'); ?></p>
+    <?php else: ?>
     <?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
         <h2 id="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></h2>
         <?php if (0 === count($connectionList)): ?>
@@ -35,4 +38,5 @@
             </table>
         <?php endif; ?>
     <?php endforeach; ?>
+    <?php endif; ?>
 <?php $this->stop(); ?>

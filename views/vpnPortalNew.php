@@ -3,10 +3,9 @@
     <?php if ($motdMessage): ?>
         <p class="plain"><?=$this->batch($motdMessage['message'], 'escape|nl2br'); ?></p>
     <?php endif; ?>
-       
     <?php if (0 === count($profileList)): ?>
         <p class="warning">
-            <?=$this->t('Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.'); ?>
+            <?=$this->t('Either, no VPN profiles are configured, or this account does not have the required permissions to access any of the available profiles.'); ?>
         </p>
     <?php else: ?>
         <p>
