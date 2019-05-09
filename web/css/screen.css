@@ -10,10 +10,6 @@ body {
     text-align: justify;
 }
 
-h1 {
-    display: none;
-}
-
 a {
     color: #222;
 }
@@ -93,23 +89,23 @@ ul.simple {
     margin: 0;
 }
 
-ul.menu {
+nav ul {
     padding: 0;
 }
 
-ul.menu li {
+nav ul li {
     display: inline-block;
     margin-bottom: 0.5em;
     font-weight: bold;
 }
 
-ul.menu li.active a, ul.menu li.active span {
+nav ul li.active a, nav ul li.active span {
     color: #fff;
     background-color: #555;
     border-radius: 0.5em;
 }
 
-ul.menu li a, ul.menu li span {
+nav ul li a, nav ul li span {
     display: inline-block;
     padding: 0.7em;
     text-decoration: none;
@@ -145,20 +141,16 @@ label {
     margin: 0.7em 0 0.3em 0;
 }
 
-hr {
-    display: none;
-}
-
-div.footer {
+footer {
     margin: 2em 0;
     text-align: center;
 }
 
-div.footer form {
+footer form {
     display: inline;
 }
 
-div.footer button {
+footer button {
     border: 0;
     background-color: #fff;
     color: #888;
