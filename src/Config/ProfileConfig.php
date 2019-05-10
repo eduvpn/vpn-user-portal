@@ -32,7 +32,7 @@ class ProfileConfig extends Config
      */
     public function getRangeFour()
     {
-        return $this->requireString('range');
+        return $this->requireString('rangeFour');
     }
 
     /**
@@ -40,7 +40,7 @@ class ProfileConfig extends Config
      */
     public function getRangeSix()
     {
-        return $this->requireString('range6');
+        return $this->requireString('rangeSix');
     }
 
     /**
@@ -227,8 +227,8 @@ class ProfileConfig extends Config
             'listen' => $this->getListen(),
             'managementIp' => $this->getManagementIp(),
             'profileNumber' => $this->getProfileNumber(),
-            'range' => $this->getRangeFour(),
-            'range6' => $this->getRangeSix(),
+            'rangeFour' => $this->getRangeFour(),
+            'rangeSix' => $this->getRangeSix(),
             'routes' => $this->getRoutes(),
             'vpnProtoPorts' => $this->getVpnProtoPorts(),
         ];

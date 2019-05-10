@@ -133,113 +133,108 @@ return [
 
     // API configuration
     // OPTIONAL (DEFAULT = [])
-    'Api' => [
-        // Enable Remote Access, i.e. users from other VPN servers listed in
-        // the below remoteAccessList files to access this VPN server through
-        // the OAuth API
-        'remoteAccess' => false,
-        'remoteAccessList' => [
-            'production' => [
-                'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet.json',
-                'public_key' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
-            ],
-            //'development' => [
-            //    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
-            //    'public_key' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
-            //],
-        ],
-    ],
+    //'Api' => [
+    //    // Enable Remote Access, i.e. users from other VPN servers listed in
+    //    // the below remoteAccessList files to access this VPN server through
+    //    // the OAuth API
+    //    'remoteAccess' => false,
+    //    'remoteAccessList' => [
+    //        'production' => [
+    //            'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet.json',
+    //            'public_key' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
+    //        ],
+    //        //'development' => [
+    //        //    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
+    //        //    'public_key' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
+    //        //],
+    //    ],
+    //],
 
     // List of VPN profiles
     'ProfileList' => [
         'default' => [
-            // The number of this profile, every profile per instance has a
-            // unique number
+            // Profile Number. Every profile has their own unique number
             // REQUIRED
             'profileNumber' => 1,
 
-            // The name of the profile as shown in the user and admin portals
+            // Profile Name as shown in the portal / through API
             // REQUIRED
             'displayName' => 'Default Profile',
 
             // The IPv4 range of the network that will be assigned to clients
             // REQUIRED
-            'range' => '10.42.42.0/25',
+            'rangeFour' => '10.42.42.0/25',
 
             // The IPv6 range of the network that will be assigned to clients
             // REQUIRED
-            'range6' => 'fd42:4242:4242:4242::/64',
+            'rangeSix' => 'fd42:4242:4242:4242::/64',
 
             // The hostname the VPN client(s) will connect to
             // REQUIRED
             'hostName' => 'vpn.example',
 
             // The address the OpenVPN processes will listen on
-            // DEFAULT = '::'
+            // OPTIONAL (DEFAULT = ::)
             //'listen' => '::',
 
-            // The IP address to use for connecting to OpenVPN processes
-            // DEFAULT = '127.0.0.1'
+            // The IP address used for connecting to OpenVPN Management 
+            // Interface
+            // OPTIONAL (DEFAULT = 127.0.0.1)
             //'managementIp' => '127.0.0.1',
 
-            // Whether or not to route all traffic from the client over the VPN
-            // DEFAULT = true
+            // Route all traffic over the VPN
+            // OPTIONAL (DEFAULT = true)
             //'defaultGateway' => true,
 
             // Block access to local LAN when VPN is active
-            // DEFAULT = false
+            // OPTIONAL (DEFAULT = false)
             //'blockLan' => false,
 
-            // IPv4 and IPv6 routes to push to the client, only used when
+            // IPv4 and IPv6 routes to push to the client. Only when 
             // defaultGateway is false
-            // DEFAULT = []
+            // OPTIONAL (DEFAULT = [])
             //'routes' => [
             //    '192.168.1.0/24',
             //    'fd01:1:1:1::/64',
             //],
 
             // IPv4 and IPv6 address of DNS server(s) to push to the client
-            // DEFAULT  = ['9.9.9.9', '2620:fe::fe']
-            // Quad9 (https://www.quad9.net)
+            // OPTIONAL (DEFAULT = ['9.9.9.9', '2620:fe::fe'])
             //'dns' => ['9.9.9.9', '2620:fe::fe'],
 
-            // Whether or not to allow client-to-client traffic
-            // DEFAULT = false
+            // Allow "client to client" traffic
+            // OPTIONAL (DEFAULT = false)
             //'clientToClient' => false,
 
-            // Whether or not to enable OpenVPN logging
-            // DEFAULT = false
+            // Enable OpenVPN Server Logging
+            // OPTIONAL (DEFAULT = false)`
             //'enableLog' => false,
 
-            // Whether or not to enable ACLs for controlling who can connect
-            // DEFAULT = false
+            // Enable Profile ACL
+            // OPTIONAL (DEFAULT = false)
             //'enableAcl' => false,
 
-            // The list of permissions to allow access, requires enableAcl to
-            // be true
-            // DEFAULT  = []
+            // List of required permissions for access to this profile
+            // OPTIONAL (DEFAULT  = [])
             //'aclPermissionList' => [],
 
-            // The protocols and ports the OpenVPN processes should use, MUST
-            // be either 1, 2, 4, 8 or 16 proto/port combinations
-            // DEFAULT = ['udp/1194', 'tcp/1194']
+            // List of protocol/port combinations OpenVPN should use. MUST be
+            // either 1, 2, 4, 8 or 16 combinations
+            // OPTIONAL (DEFAULT = ['udp/1194', 'tcp/1194'])
             //'vpnProtoPorts' => [
             //    'udp/1194',
             //    'tcp/1194',
             //],
 
-            // List the protocols and ports exposed to the VPN clients. Useful
-            // for OpenVPN port sharing. When empty (or missing), uses list
-            // from vpnProtoPorts
-            // DEFAULT = []
+            // List the protocol/port combinations exposed to the VPN clients. 
+            // OPTIONAL (DEFAULT = $vpnProtoPorts)
             //'exposedVpnProtoPorts' => [
             //    'udp/1194',
             //    'tcp/443'
             //],
 
-            // Hide the profile from the user portal, i.e. do not allow the
-            // user to choose it
-            // DEFAULT = false
+            // Hide the profile/API
+            // OPTIONAL (DEFAULT = false)
             //'hideProfile' => false,
         ],
     ],
