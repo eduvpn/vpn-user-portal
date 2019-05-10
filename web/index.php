@@ -21,7 +21,6 @@ use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use LC\OpenVpn\ManagementSocket;
 use LC\Portal\CA\EasyRsaCa;
-use LC\Portal\ClientFetcher;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Graph;
@@ -49,6 +48,7 @@ use LC\Portal\Http\UpdateSessionInfoHook;
 use LC\Portal\Http\VpnPortalModule;
 use LC\Portal\LdapClient;
 use LC\Portal\Logger;
+use LC\Portal\NativeClientDb;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\Storage;
@@ -334,11 +334,7 @@ try {
     );
     $tlsCrypt = new TlsCrypt($dataDir);
     $serverManager = new ServerManager($portalConfig->getProfileConfigList(), $logger, new ManagementSocket());
-
-    $apiConfig = $portalConfig->getApiConfig();
-    $clientInfoList = false !== $apiConfig ? $apiConfig->getClientInfoList() : [];
-
-    $clientFetcher = new ClientFetcher($clientInfoList);
+    $nativeClientDb = new NativeClientDb();
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
@@ -349,7 +345,7 @@ try {
         $easyRsaCa,
         $tlsCrypt,
         $serverManager,
-        $clientFetcher
+        $nativeClientDb
     );
     $service->addModule($vpnPortalModule);
 
@@ -375,16 +371,19 @@ try {
         $service->addModule($twoFactorEnrollModule);
     }
 
-    // OAuth module
-    $secretKey = SecretKey::fromEncodedString(
-        FileIO::readFile(
-            sprintf('%s/config/oauth.key', $baseDir)
-        )
-    );
-    if (false !== $apiConfig) {
+    if (false !== $portalConfig->getEnableApi()) {
+        $apiConfig = $portalConfig->getApiConfig();
+
+        // OAuth module
+        $secretKey = SecretKey::fromEncodedString(
+            FileIO::readFile(
+                sprintf('%s/config/oauth.key', $baseDir)
+            )
+        );
+
         $oauthServer = new OAuthServer(
             $storage,
-            $clientFetcher,
+            $nativeClientDb,
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
         $oauthServer->setAccessTokenExpiry($apiConfig->getTokenExpiry());

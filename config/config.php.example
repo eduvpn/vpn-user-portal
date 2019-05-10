@@ -1,140 +1,139 @@
 <?php
 
 return [
-    // override default branding style (templates/CSS) with custom style.
-    // NOTE: the styling/branding MUST be installed for this to work!
+    // UI Style
+    // OPTIONAL (DEFAULT = null)
     //'styleName' => 'eduVPN',
     //'styleName' => 'LC',
 
-    'authMethod' => 'DbAuthentication',       // Local User Database
+    // Authentication Mechanism
+    // OPTIONAL (DEFAULT = DbAuthentication)
+    //'authMethod' => 'DbAuthentication',     // Local User Database
     //'authMethod' => 'LdapAuthentication',   // LDAP
     //'authMethod' => 'RadiusAuthentication', // RADIUS
     //'authMethod' => 'SamlAuthentication',   // SAML
 
     // Default Session Expiry
-    // The session expiry will be used to determine the "Not After" of the
-    // issued X.509 certificates and the moment at which to start rejecting
-    // the OAuth tokens.
-    'sessionExpiry' => 'P90D',      // 90 days
+    // Used to determine:
+    // - Expiry of issued X.509 certificates
+    // - Time an OAuth "refresh token" is valid _without_ user authentication
+    // OPTIONAL (DEFAULT = P90D)
+    //'sessionExpiry' => 'P90D',    // 90 days
     //'sessionExpiry' => 'PT12H',   // 12 hours
     //'sessionExpiry' => 'P1D',     // 1 day
 
     // LDAP
-    'LdapAuthentication' => [
-        // *** OpenLDAP / FreeIPA ***
-        'ldapUri' => 'ldaps://ipa.example.org',
-        'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
-        //'permissionAttributeList' => ['eduPersonEntitlement'],
-        //'permissionAttributeList' => ['memberOf'],
-
-        // *** Active Directory ***
-        //'ldapUri' => 'ldap://ad.example.org',
-        //'bindDnTemplate' => 'DOMAIN\{{UID}}',
-        //'baseDn' => 'dc=example,dc=org',
-        //'userFilterTemplate' => '(sAMAccountName={{UID}})',
-        //'permissionAttributeList' => ['memberOf'],
-    ],
+    //'LdapAuthentication' => [
+    //    // *** OpenLDAP / FreeIPA ***
+    //    'ldapUri' => 'ldaps://ipa.example.org',
+    //    'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
+    //    //'permissionAttributeList' => ['eduPersonEntitlement'],
+    //    //'permissionAttributeList' => ['memberOf'],
+    //
+    //    // *** Active Directory ***
+    //    //'ldapUri' => 'ldap://ad.example.org',
+    //    //'bindDnTemplate' => 'DOMAIN\{{UID}}',
+    //    //'baseDn' => 'dc=example,dc=org',
+    //    //'userFilterTemplate' => '(sAMAccountName={{UID}})',
+    //    //'permissionAttributeList' => ['memberOf'],
+    //],
 
     // RADIUS
-    'RadiusAuthentication' => [
-        'serverList' => [
-            [
-                'host' => 'radius.example.org',
-                'secret' => 'testing123',
-                //'port' => 1812,
-            ],
-        ],
-        //'realm' => 'example.org',
-        //'nasIdentifier' => 'vpn.example.org',
-    ],
+    //'RadiusAuthentication' => [
+    //    'ServerList' => [
+    //        [
+    //            'host' => 'radius.example.org',
+    //            'secret' => 'testing123',
+    //            //'port' => 1812,
+    //        ],
+    //    ],
+    //    //'realm' => 'example.org',
+    //    //'nasIdentifier' => 'vpn.example.org',
+    //],
 
     // SAML (php-saml-sp)
-    'SamlAuthentication' => [
-        // 'OID for eduPersonTargetedID
-        'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
-        // OID for eduPersonPrincipalName
-        //'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
+    //'SamlAuthentication' => [
+    //    // 'OID for eduPersonTargetedID
+    //    'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
+    //    // OID for eduPersonPrincipalName
+    //    //'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
+    //
+    //    // ** AUTHORIZATION | PERMISSIONS **
+    //    // OID for eduPersonEntitlement
+    //    //'permissionAttributeList' => ['urn:oid:1.3.6.1.4.1.5923.1.1.1.7'],
+    //    // OID for eduPersonAffiliation
+    //    //'permissionAttributeList' => ['urn:oid:1.3.6.1.4.1.5923.1.1.1.1'],
+    //
+    //    // override the SP entityId, the default is:
+    //    // https://vpn.example.org/vpn-user-portal/_saml/metadata
+    //    //'spEntityId' => 'https://vpn.example.org/saml',
+    //
+    //    // (Aggregate) SAML metadata file containing the IdP metadata of IdPs
+    //    // that are allowed to access this service
+    //    'idpMetadata' => '/path/to/idp/metadata.xml',
+    //
+    //    // set a fixed IdP for use with this service, it MUST be available in
+    //    // the IdP metadata file
+    //    'idpEntityId' => 'https://idp.example.org/saml',
 
-        // ** AUTHORIZATION | PERMISSIONS **
-        // OID for eduPersonEntitlement
-        //'permissionAttributeList' => ['urn:oid:1.3.6.1.4.1.5923.1.1.1.7'],
-        // OID for eduPersonAffiliation
-        //'permissionAttributeList' => ['urn:oid:1.3.6.1.4.1.5923.1.1.1.1'],
+    //    // set a URL that performs IdP discovery, all IdPs listed in the
+    //    // discovery service MUST also be available in the IdP metadata file,
+    //    // NOTE: do NOT enable idpEntityId as it will take precedence over
+    //    // using discovery...
+    //    //'discoUrl' => 'http://vpn.example.org/php-saml-ds/index.php',
+    //
+    //    // AuthnContext required for *all* users
+    //    //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+    //
+    //    // Users with certain permissions obtained through
+    //    // "permissionAttributeList" MUST also have ANY of the listed
+    //    // AuthnContexts. If they currently don't, a new authentication is
+    //    // triggered to obtain it
+    //    //'permissionAuthnContext' => [
+    //    //    'urn:oid:1.3.6.1.4.1.5923.1.1.1.7!urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+    //    //],
+    //
+    //    // Allow for overriding global sessionExpiry based on SAML
+    //    // "permissionAttributeList" value(s)
+    //    //'permissionSessionExpiry' => [
+    //    //    'urn:oid:1.3.6.1.4.1.5923.1.1.1.7!urn:example:LC-admin' => 'PT12H',
+    //    //],
+    //],
 
-        // override the SP entityId, the default is:
-        // https://vpn.example.org/vpn-user-portal/_saml/metadata
-        //'spEntityId' => 'https://vpn.example.org/saml',
-
-        // (Aggregate) SAML metadata file containing the IdP metadata of IdPs
-        // that are allowed to access this service
-        'idpMetadata' => '/path/to/idp/metadata.xml',
-
-        // set a fixed IdP for use with this service, it MUST be available in
-        // the IdP metadata file
-        'idpEntityId' => 'https://idp.example.org/saml',
-
-        // set a URL that performs IdP discovery, all IdPs listed in the
-        // discovery service MUST also be available in the IdP metadata file,
-        // NOTE: do NOT enable idpEntityId as it will take precedence over
-        // using discovery...
-        //'discoUrl' => 'http://vpn.example.org/php-saml-ds/index.php',
-
-        // AuthnContext required for *all* users
-        //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
-
-        // Users with certain permissions obtained through
-        // "permissionAttributeList" MUST also have ANY of the listed
-        // AuthnContexts. If they currently don't, a new authentication is
-        // triggered to obtain it
-        //'permissionAuthnContext' => [
-        //    'urn:oid:1.3.6.1.4.1.5923.1.1.1.7!urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
-        //],
-
-        // Allow for overriding global sessionExpiry based on SAML
-        // "permissionAttributeList" value(s)
-        //'permissionSessionExpiry' => [
-        //    'urn:oid:1.3.6.1.4.1.5923.1.1.1.7!urn:example:LC-admin' => 'PT12H',
-        //],
-    ],
-
-    // the permission required to be able to access the "admin" portion of
-    // the portal, see "permissionAttributeList" in the authentication
-    // configuration sections
+    // List of attributes/values giving "Admin" power in the portal
+    // The format is "<attribute>!<value>"
+    // OPTIONAL (DEFAULT = [])
     //'adminPermissionList' => ['urn:oid:1.3.6.1.4.1.5923.1.1.1.7!urn:example:LC-admin'],
 
-    // list of userIds that have access to the admin
-    'adminUserIdList' => ['admin'],
+    // List of User IDs giving "Admin" power in the portal
+    // OPTIONAL (DEFAULT = [])
+    //'adminUserIdList' => ['admin'],
 
     // Require Users to use 2FA
-    'requireTwoFactor' => false,
+    // OPTIONAL (DEFAULT = false)
     //'requireTwoFactor' => true,
 
     // Available 2FA methods
-    //'twoFactorMethods' => ['totp'],         // TOTP
-    'twoFactorMethods' => [],                 // 2FA disabled
+    // OPTIONAL (DEFAULT = [])
+    //'twoFactorMethods' => ['totp'], // TOTP
 
-    // supported languages in the UI, the first one mentioned is the default
-    'supportedLanguages' => [
-        'en_US' => 'English',
-        //'nl_NL' => 'Nederlands',
-        //'nb_NO' => 'norsk bokmål',
-        //'da_DK' => 'Dansk',
-        //'fr_FR' => 'Français',
-    ],
+    // Supported languages in the UI, the first one mentioned is the default
+    // OPTIONAL (DEFAULT = ['en_US' => 'English'])
+    //'supportedLanguages' => [
+    //    'en_US' => 'English',
+    //    //'nl_NL' => 'Nederlands',
+    //    //'nb_NO' => 'norsk bokmål',
+    //    //'da_DK' => 'Dansk',
+    //    //'fr_FR' => 'Français',
+    //],
 
+    // Enable OAuth API for Native Apps
+    // OPTIONAL (DEFAULT = true)
+    //'enableApi' => false,
+
+    // API configuration
+    // OPTIONAL (DEFAULT = [])
     'Api' => [
-        'consumerList' => [
-            //'_CLIENT_ID_' => [
-            //    'redirect_uri_list' => [
-            //        '_REDIRECT_URI_1_',
-            //        '_REDIRECT_URI_2_',
-            //    ],
-            //    'display_name' => '_DISPLAY_NAME_',
-            //    'require_approval' => true,
-            //    'client_secret' => '_SECRET_',
-            //],
-        ],
-
         // Enable Remote Access, i.e. users from other VPN servers listed in
         // the below remoteAccessList files to access this VPN server through
         // the OAuth API
@@ -152,7 +151,7 @@ return [
     ],
 
     // List of VPN profiles
-    'vpnProfiles' => [
+    'ProfileList' => [
         'default' => [
             // The number of this profile, every profile per instance has a
             // unique number

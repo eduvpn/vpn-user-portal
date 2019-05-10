@@ -9,16 +9,17 @@
 
 namespace LC\Portal;
 
+use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\ClientInfo;
 
-class OAuthClientInfo
+class NativeClientDb implements ClientDbInterface
 {
     /**
      * @param string $clientId
      *
      * @return false|\fkooman\OAuth\Server\ClientInfo
      */
-    public static function getClient($clientId)
+    public function get($clientId)
     {
         $clientInfo = [
             // Windows

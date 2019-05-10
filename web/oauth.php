@@ -12,7 +12,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
-use LC\Portal\ClientFetcher;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Http\JsonResponse;
@@ -20,6 +19,7 @@ use LC\Portal\Http\OAuthTokenModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Logger;
+use LC\Portal\NativeClientDb;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\Storage;
 
@@ -41,9 +41,8 @@ try {
     );
     $storage->update();
 
-    // OAuth module
-    if (false !== $apiConfig = $portalConfig->getApiConfig()) {
-        $clientFetcher = new ClientFetcher($apiConfig->getClientInfoList());
+    if (false !== $portalConfig->getEnableApi()) {
+        $apiConfig = $portalConfig->getApiConfig();
         $secretKey = SecretKey::fromEncodedString(
             FileIO::readFile(
                 sprintf('%s/config/oauth.key', $baseDir)
@@ -51,7 +50,7 @@ try {
         );
         $oauthServer = new OAuthServer(
             $storage,
-            $clientFetcher,
+            new NativeClientDb(),
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
 

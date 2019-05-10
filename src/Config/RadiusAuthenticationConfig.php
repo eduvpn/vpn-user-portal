@@ -32,12 +32,12 @@ class RadiusAuthenticationConfig extends Config
      */
     public function getServerList()
     {
-        if (!\array_key_exists('serverList', $this->configData)) {
+        if (!\array_key_exists('ServerList', $this->configData)) {
             return [];
         }
 
         $serverList = [];
-        foreach ($this->configData['serverList'] as $serverConfigData) {
+        foreach ($this->configData['ServerList'] as $serverConfigData) {
             $serverList[] = new RadiusServerConfig($serverConfigData);
         }
 

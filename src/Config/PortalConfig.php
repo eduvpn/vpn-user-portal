@@ -155,15 +155,28 @@ class PortalConfig extends Config
     }
 
     /**
-     * @return ApiConfig|false
+     * @return bool
+     */
+    public function getEnableApi()
+    {
+        if (null === $configValue = $this->optionalBool('enableApi')) {
+            return true;
+        }
+
+        return $configValue;
+    }
+
+    /**
+     * @return ApiConfig
      */
     public function getApiConfig()
     {
-        if (!\array_key_exists('Api', $this->configData)) {
-            return false;
+        $apiConfigData = [];
+        if (\array_key_exists('Api', $this->configData)) {
+            $apiConfigData = $this->configData['Api'];
         }
 
-        return new ApiConfig($this->configData['Api']);
+        return new ApiConfig($apiConfigData);
     }
 
     /**
@@ -171,17 +184,17 @@ class PortalConfig extends Config
      */
     public function getProfileConfigList()
     {
-        if (!\array_key_exists('vpnProfiles', $this->configData)) {
+        if (!\array_key_exists('ProfileList', $this->configData)) {
             return [];
         }
 
-        if (!\is_array($this->configData['vpnProfiles'])) {
+        if (!\is_array($this->configData['ProfileList'])) {
             // XXX
             throw new ConfigException('');
         }
 
         $profileConfigList = [];
-        foreach ($this->configData['vpnProfiles'] as $profileId => $profileConfigData) {
+        foreach ($this->configData['ProfileList'] as $profileId => $profileConfigData) {
             // XXX make sure profileId = string
             // XXX make sure profileConfigData = array
             $profileConfigList[$profileId] = new ProfileConfig($profileConfigData);

@@ -12,7 +12,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\CA\EasyRsaCa;
-use LC\Portal\ClientFetcher;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Http\BearerAuthenticationHook;
@@ -21,6 +20,7 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Logger;
+use LC\Portal\NativeClientDb;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
@@ -36,18 +36,16 @@ try {
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
 
-    if (false !== $apiConfig = $portalConfig->getApiConfig()) {
+    if (false !== $portalConfig->getEnableApi()) {
+        $apiConfig = $portalConfig->getApiConfig();
         $storage = new Storage(
             new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
             sprintf('%s/schema', $baseDir)
         );
         $storage->update();
 
-        $clientFetcher = new ClientFetcher($apiConfig->getClientInfoList());
-
         $keyInstanceMapping = [];
-        $remoteAccess = $apiConfig->getRemoteAccess();
-        if ($remoteAccess) {
+        if (true === $remoteAccess = $apiConfig->getRemoteAccess()) {
             $keyInstanceMappingFile = sprintf('%s/key_instance_mapping.json', $dataDir);
             if (FileIO::exists($keyInstanceMappingFile)) {
                 $keyInstanceMapping = FileIO::readJsonFile($keyInstanceMappingFile);
@@ -62,7 +60,7 @@ try {
 
         $bearerValidator = new BearerValidator(
             $storage,
-            $clientFetcher,
+            new NativeClientDb(),
             $secretKey->getPublicKey(),
             $keyInstanceMapping
         );
