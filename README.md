@@ -1,7 +1,3 @@
-# Introduction
-
-This project contains the user portal and OAuth authorization server of the 
-Let's Connect! software.
-
-It allows users to download and manage VPN configurations / Certificates. It 
-can also be used to view and revoke authorized the native VPN apps.
+This project is the VPN portal of the Let's Connect! software. If allows users
+to create and manage their VPN configurations/certificates and OAuth 
+applications. It also allows designated admins to manage the VPN service.
