@@ -221,14 +221,14 @@ return [
             // List of protocol/port combinations OpenVPN should use. MUST be
             // either 1, 2, 4, 8 or 16 combinations
             // OPTIONAL (DEFAULT = ['udp/1194', 'tcp/1194'])
-            //'vpnProtoPorts' => [
+            //'vpnProtoPortList' => [
             //    'udp/1194',
             //    'tcp/1194',
             //],
 
             // List the protocol/port combinations exposed to the VPN clients. 
-            // OPTIONAL (DEFAULT = $vpnProtoPorts)
-            //'exposedVpnProtoPorts' => [
+            // OPTIONAL (DEFAULT = $vpnProtoPortList)
+            //'exposedVpnProtoPortList' => [
             //    'udp/1194',
             //    'tcp/443'
             //],

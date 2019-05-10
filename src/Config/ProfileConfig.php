@@ -162,9 +162,9 @@ class ProfileConfig extends Config
     /**
      * @return array<string>
      */
-    public function getVpnProtoPorts()
+    public function getVpnProtoPortList()
     {
-        if (null === $configValue = $this->optionalStringArray('vpnProtoPorts')) {
+        if (null === $configValue = $this->optionalStringArray('vpnProtoPortList')) {
             return ['udp/1194', 'tcp/1194'];
         }
 
@@ -174,9 +174,9 @@ class ProfileConfig extends Config
     /**
      * @return array<string>
      */
-    public function getExposedVpnProtoPorts()
+    public function getExposedVpnProtoPortList()
     {
-        if (null === $configValue = $this->optionalStringArray('exposedVpnProtoPorts')) {
+        if (null === $configValue = $this->optionalStringArray('exposedVpnProtoPortList')) {
             return [];
         }
 
@@ -221,7 +221,7 @@ class ProfileConfig extends Config
             'dns' => $this->getDns(),
             'enableAcl' => $this->getEnableAcl(),
             'enableLog' => $this->getEnableLog(),
-            'exposedVpnProtoPorts' => $this->getExposedVpnProtoPorts(),
+            'exposedVpnProtoPortList' => $this->getExposedVpnProtoPortList(),
             'hideProfile' => $this->getHideProfile(),
             'hostName' => $this->getHostname(),
             'listen' => $this->getListen(),
@@ -230,7 +230,7 @@ class ProfileConfig extends Config
             'rangeFour' => $this->getRangeFour(),
             'rangeSix' => $this->getRangeSix(),
             'routes' => $this->getRoutes(),
-            'vpnProtoPorts' => $this->getVpnProtoPorts(),
+            'vpnProtoPortList' => $this->getVpnProtoPortList(),
         ];
     }
 }

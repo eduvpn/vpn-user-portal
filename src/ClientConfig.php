@@ -26,13 +26,13 @@ class ClientConfig
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->getHostname();
 
-        $vpnProtoPorts = $profileConfig->getVpnProtoPorts();
-        $exposedVpnProtoPorts = $profileConfig->getExposedVpnProtoPorts();
-        if (0 !== \count($exposedVpnProtoPorts)) {
-            $vpnProtoPorts = $exposedVpnProtoPorts;
+        $vpnProtoPortList = $profileConfig->getVpnProtoPortList();
+        $exposedVpnProtoPortList = $profileConfig->getExposedVpnProtoPortList();
+        if (0 !== \count($exposedVpnProtoPortList)) {
+            $vpnProtoPortList = $exposedVpnProtoPortList;
         }
 
-        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $shufflePorts);
+        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPortList, $shufflePorts);
 
         $clientConfig = [
             '# OpenVPN Client Configuration',
@@ -98,15 +98,15 @@ class ClientConfig
     }
 
     /**
-     * @param array $vpnProtoPorts
+     * @param array $vpnProtoPortList
      * @param bool  $shufflePorts
      *
      * @return array
      */
-    public static function remotePortProtoList(array $vpnProtoPorts, $shufflePorts)
+    public static function remotePortProtoList(array $vpnProtoPortList, $shufflePorts)
     {
-        // if these ports are listed in vpnProtoPorts they are ALWAYS added to
-        // the client configuration file
+        // if these ports are listed in vpnProtoPortList they are ALWAYS added
+        // to the client configuration file
         $specialUdpPorts = ['udp/53', 'udp/443'];
         $specialTcpPorts = ['tcp/80', 'tcp/443'];
 
@@ -115,7 +115,7 @@ class ClientConfig
         $normalUdpPorts = [];
         $normalTcpPorts = [];
 
-        foreach ($vpnProtoPorts as $vpnProtoPort) {
+        foreach ($vpnProtoPortList as $vpnProtoPort) {
             if (0 === strpos($vpnProtoPort, 'udp')) {
                 // UDP
                 if (!\in_array($vpnProtoPort, $specialUdpPorts, true)) {
