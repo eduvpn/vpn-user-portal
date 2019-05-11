@@ -269,7 +269,7 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param ProfileConfig $profileId
+     * @param ProfileConfig $profileConfig
      *
      * @return Response
      */

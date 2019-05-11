@@ -14,11 +14,10 @@ use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Http\BasicAuthenticationHook;
+use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\NodeApiModule;
 use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
-use LC\Portal\Json;
 use LC\Portal\Logger;
 use LC\Portal\Node\LocalNodeApi;
 use LC\Portal\Storage;
@@ -57,7 +56,6 @@ try {
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
-    $response = new Response(500, 'application/json');
-    $response->setBody(Json::encode(['error' => $e->getMessage()]));
+    $response = new JsonResponse(['error' => $e->getMessage()], 500);
     $response->send();
 }

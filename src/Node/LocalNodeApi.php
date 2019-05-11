@@ -33,8 +33,8 @@ class LocalNodeApi implements NodeApiInterface
     /**
      * @param \LC\Portal\CA\CaInterface      $ca
      * @param \LC\Portal\TlsCrypt            $tlsCrypt
-     * @param \LC\Portal\Storage             $storage
      * @param \LC\Portal\Config\PortalConfig $portalConfig
+     * @param \LC\Portal\Storage             $storage
      */
     public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, PortalConfig $portalConfig, Storage $storage)
     {

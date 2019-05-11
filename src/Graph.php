@@ -30,15 +30,9 @@ class Graph
     /** @var array */
     private $barColor = [0x55, 0x55, 0x55];
 
-    /**
-     * @param \DateTime $dateTime
-     */
-    public function __construct(DateTime $dateTime = null)
+    public function __construct()
     {
-        if (null === $dateTime) {
-            $dateTime = new DateTime();
-        }
-        $this->dateTime = $dateTime;
+        $this->dateTime = new DateTime();
     }
 
     /**
