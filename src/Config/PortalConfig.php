@@ -180,10 +180,28 @@ class PortalConfig extends Config
     }
 
     /**
+     * @param string $profileId
+     *
+     * @return ProfileConfig
+     */
+    public function getProfileConfig($profileId)
+    {
+        $profileConfigList = $this->getProfileConfigList();
+        if (!\array_key_exists($profileId, $profileConfigList)) {
+            // XXX better error
+            throw new ConfigException('');
+        }
+
+        return $profileConfigList[$profileId];
+    }
+
+    /**
      * @return array<string,ProfileConfig>
      */
     public function getProfileConfigList()
     {
+        // XXX make sure we have no callers that would be btter of with the
+        // getProfileConfig($profileId) call!
         if (!\array_key_exists('ProfileList', $this->configData)) {
             return [];
         }

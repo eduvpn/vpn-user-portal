@@ -17,8 +17,8 @@ use LC\Portal\HttpClient\CurlHttpClient;
 try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
     $portalConfig = PortalConfig::fromFile($configFile);
-
-    if (false !== $apiConfig = $portalConfig->getApiConfig()) {
+    if ($portalConfig->getEnableApi()) {
+        $apiConfig = $portalConfig->getApiConfig();
         if (false !== $apiConfig->getRemoteAccess()) {
             $dataDir = sprintf('%s/data', $baseDir);
             $foreignKeyListFetcher = new ForeignKeyListFetcher($dataDir);

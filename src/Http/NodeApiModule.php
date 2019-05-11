@@ -10,33 +10,19 @@
 namespace LC\Portal\Http;
 
 use DateTime;
-use LC\Portal\CA\CaInterface;
-use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
+use LC\Portal\Node\NodeApiInterface;
 
 class NodeApiModule implements ServiceModuleInterface
 {
-    /** @var \LC\Portal\CA\CaInterface */
-    private $ca;
-
-    /** @var \LC\Portal\TlsCrypt */
-    private $tlsCrypt;
-
-    /** @var array<string,\LC\Portal\Config\ProfileConfig> */
-    private $profileConfigList;
-
-    /** @var \LC\Portal\Storage */
-    private $storage;
+    /** @var \LC\Portal\Node\NodeApiInterface */
+    private $nodeApi;
 
     /**
-     * @param array<string,\LC\Portal\Config\ProfileConfig> $profileConfigList
+     * @param \LC\Portal\Node\NodeApiInterface $nodeApi
      */
-    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, array $profileConfigList, Storage $storage)
+    public function __construct(NodeApiInterface $nodeApi)
     {
-        $this->ca = $ca;
-        $this->tlsCrypt = $tlsCrypt;
-        $this->profileConfigList = $profileConfigList;
-        $this->storage = $storage;
+        $this->nodeApi = $nodeApi;
     }
 
     /**
@@ -78,12 +64,7 @@ class NodeApiModule implements ServiceModuleInterface
 
                 $commonName = InputValidation::serverCommonName($request->getPostParameter('common_name'));
 
-                $certInfo = $this->ca->serverCert($commonName);
-                // add TLS Auth
-                $certInfo['tls_crypt'] = $this->tlsCrypt->get();
-                $certInfo['ca'] = $this->ca->caCert();
-
-                return new ApiResponse('add_server_certificate', $certInfo, 201);
+                return new ApiResponse('add_server_certificate', $this->nodeApi->addServerCertificate($commonName), 201);
             }
         );
 
@@ -96,9 +77,8 @@ class NodeApiModule implements ServiceModuleInterface
                 AuthUtils::requireUser($hookData, ['vpn-user-portal', 'vpn-server-node']);
 
                 $profileList = [];
-                foreach ($this->profileConfigList as $profileId => $profileConfig) {
+                foreach ($this->nodeApi->getProfileList() as $profileId => $profileConfig) {
                     $profileConfigArray = $profileConfig->toArray();
-                    ksort($profileConfigArray);
                     $profileList[$profileId] = $profileConfigArray;
                 }
 
@@ -118,11 +98,7 @@ class NodeApiModule implements ServiceModuleInterface
         $ip6 = InputValidation::ip6($request->getPostParameter('ip6'));
         $connectedAt = InputValidation::connectedAt($request->getPostParameter('connected_at'));
 
-        if (null !== $response = $this->verifyConnection($profileId, $commonName)) {
-            return $response;
-        }
-
-        $this->storage->clientConnect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)));
+        $this->nodeApi->connect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)));
 
         return new ApiResponse('connect');
     }
@@ -136,79 +112,12 @@ class NodeApiModule implements ServiceModuleInterface
         $commonName = InputValidation::commonName($request->getPostParameter('common_name'));
         $ip4 = InputValidation::ip4($request->getPostParameter('ip4'));
         $ip6 = InputValidation::ip6($request->getPostParameter('ip6'));
-
         $connectedAt = InputValidation::connectedAt($request->getPostParameter('connected_at'));
         $disconnectedAt = InputValidation::disconnectedAt($request->getPostParameter('disconnected_at'));
         $bytesTransferred = InputValidation::bytesTransferred($request->getPostParameter('bytes_transferred'));
 
-        $this->storage->clientDisconnect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)), new DateTime(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+        $this->nodeApi->disconnect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)), new DateTime(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
 
         return new ApiResponse('disconnect');
-    }
-
-    /**
-     * @param string $profileId
-     * @param string $commonName
-     *
-     * @return \LC\Portal\Http\ApiErrorResponse|null
-     */
-    private function verifyConnection($profileId, $commonName)
-    {
-        // verify status of certificate/user
-        if (false === $result = $this->storage->getUserCertificateInfo($commonName)) {
-            // if a certificate does no longer exist, we cannot figure out the user
-            return new ApiErrorResponse('connect', 'user or certificate does not exist');
-        }
-
-        // XXX should we check whether or not session is expired yet?!
-
-        if ($result['user_is_disabled']) {
-            $msg = '[VPN] unable to connect, account is disabled';
-            $this->storage->addUserMessage($result['user_id'], 'notification', $msg);
-
-            return new ApiErrorResponse('connect', $msg);
-        }
-
-        return $this->verifyAcl($profileId, $result['user_id']);
-    }
-
-    /**
-     * @param string $profileId
-     * @param string $externalUserId
-     *
-     * @return \LC\Portal\Http\ApiErrorResponse|null
-     */
-    private function verifyAcl($profileId, $externalUserId)
-    {
-        // verify ACL
-        // XXX make sure the profile exists!
-        $profileConfig = $this->profileConfigList[$profileId];
-        if ($profileConfig->getEnableAcl()) {
-            // ACL enabled
-            $userPermissionList = $this->storage->getPermissionList($externalUserId);
-            if (false === self::hasPermission($userPermissionList, $profileConfig->getAclPermissionList())) {
-                $msg = '[VPN] unable to connect, user does not have required permissions';
-                $this->storage->addUserMessage($externalUserId, 'notification', $msg);
-
-                return new ApiErrorResponse('connect', $msg);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return bool
-     */
-    private static function hasPermission(array $userPermissionList, array $aclPermissionList)
-    {
-        // one of the permissions must be listed in the profile ACL list
-        foreach ($userPermissionList as $userPermission) {
-            if (\in_array($userPermission, $aclPermissionList, true)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
