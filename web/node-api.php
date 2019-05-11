@@ -43,6 +43,7 @@ try {
 
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
     $storage = new Storage(new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)), sprintf('%s/schema', $baseDir));
+    $storage->update();
     $easyRsaCa = new EasyRsaCa(sprintf('%s/easy-rsa', $baseDir), sprintf('%s/easy-rsa', $dataDir));
     $tlsCrypt = new TlsCrypt($dataDir);
     $localNodeApi = new LocalNodeApi($easyRsaCa, $tlsCrypt, $portalConfig, $storage);
