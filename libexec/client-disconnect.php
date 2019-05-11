@@ -10,13 +10,14 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use DateTime;
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Logger;
-use LC\Portal\Node\Connection;
 use LC\Portal\Node\LocalNodeApi;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
+use RuntimeException;
 
 $logger = new Logger(
     basename($argv[0])
@@ -37,7 +38,10 @@ try {
 
     // read environment variables
     foreach ($envKeys as $envKey) {
-        $envData[$envKey] = getenv($envKey);
+        if (false === $envValue = getenv($envKey)) {
+            throw new RuntimeException(sprintf('environment variable "%s" not available', $envKey));
+        }
+        $envData[$envKey] = $envValue;
     }
 
     $configDir = sprintf('%s/config', $baseDir);
@@ -47,8 +51,15 @@ try {
     $easyRsaCa = new EasyRsaCa(sprintf('%s/easy-rsa', $baseDir), sprintf('%s/easy-rsa', $dataDir));
     $tlsCrypt = new TlsCrypt($dataDir);
     $localNodeApi = new LocalNodeApi($easyRsaCa, $tlsCrypt, $portalConfig, $storage);
-    $connection = new Connection($localNodeApi);
-    $connection->disconnect($envData);
+    $localNodeApi->disconnect(
+        $envData['PROFILE_ID'],
+        $envData['common_name'],
+        $envData['ifconfig_pool_remote_ip'],
+        $envData['ifconfig_pool_remote_ip6'],
+        new DateTime(sprintf('@%d', (int) $envData['time_unix'])),
+        new DateTime(sprintf('@%d', (int) $envData['time_unix'] + (int) $envData['time_duration'])),
+        (int) $envData['bytes_received'] + (int) $envData['bytes_sent'],
+    );
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     exit(1);
