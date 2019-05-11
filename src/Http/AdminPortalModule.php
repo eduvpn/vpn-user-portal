@@ -374,7 +374,15 @@ class AdminPortalModule implements ServiceModuleInterface
                 }
 
                 $imageData = $this->graph->draw(
-                    $dateUsersList
+                    $dateUsersList,
+                    /**
+                     * @param int $v
+                     *
+                     * @return string
+                     */
+                    function ($v) {
+                        return sprintf('%d ', $v);
+                    }
                 );
                 $response->setBody($imageData);
 

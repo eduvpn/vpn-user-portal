@@ -71,7 +71,7 @@ class Graph
      *
      * @return string the PNG logo data
      */
-    public function draw(array $graphData, callable $toHuman = null, DateInterval $dateInterval = null)
+    public function draw(array $graphData, callable $toHuman, DateInterval $dateInterval = null)
     {
         if (null === $this->fontFile) {
             throw new GraphException('no font specified 1');
@@ -82,10 +82,6 @@ class Graph
 
         if (null === $dateInterval) {
             $dateInterval = new DateInterval('P1M');
-        }
-
-        if (null === $toHuman) {
-            $toHuman = ['\LC\Portal\Graph', 'toHumanDummy'];
         }
 
         $dateList = $this->createDateList($dateInterval);
@@ -327,15 +323,5 @@ class Graph
             $this->imageSize[1] - $y2,
             $color
         );
-    }
-
-    /**
-     * @param string $str
-     *
-     * @return string
-     */
-    private static function toHumanDummy($str)
-    {
-        return sprintf('%s ', $str);
     }
 }
