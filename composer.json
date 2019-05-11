@@ -58,6 +58,7 @@
         "ext-openssl": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
+        "ext-radius": "*",
         "ext-sodium": "*",
         "ext-spl": "*",
         "fkooman/jwt": "^1",
