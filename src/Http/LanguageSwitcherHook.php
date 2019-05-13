@@ -42,7 +42,9 @@ class LanguageSwitcherHook implements BeforeHookInterface
             return false;
         }
 
-        $language = $request->getPostParameter('setLanguage', false, 'en_US');
+        if (null === $language = $request->optionalPostParameter('setLanguage')) {
+            $language = 'en_US';
+        }
         if (!\in_array($language, $this->supportedLanguages, true)) {
             throw new HttpException('invalid language', 400);
         }

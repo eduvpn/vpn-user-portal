@@ -149,7 +149,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
-                $userId = $request->getQueryParameter('user_id');
+                $userId = $request->requireQueryParameter('user_id');
                 InputValidation::userId($userId);
 
                 $clientCertificateList = $this->storage->getCertificates($userId);
@@ -181,7 +181,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
-                $userId = $request->getPostParameter('user_id');
+                $userId = $request->requirePostParameter('user_id');
                 InputValidation::userId($userId);
 
                 // if the current user being managed is the account itself,
@@ -191,7 +191,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     throw new HttpException('cannot manage own account', 400);
                 }
 
-                $userAction = $request->getPostParameter('user_action');
+                $userAction = $request->requirePostParameter('user_action');
                 // no need to explicitly validate userAction, as we will have
                 // switch below with whitelisted acceptable values
 
@@ -302,7 +302,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $profileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
+                $profileId = InputValidation::profileId($request->requireQueryParameter('profile_id'));
                 $response = new Response(
                     200,
                     'image/png'
@@ -359,7 +359,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $profileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
+                $profileId = InputValidation::profileId($request->requireQueryParameter('profile_id'));
                 $response = new Response(
                     200,
                     'image/png'
@@ -426,7 +426,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $messageAction = $request->getPostParameter('message_action');
+                $messageAction = $request->requirePostParameter('message_action');
                 switch ($messageAction) {
                     case 'set':
                         // we can only have one "motd", so remove the ones that
@@ -437,11 +437,11 @@ class AdminPortalModule implements ServiceModuleInterface
                         }
 
                         // no need to validate, we accept everything
-                        $messageBody = $request->getPostParameter('message_body');
+                        $messageBody = $request->requirePostParameter('message_body');
                         $this->storage->addSystemMessage('motd', $messageBody);
                         break;
                     case 'delete':
-                        $messageId = InputValidation::messageId($request->getPostParameter('message_id'));
+                        $messageId = InputValidation::messageId($request->requirePostParameter('message_id'));
                         $this->storage->deleteSystemMessage($messageId);
                         break;
                     default:
@@ -462,9 +462,8 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $dateTime = $request->getPostParameter('date_time');
-                InputValidation::dateTime($dateTime);
-                $ipAddress = $request->getPostParameter('ip_address');
+                $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
+                $ipAddress = $request->requirePostParameter('ip_address');
                 InputValidation::ipAddress($ipAddress);
 
                 $logData = $this->storage->getLogEntry($dateTime, $ipAddress);

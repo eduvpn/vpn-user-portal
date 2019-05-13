@@ -59,8 +59,8 @@ class TwoFactorModule implements ServiceModuleInterface
 
                 $this->session->delete('_two_factor_verified');
 
-                $totpKey = InputValidation::totpKey($request->getPostParameter('_two_factor_auth_totp_key'));
-                $redirectTo = $request->getPostParameter('_two_factor_auth_redirect_to');
+                $totpKey = InputValidation::totpKey($request->requirePostParameter('_two_factor_auth_totp_key'));
+                $redirectTo = $request->requirePostParameter('_two_factor_auth_redirect_to');
 
                 try {
                     $totp = new Totp($this->storage);

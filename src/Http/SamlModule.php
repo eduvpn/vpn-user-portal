@@ -43,9 +43,9 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 try {
-                    $relayState = $request->getQueryParameter('ReturnTo');
-                    $idpEntityId = $request->getQueryParameter('IdP', false);
-                    $authnContextQuery = $request->getQueryParameter('AuthnContext', false);
+                    $relayState = $request->requireQueryParameter('ReturnTo');
+                    $idpEntityId = $request->optionalQueryParameter('IdP');
+                    $authnContextQuery = $request->optionalQueryParameter('AuthnContext');
                     $authnContextList = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
 
                     // verify the requested AuthnContext in the whitelist
@@ -114,10 +114,10 @@ class SamlModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 try {
                     $this->samlSp->handleResponse(
-                        $request->getPostParameter('SAMLResponse')
+                        $request->requirePostParameter('SAMLResponse')
                     );
 
-                    return new RedirectResponse($request->getPostParameter('RelayState'));
+                    return new RedirectResponse($request->requirePostParameter('RelayState'));
                 } catch (SamlException $e) {
                     throw new HttpException($e->getMessage(), 500, [], $e);
                 }
@@ -131,7 +131,7 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 try {
-                    $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
+                    $logoutUrl = $this->samlSp->logout($request->requireQueryParameter('ReturnTo'));
 
                     return new RedirectResponse($logoutUrl);
                 } catch (SamlException $e) {
@@ -151,7 +151,7 @@ class SamlModule implements ServiceModuleInterface
                         $request->getQueryString()
                     );
 
-                    return new RedirectResponse($request->getQueryParameter('RelayState'));
+                    return new RedirectResponse($request->requireQueryParameter('RelayState'));
                 } catch (SamlException $e) {
                     throw new HttpException($e->getMessage(), 500, [], $e);
                 }
@@ -164,7 +164,7 @@ class SamlModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
+                $logoutUrl = $this->samlSp->logout($request->requireQueryParameter('ReturnTo'));
 
                 return new RedirectResponse($logoutUrl);
             }

@@ -13,15 +13,20 @@ use LC\Portal\Http\Exception\HttpException;
 
 class Request
 {
-    /** @var array */
+    /** @var array<string,string> */
     private $serverData;
 
-    /** @var array */
+    /** @var array<string,string> */
     private $getData;
 
-    /** @var array */
+    /** @var array<string,string> */
     private $postData;
 
+    /**
+     * @param array<string,string> $serverData
+     * @param array<string,string> $getData
+     * @param array<string,string> $postData
+     */
     public function __construct(array $serverData, array $getData = [], array $postData = [])
     {
         $requiredHeaders = [
@@ -180,7 +185,7 @@ class Request
     }
 
     /**
-     * @return array
+     * @return array<string,string>
      */
     public function getQueryParameters()
     {
@@ -188,19 +193,35 @@ class Request
     }
 
     /**
-     * @param string $key
-     * @param bool   $isRequired
-     * @param mixed  $defaultValue
+     * @param string $getKey
      *
-     * @return mixed
+     * @return string
      */
-    public function getQueryParameter($key, $isRequired = true, $defaultValue = null)
+    public function requireQueryParameter($getKey)
     {
-        return Utils::getValueFromArray($this->getData, $key, $isRequired, $defaultValue);
+        if (!\array_key_exists($getKey, $this->getData)) {
+            throw new HttpException(sprintf('missing GET parameter "%s"', $getKey), 400);
+        }
+
+        return $this->getData[$getKey];
     }
 
     /**
-     * @return array
+     * @param string $getKey
+     *
+     * @return string|null
+     */
+    public function optionalQueryParameter($getKey)
+    {
+        if (!\array_key_exists($getKey, $this->getData)) {
+            return null;
+        }
+
+        return $this->getData[$getKey];
+    }
+
+    /**
+     * @return array<string,string>
      */
     public function getPostParameters()
     {
@@ -208,25 +229,31 @@ class Request
     }
 
     /**
-     * @param string $key
-     * @param bool   $isRequired
-     * @param mixed  $defaultValue
+     * @param string $postKey
      *
-     * @return mixed
+     * @return string
      */
-    public function getPostParameter($key, $isRequired = true, $defaultValue = null)
+    public function requirePostParameter($postKey)
     {
-        return Utils::getValueFromArray($this->postData, $key, $isRequired, $defaultValue);
+        if (!\array_key_exists($postKey, $this->postData)) {
+            throw new HttpException(sprintf('missing POST parameter "%s"', $postKey), 400);
+        }
+
+        return $this->postData[$postKey];
     }
 
     /**
-     * @param string $headerKey
+     * @param string $postKey
      *
-     * @return bool
+     * @return string|null
      */
-    public function hasHeader($headerKey)
+    public function optionalPostParameter($postKey)
     {
-        return \array_key_exists($headerKey, $this->serverData);
+        if (!\array_key_exists($postKey, $this->postData)) {
+            return null;
+        }
+
+        return $this->postData[$postKey];
     }
 
     /**
@@ -236,7 +263,7 @@ class Request
      */
     public function requireHeader($headerKey)
     {
-        if (!$this->hasHeader($headerKey)) {
+        if (!\array_key_exists($headerKey, $this->serverData)) {
             throw new HttpException(sprintf('missing request header "%s"', $headerKey), 400);
         }
 
@@ -250,7 +277,7 @@ class Request
      */
     public function optionalHeader($headerKey)
     {
-        if (!$this->hasHeader($headerKey)) {
+        if (!\array_key_exists($headerKey, $this->serverData)) {
             return null;
         }
 

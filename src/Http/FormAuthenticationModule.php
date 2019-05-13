@@ -47,9 +47,9 @@ class FormAuthenticationModule implements ServiceModuleInterface
             function (Request $request) {
                 $this->session->delete('_form_auth_user');
 
-                $authUser = $request->getPostParameter('userName');
-                $authPass = $request->getPostParameter('userPass');
-                $redirectTo = $request->getPostParameter('_form_auth_redirect_to');
+                $authUser = $request->requirePostParameter('userName');
+                $authPass = $request->requirePostParameter('userPass');
+                $redirectTo = $request->requirePostParameter('_form_auth_redirect_to');
 
                 // validate the URL
                 if (false === filter_var($redirectTo, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_PATH_REQUIRED)) {

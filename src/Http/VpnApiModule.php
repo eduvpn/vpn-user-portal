@@ -175,7 +175,7 @@ class VpnApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
-                $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
+                $commonName = InputValidation::commonName($request->requireQueryParameter('common_name'));
                 $clientCertificateInfo = $this->storage->getUserCertificateInfo($commonName);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
 
@@ -196,7 +196,7 @@ class VpnApiModule implements ServiceModuleInterface
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 try {
-                    $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
+                    $requestedProfileId = InputValidation::profileId($request->requireQueryParameter('profile_id'));
                     $userPermissions = $this->getPermissionList($accessTokenInfo);
 
                     $availableProfiles = [];

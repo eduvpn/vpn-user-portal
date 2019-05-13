@@ -85,8 +85,8 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
                 $userId = $userInfo->getUserId();
 
-                $totpSecret = InputValidation::totpSecret($request->getPostParameter('totp_secret'));
-                $totpKey = InputValidation::totpKey($request->getPostParameter('totp_key'));
+                $totpSecret = InputValidation::totpSecret($request->requirePostParameter('totp_secret'));
+                $totpKey = InputValidation::totpKey($request->requirePostParameter('totp_key'));
                 $hasTwoFactorEnrollRedirectTo = $this->session->has('_two_factor_enroll_redirect_to');
 
                 try {
@@ -134,7 +134,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
-                $totpSecret = InputValidation::totpSecret($request->getQueryParameter('totp_secret'));
+                $totpSecret = InputValidation::totpSecret($request->requireQueryParameter('totp_secret'));
 
                 $otpAuthUrl = sprintf(
                     'otpauth://totp/%s:%s?secret=%s&issuer=%s',

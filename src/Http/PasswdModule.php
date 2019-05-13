@@ -60,9 +60,9 @@ class PasswdModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
-                $userPass = $request->getPostParameter('userPass');
-                $newUserPass = InputValidation::userPass($request->getPostParameter('newUserPass'));
-                $newUserPassConfirm = InputValidation::userPass($request->getPostParameter('newUserPassConfirm'));
+                $userPass = $request->requirePostParameter('userPass');
+                $newUserPass = InputValidation::userPass($request->requirePostParameter('newUserPass'));
+                $newUserPassConfirm = InputValidation::userPass($request->requirePostParameter('newUserPassConfirm'));
 
                 if (!$this->storage->isValid($userInfo->getUserId(), $userPass)) {
                     return new HtmlResponse(
