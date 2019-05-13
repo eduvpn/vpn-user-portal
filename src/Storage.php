@@ -349,7 +349,7 @@ SQL
     /**
      * @param string $commonName
      *
-     * @return false|array{user_id:string, user_is_disabled:bool, display_name:string, valid_from:int, valid_to:int, client_id: string}
+     * @return false|array{user_id:string, user_is_disabled:bool, display_name:string, valid_from:string, valid_to:string, client_id: null|string}
      */
     public function getUserCertificateInfo($commonName)
     {
