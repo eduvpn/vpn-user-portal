@@ -7,12 +7,12 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\OAuth;
 
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\ClientInfo;
 
-class OAuthClientDb implements ClientDbInterface
+class ClientDb implements ClientDbInterface
 {
     /**
      * @param string $clientId

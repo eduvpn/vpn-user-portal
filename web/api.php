@@ -21,7 +21,7 @@ use LC\Portal\Http\Service;
 use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Logger;
 use LC\Portal\OAuth\BearerValidator;
-use LC\Portal\OAuthClientDb;
+use LC\Portal\OAuth\ClientDb;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 
@@ -60,7 +60,7 @@ try {
 
         $bearerValidator = new BearerValidator(
             $storage,
-            new OAuthClientDb(),
+            new ClientDb(),
             $secretKey->getPublicKey(),
             $keyInstanceMapping
         );

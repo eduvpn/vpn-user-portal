@@ -48,8 +48,8 @@ use LC\Portal\Http\UpdateSessionInfoHook;
 use LC\Portal\Http\VpnPortalModule;
 use LC\Portal\LdapClient;
 use LC\Portal\Logger;
+use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
-use LC\Portal\OAuthClientDb;
 use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
@@ -334,7 +334,7 @@ try {
     );
     $tlsCrypt = new TlsCrypt($dataDir);
     $serverManager = new ServerManager($portalConfig->getProfileConfigList(), $logger, new ManagementSocket());
-    $oauthClientDb = new OAuthClientDb();
+    $clientDb = new clientDb();
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
@@ -345,7 +345,7 @@ try {
         $easyRsaCa,
         $tlsCrypt,
         $serverManager,
-        $oauthClientDb
+        $clientDb
     );
     $service->addModule($vpnPortalModule);
 
@@ -383,7 +383,7 @@ try {
 
         $oauthServer = new OAuthServer(
             $storage,
-            $oauthClientDb,
+            $clientDb,
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
         $oauthServer->setAccessTokenExpiry($apiConfig->getTokenExpiry());
