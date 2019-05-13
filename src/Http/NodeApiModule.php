@@ -38,7 +38,15 @@ class NodeApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireUser($hookData, ['vpn-server-node']);
 
-                return $this->connect($request);
+                $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
+                $commonName = InputValidation::commonName($request->getPostParameter('common_name'));
+                $ip4 = InputValidation::ip4($request->getPostParameter('ip4'));
+                $ip6 = InputValidation::ip6($request->getPostParameter('ip6'));
+                $connectedAt = InputValidation::connectedAt($request->getPostParameter('connected_at'));
+
+                $this->nodeApi->connect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)));
+
+                return new ApiResponse('connect');
             }
         );
 
@@ -50,7 +58,17 @@ class NodeApiModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireUser($hookData, ['vpn-server-node']);
 
-                return $this->disconnect($request);
+                $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
+                $commonName = InputValidation::commonName($request->getPostParameter('common_name'));
+                $ip4 = InputValidation::ip4($request->getPostParameter('ip4'));
+                $ip6 = InputValidation::ip6($request->getPostParameter('ip6'));
+                $connectedAt = InputValidation::connectedAt($request->getPostParameter('connected_at'));
+                $disconnectedAt = InputValidation::disconnectedAt($request->getPostParameter('disconnected_at'));
+                $bytesTransferred = InputValidation::bytesTransferred($request->getPostParameter('bytes_transferred'));
+
+                $this->nodeApi->disconnect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)), new DateTime(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+
+                return new ApiResponse('disconnect');
             }
         );
 
@@ -74,7 +92,7 @@ class NodeApiModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireUser($hookData, ['vpn-user-portal', 'vpn-server-node']);
+                AuthUtils::requireUser($hookData, ['vpn-server-node']);
 
                 $profileList = [];
                 foreach ($this->nodeApi->getProfileList() as $profileId => $profileConfig) {
@@ -85,39 +103,5 @@ class NodeApiModule implements ServiceModuleInterface
                 return new ApiResponse('profile_list', $profileList);
             }
         );
-    }
-
-    /**
-     * @return \LC\Portal\Http\Response
-     */
-    public function connect(Request $request)
-    {
-        $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
-        $commonName = InputValidation::commonName($request->getPostParameter('common_name'));
-        $ip4 = InputValidation::ip4($request->getPostParameter('ip4'));
-        $ip6 = InputValidation::ip6($request->getPostParameter('ip6'));
-        $connectedAt = InputValidation::connectedAt($request->getPostParameter('connected_at'));
-
-        $this->nodeApi->connect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)));
-
-        return new ApiResponse('connect');
-    }
-
-    /**
-     * @return \LC\Portal\Http\Response
-     */
-    public function disconnect(Request $request)
-    {
-        $profileId = InputValidation::profileId($request->getPostParameter('profile_id'));
-        $commonName = InputValidation::commonName($request->getPostParameter('common_name'));
-        $ip4 = InputValidation::ip4($request->getPostParameter('ip4'));
-        $ip6 = InputValidation::ip6($request->getPostParameter('ip6'));
-        $connectedAt = InputValidation::connectedAt($request->getPostParameter('connected_at'));
-        $disconnectedAt = InputValidation::disconnectedAt($request->getPostParameter('disconnected_at'));
-        $bytesTransferred = InputValidation::bytesTransferred($request->getPostParameter('bytes_transferred'));
-
-        $this->nodeApi->disconnect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)), new DateTime(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
-
-        return new ApiResponse('disconnect');
     }
 }

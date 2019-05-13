@@ -52,6 +52,7 @@ class TlsCrypt
      */
     private static function generateTlsCrypt()
     {
+        // Same as $(openvpn --genkey --secret <file>)
         $randomData = wordwrap(Hex::encode(random_bytes(256)), 32, "\n", true);
 
         return <<< EOF
