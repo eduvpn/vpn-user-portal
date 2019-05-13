@@ -75,7 +75,7 @@ class Response
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function json()
     {

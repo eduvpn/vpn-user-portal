@@ -43,7 +43,7 @@ class FileIO
     /**
      * @param string $filePath
      *
-     * @return mixed
+     * @return array
      */
     public static function readJsonFile($filePath)
     {
@@ -71,12 +71,12 @@ class FileIO
 
     /**
      * @param string $filePath
-     * @param mixed  $fileJsonData
+     * @param array  $fileJsonData
      * @param int    $mode
      *
      * @return void
      */
-    public static function writeJsonFile($filePath, $fileJsonData, $mode = 0600)
+    public static function writeJsonFile($filePath, array $fileJsonData, $mode = 0600)
     {
         $fileData = Json::encode($fileJsonData);
 

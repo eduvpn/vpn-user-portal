@@ -14,11 +14,11 @@ use LC\Portal\Exception\JsonException;
 class Json
 {
     /**
-     * @param mixed $jsonData
+     * @param array $jsonData
      *
      * @return string
      */
-    public static function encode($jsonData)
+    public static function encode(array $jsonData)
     {
         $jsonString = json_encode($jsonData);
         // 5.5.0 	The return value on failure was changed from null string to FALSE.

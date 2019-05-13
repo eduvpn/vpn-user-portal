@@ -68,7 +68,7 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param mixed $shuffleHosts
+     * @param bool $shuffleHosts
      *
      * @return void
      */
