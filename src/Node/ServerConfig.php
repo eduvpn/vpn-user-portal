@@ -84,9 +84,9 @@ class ServerConfig
     }
 
     /**
-     * @param array<string,string>            $certData
-     * @param string                          $profileId
-     * @param \LC\Portal\Config\ProfileConfig $profileConfig
+     * @param array{cert:string, key:string, valid_from:int, valid_to:int, ca:string, tls-crypt:string} $certData
+     * @param string                                                                                    $profileId
+     * @param \LC\Portal\Config\ProfileConfig                                                           $profileConfig
      *
      * @return array<string,string>
      */

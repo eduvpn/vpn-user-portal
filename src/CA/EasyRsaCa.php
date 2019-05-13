@@ -62,9 +62,7 @@ class EasyRsaCa implements CaInterface
     }
 
     /**
-     * Get the CA root certificate.
-     *
-     * @return string the CA certificate in PEM format
+     * @return string
      */
     public function caCert()
     {
@@ -74,12 +72,9 @@ class EasyRsaCa implements CaInterface
     }
 
     /**
-     * Generate a certificate for the VPN server.
-     *
      * @param string $commonName
      *
-     * @return array the certificate, key in array with keys
-     *               'cert', 'key', 'valid_from' and 'valid_to'
+     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
      */
     public function serverCert($commonName)
     {
@@ -92,13 +87,10 @@ class EasyRsaCa implements CaInterface
     }
 
     /**
-     * Generate a certificate for a VPN client.
-     *
      * @param string    $commonName
      * @param \DateTime $expiresAt
      *
-     * @return array the certificate and key in array with keys 'cert', 'key',
-     *               'valid_from' and 'valid_to'
+     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
      */
     public function clientCert($commonName, DateTime $expiresAt)
     {
@@ -133,7 +125,7 @@ class EasyRsaCa implements CaInterface
     /**
      * @param string $commonName
      *
-     * @return array<string,string>
+     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
      */
     private function certInfo($commonName)
     {
@@ -145,8 +137,8 @@ class EasyRsaCa implements CaInterface
         return [
             'cert' => $certData,
             'key' => $keyData,
-            'valid_from' => $parsedCert['validFrom_time_t'],
-            'valid_to' => $parsedCert['validTo_time_t'],
+            'valid_from' => (int) $parsedCert['validFrom_time_t'],
+            'valid_to' => (int) $parsedCert['validTo_time_t'],
         ];
     }
 
