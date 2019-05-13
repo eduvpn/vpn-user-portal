@@ -10,12 +10,10 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use DateTime;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Logger;
 use LC\Portal\OpenVpn\Connection;
 use LC\Portal\Storage;
-use RuntimeException;
 
 $logger = new Logger(
     basename($argv[0])

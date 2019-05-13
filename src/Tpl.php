@@ -37,7 +37,7 @@ class Tpl implements TplInterface
 
     /**
      * @param array<string> $templateFolderList
-     * @param string        $translationFile
+     * @param string|null        $translationFile
      */
     public function __construct(array $templateFolderList, $translationFile = null)
     {

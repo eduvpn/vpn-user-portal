@@ -26,6 +26,9 @@ class DisabledUserHook implements BeforeHookInterface
         $this->storage = $storage;
     }
 
+    /**
+     * @return bool
+     */
     public function executeBefore(Request $request, array $hookData)
     {
         $whiteList = [
@@ -54,5 +57,7 @@ class DisabledUserHook implements BeforeHookInterface
             // user is disabled, show a special message
             throw new HttpException(sprintf('account for user "%s" disabled', $userId), 403);
         }
+
+        return true;
     }
 }

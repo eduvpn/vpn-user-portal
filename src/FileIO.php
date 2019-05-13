@@ -84,18 +84,6 @@ class FileIO
     }
 
     /**
-     * @param string $filePath
-     *
-     * @return void
-     */
-    public static function deleteFile($filePath)
-    {
-        if (false === unlink($filePath)) {
-            throw new RuntimeException(sprintf('unable to delete file "%s"', $filePath));
-        }
-    }
-
-    /**
      * @param string $dirPath
      * @param int    $mode
      *
