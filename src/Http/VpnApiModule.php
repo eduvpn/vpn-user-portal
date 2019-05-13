@@ -9,10 +9,10 @@
 
 namespace LC\Portal\Http;
 
-use DateInterval;
 use DateTime;
 use DateTimeZone;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\Config\ProfileConfig;
 use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
@@ -26,17 +26,14 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \LC\Portal\Storage */
     private $storage;
 
-    /** @var array<string,\LC\Portal\Config\ProfileConfig> */
-    private $profileConfigList;
+    /** @var \LC\Portal\Config\PortalConfig */
+    private $portalConfig;
 
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
     /** @var \LC\Portal\OpenVpn\TlsCrypt */
     private $tlsCrypt;
-
-    /** @var \DateInterval */
-    private $sessionExpiry;
 
     /** @var bool */
     private $shuffleHosts = true;
@@ -48,19 +45,17 @@ class VpnApiModule implements ServiceModuleInterface
     private $random;
 
     /**
-     * @param Storage                                       $storage
-     * @param array<string,\LC\Portal\Config\ProfileConfig> $profileConfigList
-     * @param \LC\Portal\CA\CaInterface                     $ca
-     * @param \LC\Portal\OpenVpn\TlsCrypt                   $tlsCrypt
-     * @param \DateInterval                                 $sessionExpiry
+     * @param Storage                        $storage
+     * @param \LC\Portal\Config\PortalConfig $portalConfig
+     * @param \LC\Portal\CA\CaInterface      $ca
+     * @param \LC\Portal\OpenVpn\TlsCrypt    $tlsCrypt
      */
-    public function __construct(Storage $storage, array $profileConfigList, CaInterface $ca, TlsCrypt $tlsCrypt, DateInterval $sessionExpiry)
+    public function __construct(Storage $storage, PortalConfig $portalConfig, CaInterface $ca, TlsCrypt $tlsCrypt)
     {
         $this->storage = $storage;
-        $this->profileConfigList = $profileConfigList;
+        $this->portalConfig = $portalConfig;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
-        $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = new DateTime();
         $this->random = new Random();
     }
@@ -91,7 +86,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $accessTokenInfo = $hookData['auth'];
                 $userPermissions = $this->getPermissionList($accessTokenInfo);
                 $userProfileList = [];
-                foreach ($this->profileConfigList as $profileId => $profileConfig) {
+                foreach ($this->portalConfig->getProfileConfigList() as $profileId => $profileConfig) {
                     if ($profileConfig->getHideProfile()) {
                         continue;
                     }
@@ -202,7 +197,7 @@ class VpnApiModule implements ServiceModuleInterface
                     $userPermissions = $this->getPermissionList($accessTokenInfo);
 
                     $availableProfiles = [];
-                    foreach ($this->profileConfigList as $profileId => $profileConfig) {
+                    foreach ($this->portalConfig->getProfileConfigList() as $profileId => $profileConfig) {
                         if ($profileConfig->getHideProfile()) {
                             continue;
                         }
@@ -220,7 +215,7 @@ class VpnApiModule implements ServiceModuleInterface
                         return new ApiErrorResponse('profile_config', 'user has no access to this profile');
                     }
 
-                    return $this->getConfigOnly($this->profileConfigList[$requestedProfileId]);
+                    return $this->getConfigOnly($this->portalConfig->getProfileConfig($requestedProfileId));
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('profile_config', $e->getMessage());
                 }
@@ -381,7 +376,7 @@ class VpnApiModule implements ServiceModuleInterface
     private function getExpiresAt(VpnAccessTokenInfo $accessTokenInfo)
     {
         if (!$accessTokenInfo->getIsLocal()) {
-            return date_add(clone $this->dateTime, $this->sessionExpiry);
+            return date_add(clone $this->dateTime, $this->portalConfig->getSessionExpiry());
         }
 
         return new DateTime($this->storage->getSessionExpiresAt($accessTokenInfo->getUserId()));

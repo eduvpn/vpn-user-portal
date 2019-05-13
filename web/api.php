@@ -84,10 +84,9 @@ try {
         // api module
         $vpnApiModule = new VpnApiModule(
             $storage,
-            $portalConfig->getProfileConfigList(),
+            $portalConfig,
             $easyRsaCa,
-            $tlsCrypt,
-            $portalConfig->getSessionExpiry()
+            $tlsCrypt
         );
         $service->addModule($vpnApiModule);
     }
