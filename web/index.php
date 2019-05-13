@@ -51,8 +51,8 @@ use LC\Portal\Logger;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OpenVpn\ServerManager;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
 
 $logger = new Logger('vpn-user-portal');
@@ -332,7 +332,7 @@ try {
         $easyRsaDir,
         $easyRsaDataDir
     );
-    $tlsCrypt = new TlsCrypt($dataDir);
+    $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $dataDir));
     $serverManager = new ServerManager($portalConfig->getProfileConfigList(), $logger, new ManagementSocket());
     $clientDb = new clientDb();
 

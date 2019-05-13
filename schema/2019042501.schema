@@ -1,4 +1,4 @@
-CREATE TABLE authorizations (
+CREATE TABLE IF NOT EXISTS authorizations (
     auth_key VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL,
     client_id VARCHAR(255) NOT NULL,
@@ -6,19 +6,19 @@ CREATE TABLE authorizations (
     auth_time VARCHAR(255) NOT NULL,
     UNIQUE(auth_key)
 );
-CREATE TABLE pdo_users (
+CREATE TABLE IF NOT EXISTS pdo_users (
     user_id VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     created_at VARCHAR(255) NOT NULL,
     UNIQUE(user_id)
 );
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS users(
   user_id VARCHAR(255) NOT NULL PRIMARY KEY UNIQUE,
   session_expires_at DATETIME NOT NULL,
   permission_list TEXT NOT NULL,
   is_disabled BOOLEAN NOT NULL
 );
-CREATE TABLE certificates(
+CREATE TABLE IF NOT EXISTS certificates(
   common_name VARCHAR(255) UNIQUE NOT NULL,
   display_name VARCHAR(255) NOT NULL,
   valid_from DATETIME NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE certificates(
   client_id VARCHAR(255) DEFAULT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
-CREATE TABLE connection_log(
+CREATE TABLE IF NOT EXISTS connection_log(
   user_id VARCHAR(255) NOT NULL,
   common_name VARCHAR(255) NOT NULL,
   profile_id VARCHAR(255) NOT NULL,
@@ -37,27 +37,27 @@ CREATE TABLE connection_log(
   bytes_transferred INTEGER DEFAULT NULL,
   client_lost BOOLEAN DEFAULT 0
 );
-CREATE TABLE system_messages(
+CREATE TABLE IF NOT EXISTS system_messages(
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   type VARCHAR(255) NOT NULL DEFAULT "notification",
   message TINYTEXT NOT NULL,
   date_time DATETIME NOT NULL
 );
-CREATE TABLE user_messages(
+CREATE TABLE IF NOT EXISTS user_messages(
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   type VARCHAR(255) NOT NULL DEFAULT "notification",
   message TINYTEXT NOT NULL,
   date_time DATETIME NOT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
-CREATE TABLE otp(
+CREATE TABLE IF NOT EXISTS otp(
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
   otp_secret VARCHAR(255) NOT NULL,
   otp_hash_algorithm VARCHAR(255) NOT NULL,
   otp_digits INTEGER NOT NULL,
   totp_period INTEGER NOT NULL
 );
-CREATE TABLE otp_log(
+CREATE TABLE IF NOT EXISTS otp_log(
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
   otp_key VARCHAR(255) NOT NULL,
   date_time DATETIME NOT NULL,

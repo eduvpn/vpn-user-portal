@@ -22,8 +22,8 @@ use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Logger;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 
 $logger = new Logger('vpn-user-api');
 
@@ -78,7 +78,7 @@ try {
             $easyRsaDir,
             $easyRsaDataDir
         );
-        $tlsCrypt = new TlsCrypt($dataDir);
+        $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $dataDir));
 
         // api module
         $vpnApiModule = new VpnApiModule(

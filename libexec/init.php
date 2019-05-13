@@ -13,8 +13,8 @@ $baseDir = dirname(__DIR__);
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\FileIO;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
 try {
@@ -36,8 +36,12 @@ try {
     $storage->init();
 
     // tls-crypt
-    $tlsCrypt = new TlsCrypt($dataDir);
-    $tlsCrypt->init();
+    // XXX should we move this to config dir?
+    $tlsCryptFile = sprintf('%s/tls-crypt.key', $dataDir);
+    if (!FileIO::exists($tlsCryptFile)) {
+        $tlsCrypt = TlsCrypt::generate();
+        FileIO::writeFile($tlsCryptFile, $tlsCrypt->raw(), 0640);
+    }
 
     // OAuth Key
     $oauthKeyFile = sprintf('%s/oauth.key', $configDir);

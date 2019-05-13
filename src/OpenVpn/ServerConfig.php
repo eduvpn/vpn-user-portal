@@ -14,7 +14,6 @@ use LC\Portal\CA\CaInterface;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Config\ProfileConfig;
 use LC\Portal\IP;
-use LC\Portal\TlsCrypt;
 use RuntimeException;
 
 class ServerConfig
@@ -25,7 +24,7 @@ class ServerConfig
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
-    /** @var \LC\Portal\TlsCrypt */
+    /** @var \LC\Portal\OpenVpn\TlsCrypt */
     private $tlsCrypt;
 
     /** @var string */
@@ -43,7 +42,7 @@ class ServerConfig
     /**
      * @param \LC\Portal\Config\PortalConfig $portalConfig
      * @param \LC\Portal\CA\CaInterface      $ca
-     * @param \LC\Portal\TlsCrypt            $tlsCrypt
+     * @param \LC\Portal\OpenVpn\TlsCrypt    $tlsCrypt
      * @param string                         $libExecDir
      * @param string                         $vpnUser
      * @param string                         $vpnGroup
@@ -70,7 +69,7 @@ class ServerConfig
             $this->ca->serverCert($commonName),
             [
                 'ca' => $this->ca->caCert(),
-                'tls-crypt' => $this->tlsCrypt->get(),
+                'tls-crypt' => $this->tlsCrypt->raw(),
             ]
         );
         $profileList = $this->portalConfig->getProfileConfigList();

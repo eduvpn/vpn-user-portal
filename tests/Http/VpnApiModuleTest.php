@@ -16,8 +16,8 @@ use LC\Portal\Http\BearerAuthenticationHook;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\VpnApiModule;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
@@ -38,7 +38,7 @@ class VpnApiModuleTest extends TestCase
         mkdir($tmpDir);
         $ca = new EasyRsaCa(\dirname(\dirname(__DIR__)).'/easy-rsa', $tmpDir);
         $ca->init();
-        $tlsCrypt = new TlsCrypt(__DIR__.'/data');
+        $tlsCrypt = TlsCrypt::generate();
         $sessionExpiry = new DateInterval('P90D');
         $vpnApiModule = new VpnApiModule($storage, $portalConfig->getProfileConfigList(), $ca, $tlsCrypt, $sessionExpiry);
         $this->service = new Service();

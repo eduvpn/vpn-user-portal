@@ -14,8 +14,8 @@ use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\OpenVpn\ServerConfig;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 
 try {
     $configDir = sprintf('%s/config', $baseDir);
@@ -42,7 +42,7 @@ try {
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
     $storage = new Storage(new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)), sprintf('%s/schema', $baseDir));
     $easyRsaCa = new EasyRsaCa(sprintf('%s/easy-rsa', $baseDir), sprintf('%s/easy-rsa', $dataDir));
-    $tlsCrypt = new TlsCrypt($dataDir);
+    $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $dataDir));
     $openVpn = new ServerConfig($portalConfig, $easyRsaCa, $tlsCrypt, $libExecDir, $vpnUser, $vpnGroup);
     $configList = $openVpn->getConfigList();
     foreach ($configList as $configName => $configFile) {

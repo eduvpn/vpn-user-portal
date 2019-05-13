@@ -17,9 +17,9 @@ use LC\Portal\Config\PortalConfig;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\OpenVpn\ClientConfig;
 use LC\Portal\OpenVpn\ServerManager;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Random;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 use LC\Portal\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
@@ -39,7 +39,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
-    /** @var \LC\Portal\TlsCrypt */
+    /** @var \LC\Portal\OpenVpn\TlsCrypt */
     private $tlsCrypt;
 
     /** @var \LC\Portal\OpenVpn\ServerManager */
@@ -447,7 +447,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         // get the CA & tls-auth
         $serverInfo = [
-            'tls_crypt' => $this->tlsCrypt->get(),
+            'tls_crypt' => $this->tlsCrypt->raw(),
             'ca' => $this->ca->caCert(),
         ];
 

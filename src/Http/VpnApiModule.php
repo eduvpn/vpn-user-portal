@@ -17,9 +17,9 @@ use LC\Portal\Config\ProfileConfig;
 use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
 use LC\Portal\OpenVpn\ClientConfig;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Random;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 
 class VpnApiModule implements ServiceModuleInterface
 {
@@ -32,7 +32,7 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \LC\Portal\CA\CaInterface */
     private $ca;
 
-    /** @var \LC\Portal\TlsCrypt */
+    /** @var \LC\Portal\OpenVpn\TlsCrypt */
     private $tlsCrypt;
 
     /** @var \DateInterval */
@@ -50,6 +50,8 @@ class VpnApiModule implements ServiceModuleInterface
     /**
      * @param Storage                                       $storage
      * @param array<string,\LC\Portal\Config\ProfileConfig> $profileConfigList
+     * @param \LC\Portal\CA\CaInterface                     $ca
+     * @param \LC\Portal\OpenVpn\TlsCrypt                   $tlsCrypt
      * @param \DateInterval                                 $sessionExpiry
      */
     public function __construct(Storage $storage, array $profileConfigList, CaInterface $ca, TlsCrypt $tlsCrypt, DateInterval $sessionExpiry)
@@ -278,7 +280,7 @@ class VpnApiModule implements ServiceModuleInterface
         // obtain information about this profile to be able to construct
         // a client configuration file
         $serverInfo = [
-            'tls_crypt' => $this->tlsCrypt->get(),
+            'tls_crypt' => $this->tlsCrypt->raw(),
             'ca' => $this->ca->caCert(),
         ];
 
