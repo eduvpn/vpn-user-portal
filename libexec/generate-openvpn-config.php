@@ -14,7 +14,7 @@ use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Node\LocalNodeApi;
-use LC\Portal\Node\OpenVpn;
+use LC\Portal\Node\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 
@@ -45,7 +45,7 @@ try {
     $easyRsaCa = new EasyRsaCa(sprintf('%s/easy-rsa', $baseDir), sprintf('%s/easy-rsa', $dataDir));
     $tlsCrypt = new TlsCrypt($dataDir);
     $localNodeApi = new LocalNodeApi($easyRsaCa, $tlsCrypt, $portalConfig, $storage);
-    $openVpn = new OpenVpn($localNodeApi, $vpnConfigDir, $libExecDir, $vpnUser, $vpnGroup);
+    $openVpn = new ServerConfig($localNodeApi, $vpnConfigDir, $libExecDir, $vpnUser, $vpnGroup);
     $openVpn->writeProfiles();
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;

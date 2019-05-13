@@ -113,7 +113,7 @@ class LocalNodeApi implements NodeApiInterface
     {
         $certInfo = $this->ca->serverCert($commonName);
         $certInfo['ca'] = $this->ca->caCert();
-        $certInfo['tls_crypt'] = $this->tlsCrypt->get();
+        $certInfo['tls-crypt'] = $this->tlsCrypt->get();
 
         return $certInfo;
     }

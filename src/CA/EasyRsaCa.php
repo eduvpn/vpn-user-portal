@@ -143,8 +143,8 @@ class EasyRsaCa implements CaInterface
         $parsedCert = openssl_x509_parse($certData);
 
         return [
-            'certificate' => $certData,
-            'private_key' => $keyData,
+            'cert' => $certData,
+            'key' => $keyData,
             'valid_from' => $parsedCert['validFrom_time_t'],
             'valid_to' => $parsedCert['validTo_time_t'],
         ];

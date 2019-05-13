@@ -14,7 +14,7 @@ use LC\Portal\Config\ProfileConfig;
 use LC\Portal\FileIO;
 use RuntimeException;
 
-class OpenVpn
+class ServerConfig
 {
     /** @var NodeApiInterface */
     private $nodeApi;
@@ -56,37 +56,12 @@ class OpenVpn
      */
     public function writeProfiles()
     {
+        // generate (server) cert/keys
+        $commonName = sprintf('LC.%s', $this->dateTime->format('YmdHis'));
+        $certData = $this->nodeApi->addServerCertificate($commonName);
         $profileList = $this->nodeApi->getProfileList();
         foreach ($profileList as $profileId => $profileConfig) {
-            $this->writeProfile($profileId, $profileConfig);
-
-            // generate a CN based on date and profile, instance
-            $commonName = sprintf('%s.%s', $this->dateTime->format('YmdHis'), $profileId);
-            $vpnTlsDir = sprintf('%s/tls/%s', $this->vpnConfigDir, $profileId);
-
-            $this->generateKeys($vpnTlsDir, $commonName);
-        }
-    }
-
-    /**
-     * @param string $vpnTlsDir
-     * @param string $commonName
-     *
-     * @return void
-     */
-    private function generateKeys($vpnTlsDir, $commonName)
-    {
-        FileIO::createDir($vpnTlsDir, 0700);
-        $certData = $this->nodeApi->addServerCertificate($commonName);
-        $certFileMapping = [
-            'ca' => sprintf('%s/ca.crt', $vpnTlsDir),
-            'certificate' => sprintf('%s/server.crt', $vpnTlsDir),
-            'private_key' => sprintf('%s/server.key', $vpnTlsDir),
-            'tls_crypt' => sprintf('%s/tls-crypt.key', $vpnTlsDir),
-        ];
-
-        foreach ($certFileMapping as $k => $v) {
-            FileIO::writeFile($v, $certData[$k], 0600);
+            $this->writeProfile($certData, $profileId, $profileConfig);
         }
     }
 
@@ -96,7 +71,7 @@ class OpenVpn
      *
      * @return void
      */
-    private function writeProfile($profileId, ProfileConfig $profileConfig)
+    private function writeProfile(array $certData, $profileId, ProfileConfig $profileConfig)
     {
         $processCount = \count($profileConfig->getVpnProtoPortList());
         $allowedProcessCount = [1, 2, 4, 8, 16, 32, 64];
@@ -121,7 +96,7 @@ class OpenVpn
             $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
             $processConfig['configName'] = sprintf('%s-%d.conf', $profileId, $i);
 
-            $this->writeProcess($profileId, $profileConfig, $processConfig);
+            $this->writeProcess($certData, $profileId, $profileConfig, $processConfig);
         }
     }
 
@@ -177,10 +152,8 @@ class OpenVpn
      *
      * @return void
      */
-    private function writeProcess($profileId, ProfileConfig $profileConfig, array $processConfig)
+    private function writeProcess(array $certData, $profileId, ProfileConfig $profileConfig, array $processConfig)
     {
-        $tlsDir = sprintf('tls/%s', $profileId);
-
         $rangeFourIp = new IP($processConfig['rangeFour']);
         $rangeSixIp = new IP($processConfig['rangeSix']);
 
@@ -202,9 +175,6 @@ class OpenVpn
             'auth none',
             sprintf('client-connect %s/client-connect', $this->libExecDir),
             sprintf('client-disconnect %s/client-disconnect', $this->libExecDir),
-            sprintf('ca %s/ca.crt', $tlsDir),
-            sprintf('cert %s/server.crt', $tlsDir),
-            sprintf('key %s/server.key', $tlsDir),
             sprintf('server %s %s', $rangeFourIp->getNetwork(), $rangeFourIp->getNetmask()),
             sprintf('server-ipv6 %s', $rangeSixIp->getAddressPrefix()),
             sprintf('max-clients %d', $rangeFourIp->getNumberOfHosts() - 1),
@@ -215,7 +185,18 @@ class OpenVpn
             sprintf('setenv PROFILE_ID %s', $profileId),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $profileConfig->getListen()),
-            sprintf('tls-crypt %s/tls-crypt.key', $tlsDir),
+            '<ca>',
+            ($certData['ca']),
+            '</ca>',
+            '<cert>',
+            ($certData['cert']),
+            '</cert>',
+            '<key>',
+            trim($certData['key']),
+            '</key>',
+            '<tls-crypt>',
+            trim($certData['tls-crypt']),
+            '</tls-crypt>',
         ];
 
         if (!$profileConfig->getEnableLog()) {
@@ -244,9 +225,6 @@ class OpenVpn
 
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
-
-        sort($serverConfig, SORT_STRING);
-
         $serverConfig = array_merge(
             [
                 '#',
