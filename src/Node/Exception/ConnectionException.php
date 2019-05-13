@@ -11,6 +11,6 @@ namespace LC\Portal\Node\Exception;
 
 use Exception;
 
-class NodeException extends Exception
+class ConnectionException extends Exception
 {
 }

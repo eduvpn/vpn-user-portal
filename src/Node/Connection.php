@@ -11,7 +11,7 @@ namespace LC\Portal\Node;
 
 use DateTime;
 use LC\Portal\Config\PortalConfig;
-use LC\Portal\Node\Exception\NodeException;
+use LC\Portal\Node\Exception\ConnectionException;
 use LC\Portal\Storage;
 
 class Connection
@@ -46,13 +46,13 @@ class Connection
         // XXX add logging again
         // verify if certificate with CN still exists
         if (false === $userCertificateInfo = $this->storage->getUserCertificateInfo($commonName)) {
-            throw new NodeException(sprintf('common name "%s" does not exist', $commonName));
+            throw new ConnectionException(sprintf('common name "%s" does not exist', $commonName));
         }
 
         // make sure the user is not disabled
         $userId = $userCertificateInfo['user_id'];
         if ($userCertificateInfo['user_is_disabled']) {
-            throw new NodeException(sprintf('account of user "%s" is disabled', $userId));
+            throw new ConnectionException(sprintf('account of user "%s" is disabled', $userId));
         }
 
         // check whether ACLs are enabled
@@ -61,7 +61,7 @@ class Connection
             // make sure the user has the required permissions...
             $userPermissionList = $this->storage->getPermissionList($userId);
             if (false === self::hasPermission($userPermissionList, $profileConfig->getAclPermissionList())) {
-                throw new NodeException(sprintf('user "%s" does not have the required permissions', $userId));
+                throw new ConnectionException(sprintf('user "%s" does not have the required permissions', $userId));
             }
         }
 
