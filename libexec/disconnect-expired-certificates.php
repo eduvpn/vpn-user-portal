@@ -20,7 +20,6 @@ try {
     $dateTime = new DateTime();
     $configFile = sprintf('%s/config/config.php', $baseDir);
     $portalConfig = PortalConfig::fromFile($configFile);
-
     $dataDir = sprintf('%s/data', $baseDir);
     $storage = new Storage(
         new PDO(
@@ -30,10 +29,10 @@ try {
     );
 
     $serverManager = new ServerManager(
-        $portalConfig->getProfileConfigList(),
-        new Logger($argv[0]),
+        $portalConfig,
         new ManagementSocket()
     );
+    $serverManager->setLogger(new Logger($argv[0]));
 
     foreach ($serverManager->connections() as $profile) {
         foreach ($profile['connections'] as $connection) {

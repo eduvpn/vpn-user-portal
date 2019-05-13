@@ -335,7 +335,8 @@ try {
         $easyRsaDataDir
     );
     $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $configDir));
-    $serverManager = new ServerManager($portalConfig->getProfileConfigList(), $logger, new ManagementSocket());
+    $serverManager = new ServerManager($portalConfig, new ManagementSocket());
+    $serverManager->setLogger($logger);
     $clientDb = new clientDb();
 
     // portal module

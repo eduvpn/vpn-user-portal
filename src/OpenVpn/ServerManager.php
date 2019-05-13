@@ -11,32 +11,43 @@ namespace LC\Portal\OpenVpn;
 
 use LC\OpenVpn\ConnectionManager;
 use LC\OpenVpn\ManagementSocketInterface;
+use LC\Portal\Config\PortalConfig;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Manage all OpenVPN processes controlled by this service.
  */
 class ServerManager
 {
-    /** @var array<string,\LC\Portal\Config\ProfileConfig> */
-    private $profileConfigList;
-
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
+    /** @var \LC\Portal\Config\PortalConfig */
+    private $portalConfig;
 
     /** @var \LC\OpenVpn\ManagementSocketInterface */
     private $managementSocket;
 
+    /** @var \Psr\Log\LoggerInterface */
+    private $logger;
+
     /**
-     * @param array<string,\LC\Portal\Config\ProfileConfig> $profileConfigList
-     * @param \Psr\Log\LoggerInterface                      $logger
-     * @param \LC\OpenVpn\ManagementSocketInterface         $managementSocket
+     * @param \LC\Portal\Config\PortalConfig        $portalConfig
+     * @param \LC\OpenVpn\ManagementSocketInterface $managementSocket
      */
-    public function __construct(array $profileConfigList, LoggerInterface $logger, ManagementSocketInterface $managementSocket)
+    public function __construct(PortalConfig $portalConfig, ManagementSocketInterface $managementSocket)
     {
-        $this->profileConfigList = $profileConfigList;
-        $this->logger = $logger;
+        $this->portalConfig = $portalConfig;
         $this->managementSocket = $managementSocket;
+        $this->logger = new NullLogger();
+    }
+
+    /**
+     * @param \Psr\Log\LoggerInterface $logger
+     *
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -47,7 +58,7 @@ class ServerManager
         $clientConnections = [];
 
         // loop over all profiles
-        foreach ($this->profileConfigList as $profileId => $profileConfig) {
+        foreach ($this->portalConfig->getProfileConfigList() as $profileId => $profileConfig) {
             $managementIp = $profileConfig->getManagementIp();
             $profileNumber = $profileConfig->getProfileNumber();
 
@@ -79,7 +90,7 @@ class ServerManager
         $socketAddressList = [];
 
         // loop over all profiles
-        foreach ($this->profileConfigList as $profileId => $profileConfig) {
+        foreach ($this->portalConfig->getProfileConfigList() as $profileId => $profileConfig) {
             $managementIp = $profileConfig->getManagementIp();
             $profileNumber = $profileConfig->getProfileNumber();
             for ($i = 0; $i < \count($profileConfig->getVpnProtoPortList()); ++$i) {

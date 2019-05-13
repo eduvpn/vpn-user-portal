@@ -7,9 +7,13 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace LC\Portal\Tests\Http;
 
-class NullAuthenticationHook implements BeforeHookInterface
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\UserInfo;
+
+class TestAuthenticationHook implements BeforeHookInterface
 {
     /** @var string */
     private $authUser;

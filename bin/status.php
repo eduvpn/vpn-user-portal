@@ -12,7 +12,6 @@ $baseDir = dirname(__DIR__);
 
 use LC\OpenVpn\ManagementSocket;
 use LC\Portal\Config\PortalConfig;
-use LC\Portal\Logger;
 use LC\Portal\OpenVpn\ServerManager;
 
 try {
@@ -20,16 +19,14 @@ try {
     $portalConfig = PortalConfig::fromFile($configFile);
 
     $serverManager = new ServerManager(
-        $portalConfig->getProfileConfigList(),
-        new Logger($argv[0]),
+        $portalConfig,
         new ManagementSocket()
     );
 
     $output = [];
-    foreach ($serverManager->connections() as $profile) {
-        $output[] = $profile['id'];
-
-        foreach ($profile['connections'] as $connection) {
+    foreach ($serverManager->connections() as $profileId => $profileConnections) {
+        $output[] = $profileId.PHP_EOL;
+        foreach ($profileConnections as $connection) {
             $output[] = sprintf("\t%s\t%s", $connection['common_name'], implode(', ', $connection['virtual_address']));
         }
     }
