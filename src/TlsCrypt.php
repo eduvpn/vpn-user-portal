@@ -9,7 +9,7 @@
 
 namespace LC\Portal;
 
-use RuntimeException;
+use ParagonIE\ConstantTime\Hex;
 
 class TlsCrypt
 {
@@ -33,7 +33,7 @@ class TlsCrypt
 
         // generate the tls-crypt file if it does not exist
         if (false === FileIO::exists($tlsCryptFile)) {
-            $this->execOpenVpn(['--genkey', '--secret', $tlsCryptFile]);
+            FileIO::writeFile($tlsCryptFile, self::generateTlsCrypt());
         }
     }
 
@@ -48,27 +48,20 @@ class TlsCrypt
     }
 
     /**
-     * @param array<int, string> $argv
-     *
-     * @return void
+     * @return string
      */
-    private function execOpenVpn(array $argv)
+    private static function generateTlsCrypt()
     {
-        $command = sprintf(
-            '/usr/sbin/openvpn %s >/dev/null 2>/dev/null',
-            implode(' ', $argv)
-        );
+        $randomData = wordwrap(Hex::encode(random_bytes(256)), 32, "\n", true);
 
-        exec(
-            $command,
-            $commandOutput,
-            $returnValue
-        );
+        return <<< EOF
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+$randomData
+-----END OpenVPN Static key V1-----
 
-        if (0 !== $returnValue) {
-            throw new RuntimeException(
-                sprintf('command "%s" did not complete successfully: "%s"', $command, implode(PHP_EOL, $commandOutput))
-            );
-        }
+EOF;
     }
 }
