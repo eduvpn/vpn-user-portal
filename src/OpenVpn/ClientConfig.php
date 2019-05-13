@@ -35,7 +35,6 @@ class ClientConfig
         $remoteProtoPortList = self::remotePortProtoList($vpnProtoPortList, $shufflePorts);
 
         $clientConfig = [
-            '# OpenVPN Client Configuration',
             'dev tun',
             'client',
             'nobind',
@@ -63,17 +62,34 @@ class ClientConfig
             'ncp-ciphers AES-256-GCM',
             'cipher AES-256-GCM',
             'auth none',
-
-            '<ca>',
-            trim($serverInfo['ca']),
-            '</ca>',
-            '<tls-crypt>',
-            trim($serverInfo['tls_crypt']),
-            '</tls-crypt>',
         ];
 
-        // API 1, if clientCertificate is provided, we add it directly to the
-        // configuration file, XXX can be removed for API 2
+        // remote entries
+        foreach ($remoteProtoPortList as $remoteProtoPort) {
+            $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
+        }
+
+        sort($clientConfig);
+
+        $clientConfig = array_merge(
+            [
+                '#',
+                '# OpenVPN Client Configuration',
+                '#',
+            ],
+            $clientConfig
+        );
+
+        $clientConfig = array_merge(
+            $clientConfig,
+            [
+                '<ca>',
+                trim($serverInfo['ca']),
+                '</ca>',
+            ]
+        );
+
+        // add client certificate/key if provided
         if (0 !== \count($clientCertificate)) {
             $clientConfig = array_merge(
                 $clientConfig,
@@ -81,7 +97,6 @@ class ClientConfig
                     '<cert>',
                     $clientCertificate['cert'],
                     '</cert>',
-
                     '<key>',
                     $clientCertificate['key'],
                     '</key>',
@@ -89,10 +104,14 @@ class ClientConfig
             );
         }
 
-        // remote entries
-        foreach ($remoteProtoPortList as $remoteProtoPort) {
-            $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
-        }
+        $clientConfig = array_merge(
+            $clientConfig,
+            [
+                '<tls-crypt>',
+                trim($serverInfo['tls_crypt']),
+                '</tls-crypt>',
+            ]
+        );
 
         return implode(PHP_EOL, $clientConfig);
     }

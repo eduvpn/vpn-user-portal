@@ -196,10 +196,6 @@ class ServerConfig
                 '#',
                 '# OpenVPN Server Configuration',
                 '#',
-                '# ******************************************',
-                '# * THIS FILE IS GENERATED, DO NOT MODIFY! *',
-                '# ******************************************',
-                '#',
             ],
             $serverConfig
         );
