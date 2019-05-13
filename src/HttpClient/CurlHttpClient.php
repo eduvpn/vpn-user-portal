@@ -16,7 +16,7 @@ class CurlHttpClient implements HttpClientInterface
     /** @var resource */
     private $curlChannel;
 
-    public function __construct(array $configData = [])
+    public function __construct()
     {
         if (false === $this->curlChannel = curl_init()) {
             throw new RuntimeException('unable to create cURL channel');

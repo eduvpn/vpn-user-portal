@@ -116,7 +116,6 @@ class ForeignKeyListFetcher
             foreach ($sourceInfo as $instanceInfo) {
                 foreach ($instanceInfo['public_key_list'] as $publicKeyStr) {
                     $publicKey = new PublicKey(Base64UrlSafe::decode($publicKeyStr));
-                    $baseUri = $instanceInfo['base_uri'];
                     $mappingData[PublicSigner::calculateKeyId($publicKey)] = [
                         'public_key' => $publicKey->encode(),
                         'base_uri' => $instanceInfo['base_uri'],

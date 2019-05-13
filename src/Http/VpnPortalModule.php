@@ -140,18 +140,11 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
-                // make sure the profileId is in the list of allowed profiles for this
-                // user, it would not result in the ability to use the VPN, but
-                // better prevent it early
-                if (!\in_array($profileId, array_keys($profileList), true)) {
+                // make sure the profileId is in the list of allowed profiles
+                // for this user, it would not result in the ability to use the
+                // VPN, but better prevent it early
+                if (!\in_array($profileId, array_keys($visibleProfileList), true)) {
                     throw new HttpException('no permission to download a configuration for this profile', 400);
-                }
-
-                $motdMessages = $this->storage->systemMessages('motd');
-                if (0 === \count($motdMessages)) {
-                    $motdMessage = false;
-                } else {
-                    $motdMessage = $motdMessages[0];
                 }
 
                 $expiresAt = new DateTime($this->storage->getSessionExpiresAt($userInfo->getUserId()));
@@ -261,10 +254,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
-                $profileList = $this->portalConfig->getProfileConfigList();
                 $userPermissions = $userInfo->getPermissionList();
-                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
-
                 $authorizedClients = $this->storage->getAuthorizations($userInfo->getUserId());
                 foreach ($authorizedClients as $k => $v) {
                     // false means no longer registered
@@ -327,11 +317,11 @@ class VpnPortalModule implements ServiceModuleInterface
                 // particular client_id and user_id and add them to the kill
                 // list...
                 $killList = [];
-                foreach ($this->serverManager->connections() as $profileId => $clientConnectionList) {
+                foreach ($this->serverManager->connections() as $clientConnectionList) {
                     foreach ($clientConnectionList as $clientConnection) {
                         if (false !== $certInfo = $this->storage->getUserCertificateInfo($clientConnection['common_name'])) {
                             // if client_id and user_id match...
-                            if ($userId === $clientConnection['user_id'] && $clientId === $clientConnection['client_id']) {
+                            if ($userId === $certInfo['user_id'] && $clientId === $certInfo['client_id']) {
                                 // add it to the kill list and do not disconnect
                                 // immediately, as we want to "revoke" the
                                 // certificates first before disconnecting as

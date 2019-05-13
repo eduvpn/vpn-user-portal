@@ -29,6 +29,7 @@ abstract class Config
      * @psalm-suppress UnresolvableInclude
      *
      * @param string $configFile
+     * @suppress PhanTypeInstantiateAbstract
      *
      * @return static
      */

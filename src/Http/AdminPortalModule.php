@@ -212,7 +212,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         }
 
                         // kill all active connections for this user
-                        foreach ($clientConnections as $profileId => $connectionList) {
+                        foreach ($clientConnections as $connectionList) {
                             foreach ($connectionList as $connection) {
                                 $this->serverManager->kill($connection['common_name']);
                             }
@@ -490,7 +490,6 @@ class AdminPortalModule implements ServiceModuleInterface
      */
     private function createDateList(DateInterval $dateInterval)
     {
-        $currentDay = $this->dateTimeToday->format('Y-m-d');
         $dateTime = clone $this->dateTimeToday;
         $dateTime->sub($dateInterval);
         $oneDay = new DateInterval('P1D');

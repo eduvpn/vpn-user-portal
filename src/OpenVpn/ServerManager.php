@@ -90,7 +90,7 @@ class ServerManager
         $socketAddressList = [];
 
         // loop over all profiles
-        foreach ($this->portalConfig->getProfileConfigList() as $profileId => $profileConfig) {
+        foreach ($this->portalConfig->getProfileConfigList() as $profileConfig) {
             $managementIp = $profileConfig->getManagementIp();
             $profileNumber = $profileConfig->getProfileNumber();
             for ($i = 0; $i < \count($profileConfig->getVpnProtoPortList()); ++$i) {

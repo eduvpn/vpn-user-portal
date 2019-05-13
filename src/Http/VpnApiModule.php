@@ -170,8 +170,9 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
-                $accessTokenInfo = $hookData['auth'];
+                // XXX any valid user can get info about any CN, also belonging
+                // to other users... Not sure how to cleanly fix this as the
+                // certificate has to exists before we can find the owner of it
                 $commonName = InputValidation::commonName($request->requireQueryParameter('common_name'));
                 $clientCertificateInfo = $this->storage->getUserCertificateInfo($commonName);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
