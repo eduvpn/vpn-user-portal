@@ -19,8 +19,8 @@ use LC\Portal\Http\OAuthTokenModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Logger;
-use LC\Portal\NativeClientDb;
 use LC\Portal\OAuth\PublicSigner;
+use LC\Portal\OAuthClientDb;
 use LC\Portal\Storage;
 
 $logger = new Logger('vpn-user-portal');
@@ -50,7 +50,7 @@ try {
         );
         $oauthServer = new OAuthServer(
             $storage,
-            new NativeClientDb(),
+            new OAuthClientDb(),
             new PublicSigner($secretKey->getPublicKey(), $secretKey)
         );
 

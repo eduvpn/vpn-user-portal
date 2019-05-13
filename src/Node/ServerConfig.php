@@ -13,6 +13,7 @@ use DateTime;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Config\ProfileConfig;
+use LC\Portal\IP;
 use LC\Portal\TlsCrypt;
 use RuntimeException;
 
@@ -159,18 +160,6 @@ class ServerConfig
             sprintf('setenv PROFILE_ID %s', $profileId),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $profileConfig->getListen()),
-            '<ca>',
-            ($certData['ca']),
-            '</ca>',
-            '<cert>',
-            ($certData['cert']),
-            '</cert>',
-            '<key>',
-            trim($certData['key']),
-            '</key>',
-            '<tls-crypt>',
-            trim($certData['tls-crypt']),
-            '</tls-crypt>',
         ];
 
         if (!$profileConfig->getEnableLog()) {
@@ -199,6 +188,9 @@ class ServerConfig
 
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
+
+        sort($serverConfig);
+
         $serverConfig = array_merge(
             [
                 '#',
@@ -212,7 +204,26 @@ class ServerConfig
             $serverConfig
         );
 
-        return implode(PHP_EOL, $serverConfig);
+        // add all inline data
+        $serverConfig = array_merge(
+            $serverConfig,
+            [
+                '<ca>',
+                ($certData['ca']),
+                '</ca>',
+                '<cert>',
+                ($certData['cert']),
+                '</cert>',
+                '<key>',
+                trim($certData['key']),
+                '</key>',
+                '<tls-crypt>',
+                trim($certData['tls-crypt']),
+                '</tls-crypt>',
+            ]
+        );
+
+        return implode(PHP_EOL, $serverConfig).PHP_EOL;
     }
 
     /**

@@ -12,7 +12,7 @@ namespace LC\Portal;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\ClientInfo;
 
-class NativeClientDb implements ClientDbInterface
+class OAuthClientDb implements ClientDbInterface
 {
     /**
      * @param string $clientId

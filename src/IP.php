@@ -7,10 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Node;
+namespace LC\Portal;
 
 use InvalidArgumentException;
-use LC\Portal\Node\Exception\IPException;
+use LC\Portal\Exception\IPException;
 
 class IP
 {
