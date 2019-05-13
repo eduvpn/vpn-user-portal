@@ -7,11 +7,11 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Node;
+namespace LC\Portal\OpenVpn;
 
 use DateTime;
 use LC\Portal\Config\PortalConfig;
-use LC\Portal\Node\Exception\ConnectionException;
+use LC\Portal\OpenVpn\Exception\ConnectionException;
 use LC\Portal\Storage;
 
 class Connection

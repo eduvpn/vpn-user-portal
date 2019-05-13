@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Node;
+namespace LC\Portal\OpenVpn;
 
 use DateTime;
 use LC\Portal\CA\CaInterface;

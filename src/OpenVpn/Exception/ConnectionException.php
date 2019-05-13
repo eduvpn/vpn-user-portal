@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Node\Exception;
+namespace LC\Portal\OpenVpn\Exception;
 
 use Exception;
 

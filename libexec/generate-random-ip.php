@@ -21,5 +21,5 @@ $v6 = sprintf(
     bin2hex(random_bytes(2))
 );
 
-echo sprintf('IPv4 CIDR  : %s', $v4).PHP_EOL;
-echo sprintf('IPv6 prefix: %s', $v6).PHP_EOL;
+echo sprintf('IPv4: %s', $v4).PHP_EOL;
+echo sprintf('IPv6: %s', $v6).PHP_EOL;

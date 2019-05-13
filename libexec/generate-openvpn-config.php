@@ -13,7 +13,7 @@ $baseDir = dirname(__DIR__);
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
-use LC\Portal\Node\ServerConfig;
+use LC\Portal\OpenVpn\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 
