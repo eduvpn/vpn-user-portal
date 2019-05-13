@@ -79,11 +79,11 @@ class ClientConfig
                 $clientConfig,
                 [
                     '<cert>',
-                    $clientCertificate['certificate'],
+                    $clientCertificate['cert'],
                     '</cert>',
 
                     '<key>',
-                    $clientCertificate['private_key'],
+                    $clientCertificate['key'],
                     '</key>',
                 ]
             );
