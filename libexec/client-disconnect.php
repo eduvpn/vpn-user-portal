@@ -11,12 +11,10 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use DateTime;
-use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Logger;
-use LC\Portal\Node\LocalNodeApi;
+use LC\Portal\Node\Connection;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 use RuntimeException;
 
 $logger = new Logger(
@@ -48,10 +46,8 @@ try {
     $dataDir = sprintf('%s/data', $baseDir);
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
     $storage = new Storage(new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)), sprintf('%s/schema', $baseDir));
-    $easyRsaCa = new EasyRsaCa(sprintf('%s/easy-rsa', $baseDir), sprintf('%s/easy-rsa', $dataDir));
-    $tlsCrypt = new TlsCrypt($dataDir);
-    $localNodeApi = new LocalNodeApi($easyRsaCa, $tlsCrypt, $portalConfig, $storage);
-    $localNodeApi->disconnect(
+    $connection = new Connection($portalConfig, $storage);
+    $connection->disconnect(
         $envData['PROFILE_ID'],
         $envData['common_name'],
         $envData['ifconfig_pool_remote_ip'],

@@ -13,7 +13,6 @@ $baseDir = dirname(__DIR__);
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
-use LC\Portal\Node\LocalNodeApi;
 use LC\Portal\Node\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
@@ -44,9 +43,13 @@ try {
     $storage = new Storage(new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)), sprintf('%s/schema', $baseDir));
     $easyRsaCa = new EasyRsaCa(sprintf('%s/easy-rsa', $baseDir), sprintf('%s/easy-rsa', $dataDir));
     $tlsCrypt = new TlsCrypt($dataDir);
-    $localNodeApi = new LocalNodeApi($easyRsaCa, $tlsCrypt, $portalConfig, $storage);
-    $openVpn = new ServerConfig($localNodeApi, $vpnConfigDir, $libExecDir, $vpnUser, $vpnGroup);
-    $openVpn->writeProfiles();
+    $openVpn = new ServerConfig($portalConfig, $easyRsaCa, $tlsCrypt, $libExecDir, $vpnUser, $vpnGroup);
+    $configList = $openVpn->getConfigList();
+    foreach ($configList as $configName => $configFile) {
+        $configFileName = sprintf('%s/%s.conf', $vpnConfigDir, $configName);
+        echo 'Writing: '.basename($configFileName).PHP_EOL;
+        FileIO::writeFile($configFileName, $configFile);
+    }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

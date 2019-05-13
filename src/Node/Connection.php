@@ -10,20 +10,12 @@
 namespace LC\Portal\Node;
 
 use DateTime;
-use LC\Portal\CA\CaInterface;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Node\Exception\NodeException;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 
-class LocalNodeApi implements NodeApiInterface
+class Connection
 {
-    /** @var \LC\Portal\CA\CaInterface */
-    private $ca;
-
-    /** @var \LC\Portal\TlsCrypt */
-    private $tlsCrypt;
-
     /** @var \LC\Portal\Config\PortalConfig */
     private $portalConfig;
 
@@ -31,25 +23,13 @@ class LocalNodeApi implements NodeApiInterface
     private $storage;
 
     /**
-     * @param \LC\Portal\CA\CaInterface      $ca
-     * @param \LC\Portal\TlsCrypt            $tlsCrypt
      * @param \LC\Portal\Config\PortalConfig $portalConfig
      * @param \LC\Portal\Storage             $storage
      */
-    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, PortalConfig $portalConfig, Storage $storage)
+    public function __construct(PortalConfig $portalConfig, Storage $storage)
     {
-        $this->ca = $ca;
-        $this->tlsCrypt = $tlsCrypt;
         $this->portalConfig = $portalConfig;
         $this->storage = $storage;
-    }
-
-    /**
-     * @return array<string, \LC\Portal\Config\ProfileConfig>
-     */
-    public function getProfileList()
-    {
-        return $this->portalConfig->getProfileConfigList();
     }
 
     /**
@@ -102,20 +82,6 @@ class LocalNodeApi implements NodeApiInterface
     public function disconnect($profileId, $commonName, $ipFour, $ipSix, DateTime $connectedAt, DateTime $disconnectedAt, $bytesTransferred)
     {
         $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, $connectedAt, $disconnectedAt, $bytesTransferred);
-    }
-
-    /**
-     * @param string $commonName
-     *
-     * @return array<string, string>
-     */
-    public function addServerCertificate($commonName)
-    {
-        $certInfo = $this->ca->serverCert($commonName);
-        $certInfo['ca'] = $this->ca->caCert();
-        $certInfo['tls-crypt'] = $this->tlsCrypt->get();
-
-        return $certInfo;
     }
 
     /**

@@ -10,17 +10,22 @@
 namespace LC\Portal\Node;
 
 use DateTime;
+use LC\Portal\CA\CaInterface;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\Config\ProfileConfig;
-use LC\Portal\FileIO;
+use LC\Portal\TlsCrypt;
 use RuntimeException;
 
 class ServerConfig
 {
-    /** @var NodeApiInterface */
-    private $nodeApi;
+    /** @var \LC\Portal\Config\PortalConfig */
+    private $portalConfig;
 
-    /** @var string */
-    private $vpnConfigDir;
+    /** @var \LC\Portal\CA\CaInterface */
+    private $ca;
+
+    /** @var \LC\Portal\TlsCrypt */
+    private $tlsCrypt;
 
     /** @var string */
     private $libExecDir;
@@ -35,16 +40,18 @@ class ServerConfig
     private $dateTime;
 
     /**
-     * @param NodeApiInterface $nodeApi
-     * @param string           $vpnConfigDir
-     * @param string           $libExecDir
-     * @param string           $vpnUser
-     * @param string           $vpnGroup
+     * @param \LC\Portal\Config\PortalConfig $portalConfig
+     * @param \LC\Portal\CA\CaInterface      $ca
+     * @param \LC\Portal\TlsCrypt            $tlsCrypt
+     * @param string                         $libExecDir
+     * @param string                         $vpnUser
+     * @param string                         $vpnGroup
      */
-    public function __construct(NodeApiInterface $nodeApi, $vpnConfigDir, $libExecDir, $vpnUser, $vpnGroup)
+    public function __construct(PortalConfig $portalConfig, CaInterface $ca, TlsCrypt $tlsCrypt, $libExecDir, $vpnUser, $vpnGroup)
     {
-        $this->nodeApi = $nodeApi;
-        $this->vpnConfigDir = $vpnConfigDir;
+        $this->portalConfig = $portalConfig;
+        $this->ca = $ca;
+        $this->tlsCrypt = $tlsCrypt;
         $this->libExecDir = $libExecDir;
         $this->vpnUser = $vpnUser;
         $this->vpnGroup = $vpnGroup;
@@ -52,27 +59,41 @@ class ServerConfig
     }
 
     /**
-     * @return void
+     * @return array<string,string>
      */
-    public function writeProfiles()
+    public function getConfigList()
     {
-        // generate (server) cert/keys
+        $configList = [];
         $commonName = sprintf('LC.%s', $this->dateTime->format('YmdHis'));
-        $certData = $this->nodeApi->addServerCertificate($commonName);
-        $profileList = $this->nodeApi->getProfileList();
+        $certData = array_merge(
+            $this->ca->serverCert($commonName),
+            [
+                'ca' => $this->ca->caCert(),
+                'tls-crypt' => $this->tlsCrypt->get(),
+            ]
+        );
+        $profileList = $this->portalConfig->getProfileConfigList();
         foreach ($profileList as $profileId => $profileConfig) {
-            $this->writeProfile($certData, $profileId, $profileConfig);
+            $configList = array_merge(
+                $configList,
+                $this->getProfileConfig($certData, $profileId, $profileConfig)
+            );
         }
+
+        return $configList;
     }
 
     /**
+     * @param array<string,string>            $certData
      * @param string                          $profileId
      * @param \LC\Portal\Config\ProfileConfig $profileConfig
      *
-     * @return void
+     * @return array<string,string>
      */
-    private function writeProfile(array $certData, $profileId, ProfileConfig $profileConfig)
+    private function getProfileConfig(array $certData, $profileId, ProfileConfig $profileConfig)
     {
+        $profileConfigList = [];
+
         $processCount = \count($profileConfig->getVpnProtoPortList());
         $allowedProcessCount = [1, 2, 4, 8, 16, 32, 64];
         if (!\in_array($processCount, $allowedProcessCount, true)) {
@@ -94,65 +115,18 @@ class ServerConfig
             $processConfig['proto'] = self::getProto($profileConfig, $i);
             $processConfig['port'] = self::getPort($profileConfig, $i);
             $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
-            $processConfig['configName'] = sprintf('%s-%d.conf', $profileId, $i);
-
-            $this->writeProcess($certData, $profileId, $profileConfig, $processConfig);
-        }
-    }
-
-    /**
-     * @param string $listenAddress
-     * @param string $proto
-     *
-     * @return string
-     */
-    private static function getFamilyProto($listenAddress, $proto)
-    {
-        $v6 = false !== strpos($listenAddress, ':');
-        if ('udp' === $proto) {
-            return $v6 ? 'udp6' : 'udp';
-        }
-        if ('tcp' === $proto) {
-            return $v6 ? 'tcp6-server' : 'tcp-server';
+            $profileConfigList[sprintf('%s-%d', $profileId, $i)] = $this->getProcessConfig($certData, $profileId, $profileConfig, $processConfig);
         }
 
-        throw new RuntimeException('only "tcp" and "udp" are supported as protocols');
-    }
-
-    /**
-     * @param \LC\Portal\Config\ProfileConfig $profileConfig
-     * @param int                             $i
-     *
-     * @return string
-     */
-    private static function getProto(ProfileConfig $profileConfig, $i)
-    {
-        $vpnProtoPortList = $profileConfig->getVpnProtoPortList();
-        list($vpnProto, $vpnPort) = explode('/', $vpnProtoPortList[$i]);
-
-        return self::getFamilyProto($profileConfig->getListen(), $vpnProto);
-    }
-
-    /**
-     * @param \LC\Portal\Config\ProfileConfig $profileConfig
-     * @param int                             $i
-     *
-     * @return int
-     */
-    private static function getPort(ProfileConfig $profileConfig, $i)
-    {
-        $vpnProtoPortList = $profileConfig->getVpnProtoPortList();
-        list($vpnProto, $vpnPort) = explode('/', $vpnProtoPortList[$i]);
-
-        return (int) $vpnPort;
+        return $profileConfigList;
     }
 
     /**
      * @param string $profileId
      *
-     * @return void
+     * @return string
      */
-    private function writeProcess(array $certData, $profileId, ProfileConfig $profileConfig, array $processConfig)
+    private function getProcessConfig(array $certData, $profileId, ProfileConfig $profileConfig, array $processConfig)
     {
         $rangeFourIp = new IP($processConfig['rangeFour']);
         $rangeSixIp = new IP($processConfig['rangeSix']);
@@ -238,9 +212,54 @@ class ServerConfig
             $serverConfig
         );
 
-        $configFile = sprintf('%s/%s', $this->vpnConfigDir, $processConfig['configName']);
+        return implode(PHP_EOL, $serverConfig);
+    }
 
-        FileIO::writeFile($configFile, implode(PHP_EOL, $serverConfig), 0600);
+    /**
+     * @param string $listenAddress
+     * @param string $proto
+     *
+     * @return string
+     */
+    private static function getFamilyProto($listenAddress, $proto)
+    {
+        $v6 = false !== strpos($listenAddress, ':');
+        if ('udp' === $proto) {
+            return $v6 ? 'udp6' : 'udp';
+        }
+        if ('tcp' === $proto) {
+            return $v6 ? 'tcp6-server' : 'tcp-server';
+        }
+
+        throw new RuntimeException('only "tcp" and "udp" are supported as protocols');
+    }
+
+    /**
+     * @param \LC\Portal\Config\ProfileConfig $profileConfig
+     * @param int                             $i
+     *
+     * @return string
+     */
+    private static function getProto(ProfileConfig $profileConfig, $i)
+    {
+        $vpnProtoPortList = $profileConfig->getVpnProtoPortList();
+        list($vpnProto, $vpnPort) = explode('/', $vpnProtoPortList[$i]);
+
+        return self::getFamilyProto($profileConfig->getListen(), $vpnProto);
+    }
+
+    /**
+     * @param \LC\Portal\Config\ProfileConfig $profileConfig
+     * @param int                             $i
+     *
+     * @return int
+     */
+    private static function getPort(ProfileConfig $profileConfig, $i)
+    {
+        $vpnProtoPortList = $profileConfig->getVpnProtoPortList();
+        list($vpnProto, $vpnPort) = explode('/', $vpnProtoPortList[$i]);
+
+        return (int) $vpnPort;
     }
 
     /**
