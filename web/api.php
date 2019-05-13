@@ -31,9 +31,10 @@ try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
     $dataDir = sprintf('%s/data', $baseDir);
+    $configDir = sprintf('%s/config', $baseDir);
     FileIO::createDir($dataDir, 0700);
 
-    $portalConfig = PortalConfig::fromFile(sprintf('%s/config/config.php', $baseDir));
+    $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
     $service = new Service();
 
     if (false !== $portalConfig->getEnableApi()) {
@@ -54,7 +55,7 @@ try {
 
         $secretKey = SecretKey::fromEncodedString(
             FileIO::readFile(
-                sprintf('%s/config/oauth.key', $baseDir)
+                sprintf('%s/oauth.key', $configDir)
             )
         );
 
@@ -78,7 +79,7 @@ try {
             $easyRsaDir,
             $easyRsaDataDir
         );
-        $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $dataDir));
+        $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $configDir));
 
         // api module
         $vpnApiModule = new VpnApiModule(

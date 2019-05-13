@@ -70,19 +70,21 @@ try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
     $dataDir = sprintf('%s/data', $baseDir);
+    $configDir = sprintf('%s/config', $baseDir);
+
     FileIO::createDir($dataDir, 0700);
 
-    $portalConfig = PortalConfig::fromFile(sprintf('%s/config/config.php', $baseDir));
+    $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
 
     $templateDirs = [
         sprintf('%s/views', $baseDir),
-        sprintf('%s/config/views', $baseDir),
+        sprintf('%s/views', $configDir),
     ];
 
     $styleConfig = null;
     if (null !== $styleName = $portalConfig->getStyleName()) {
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
-        //        $styleConfig = Config::fromFile(sprintf('%s/config/%s.php', $baseDir, $styleName));
+        //        $styleConfig = Config::fromFile(sprintf('%s/%s.php', $configDir, $styleName));
     }
 
     $sessionExpiry = $portalConfig->getSessionExpiry();
@@ -179,8 +181,8 @@ try {
             $permissionAttributeList = $samlAuthenticationConfig->getPermissionAttributeList();
             $spInfo = new SpInfo(
                 $spEntityId,
-                PrivateKey::fromFile(sprintf('%s/config/saml.key', $baseDir)),
-                PublicKey::fromFile(sprintf('%s/config/saml.crt', $baseDir)),
+                PrivateKey::fromFile(sprintf('%s/saml.key', $configDir)),
+                PublicKey::fromFile(sprintf('%s/saml.crt', $configDir)),
                 $request->getRootUri().'_saml/acs'
             );
             $spInfo->setSloUrl($request->getRootUri().'_saml/slo');
@@ -332,7 +334,7 @@ try {
         $easyRsaDir,
         $easyRsaDataDir
     );
-    $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $dataDir));
+    $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $configDir));
     $serverManager = new ServerManager($portalConfig->getProfileConfigList(), $logger, new ManagementSocket());
     $clientDb = new clientDb();
 
@@ -377,7 +379,7 @@ try {
         // OAuth module
         $secretKey = SecretKey::fromEncodedString(
             FileIO::readFile(
-                sprintf('%s/config/oauth.key', $baseDir)
+                sprintf('%s/oauth.key', $configDir)
             )
         );
 

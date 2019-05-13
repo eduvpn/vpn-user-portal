@@ -52,7 +52,7 @@ class FormAuthenticationModule implements ServiceModuleInterface
                 $redirectTo = $request->requirePostParameter('_form_auth_redirect_to');
 
                 // validate the URL
-                if (false === filter_var($redirectTo, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED | FILTER_FLAG_PATH_REQUIRED)) {
+                if (false === filter_var($redirectTo, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
                     throw new HttpException('invalid redirect_to URL', 400);
                 }
                 // extract the "host" part of the URL

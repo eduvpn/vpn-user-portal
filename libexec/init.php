@@ -36,8 +36,7 @@ try {
     $storage->init();
 
     // tls-crypt
-    // XXX should we move this to config dir?
-    $tlsCryptFile = sprintf('%s/tls-crypt.key', $dataDir);
+    $tlsCryptFile = sprintf('%s/tls-crypt.key', $configDir);
     if (!FileIO::exists($tlsCryptFile)) {
         $tlsCrypt = TlsCrypt::generate();
         FileIO::writeFile($tlsCryptFile, $tlsCrypt->raw(), 0640);
