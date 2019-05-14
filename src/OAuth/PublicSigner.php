@@ -57,7 +57,13 @@ class PublicSigner implements SignerInterface
      */
     public static function extractKid($providedToken)
     {
-        return EdDSA::extractKeyId($providedToken);
+        try {
+            return EdDSA::extractKeyId($providedToken);
+        } catch (JwtException $e) {
+            // if the token is not a JWT token an exception is thrown, which
+            // of course implies we won't have a "kid"
+            return null;
+        }
     }
 
     /**
