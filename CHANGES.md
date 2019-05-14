@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.3 (2019-05-14)
+- update Norwegian translation
+- fix issue HTTP 500 API response when token was not JWT token (failed to 
+  extract key ID) (eduvpn/macos#217, eduvpn/vpn-server-api#75)
+
 ## 2.0.2 (2019-05-01)
 - do not list hidden profile in `/profile_list` API call
 
