@@ -16,9 +16,10 @@ use LC\Portal\CA\CaInterface;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\OpenVpn\ClientConfig;
-use LC\Portal\OpenVpn\ServerManager;
+use LC\Portal\OpenVpn\ServerManagerInterface;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Random;
+use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 
@@ -42,11 +43,14 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LC\Portal\OpenVpn\TlsCrypt */
     private $tlsCrypt;
 
-    /** @var \LC\Portal\OpenVpn\ServerManager */
+    /** @var \LC\Portal\OpenVpn\ServerManagerInterface */
     private $serverManager;
 
     /** @var \fkooman\OAuth\Server\ClientDbInterface */
     private $clientDb;
+
+    /** @var \DateTime */
+    private $dateTime;
 
     /** @var \LC\Portal\RandomInterface */
     private $random;
@@ -54,7 +58,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
-    public function __construct(PortalConfig $portalConfig, TplInterface $tpl, SessionInterface $session, Storage $storage, CaInterface $ca, TlsCrypt $tlsCrypt, ServerManager $serverManager, ClientDbInterface $clientDb)
+    public function __construct(PortalConfig $portalConfig, TplInterface $tpl, SessionInterface $session, Storage $storage, CaInterface $ca, TlsCrypt $tlsCrypt, ServerManagerInterface $serverManager, ClientDbInterface $clientDb)
     {
         $this->portalConfig = $portalConfig;
         $this->tpl = $tpl;
@@ -64,6 +68,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->tlsCrypt = $tlsCrypt;
         $this->serverManager = $serverManager;
         $this->clientDb = $clientDb;
+        $this->dateTime = new DateTime();
         $this->random = new Random();
     }
 
@@ -75,6 +80,26 @@ class VpnPortalModule implements ServiceModuleInterface
     public function setShuffleHosts($shuffleHosts)
     {
         $this->shuffleHosts = (bool) $shuffleHosts;
+    }
+
+    /**
+     * @param \LC\Portal\RandomInterface $random
+     *
+     * @return void
+     */
+    public function setRandom(RandomInterface $random)
+    {
+        $this->random = $random;
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     *
+     * @return void
+     */
+    public function setDateTime(DateTime $dateTime)
+    {
+        $this->dateTime = $dateTime;
     }
 
     /**
@@ -455,7 +480,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // https://bugzilla.gnome.org/show_bug.cgi?id=795601
         $displayName = str_replace(' ', '_', $displayName);
 
-        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
+        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, $this->dateTime->format('Ymd'), $displayName);
 
         $response = new Response(200, 'application/x-openvpn-profile');
         $response->addHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $clientConfigFile));

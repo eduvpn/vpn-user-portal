@@ -139,9 +139,7 @@ try {
     $tpl = new Tpl($templateDirs, $languageFile);
     $tpl->addDefault(
         [
-            'requestUri' => $request->getUri(),
             'requestRoot' => $request->getRoot(),
-            'requestRootUri' => $request->getRootUri(),
         ]
     );
     $supportedLanguages = $portalConfig->getSupportedLanguages();
@@ -361,7 +359,7 @@ try {
 
     $adminPortalModule = new AdminPortalModule(
         $dataDir,
-        $portalConfig->getProfileConfigList(),
+        $portalConfig,
         $tpl,
         $storage,
         $serverManager,

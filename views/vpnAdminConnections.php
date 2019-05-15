@@ -1,11 +1,11 @@
 <?php $this->layout('base', ['activeItem' => 'connections']); ?>
 <?php $this->start('content'); ?>
-    <?php if (0 === count($profileConnectionList)): ?>
+    <?php if (0 === count($profileConfigList)): ?>
         <p class="warning"><?=$this->t('No VPN profiles configured.'); ?></p>
     <?php else: ?>
-    <?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
-        <h2 id="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></h2>
-        <?php if (0 === count($connectionList)): ?>
+    <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
+        <h2 id="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->getDisplayName()); ?></h2>
+        <?php if (0 === count($profileConnectionList[$profileId])): ?>
             <p class="plain"><?=$this->t('No clients connected.'); ?></p>
         <?php else: ?>
             <table>
@@ -17,17 +17,17 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($connectionList as $connection): ?>
+                <?php foreach ($profileConnectionList[$profileId] as $profileConnection): ?>
                 <tr>
                     <td>
-                        <a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($connection['user_id'], 'rawurlencode'); ?>"><?=$this->e($connection['user_id']); ?></a>
+                        <a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($profileConnection['user_id'], 'rawurlencode'); ?>"><?=$this->e($profileConnection['user_id']); ?></a>
                     </td>
                     <td>
-                        <span title="<?=$this->e($connection['common_name']); ?>"><?=$this->e($connection['display_name']); ?></span>
+                        <span title="<?=$this->e($profileConnection['common_name']); ?>"><?=$this->e($profileConnection['display_name']); ?></span>
                     </td>
                     <td>
                         <ul>
-                            <?php foreach ($connection['virtual_address'] as $ip): ?>
+                            <?php foreach ($profileConnection['virtual_address'] as $ip): ?>
                             <li><code><?=$this->e($ip); ?></code></li>
                             <?php endforeach; ?>
                         </ul>

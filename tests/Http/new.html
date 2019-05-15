@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1">
+    <title>VPN Portal</title>
+    <link href="/css/normalize.css" media="screen" rel="stylesheet">
+    <link href="/css/screen.css" media="screen" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+    <li class="active"><a href="new">New</a></li>
+    <li><a href="certificates">Certificates</a></li>
+    <li><a href="account">Account</a></li>
+    <li><a href="documentation">Documentation</a></li>
+</ul>
+        </nav>
+    </header>
+    <main>
+                        <p>
+            Download a new VPN configuration by choosing a profile and a name, e.g. <em>Phone</em>.        </p>
+
+        <form method="post">
+            <fieldset>
+                <label for="profileId">Profile</label>
+                <select id="profileId" name="profileId">
+                                                                        <option value="default">Default Profile</option>
+                                                            </select>
+                <label for="displayName">Name</label>
+                <input type="text" name="displayName" id="displayName" size="32" maxlength="64" placeholder="Name" autofocus required>
+            </fieldset>
+            <fieldset>
+                <button type="submit">Download</button>
+            </fieldset>
+        </form>
+        </main>
+    <footer>
+        <form method="post" action="/setLanguage">
+            <button name="setLanguage" value="en_US">English</button>
+            <button name="setLanguage" value="nl_NL">Nederlands</button>
+        </form>
+        <form method="post" action="/_logout">
+            <button type="submit">Sign Out</button>
+        </form>
+    </footer>
+</body>
+</html>

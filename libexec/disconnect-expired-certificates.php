@@ -7,6 +7,10 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
+// XXX rename the script to something like "disconnect-invalid-certificates.php"
+// but also take care of cronjob! Find / replace in the rest of the code for
+// the script name
+
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 

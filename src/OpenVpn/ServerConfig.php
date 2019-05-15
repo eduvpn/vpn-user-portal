@@ -59,6 +59,16 @@ class ServerConfig
     }
 
     /**
+     * @param \DateTime $dateTime
+     *
+     * @return void
+     */
+    public function setDateTime(DateTime $dateTime)
+    {
+        $this->dateTime = $dateTime;
+    }
+
+    /**
      * @return array<string,string>
      */
     public function getConfigList()

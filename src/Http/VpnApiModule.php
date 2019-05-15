@@ -19,6 +19,7 @@ use LC\Portal\OAuth\VpnAccessTokenInfo;
 use LC\Portal\OpenVpn\ClientConfig;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Random;
+use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
 
 class VpnApiModule implements ServiceModuleInterface
@@ -58,6 +59,26 @@ class VpnApiModule implements ServiceModuleInterface
         $this->tlsCrypt = $tlsCrypt;
         $this->dateTime = new DateTime();
         $this->random = new Random();
+    }
+
+    /**
+     * @param \LC\Portal\RandomInterface $random
+     *
+     * @return void
+     */
+    public function setRandom(RandomInterface $random)
+    {
+        $this->random = $random;
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     *
+     * @return void
+     */
+    public function setDateTime(DateTime $dateTime)
+    {
+        $this->dateTime = $dateTime;
     }
 
     /**

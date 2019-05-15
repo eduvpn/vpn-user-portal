@@ -11,10 +11,11 @@ namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTime;
+use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
 use LC\Portal\Graph;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\OpenVpn\ServerManager;
+use LC\Portal\OpenVpn\ServerManagerInterface;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 use RuntimeException;
@@ -24,8 +25,8 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var string */
     private $dataDir;
 
-    /** @var array<string,\LC\Portal\Config\ProfileConfig> */
-    private $profileConfigList;
+    /** @var \LC\Portal\Config\PortalConfig */
+    private $portalConfig;
 
     /** @var \LC\Portal\TplInterface */
     private $tpl;
@@ -36,24 +37,24 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var \LC\Portal\Graph */
     private $graph;
 
-    /** @var \LC\Portal\OpenVpn\ServerManager */
+    /** @var \LC\Portal\OpenVpn\ServerManagerInterface */
     private $serverManager;
 
     /** @var \DateTime */
     private $dateTimeToday;
 
     /**
-     * @param string                                        $dataDir
-     * @param array<string,\LC\Portal\Config\ProfileConfig> $profileConfigList
-     * @param \LC\Portal\TplInterface                       $tpl
-     * @param Storage                                       $storage
-     * @param \LC\Portal\OpenVpn\ServerManager              $serverManager
-     * @param Graph                                         $graph
+     * @param string                                    $dataDir
+     * @param \LC\Portal\Config\PortalConfig            $portalConfig
+     * @param \LC\Portal\TplInterface                   $tpl
+     * @param Storage                                   $storage
+     * @param \LC\Portal\OpenVpn\ServerManagerInterface $serverManager
+     * @param Graph                                     $graph
      */
-    public function __construct($dataDir, array $profileConfigList, TplInterface $tpl, Storage $storage, ServerManager $serverManager, Graph $graph)
+    public function __construct($dataDir, PortalConfig $portalConfig, TplInterface $tpl, Storage $storage, ServerManagerInterface $serverManager, Graph $graph)
     {
         $this->dataDir = $dataDir;
-        $this->profileConfigList = $profileConfigList;
+        $this->portalConfig = $portalConfig;
         $this->tpl = $tpl;
         $this->storage = $storage;
         $this->serverManager = $serverManager;
@@ -74,24 +75,12 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $idNameMapping = [];
-                $profileConnectionList = [];
-                foreach ($this->profileConfigList as $profileId => $profileConfig) {
-                    $idNameMapping[$profileId] = $profileConfig->getDisplayName();
-                    $profileConnectionList[$profileId] = [];
-                }
-
-                // here we need to "enrich" the clientConnectionList, i.e. add
-                // the user_id and display_name to the list
-                // XXX can we get rid of this somehow?!
-                $profileConnectionList = $this->getClientConnectionProfileList(null);
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminConnections',
                         [
-                            'idNameMapping' => $idNameMapping,
-                            'profileConnectionList' => $profileConnectionList,
+                            'profileConfigList' => $this->portalConfig->getProfileConfigList(),
+                            'profileConnectionList' => $this->getProfileConnectionList(),
                         ]
                     )
                 );
@@ -110,7 +99,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
-                            'profileConfigList' => $this->profileConfigList,
+                            'profileConfigList' => $this->portalConfig->getProfileConfigList(),
                         ]
                     )
                 );
@@ -198,7 +187,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 switch ($userAction) {
                     case 'disableUser':
                         // get active connections for this user
-                        $clientConnections = $this->getClientConnectionProfileList($userId);
+                        $clientConnections = $this->getProfileConnectionList($userId);
 
                         // disable the user
                         $this->storage->disableUser($userId);
@@ -273,11 +262,8 @@ class AdminPortalModule implements ServiceModuleInterface
                     // this is an old "stats" format we no longer support,
                     // vpn-server-api-stats has to run again first, which is
                     // done by the crontab running at midnight...
+                    // XXX remove legacy support in 3.0
                     $stats = false;
-                }
-                $idNameMapping = [];
-                foreach ($this->profileConfigList as $profileId => $profileConfig) {
-                    $idNameMapping[$profileId] = $profileConfig->getDisplayName();
                 }
 
                 return new HtmlResponse(
@@ -287,7 +273,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'stats' => $stats,
                             'generated_at' => false !== $stats ? $stats['generated_at'] : false,
                             'generated_at_tz' => date('T'),
-                            'idNameMapping' => $idNameMapping,
+                            'profileConfigList' => $this->portalConfig->getProfileConfigList(),
                         ]
                     )
                 );
@@ -521,30 +507,39 @@ class AdminPortalModule implements ServiceModuleInterface
      * @param string|null $userId
      *
      * @return array
+     *               XXX make sure all profile IDs are there in the getProfileConnectionList!
      */
-    private function getClientConnectionProfileList($userId)
+    private function getProfileConnectionList($userId = null)
     {
-        // here we need to "enrich" the clientConnectionList, i.e. add
-        // the user_id and display_name to the list
-        $enrichedClientConnectionList = [];
+        $profileConnectionList = [];
+        foreach (array_keys($this->portalConfig->getProfileConfigList()) as $profileId) {
+            $profileConnectionList[$profileId] = [];
+        }
+
         foreach ($this->serverManager->connections() as $profileId => $clientConnectionList) {
-            $enrichedClientConnectionList[$profileId] = [];
             foreach ($clientConnectionList as $clientConnection) {
                 if (false === $certInfo = $this->storage->getUserCertificateInfo($clientConnection['common_name'])) {
-                    // XXX come up with a way to show connections where the certificate was already deleted...
+                    // this SHOULD never happen, it would mean that
+                    // disconnecting the user when the certificate was deleted
+                    // did not work, this is effectively a "ghost" connection,
+                    // it will be automatically kicked offline the next time
+                    // the cronjob that takes care of deleted / expired
+                    // certificates runs...
+                    // XXX write event to log!
                     continue;
                 }
 
-                // only include entries for a particular user_id
+                // if requested, only return connections for a particular user_id
                 if (null !== $userId) {
                     if ($certInfo['user_id'] !== $userId) {
                         continue;
                     }
                 }
-                $enrichedClientConnectionList[$profileId][] = array_merge($clientConnection, $certInfo);
+
+                $profileConnectionList[$profileId][] = array_merge($clientConnection, $certInfo);
             }
         }
 
-        return $enrichedClientConnectionList;
+        return $profileConnectionList;
     }
 }

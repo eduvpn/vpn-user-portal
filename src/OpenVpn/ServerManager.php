@@ -18,7 +18,7 @@ use Psr\Log\NullLogger;
 /**
  * Manage all OpenVPN processes controlled by this service.
  */
-class ServerManager
+class ServerManager implements ServerManagerInterface
 {
     /** @var \LC\Portal\Config\PortalConfig */
     private $portalConfig;

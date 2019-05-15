@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1">
+    <title>VPN Portal</title>
+    <link href="/css/normalize.css" media="screen" rel="stylesheet">
+    <link href="/css/screen.css" media="screen" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+    <li><a href="new">New</a></li>
+    <li><a href="certificates">Certificates</a></li>
+    <li><a href="account">Account</a></li>
+    <li class="active"><a href="connections">Connections</a></li>
+    <li><a href="users">Users</a></li>
+    <li><a href="info">Info</a></li>
+    <li><a href="stats">Stats</a></li>
+    <li><a href="messages">Messages</a></li>
+    <li><a href="log">Log</a></li>
+    <li><a href="documentation">Documentation</a></li>
+</ul>
+        </nav>
+    </header>
+    <main>
+                        <h2 id="default">Default Profile</h2>
+                    <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>IP address</th>
+                </tr>
+            </thead>
+            <tbody>
+                                <tr>
+                    <td>
+                        <a href="/user?user_id=bar">bar</a>
+                    </td>
+                    <td>
+                        <span title="CN_1">User Certificate</span>
+                    </td>
+                    <td>
+                        <ul>
+                                                        <li><code>10.0.0.2</code></li>
+                                                        <li><code>fd00::1000</code></li>
+                                                    </ul>
+                    </td>
+                </tr>
+                            </tbody>
+            </table>
+                    </main>
+    <footer>
+        <form method="post" action="/setLanguage">
+            <button name="setLanguage" value="en_US">English</button>
+            <button name="setLanguage" value="nl_NL">Nederlands</button>
+        </form>
+        <form method="post" action="/_logout">
+            <button type="submit">Sign Out</button>
+        </form>
+    </footer>
+</body>
+</html>
