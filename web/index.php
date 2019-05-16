@@ -127,13 +127,17 @@ try {
         )
     );
 
+    $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
+    // the first listed language is the default language
+    $uiLang = array_keys($supportedLanguages)[0];
     $languageFile = null;
     if (array_key_exists('ui_lang', $_COOKIE)) {
         $uiLang = $_COOKIE['ui_lang'];
-        if ('en_US' !== $uiLang) {
-            $languageFile = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
-        }
     }
+    if ('en_US' !== $uiLang) {
+        $languageFile = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
+    }
+
     $tpl = new Tpl($templateDirs, $languageFile);
     $tpl->addDefault(
         [
@@ -142,7 +146,6 @@ try {
             'requestRootUri' => $request->getRootUri(),
         ]
     );
-    $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
     $tpl->addDefault(
         [
             'supportedLanguages' => $supportedLanguages,
