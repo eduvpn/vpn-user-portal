@@ -12,11 +12,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\SAML\SP\PrivateKey;
-use fkooman\SAML\SP\PublicKey;
-use fkooman\SAML\SP\SP;
-use fkooman\SAML\SP\SpInfo;
-use fkooman\SAML\SP\XmlIdpInfoSource;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use LC\OpenVpn\ManagementSocket;
@@ -37,7 +32,6 @@ use LC\Portal\Http\OAuthModule;
 use LC\Portal\Http\PasswdModule;
 use LC\Portal\Http\RadiusAuth;
 use LC\Portal\Http\Request;
-use LC\Portal\Http\SamlAuthenticationHook;
 use LC\Portal\Http\SamlModule;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\TwoFactorEnrollModule;
@@ -161,42 +155,37 @@ try {
 
     $service->addModule(new LogoutModule($session, $logoutUrl, $returnParameter));
     switch ($authMethod) {
-        case 'SamlAuthentication':
-            $samlAuthenticationConfig = $portalConfig->getSamlAuthenticationConfig();
-            if (null === $spEntityId = $samlAuthenticationConfig->getSpEntityId()) {
-                $spEntityId = $request->getRootUri().'_saml/metadata';
-            }
-            $userIdAttribute = $samlAuthenticationConfig->getUserIdAttribute();
-            $permissionAttributeList = $samlAuthenticationConfig->getPermissionAttributeList();
-            $spInfo = new SpInfo(
-                $spEntityId,
-                PrivateKey::fromFile(sprintf('%s/saml.key', $configDir)),
-                PublicKey::fromFile(sprintf('%s/saml.crt', $configDir)),
-                $request->getRootUri().'_saml/acs'
-            );
-            $spInfo->setSloUrl($request->getRootUri().'_saml/slo');
-            $samlSp = new SP(
-                $spInfo,
-                new XmlIdpInfoSource($samlAuthenticationConfig->requireString('idpMetadata'))
-            );
+        case 'DbAuthentication':
             $service->addBeforeHook(
                 'auth',
-                new SamlAuthenticationHook(
-                    $samlSp,
-                    $samlAuthenticationConfig->getIdpEntityId(),
-                    $userIdAttribute,
-                    $permissionAttributeList,
-                    $samlAuthenticationConfig->getAuthnContext(),
-                    $samlAuthenticationConfig->getPermissionAuthnContext(),
-                    $samlAuthenticationConfig->getPermissionSessionExpiry()
+                new FormAuthenticationHook(
+                    $session,
+                    $tpl
                 )
             );
+
             $service->addModule(
-                new SamlModule(
-                    $samlSp,
-                    $samlAuthenticationConfig->getDiscoUrl()
+                new FormAuthenticationModule(
+                    $storage,
+                    $session,
+                    $tpl
                 )
             );
+            // add module for changing password
+            $service->addModule(
+                new PasswdModule(
+                    $tpl,
+                    $storage
+                )
+            );
+
+            break;
+        case 'SamlAuthentication':
+            $samlModule = new SamlModule(
+                $portalConfig->getSamlAuthenticationConfig()
+            );
+            $service->addBeforeHook('auth', $samlModule);
+            $service->addModule($samlModule);
 
             break;
         case 'LdapAuthentication':
@@ -224,31 +213,6 @@ try {
                     $userAuth,
                     $session,
                     $tpl
-                )
-            );
-
-            break;
-        case 'DbAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new FormAuthenticationHook(
-                    $session,
-                    $tpl
-                )
-            );
-
-            $service->addModule(
-                new FormAuthenticationModule(
-                    $storage,
-                    $session,
-                    $tpl
-                )
-            );
-            // add module for changing password
-            $service->addModule(
-                new PasswdModule(
-                    $tpl,
-                    $storage
                 )
             );
 
