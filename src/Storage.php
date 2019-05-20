@@ -57,6 +57,14 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
     }
 
     /**
+     * @return \PDO
+     */
+    public function getPdo()
+    {
+        return $this->db;
+    }
+
+    /**
      * @param string $authUser
      * @param string $authPass
      *
@@ -575,38 +583,6 @@ SQL
         // this is why we don't need to distinguish between a successful fetch
         // or not, a bit ugly!
         return (bool) $stmt->fetchColumn();
-    }
-
-    /**
-     * @param string $profileId
-     *
-     * @return array
-     */
-    public function getLogEntries($profileId)
-    {
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-    SELECT 
-        user_id,
-        common_name, 
-        connected_at, 
-        disconnected_at, 
-        bytes_transferred
-    FROM 
-        connection_log
-    WHERE
-        profile_id = :profile_id
-    AND
-        disconnected_at IS NOT NULL
-    ORDER BY
-        connected_at
-SQL
-        );
-
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**

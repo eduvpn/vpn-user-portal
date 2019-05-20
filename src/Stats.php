@@ -10,6 +10,7 @@
 namespace LC\Portal;
 
 use DateTime;
+use PDO;
 
 class Stats
 {
@@ -38,13 +39,36 @@ class Stats
         ];
 
         foreach ($profileIdList as $profileId) {
-            $logEntries = $this->storage->getLogEntries($profileId);
-
             $statsData = [];
             $timeConnection = [];
             $uniqueUsers = [];
 
-            foreach ($logEntries as $entry) {
+            // we need to fetch one row at a time in order to not exhaust PHP's
+            // memory, this is not ideal, but as long as there is no "yield"
+            // support in PHP 5.4...
+            $db = $this->storage->getPdo();
+            $stmt = $db->prepare(
+<<< 'SQL'
+    SELECT 
+        user_id,
+        common_name, 
+        connected_at, 
+        disconnected_at, 
+        bytes_transferred
+    FROM 
+        connection_log
+    WHERE
+        profile_id = :profile_id
+    AND
+        disconnected_at IS NOT NULL
+    ORDER BY
+        connected_at
+SQL
+            );
+
+            $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+            $stmt->execute();
+            while ($entry = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $userId = $entry['user_id'];
                 $connectedAt = $entry['connected_at'];
                 $disconnectedAt = $entry['disconnected_at'];
