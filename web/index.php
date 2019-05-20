@@ -23,7 +23,6 @@ use LC\OpenVpn\ManagementSocket;
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
-use LC\Portal\Graph;
 use LC\Portal\Http\AdminHook;
 use LC\Portal\Http\AdminPortalModule;
 use LC\Portal\Http\CsrfProtectionHook;
@@ -57,15 +56,6 @@ use LC\Portal\Tpl;
 
 $logger = new Logger('vpn-user-portal');
 
-// on various systems we have various font locations
-// XXX move this to configuration
-$fontList = [
-    '/usr/share/fonts/google-roboto/Roboto-Regular.ttf', // Fedora (google-roboto-fonts)
-    '/usr/share/fonts/roboto_fontface/roboto/Roboto-Regular.ttf', // Fedora (roboto-fontface-fonts)
-    '/usr/share/fonts/roboto_fontface/Roboto-Regular.ttf', // CentOS (roboto-fontface-fonts)
-    '/usr/share/fonts-roboto-fontface/fonts/Roboto-Regular.ttf', // Debian (fonts-roboto-fontface)
-];
-
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
@@ -81,10 +71,8 @@ try {
         sprintf('%s/views', $configDir),
     ];
 
-    $styleConfig = null;
     if (null !== $styleName = $portalConfig->getStyleName()) {
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
-        //        $styleConfig = Config::fromFile(sprintf('%s/%s.php', $configDir, $styleName));
     }
 
     $sessionExpiry = $portalConfig->getSessionExpiry();
@@ -354,19 +342,12 @@ try {
     $service->addModule($vpnPortalModule);
 
     // admin module
-    $graph = new Graph();
-    $graph->setFontList($fontList);
-    if (null !== $styleConfig) {
-        $graph->setBarColor($styleConfig->getItem('barColor'));
-    }
-
     $adminPortalModule = new AdminPortalModule(
         $dataDir,
         $portalConfig,
         $tpl,
         $storage,
-        $serverManager,
-        $graph
+        $serverManager
     );
     $service->addModule($adminPortalModule);
 

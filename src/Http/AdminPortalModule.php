@@ -13,7 +13,6 @@ use DateInterval;
 use DateTime;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
-use LC\Portal\Graph;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\OpenVpn\ServerManagerInterface;
 use LC\Portal\Storage;
@@ -34,9 +33,6 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var \LC\Portal\Storage */
     private $storage;
 
-    /** @var \LC\Portal\Graph */
-    private $graph;
-
     /** @var \LC\Portal\OpenVpn\ServerManagerInterface */
     private $serverManager;
 
@@ -49,16 +45,14 @@ class AdminPortalModule implements ServiceModuleInterface
      * @param \LC\Portal\TplInterface                   $tpl
      * @param Storage                                   $storage
      * @param \LC\Portal\OpenVpn\ServerManagerInterface $serverManager
-     * @param Graph                                     $graph
      */
-    public function __construct($dataDir, PortalConfig $portalConfig, TplInterface $tpl, Storage $storage, ServerManagerInterface $serverManager, Graph $graph)
+    public function __construct($dataDir, PortalConfig $portalConfig, TplInterface $tpl, Storage $storage, ServerManagerInterface $serverManager)
     {
         $this->dataDir = $dataDir;
         $this->portalConfig = $portalConfig;
         $this->tpl = $tpl;
         $this->storage = $storage;
         $this->serverManager = $serverManager;
-        $this->graph = $graph;
         $this->dateTimeToday = new DateTime('today');
     }
 
@@ -257,122 +251,15 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $stats = $this->getStats();
-                if (!\is_array($stats) || !\array_key_exists('profiles', $stats)) {
-                    // this is an old "stats" format we no longer support,
-                    // vpn-server-api-stats has to run again first, which is
-                    // done by the crontab running at midnight...
-                    // XXX remove legacy support in 3.0
-                    $stats = false;
-                }
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
-                            'stats' => $stats,
-                            'generated_at' => false !== $stats ? $stats['generated_at'] : false,
-                            'generated_at_tz' => date('T'),
+                            'statsData' => $this->getStatsData(),
                             'profileConfigList' => $this->portalConfig->getProfileConfigList(),
                         ]
                     )
                 );
-            }
-        );
-
-        $service->get(
-            '/stats/traffic',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
-
-                $profileId = InputValidation::profileId($request->requireQueryParameter('profile_id'));
-                $response = new Response(
-                    200,
-                    'image/png'
-                );
-
-                if (false === $stats = $this->getStats()) {
-                    throw new HttpException('no stats available', 400);
-                }
-                $dateByteList = [];
-                foreach ($stats['profiles'][$profileId]['days'] as $v) {
-                    $dateByteList[$v['date']] = $v['bytes_transferred'];
-                }
-
-                $imageData = $this->graph->draw(
-                    $dateByteList,
-                    /**
-                     * @param int $v
-                     *
-                     * @return string
-                     */
-                    function ($v) {
-                        $suffix = 'B';
-                        if ($v > 1024) {
-                            $v /= 1024;
-                            $suffix = 'kiB';
-                        }
-                        if ($v > 1024) {
-                            $v /= 1024;
-                            $suffix = 'MiB';
-                        }
-                        if ($v > 1024) {
-                            $v /= 1024;
-                            $suffix = 'GiB';
-                        }
-                        if ($v > 1024) {
-                            $v /= 1024;
-                            $suffix = 'TiB';
-                        }
-
-                        return sprintf('%d %s ', $v, $suffix);
-                    }
-                );
-                $response->setBody($imageData);
-
-                return $response;
-            }
-        );
-
-        $service->get(
-            '/stats/users',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
-
-                $profileId = InputValidation::profileId($request->requireQueryParameter('profile_id'));
-                $response = new Response(
-                    200,
-                    'image/png'
-                );
-
-                if (false === $stats = $this->getStats()) {
-                    throw new HttpException('no stats available', 400);
-                }
-                $dateUsersList = [];
-                foreach ($stats['profiles'][$profileId]['days'] as $v) {
-                    $dateUsersList[$v['date']] = $v['unique_user_count'];
-                }
-
-                $imageData = $this->graph->draw(
-                    $dateUsersList,
-                    /**
-                     * @param int $v
-                     *
-                     * @return string
-                     */
-                    function ($v) {
-                        return sprintf('%d ', $v);
-                    }
-                );
-                $response->setBody($imageData);
-
-                return $response;
             }
         );
 
@@ -490,16 +377,16 @@ class AdminPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @return false|array
+     * @return array
      */
-    private function getStats()
+    private function getStatsData()
     {
         $statsFile = sprintf('%s/stats.json', $this->dataDir);
         try {
             return FileIO::readJsonFile($statsFile);
         } catch (RuntimeException $e) {
-            // no stats file available yet
-            return false;
+            // no stats file available (yet) or unable to read it
+            return [];
         }
     }
 
