@@ -9,7 +9,6 @@
 
 namespace LC\Portal\Http;
 
-use DateInterval;
 use DateTime;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\FileIO;
@@ -357,26 +356,6 @@ class AdminPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \DateInterval $dateInterval
-     *
-     * @return array<string, int>
-     */
-    private function createDateList(DateInterval $dateInterval)
-    {
-        $dateTime = clone $this->dateTimeToday;
-        $dateTime->sub($dateInterval);
-        $oneDay = new DateInterval('P1D');
-
-        $dateList = [];
-        while ($dateTime < $this->dateTimeToday) {
-            $dateList[$dateTime->format('Y-m-d')] = 0;
-            $dateTime->add($oneDay);
-        }
-
-        return $dateList;
-    }
-
-    /**
      * @return array
      */
     private function getStatsData()
@@ -394,7 +373,6 @@ class AdminPortalModule implements ServiceModuleInterface
      * @param string|null $userId
      *
      * @return array
-     *               XXX make sure all profile IDs are there in the getProfileConnectionList!
      */
     private function getProfileConnectionList($userId = null)
     {
@@ -403,6 +381,8 @@ class AdminPortalModule implements ServiceModuleInterface
             $profileConnectionList[$profileId] = [];
         }
 
+        // XXX make sure all profile IDs are there in the getProfileConnectionList!
+        // what if client connections are connected to no longer existing profiles?!
         foreach ($this->serverManager->connections() as $profileId => $clientConnectionList) {
             foreach ($clientConnectionList as $clientConnection) {
                 if (false === $certInfo = $this->storage->getUserCertificateInfo($clientConnection['common_name'])) {
