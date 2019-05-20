@@ -25,10 +25,8 @@ try {
         $db,
         sprintf('%s/schema', $baseDir)
     );
-
     $outFile = sprintf('%s/stats.json', $dataDir);
-
-    $stats = new Stats($storage, new DateTime());
+    $stats = new Stats($storage);
     $statsData = $stats->get(
         array_keys($portalConfig->getProfileConfigList())
     );

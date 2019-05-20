@@ -17,13 +17,9 @@ class Stats
     /** @var Storage */
     private $storage;
 
-    /** @var \DateTime */
-    private $dateTime;
-
-    public function __construct(Storage $storage, DateTime $dateTime)
+    public function __construct(Storage $storage)
     {
         $this->storage = $storage;
-        $this->dateTime = $dateTime;
     }
 
     /**
@@ -34,6 +30,8 @@ class Stats
     public function get(array $profileIdList)
     {
         $allStatsData = [];
+        $db = $this->storage->getPdo();
+
         foreach ($profileIdList as $profileId) {
             $statsData = [];
             $timeConnection = [];
@@ -42,7 +40,6 @@ class Stats
             // we need to fetch one row at a time in order to not exhaust PHP's
             // memory, this is not ideal, but as long as there is no "yield"
             // support in PHP 5.4...
-            $db = $this->storage->getPdo();
             $stmt = $db->prepare(
 <<< 'SQL'
     SELECT 
