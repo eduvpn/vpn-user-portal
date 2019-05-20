@@ -76,19 +76,6 @@ class ForeignKeyListFetcher
     }
 
     /**
-     * @return array
-     */
-    public function extract()
-    {
-        $mappingFile = sprintf('%s/key_instance_mapping.json', $this->dataDir);
-        if (false === FileIO::exists($mappingFile)) {
-            return [];
-        }
-
-        return FileIO::readJsonFile($mappingFile);
-    }
-
-    /**
      * @param string $remoteSourceName
      *
      * @return int

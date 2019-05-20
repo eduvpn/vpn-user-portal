@@ -66,7 +66,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -86,7 +86,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -105,7 +105,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 $userList = $this->storage->getUsers();
 
@@ -126,7 +126,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
@@ -159,7 +159,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
@@ -227,7 +227,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -248,7 +248,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -268,7 +268,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 $motdMessages = $this->storage->systemMessages('motd');
 
@@ -296,7 +296,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 $messageAction = $request->requirePostParameter('message_action');
                 switch ($messageAction) {
@@ -332,7 +332,7 @@ class AdminPortalModule implements ServiceModuleInterface
              * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
+                self::requireAdmin($hookData);
 
                 $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
                 $ipAddress = $request->requirePostParameter('ip_address');
@@ -408,5 +408,15 @@ class AdminPortalModule implements ServiceModuleInterface
         }
 
         return $profileConnectionList;
+    }
+
+    /**
+     * @return void
+     */
+    private static function requireAdmin(array $hookData)
+    {
+        if (false === $hookData['is_admin']) {
+            throw new HttpException('user is not an administrator', 403);
+        }
     }
 }

@@ -396,25 +396,6 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string $scope
-     *
-     * @return string
-     */
-    public static function validateScope($scope)
-    {
-        // scope       = scope-token *( SP scope-token )
-        // scope-token = 1*NQCHAR
-        // NQCHAR      = %x21 / %x23-5B / %x5D-7E
-        foreach (explode(' ', $scope) as $scopeToken) {
-            if (1 !== preg_match('/^[\x21\x23-\x5B\x5D-\x7E]+$/', $scopeToken)) {
-                throw new HttpException('invalid "scope"', 400);
-            }
-        }
-
-        return $scope;
-    }
-
-    /**
      * @return bool
      */
     public static function isMember(array $aclPermissionList, array $userPermissions)

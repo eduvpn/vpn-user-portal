@@ -70,6 +70,8 @@ class LdapAuth implements CredentialValidatorInterface
 
             $userFilter = '(objectClass=*)';
             if (null !== $this->userFilterTemplate) {
+                // XXX do we need to escape filter here? we have no ldap to
+                // test with at the moment :(
                 $userFilter = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->userFilterTemplate);
             }
 

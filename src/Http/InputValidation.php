@@ -11,7 +11,6 @@ namespace LC\Portal\Http;
 
 use DateTime;
 use LC\Portal\Http\Exception\InputValidationException;
-use LC\Portal\Json;
 
 class InputValidation
 {
@@ -45,20 +44,6 @@ class InputValidation
         }
 
         return $commonName;
-    }
-
-    /**
-     * @param string $serverCommonName
-     *
-     * @return string
-     */
-    public static function serverCommonName($serverCommonName)
-    {
-        if (1 !== preg_match('/^[a-zA-Z0-9-.]+$/', $serverCommonName)) {
-            throw new InputValidationException('invalid "server_common_name"');
-        }
-
-        return $serverCommonName;
     }
 
     /**
@@ -164,105 +149,6 @@ class InputValidation
     }
 
     /**
-     * @param string $ip4
-     *
-     * @return string
-     */
-    public static function ip4($ip4)
-    {
-        if (false === filter_var($ip4, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            throw new InputValidationException('invalid "ip4"');
-        }
-
-        return $ip4;
-    }
-
-    /**
-     * @param string $ip6
-     *
-     * @return string
-     */
-    public static function ip6($ip6)
-    {
-        if (false === filter_var($ip6, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            throw new InputValidationException('invalid "ip6"');
-        }
-
-        // normalize the IPv6 address
-        return inet_ntop(inet_pton($ip6));
-    }
-
-    /**
-     * @param string $connectedAt
-     *
-     * @return int
-     */
-    public static function connectedAt($connectedAt)
-    {
-        if (!is_numeric($connectedAt) || 0 > (int) $connectedAt) {
-            throw new InputValidationException('invalid "connected_at"');
-        }
-
-        return (int) $connectedAt;
-    }
-
-    /**
-     * @param string $disconnectedAt
-     *
-     * @return int
-     */
-    public static function disconnectedAt($disconnectedAt)
-    {
-        if (!is_numeric($disconnectedAt) || 0 > (int) $disconnectedAt) {
-            throw new InputValidationException('invalid "disconnected_at"');
-        }
-
-        return (int) $disconnectedAt;
-    }
-
-    /**
-     * @param string $bytesTransferred
-     *
-     * @return int
-     */
-    public static function bytesTransferred($bytesTransferred)
-    {
-        if (!is_numeric($bytesTransferred) || 0 > (int) $bytesTransferred) {
-            throw new InputValidationException('invalid "bytes_transferred"');
-        }
-
-        return (int) $bytesTransferred;
-    }
-
-    /**
-     * @param string $twoFactorType
-     *
-     * @return string
-     */
-    public static function twoFactorType($twoFactorType)
-    {
-        if ('totp' !== $twoFactorType) {
-            throw new InputValidationException('invalid "two_factor_type"');
-        }
-
-        return $twoFactorType;
-    }
-
-    /**
-     * @param string $twoFactorValue
-     *
-     * @return string
-     */
-    public static function twoFactorValue($twoFactorValue)
-    {
-        if (0 >= \strlen($twoFactorValue)) {
-            throw new InputValidationException('invalid "two_factor_value"');
-        }
-
-        return $twoFactorValue;
-    }
-
-    /**
      * @param string $messageId
      *
      * @return int
@@ -274,68 +160,6 @@ class InputValidation
         }
 
         return (int) $messageId;
-    }
-
-    /**
-     * @param string $messageType
-     *
-     * @return string
-     */
-    public static function messageType($messageType)
-    {
-        if ('motd' !== $messageType && 'notification' !== $messageType && 'maintenance' !== $messageType) {
-            throw new InputValidationException('invalid "message_type"');
-        }
-
-        return $messageType;
-    }
-
-    /**
-     * @param string $voucherCode
-     *
-     * @return string
-     */
-    public static function voucherCode($voucherCode)
-    {
-        if (1 !== preg_match('/^[a-fA-F0-9]{32}$/', $voucherCode)) {
-            throw new InputValidationException('invalid "voucherCode"');
-        }
-
-        return $voucherCode;
-    }
-
-    /**
-     * @param string $expiresAt
-     *
-     * @return \DateTime
-     */
-    public static function expiresAt($expiresAt)
-    {
-        if (false === $dateTime = DateTime::createFromFormat(DateTime::ATOM, $expiresAt)) {
-            throw new InputValidationException('invalid "expires_at"');
-        }
-
-        return $dateTime;
-    }
-
-    /**
-     * Make sure the input string is valid JSON array containing just strings.
-     *
-     * @param string $permissionListStr
-     *
-     * @return array<string>
-     */
-    public static function permissionList($permissionListStr)
-    {
-        // make sure the string is valid JSON array containing just strings
-        $permissionList = Json::decode($permissionListStr);
-        foreach ($permissionList as $permission) {
-            if (!\is_string($permission)) {
-                throw new InputValidationException('invalid "permissionList"');
-            }
-        }
-
-        return $permissionList;
     }
 
     /**
