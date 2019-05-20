@@ -14,10 +14,10 @@
     <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
         <tr>
             <td><span title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->getDisplayName()); ?></td>
-            <?php if (array_key_exists('profiles', $statsData) && array_key_exists($profileId, $statsData['profiles'])): ?>
-                <td><?=$this->e($statsData['profiles'][$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
-                <td><?=$this->e($statsData['profiles'][$profileId]['unique_user_count']); ?></td>
-                <td><span title="<?=$this->e($statsData['profiles'][$profileId]['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e($statsData['profiles'][$profileId]['max_concurrent_connections']); ?></span></td>
+            <?php if (array_key_exists($profileId, $statsData)): ?>
+                <td><?=$this->e($statsData[$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
+                <td><?=$this->e($statsData[$profileId]['unique_user_count']); ?></td>
+                <td><span title="<?=$this->e($statsData[$profileId]['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e($statsData[$profileId]['max_concurrent_connections']); ?></span></td>
             <?php else: ?>
                 <td><em><?=$this->t('N/A'); ?></em></td>
                 <td><em><?=$this->t('N/A'); ?></em></td>

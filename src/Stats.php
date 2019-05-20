@@ -33,11 +33,7 @@ class Stats
      */
     public function get(array $profileIdList)
     {
-        $allStatsData = [
-            'generated_at' => $this->dateTime->format(DateTime::ATOM),
-            'profiles' => [],
-        ];
-
+        $allStatsData = [];
         foreach ($profileIdList as $profileId) {
             $statsData = [];
             $timeConnection = [];
@@ -139,7 +135,7 @@ SQL
                 $totalTraffic += $entry['bytes_transferred'];
             }
 
-            $allStatsData['profiles'][$profileId] = [
+            $allStatsData[$profileId] = [
                 'days' => array_values($statsData),
                 'total_traffic' => $totalTraffic,
                 'max_concurrent_connections' => $maxConcurrentConnections,
