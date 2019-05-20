@@ -11,7 +11,6 @@ namespace LC\Portal\Tests\Http;
 
 use DateTime;
 use LC\Portal\Config\PortalConfig;
-use LC\Portal\Graph;
 use LC\Portal\Http\AdminHook;
 use LC\Portal\Http\AdminPortalModule;
 use LC\Portal\Http\Request;
@@ -55,8 +54,7 @@ class AdminPortalModuleTest extends TestCase
             $portalConfig,
             $tpl,
             $storage,
-            new TestServerManager(),
-            new Graph()
+            new TestServerManager()
         );
         $this->service = new Service();
         $this->service->addBeforeHook('auth', new TestAuthenticationHook('foo'));
