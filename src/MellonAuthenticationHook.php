@@ -52,7 +52,7 @@ class MellonAuthenticationHook implements BeforeHookInterface
     {
         $userId = trim(strip_tags($request->requireHeader($this->userIdAttribute)));
         if ($this->nameIdSerialization) {
-            if (\in_array($this->userIdAttribute, ['NAME_ID', 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10'], true)) {
+            if (\in_array($this->userIdAttribute, ['MELLON_NAME_ID', 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10'], true)) {
                 // only for NAME_ID and eduPersonTargetedID, serialize it the way Shibboleth does
                 // it by prefixing it with the IdP entityID and SP entityID
                 $idpEntityId = $request->requireHeader('MELLON_IDP');
