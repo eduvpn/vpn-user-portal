@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.4 (...)
+## 2.0.4 (2019-05-21)
 - fix default language for portal, it always used English independent of the
   order of languages in the configuration file
 - fix `MellonAuthentication` logout
