@@ -3,7 +3,7 @@
 ## 2.0.4 (...)
 - fix default language for portal, it always used English independent of the
   order of languages in the configuration file
-- fix Mellon logout
+- fix `MellonAuthentication` logout
 
 ## 2.0.3 (2019-05-14)
 - update Norwegian translation
