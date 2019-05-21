@@ -226,7 +226,9 @@ try {
                 'auth',
                 new MellonAuthenticationHook(
                     $config->getSection('MellonAuthentication')->getItem('userIdAttribute'),
-                    $config->getSection('MellonAuthentication')->optionalItem('permissionAttribute')
+                    $config->getSection('MellonAuthentication')->optionalItem('permissionAttribute'),
+                    $config->getSection('MellonAuthentication')->optionalItem('nameIdSerialization', false),
+                    $config->getSection('MellonAuthentication')->optionalItem('spEntityId')
                 )
             );
             break;

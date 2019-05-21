@@ -10,6 +10,7 @@
 namespace LC\Portal;
 
 use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\Request;
 use LC\Common\Http\UserInfo;
 
@@ -21,14 +22,24 @@ class MellonAuthenticationHook implements BeforeHookInterface
     /** @var string|null */
     private $permissionAttribute;
 
+    /** @var bool */
+    private $nameIdSerialization;
+
+    /** @var string|null */
+    private $spEntityId;
+
     /**
      * @param string      $userIdAttribute
      * @param string|null $permissionAttribute
+     * @param bool        $nameIdSerialization
+     * @param string|null $spEntityId
      */
-    public function __construct($userIdAttribute, $permissionAttribute)
+    public function __construct($userIdAttribute, $permissionAttribute, $nameIdSerialization, $spEntityId)
     {
         $this->userIdAttribute = $userIdAttribute;
         $this->permissionAttribute = $permissionAttribute;
+        $this->nameIdSerialization = $nameIdSerialization;
+        $this->spEntityId = $spEntityId;
     }
 
     /**
@@ -39,6 +50,19 @@ class MellonAuthenticationHook implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
+        $userId = trim(strip_tags($request->requireHeader($this->userIdAttribute)));
+        if ($this->nameIdSerialization) {
+            if (\in_array($this->userIdAttribute, ['NAME_ID', 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10'], true)) {
+                // only for NAME_ID and eduPersonTargetedID, serialize it the way Shibboleth does
+                // it by prefixing it with the IdP entityID and SP entityID
+                $idpEntityId = $request->requireHeader('MELLON_IDP');
+                if (null === $this->spEntityId) {
+                    throw new HttpException('"spEntityId" MUST be set in configuration', 500);
+                }
+                $userId = sprintf('%s!%s!%s', $idpEntityId, $this->spEntityId, $userId);
+            }
+        }
+
         $userPermissions = [];
         if (null !== $this->permissionAttribute) {
             $permissionHeaderValue = $request->optionalHeader($this->permissionAttribute);
@@ -48,7 +72,7 @@ class MellonAuthenticationHook implements BeforeHookInterface
         }
 
         return new UserInfo(
-            trim(strip_tags($request->requireHeader($this->userIdAttribute))),
+            $userId,
             $userPermissions
         );
     }
