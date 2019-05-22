@@ -27,4 +27,31 @@
     <?php endforeach; ?>
     </tbody>
 </table>
+
+<h2><?=$this->t('Graphs'); ?></h2>
+<?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
+<?php if (array_key_exists($profileId, $graphStats)): ?>
+    <h3><?=$profileConfig->getDisplayName(); ?></h3>
+    <!-- #users -->
+    <table>
+        <tbody>
+<?php foreach ($graphStats[$profileId] as $day => $dayInfo): ?>
+            <tr>
+                <th><?=$this->e($day); ?></th><td><span><?=str_repeat('X', $dayInfo['user_fraction']); ?></span></td>
+            </tr>
+<?php endforeach; ?>
+        </tbody>
+    </table>
+    <!-- #traffic -->
+    <table>
+        <tbody>
+<?php foreach ($graphStats[$profileId] as $day => $dayInfo): ?>
+            <tr>
+                <th><?=$this->e($day); ?></th><td><span><?=str_repeat('X', $dayInfo['traffic_fraction']); ?></span></td>
+            </tr>
+<?php endforeach; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+<?php endforeach; ?>
 <?php $this->stop(); ?>

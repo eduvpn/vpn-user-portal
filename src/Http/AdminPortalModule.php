@@ -255,6 +255,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminStats',
                         [
                             'statsData' => $this->getStatsData(),
+                            'graphStats' => $this->getGraphStats(),
                             'profileConfigList' => $this->portalConfig->getProfileConfigList(),
                         ]
                     )
@@ -367,6 +368,41 @@ class AdminPortalModule implements ServiceModuleInterface
             // no stats file available (yet) or unable to read it
             return [];
         }
+    }
+
+    /**
+     * @return array<string,array<string,array<string,int>>
+     */
+    private function getGraphStats()
+    {
+        $outputData = [];
+        $statsData = $this->getStatsData();
+        foreach ($statsData as $profileId => $daysList) {
+            $outputData[$profileId] = [];
+            // find max number of unique users per day
+            $maxUniqueUserCount = 0;
+            $maxTrafficCount = 0;
+            foreach ($daysList['days'] as $dayData) {
+                if ($dayData['unique_user_count'] > $maxUniqueUserCount) {
+                    $maxUniqueUserCount = $dayData['unique_user_count'];
+                }
+                if ($dayData['bytes_transferred'] > $maxTrafficCount) {
+                    $maxTrafficCount = $dayData['bytes_transferred'];
+                }
+            }
+            // convert unique_user_count to a number between 0 and 10 as a
+            // fraction of the maxUniqueUserCount
+            $maxUserDivider = $maxUniqueUserCount / 10;
+            $maxTrafficDivider = $maxTrafficCount / 10;
+            foreach ($daysList['days'] as $dayData) {
+                $outputData[$profileId][$dayData['date']] = [
+                    'user_fraction' => (int) floor($dayData['unique_user_count'] / $maxUserDivider),
+                    'traffic_fraction' => (int) floor($dayData['bytes_transferred'] / $maxTrafficDivider),
+                ];
+            }
+        }
+
+        return $outputData;
     }
 
     /**
