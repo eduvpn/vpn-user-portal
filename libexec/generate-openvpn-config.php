@@ -36,13 +36,7 @@ try {
         $vpnUser = 'nobody';
         $vpnGroup = 'nogroup';
     } else {
-        echo 'OS Detected: Unknown...'.PHP_EOL;
-        // we will no specify user/group and point to "../libexec" as the
-        // libexec dir so we can run the OpenVPN processes in "development
-        // mode" as well
-        $libExecDir = null;
-        $vpnUser = null;
-        $vpnGroup = null;
+        throw new RuntimeException('only RHEL/CentOS/Fedora or Debian/Ubuntu supported');
     }
 
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
