@@ -30,10 +30,10 @@ class ServerConfig
     /** @var string */
     private $libExecDir;
 
-    /** @var string */
+    /** @var string|null */
     private $vpnUser;
 
-    /** @var string */
+    /** @var string|null */
     private $vpnGroup;
 
     /** @var \DateTime */
@@ -43,16 +43,16 @@ class ServerConfig
      * @param \LC\Portal\Config\PortalConfig $portalConfig
      * @param \LC\Portal\CA\CaInterface      $ca
      * @param \LC\Portal\OpenVpn\TlsCrypt    $tlsCrypt
-     * @param string                         $libExecDir
-     * @param string                         $vpnUser
-     * @param string                         $vpnGroup
+     * @param string|null                    $libExecDir
+     * @param string|null                    $vpnUser
+     * @param string|null                    $vpnGroup
      */
     public function __construct(PortalConfig $portalConfig, CaInterface $ca, TlsCrypt $tlsCrypt, $libExecDir, $vpnUser, $vpnGroup)
     {
         $this->portalConfig = $portalConfig;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
-        $this->libExecDir = $libExecDir;
+        $this->libExecDir = null !== $libExecDir ? $libExecDir : '../libexec';
         $this->vpnUser = $vpnUser;
         $this->vpnGroup = $vpnGroup;
         $this->dateTime = new DateTime();
@@ -145,8 +145,6 @@ class ServerConfig
         $serverConfig = [
             'verb 3',
             'dev-type tun',
-            sprintf('user %s', $this->vpnUser),
-            sprintf('group %s', $this->vpnGroup),
             'topology subnet',
             'persist-key',
             'persist-tun',
@@ -170,6 +168,13 @@ class ServerConfig
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $profileConfig->getListen()),
         ];
+
+        if (null !== $this->vpnUser) {
+            $serverConfig[] = sprintf('user %s', $this->vpnUser);
+        }
+        if (null !== $this->vpnGroup) {
+            $serverConfig[] = sprintf('group %s', $this->vpnGroup);
+        }
 
         if (!$profileConfig->getEnableLog()) {
             $serverConfig[] = 'log /dev/null';
