@@ -271,8 +271,8 @@ class ServerConfig
                 ];
             default:
                 return [
-                    sprintf('client-connect /usr/bin/php %s/libexec/client-connect.php', \dirname(\dirname(__DIR__))),
-                    sprintf('client-disconnect /usr/bin/php %s/libexec/client-disconnect.php', \dirname(\dirname(__DIR__))),
+                    sprintf('client-connect "/usr/bin/php %s/libexec/client-connect.php"', \dirname(\dirname(__DIR__))),
+                    sprintf('client-disconnect "/usr/bin/php %s/libexec/client-disconnect.php"', \dirname(\dirname(__DIR__))),
                 ];
         }
     }
