@@ -64,11 +64,6 @@ class ClientConfig
             'auth none',
         ];
 
-        // remote entries
-        foreach ($remoteProtoPortList as $remoteProtoPort) {
-            $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
-        }
-
         sort($clientConfig);
 
         $clientConfig = array_merge(
@@ -112,6 +107,11 @@ class ClientConfig
                 '</tls-crypt>',
             ]
         );
+
+        // remote entries
+        foreach ($remoteProtoPortList as $remoteProtoPort) {
+            $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
+        }
 
         return implode(PHP_EOL, $clientConfig);
     }

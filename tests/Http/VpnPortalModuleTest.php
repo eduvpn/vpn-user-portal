@@ -116,7 +116,7 @@ class VpnPortalModuleTest extends TestCase
             ],
             $httpResponse->getHeaders()
         );
-        // file_put_contents(__DIR__.'/client.conf', $httpResponse->getBody());
+        //file_put_contents(__DIR__.'/client.conf', $httpResponse->getBody());
         $this->assertSame(file_get_contents(__DIR__.'/client.conf'), $httpResponse->getBody());
     }
 }
