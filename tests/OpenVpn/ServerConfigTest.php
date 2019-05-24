@@ -24,9 +24,7 @@ class ServerConfigTest extends TestCase
             PortalConfig::fromFile(\dirname(\dirname(__DIR__)).'/config/config.php.example'),
             new TestCa(new DateTime('2019-01-01')),
             TlsCrypt::fromFile(\dirname(__DIR__).'/tls-crypt.key'),
-            '/usr/libexec/vpn-user-portal',
-            'openvpn',
-            'openvpn'
+            ServerConfig::OS_REDHAT
         );
         $serverConfig->setDateTime(new DateTime('2019-01-01'));
         // file_put_contents(__DIR__.'/default.conf', var_export($serverConfig->getConfigList(), true));

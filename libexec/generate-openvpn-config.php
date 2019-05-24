@@ -22,28 +22,31 @@ try {
     $dataDir = sprintf('%s/data', $baseDir);
     $vpnConfigDir = sprintf('%s/openvpn-config', $baseDir);
 
-    // auto detect user/group to use for OpenVPN process
+    /** @var bool */
+    $forceDev = false;
+    foreach ($argv as $arg) {
+        if ('--dev' === $arg) {
+            $forceDev = true;
+        }
+    }
+
+    /** @var int|null */
+    $osType = null;
     if (FileIO::exists('/etc/redhat-release')) {
-        // RHEL/CentOS/Fedora
-        echo 'OS Detected: RHEL/CentOS/Fedora...'.PHP_EOL;
-        $libExecDir = '/usr/libexec/vpn-server-node';
-        $vpnUser = 'openvpn';
-        $vpnGroup = 'openvpn';
-    } elseif (FileIO::exists('/etc/debian_version')) {
-        // Debian/Ubuntu
-        echo 'OS Detected: Debian/Ubuntu...'.PHP_EOL;
-        $libExecDir = '/usr/lib/vpn-server-node';
-        $vpnUser = 'nobody';
-        $vpnGroup = 'nogroup';
-    } else {
-        throw new RuntimeException('only RHEL/CentOS/Fedora or Debian/Ubuntu supported');
+        $osType = ServerConfig::OS_REDHAT;
+    }
+    if (FileIO::exists('/etc/debian_version')) {
+        $osType = ServerConfig::OS_DEBIAN;
+    }
+    if (null === $osType || $forceDev) {
+        $osType = ServerConfig::OS_DEV;
     }
 
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
     $storage = new Storage(new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)), sprintf('%s/schema', $baseDir));
     $easyRsaCa = new EasyRsaCa(sprintf('%s/easy-rsa', $baseDir), sprintf('%s/easy-rsa', $dataDir));
     $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $configDir));
-    $openVpn = new ServerConfig($portalConfig, $easyRsaCa, $tlsCrypt, $libExecDir, $vpnUser, $vpnGroup);
+    $openVpn = new ServerConfig($portalConfig, $easyRsaCa, $tlsCrypt, $osType);
     $configList = $openVpn->getConfigList();
     foreach ($configList as $configName => $configFile) {
         $configFileName = sprintf('%s/%s.conf', $vpnConfigDir, $configName);

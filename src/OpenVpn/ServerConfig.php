@@ -18,6 +18,15 @@ use RuntimeException;
 
 class ServerConfig
 {
+    /** @var int */
+    const OS_DEV = 0;
+
+    /** @var int */
+    const OS_REDHAT = 10;
+
+    /** @var int */
+    const OS_DEBIAN = 20;
+
     /** @var \LC\Portal\Config\PortalConfig */
     private $portalConfig;
 
@@ -27,14 +36,8 @@ class ServerConfig
     /** @var \LC\Portal\OpenVpn\TlsCrypt */
     private $tlsCrypt;
 
-    /** @var string */
-    private $libExecDir;
-
-    /** @var string */
-    private $vpnUser;
-
-    /** @var string */
-    private $vpnGroup;
+    /** @var int */
+    private $osType;
 
     /** @var \DateTime */
     private $dateTime;
@@ -43,18 +46,14 @@ class ServerConfig
      * @param \LC\Portal\Config\PortalConfig $portalConfig
      * @param \LC\Portal\CA\CaInterface      $ca
      * @param \LC\Portal\OpenVpn\TlsCrypt    $tlsCrypt
-     * @param string                         $libExecDir
-     * @param string                         $vpnUser
-     * @param string                         $vpnGroup
+     * @param int                            $osType
      */
-    public function __construct(PortalConfig $portalConfig, CaInterface $ca, TlsCrypt $tlsCrypt, $libExecDir, $vpnUser, $vpnGroup)
+    public function __construct(PortalConfig $portalConfig, CaInterface $ca, TlsCrypt $tlsCrypt, $osType)
     {
         $this->portalConfig = $portalConfig;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
-        $this->libExecDir = $libExecDir;
-        $this->vpnUser = $vpnUser;
-        $this->vpnGroup = $vpnGroup;
+        $this->osType = $osType;
         $this->dateTime = new DateTime();
     }
 
@@ -145,8 +144,6 @@ class ServerConfig
         $serverConfig = [
             'verb 3',
             'dev-type tun',
-            sprintf('user %s', $this->vpnUser),
-            sprintf('group %s', $this->vpnGroup),
             'topology subnet',
             'persist-key',
             'persist-tun',
@@ -157,8 +154,6 @@ class ServerConfig
             'ncp-ciphers AES-256-GCM',  // only AES-256-GCM
             'cipher AES-256-GCM',       // only AES-256-GCM
             'auth none',
-            sprintf('client-connect %s/client-connect', $this->libExecDir),
-            sprintf('client-disconnect %s/client-disconnect', $this->libExecDir),
             sprintf('server %s %s', $rangeFourIp->getNetwork(), $rangeFourIp->getNetmask()),
             sprintf('server-ipv6 %s', $rangeSixIp->getAddressPrefix()),
             sprintf('max-clients %d', $rangeFourIp->getNumberOfHosts() - 1),
@@ -198,6 +193,12 @@ class ServerConfig
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
 
+        // User / Group
+        $serverConfig = array_merge($serverConfig, $this->getUserGroup());
+
+        // Client Connect / Disconnect scripts
+        $serverConfig = array_merge($serverConfig, $this->getClientConnectDisconnect());
+
         sort($serverConfig);
 
         $serverConfig = array_merge(
@@ -229,6 +230,51 @@ class ServerConfig
         );
 
         return implode(PHP_EOL, $serverConfig).PHP_EOL;
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function getUserGroup()
+    {
+        switch ($this->osType) {
+            case self::OS_REDHAT:
+                return [
+                    'user openvpn',
+                    'group openvpn',
+                ];
+            case self::OS_DEBIAN:
+                return [
+                    'user nobody',
+                    'group nogroup',
+                ];
+            default:
+                return [];
+        }
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function getClientConnectDisconnect()
+    {
+        switch ($this->osType) {
+            case self::OS_REDHAT:
+                return [
+                    'client-connect /usr/libexec/vpn-user-portal/client-connect',
+                    'client-disconnect /usr/libexec/vpn-user-portal/client-disconnect',
+                ];
+            case self::OS_DEBIAN:
+                return [
+                    'client-connect /usr/lib/vpn-user-portal/client-connect',
+                    'client-disconnect /usr/lib/vpn-user-portal/client-disconnect',
+                ];
+            default:
+                return [
+                    sprintf('client-connect /usr/bin/php %s/libexec/client-connect.php', \dirname(\dirname(__DIR__))),
+                    sprintf('client-disconnect /usr/bin/php %s/libexec/client-disconnect.php', \dirname(\dirname(__DIR__))),
+                ];
+        }
     }
 
     /**
