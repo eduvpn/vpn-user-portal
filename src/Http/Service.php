@@ -156,8 +156,7 @@ class Service
                         $this->tpl->render(
                             'errorPage',
                             [
-                                'code' => (int) $e->getCode(),
-                                'message' => $e->getMessage(),
+                                'e' => $e,
                             ]
                         )
                     );

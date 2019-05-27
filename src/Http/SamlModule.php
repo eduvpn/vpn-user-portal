@@ -198,7 +198,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
                         )
                     );
                 } catch (SamlException $e) {
-                    throw new HttpException($e->getMessage(), 500, [], $e);
+                    throw new HttpException('user authentication failed', 500, [], $e);
                 }
             }
         );

@@ -188,6 +188,10 @@ footer form {
     display: inline;
 }
 
+details pre {
+    white-space: pre-wrap;
+}
+
 footer button {
     border: 0;
     background-color: #fff;
