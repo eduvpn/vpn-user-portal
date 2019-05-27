@@ -7,7 +7,6 @@
         <?=$this->e($e->getMessage()); ?>
     </p>
     <details class="error">
-        <summary>Details...</summary>
         <pre><?=$this->e($e); ?></pre>
 <?php while (null !== $previousException = $e->getPrevious()): ?>
         <pre><?=$this->e($previousException); ?></pre>
