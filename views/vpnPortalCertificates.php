@@ -5,7 +5,7 @@
             <?=$this->t('There are currently no issued certificates. <a href="new">Download</a> a new configuration.'); ?>
         </p>                    
     <?php else: ?>
-        <table>
+        <table class="tbl">
             <thead>
                 <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Issued'); ?> (<?=$this->e(date('T')); ?>)</th><th><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</th><th></th></tr> 
             </thead>

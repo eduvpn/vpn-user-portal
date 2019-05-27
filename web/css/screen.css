@@ -112,27 +112,65 @@ nav ul li a, nav ul li span {
     color: #555;
 }
 
-table {
+table.tbl {
     border: 1px solid #ccc;
     width: 100%;
     border-collapse: collapse;
 }
 
-thead tr {
+table.tbl thead tr {
     background-color: #eee;
     color: #555;
 }
 
-tbody th {
+table.tbl tbody th {
     vertical-align: top;
 }
 
-td, th {
+table.tbl td, table.tbl th {
     padding: 0.8em 0.5em;
 }
 
-tbody tr:nth-child(even) {
+table.tbl tbody tr:nth-child(even) {
    background-color: #f4f4f4;
+}
+
+table.stats {
+    font-size: 85%; 
+    border-spacing: 0 0.3em;
+    display: inline-block;
+    margin: 0 1em;
+}
+
+table.stats-users span {
+    background-color: darkred;
+}
+
+table.stats-traffic span {
+    background-color: darkgreen;
+}
+
+table.stats thead th:last-child {
+    text-align: right;
+    padding: 0.5em;
+    border-right: solid 1px #555;
+}
+
+table.stats th {
+    padding-right: 0.5em;
+}
+
+table.stats td, th {
+    line-height: 1;
+}
+
+table.stats tbody td {
+    padding: 0;
+    color: transparent;
+}
+
+table.stats tbody th {
+    font-weight: normal;
 }
 
 label {

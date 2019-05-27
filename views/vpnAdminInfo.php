@@ -5,7 +5,7 @@
     <?php else: ?>
     <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
         <h2><?=$this->e($profileConfig->getDisplayName()); ?></h2>
-        <table>
+        <table class="tbl">
             <tbody>
                 <?php foreach ($profileConfig->toArray() as $k => $v): ?>
                     <tr>

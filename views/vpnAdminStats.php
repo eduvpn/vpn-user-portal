@@ -1,7 +1,6 @@
 <?php $this->layout('base', ['activeItem' => 'stats']); ?>
 <?php $this->start('content'); ?>
-<h2><?=$this->t('Summary'); ?></h2>
-<table>
+<table class="tbl">
     <thead>
         <tr>
             <th><?=$this->t('Profile'); ?></th>
@@ -13,7 +12,7 @@
     <tbody>
     <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
         <tr>
-            <td><span title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->getDisplayName()); ?></td>
+            <td><span title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->getDisplayName()); ?></span></td>
             <?php if (array_key_exists($profileId, $statsData)): ?>
                 <td><?=$this->e($statsData[$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
                 <td><?=$this->e($statsData[$profileId]['unique_user_count']); ?></td>
@@ -28,12 +27,14 @@
     </tbody>
 </table>
 
-<h2><?=$this->t('Graphs'); ?></h2>
 <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
 <?php if (array_key_exists($profileId, $graphStats)): ?>
     <h3><?=$profileConfig->getDisplayName(); ?></h3>
     <!-- #users -->
-    <table>
+    <table class="stats stats-users">
+        <thead>
+            <tr><th><?=$this->t('Date'); ?></th><th><?=$this->t('# Users'); ?></th></tr>
+        </thead>
         <tbody>
 <?php foreach ($graphStats[$profileId] as $day => $dayInfo): ?>
             <tr>
@@ -43,7 +44,10 @@
         </tbody>
     </table>
     <!-- #traffic -->
-    <table>
+    <table class="stats stats-traffic">
+        <thead>
+            <tr><th><?=$this->t('Date'); ?></th><th><?=$this->t('Traffic'); ?></th></tr>
+        </thead>
         <tbody>
 <?php foreach ($graphStats[$profileId] as $day => $dayInfo): ?>
             <tr>

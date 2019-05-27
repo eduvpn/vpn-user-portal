@@ -379,7 +379,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $statsData = $this->getStatsData();
         foreach ($statsData as $profileId => $daysList) {
             $outputData[$profileId] = [];
-            // find max number of unique users per day
+            // find max number of unique users/traffic per day
             $maxUniqueUserCount = 0;
             $maxTrafficCount = 0;
             foreach ($daysList['days'] as $dayData) {
@@ -390,10 +390,9 @@ class AdminPortalModule implements ServiceModuleInterface
                     $maxTrafficCount = $dayData['bytes_transferred'];
                 }
             }
-            // convert unique_user_count to a number between 0 and 10 as a
-            // fraction of the maxUniqueUserCount
-            $maxUserDivider = $maxUniqueUserCount / 10;
-            $maxTrafficDivider = $maxTrafficCount / 10;
+            // convert users/traffic to a number between 0 and 25
+            $maxUserDivider = $maxUniqueUserCount / 25;
+            $maxTrafficDivider = $maxTrafficCount / 25;
             foreach ($daysList['days'] as $dayData) {
                 $outputData[$profileId][$dayData['date']] = [
                     'user_fraction' => (int) floor($dayData['unique_user_count'] / $maxUserDivider),
