@@ -28,7 +28,7 @@
 </table>
 
 <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
-<?php if (array_key_exists($profileId, $graphStats)): ?>
+<?php if (array_key_exists($profileId, $graphStats) && 0 !== count($graphStats[$profileId])): ?>
     <h3><?=$profileConfig->getDisplayName(); ?></h3>
     <!-- #users -->
     <table class="stats stats-users">
