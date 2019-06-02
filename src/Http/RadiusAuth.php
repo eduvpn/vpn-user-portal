@@ -12,6 +12,7 @@ namespace LC\Portal\Http;
 use LC\Portal\Config\RadiusAuthenticationConfig;
 use LC\Portal\Http\Exception\RadiusException;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class RadiusAuth implements CredentialValidatorInterface
 {
@@ -27,6 +28,9 @@ class RadiusAuth implements CredentialValidatorInterface
      */
     public function __construct(LoggerInterface $logger, RadiusAuthenticationConfig $radiusAuthenticationConfig)
     {
+        if (false === \extension_loaded('radius')) {
+            throw new RuntimeException('"radius" PHP extension not available');
+        }
         $this->logger = $logger;
         $this->radiusAuthenticationConfig = $radiusAuthenticationConfig;
     }

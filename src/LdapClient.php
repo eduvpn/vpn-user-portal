@@ -10,6 +10,7 @@
 namespace LC\Portal;
 
 use LC\Portal\Exception\LdapClientException;
+use RuntimeException;
 
 class LdapClient
 {
@@ -21,6 +22,9 @@ class LdapClient
      */
     public function __construct($ldapUri)
     {
+        if (false === \extension_loaded('ldap')) {
+            throw new RuntimeException('"ldap" PHP extension not available');
+        }
         $this->ldapResource = ldap_connect($ldapUri);
         if (false === $this->ldapResource) {
             // only with very old OpenLDAP will it ever return false...
