@@ -55,7 +55,7 @@ try {
 
         $secretKey = SecretKey::fromEncodedString(
             FileIO::readFile(
-                sprintf('%s/oauth.key', $configDir)
+                sprintf('%s/oauth.key', $dataDir)
             )
         );
 
@@ -79,7 +79,7 @@ try {
             $easyRsaDir,
             $easyRsaDataDir
         );
-        $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $configDir));
+        $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $dataDir));
 
         // api module
         $vpnApiModule = new VpnApiModule(

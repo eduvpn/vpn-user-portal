@@ -15,10 +15,10 @@ use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\FileIO;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Storage;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 try {
-    $configDir = sprintf('%s/config', $baseDir);
+    $dataDir = sprintf('%s/data', $baseDir);
+    FileIO::createDir($dataDir);
 
     // ca
     $easyRsaDir = sprintf('%s/easy-rsa', $baseDir);
@@ -28,7 +28,6 @@ try {
 
     // database
     $dataDir = sprintf('%s/data', $baseDir);
-    FileIO::createDir($dataDir);
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir)
@@ -36,24 +35,17 @@ try {
     $storage->init();
 
     // tls-crypt
-    $tlsCryptFile = sprintf('%s/tls-crypt.key', $configDir);
+    $tlsCryptFile = sprintf('%s/tls-crypt.key', $dataDir);
     if (!FileIO::exists($tlsCryptFile)) {
         $tlsCrypt = TlsCrypt::generate();
         FileIO::writeFile($tlsCryptFile, $tlsCrypt->raw(), 0640);
     }
 
     // OAuth Key
-    $oauthKeyFile = sprintf('%s/oauth.key', $configDir);
+    $oauthKeyFile = sprintf('%s/oauth.key', $dataDir);
     if (!FileIO::exists($oauthKeyFile)) {
         $secretKey = SecretKey::generate();
         FileIO::writeFile($oauthKeyFile, $secretKey->encode(), 0640);
-    }
-
-    // Node API Key
-    $apiKeyFile = sprintf('%s/node-api.key', $configDir);
-    if (!FileIO::exists($apiKeyFile)) {
-        $apiKey = Base64UrlSafe::encodeUnpadded(random_bytes(32));
-        FileIO::writeFile($apiKeyFile, $apiKey, 0640);
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;

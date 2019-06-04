@@ -287,7 +287,7 @@ try {
         $easyRsaDir,
         $easyRsaDataDir
     );
-    $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $configDir));
+    $tlsCrypt = TlsCrypt::fromFile(sprintf('%s/tls-crypt.key', $dataDir));
     $serverManager = new ServerManager($portalConfig, new ManagementSocket());
     $serverManager->setLogger($logger);
     $clientDb = new clientDb();
@@ -326,7 +326,7 @@ try {
         // OAuth module
         $secretKey = SecretKey::fromEncodedString(
             FileIO::readFile(
-                sprintf('%s/oauth.key', $configDir)
+                sprintf('%s/oauth.key', $dataDir)
             )
         );
 

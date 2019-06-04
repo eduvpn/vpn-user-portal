@@ -14,9 +14,8 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\FileIO;
 
 try {
-    // generate OAuth key
-    $configDir = sprintf('%s/config', $baseDir);
-    $keyFile = sprintf('%s/oauth.key', $configDir);
+    $dataDir = sprintf('%s/data', $baseDir);
+    $keyFile = sprintf('%s/oauth.key', $dataDir);
     $secretKey = SecretKey::fromEncodedString(FileIO::readFile($keyFile));
     echo 'Public Key: '.$secretKey->getPublicKey()->encode().PHP_EOL;
 } catch (Exception $e) {

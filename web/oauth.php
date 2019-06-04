@@ -45,7 +45,7 @@ try {
         $apiConfig = $portalConfig->getApiConfig();
         $secretKey = SecretKey::fromEncodedString(
             FileIO::readFile(
-                sprintf('%s/config/oauth.key', $baseDir)
+                sprintf('%s/oauth.key', $dataDir)
             )
         );
         $oauthServer = new OAuthServer(
