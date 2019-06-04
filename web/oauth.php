@@ -18,6 +18,7 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\OAuthTokenModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
+use LC\Portal\Init;
 use LC\Portal\Logger;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
@@ -29,7 +30,9 @@ try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
     $dataDir = sprintf('%s/data', $baseDir);
-    FileIO::createDir($dataDir, 0700);
+
+    $init = new Init($baseDir);
+    $init->init();
 
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
@@ -39,7 +42,6 @@ try {
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir)
     );
-    $storage->update();
 
     if (false !== $portalConfig->getEnableApi()) {
         $apiConfig = $portalConfig->getApiConfig();

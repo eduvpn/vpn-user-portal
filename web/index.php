@@ -39,6 +39,7 @@ use LC\Portal\Http\TwoFactorHook;
 use LC\Portal\Http\TwoFactorModule;
 use LC\Portal\Http\UpdateSessionInfoHook;
 use LC\Portal\Http\VpnPortalModule;
+use LC\Portal\Init;
 use LC\Portal\LdapClient;
 use LC\Portal\Logger;
 use LC\Portal\OAuth\ClientDb;
@@ -56,7 +57,8 @@ try {
     $dataDir = sprintf('%s/data', $baseDir);
     $configDir = sprintf('%s/config', $baseDir);
 
-    FileIO::createDir($dataDir, 0700);
+    $init = new Init($baseDir);
+    $init->init();
 
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
 
@@ -151,7 +153,6 @@ try {
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir)
     );
-    $storage->update();
 
     $service->addModule(new LogoutModule($session, $logoutUrl, $returnParameter));
     switch ($authMethod) {

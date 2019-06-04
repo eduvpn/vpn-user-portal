@@ -19,6 +19,7 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\VpnApiModule;
+use LC\Portal\Init;
 use LC\Portal\Logger;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
@@ -32,7 +33,9 @@ try {
 
     $dataDir = sprintf('%s/data', $baseDir);
     $configDir = sprintf('%s/config', $baseDir);
-    FileIO::createDir($dataDir, 0700);
+
+    $init = new Init($baseDir);
+    $init->init();
 
     $portalConfig = PortalConfig::fromFile(sprintf('%s/config.php', $configDir));
     $service = new Service();
@@ -43,7 +46,6 @@ try {
             new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
             sprintf('%s/schema', $baseDir)
         );
-        $storage->update();
 
         $keyInstanceMapping = [];
         if (true === $remoteAccess = $apiConfig->getRemoteAccess()) {
