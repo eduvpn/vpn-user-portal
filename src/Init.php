@@ -41,11 +41,13 @@ class Init
         $tlsCryptFile = sprintf('%s/tls-crypt.key', $dataDir);
         $oauthKeyFile = sprintf('%s/oauth.key', $dataDir);
 
-        // ca
-        $ca = new EasyRsaCa($easyRsaDir, $easyRsaDataDir);
-        $ca->init();
+        // CA
+        if (!FileIO::exists($easyRsaDataDir)) {
+            $ca = new EasyRsaCa($easyRsaDir, $easyRsaDataDir);
+            $ca->init();
+        }
 
-        // database
+        // DB
         $hasDbFile = FileIO::exists($dbFile);
         $storage = new Storage(
             new PDO(sprintf('sqlite://%s', $dbFile)),
@@ -64,7 +66,7 @@ class Init
             FileIO::writeFile($tlsCryptFile, $tlsCrypt->raw(), 0640);
         }
 
-        // OAuth Key
+        // OAuth
         if (!FileIO::exists($oauthKeyFile)) {
             $secretKey = SecretKey::generate();
             FileIO::writeFile($oauthKeyFile, $secretKey->encode(), 0640);
