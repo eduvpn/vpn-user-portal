@@ -58,7 +58,7 @@ class VpnApiModuleTest extends TestCase
             [
                 'REQUEST_METHOD' => 'GET',
                 'SERVER_NAME' => 'vpn.example.org',
-                'SERVER_PORT' => 443,
+                'SERVER_PORT' => '443',
                 'REQUEST_URI' => '/api.php/profile_list',
                 'SCRIPT_NAME' => '/api.php',
             ],
@@ -78,7 +78,7 @@ class VpnApiModuleTest extends TestCase
             [
                 'REQUEST_METHOD' => 'POST',
                 'SERVER_NAME' => 'vpn.example.org',
-                'SERVER_PORT' => 443,
+                'SERVER_PORT' => '443',
                 'REQUEST_URI' => '/api.php/create_keypair',
                 'SCRIPT_NAME' => '/api.php',
             ],
@@ -99,7 +99,7 @@ class VpnApiModuleTest extends TestCase
             [
                 'REQUEST_METHOD' => 'GET',
                 'SERVER_NAME' => 'vpn.example.org',
-                'SERVER_PORT' => 443,
+                'SERVER_PORT' => '443',
                 'REQUEST_URI' => '/api.php/check_certificate',
                 'SCRIPT_NAME' => '/api.php',
             ],

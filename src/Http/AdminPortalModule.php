@@ -371,7 +371,7 @@ class AdminPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @return array<string,array<string,array<string,int>>
+     * @return array
      */
     private function getGraphStats()
     {

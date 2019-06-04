@@ -45,7 +45,7 @@ class TestCa implements CaInterface
             'cert' => sprintf('---ServerCert [%s]---', $commonName),
             'key' => '---ServerKey---',
             'valid_from' => $this->dateTime->getTimestamp(),
-            'valid_to' => date_add(clone $this->dateTime, new DateInterval('P1Y')),
+            'valid_to' => date_add(clone $this->dateTime, new DateInterval('P1Y'))->getTimestamp(),
         ];
     }
 

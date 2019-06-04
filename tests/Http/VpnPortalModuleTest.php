@@ -72,7 +72,7 @@ class VpnPortalModuleTest extends TestCase
             [
                 'REQUEST_METHOD' => 'GET',
                 'SERVER_NAME' => 'vpn.example.org',
-                'SERVER_PORT' => 443,
+                'SERVER_PORT' => '443',
                 'REQUEST_URI' => '/index.php/new',
                 'SCRIPT_NAME' => '/index.php',
             ],
@@ -96,7 +96,7 @@ class VpnPortalModuleTest extends TestCase
             [
                 'REQUEST_METHOD' => 'POST',
                 'SERVER_NAME' => 'vpn.example.org',
-                'SERVER_PORT' => 443,
+                'SERVER_PORT' => '443',
                 'REQUEST_URI' => '/index.php/new',
                 'SCRIPT_NAME' => '/index.php',
             ],

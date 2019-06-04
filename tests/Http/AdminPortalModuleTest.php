@@ -71,7 +71,7 @@ class AdminPortalModuleTest extends TestCase
             [
                 'REQUEST_METHOD' => 'GET',
                 'SERVER_NAME' => 'vpn.example.org',
-                'SERVER_PORT' => 443,
+                'SERVER_PORT' => '443',
                 'REQUEST_URI' => '/index.php/connections',
                 'SCRIPT_NAME' => '/index.php',
             ],
