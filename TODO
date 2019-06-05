@@ -1,0 +1,11 @@
+# TODO
+
+## Bugs
+
+- fix issue where client-connect / client-disconnect script cannot read the 
+  portal config: `Jun 05 08:35:27 lc-dev.tuxed.net client-connect[16306]: unable to read "/usr/share/vpn-user-portal/config/config.php"`
+- after initialing the CA through the browser (on first load) and THEN 
+  generating a server certificate/config it will create the `index.txt` as 
+  user root, which is no good of course... it all needs to be owned by the
+  `apache` user... not sure how to fix this cleanly?
+
