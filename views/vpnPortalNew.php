@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'new']); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'new']); ?>
 <?php $this->start('content'); ?>
     <?php if ($motdMessage): ?>
         <p class="plain"><?=$this->batch($motdMessage['message'], 'escape|nl2br'); ?></p>

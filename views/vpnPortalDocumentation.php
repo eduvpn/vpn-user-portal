@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'documentation']); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'documentation']); ?>
 <?php $this->start('content'); ?>
     <h2>Getting Started</h2>
     <p>

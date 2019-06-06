@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'messages']); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'messages']); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('System'); ?></h2>
     <p>

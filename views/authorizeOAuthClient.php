@@ -1,4 +1,5 @@
-<?php $this->layout('base'); ?>
+<?php declare(strict_types=1);
+$this->layout('base'); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Approve Application'); ?></h2>
     

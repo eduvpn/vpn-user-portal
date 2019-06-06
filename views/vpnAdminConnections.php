@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'connections']); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'connections']); ?>
 <?php $this->start('content'); ?>
     <?php if (0 === count($profileConfigList)): ?>
         <p class="warning"><?=$this->t('No VPN profiles configured.'); ?></p>

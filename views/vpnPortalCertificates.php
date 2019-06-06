@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'certificates']); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'certificates']); ?>
 <?php $this->start('content'); ?>
     <?php if (0 === count($userCertificateList)): ?>
         <p class="plain">

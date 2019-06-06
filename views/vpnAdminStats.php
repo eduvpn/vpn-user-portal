@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'stats']); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'stats']); ?>
 <?php $this->start('content'); ?>
 <table class="tbl">
     <thead>

@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'info']); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'info']); ?>
 <?php $this->start('content'); ?>
     <?php if (0 === count($profileConfigList)): ?>
         <p class="warning"><?=$this->t('No VPN profiles configured.'); ?></p>
@@ -25,7 +26,7 @@
                         <?php elseif (empty($v)): ?>
                             <td><em><?=$this->t('N/A'); ?></em></td>
                         <?php else: ?>
-                            <td><?=$this->e($v); ?></td>
+                            <td><?=$this->e((string) $v); ?></td>
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?> 

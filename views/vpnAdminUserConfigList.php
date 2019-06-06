@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'users']); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'users']); ?>
 <?php $this->start('content'); ?>
     <p>
         <?=$this->t('Managing user <em>%userId%</em>.'); ?>

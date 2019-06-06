@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -138,8 +140,8 @@ class ServerConfig
      */
     private function getProcessConfig(array $serverInfo, CertInfo $serverCertInfo, $profileId, ProfileConfig $profileConfig, array $processConfig)
     {
-        $rangeFourIp = new IP($processConfig['rangeFour']);
-        $rangeSixIp = new IP($processConfig['rangeSix']);
+        $rangeFourIp = $processConfig['rangeFour'];
+        $rangeSixIp = $processConfig['rangeSix'];
 
         // static options
         $serverConfig = [
