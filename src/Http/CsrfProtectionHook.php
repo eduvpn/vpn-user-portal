@@ -18,7 +18,7 @@ class CsrfProtectionHook implements BeforeHookInterface
     public function executeBefore(Request $request, array $hookData): void
     {
         if (!$request->isBrowser()) {
-            // not a browser, no CSRF protected needed
+            // not a browser, no CSRF protection needed
             return;
         }
 
@@ -51,7 +51,6 @@ class CsrfProtectionHook implements BeforeHookInterface
 
     public function verifyOrigin(string $serverOrigin, string $httpOrigin): void
     {
-        // the HTTP_ORIGIN MUST be equal to uriAuthority
         if ($serverOrigin !== $httpOrigin) {
             throw new HttpException('CSRF protection failed: unexpected HTTP_ORIGIN', 400);
         }
@@ -59,8 +58,8 @@ class CsrfProtectionHook implements BeforeHookInterface
 
     public function verifyReferrer(string $serverOrigin, string $httpReferrer): void
     {
-        // the HTTP_REFERER MUST start with uriAuthority
-        if (0 !== strpos($httpReferrer, sprintf('%s/', $serverOrigin))) {
+        // the HTTP_REFERER MUST start with serverOrigin
+        if (0 !== mb_strpos($httpReferrer, sprintf('%s/', $serverOrigin))) {
             throw new HttpException('CSRF protection failed: unexpected HTTP_REFERER', 400);
         }
     }
