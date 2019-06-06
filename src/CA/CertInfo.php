@@ -48,7 +48,7 @@ class CertInfo
         return $this->validFrom;
     }
 
-    public function getValidTO(): DateTimeInterface
+    public function getValidTo(): DateTimeInterface
     {
         return $this->validTo;
     }
