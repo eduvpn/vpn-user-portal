@@ -48,12 +48,7 @@ class Tpl implements TplInterface
         $this->addCallback('bytes_to_human', [__CLASS__, 'toHuman']);
     }
 
-    /**
-     * @param array $templateVariables
-     *
-     * @return void
-     */
-    public function addDefault(array $templateVariables)
+    public function addDefault(array $templateVariables): void
     {
         $this->templateVariables = array_merge($this->templateVariables, $templateVariables);
     }
@@ -69,13 +64,7 @@ class Tpl implements TplInterface
         $this->callbackList[$callbackName] = $cb;
     }
 
-    /**
-     * @param string $templateName
-     * @param array  $templateVariables
-     *
-     * @return string
-     */
-    public function render($templateName, array $templateVariables = [])
+    public function render(string $templateName, array $templateVariables = []): string
     {
         $this->templateVariables = array_merge($this->templateVariables, $templateVariables);
         extract($this->templateVariables);

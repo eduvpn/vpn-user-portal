@@ -23,21 +23,12 @@ class ForeignKeyListFetcher
     /** @var string */
     private $dataDir;
 
-    /**
-     * @param string $dataDir
-     */
-    public function __construct($dataDir)
+    public function __construct(string $dataDir)
     {
         $this->dataDir = $dataDir;
     }
 
-    /**
-     * @param HttpClient\HttpClientInterface $httpClient
-     * @param array                          $remoteAccessList
-     *
-     * @return void
-     */
-    public function update(HttpClientInterface $httpClient, array $remoteAccessList)
+    public function update(HttpClientInterface $httpClient, array $remoteAccessList): void
     {
         $agreggateDiscoveryData = [];
         foreach ($remoteAccessList as $sourceName => $sourceInfo) {
@@ -77,12 +68,7 @@ class ForeignKeyListFetcher
         FileIO::writeFile($mappingFile, Json::encode(self::generateMapping($agreggateDiscoveryData)));
     }
 
-    /**
-     * @param string $remoteSourceName
-     *
-     * @return int
-     */
-    private function getCurrentSequence($remoteSourceName)
+    private function getCurrentSequence(string $remoteSourceName): int
     {
         $discoveryFile = sprintf('%s/%s.json', $this->dataDir, $remoteSourceName);
         if (false === FileIO::exists($discoveryFile)) {
@@ -93,12 +79,7 @@ class ForeignKeyListFetcher
         return (int) $jsonData['seq'];
     }
 
-    /**
-     * @param array $discoveryData
-     *
-     * @return array
-     */
-    private static function generateMapping(array $discoveryData)
+    private static function generateMapping(array $discoveryData): array
     {
         $mappingData = [];
         foreach ($discoveryData as $sourceName => $sourceInfo) {

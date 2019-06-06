@@ -13,18 +13,7 @@ namespace LC\Portal;
 
 interface TplInterface
 {
-    /**
-     * @param array $templateVariables
-     *
-     * @return void
-     */
-    public function addDefault(array $templateVariables);
+    public function addDefault(array $templateVariables): void;
 
-    /**
-     * @param string $templateName
-     * @param array  $templateVariables
-     *
-     * @return string
-     */
-    public function render($templateName, array $templateVariables);
+    public function render(string $templateName, array $templateVariables): string;
 }

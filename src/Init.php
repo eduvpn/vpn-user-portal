@@ -21,18 +21,12 @@ class Init
     /** @var string */
     private $baseDir;
 
-    /**
-     * @param string $baseDir
-     */
-    public function __construct($baseDir)
+    public function __construct(string $baseDir)
     {
         $this->baseDir = $baseDir;
     }
 
-    /**
-     * @return void
-     */
-    public function init()
+    public function init(): void
     {
         $dataDir = sprintf('%s/data', $this->baseDir);
         FileIO::createDir($dataDir, 0700);

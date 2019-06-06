@@ -15,12 +15,7 @@ use LC\Portal\Exception\JsonException;
 
 class Json
 {
-    /**
-     * @param array $jsonData
-     *
-     * @return string
-     */
-    public static function encode(array $jsonData)
+    public static function encode(array $jsonData): string
     {
         $jsonString = json_encode($jsonData);
         // 5.5.0 	The return value on failure was changed from null string to FALSE.
@@ -31,12 +26,7 @@ class Json
         return $jsonString;
     }
 
-    /**
-     * @param string $jsonString
-     *
-     * @return array
-     */
-    public static function decode($jsonString)
+    public static function decode(string $jsonString): array
     {
         $jsonData = json_decode($jsonString, true);
         if (null === $jsonData && JSON_ERROR_NONE !== json_last_error()) {

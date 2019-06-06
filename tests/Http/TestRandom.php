@@ -18,12 +18,7 @@ class TestRandom implements RandomInterface
     /** @var int */
     private $randomState = 0;
 
-    /**
-     * @param int $length
-     *
-     * @return string
-     */
-    public function get($length)
+    public function get(int $length): string
     {
         return str_pad((string) $this->randomState++, $length * 2, '0', STR_PAD_LEFT);
     }

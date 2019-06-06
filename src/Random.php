@@ -15,12 +15,7 @@ use ParagonIE\ConstantTime\Hex;
 
 class Random implements RandomInterface
 {
-    /**
-     * @param int $length
-     *
-     * @return string
-     */
-    public function get($length)
+    public function get(int $length): string
     {
         return Hex::encode(
             random_bytes($length)

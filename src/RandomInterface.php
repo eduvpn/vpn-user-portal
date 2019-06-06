@@ -13,10 +13,5 @@ namespace LC\Portal;
 
 interface RandomInterface
 {
-    /**
-     * Get a randomly generated crypto secure string.
-     *
-     * @param int $length the length (in bytes) of the random string
-     */
-    public function get($length);
+    public function get(int $length): string;
 }

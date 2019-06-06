@@ -15,22 +15,12 @@ use RuntimeException;
 
 class FileIO
 {
-    /**
-     * @param string $filePath
-     *
-     * @return bool
-     */
-    public static function exists($filePath)
+    public static function exists(string $filePath): bool
     {
         return file_exists($filePath);
     }
 
-    /**
-     * @param string $filePath
-     *
-     * @return string
-     */
-    public static function readFile($filePath)
+    public static function readFile(string $filePath): string
     {
         if (false === self::exists($filePath)) {
             throw new RuntimeException(sprintf('unable to find "%s"', $filePath));
@@ -42,26 +32,14 @@ class FileIO
         return $fileData;
     }
 
-    /**
-     * @param string $filePath
-     *
-     * @return array
-     */
-    public static function readJsonFile($filePath)
+    public static function readJsonFile(string $filePath): array
     {
         $fileData = self::readFile($filePath);
 
         return Json::decode($fileData);
     }
 
-    /**
-     * @param string $filePath
-     * @param string $fileData
-     * @param int    $mode
-     *
-     * @return void
-     */
-    public static function writeFile($filePath, $fileData, $mode = 0600)
+    public static function writeFile(string $filePath, string $fileData, int $mode = 0600): void
     {
         if (false === file_put_contents($filePath, $fileData)) {
             throw new RuntimeException(sprintf('unable to write file "%s"', $filePath));
@@ -71,27 +49,14 @@ class FileIO
         }
     }
 
-    /**
-     * @param string $filePath
-     * @param array  $fileJsonData
-     * @param int    $mode
-     *
-     * @return void
-     */
-    public static function writeJsonFile($filePath, array $fileJsonData, $mode = 0600)
+    public static function writeJsonFile(string $filePath, array $fileJsonData, int $mode = 0600): void
     {
         $fileData = Json::encode($fileJsonData);
 
         self::writeFile($filePath, $fileData, $mode);
     }
 
-    /**
-     * @param string $dirPath
-     * @param int    $mode
-     *
-     * @return void
-     */
-    public static function createDir($dirPath, $mode = 0711)
+    public static function createDir(string $dirPath, int $mode = 0711): void
     {
         if (false === file_exists($dirPath)) {
             if (false === mkdir($dirPath, $mode, true)) {
