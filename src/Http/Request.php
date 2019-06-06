@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -13,7 +15,7 @@ use LC\Portal\Http\Exception\HttpException;
 
 class Request
 {
-    /** @var array<string,string> */
+    /** @var array */
     private $serverData;
 
     /** @var array<string,string> */
@@ -23,58 +25,36 @@ class Request
     private $postData;
 
     /**
-     * @param array<string,string> $serverData
-     * @param array                $getData
-     * @param array                $postData
+     * @param array $serverData
+     * @param array $getData
+     * @param array $postData
      */
     public function __construct(array $serverData, array $getData = [], array $postData = [])
     {
-        // make sure serverData, getData and postData are array<string,string>
-        foreach ([$serverData, $getData, $postData] as $keyValueList) {
+        $this->serverData = $serverData;
+
+        // make sure getData and postData are array<string,string>
+        foreach ([$getData, $postData] as $keyValueList) {
             foreach ($keyValueList as $k => $v) {
                 if (!\is_string($k) || !\is_string($v)) {
-                    throw new HttpException('SERVER/GET/POST parameter key and value MUST be of type "string"', 400);
+                    throw new HttpException('GET/POST parameter key and value MUST be of type "string"', 400);
                 }
             }
         }
-
-        $requiredHeaders = [
-            'REQUEST_METHOD',
-            'SERVER_NAME',
-            'SERVER_PORT',
-            'REQUEST_URI',
-            'SCRIPT_NAME',
-        ];
-
-        foreach ($requiredHeaders as $key) {
-            if (!\array_key_exists($key, $serverData)) {
-                // this indicates something wrong with the interaction between
-                // the web server and PHP, these headers MUST always be available
-                throw new HttpException(sprintf('missing header "%s"', $key), 500);
-            }
-        }
-        $this->serverData = $serverData;
         $this->getData = $getData;
         $this->postData = $postData;
     }
 
-    /**
-     * @return string
-     */
-    public function getAuthority()
+    public function getAuthority(): string
     {
         // scheme
-        if (!\array_key_exists('REQUEST_SCHEME', $this->serverData)) {
-            $requestScheme = 'http';
-        } else {
-            $requestScheme = $this->serverData['REQUEST_SCHEME'];
-        }
+        $requestScheme = $this->optionalHeader('REQUEST_SCHEME') ?? 'http';
 
         // server_name
-        $serverName = $this->serverData['SERVER_NAME'];
+        $serverName = $this->requireHeader('SERVER_NAME');
 
         // port
-        $serverPort = (int) $this->serverData['SERVER_PORT'];
+        $serverPort = (int) $this->requireHeader('SERVER_PORT');
 
         $usePort = false;
         if ('https' === $requestScheme && 443 !== $serverPort) {
@@ -91,22 +71,14 @@ class Request
         return sprintf('%s://%s', $requestScheme, $serverName);
     }
 
-    /**
-     * @return string
-     */
-    public function getUri()
+    public function getUri(): string
     {
-        $requestUri = $this->serverData['REQUEST_URI'];
-
-        return sprintf('%s%s', $this->getAuthority(), $requestUri);
+        return sprintf('%s%s', $this->getAuthority(), $this->requireHeader('REQUEST_URI'));
     }
 
-    /**
-     * @return string
-     */
-    public function getRoot()
+    public function getRoot(): string
     {
-        $rootDir = \dirname($this->serverData['SCRIPT_NAME']);
+        $rootDir = \dirname($this->requireHeader('SCRIPT_NAME'));
         if ('/' !== $rootDir) {
             return sprintf('%s/', $rootDir);
         }
@@ -114,61 +86,48 @@ class Request
         return $rootDir;
     }
 
-    /**
-     * @return string
-     */
-    public function getRootUri()
+    public function getRootUri(): string
     {
         return sprintf('%s%s', $this->getAuthority(), $this->getRoot());
     }
 
-    /**
-     * @return string
-     */
-    public function getRequestMethod()
+    public function getRequestMethod(): string
     {
-        return $this->serverData['REQUEST_METHOD'];
+        return $this->requireHeader('REQUEST_METHOD');
     }
 
-    /**
-     * @return string
-     */
-    public function getServerName()
+    public function getServerName(): string
     {
-        return $this->serverData['SERVER_NAME'];
+        return $this->requireHeader('SERVER_NAME');
     }
 
-    /**
-     * @return bool
-     */
-    public function isBrowser()
+    public function isBrowser(): bool
     {
-        if (!\array_key_exists('HTTP_ACCEPT', $this->serverData)) {
+        if (null === $httpAccept = $this->optionalHeader('HTTP_ACCEPT')) {
             return false;
         }
 
-        return false !== mb_strpos($this->serverData['HTTP_ACCEPT'], 'text/html');
+        return false !== mb_strpos($httpAccept, 'text/html');
     }
 
-    /**
-     * @return string
-     */
-    public function getPathInfo()
+    public function getPathInfo(): string
     {
         // remove the query string
-        $requestUri = $this->serverData['REQUEST_URI'];
+        $requestUri = $this->requireHeader('REQUEST_URI');
+        $scriptName = $this->requireHeader('SCRIPT_NAME');
+
         if (false !== $pos = mb_strpos($requestUri, '?')) {
             $requestUri = mb_substr($requestUri, 0, $pos);
         }
 
         // if requestUri === scriptName
-        if ($this->serverData['REQUEST_URI'] === $this->serverData['SCRIPT_NAME']) {
+        if ($this->requireHeader('REQUEST_URI') === $scriptName) {
             return '/';
         }
 
         // remove script_name (if it is part of request_uri
-        if (0 === mb_strpos($requestUri, $this->serverData['SCRIPT_NAME'])) {
-            return substr($requestUri, mb_strlen($this->serverData['SCRIPT_NAME']));
+        if (0 === mb_strpos($requestUri, $scriptName)) {
+            return substr($requestUri, mb_strlen($scriptName));
         }
 
         // remove the root
@@ -179,34 +138,20 @@ class Request
         return $requestUri;
     }
 
-    /**
-     * Return the "raw" query string.
-     *
-     * @return string
-     */
-    public function getQueryString()
+    public function getQueryString(): string
     {
-        if (!\array_key_exists('QUERY_STRING', $this->serverData)) {
-            return '';
-        }
-
-        return $this->serverData['QUERY_STRING'];
+        return $this->optionalHeader('QUERY_STRING') ?? '';
     }
 
     /**
      * @return array<string,string>
      */
-    public function getQueryParameters()
+    public function getQueryParameters(): array
     {
         return $this->getData;
     }
 
-    /**
-     * @param string $getKey
-     *
-     * @return string
-     */
-    public function requireQueryParameter($getKey)
+    public function requireQueryParameter(string $getKey): string
     {
         if (!\array_key_exists($getKey, $this->getData)) {
             throw new HttpException(sprintf('missing GET parameter "%s"', $getKey), 400);
@@ -215,12 +160,7 @@ class Request
         return $this->getData[$getKey];
     }
 
-    /**
-     * @param string $getKey
-     *
-     * @return string|null
-     */
-    public function optionalQueryParameter($getKey)
+    public function optionalQueryParameter(string $getKey): ?string
     {
         if (!\array_key_exists($getKey, $this->getData)) {
             return null;
@@ -232,17 +172,12 @@ class Request
     /**
      * @return array<string,string>
      */
-    public function getPostParameters()
+    public function getPostParameters(): array
     {
         return $this->postData;
     }
 
-    /**
-     * @param string $postKey
-     *
-     * @return string
-     */
-    public function requirePostParameter($postKey)
+    public function requirePostParameter(string $postKey): string
     {
         if (!\array_key_exists($postKey, $this->postData)) {
             throw new HttpException(sprintf('missing POST parameter "%s"', $postKey), 400);
@@ -251,12 +186,7 @@ class Request
         return $this->postData[$postKey];
     }
 
-    /**
-     * @param string $postKey
-     *
-     * @return string|null
-     */
-    public function optionalPostParameter($postKey)
+    public function optionalPostParameter(string $postKey): ?string
     {
         if (!\array_key_exists($postKey, $this->postData)) {
             return null;
@@ -265,12 +195,7 @@ class Request
         return $this->postData[$postKey];
     }
 
-    /**
-     * @param string $headerKey
-     *
-     * @return string
-     */
-    public function requireHeader($headerKey)
+    public function requireHeader(string $headerKey): string
     {
         if (!\array_key_exists($headerKey, $this->serverData)) {
             throw new HttpException(sprintf('missing request header "%s"', $headerKey), 400);
@@ -279,12 +204,7 @@ class Request
         return $this->serverData[$headerKey];
     }
 
-    /**
-     * @param string $headerKey
-     *
-     * @return string|null
-     */
-    public function optionalHeader($headerKey)
+    public function optionalHeader(string $headerKey): ?string
     {
         if (!\array_key_exists($headerKey, $this->serverData)) {
             return null;
