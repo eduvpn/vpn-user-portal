@@ -21,7 +21,7 @@ class CsrfProtectionHookTest extends TestCase
     public function testMismatchOrigin(): void
     {
         $this->expectException(HttpException::class);
-        $this->expectExceptionMessage('CSRF protection failed: unexpected HTTP_ORIGIN');
+        $this->expectExceptionMessage('CSRF protection triggered: unexpected HTTP_ORIGIN');
         $serviceHook = new CsrfProtectionHook();
         $request = new Request(
             [
@@ -43,7 +43,7 @@ class CsrfProtectionHookTest extends TestCase
     public function testMismatchReferrer(): void
     {
         $this->expectException(HttpException::class);
-        $this->expectExceptionMessage('CSRF protection failed: unexpected HTTP_REFERER');
+        $this->expectExceptionMessage('CSRF protection triggered: unexpected HTTP_REFERER');
         $serviceHook = new CsrfProtectionHook();
         $request = new Request(
             [
@@ -54,6 +54,27 @@ class CsrfProtectionHookTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
                 'HTTP_ACCEPT' => 'text/html',
                 'HTTP_REFERER' => 'http://fake.example.org/index.php/foo',
+            ],
+            [],
+            []
+        );
+
+        $serviceHook->executeBefore($request, []);
+    }
+
+    public function testNoOriginAndReferrer(): void
+    {
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage('CSRF protection triggered, no HTTP_ORIGIN or HTTP_REFERER');
+        $serviceHook = new CsrfProtectionHook();
+        $request = new Request(
+            [
+                'REQUEST_METHOD' => 'POST',
+                'SERVER_NAME' => 'vpn.example.org',
+                'SERVER_PORT' => '80',
+                'REQUEST_URI' => '/index.php/new',
+                'SCRIPT_NAME' => '/index.php',
+                'HTTP_ACCEPT' => 'text/html',
             ],
             [],
             []

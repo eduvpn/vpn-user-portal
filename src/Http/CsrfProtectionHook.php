@@ -46,13 +46,13 @@ class CsrfProtectionHook implements BeforeHookInterface
             return;
         }
 
-        throw new HttpException('CSRF protection failed, no HTTP_ORIGIN or HTTP_REFERER', 400);
+        throw new HttpException('CSRF protection triggered, no HTTP_ORIGIN or HTTP_REFERER', 400);
     }
 
     public function verifyOrigin(string $serverOrigin, string $httpOrigin): void
     {
         if ($serverOrigin !== $httpOrigin) {
-            throw new HttpException('CSRF protection failed: unexpected HTTP_ORIGIN', 400);
+            throw new HttpException('CSRF protection triggered: unexpected HTTP_ORIGIN', 400);
         }
     }
 
@@ -60,7 +60,7 @@ class CsrfProtectionHook implements BeforeHookInterface
     {
         // the HTTP_REFERER MUST start with serverOrigin
         if (0 !== mb_strpos($httpReferrer, sprintf('%s/', $serverOrigin))) {
-            throw new HttpException('CSRF protection failed: unexpected HTTP_REFERER', 400);
+            throw new HttpException('CSRF protection triggered: unexpected HTTP_REFERER', 400);
         }
     }
 }
