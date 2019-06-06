@@ -58,6 +58,7 @@ class EasyRsaCa implements CaInterface
 
             $this->execEasyRsa(['init-pki']);
             $this->execEasyRsa(['build-ca', 'nopass']);
+            $this->execEasyRsa(['update-db']);
         }
     }
 
