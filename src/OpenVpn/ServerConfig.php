@@ -11,6 +11,7 @@ namespace LC\Portal\OpenVpn;
 
 use DateTime;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\CA\CertInfo;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Config\ProfileConfig;
 use LC\Portal\IP;
@@ -74,18 +75,17 @@ class ServerConfig
     {
         $configList = [];
         $commonName = sprintf('LC.%s', $this->dateTime->format('YmdHis'));
-        $certData = array_merge(
-            $this->ca->serverCert($commonName),
-            [
-                'ca' => $this->ca->caCert(),
-                'tls-crypt' => $this->tlsCrypt->raw(),
-            ]
-        );
+        $serverCertInfo = $this->ca->serverCert($commonName);
+        $serverInfo = [
+            'ca' => $this->ca->caCert(),
+            'tls-crypt' => $this->tlsCrypt->raw(),
+        ];
+
         $profileList = $this->portalConfig->getProfileConfigList();
         foreach ($profileList as $profileId => $profileConfig) {
             $configList = array_merge(
                 $configList,
-                $this->getProfileConfig($certData, $profileId, $profileConfig)
+                $this->getProfileConfig($serverInfo, $serverCertInfo, $profileId, $profileConfig)
             );
         }
 
@@ -93,13 +93,14 @@ class ServerConfig
     }
 
     /**
-     * @param array{cert:string, key:string, valid_from:int, valid_to:int, ca:string, tls-crypt:string} $certData
-     * @param string                                                                                    $profileId
-     * @param \LC\Portal\Config\ProfileConfig                                                           $profileConfig
+     * @param array                           $serverInfo
+     * @param \LC\Portal\CA\CertInfo          $serverCertInfo
+     * @param string                          $profileId
+     * @param \LC\Portal\Config\ProfileConfig $profileConfig
      *
      * @return array<string,string>
      */
-    private function getProfileConfig(array $certData, $profileId, ProfileConfig $profileConfig)
+    private function getProfileConfig(array $serverInfo, CertInfo $serverCertInfo, $profileId, ProfileConfig $profileConfig)
     {
         $profileConfigList = [];
 
@@ -124,7 +125,7 @@ class ServerConfig
             $processConfig['proto'] = self::getProto($profileConfig, $i);
             $processConfig['port'] = self::getPort($profileConfig, $i);
             $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
-            $profileConfigList[sprintf('%s-%d', $profileId, $i)] = $this->getProcessConfig($certData, $profileId, $profileConfig, $processConfig);
+            $profileConfigList[sprintf('%s-%d', $profileId, $i)] = $this->getProcessConfig($serverInfo, $serverCertInfo, $profileId, $profileConfig, $processConfig);
         }
 
         return $profileConfigList;
@@ -135,7 +136,7 @@ class ServerConfig
      *
      * @return string
      */
-    private function getProcessConfig(array $certData, $profileId, ProfileConfig $profileConfig, array $processConfig)
+    private function getProcessConfig(array $serverInfo, CertInfo $serverCertInfo, $profileId, ProfileConfig $profileConfig, array $processConfig)
     {
         $rangeFourIp = new IP($processConfig['rangeFour']);
         $rangeSixIp = new IP($processConfig['rangeSix']);
@@ -215,16 +216,16 @@ class ServerConfig
             $serverConfig,
             [
                 '<ca>',
-                ($certData['ca']),
+                ($serverInfo['ca']),
                 '</ca>',
                 '<cert>',
-                ($certData['cert']),
+                trim($serverCertInfo->getCertData()),
                 '</cert>',
                 '<key>',
-                trim($certData['key']),
+                trim($serverCertInfo->getKeyData()),
                 '</key>',
                 '<tls-crypt>',
-                trim($certData['tls-crypt']),
+                trim($serverInfo['tls-crypt']),
                 '</tls-crypt>',
             ]
         );

@@ -427,14 +427,14 @@ class VpnPortalModule implements ServiceModuleInterface
         // create a certificate
         // generate a random string as the certificate's CN
         $commonName = $this->random->get(16);
-        $clientCertificate = $this->ca->clientCert($commonName, $expiresAt);
+        $clientCertInfo = $this->ca->clientCert($commonName, $expiresAt);
 
         $this->storage->addCertificate(
             $userId,
             $commonName,
             $displayName,
-            new DateTime(sprintf('@%d', $clientCertificate['valid_from'])),
-            new DateTime(sprintf('@%d', $clientCertificate['valid_to'])),
+            $clientCertInfo->getValidFrom(),
+            $clientCertInfo->getValidTo(),
             null
         );
 
@@ -447,7 +447,7 @@ class VpnPortalModule implements ServiceModuleInterface
             'ca' => $this->ca->caCert(),
         ];
 
-        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $clientCertificate, $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $clientCertInfo, $this->shuffleHosts);
 
         // convert the OpenVPN file to "Windows" format, no platform cares, but
         // in Notepad on Windows it looks not so great everything on one line

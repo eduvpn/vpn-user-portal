@@ -10,6 +10,7 @@
 namespace LC\Portal\CA;
 
 use DateTime;
+use DateTimeInterface;
 use LC\Portal\CA\Exception\CaException;
 use LC\Portal\FileIO;
 use RuntimeException;
@@ -62,22 +63,14 @@ class EasyRsaCa implements CaInterface
         }
     }
 
-    /**
-     * @return string
-     */
-    public function caCert()
+    public function caCert(): string
     {
         $certFile = sprintf('%s/pki/ca.crt', $this->easyRsaDataDir);
 
         return $this->readCertificate($certFile);
     }
 
-    /**
-     * @param string $commonName
-     *
-     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
-     */
-    public function serverCert($commonName)
+    public function serverCert(string $commonName): CertInfo
     {
         if ($this->hasCert($commonName)) {
             throw new CaException(sprintf('certificate with commonName "%s" already exists', $commonName));
@@ -87,13 +80,7 @@ class EasyRsaCa implements CaInterface
         return $this->certInfo($commonName);
     }
 
-    /**
-     * @param string    $commonName
-     * @param \DateTime $expiresAt
-     *
-     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
-     */
-    public function clientCert($commonName, DateTime $expiresAt)
+    public function clientCert(string $commonName, DateTimeInterface $expiresAt): CertInfo
     {
         if ($this->hasCert($commonName)) {
             throw new CaException(sprintf('certificate with commonName "%s" already exists', $commonName));
@@ -123,24 +110,19 @@ class EasyRsaCa implements CaInterface
         return $this->certInfo($commonName);
     }
 
-    /**
-     * @param string $commonName
-     *
-     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
-     */
-    private function certInfo($commonName)
+    private function certInfo(string $commonName): CertInfo
     {
         $certData = $this->readCertificate(sprintf('%s/pki/issued/%s.crt', $this->easyRsaDataDir, $commonName));
         $keyData = $this->readKey(sprintf('%s/pki/private/%s.key', $this->easyRsaDataDir, $commonName));
 
         $parsedCert = openssl_x509_parse($certData);
 
-        return [
-            'cert' => $certData,
-            'key' => $keyData,
-            'valid_from' => (int) $parsedCert['validFrom_time_t'],
-            'valid_to' => (int) $parsedCert['validTo_time_t'],
-        ];
+        return new CertInfo(
+            $certData,
+            $keyData,
+            new DateTime(sprintf('@%d', $parsedCert['validFrom_time_t'])),
+            new DateTime(sprintf('@%d', $parsedCert['validTo_time_t']))
+        );
     }
 
     /**

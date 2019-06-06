@@ -10,6 +10,7 @@
 namespace LC\Portal;
 
 use DateTime;
+use DateTimeInterface;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\Otp\OtpInfo;
 use fkooman\Otp\OtpStorageInterface;
@@ -413,16 +414,16 @@ SQL
     }
 
     /**
-     * @param string      $userId
-     * @param string      $commonName
-     * @param string      $displayName
-     * @param \DateTime   $validFrom
-     * @param \DateTime   $validTo
-     * @param string|null $clientId
+     * @param string             $userId
+     * @param string             $commonName
+     * @param string             $displayName
+     * @param \DateTimeInterface $validFrom
+     * @param \DateTimeInterface $validTo
+     * @param string|null        $clientId
      *
      * @return void
      */
-    public function addCertificate($userId, $commonName, $displayName, DateTime $validFrom, DateTime $validTo, $clientId)
+    public function addCertificate($userId, $commonName, $displayName, DateTimeInterface $validFrom, DateTimeInterface $validTo, $clientId)
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(

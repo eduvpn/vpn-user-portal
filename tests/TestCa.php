@@ -11,7 +11,9 @@ namespace LC\Portal\Tests;
 
 use DateInterval;
 use DateTime;
+use DateTimeInterface;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\CA\CertInfo;
 
 class TestCa implements CaInterface
 {
@@ -26,42 +28,28 @@ class TestCa implements CaInterface
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return string
-     */
-    public function caCert()
+    public function caCert(): string
     {
         return '---CaCert---';
     }
 
-    /**
-     * @param string $commonName
-     *
-     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
-     */
-    public function serverCert($commonName)
+    public function serverCert(string $commonName): CertInfo
     {
-        return [
-            'cert' => sprintf('---ServerCert [%s]---', $commonName),
-            'key' => '---ServerKey---',
-            'valid_from' => $this->dateTime->getTimestamp(),
-            'valid_to' => date_add(clone $this->dateTime, new DateInterval('P1Y'))->getTimestamp(),
-        ];
+        return new CertInfo(
+            sprintf('---ServerCert [%s]---', $commonName),
+            '---ServerKey---',
+            $this->dateTime,
+            date_add(clone $this->dateTime, new DateInterval('P1Y'))
+        );
     }
 
-    /**
-     * @param string    $commonName
-     * @param \DateTime $expiresAt
-     *
-     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
-     */
-    public function clientCert($commonName, DateTime $expiresAt)
+    public function clientCert(string $commonName, DateTimeInterface $expiresAt): CertInfo
     {
-        return [
-            'cert' => sprintf('---ClientCert [%s,%s]---', $commonName, $expiresAt->format(DateTime::ATOM)),
-            'key' => '---ClientKey---',
-            'valid_from' => $this->dateTime->getTimestamp(),
-            'valid_to' => $expiresAt->getTimestamp(),
-        ];
+        return new CertInfo(
+            sprintf('---ClientCert [%s,%s]---', $commonName, $expiresAt->format(DateTime::ATOM)),
+            '---ClientKey---',
+            $this->dateTime,
+            $expiresAt
+        );
     }
 }

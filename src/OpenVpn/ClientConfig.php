@@ -9,6 +9,7 @@
 
 namespace LC\Portal\OpenVpn;
 
+use LC\Portal\CA\CertInfo;
 use LC\Portal\Config\ProfileConfig;
 
 class ClientConfig
@@ -16,12 +17,12 @@ class ClientConfig
     /**
      * @param \LC\Portal\Config\ProfileConfig $profileConfig
      * @param array                           $serverInfo
-     * @param array                           $clientCertificate
+     * @param \LC\Portal\CA\CertInfo|null     $clientCertInfo
      * @param bool                            $shufflePorts
      *
      * @return string
      */
-    public static function get(ProfileConfig $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts)
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, ?CertInfo $clientCertInfo, $shufflePorts)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->getHostname();
@@ -85,15 +86,15 @@ class ClientConfig
         );
 
         // add client certificate/key if provided
-        if (0 !== \count($clientCertificate)) {
+        if (null !== $clientCertInfo) {
             $clientConfig = array_merge(
                 $clientConfig,
                 [
                     '<cert>',
-                    $clientCertificate['cert'],
+                    $clientCertInfo->getCertData(),
                     '</cert>',
                     '<key>',
-                    $clientCertificate['key'],
+                    $clientCertInfo->getKeyData(),
                     '</key>',
                 ]
             );

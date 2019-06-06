@@ -9,27 +9,13 @@
 
 namespace LC\Portal\CA;
 
-use DateTime;
+use DateTimeInterface;
 
 interface CaInterface
 {
-    /**
-     * @return string
-     */
-    public function caCert();
+    public function caCert(): string;
 
-    /**
-     * @param string $commonName
-     *
-     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
-     */
-    public function serverCert($commonName);
+    public function serverCert(string $commonName): CertInfo;
 
-    /**
-     * @param string    $commonName
-     * @param \DateTime $expiresAt
-     *
-     * @return array{cert:string, key:string, valid_from:int, valid_to:int}
-     */
-    public function clientCert($commonName, DateTime $expiresAt);
+    public function clientCert(string $commonName, DateTimeInterface $expiresAt): CertInfo;
 }

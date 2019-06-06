@@ -174,8 +174,8 @@ class VpnApiModule implements ServiceModuleInterface
                     return new ApiResponse(
                         'create_keypair',
                         [
-                            'certificate' => $clientCertificate['cert'],
-                            'private_key' => $clientCertificate['key'],
+                            'certificate' => $clientCertificate->getCertData(),
+                            'private_key' => $clientCertificate->getKeyData(),
                         ]
                     );
                 } catch (InputValidationException $e) {
@@ -301,7 +301,7 @@ class VpnApiModule implements ServiceModuleInterface
             'ca' => $this->ca->caCert(),
         ];
 
-        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, [], $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, null, $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');
@@ -313,7 +313,7 @@ class VpnApiModule implements ServiceModuleInterface
     /**
      * @param \LC\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
      *
-     * @return array
+     * @return \LC\Portal\CA\CertInfo
      */
     private function getCertificate(VpnAccessTokenInfo $accessTokenInfo)
     {
@@ -325,8 +325,8 @@ class VpnApiModule implements ServiceModuleInterface
             $accessTokenInfo->getUserId(),
             $commonName,
             $accessTokenInfo->getClientId(),
-            new DateTime(sprintf('@%d', $certInfo['valid_from'])),
-            new DateTime(sprintf('@%d', $certInfo['valid_to'])),
+            $certInfo->getValidFrom(),
+            $certInfo->getValidTo(),
             $accessTokenInfo->getClientId()
         );
 
