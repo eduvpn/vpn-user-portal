@@ -45,6 +45,12 @@ class Request
         $this->postData = $postData;
     }
 
+    /**
+     * URI = scheme:[//authority]path[?query][#fragment]
+     * authority = [userinfo@]host[:port].
+     *
+     * @see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Generic_syntax
+     */
     public function getAuthority(): string
     {
         // scheme
@@ -112,10 +118,10 @@ class Request
 
     public function getPathInfo(): string
     {
-        // remove the query string
         $requestUri = $this->requireHeader('REQUEST_URI');
         $scriptName = $this->requireHeader('SCRIPT_NAME');
 
+        // remove the query string
         if (false !== $pos = mb_strpos($requestUri, '?')) {
             $requestUri = mb_substr($requestUri, 0, $pos);
         }
@@ -125,7 +131,7 @@ class Request
             return '/';
         }
 
-        // remove script_name (if it is part of request_uri
+        // remove script_name (if it is part of request_uri)
         if (0 === mb_strpos($requestUri, $scriptName)) {
             return substr($requestUri, mb_strlen($scriptName));
         }
@@ -138,6 +144,9 @@ class Request
         return $requestUri;
     }
 
+    /**
+     * Get the "raw" not-urldecoded query string.
+     */
     public function getQueryString(): string
     {
         return $this->optionalHeader('QUERY_STRING') ?? '';
