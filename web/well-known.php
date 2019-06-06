@@ -15,12 +15,18 @@ use LC\Portal\Http\Request;
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
+    if (null === $appRoot = getenv('LC_VPN_ROOT')) {
+        $appRootUri = sprintf('%s://%s', $request->getScheme(), $request->getAuthority());
+    } else {
+        $appRootUri = sprintf('%s://%s%s', $request->getScheme(), $request->getAuthority(), $appRoot);
+    }
+
     $jsonData = [
         'api' => [
             'http://eduvpn.org/api#2' => [
-                'api_base_uri' => $request->getRootUri().'api.php',
-                'authorization_endpoint' => $request->getRootUri().'_oauth/authorize',
-                'token_endpoint' => $request->getRootUri().'oauth.php/token',
+                'api_base_uri' => $appRootUri.'/api.php',
+                'authorization_endpoint' => $appRootUri.'/_oauth/authorize',
+                'token_endpoint' => $appRootUri.'/oauth.php/token',
             ],
         ],
     ];
