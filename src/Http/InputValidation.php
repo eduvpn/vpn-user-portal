@@ -180,6 +180,22 @@ class InputValidation
     }
 
     /**
+     * @param string $systemMessage
+     *
+     * @return string
+     */
+    public static function systemMessage($systemMessage)
+    {
+        self::requireUtf8($systemMessage, 'systemMessage');
+
+        if (0 === mb_strlen($systemMessage)) {
+            throw new InputValidationException('invalid "system_message"');
+        }
+
+        return $systemMessage;
+    }
+
+    /**
      * @param string $inputString
      * @param string $inputName
      *

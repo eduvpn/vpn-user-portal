@@ -131,9 +131,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
-                $userId = $request->requireQueryParameter('user_id');
-                InputValidation::userId($userId);
-
+                $userId = InputValidation::userId($request->requireQueryParameter('user_id'));
                 $clientCertificateList = $this->storage->getCertificates($userId);
                 $userMessages = $this->storage->userMessages($userId);
 
@@ -163,8 +161,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
-                $userId = $request->requirePostParameter('user_id');
-                InputValidation::userId($userId);
+                $userId = InputValidation::userId($request->requirePostParameter('user_id'));
 
                 // if the current user being managed is the account itself,
                 // do not allow this. We don't want admins allow to disable
@@ -310,7 +307,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         }
 
                         // no need to validate, we accept everything
-                        $messageBody = $request->requirePostParameter('message_body');
+                        $messageBody = InputValidation::systemMessage($request->requirePostParameter('message_body'));
                         $this->storage->addSystemMessage('motd', $messageBody);
                         break;
                     case 'delete':
@@ -336,9 +333,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 self::requireAdmin($hookData);
 
                 $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
-                $ipAddress = $request->requirePostParameter('ip_address');
-                InputValidation::ipAddress($ipAddress);
-
+                $ipAddress = InputValidation::ipAddress($request->requirePostParameter('ip_address'));
                 $logData = $this->storage->getLogEntry($dateTime, $ipAddress);
 
                 return new HtmlResponse(

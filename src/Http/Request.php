@@ -29,6 +29,15 @@ class Request
      */
     public function __construct(array $serverData, array $getData = [], array $postData = [])
     {
+        // make sure serverData, getData and postData are array<string,string>
+        foreach ([$serverData, $getData, $postData] as $keyValueList) {
+            foreach ($keyValueList as $k => $v) {
+                if (!\is_string($k) || !\is_string($v)) {
+                    throw new HttpException('SERVER/GET/POST parameter key and value MUST be of type "string"', 400);
+                }
+            }
+        }
+
         $requiredHeaders = [
             'REQUEST_METHOD',
             'SERVER_NAME',
@@ -45,19 +54,7 @@ class Request
             }
         }
         $this->serverData = $serverData;
-        // make sure GET and POST variable values are always string
-        foreach ($_GET as $k => $v) {
-            if (!\is_string($k) || !\is_string($v)) {
-                throw new HttpException('GET parameter key/values MUST be "string"', 400);
-            }
-        }
         $this->getData = $getData;
-
-        foreach ($_POST as $k => $v) {
-            if (!\is_string($k) || !\is_string($v)) {
-                throw new HttpException('POST parameter key/values MUST be "string"', 400);
-            }
-        }
         $this->postData = $postData;
     }
 
