@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -23,37 +25,25 @@ class UserInfo
     private $sessionExpiresAt = null;
 
     /**
-     * @param string        $userId
      * @param array<string> $permissionList
      */
-    public function __construct($userId, array $permissionList)
+    public function __construct(string $userId, array $permissionList)
     {
         $this->userId = $userId;
         $this->permissionList = $permissionList;
     }
 
-    /**
-     * @param \DateTime $sessionExpiresAt
-     *
-     * @return void
-     */
-    public function setSessionExpiresAt(DateTime $sessionExpiresAt)
+    public function setSessionExpiresAt(DateTime $sessionExpiresAt): void
     {
         $this->sessionExpiresAt = $sessionExpiresAt;
     }
 
-    /**
-     * @return \DateTime|null
-     */
-    public function getSessionExpiresAt()
+    public function getSessionExpiresAt(): ?DateTime
     {
         return $this->sessionExpiresAt;
     }
 
-    /**
-     * @return string
-     */
-    public function getUserId()
+    public function getUserId(): string
     {
         return $this->userId;
     }
@@ -61,7 +51,7 @@ class UserInfo
     /**
      * @return array<string>
      */
-    public function getPermissionList()
+    public function getPermissionList(): array
     {
         return $this->permissionList;
     }
