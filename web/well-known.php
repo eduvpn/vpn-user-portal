@@ -15,7 +15,7 @@ use LC\Portal\Http\Request;
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
-    if (null === $appRoot = getenv('LC_VPN_ROOT')) {
+    if (false === $appRoot = getenv('LC_VPN_ROOT')) {
         $appRootUri = sprintf('%s://%s', $request->getScheme(), $request->getAuthority());
     } else {
         $appRootUri = sprintf('%s://%s%s', $request->getScheme(), $request->getAuthority(), $appRoot);
