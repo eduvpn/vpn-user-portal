@@ -45,6 +45,11 @@ class Request
         $this->postData = $postData;
     }
 
+    public function getScheme(): string
+    {
+        return $this->optionalHeader('REQUEST_SCHEME') ?? 'http';
+    }
+
     /**
      * URI = scheme:[//authority]path[?query][#fragment]
      * authority = [userinfo@]host[:port].
@@ -53,13 +58,9 @@ class Request
      */
     public function getAuthority(): string
     {
-        // scheme
-        $requestScheme = $this->optionalHeader('REQUEST_SCHEME') ?? 'http';
-
-        // server_name
+        // we do not care about "userinfo"...
+        $requestScheme = $this->getScheme();
         $serverName = $this->requireHeader('SERVER_NAME');
-
-        // port
         $serverPort = (int) $this->requireHeader('SERVER_PORT');
 
         $usePort = false;
@@ -71,15 +72,15 @@ class Request
         }
 
         if ($usePort) {
-            return sprintf('%s://%s:%d', $requestScheme, $serverName, $serverPort);
+            return sprintf('%s:%d', $serverName, $serverPort);
         }
 
-        return sprintf('%s://%s', $requestScheme, $serverName);
+        return $serverName;
     }
 
     public function getUri(): string
     {
-        return sprintf('%s%s', $this->getAuthority(), $this->requireHeader('REQUEST_URI'));
+        return sprintf('%s://%s%s', $this->getScheme(), $this->getAuthority(), $this->requireHeader('REQUEST_URI'));
     }
 
     public function getRoot(): string
@@ -94,7 +95,7 @@ class Request
 
     public function getRootUri(): string
     {
-        return sprintf('%s%s', $this->getAuthority(), $this->getRoot());
+        return sprintf('%s://%s%s', $this->getScheme(), $this->getAuthority(), $this->getRoot());
     }
 
     public function getRequestMethod(): string
