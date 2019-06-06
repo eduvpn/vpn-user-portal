@@ -24,8 +24,8 @@ class Request
 
     /**
      * @param array<string,string> $serverData
-     * @param array<string,string> $getData
-     * @param array<string,string> $postData
+     * @param array                $getData
+     * @param array                $postData
      */
     public function __construct(array $serverData, array $getData = [], array $postData = [])
     {
@@ -45,7 +45,19 @@ class Request
             }
         }
         $this->serverData = $serverData;
+        // make sure GET and POST variable values are always string
+        foreach ($_GET as $k => $v) {
+            if (!\is_string($k) || !\is_string($v)) {
+                throw new HttpException('GET parameter key/values MUST be "string"', 400);
+            }
+        }
         $this->getData = $getData;
+
+        foreach ($_POST as $k => $v) {
+            if (!\is_string($k) || !\is_string($v)) {
+                throw new HttpException('POST parameter key/values MUST be "string"', 400);
+            }
+        }
         $this->postData = $postData;
     }
 
