@@ -25,6 +25,7 @@ use LC\Common\Http\CsrfProtectionHook;
 use LC\Common\Http\FormAuthenticationHook;
 use LC\Common\Http\FormAuthenticationModule;
 use LC\Common\Http\HtmlResponse;
+use LC\Common\Http\InputValidation;
 use LC\Common\Http\LanguageSwitcherHook;
 use LC\Common\Http\LdapAuth;
 use LC\Common\Http\RadiusAuth;
@@ -132,10 +133,12 @@ try {
     $uiLang = array_keys($supportedLanguages)[0];
     $languageFile = null;
     if (array_key_exists('ui_lang', $_COOKIE)) {
-        $uiLang = $_COOKIE['ui_lang'];
+        $uiLang = InputValidation::uiLang($_COOKIE['ui_lang']);
     }
     if ('en_US' !== $uiLang) {
-        $languageFile = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
+        if (array_key_exists($uiLang, $supportedLanguages)) {
+            $languageFile = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
+        }
     }
 
     $tpl = new Tpl($templateDirs, $languageFile);
