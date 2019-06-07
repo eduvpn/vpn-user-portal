@@ -17,10 +17,7 @@ use RuntimeException;
 
 class Logger extends AbstractLogger
 {
-    /**
-     * @param string $ident
-     */
-    public function __construct($ident)
+    public function __construct(string $ident)
     {
         if (false === openlog($ident, LOG_PERROR | LOG_ODELAY, LOG_USER)) {
             throw new RuntimeException('unable to open syslog');
@@ -39,11 +36,8 @@ class Logger extends AbstractLogger
      *
      * @param mixed  $level
      * @param string $message
-     * @param array  $context
-     *
-     * @return void
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         // convert level to syslog level
         $syslogPriority = self::levelToPriority($level);
@@ -54,12 +48,7 @@ class Logger extends AbstractLogger
         );
     }
 
-    /**
-     * @param int $level
-     *
-     * @return int
-     */
-    private static function levelToPriority($level)
+    private static function levelToPriority(int $level): int
     {
         switch ($level) {
             case LogLevel::EMERGENCY:

@@ -26,10 +26,8 @@ class Stats
 
     /**
      * @param array<string> $profileIdList
-     *
-     * @return array
      */
-    public function get(array $profileIdList)
+    public function get(array $profileIdList): array
     {
         $allStatsData = [];
         $db = $this->storage->getPdo();

@@ -13,10 +13,7 @@ namespace LC\Portal\Config;
 
 class SamlAuthenticationConfig extends Config
 {
-    /**
-     * @return string
-     */
-    public function getUserIdAttribute()
+    public function getUserIdAttribute(): string
     {
         return $this->requireString('userIdAttribute');
     }
@@ -24,7 +21,7 @@ class SamlAuthenticationConfig extends Config
     /**
      * @return array<string>
      */
-    public function getPermissionAttributeList()
+    public function getPermissionAttributeList(): array
     {
         if (null === $configValue = $this->optionalStringArray('permissionAttributeList')) {
             return [];
@@ -33,34 +30,22 @@ class SamlAuthenticationConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getSpEntityId()
+    public function getSpEntityId(): ?string
     {
         return $this->optionalString('spEntityId');
     }
 
-    /**
-     * @return string
-     */
-    public function getIdpMetadata()
+    public function getIdpMetadata(): string
     {
         return $this->requireString('idpMetadata');
     }
 
-    /**
-     * @return string|null
-     */
-    public function getIdpEntityId()
+    public function getIdpEntityId(): ?string
     {
         return $this->optionalString('idpEntityId');
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDiscoUrl()
+    public function getDiscoUrl(): ?string
     {
         return $this->optionalString('discoUrl');
     }
@@ -68,7 +53,7 @@ class SamlAuthenticationConfig extends Config
     /**
      * @return array<string>
      */
-    public function getAuthnContext()
+    public function getAuthnContext(): array
     {
         if (null === $configValue = $this->optionalStringArray('authnContext')) {
             return [];
@@ -80,7 +65,7 @@ class SamlAuthenticationConfig extends Config
     /**
      * @return array<string,array<string>>
      */
-    public function getPermissionAuthnContext()
+    public function getPermissionAuthnContext(): array
     {
         if (null === $configValue = $this->optionalStringWithStringArray('permissionAuthnContext')) {
             return [];
@@ -92,7 +77,7 @@ class SamlAuthenticationConfig extends Config
     /**
      * @return array<string,string>
      */
-    public function getPermissionSessionExpiry()
+    public function getPermissionSessionExpiry(): array
     {
         if (null === $configValue = $this->optionalStringArray('permissionSessionExpiry')) {
             return [];

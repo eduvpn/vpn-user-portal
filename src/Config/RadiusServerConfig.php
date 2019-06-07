@@ -13,26 +13,17 @@ namespace LC\Portal\Config;
 
 class RadiusServerConfig extends Config
 {
-    /**
-     * @return string
-     */
-    public function getHost()
+    public function getHost(): string
     {
         return $this->requireString('host');
     }
 
-    /**
-     * @return string
-     */
-    public function getSecret()
+    public function getSecret(): string
     {
         return $this->requireString('secret');
     }
 
-    /**
-     * @return int
-     */
-    public function getPort()
+    public function getPort(): int
     {
         if (null === $port = $this->optionalInt('port')) {
             return 1812;

@@ -13,18 +13,12 @@ namespace LC\Portal\Config;
 
 class RadiusAuthenticationConfig extends Config
 {
-    /**
-     * @return string|null
-     */
-    public function getRealm()
+    public function getRealm(): ?string
     {
         return $this->optionalString('realm');
     }
 
-    /**
-     * @return string|null
-     */
-    public function getNasIdentifier()
+    public function getNasIdentifier(): ?string
     {
         return $this->optionalString('nasIdentifier');
     }
@@ -32,7 +26,7 @@ class RadiusAuthenticationConfig extends Config
     /**
      * @return array<RadiusServerConfig>
      */
-    public function getServerList()
+    public function getServerList(): array
     {
         if (!\array_key_exists('ServerList', $this->configData)) {
             return [];

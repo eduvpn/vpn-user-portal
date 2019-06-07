@@ -25,20 +25,13 @@ class EasyRsaCa implements CaInterface
     /** @var string */
     private $easyRsaDataDir;
 
-    /**
-     * @param string $easyRsaDir
-     * @param string $easyRsaDataDir
-     */
-    public function __construct($easyRsaDir, $easyRsaDataDir)
+    public function __construct(string $easyRsaDir, string $easyRsaDataDir)
     {
         $this->easyRsaDir = $easyRsaDir;
         $this->easyRsaDataDir = $easyRsaDataDir;
     }
 
-    /**
-     * @return void
-     */
-    public function init()
+    public function init(): void
     {
         FileIO::createDir($this->easyRsaDataDir, 0700);
 
@@ -127,12 +120,7 @@ class EasyRsaCa implements CaInterface
         );
     }
 
-    /**
-     * @param string $certFile
-     *
-     * @return string
-     */
-    private function readCertificate($certFile)
+    private function readCertificate(string $certFile): string
     {
         // strip junk before and after actual certificate
         $pattern = '/(-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----)/msU';
@@ -143,12 +131,7 @@ class EasyRsaCa implements CaInterface
         return $matches[1];
     }
 
-    /**
-     * @param string $keyFile
-     *
-     * @return string
-     */
-    private function readKey($keyFile)
+    private function readKey(string $keyFile): string
     {
         // strip whitespace before and after actual key
         return trim(
@@ -156,12 +139,7 @@ class EasyRsaCa implements CaInterface
         );
     }
 
-    /**
-     * @param string $commonName
-     *
-     * @return bool
-     */
-    private function hasCert($commonName)
+    private function hasCert(string $commonName): bool
     {
         return FileIO::exists(
             sprintf(
@@ -172,10 +150,7 @@ class EasyRsaCa implements CaInterface
         );
     }
 
-    /**
-     * @return void
-     */
-    private function execEasyRsa(array $argv)
+    private function execEasyRsa(array $argv): void
     {
         $command = sprintf(
             '%s/easyrsa --vars=%s/vars %s >/dev/null 2>/dev/null',

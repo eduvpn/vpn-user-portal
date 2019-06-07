@@ -13,50 +13,32 @@ namespace LC\Portal\Config;
 
 class ProfileConfig extends Config
 {
-    /**
-     * @return int
-     */
-    public function getProfileNumber()
+    public function getProfileNumber(): int
     {
         return $this->requireInt('profileNumber');
     }
 
-    /**
-     * @return string
-     */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return $this->requireString('displayName');
     }
 
-    /**
-     * @return string
-     */
-    public function getRangeFour()
+    public function getRangeFour(): string
     {
         return $this->requireString('rangeFour');
     }
 
-    /**
-     * @return string
-     */
-    public function getRangeSix()
+    public function getRangeSix(): string
     {
         return $this->requireString('rangeSix');
     }
 
-    /**
-     * @return string
-     */
-    public function getHostname()
+    public function getHostname(): string
     {
         return $this->requireString('hostName');
     }
 
-    /**
-     * @return bool
-     */
-    public function getDefaultGateway()
+    public function getDefaultGateway(): bool
     {
         if (null === $configValue = $this->optionalBool('defaultGateway')) {
             return true;
@@ -68,7 +50,7 @@ class ProfileConfig extends Config
     /**
      * @return array<string>
      */
-    public function getRoutes()
+    public function getRoutes(): array
     {
         if (null === $configValue = $this->optionalStringArray('routes')) {
             return [];
@@ -80,7 +62,7 @@ class ProfileConfig extends Config
     /**
      * @return array<string>
      */
-    public function getDns()
+    public function getDns(): array
     {
         if (null === $configValue = $this->optionalStringArray('dns')) {
             return [];
@@ -89,10 +71,7 @@ class ProfileConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return bool
-     */
-    public function getClientToClient()
+    public function getClientToClient(): bool
     {
         if (null === $configValue = $this->optionalBool('clientToClient')) {
             return false;
@@ -101,10 +80,7 @@ class ProfileConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return string
-     */
-    public function getListen()
+    public function getListen(): string
     {
         if (null === $configValue = $this->optionalString('listen')) {
             return '::';
@@ -113,10 +89,7 @@ class ProfileConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return bool
-     */
-    public function getEnableLog()
+    public function getEnableLog(): bool
     {
         if (null === $configValue = $this->optionalBool('enableLog')) {
             return false;
@@ -125,10 +98,7 @@ class ProfileConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return bool
-     */
-    public function getEnableAcl()
+    public function getEnableAcl(): bool
     {
         if (null === $configValue = $this->optionalBool('enableAcl')) {
             return false;
@@ -140,7 +110,7 @@ class ProfileConfig extends Config
     /**
      * @return array<string>
      */
-    public function getAclPermissionList()
+    public function getAclPermissionList(): array
     {
         if (null === $configValue = $this->optionalStringArray('aclPermissionList')) {
             return [];
@@ -149,10 +119,7 @@ class ProfileConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return string
-     */
-    public function getManagementIp()
+    public function getManagementIp(): string
     {
         if (null === $configValue = $this->optionalString('managementIp')) {
             return '127.0.0.1';
@@ -164,7 +131,7 @@ class ProfileConfig extends Config
     /**
      * @return array<string>
      */
-    public function getVpnProtoPortList()
+    public function getVpnProtoPortList(): array
     {
         if (null === $configValue = $this->optionalStringArray('vpnProtoPortList')) {
             return ['udp/1194', 'tcp/1194'];
@@ -176,7 +143,7 @@ class ProfileConfig extends Config
     /**
      * @return array<string>
      */
-    public function getExposedVpnProtoPortList()
+    public function getExposedVpnProtoPortList(): array
     {
         if (null === $configValue = $this->optionalStringArray('exposedVpnProtoPortList')) {
             return [];
@@ -185,10 +152,7 @@ class ProfileConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return bool
-     */
-    public function getHideProfile()
+    public function getHideProfile(): bool
     {
         if (null === $configValue = $this->optionalBool('hideProfile')) {
             return false;
@@ -197,10 +161,7 @@ class ProfileConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return bool
-     */
-    public function getBlockLan()
+    public function getBlockLan(): bool
     {
         if (null === $configValue = $this->optionalBool('blockLan')) {
             return false;
@@ -212,7 +173,7 @@ class ProfileConfig extends Config
     /**
      * @return array<string,mixed>
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'aclPermissionList' => $this->getAclPermissionList(),

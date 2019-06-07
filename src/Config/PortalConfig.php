@@ -16,18 +16,12 @@ use LC\Portal\Config\Exception\ConfigException;
 
 class PortalConfig extends Config
 {
-    /**
-     * @return string|null
-     */
-    public function getStyleName()
+    public function getStyleName(): ?string
     {
         return $this->optionalString('styleName');
     }
 
-    /**
-     * @return bool
-     */
-    public function getSecureCookie()
+    public function getSecureCookie(): bool
     {
         if (null === $configValue = $this->optionalBool('secureCookie')) {
             return false;
@@ -36,10 +30,7 @@ class PortalConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return string
-     */
-    public function getAuthMethod()
+    public function getAuthMethod(): string
     {
         if (null === $configValue = $this->optionalString('authMethod')) {
             return 'DbAuthentication';
@@ -48,10 +39,7 @@ class PortalConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return \DateInterval
-     */
-    public function getSessionExpiry()
+    public function getSessionExpiry(): DateInterval
     {
         if (null === $configValue = $this->optionalString('sessionExpiry')) {
             return new DateInterval('P90D');
@@ -63,7 +51,7 @@ class PortalConfig extends Config
     /**
      * @return array<string>
      */
-    public function getAdminPermissionList()
+    public function getAdminPermissionList(): array
     {
         if (null === $configValue = $this->optionalStringArray('adminPermissionList')) {
             return [];
@@ -75,7 +63,7 @@ class PortalConfig extends Config
     /**
      * @return array<string>
      */
-    public function getAdminUserIdList()
+    public function getAdminUserIdList(): array
     {
         if (null === $configValue = $this->optionalStringArray('adminUserIdList')) {
             return [];
@@ -84,10 +72,7 @@ class PortalConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return bool
-     */
-    public function getRequireTwoFactor()
+    public function getRequireTwoFactor(): bool
     {
         if (null === $configValue = $this->optionalBool('requireTwoFactor')) {
             return false;
@@ -99,7 +84,7 @@ class PortalConfig extends Config
     /**
      * @return array<string>
      */
-    public function getTwoFactorMethods()
+    public function getTwoFactorMethods(): array
     {
         if (null === $configValue = $this->optionalStringArray('twoFactorMethods')) {
             return [];
@@ -111,7 +96,7 @@ class PortalConfig extends Config
     /**
      * @return array<string,string>
      */
-    public function getSupportedLanguages()
+    public function getSupportedLanguages(): array
     {
         if (null === $configValue = $this->optionalStringStringArray('supportedLanguages')) {
             return ['en_US' => 'English'];
@@ -120,10 +105,7 @@ class PortalConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return SamlAuthenticationConfig
-     */
-    public function getSamlAuthenticationConfig()
+    public function getSamlAuthenticationConfig(): SamlAuthenticationConfig
     {
         if (!\array_key_exists('SamlAuthentication', $this->configData)) {
             throw new ConfigException('key "SamlAuthentication" is missing');
@@ -132,10 +114,7 @@ class PortalConfig extends Config
         return new SamlAuthenticationConfig($this->configData['SamlAuthentication']);
     }
 
-    /**
-     * @return LdapAuthenticationConfig
-     */
-    public function getLdapAuthenticationConfig()
+    public function getLdapAuthenticationConfig(): LdapAuthenticationConfig
     {
         if (!\array_key_exists('LdapAuthentication', $this->configData)) {
             throw new ConfigException('key "LdapAuthentication" is missing');
@@ -144,10 +123,7 @@ class PortalConfig extends Config
         return new LdapAuthenticationConfig($this->configData['LdapAuthentication']);
     }
 
-    /**
-     * @return RadiusAuthenticationConfig
-     */
-    public function getRadiusAuthenticationConfig()
+    public function getRadiusAuthenticationConfig(): RadiusAuthenticationConfig
     {
         if (!\array_key_exists('RadiusAuthentication', $this->configData)) {
             throw new ConfigException('key "RadiusAuthentication" is missing');
@@ -156,10 +132,7 @@ class PortalConfig extends Config
         return new RadiusAuthenticationConfig($this->configData['RadiusAuthentication']);
     }
 
-    /**
-     * @return bool
-     */
-    public function getEnableApi()
+    public function getEnableApi(): bool
     {
         if (null === $configValue = $this->optionalBool('enableApi')) {
             return true;
@@ -168,10 +141,7 @@ class PortalConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return ApiConfig
-     */
-    public function getApiConfig()
+    public function getApiConfig(): ApiConfig
     {
         $apiConfigData = [];
         if (\array_key_exists('Api', $this->configData)) {
@@ -181,17 +151,12 @@ class PortalConfig extends Config
         return new ApiConfig($apiConfigData);
     }
 
-    /**
-     * @param string $profileId
-     *
-     * @return ProfileConfig
-     */
-    public function getProfileConfig($profileId)
+    public function getProfileConfig(string $profileId): ProfileConfig
     {
         $profileConfigList = $this->getProfileConfigList();
         if (!\array_key_exists($profileId, $profileConfigList)) {
             // XXX better error
-            throw new ConfigException('');
+            throw new ConfigException('XXX');
         }
 
         return $profileConfigList[$profileId];
@@ -200,7 +165,7 @@ class PortalConfig extends Config
     /**
      * @return array<string,ProfileConfig>
      */
-    public function getProfileConfigList()
+    public function getProfileConfigList(): array
     {
         // XXX make sure we have no callers that would be btter of with the
         // getProfileConfig($profileId) call!

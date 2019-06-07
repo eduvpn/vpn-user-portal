@@ -19,9 +19,6 @@ abstract class Config
     /** @var array */
     protected $configData;
 
-    /**
-     * @param array $configData
-     */
     public function __construct(array $configData)
     {
         $this->configData = $configData;
@@ -30,12 +27,9 @@ abstract class Config
     /**
      * @psalm-suppress UnresolvableInclude
      *
-     * @param string $configFile
-     * @suppress PhanTypeInstantiateAbstract
-     *
      * @return static
      */
-    public static function fromFile($configFile)
+    public static function fromFile(string $configFile)
     {
         if (false === FileIO::exists($configFile)) {
             throw new ConfigException(sprintf('unable to read "%s"', $configFile));
@@ -44,12 +38,7 @@ abstract class Config
         return new static(require $configFile);
     }
 
-    /**
-     * @param string $configKey
-     *
-     * @return string|null
-     */
-    public function optionalString($configKey)
+    public function optionalString(string $configKey): ?string
     {
         if (!\array_key_exists($configKey, $this->configData)) {
             return null;
@@ -62,12 +51,7 @@ abstract class Config
         return $this->configData[$configKey];
     }
 
-    /**
-     * @param string $configKey
-     *
-     * @return string
-     */
-    public function requireString($configKey)
+    public function requireString(string $configKey): string
     {
         if (null === $configValue = $this->optionalString($configKey)) {
             throw new ConfigException(sprintf('key "%s" is missing', $configKey));
@@ -76,12 +60,7 @@ abstract class Config
         return $configValue;
     }
 
-    /**
-     * @param string $configKey
-     *
-     * @return bool|null
-     */
-    public function optionalBool($configKey)
+    public function optionalBool(string $configKey): ?bool
     {
         if (!\array_key_exists($configKey, $this->configData)) {
             return null;
@@ -94,12 +73,7 @@ abstract class Config
         return $this->configData[$configKey];
     }
 
-    /**
-     * @param string $configKey
-     *
-     * @return bool
-     */
-    public function requireBool($configKey)
+    public function requireBool(string $configKey): bool
     {
         if (null === $configValue = $this->optionalBool($configKey)) {
             throw new ConfigException(sprintf('key "%s" is missing', $configKey));
@@ -108,12 +82,7 @@ abstract class Config
         return $configValue;
     }
 
-    /**
-     * @param string $configKey
-     *
-     * @return int|null
-     */
-    public function optionalInt($configKey)
+    public function optionalInt(string $configKey): ?int
     {
         if (!\array_key_exists($configKey, $this->configData)) {
             return null;
@@ -126,12 +95,7 @@ abstract class Config
         return $this->configData[$configKey];
     }
 
-    /**
-     * @param string $configKey
-     *
-     * @return int
-     */
-    public function requireInt($configKey)
+    public function requireInt(string $configKey): int
     {
         if (null === $configValue = $this->optionalInt($configKey)) {
             throw new ConfigException(sprintf('key "%s" is missing', $configKey));
@@ -141,11 +105,9 @@ abstract class Config
     }
 
     /**
-     * @param string $configKey
-     *
      * @return array<string>|null
      */
-    public function optionalStringArray($configKey)
+    public function optionalStringArray(string $configKey): ?array
     {
         if (!\array_key_exists($configKey, $this->configData)) {
             return null;
@@ -167,11 +129,9 @@ abstract class Config
     }
 
     /**
-     * @param string $configKey
-     *
      * @return array<string>
      */
-    public function requireStringArray($configKey)
+    public function requireStringArray(string $configKey): array
     {
         if (null === $configValue = $this->optionalStringArray($configKey)) {
             throw new ConfigException(sprintf('key "%s" is missing', $configKey));
@@ -181,11 +141,9 @@ abstract class Config
     }
 
     /**
-     * @param string $configKey
-     *
      * @return array<string,string>|null
      */
-    public function optionalStringStringArray($configKey)
+    public function optionalStringStringArray(string $configKey): ?array
     {
         if (!\array_key_exists($configKey, $this->configData)) {
             return null;
@@ -212,11 +170,9 @@ abstract class Config
     }
 
     /**
-     * @param string $configKey
-     *
      * @return array<string,string>
      */
-    public function requireStringStringArray($configKey)
+    public function requireStringStringArray(string $configKey): array
     {
         if (null === $configValue = $this->optionalStringStringArray($configKey)) {
             throw new ConfigException(sprintf('key "%s" is missing', $configKey));
@@ -226,11 +182,9 @@ abstract class Config
     }
 
     /**
-     * @param string $configKey
-     *
      * @return array<string,array<string>>|null
      */
-    public function optionalStringWithStringArray($configKey)
+    public function optionalStringWithStringArray(string $configKey): ?array
     {
         if (!\array_key_exists($configKey, $this->configData)) {
             return null;

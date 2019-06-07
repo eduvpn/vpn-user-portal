@@ -15,10 +15,7 @@ use DateInterval;
 
 class ApiConfig extends Config
 {
-    /**
-     * @return \DateInterval
-     */
-    public function getTokenExpiry()
+    public function getTokenExpiry(): DateInterval
     {
         if (null === $configValue = $this->optionalString('tokenExpiry')) {
             return new DateInterval('PT1H');
@@ -27,10 +24,7 @@ class ApiConfig extends Config
         return new DateInterval($configValue);
     }
 
-    /**
-     * @return bool
-     */
-    public function getRemoteAccess()
+    public function getRemoteAccess(): bool
     {
         if (null === $configValue = $this->optionalBool('remoteAccess')) {
             return false;
@@ -42,7 +36,7 @@ class ApiConfig extends Config
     /**
      * @return array<string,array<string,string>>
      */
-    public function getRemoteAccessList()
+    public function getRemoteAccessList(): array
     {
         // XXX hmm we still need to put stuff here!
         return [];

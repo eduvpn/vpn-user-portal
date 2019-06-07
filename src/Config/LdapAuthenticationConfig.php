@@ -13,18 +13,12 @@ namespace LC\Portal\Config;
 
 class LdapAuthenticationConfig extends Config
 {
-    /**
-     * @return string
-     */
-    public function getLdapUri()
+    public function getLdapUri(): string
     {
         return $this->requireString('ldapUri');
     }
 
-    /**
-     * @return string
-     */
-    public function getBindDnTemplate()
+    public function getBindDnTemplate(): string
     {
         return $this->requireString('bindDnTemplate');
     }
@@ -32,7 +26,7 @@ class LdapAuthenticationConfig extends Config
     /**
      * @return array<string>
      */
-    public function getPermissionAttributeList()
+    public function getPermissionAttributeList(): array
     {
         if (null === $configValue = $this->optionalStringArray('permissionAttributeList')) {
             return [];
@@ -41,18 +35,12 @@ class LdapAuthenticationConfig extends Config
         return $configValue;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getBaseDn()
+    public function getBaseDn(): ?string
     {
         return $this->optionalString('baseDn');
     }
 
-    /**
-     * @return string|null
-     */
-    public function getUserFilterTemplate()
+    public function getUserFilterTemplate(): ?string
     {
         return $this->optionalString('userFilterTemplate');
     }
