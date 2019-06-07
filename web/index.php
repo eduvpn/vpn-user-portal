@@ -27,6 +27,7 @@ use LC\Portal\Http\DisabledUserHook;
 use LC\Portal\Http\FormAuthenticationHook;
 use LC\Portal\Http\FormAuthenticationModule;
 use LC\Portal\Http\HtmlResponse;
+use LC\Portal\Http\InputValidation;
 use LC\Portal\Http\LanguageSwitcherHook;
 use LC\Portal\Http\LdapAuth;
 use LC\Portal\Http\LogoutModule;
@@ -120,10 +121,12 @@ try {
     $uiLang = array_keys($supportedLanguages)[0];
     $languageFile = null;
     if (array_key_exists('ui_lang', $_COOKIE)) {
-        $uiLang = $_COOKIE['ui_lang'];
+        $uiLang = InputValidation::uiLang($_COOKIE['ui_lang']);
     }
     if ('en_US' !== $uiLang) {
-        $languageFile = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
+        if (array_key_exists($uiLang, $supportedLanguages)) {
+            $languageFile = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
+        }
     }
 
     $tpl = new Tpl($templateDirs, $languageFile);

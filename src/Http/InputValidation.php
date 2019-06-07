@@ -198,6 +198,20 @@ class InputValidation
     }
 
     /**
+     * @param string $uiLang
+     *
+     * @return string
+     */
+    public static function uiLang($uiLang)
+    {
+        if (1 !== preg_match('/^[a-zA-Z]{2}_[a-zA-Z]{2}$/', $uiLang)) {
+            throw new InputValidationException('invalid "ui_lang"');
+        }
+
+        return $uiLang;
+    }
+
+    /**
      * @param string $inputString
      * @param string $inputName
      *
