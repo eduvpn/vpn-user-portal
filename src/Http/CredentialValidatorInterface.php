@@ -14,10 +14,7 @@ namespace LC\Portal\Http;
 interface CredentialValidatorInterface
 {
     /**
-     * @param string $authUser
-     * @param string $authPass
-     *
      * @return false|UserInfo
      */
-    public function isValid($authUser, $authPass);
+    public function isValid(string $authUser, string $authPass);
 }

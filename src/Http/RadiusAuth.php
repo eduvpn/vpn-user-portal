@@ -38,12 +38,9 @@ class RadiusAuth implements CredentialValidatorInterface
     }
 
     /**
-     * @param string $authUser
-     * @param string $authPass
-     *
      * @return false|UserInfo
      */
-    public function isValid($authUser, $authPass)
+    public function isValid(string $authUser, string $authPass)
     {
         // add realm if requested
         if (null !== $realm = $this->radiusAuthenticationConfig->getRealm()) {

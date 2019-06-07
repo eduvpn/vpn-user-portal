@@ -39,9 +39,8 @@ class Tpl implements TplInterface
 
     /**
      * @param array<string> $templateFolderList
-     * @param string|null   $translationFile
      */
-    public function __construct(array $templateFolderList, $translationFile = null)
+    public function __construct(array $templateFolderList, ?string $translationFile = null)
     {
         $this->templateFolderList = $templateFolderList;
         $this->translationFile = $translationFile;
@@ -53,13 +52,7 @@ class Tpl implements TplInterface
         $this->templateVariables = array_merge($this->templateVariables, $templateVariables);
     }
 
-    /**
-     * @param string   $callbackName
-     * @param callable $cb
-     *
-     * @return void
-     */
-    public function addCallback($callbackName, callable $cb)
+    public function addCallback(string $callbackName, callable $cb): void
     {
         $this->callbackList[$callbackName] = $cb;
     }
@@ -85,12 +78,7 @@ class Tpl implements TplInterface
         return $templateStr;
     }
 
-    /**
-     * @param int $byteSize
-     *
-     * @return string
-     */
-    public static function toHuman($byteSize)
+    public static function toHuman(int $byteSize): string
     {
         $kB = 1024;
         $MB = $kB * 1024;
@@ -109,23 +97,12 @@ class Tpl implements TplInterface
         return sprintf('%0.0f kiB', $byteSize / $kB);
     }
 
-    /**
-     * @param string $templateName
-     * @param array  $templateVariables
-     *
-     * @return string
-     */
-    private function insert($templateName, array $templateVariables = [])
+    private function insert(string $templateName, array $templateVariables = []): string
     {
         return $this->render($templateName, $templateVariables);
     }
 
-    /**
-     * @param string $sectionName
-     *
-     * @return void
-     */
-    private function start($sectionName)
+    private function start(string $sectionName): void
     {
         if (null !== $this->activeSectionName) {
             throw new TplException(sprintf('section "%s" already started', $this->activeSectionName));
@@ -135,10 +112,7 @@ class Tpl implements TplInterface
         ob_start();
     }
 
-    /**
-     * @return void
-     */
-    private function stop()
+    private function stop(): void
     {
         if (null === $this->activeSectionName) {
             throw new TplException('no section started');
@@ -148,23 +122,12 @@ class Tpl implements TplInterface
         $this->activeSectionName = null;
     }
 
-    /**
-     * @param string $layoutName
-     * @param array  $templateVariables
-     *
-     * @return void
-     */
-    private function layout($layoutName, array $templateVariables = [])
+    private function layout(string $layoutName, array $templateVariables = []): void
     {
         $this->layoutList[$layoutName] = $templateVariables;
     }
 
-    /**
-     * @param string $sectionName
-     *
-     * @return string
-     */
-    private function section($sectionName)
+    private function section(string $sectionName): string
     {
         if (!\array_key_exists($sectionName, $this->sectionList)) {
             throw new TplException(sprintf('section "%s" does not exist', $sectionName));
@@ -173,13 +136,7 @@ class Tpl implements TplInterface
         return $this->sectionList[$sectionName];
     }
 
-    /**
-     * @param string      $v
-     * @param string|null $cb
-     *
-     * @return string
-     */
-    private function e($v, $cb = null)
+    private function e(string $v, ?string $cb = null): string
     {
         if (null !== $cb) {
             $v = $this->batch($v, $cb);
@@ -188,13 +145,7 @@ class Tpl implements TplInterface
         return htmlentities($v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
-    /**
-     * @param string $v
-     * @param string $cb
-     *
-     * @return string
-     */
-    private function batch($v, $cb)
+    private function batch(string $v, string $cb): string
     {
         $functionList = explode('|', $cb);
         foreach ($functionList as $f) {
@@ -217,23 +168,13 @@ class Tpl implements TplInterface
 
     /**
      * Format a date.
-     *
-     * @param string $d
-     * @param string $f
-     *
-     * @return string
      */
-    private function d($d, $f = 'Y-m-d H:i:s')
+    private function d(string $d, string $f = 'Y-m-d H:i:s'): string
     {
         return $this->e(date_format(new DateTime($d), $f));
     }
 
-    /**
-     * @param string $v
-     *
-     * @return string
-     */
-    private function t($v)
+    private function t(string $v): string
     {
         if (null === $this->translationFile) {
             // no translation file, use original
@@ -261,12 +202,7 @@ class Tpl implements TplInterface
         return str_replace(array_keys($escapedVars), array_values($escapedVars), $translatedText);
     }
 
-    /**
-     * @param string $templateName
-     *
-     * @return bool
-     */
-    private function exists($templateName)
+    private function exists(string $templateName): bool
     {
         foreach ($this->templateFolderList as $templateFolder) {
             $templatePath = sprintf('%s/%s.php', $templateFolder, $templateName);
@@ -278,12 +214,7 @@ class Tpl implements TplInterface
         return false;
     }
 
-    /**
-     * @param string $templateName
-     *
-     * @return string
-     */
-    private function templatePath($templateName)
+    private function templatePath(string $templateName): string
     {
         foreach (array_reverse($this->templateFolderList) as $templateFolder) {
             $templatePath = sprintf('%s/%s.php', $templateFolder, $templateName);

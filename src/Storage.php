@@ -28,17 +28,13 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
     /** @var \PDO */
     private $db;
 
-    /** @var \DateTime */
+    /** @var \DateTimeInterface */
     private $dateTime;
 
     /** @var \fkooman\SqliteMigrate\Migration */
     private $migration;
 
-    /**
-     * @param \PDO   $db
-     * @param string $schemaDir
-     */
-    public function __construct(PDO $db, $schemaDir)
+    public function __construct(PDO $db, string $schemaDir)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
@@ -49,31 +45,20 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $this->dateTime = new DateTime();
     }
 
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return void
-     */
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTimeInterface $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return \PDO
-     */
-    public function getPdo()
+    public function getPdo(): PDO
     {
         return $this->db;
     }
 
     /**
-     * @param string $authUser
-     * @param string $authPass
-     *
      * @return false|UserInfo
      */
-    public function isValid($authUser, $authPass)
+    public function isValid(string $authUser, string $authPass)
     {
         $stmt = $this->db->prepare(
             'SELECT
@@ -94,13 +79,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         return false;
     }
 
-    /**
-     * @param string $userId
-     * @param string $userPass
-     *
-     * @return void
-     */
-    public function add($userId, $userPass)
+    public function add(string $userId, string $userPass): void
     {
         if ($this->userExists($userId)) {
             $this->updatePassword($userId, $userPass);
@@ -122,12 +101,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt->execute();
     }
 
-    /**
-     * @param string $authUser
-     *
-     * @return bool
-     */
-    public function userExists($authUser)
+    public function userExists(string $authUser): bool
     {
         $stmt = $this->db->prepare(
             'SELECT
@@ -143,13 +117,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         return 1 === (int) $stmt->fetchColumn();
     }
 
-    /**
-     * @param string $userId
-     * @param string $newUserPass
-     *
-     * @return bool
-     */
-    public function updatePassword($userId, $newUserPass)
+    public function updatePassword(string $userId, string $newUserPass): bool
     {
         $stmt = $this->db->prepare(
             'UPDATE
@@ -276,10 +244,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt->execute();
     }
 
-    /**
-     * @return array
-     */
-    public function getUsers()
+    public function getUsers(): array
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -310,11 +275,9 @@ SQL
     }
 
     /**
-     * @param string $userId
-     *
-     * @return string|null
+     * XXX why can this return null?
      */
-    public function getSessionExpiresAt($userId)
+    public function getSessionExpiresAt(string $userId): ?string
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -334,11 +297,9 @@ SQL
     }
 
     /**
-     * @param string $userId
-     *
      * @return array<string>
      */
-    public function getPermissionList($userId)
+    public function getPermissionList(string $userId): array
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -358,11 +319,11 @@ SQL
     }
 
     /**
-     * @param string $commonName
+     * XXX turn this into an object!
      *
      * @return false|array{user_id:string, user_is_disabled:bool, display_name:string, valid_from:string, valid_to:string, client_id: null|string}
      */
-    public function getUserCertificateInfo($commonName)
+    public function getUserCertificateInfo(string $commonName)
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -388,13 +349,9 @@ SQL
     }
 
     /**
-     * @param string        $userId
-     * @param \DateTime     $sessionExpiresAt
      * @param array<string> $permissionList
-     *
-     * @return void
      */
-    public function updateSessionInfo($userId, DateTime $sessionExpiresAt, array $permissionList)
+    public function updateSessionInfo(string $userId, DateTimeInterface $sessionExpiresAt, array $permissionList): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -415,17 +372,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string             $userId
-     * @param string             $commonName
-     * @param string             $displayName
-     * @param \DateTimeInterface $validFrom
-     * @param \DateTimeInterface $validTo
-     * @param string|null        $clientId
-     *
-     * @return void
-     */
-    public function addCertificate($userId, $commonName, $displayName, DateTimeInterface $validFrom, DateTimeInterface $validTo, $clientId)
+    public function addCertificate(string $userId, string $commonName, string $displayName, DateTimeInterface $validFrom, DateTimeInterface $validTo, ?string $clientId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -445,12 +392,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return array
-     */
-    public function getCertificates($userId)
+    public function getCertificates(string $userId): array
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -475,12 +417,7 @@ SQL
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param string $commonName
-     *
-     * @return void
-     */
-    public function deleteCertificate($commonName)
+    public function deleteCertificate(string $commonName): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -494,13 +431,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     * @param string $clientId
-     *
-     * @return void
-     */
-    public function deleteCertificatesOfClientId($userId, $clientId)
+    public function deleteCertificatesOfClientId(string $userId, string $clientId): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -517,12 +448,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return void
-     */
-    public function disableUser($userId)
+    public function disableUser(string $userId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -539,12 +465,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return void
-     */
-    public function enableUser($userId)
+    public function enableUser(string $userId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -561,12 +482,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return bool
-     */
-    public function isDisabledUser($userId)
+    public function isDisabledUser(string $userId): bool
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -588,16 +504,7 @@ SQL
         return (bool) $stmt->fetchColumn();
     }
 
-    /**
-     * @param string    $profileId
-     * @param string    $commonName
-     * @param string    $ip4
-     * @param string    $ip6
-     * @param \DateTime $connectedAt
-     *
-     * @return void
-     */
-    public function clientConnect($profileId, $commonName, $ip4, $ip6, DateTime $connectedAt)
+    public function clientConnect(string $profileId, string $commonName, string $ip4, string $ip6, DateTimeInterface $connectedAt): void
     {
         // update "lost" client entries when a new client connects that gets
         // the IP address of an existing entry that was not "closed" yet. This
@@ -671,18 +578,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string    $profileId
-     * @param string    $commonName
-     * @param string    $ip4
-     * @param string    $ip6
-     * @param \DateTime $connectedAt
-     * @param \DateTime $disconnectedAt
-     * @param int       $bytesTransferred
-     *
-     * @return void
-     */
-    public function clientDisconnect($profileId, $commonName, $ip4, $ip6, DateTime $connectedAt, DateTime $disconnectedAt, $bytesTransferred)
+    public function clientDisconnect(string $profileId, string $commonName, string $ip4, string $ip6, DateTimeInterface $connectedAt, DateTimeInterface $disconnectedAt, int $bytesTransferred): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -715,11 +611,9 @@ SQL
     }
 
     /**
-     * @param string $ipAddress
-     *
      * @return false|array
      */
-    public function getLogEntry(DateTime $dateTime, $ipAddress)
+    public function getLogEntry(DateTimeInterface $dateTime, string $ipAddress)
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -751,12 +645,7 @@ SQL
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return void
-     */
-    public function cleanConnectionLog(DateTime $dateTime)
+    public function cleanConnectionLog(DateTimeInterface $dateTime): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -774,12 +663,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return void
-     */
-    public function cleanUserMessages(DateTime $dateTime)
+    public function cleanUserMessages(DateTimeInterface $dateTime): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -795,12 +679,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string $type
-     *
-     * @return array
-     */
-    public function systemMessages($type)
+    public function systemMessages(string $type): array
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -819,13 +698,7 @@ SQL
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param string $type
-     * @param string $message
-     *
-     * @return void
-     */
-    public function addSystemMessage($type, $message)
+    public function addSystemMessage(string $type, string $message): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -842,12 +715,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param int $messageId
-     *
-     * @return void
-     */
-    public function deleteSystemMessage($messageId)
+    public function deleteSystemMessage(int $messageId): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -861,12 +729,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return array
-     */
-    public function userMessages($userId)
+    public function userMessages(string $userId): array
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -888,14 +751,7 @@ SQL
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param string $userId
-     * @param string $type
-     * @param string $message
-     *
-     * @return void
-     */
-    public function addUserMessage($userId, $type, $message)
+    public function addUserMessage(string $userId, string $type, string $message): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -1017,12 +873,7 @@ SQL
         return true;
     }
 
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return void
-     */
-    public function cleanExpiredCertificates(DateTime $dateTime)
+    public function cleanExpiredCertificates(DateTimeInterface $dateTime): void
     {
         $stmt = $this->db->prepare('DELETE FROM certificates WHERE valid_to < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -1030,12 +881,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return void
-     */
-    public function cleanOtpLog(DateTime $dateTime)
+    public function cleanOtpLog(DateTime $dateTime): void
     {
         $stmt = $this->db->prepare('DELETE FROM otp_log WHERE date_time < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -1043,28 +889,17 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @return void
-     */
-    public function init()
+    public function init(): void
     {
         $this->migration->init();
     }
 
-    /**
-     * @return void
-     */
-    public function update()
+    public function update(): void
     {
         $this->migration->run();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return void
-     */
-    private function addUser($userId)
+    private function addUser(string $userId): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
