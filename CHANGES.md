@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.5 (2019-06-07)
+- proper input validation on value from language cookie
+
 ## 2.0.4 (2019-05-21)
 - fix default language for portal, it always used English independent of the
   order of languages in the configuration file
