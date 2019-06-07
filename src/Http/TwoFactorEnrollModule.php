@@ -49,10 +49,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     {
         $service->get(
             '/two_factor_enroll',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());

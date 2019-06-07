@@ -40,10 +40,7 @@ class FormAuthenticationModule implements ServiceModuleInterface
     {
         $service->post(
             '/_form/auth/verify',
-            /**
-             * @return Response
-             */
-            function (Request $request) {
+            function (Request $request): Response {
                 $this->session->delete('_form_auth_user');
 
                 $authUser = $request->requirePostParameter('userName');

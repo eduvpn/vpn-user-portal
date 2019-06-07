@@ -126,10 +126,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
     {
         $service->get(
             '/_saml/login',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 try {
                     $relayState = $request->requireQueryParameter('ReturnTo');
                     $idpEntityId = $request->optionalQueryParameter('IdP');
