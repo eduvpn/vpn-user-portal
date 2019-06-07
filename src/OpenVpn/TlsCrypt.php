@@ -20,10 +20,7 @@ class TlsCrypt
     /** @var string */
     private $tlsCrypt;
 
-    /**
-     * @param string $tlsCrypt
-     */
-    public function __construct($tlsCrypt)
+    public function __construct(string $tlsCrypt)
     {
         if (false === strpos($tlsCrypt, '2048 bit OpenVPN static key')) {
             throw new RuntimeException('provided string is not an OpenVPN static key');
@@ -31,20 +28,12 @@ class TlsCrypt
         $this->tlsCrypt = $tlsCrypt;
     }
 
-    /**
-     * @param string $tlsCryptFile
-     *
-     * @return self
-     */
-    public static function fromFile($tlsCryptFile)
+    public static function fromFile(string $tlsCryptFile): self
     {
         return new self(FileIO::readFile($tlsCryptFile));
     }
 
-    /**
-     * @return self
-     */
-    public static function generate()
+    public static function generate(): self
     {
         // Same as $(openvpn --genkey --secret <file>)
         $randomData = wordwrap(Hex::encode(random_bytes(256)), 32, "\n", true);
@@ -61,10 +50,7 @@ EOF;
         return new self($tlsCrypt);
     }
 
-    /**
-     * @return string
-     */
-    public function raw()
+    public function raw(): string
     {
         return $this->tlsCrypt;
     }

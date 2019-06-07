@@ -18,7 +18,7 @@ class TestServerManager implements ServerManagerInterface
     /**
      * @return array<string,array>
      */
-    public function connections()
+    public function connections(): array
     {
         return [
             'default' => [
@@ -33,12 +33,7 @@ class TestServerManager implements ServerManagerInterface
         ];
     }
 
-    /**
-     * @param string $commonName
-     *
-     * @return int
-     */
-    public function kill($commonName)
+    public function kill(string $commonName): int
     {
         return 0;
     }

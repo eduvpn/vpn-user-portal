@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
-use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\CA\CertInfo;
 use LC\Portal\Config\PortalConfig;
@@ -42,30 +43,19 @@ class ServerConfig
     /** @var int */
     private $osType;
 
-    /** @var \DateTime */
+    /** @var \DateTimeInterface */
     private $dateTime;
 
-    /**
-     * @param \LC\Portal\Config\PortalConfig $portalConfig
-     * @param \LC\Portal\CA\CaInterface      $ca
-     * @param \LC\Portal\OpenVpn\TlsCrypt    $tlsCrypt
-     * @param int                            $osType
-     */
-    public function __construct(PortalConfig $portalConfig, CaInterface $ca, TlsCrypt $tlsCrypt, $osType)
+    public function __construct(PortalConfig $portalConfig, CaInterface $ca, TlsCrypt $tlsCrypt, int $osType)
     {
         $this->portalConfig = $portalConfig;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
         $this->osType = $osType;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
     }
 
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return void
-     */
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTimeInterface $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
@@ -73,7 +63,7 @@ class ServerConfig
     /**
      * @return array<string,string>
      */
-    public function getConfigList()
+    public function getConfigList(): array
     {
         $configList = [];
         $commonName = sprintf('LC.%s', $this->dateTime->format('YmdHis'));
@@ -95,14 +85,9 @@ class ServerConfig
     }
 
     /**
-     * @param array                           $serverInfo
-     * @param \LC\Portal\CA\CertInfo          $serverCertInfo
-     * @param string                          $profileId
-     * @param \LC\Portal\Config\ProfileConfig $profileConfig
-     *
      * @return array<string,string>
      */
-    private function getProfileConfig(array $serverInfo, CertInfo $serverCertInfo, $profileId, ProfileConfig $profileConfig)
+    private function getProfileConfig(array $serverInfo, CertInfo $serverCertInfo, string $profileId, ProfileConfig $profileConfig): array
     {
         $profileConfigList = [];
 
@@ -133,12 +118,7 @@ class ServerConfig
         return $profileConfigList;
     }
 
-    /**
-     * @param string $profileId
-     *
-     * @return string
-     */
-    private function getProcessConfig(array $serverInfo, CertInfo $serverCertInfo, $profileId, ProfileConfig $profileConfig, array $processConfig)
+    private function getProcessConfig(array $serverInfo, CertInfo $serverCertInfo, string $profileId, ProfileConfig $profileConfig, array $processConfig): string
     {
         $rangeFourIp = $processConfig['rangeFour'];
         $rangeSixIp = $processConfig['rangeSix'];
@@ -238,7 +218,7 @@ class ServerConfig
     /**
      * @return array<string>
      */
-    private function getUserGroup()
+    private function getUserGroup(): array
     {
         switch ($this->osType) {
             case self::OS_REDHAT:
@@ -259,7 +239,7 @@ class ServerConfig
     /**
      * @return array<string>
      */
-    private function getClientConnectDisconnect()
+    private function getClientConnectDisconnect(): array
     {
         switch ($this->osType) {
             case self::OS_REDHAT:
@@ -280,13 +260,7 @@ class ServerConfig
         }
     }
 
-    /**
-     * @param string $listenAddress
-     * @param string $proto
-     *
-     * @return string
-     */
-    private static function getFamilyProto($listenAddress, $proto)
+    private static function getFamilyProto(string $listenAddress, string $proto): string
     {
         $v6 = false !== strpos($listenAddress, ':');
         if ('udp' === $proto) {
@@ -299,13 +273,7 @@ class ServerConfig
         throw new RuntimeException('only "tcp" and "udp" are supported as protocols');
     }
 
-    /**
-     * @param \LC\Portal\Config\ProfileConfig $profileConfig
-     * @param int                             $i
-     *
-     * @return string
-     */
-    private static function getProto(ProfileConfig $profileConfig, $i)
+    private static function getProto(ProfileConfig $profileConfig, int $i): string
     {
         $vpnProtoPortList = $profileConfig->getVpnProtoPortList();
         list($vpnProto, $vpnPort) = explode('/', $vpnProtoPortList[$i]);
@@ -313,13 +281,7 @@ class ServerConfig
         return self::getFamilyProto($profileConfig->getListen(), $vpnProto);
     }
 
-    /**
-     * @param \LC\Portal\Config\ProfileConfig $profileConfig
-     * @param int                             $i
-     *
-     * @return int
-     */
-    private static function getPort(ProfileConfig $profileConfig, $i)
+    private static function getPort(ProfileConfig $profileConfig, int $i): int
     {
         $vpnProtoPortList = $profileConfig->getVpnProtoPortList();
         list($vpnProto, $vpnPort) = explode('/', $vpnProtoPortList[$i]);
@@ -327,10 +289,7 @@ class ServerConfig
         return (int) $vpnPort;
     }
 
-    /**
-     * @return array
-     */
-    private static function getRoutes(ProfileConfig $profileConfig)
+    private static function getRoutes(ProfileConfig $profileConfig): array
     {
         if ($profileConfig->getDefaultGateway()) {
             $redirectFlags = ['def1', 'ipv6'];
@@ -368,10 +327,7 @@ class ServerConfig
         return $routeConfig;
     }
 
-    /**
-     * @return array
-     */
-    private static function getDns(IP $rangeFourIp, IP $rangeSixIp, ProfileConfig $profileConfig)
+    private static function getDns(IP $rangeFourIp, IP $rangeSixIp, ProfileConfig $profileConfig): array
     {
         $dnsEntries = [];
         if ($profileConfig->getDefaultGateway()) {
@@ -393,10 +349,7 @@ class ServerConfig
         return $dnsEntries;
     }
 
-    /**
-     * @return array
-     */
-    private static function getClientToClient(ProfileConfig $profileConfig)
+    private static function getClientToClient(ProfileConfig $profileConfig): array
     {
         if (!$profileConfig->getClientToClient()) {
             return [];
@@ -412,13 +365,8 @@ class ServerConfig
         ];
     }
 
-    /**
-     * @param int $profileNumber
-     * @param int $processNumber
-     *
-     * @return int
-     */
-    private static function toPort($profileNumber, $processNumber)
+    // XXX duplicate in ServerManager!
+    private static function toPort(int $profileNumber, int $processNumber): int
     {
         // we have 2^16 - 11940 ports available for management ports, so let's
         // say we have 2^14 ports available to distribute over profiles and

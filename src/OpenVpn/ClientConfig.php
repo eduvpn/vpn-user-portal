@@ -16,15 +16,7 @@ use LC\Portal\Config\ProfileConfig;
 
 class ClientConfig
 {
-    /**
-     * @param \LC\Portal\Config\ProfileConfig $profileConfig
-     * @param array                           $serverInfo
-     * @param \LC\Portal\CA\CertInfo|null     $clientCertInfo
-     * @param bool                            $shufflePorts
-     *
-     * @return string
-     */
-    public static function get(ProfileConfig $profileConfig, array $serverInfo, ?CertInfo $clientCertInfo, $shufflePorts)
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, ?CertInfo $clientCertInfo, bool $shufflePorts): string
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->getHostname();
@@ -119,13 +111,7 @@ class ClientConfig
         return implode(PHP_EOL, $clientConfig);
     }
 
-    /**
-     * @param array $vpnProtoPortList
-     * @param bool  $shufflePorts
-     *
-     * @return array
-     */
-    public static function remotePortProtoList(array $vpnProtoPortList, $shufflePorts)
+    public static function remotePortProtoList(array $vpnProtoPortList, bool $shufflePorts): array
     {
         // if these ports are listed in vpnProtoPortList they are ALWAYS added
         // to the client configuration file

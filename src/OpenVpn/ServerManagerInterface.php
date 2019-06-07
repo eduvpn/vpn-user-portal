@@ -16,12 +16,7 @@ interface ServerManagerInterface
     /**
      * @return array<string,array>
      */
-    public function connections();
+    public function connections(): array;
 
-    /**
-     * @param string $commonName
-     *
-     * @return int
-     */
-    public function kill($commonName);
+    public function kill(string $commonName): int;
 }

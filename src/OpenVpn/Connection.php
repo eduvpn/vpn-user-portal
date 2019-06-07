@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
-use DateTime;
+use DateTimeInterface;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\OpenVpn\Exception\ConnectionException;
 use LC\Portal\Storage;
@@ -34,16 +34,7 @@ class Connection
         $this->storage = $storage;
     }
 
-    /**
-     * @param string    $profileId
-     * @param string    $commonName
-     * @param string    $ipFour
-     * @param string    $ipSix
-     * @param \DateTime $connectedAt
-     *
-     * @return void
-     */
-    public function connect($profileId, $commonName, $ipFour, $ipSix, DateTime $connectedAt)
+    public function connect(string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeInterface $connectedAt): void
     {
         // XXX add logging again
         // verify if certificate with CN still exists
@@ -70,18 +61,7 @@ class Connection
         $this->storage->clientConnect($profileId, $commonName, $ipFour, $ipSix, $connectedAt);
     }
 
-    /**
-     * @param string    $profileId
-     * @param string    $commonName
-     * @param string    $ipFour
-     * @param string    $ipSix
-     * @param \DateTime $connectedAt
-     * @param \DateTime $disconnectedAt
-     * @param int       $bytesTransferred
-     *
-     * @return void
-     */
-    public function disconnect($profileId, $commonName, $ipFour, $ipSix, DateTime $connectedAt, DateTime $disconnectedAt, $bytesTransferred)
+    public function disconnect(string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeInterface $connectedAt, DateTimeInterface $disconnectedAt, int $bytesTransferred): void
     {
         $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, $connectedAt, $disconnectedAt, $bytesTransferred);
     }
@@ -89,10 +69,8 @@ class Connection
     /**
      * @param array<string> $userPermissionList
      * @param array<string> $aclPermissionList
-     *
-     * @return bool
      */
-    private static function hasPermission(array $userPermissionList, array $aclPermissionList)
+    private static function hasPermission(array $userPermissionList, array $aclPermissionList): bool
     {
         // one of the permissions must be listed in the profile ACL list
         foreach ($userPermissionList as $userPermission) {
