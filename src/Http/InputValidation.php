@@ -16,12 +16,7 @@ use LC\Portal\Http\Exception\InputValidationException;
 
 class InputValidation
 {
-    /**
-     * @param string $displayName
-     *
-     * @return string
-     */
-    public static function displayName($displayName)
+    public static function displayName(string $displayName): string
     {
         self::requireUtf8($displayName, 'displayName');
 
@@ -34,12 +29,7 @@ class InputValidation
         return $displayName;
     }
 
-    /**
-     * @param string $commonName
-     *
-     * @return string
-     */
-    public static function commonName($commonName)
+    public static function commonName(string $commonName): string
     {
         if (1 !== preg_match('/^[a-fA-F0-9]{32}$/', $commonName)) {
             throw new InputValidationException('invalid "common_name"');
@@ -48,12 +38,7 @@ class InputValidation
         return $commonName;
     }
 
-    /**
-     * @param string $profileId
-     *
-     * @return string
-     */
-    public static function profileId($profileId)
+    public static function profileId(string $profileId): string
     {
         if (1 !== preg_match('/^[a-zA-Z0-9-.]+$/', $profileId)) {
             throw new InputValidationException('invalid "profile_id"');
@@ -62,12 +47,7 @@ class InputValidation
         return $profileId;
     }
 
-    /**
-     * @param string $totpSecret
-     *
-     * @return string
-     */
-    public static function totpSecret($totpSecret)
+    public static function totpSecret(string $totpSecret): string
     {
         if (1 !== preg_match('/^[A-Z0-9]{32}$/', $totpSecret)) {
             throw new InputValidationException('invalid "totp_secret"');
@@ -76,12 +56,7 @@ class InputValidation
         return $totpSecret;
     }
 
-    /**
-     * @param string $totpKey
-     *
-     * @return string
-     */
-    public static function totpKey($totpKey)
+    public static function totpKey(string $totpKey): string
     {
         if (1 !== preg_match('/^[0-9]{6}$/', $totpKey)) {
             throw new InputValidationException('invalid "totp_key"');
@@ -90,12 +65,7 @@ class InputValidation
         return $totpKey;
     }
 
-    /**
-     * @param string $clientId
-     *
-     * @return string
-     */
-    public static function clientId($clientId)
+    public static function clientId(string $clientId): string
     {
         if (1 !== preg_match('/^(?:[\x20-\x7E])+$/', $clientId)) {
             throw new InputValidationException('invalid "client_id"');
@@ -104,12 +74,7 @@ class InputValidation
         return $clientId;
     }
 
-    /**
-     * @param string $dateTime
-     *
-     * @return \DateTime
-     */
-    public static function dateTime($dateTime)
+    public static function dateTime(string $dateTime): DateTime
     {
         if (false === $dateTimeObj = DateTime::createFromFormat('Y-m-d H:i:s', $dateTime)) {
             throw new InputValidationException('invalid "date_time"');
@@ -118,12 +83,7 @@ class InputValidation
         return $dateTimeObj;
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return string
-     */
-    public static function userId($userId)
+    public static function userId(string $userId): string
     {
         self::requireUtf8($userId, 'userId');
 
@@ -135,12 +95,7 @@ class InputValidation
         return $userId;
     }
 
-    /**
-     * @param string $ipAddress
-     *
-     * @return string
-     */
-    public static function ipAddress($ipAddress)
+    public static function ipAddress(string $ipAddress): string
     {
         if (false === filter_var($ipAddress, FILTER_VALIDATE_IP)) {
             throw new InputValidationException('invalid "ip_address"');
@@ -150,12 +105,7 @@ class InputValidation
         return inet_ntop(inet_pton($ipAddress));
     }
 
-    /**
-     * @param string $messageId
-     *
-     * @return int
-     */
-    public static function messageId($messageId)
+    public static function messageId(string $messageId): int
     {
         if (!is_numeric($messageId) || 0 >= $messageId) {
             throw new InputValidationException('invalid "message_id"');
@@ -164,12 +114,7 @@ class InputValidation
         return (int) $messageId;
     }
 
-    /**
-     * @param string $userPass
-     *
-     * @return string
-     */
-    public static function userPass($userPass)
+    public static function userPass(string $userPass): string
     {
         self::requireUtf8($userPass, 'userPass');
 
@@ -181,12 +126,7 @@ class InputValidation
         return $userPass;
     }
 
-    /**
-     * @param string $systemMessage
-     *
-     * @return string
-     */
-    public static function systemMessage($systemMessage)
+    public static function systemMessage(string $systemMessage): string
     {
         self::requireUtf8($systemMessage, 'systemMessage');
 
@@ -197,12 +137,7 @@ class InputValidation
         return $systemMessage;
     }
 
-    /**
-     * @param string $uiLang
-     *
-     * @return string
-     */
-    public static function uiLang($uiLang)
+    public static function uiLang(string $uiLang): string
     {
         if (1 !== preg_match('/^[a-z]{2}_[A-Z]{2}$/', $uiLang)) {
             throw new InputValidationException('invalid "ui_lang"');
@@ -211,13 +146,7 @@ class InputValidation
         return $uiLang;
     }
 
-    /**
-     * @param string $inputString
-     * @param string $inputName
-     *
-     * @return void
-     */
-    private static function requireUtf8($inputString, $inputName)
+    private static function requireUtf8(string $inputString, string $inputName): void
     {
         // we want valid UTF-8
         if (!mb_check_encoding($inputString, 'UTF-8')) {

@@ -24,10 +24,6 @@ class RadiusAuth implements CredentialValidatorInterface
     /** @var \LC\Portal\Config\RadiusAuthenticationConfig */
     private $radiusAuthenticationConfig;
 
-    /**
-     * @param \Psr\Log\LoggerInterface                     $logger
-     * @param \LC\Portal\Config\RadiusAuthenticationConfig $radiusAuthenticationConfig
-     */
     public function __construct(LoggerInterface $logger, RadiusAuthenticationConfig $radiusAuthenticationConfig)
     {
         if (false === \extension_loaded('radius')) {

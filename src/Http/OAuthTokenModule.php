@@ -28,10 +28,7 @@ class OAuthTokenModule implements ServiceModuleInterface
     {
         $service->post(
             '/token',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 try {
                     $tokenResponse = $this->oauthServer->postToken(
                         $request->getPostParameters(),

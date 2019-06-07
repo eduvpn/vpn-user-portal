@@ -40,6 +40,7 @@ class UserInfo
 
     public function getSessionExpiresAt(): ?DateTime
     {
+        // XXX when is this null?!
         return $this->sessionExpiresAt;
     }
 

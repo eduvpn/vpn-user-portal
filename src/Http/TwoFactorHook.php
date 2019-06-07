@@ -30,13 +30,7 @@ class TwoFactorHook implements BeforeHookInterface
     /** @var bool */
     private $requireTwoFactor;
 
-    /**
-     * @param Storage                            $storage
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param \LC\Portal\TplInterface            $tpl
-     * @param bool                               $requireTwoFactor
-     */
-    public function __construct(Storage $storage, SessionInterface $session, TplInterface $tpl, $requireTwoFactor)
+    public function __construct(Storage $storage, SessionInterface $session, TplInterface $tpl, bool $requireTwoFactor)
     {
         $this->storage = $storage;
         $this->session = $session;

@@ -30,9 +30,8 @@ class AdminHook implements BeforeHookInterface
     private $tpl;
 
     /**
-     * @param array<string>           $adminPermissionList
-     * @param array<string>           $adminUserIdList
-     * @param \LC\Portal\TplInterface $tpl
+     * @param array<string> $adminPermissionList
+     * @param array<string> $adminUserIdList
      */
     public function __construct(array $adminPermissionList, array $adminUserIdList, TplInterface &$tpl)
     {
@@ -41,19 +40,12 @@ class AdminHook implements BeforeHookInterface
         $this->tpl = $tpl;
     }
 
-    /**
-     * @param Request $request
-     * @param array   $hookData
-     *
-     * @return bool
-     */
-    public function executeBefore(Request $request, array $hookData)
+    public function executeBefore(Request $request, array $hookData): bool
     {
         $whiteList = [
             'POST' => [
                 '/_saml/acs',
                 '/_form/auth/verify',
-                '/_form/auth/logout',   // DEPRECATED
                 '/_logout',
             ],
             'GET' => [

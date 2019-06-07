@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use DateTime;
 use DateTimeZone;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\CA\CertInfo;
 use LC\Portal\Config\PortalConfig;
 use LC\Portal\Config\ProfileConfig;
 use LC\Portal\Http\Exception\InputValidationException;
@@ -47,12 +48,6 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \LC\Portal\RandomInterface */
     private $random;
 
-    /**
-     * @param Storage                        $storage
-     * @param \LC\Portal\Config\PortalConfig $portalConfig
-     * @param \LC\Portal\CA\CaInterface      $ca
-     * @param \LC\Portal\OpenVpn\TlsCrypt    $tlsCrypt
-     */
     public function __construct(Storage $storage, PortalConfig $portalConfig, CaInterface $ca, TlsCrypt $tlsCrypt)
     {
         $this->storage = $storage;
@@ -63,32 +58,17 @@ class VpnApiModule implements ServiceModuleInterface
         $this->random = new Random();
     }
 
-    /**
-     * @param \LC\Portal\RandomInterface $random
-     *
-     * @return void
-     */
-    public function setRandom(RandomInterface $random)
+    public function setRandom(RandomInterface $random): void
     {
         $this->random = $random;
     }
 
-    /**
-     * @param \DateTime $dateTime
-     *
-     * @return void
-     */
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @param bool $shuffleHosts
-     *
-     * @return void
-     */
-    public function setShuffleHosts($shuffleHosts)
+    public function setShuffleHosts(bool $shuffleHosts): void
     {
         $this->shuffleHosts = (bool) $shuffleHosts;
     }
@@ -134,10 +114,7 @@ class VpnApiModule implements ServiceModuleInterface
         // DEPRECATED, this whole call is useless now!
         $service->get(
             '/user_info',
-            /**
-             * @return ApiResponse
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): ApiResponse {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
 
@@ -161,10 +138,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->post(
             '/create_keypair',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 try {
@@ -186,10 +160,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/check_certificate',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 // XXX any valid user can get info about any CN, also belonging
                 // to other users... Not sure how to cleanly fix this as the
                 // certificate has to exists before we can find the owner of it
@@ -207,10 +178,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/profile_config',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 try {
@@ -246,10 +214,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1, 2
         $service->get(
             '/user_messages',
-            /**
-             * @return ApiResponse
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): ApiResponse {
                 return new ApiResponse(
                     'user_messages',
                     []
@@ -260,10 +225,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1, 2
         $service->get(
             '/system_messages',
-            /**
-             * @return ApiResponse
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): ApiResponse {
                 $msgList = [];
                 $motdMessages = $this->storage->systemMessages('motd');
                 foreach ($motdMessages as $motdMessage) {
@@ -286,12 +248,7 @@ class VpnApiModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @param ProfileConfig $profileConfig
-     *
-     * @return Response
-     */
-    private function getConfigOnly(ProfileConfig $profileConfig)
+    private function getConfigOnly(ProfileConfig $profileConfig): Response
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
@@ -309,12 +266,7 @@ class VpnApiModule implements ServiceModuleInterface
         return $response;
     }
 
-    /**
-     * @param \LC\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
-     *
-     * @return \LC\Portal\CA\CertInfo
-     */
-    private function getCertificate(VpnAccessTokenInfo $accessTokenInfo)
+    private function getCertificate(VpnAccessTokenInfo $accessTokenInfo): CertInfo
     {
         // generate a random string as the certificate's CN
         $commonName = $this->random->get(16);
@@ -339,6 +291,8 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
+     * XXX what a parameter type mess!
+     *
      * @param false|array $clientCertificateInfo
      *
      * @return array<string, bool|string>

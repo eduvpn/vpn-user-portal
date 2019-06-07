@@ -30,9 +30,6 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    /**
-     * @param \LC\Portal\Config\SamlAuthenticationConfig $samlAuthenticationConfig
-     */
     public function __construct(SamlAuthenticationConfig $samlAuthenticationConfig)
     {
         $this->samlAuthenticationConfig = $samlAuthenticationConfig;
@@ -40,9 +37,6 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
     }
 
     /**
-     * @param \LC\Portal\Http\Request $request
-     * @param array                   $hookData
-     *
      * @return false|\LC\Portal\Http\RedirectResponse|\LC\Portal\Http\UserInfo
      */
     public function executeBefore(Request $request, array $hookData)
@@ -204,10 +198,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
 
         $service->post(
             '/_saml/acs',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 try {
                     $this->getSamlSp($request)->handleResponse(
                         $request->requirePostParameter('SAMLResponse')
@@ -222,10 +213,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
 
         $service->get(
             '/_saml/logout',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 try {
                     $logoutUrl = $this->getSamlSp($request)->logout($request->requireQueryParameter('ReturnTo'));
 
@@ -238,10 +226,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
 
         $service->get(
             '/_saml/slo',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 try {
                     $this->getSamlSp($request)->handleLogoutResponse(
                         $request->getQueryString()
@@ -256,10 +241,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
 
         $service->get(
             '/_saml/logout',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 $logoutUrl = $this->getSamlSp($request)->logout($request->requireQueryParameter('ReturnTo'));
 
                 return new RedirectResponse($logoutUrl);
@@ -268,10 +250,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
 
         $service->get(
             '/_saml/metadata',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 $response = new Response(200, 'application/samlmetadata+xml');
                 $response->setBody($this->getSamlSp($request)->metadata());
 
@@ -285,7 +264,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
      *
      * @return array<string>
      */
-    private function getPermissionList(array $samlAttributes)
+    private function getPermissionList(array $samlAttributes): array
     {
         $permissionList = [];
         foreach ($this->samlAuthenticationConfig->getPermissionAttributeList() as $permissionAttribute) {
@@ -300,12 +279,9 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
     }
 
     /**
-     * @param \LC\Portal\Http\Request $request
-     * @param array<string>           $authnContext
-     *
-     * @return \LC\Portal\Http\RedirectResponse
+     * @param array<string> $authnContext
      */
-    private function getLoginRedirect(Request $request, array $authnContext)
+    private function getLoginRedirect(Request $request, array $authnContext): RedirectResponse
     {
         $httpQuery = [
             'ReturnTo' => $request->getUri(),
@@ -327,10 +303,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
         );
     }
 
-    /**
-     * @return \fkooman\SAML\SP\SP
-     */
-    private function getSamlSp(Request $request)
+    private function getSamlSp(Request $request): SP
     {
         if (null === $spEntityId = $this->samlAuthenticationConfig->getSpEntityId()) {
             $spEntityId = $request->getRootUri().'_saml/metadata';

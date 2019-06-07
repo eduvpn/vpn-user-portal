@@ -13,12 +13,9 @@ namespace LC\Portal\Http;
 
 class RedirectResponse extends Response
 {
-    /**
-     * @param string $redirectUri
-     * @param int    $statusCode
-     */
-    public function __construct($redirectUri, $statusCode = 302)
+    public function __construct(string $redirectUri, int $statusCode = 302)
     {
+        // XXX validate URL here
         parent::__construct($statusCode);
         $this->addHeader('Location', $redirectUri);
     }

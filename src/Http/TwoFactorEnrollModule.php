@@ -35,10 +35,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     private $tpl;
 
     /**
-     * @param Storage                            $storage
-     * @param array<string>                      $twoFactorMethods
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param \LC\Portal\TplInterface            $tpl
+     * @param array<string> $twoFactorMethods
      */
     public function __construct(Storage $storage, array $twoFactorMethods, SessionInterface $session, TplInterface $tpl)
     {
@@ -76,10 +73,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
         $service->post(
             '/two_factor_enroll',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $userId = $userInfo->getUserId();
@@ -126,10 +120,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
         $service->get(
             '/two_factor_enroll_qr',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 

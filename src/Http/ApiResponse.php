@@ -16,11 +16,11 @@ use LC\Portal\Json;
 class ApiResponse extends Response
 {
     /**
-     * @param string                     $wrapperKey
+     * XXX mixed data is not cool.
+     *
      * @param bool|string|array|int|null $responseData
-     * @param int                        $responseCode
      */
-    public function __construct($wrapperKey, $responseData = null, $responseCode = 200)
+    public function __construct(string $wrapperKey, $responseData = null, int $responseCode = 200)
     {
         $responseBody = [
             $wrapperKey => [

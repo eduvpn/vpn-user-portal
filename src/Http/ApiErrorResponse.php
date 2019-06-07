@@ -15,12 +15,7 @@ use LC\Portal\Json;
 
 class ApiErrorResponse extends Response
 {
-    /**
-     * @param string $wrapperKey
-     * @param string $errorMessage
-     * @param int    $responseCode
-     */
-    public function __construct($wrapperKey, $errorMessage, $responseCode = 200)
+    public function __construct(string $wrapperKey, string $errorMessage, int $responseCode = 200)
     {
         parent::__construct($responseCode, 'application/json');
 

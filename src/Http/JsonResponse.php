@@ -15,11 +15,7 @@ use LC\Portal\Json;
 
 class JsonResponse extends Response
 {
-    /**
-     * @param array $responseData
-     * @param int   $responseCode
-     */
-    public function __construct(array $responseData, $responseCode = 200)
+    public function __construct(array $responseData, int $responseCode = 200)
     {
         parent::__construct($responseCode, 'application/json');
         $this->setBody(Json::encode($responseData));

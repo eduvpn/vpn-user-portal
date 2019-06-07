@@ -34,11 +34,6 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     /** @var \DateInterval */
     private $sessionExpiry;
 
-    /**
-     * @param Storage                            $storage
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param \DateInterval                      $sessionExpiry
-     */
     public function __construct(Storage $storage, SessionInterface $session, DateInterval $sessionExpiry)
     {
         $this->storage = $storage;
@@ -48,9 +43,6 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LC\Portal\Http\Request $request
-     * @param array                   $hookData
-     *
      * @return false|void
      */
     public function executeBefore(Request $request, array $hookData)

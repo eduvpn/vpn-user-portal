@@ -45,10 +45,7 @@ class TwoFactorModule implements ServiceModuleInterface
     {
         $service->post(
             '/_two_factor/auth/verify/totp',
-            /**
-             * @return Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 if (!\array_key_exists('auth', $hookData)) {
                     throw new HttpException('authentication hook did not run before', 500);
                 }

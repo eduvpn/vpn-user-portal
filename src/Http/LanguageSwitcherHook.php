@@ -34,6 +34,9 @@ class LanguageSwitcherHook implements BeforeHookInterface
         $this->cookie = $cookie;
     }
 
+    /**
+     * @return false|RedirectResponse
+     */
     public function executeBefore(Request $request, array $hookData)
     {
         if ('POST' !== $request->getRequestMethod()) {

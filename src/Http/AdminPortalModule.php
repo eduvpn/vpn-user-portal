@@ -40,14 +40,7 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var \DateTime */
     private $dateTimeToday;
 
-    /**
-     * @param string                                    $dataDir
-     * @param \LC\Portal\Config\PortalConfig            $portalConfig
-     * @param \LC\Portal\TplInterface                   $tpl
-     * @param Storage                                   $storage
-     * @param \LC\Portal\OpenVpn\ServerManagerInterface $serverManager
-     */
-    public function __construct($dataDir, PortalConfig $portalConfig, TplInterface $tpl, Storage $storage, ServerManagerInterface $serverManager)
+    public function __construct(string $dataDir, PortalConfig $portalConfig, TplInterface $tpl, Storage $storage, ServerManagerInterface $serverManager)
     {
         $this->dataDir = $dataDir;
         $this->portalConfig = $portalConfig;
@@ -350,10 +343,7 @@ class AdminPortalModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @return array
-     */
-    private function getStatsData()
+    private function getStatsData(): array
     {
         $statsFile = sprintf('%s/stats.json', $this->dataDir);
         try {
@@ -364,10 +354,7 @@ class AdminPortalModule implements ServiceModuleInterface
         }
     }
 
-    /**
-     * @return array
-     */
-    private function getGraphStats()
+    private function getGraphStats(): array
     {
         $outputData = [];
         $statsData = $this->getStatsData();
@@ -398,12 +385,7 @@ class AdminPortalModule implements ServiceModuleInterface
         return $outputData;
     }
 
-    /**
-     * @param string|null $userId
-     *
-     * @return array
-     */
-    private function getProfileConnectionList($userId = null)
+    private function getProfileConnectionList(?string $userId = null): array
     {
         $profileConnectionList = [];
         foreach (array_keys($this->portalConfig->getProfileConfigList()) as $profileId) {
@@ -439,10 +421,7 @@ class AdminPortalModule implements ServiceModuleInterface
         return $profileConnectionList;
     }
 
-    /**
-     * @return void
-     */
-    private static function requireAdmin(array $hookData)
+    private static function requireAdmin(array $hookData): void
     {
         if (false === $hookData['is_admin']) {
             throw new HttpException('user is not an administrator', 403);

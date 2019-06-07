@@ -32,10 +32,7 @@ class PasswdModule implements ServiceModuleInterface
     {
         $service->get(
             '/passwd',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
@@ -52,10 +49,7 @@ class PasswdModule implements ServiceModuleInterface
 
         $service->post(
             '/passwd',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 

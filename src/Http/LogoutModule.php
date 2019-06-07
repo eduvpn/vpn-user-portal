@@ -24,12 +24,7 @@ class LogoutModule implements ServiceModuleInterface
     /** @var string */
     private $returnParameter;
 
-    /**
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param string|null                        $logoutUrl
-     * @param string                             $returnParameter
-     */
-    public function __construct(SessionInterface $session, $logoutUrl, $returnParameter)
+    public function __construct(SessionInterface $session, ?string $logoutUrl, string $returnParameter)
     {
         $this->session = $session;
         $this->logoutUrl = $logoutUrl;

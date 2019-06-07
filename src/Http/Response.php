@@ -22,11 +22,7 @@ class Response
     /** @var string */
     private $body = '';
 
-    /**
-     * @param int    $statusCode
-     * @param string $contentType
-     */
-    public function __construct($statusCode = 200, $contentType = 'text/plain')
+    public function __construct(int $statusCode = 200, string $contentType = 'text/plain')
     {
         $this->statusCode = $statusCode;
         $this->headers = [
@@ -34,23 +30,12 @@ class Response
         ];
     }
 
-    /**
-     * @param string $key
-     * @param string $value
-     *
-     * @return void
-     */
-    public function addHeader($key, $value)
+    public function addHeader(string $key, string $value): void
     {
         $this->headers[$key] = $value;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     */
-    public function getHeader($key)
+    public function getHeader(string $key): ?string
     {
         if (\array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
@@ -59,46 +44,27 @@ class Response
         return null;
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
 
-    /**
-     * @param string $body
-     *
-     * @return void
-     */
-    public function setBody($body)
+    public function setBody(string $body): void
     {
         $this->body = $body;
     }
 
-    /**
-     * @return int
-     */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }
 
-    /**
-     * @param array $responseData
-     *
-     * @return self
-     */
-    public static function import(array $responseData)
+    public static function import(array $responseData): self
     {
         $response = new self(
             $responseData['statusCode'],
@@ -113,10 +79,7 @@ class Response
         return $response;
     }
 
-    /**
-     * @return void
-     */
-    public function send()
+    public function send(): void
     {
         http_response_code($this->statusCode);
         if ('' === $this->body) {

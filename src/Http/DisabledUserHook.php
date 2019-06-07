@@ -28,10 +28,7 @@ class DisabledUserHook implements BeforeHookInterface
         $this->storage = $storage;
     }
 
-    /**
-     * @return bool
-     */
-    public function executeBefore(Request $request, array $hookData)
+    public function executeBefore(Request $request, array $hookData): bool
     {
         $whiteList = [
             'POST' => [

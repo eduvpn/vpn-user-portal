@@ -36,14 +36,9 @@ class LdapAuth implements CredentialValidatorInterface
     private $permissionAttributeList;
 
     /**
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param LdapClient               $ldapClient
-     * @param string                   $bindDnTemplate
-     * @param string|null              $baseDn
-     * @param string|null              $userFilterTemplate
-     * @param array<string>            $permissionAttributeList
+     * @param array<string> $permissionAttributeList
      */
-    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, array $permissionAttributeList)
+    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, string $bindDnTemplate, ?string $baseDn, ?string $userFilterTemplate, array $permissionAttributeList)
     {
         $this->logger = $logger;
         $this->ldapClient = $ldapClient;
@@ -85,12 +80,9 @@ class LdapAuth implements CredentialValidatorInterface
     }
 
     /**
-     * @param string $baseDn
-     * @param string $userFilter
-     *
      * @return array<string>
      */
-    private function getPermissionList($baseDn, $userFilter)
+    private function getPermissionList(string $baseDn, string $userFilter): array
     {
         if (0 === \count($this->permissionAttributeList)) {
             return [];
@@ -118,12 +110,9 @@ class LdapAuth implements CredentialValidatorInterface
     }
 
     /**
-     * @param array  $ldapEntries
-     * @param string $permissionAttribute
-     *
      * @return array<string>
      */
-    private static function extractPermission(array $ldapEntries, $permissionAttribute)
+    private static function extractPermission(array $ldapEntries, string $permissionAttribute): array
     {
         if (0 === $ldapEntries[0]['count']) {
             // attribute not found for this user

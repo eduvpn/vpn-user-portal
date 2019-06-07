@@ -84,12 +84,7 @@ class OAuthModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @param \fkooman\OAuth\Server\Http\Response $authorizeResponse
-     *
-     * @return \LC\Portal\Http\Response
-     */
-    private function prepareReturnResponse(OAuthResponse $authorizeResponse)
+    private function prepareReturnResponse(OAuthResponse $authorizeResponse): Response
     {
         return Response::import(
             [
