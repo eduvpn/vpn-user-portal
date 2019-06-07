@@ -93,10 +93,7 @@ class VpnApiModule implements ServiceModuleInterface
         $this->shuffleHosts = (bool) $shuffleHosts;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         // API 1, 2
         $service->get(

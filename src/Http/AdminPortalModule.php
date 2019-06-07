@@ -57,10 +57,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->dateTimeToday = new DateTime('today');
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->get(
             '/connections',

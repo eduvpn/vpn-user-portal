@@ -128,10 +128,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
         return $userInfo;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->get(
             '/_saml/login',

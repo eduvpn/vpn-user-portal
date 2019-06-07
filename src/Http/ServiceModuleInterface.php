@@ -13,5 +13,5 @@ namespace LC\Portal\Http;
 
 interface ServiceModuleInterface
 {
-    public function init(Service $service);
+    public function init(Service $service): void;
 }

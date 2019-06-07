@@ -21,88 +21,45 @@ class Service
     private $tpl;
 
     /** @var array */
-    private $routes;
+    private $routes = [
+        'GET' => [],
+        'POST' => [],
+    ];
 
     /** @var array */
-    private $beforeHooks;
+    private $beforeHooks = [];
 
-    /** @var array */
-    private $afterHooks;
-
-    public function __construct(TplInterface $tpl = null)
+    public function __construct(?TplInterface $tpl = null)
     {
         $this->tpl = $tpl;
-        $this->routes = [
-            'GET' => [],
-            'POST' => [],
-        ];
-        $this->beforeHooks = [];
-        $this->afterHooks = [];
     }
 
-    /**
-     * @param string $name
-     *
-     * @return void
-     */
-    public function addBeforeHook($name, BeforeHookInterface $beforeHook)
+    public function addBeforeHook(string $name, BeforeHookInterface $beforeHook): void
     {
         $this->beforeHooks[$name] = $beforeHook;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return void
-     */
-    public function addAfterHook($name, AfterHookInterface $afterHook)
-    {
-        $this->afterHooks[$name] = $afterHook;
-    }
-
-    /**
-     * @param string $requestMethod
-     * @param string $pathInfo
-     *
-     * @return void
-     */
-    public function addRoute($requestMethod, $pathInfo, callable $callback)
+    public function addRoute(string $requestMethod, string $pathInfo, callable $callback): void
     {
         $this->routes[$requestMethod][$pathInfo] = $callback;
     }
 
-    /**
-     * @param string $pathInfo
-     *
-     * @return void
-     */
-    public function get($pathInfo, callable $callback)
+    public function get(string $pathInfo, callable $callback): void
     {
         $this->addRoute('GET', $pathInfo, $callback);
     }
 
-    /**
-     * @param string $pathInfo
-     *
-     * @return void
-     */
-    public function post($pathInfo, callable $callback)
+    public function post(string $pathInfo, callable $callback): void
     {
         $this->addRoute('POST', $pathInfo, $callback);
     }
 
-    /**
-     * @return void
-     */
-    public function addModule(ServiceModuleInterface $module)
+    public function addModule(ServiceModuleInterface $module): void
     {
         $module->init($this);
     }
 
-    /**
-     * @return Response
-     */
-    public function run(Request $request)
+    public function run(Request $request): Response
     {
         try {
             // before hooks
@@ -111,8 +68,7 @@ class Service
                 $hookResponse = $v->executeBefore($request, $hookData);
                 // if we get back a Response object, return it immediately
                 if ($hookResponse instanceof Response) {
-                    // run afterHooks
-                    return $this->runAfterHooks($request, $hookResponse);
+                    return $hookResponse;
                 }
 
                 $hookData[$k] = $hookResponse;
@@ -141,10 +97,7 @@ class Service
                 );
             }
 
-            $response = $this->routes[$requestMethod][$pathInfo]($request, $hookData);
-
-            // after hooks
-            return $this->runAfterHooks($request, $response);
+            return $this->routes[$requestMethod][$pathInfo]($request, $hookData);
         } catch (HttpException $e) {
             if ($request->isBrowser()) {
                 if (null === $this->tpl) {
@@ -173,35 +126,19 @@ class Service
                 $response->addHeader($key, $value);
             }
 
-            // after hooks
-            return $this->runAfterHooks($request, $response);
+            return $response;
         }
     }
 
     /**
-     * @param Request                     $request
      * @param array<string,array<string>> $whiteList
-     *
-     * @return bool
      */
-    public static function isWhitelisted(Request $request, array $whiteList)
+    public static function isWhitelisted(Request $request, array $whiteList): bool
     {
         if (!\array_key_exists($request->getRequestMethod(), $whiteList)) {
             return false;
         }
 
         return \in_array($request->getPathInfo(), $whiteList[$request->getRequestMethod()], true);
-    }
-
-    /**
-     * @return Response
-     */
-    private function runAfterHooks(Request $request, Response $response)
-    {
-        foreach ($this->afterHooks as $v) {
-            $response = $v->executeAfter($request, $response);
-        }
-
-        return $response;
     }
 }

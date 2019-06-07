@@ -36,12 +36,7 @@ class LogoutModule implements ServiceModuleInterface
         $this->returnParameter = $returnParameter;
     }
 
-    /**
-     * @param \LC\Portal\Http\Service $service
-     *
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         // new URL since we introduce SAML logout
         $service->post(

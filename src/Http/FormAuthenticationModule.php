@@ -36,10 +36,7 @@ class FormAuthenticationModule implements ServiceModuleInterface
         $this->tpl = $tpl;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->post(
             '/_form/auth/verify',
