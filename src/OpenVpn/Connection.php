@@ -24,10 +24,6 @@ class Connection
     /** @var \LC\Portal\Storage */
     private $storage;
 
-    /**
-     * @param \LC\Portal\Config\PortalConfig $portalConfig
-     * @param \LC\Portal\Storage             $storage
-     */
     public function __construct(PortalConfig $portalConfig, Storage $storage)
     {
         $this->portalConfig = $portalConfig;

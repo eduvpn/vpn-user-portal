@@ -29,11 +29,6 @@ class TwoFactorModule implements ServiceModuleInterface
     /** @var \LC\Portal\TplInterface */
     private $tpl;
 
-    /**
-     * @param Storage                            $storage
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param \LC\Portal\TplInterface            $tpl
-     */
     public function __construct(Storage $storage, SessionInterface $session, TplInterface $tpl)
     {
         $this->storage = $storage;
