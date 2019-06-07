@@ -31,12 +31,9 @@ class CurlHttpClient implements HttpClientInterface
     }
 
     /**
-     * @param string               $requestUri
      * @param array<string,string> $requestHeaders
-     *
-     * @return Response
      */
-    public function get($requestUri, array $requestHeaders = [])
+    public function get(string $requestUri, array $requestHeaders = []): Response
     {
         return $this->exec(
             [
@@ -47,15 +44,12 @@ class CurlHttpClient implements HttpClientInterface
     }
 
     /**
-     * @param array                $curlOptions
      * @param array<string,string> $requestHeaders
-     *
-     * @return Response
      */
-    private function exec(array $curlOptions, array $requestHeaders)
+    private function exec(array $curlOptions, array $requestHeaders): Response
     {
         // reset all cURL options
-        $this->curlReset();
+        curl_reset($this->curlChannel);
 
         /** @var array<string,string> */
         $headerList = [];
@@ -104,30 +98,5 @@ class CurlHttpClient implements HttpClientInterface
             $responseData,
             $headerList
         );
-    }
-
-    /**
-     * @return void
-     */
-    private function curlReset()
-    {
-        // requires PHP >= 5.5 for curl_reset
-        if (\function_exists('curl_reset')) {
-            curl_reset($this->curlChannel);
-
-            return;
-        }
-
-        // reset the request method to GET, that is enough to allow for
-        // multiple requests using the same cURL channel
-        if (false === curl_setopt_array(
-            $this->curlChannel,
-            [
-                CURLOPT_HTTPGET => true,
-                CURLOPT_HTTPHEADER => [],
-            ]
-        )) {
-            throw new RuntimeException('unable to set cURL options');
-        }
     }
 }

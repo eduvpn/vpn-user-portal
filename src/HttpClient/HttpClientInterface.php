@@ -14,10 +14,7 @@ namespace LC\Portal\HttpClient;
 interface HttpClientInterface
 {
     /**
-     * @param string               $requestUri
      * @param array<string,string> $requestHeaders
-     *
-     * @return Response
      */
-    public function get($requestUri, array $requestHeaders = []);
+    public function get(string $requestUri, array $requestHeaders = []): Response;
 }

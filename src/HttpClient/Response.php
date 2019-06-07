@@ -25,29 +25,21 @@ class Response
     private $responseHeaders;
 
     /**
-     * @param int                  $statusCode
-     * @param string               $responseBody
      * @param array<string,string> $responseHeaders
      */
-    public function __construct($statusCode, $responseBody, array $responseHeaders = [])
+    public function __construct(int $statusCode, string $responseBody, array $responseHeaders = [])
     {
         $this->statusCode = $statusCode;
         $this->responseBody = $responseBody;
         $this->responseHeaders = $responseHeaders;
     }
 
-    /**
-     * @return int
-     */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->responseBody;
     }
@@ -55,17 +47,12 @@ class Response
     /**
      * @return array<string,string>
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->responseHeaders;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     */
-    public function getHeader($key)
+    public function getHeader(string $key): ?string
     {
         foreach ($this->responseHeaders as $k => $v) {
             if (strtoupper($key) === strtoupper($k)) {
@@ -76,18 +63,12 @@ class Response
         return null;
     }
 
-    /**
-     * @return array
-     */
-    public function json()
+    public function json(): array
     {
         return Json::decode($this->responseBody);
     }
 
-    /**
-     * @return bool
-     */
-    public function isOkay()
+    public function isOkay(): bool
     {
         return 200 <= $this->statusCode && 300 > $this->statusCode;
     }
