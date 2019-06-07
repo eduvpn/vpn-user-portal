@@ -19,7 +19,7 @@ class ClientDb implements ClientDbInterface
     /**
      * @param string $clientId
      *
-     * @return false|\fkooman\OAuth\Server\ClientInfo
+     * @return false|ClientInfo
      */
     public function get($clientId)
     {

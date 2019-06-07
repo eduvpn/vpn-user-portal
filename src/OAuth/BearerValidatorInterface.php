@@ -13,10 +13,5 @@ namespace LC\Portal\OAuth;
 
 interface BearerValidatorInterface
 {
-    /**
-     * @param string $authorizationHeader
-     *
-     * @return VpnAccessTokenInfo
-     */
-    public function validate($authorizationHeader);
+    public function validate(string $authorizationHeader): VpnAccessTokenInfo;
 }

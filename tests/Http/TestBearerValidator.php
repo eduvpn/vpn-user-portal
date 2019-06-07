@@ -17,12 +17,7 @@ use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class TestBearerValidator implements BearerValidatorInterface
 {
-    /**
-     * @param string $authorizationHeader
-     *
-     * @return VpnAccessTokenInfo
-     */
-    public function validate($authorizationHeader)
+    public function validate(string $authorizationHeader): VpnAccessTokenInfo
     {
         return new VpnAccessTokenInfo('foo', 'org.eduvpn.app', new Scope('config'), true);
     }

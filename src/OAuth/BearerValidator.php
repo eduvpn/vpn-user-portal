@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\OAuth;
 
-use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\Exception\InvalidTokenException;
@@ -27,10 +28,10 @@ use ParagonIE\ConstantTime\Binary;
  */
 class BearerValidator implements BearerValidatorInterface
 {
-    /** @var StorageInterface */
+    /** @var \fkooman\OAuth\Server\StorageInterface */
     private $storage;
 
-    /** @var ClientDbInterface */
+    /** @var \fkooman\OAuth\Server\ClientDbInterface */
     private $clientDb;
 
     /** @var \fkooman\Jwt\Keys\EdDSA\PublicKey */
@@ -39,14 +40,11 @@ class BearerValidator implements BearerValidatorInterface
     /** @var array<string,array<string,string>> */
     private $keyInstanceMapping;
 
-    /** @var \DateTime */
+    /** @var \DateTimeInterface */
     private $dateTime;
 
     /**
-     * @param \fkooman\OAuth\Server\StorageInterface  $storage
-     * @param \fkooman\OAuth\Server\ClientDbInterface $clientDb
-     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey       $localPublicKey
-     * @param array<string,array<string,string>>      $keyInstanceMapping
+     * @param array<string,array<string,string>> $keyInstanceMapping
      */
     public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
     {
@@ -54,25 +52,15 @@ class BearerValidator implements BearerValidatorInterface
         $this->clientDb = $clientDb;
         $this->localPublicKey = $localPublicKey;
         $this->keyInstanceMapping = $keyInstanceMapping;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
     }
 
-    /**
-     * @param DateTime $dateTime
-     *
-     * @return void
-     */
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTimeInterface $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @param string $authorizationHeader
-     *
-     * @return VpnAccessTokenInfo
-     */
-    public function validate($authorizationHeader)
+    public function validate(string $authorizationHeader): VpnAccessTokenInfo
     {
         SyntaxValidator::validateBearerToken($authorizationHeader);
         $providedToken = Binary::safeSubstr($authorizationHeader, 7);
@@ -111,7 +99,7 @@ class BearerValidator implements BearerValidatorInterface
         }
 
         // check access_token expiry
-        if ($this->dateTime >= new DateTime($accessTokenInfo['expires_at'])) {
+        if ($this->dateTime >= new DateTimeImmutable($accessTokenInfo['expires_at'])) {
             throw new InvalidTokenException('"access_token" expired');
         }
 
