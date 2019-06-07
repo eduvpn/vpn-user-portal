@@ -78,10 +78,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1, 2
         $service->get(
             '/profile_list',
-            /**
-             * @return ApiResponse
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): ApiResponse {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 $userPermissions = $this->getPermissionList($accessTokenInfo);
@@ -297,7 +294,7 @@ class VpnApiModule implements ServiceModuleInterface
      *
      * @return array<string, bool|string>
      */
-    private function validateCertificate($clientCertificateInfo)
+    private function validateCertificate($clientCertificateInfo): array
     {
         $reason = '';
         if (false === $clientCertificateInfo) {
@@ -330,11 +327,9 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \LC\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
-     *
      * @return array<string>
      */
-    private function getPermissionList(VpnAccessTokenInfo $accessTokenInfo)
+    private function getPermissionList(VpnAccessTokenInfo $accessTokenInfo): array
     {
         if (!$accessTokenInfo->getIsLocal()) {
             return [];
@@ -343,12 +338,7 @@ class VpnApiModule implements ServiceModuleInterface
         return $this->storage->getPermissionList($accessTokenInfo->getUserId());
     }
 
-    /**
-     * @param \LC\Portal\OAuth\VpnAccessTokenInfo $accessTokenInfo
-     *
-     * @return \DateTime
-     */
-    private function getExpiresAt(VpnAccessTokenInfo $accessTokenInfo)
+    private function getExpiresAt(VpnAccessTokenInfo $accessTokenInfo): DateTime
     {
         if (!$accessTokenInfo->getIsLocal()) {
             return date_add(clone $this->dateTime, $this->portalConfig->getSessionExpiry());

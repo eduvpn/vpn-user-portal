@@ -61,11 +61,8 @@ class CurlHttpClient implements HttpClientInterface
             CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
             CURLOPT_HEADERFUNCTION => /**
              * @param resource $curlChannel
-             * @param string   $headerData
-             *
-             * @return int
              */
-            function ($curlChannel, $headerData) use (&$headerList) {
+            function ($curlChannel, string $headerData) use (&$headerList): int {
                 if (false !== strpos($headerData, ':')) {
                     list($key, $value) = explode(':', $headerData, 2);
                     $headerList[trim($key)] = trim($value);

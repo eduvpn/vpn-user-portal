@@ -18,20 +18,13 @@ class HttpException extends Exception
     /** @var array */
     private $responseHeaders;
 
-    /**
-     * @param string $message
-     * @param int    $code
-     */
-    public function __construct($message, $code, array $responseHeaders = [], Exception $previous = null)
+    public function __construct(string $message, int $code, array $responseHeaders = [], Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->responseHeaders = $responseHeaders;
     }
 
-    /**
-     * @return array
-     */
-    public function getResponseHeaders()
+    public function getResponseHeaders(): array
     {
         return $this->responseHeaders;
     }

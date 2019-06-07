@@ -54,10 +54,7 @@ class AdminPortalModule implements ServiceModuleInterface
     {
         $service->get(
             '/connections',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 return new HtmlResponse(
@@ -74,10 +71,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/info',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 return new HtmlResponse(
@@ -93,10 +87,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/users',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 $userList = $this->storage->getUsers();
@@ -114,10 +105,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/user',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 /** @var \LC\Portal\Http\UserInfo */
@@ -145,10 +133,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/user',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
@@ -212,10 +197,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/log',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 return new HtmlResponse(
@@ -233,10 +215,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/stats',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 return new HtmlResponse(
@@ -254,10 +233,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/messages',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 $motdMessages = $this->storage->systemMessages('motd');
@@ -282,10 +258,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/messages',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 $messageAction = $request->requirePostParameter('message_action');
@@ -318,10 +291,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/log',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 self::requireAdmin($hookData);
 
                 $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));

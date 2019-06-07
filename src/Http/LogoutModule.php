@@ -36,10 +36,7 @@ class LogoutModule implements ServiceModuleInterface
         // new URL since we introduce SAML logout
         $service->post(
             '/_logout',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 $httpReferrer = $request->requireHeader('HTTP_REFERER');
                 if (null !== $this->logoutUrl) {
                     // we can't destroy the complete session here, we need to

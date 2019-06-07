@@ -35,10 +35,7 @@ class OAuthModule implements ServiceModuleInterface
     {
         $service->get(
             '/_oauth/authorize',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 try {
@@ -62,10 +59,7 @@ class OAuthModule implements ServiceModuleInterface
 
         $service->post(
             '/_oauth/authorize',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
