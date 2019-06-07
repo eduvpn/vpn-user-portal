@@ -42,7 +42,7 @@ class VpnApiModuleTest extends TestCase
             $storage,
             PortalConfig::fromFile(\dirname(\dirname(__DIR__)).'/config/config.php.example'),
             new TestCa(new DateTime('2019-01-01')),
-            TlsCrypt::fromFile(\dirname(__DIR__).'/tls-crypt.key'),
+            TlsCrypt::fromFile(\dirname(__DIR__).'/tls-crypt.key')
         );
         $vpnApiModule->setDateTime(new DateTime('2019-01-01'));
         $vpnApiModule->setRandom(new TestRandom());
