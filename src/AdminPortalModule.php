@@ -270,6 +270,13 @@ class AdminPortalModule implements ServiceModuleInterface
                     $idNameMapping[$profileId] = $profileData['displayName'];
                 }
 
+                $maxConcurrentConnectionLimitList = [];
+                foreach ($profileList as $profileId => $profileData) {
+                    list($ipFour, $ipFourPrefix) = explode('/', $profileData['range']);
+                    $vpnProtoPortsCount = \count($profileData['vpnProtoPorts']);
+                    $maxConcurrentConnectionLimitList[$profileId] = ((int) pow(2, 32 - (int) $ipFourPrefix)) - 3 * $vpnProtoPortsCount;
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',
@@ -277,6 +284,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'stats' => $stats,
                             'generated_at' => false !== $stats ? $stats['generated_at'] : false,
                             'generated_at_tz' => date('T'),
+                            'maxConcurrentConnectionLimitList' => $maxConcurrentConnectionLimitList,
                             'idNameMapping' => $idNameMapping,
                         ]
                     )

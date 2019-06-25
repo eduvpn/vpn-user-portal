@@ -25,7 +25,7 @@
                         <td><span title="<?=$this->e($k); ?>"><?=$this->e($idNameMapping[$k]); ?></td>
                         <td><?=$this->e($v['total_traffic'], 'bytes_to_human'); ?></td>
                         <td><?=$this->e($v['unique_user_count']); ?></td>
-                        <td><span title="<?=$this->e($v['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e($v['max_concurrent_connections']); ?></span></td>
+                        <td><span title="<?=$this->e($v['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e($v['max_concurrent_connections']); ?> (<?=$this->e($maxConcurrentConnectionLimitList[$k]); ?>)</span></td>
                     </tr>
                 <?php endif; ?>
             <?php endforeach; ?>
