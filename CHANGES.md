@@ -2,7 +2,8 @@
 
 ## 2.0.6 (...)
 - also show maximum number of concurrent connections possible per profile 
-  (#133)
+  (issue #133)
+- fix rounding problem when showing traffic in stats page (issue #134)
 
 ## 2.0.5 (2019-06-07)
 - proper input validation on value from language cookie
