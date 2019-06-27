@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.7 (...)
+- add Ubuntu 18.04 Roboto font path (issue #135)
+
 ## 2.0.6 (2019-06-27)
 - also show maximum number of concurrent connections possible per profile 
   (issue #133)

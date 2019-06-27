@@ -65,6 +65,7 @@ $fontList = [
     '/usr/share/fonts/roboto_fontface/roboto/Roboto-Regular.ttf', // Fedora (roboto-fontface-fonts)
     '/usr/share/fonts/roboto_fontface/Roboto-Regular.ttf', // CentOS (roboto-fontface-fonts)
     '/usr/share/fonts-roboto-fontface/fonts/Roboto-Regular.ttf', // Debian (fonts-roboto-fontface)
+    '/usr/share/fonts-roboto-fontface/fonts/roboto/Roboto-Regular.ttf', // Ubuntu 18.04 (fonts-roboto-fontface)
 ];
 
 try {
