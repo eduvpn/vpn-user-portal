@@ -338,7 +338,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             $suffix = 'TiB';
                         }
 
-                        return sprintf('%d %s ', $v, $suffix);
+                        return sprintf('%.1f %s ', $v, $suffix);
                     }
                 );
                 $response->setBody($imageData);
