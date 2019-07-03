@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateTime;
+use DateTimeZone;
 use LC\Portal\Exception\TplException;
 
 class Tpl implements TplInterface
@@ -171,7 +172,10 @@ class Tpl implements TplInterface
      */
     private function d(string $d, string $f = 'Y-m-d H:i:s'): string
     {
-        return $this->e(date_format(new DateTime($d), $f));
+        $dateTime = new DateTime($d);
+        $dateTime->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+
+        return $this->e(date_format($dateTime, $f));
     }
 
     private function t(string $v): string
