@@ -10,7 +10,7 @@
 
     <form method="post">
         <fieldset>
-            <label for="dateTime"><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</label>
+            <label for="dateTime"><?=$this->t('Date/Time'); ?> (UTC)</label>
             <input id="dateTime" name="date_time" type="text" size="40" value="<?php if ($date_time): ?><?=$this->e($date_time); ?><?php else: ?><?=$this->e(date('Y-m-d H:i:s')); ?><?php endif; ?>" required>
             <label for="ipAddress"><?=$this->t('IP Address'); ?></label>
             <input id="ipAddress" name="ip_address" type="text" size="40" value="<?php if ($ip_address): ?><?=$this->e($ip_address); ?><?php endif; ?>" placeholder="fdc6:6794:d2bf:1::1000" required>
