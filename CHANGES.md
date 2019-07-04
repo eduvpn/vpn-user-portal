@@ -3,7 +3,8 @@
 ## 2.0.7 (...)
 - add Ubuntu 18.04 Roboto font path (issue #135)
 - make the log work with local timezone instead of UTC (issue #137)
-- update translations
+- do not allow to specify a time in the future on log page (issue #136)
+- update `nl_NL` and `nb_NO` translations
 
 ## 2.0.6 (2019-06-27)
 - also show maximum number of concurrent connections possible per profile 
