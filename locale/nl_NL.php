@@ -90,7 +90,7 @@ return [
     'Summary' => 'Samenvatting',
     'System' => 'Systeem',
     'TOTP' => 'TOTP',
-    'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>%currentDate%</code>.' => 'Het <em>Datum/tijd</em> veld accepteert datums in het formaat <code>Y-m-d H:i:s</code>, bijvoorbeeld <code>%currentDate%</code>.',
+    'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => 'Het <em>Datum/tijd</em> veld accepteert datums in het formaat <code>Y-m-d H:i:s</code>, bijvoorbeeld <code>2019-01-01 08:00:00</code>.',
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'De OTP-code die je invoerde komt niet overeen met de verwachtte waarde voor deze OTP-sleutel.',
     'The TOTP you provided is incorrect.' => 'De TOTP-code is ongeldig.',
     'The credentials you provided were not correct.' => 'De inloggegevens zijn niet correct.',

@@ -235,11 +235,13 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
+                $now = new DateTime();
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
-                            'currentDate' => date('Y-m-d H:i:s'),
+                            'now' => $now->format(DateTime::ATOM),
                             'date_time' => null,
                             'ip_address' => null,
                         ]
@@ -451,8 +453,11 @@ class AdminPortalModule implements ServiceModuleInterface
                 AuthUtils::requireAdmin($hookData);
 
                 $dateTime = InputValidation::dateTime($request->getPostParameter('date_time'));
+                $dateTimeLocalStr = $dateTime->format('Y-m-d H:i:s');
+
                 // make sure it is NOT in the future
-                if ($dateTime > new DateTime()) {
+                $now = new DateTime();
+                if ($dateTime > $now) {
                     throw new HttpException('can not specify a time in the future', 400);
                 }
                 // convert it to UTC as our server logs are all in UTC
@@ -465,10 +470,10 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
-                            'currentDate' => date('Y-m-d H:i:s'),
-                            'date_time' => $dateTime,
+                            'now' => $now->format(DateTime::ATOM),
+                            'date_time' => $dateTimeLocalStr,
                             'ip_address' => $ipAddress,
-                            'result' => $this->serverClient->getRequireArrayOrFalse('log', ['date_time' => $dateTime, 'ip_address' => $ipAddress]),
+                            'result' => $this->serverClient->getRequireArrayOrFalse('log', ['date_time' => $dateTime->format('Y-m-d H:i:s'), 'ip_address' => $ipAddress]),
                         ]
                     )
                 );

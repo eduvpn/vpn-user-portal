@@ -90,7 +90,7 @@ return [
     'Summary' => 'Sammendrag',
     'System' => 'System',
     'TOTP' => 'TOTP',
-    //'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>%currentDate%</code>.' => '',
+    //'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => '',
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'OTP-koden du brukte stemmer ikke overens med OTP-hemmeligheten.',
     'The TOTP you provided is incorrect.' => 'TOTP-koden er ugyldig.',
     'The credentials you provided were not correct.' => 'Innloggingsdetaljene er ikke riktige.',
@@ -121,6 +121,4 @@ return [
     'You are already enrolled for Two-factor authentication (2FA).' => 'Du er allerede registrert for TOTP.',
     'You cannot manage your own user account.' => 'Du kan ikke styre din egen brukerkonto.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Din ID er <code>%_two_factor_user_id%</code>.',
-    // [DELETED] 'Highest # Concurrent Connections' => 'Høyest # Samtidige Tilkoblinger',
-    // [DELETED] 'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>%currentDate%</code>. Use <em>UTC</em> as the time zone.' => 'Dato/Tid-feltet tar dato i format <code>Y-m-d H:i:s</code>, f.eks <code>%currentDate%</code>. Tidssonen er UTC.',
 ];

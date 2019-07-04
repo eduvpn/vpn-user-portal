@@ -90,7 +90,7 @@ return [
     //'Summary' => '',
     //'System' => '',
     'TOTP' => 'TOTP',
-    //'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>%currentDate%</code>.' => '',
+    //'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => '',
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'La clé OTP que vous avez saisie ne correspond pas à la valeur attendue pour ce secret OTP.',
     'The TOTP you provided is incorrect.' => 'Le TOTP que vous avez saisi est incorrect.',
     'The credentials you provided were not correct.' => 'L\'identifiant et/ou le mot de passe que vous avez saisis ne sont pas corrects.',
