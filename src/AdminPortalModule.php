@@ -11,6 +11,7 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
+use DateTimeZone;
 use LC\Common\Http\AuthUtils;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\HtmlResponse;
@@ -449,8 +450,14 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $dateTime = $request->getPostParameter('date_time');
-                InputValidation::dateTime($dateTime);
+                $dateTime = InputValidation::dateTime($request->getPostParameter('date_time'));
+                // make sure it is NOT in the future
+                if ($dateTime > new DateTime()) {
+                    throw new HttpException('can not specify a time in the future', 400);
+                }
+                // convert it to UTC as our server logs are all in UTC
+                $dateTime->setTimeZone(new DateTimeZone('UTC'));
+
                 $ipAddress = $request->getPostParameter('ip_address');
                 InputValidation::ipAddress($ipAddress);
 
