@@ -15,7 +15,7 @@
                     <th><?=$this->t('Profile'); ?></th>
                     <th><?=$this->t('Total Traffic'); ?></th>
                     <th><?=$this->t('Total # Unique Users'); ?></th>
-                    <th><?=$this->t('Highest # Concurrent Connections'); ?></th>
+                    <th><?=$this->t('Highest (Maximum) # Concurrent Connections'); ?></th>
                 </tr>
             </thead>
             <tbody>
