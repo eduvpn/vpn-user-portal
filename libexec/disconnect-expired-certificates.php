@@ -14,9 +14,11 @@ $baseDir = dirname(__DIR__);
 
 use LC\OpenVpn\ManagementSocket;
 use LC\Portal\Config\PortalConfig;
-use LC\Portal\Logger;
 use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\Storage;
+use Psr\Log\NullLogger;
+
+$logger = new NullLogger();
 
 try {
     $dateTime = new DateTime();
@@ -34,7 +36,7 @@ try {
         $portalConfig,
         new ManagementSocket()
     );
-    $serverManager->setLogger(new Logger($argv[0]));
+    $serverManager->setLogger($logger);
 
     foreach ($serverManager->connections() as $profile) {
         foreach ($profile['connections'] as $connection) {

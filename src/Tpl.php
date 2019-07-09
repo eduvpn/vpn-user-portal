@@ -79,23 +79,28 @@ class Tpl implements TplInterface
         return $templateStr;
     }
 
-    public static function toHuman(int $byteSize): string
+    public static function toHuman(string $byteSize): string
     {
+        if (!is_numeric($byteSize)) {
+            throw new TplException('"bytes_to_human" requires a numeric parameter');
+        }
+        $intSize = (int) $byteSize;
+
         $kB = 1024;
         $MB = $kB * 1024;
         $GB = $MB * 1024;
         $TB = $GB * 1024;
-        if ($byteSize > $TB) {
-            return sprintf('%0.2f TiB', $byteSize / $TB);
+        if ($intSize > $TB) {
+            return sprintf('%0.2f TiB', $intSize / $TB);
         }
-        if ($byteSize > $GB) {
-            return sprintf('%0.2f GiB', $byteSize / $GB);
+        if ($intSize > $GB) {
+            return sprintf('%0.2f GiB', $intSize / $GB);
         }
-        if ($byteSize > $MB) {
-            return sprintf('%0.2f MiB', $byteSize / $MB);
+        if ($intSize > $MB) {
+            return sprintf('%0.2f MiB', $intSize / $MB);
         }
 
-        return sprintf('%0.0f kiB', $byteSize / $kB);
+        return sprintf('%0.0f kiB', $intSize / $kB);
     }
 
     private function insert(string $templateName, array $templateVariables = []): string

@@ -15,9 +15,9 @@ $this->layout('base', ['activeItem' => 'stats']); ?>
         <tr>
             <td><span title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->getDisplayName()); ?></span></td>
             <?php if (array_key_exists($profileId, $statsData)): ?>
-                <td><?=$this->e($statsData[$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
-                <td><?=$this->e($statsData[$profileId]['unique_user_count']); ?></td>
-                <td><span title="<?=$this->e($statsData[$profileId]['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e($statsData[$profileId]['max_concurrent_connections']); ?></span></td>
+                <td><?=$this->e((string) $statsData[$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
+                <td><?=$this->e((string) $statsData[$profileId]['unique_user_count']); ?></td>
+                <td><span title="<?=$this->e((string) $statsData[$profileId]['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e((string) $statsData[$profileId]['max_concurrent_connections']); ?> (<?=$this->e((string) $maxConcurrentConnectionLimit[$profileId]); ?>)</span></td>
             <?php else: ?>
                 <td><em><?=$this->t('N/A'); ?></em></td>
                 <td><em><?=$this->t('N/A'); ?></em></td>
@@ -40,19 +40,6 @@ $this->layout('base', ['activeItem' => 'stats']); ?>
 <?php foreach ($graphStats[$profileId] as $day => $dayInfo): ?>
             <tr>
                 <th><?=$this->e($day); ?></th><td><span><?=str_repeat('X', $dayInfo['user_fraction']); ?></span></td>
-            </tr>
-<?php endforeach; ?>
-        </tbody>
-    </table>
-    <!-- #traffic -->
-    <table class="stats stats-traffic">
-        <thead>
-            <tr><th><?=$this->t('Date'); ?></th><th><?=$this->t('Traffic'); ?></th></tr>
-        </thead>
-        <tbody>
-<?php foreach ($graphStats[$profileId] as $day => $dayInfo): ?>
-            <tr>
-                <th><?=$this->e($day); ?></th><td><span><?=str_repeat('X', $dayInfo['traffic_fraction']); ?></span></td>
             </tr>
 <?php endforeach; ?>
         </tbody>

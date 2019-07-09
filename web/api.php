@@ -22,13 +22,13 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Init;
-use LC\Portal\Logger;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Storage;
+use Psr\Log\NullLogger;
 
-$logger = new Logger('vpn-user-api');
+$logger = new NullLogger();
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);

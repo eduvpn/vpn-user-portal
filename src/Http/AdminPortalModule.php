@@ -224,6 +224,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         [
                             'statsData' => $this->getStatsData(),
                             'graphStats' => $this->getGraphStats(),
+                            'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit(),
                             'profileConfigList' => $this->portalConfig->getProfileConfigList(),
                         ]
                     )
@@ -311,6 +312,18 @@ class AdminPortalModule implements ServiceModuleInterface
                 );
             }
         );
+    }
+
+    private function getMaxConcurrentConnectionLimit(): array
+    {
+        $maxConcurrentConnectionLimitList = [];
+        foreach ($this->portalConfig->getProfileConfigList() as $profileId => $profileConfig) {
+            list($ipFour, $ipFourPrefix) = explode('/', $profileConfig->getRangeFour());
+            $vpnProtoPortsCount = \count($profileConfig->getVpnProtoPortList());
+            $maxConcurrentConnectionLimitList[$profileId] = ((int) pow(2, 32 - (int) $ipFourPrefix)) - 3 * $vpnProtoPortsCount;
+        }
+
+        return $maxConcurrentConnectionLimitList;
     }
 
     private function getStatsData(): array

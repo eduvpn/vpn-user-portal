@@ -13,13 +13,11 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config\PortalConfig;
-use LC\Portal\Logger;
 use LC\Portal\OpenVpn\Connection;
 use LC\Portal\Storage;
+use Psr\Log\NullLogger;
 
-$logger = new Logger(
-    basename($argv[0])
-);
+$logger = new NullLogger();
 
 try {
     $envData = [];

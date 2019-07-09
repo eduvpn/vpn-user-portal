@@ -70,7 +70,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
 
         $stmt->bindValue(':user_id', $authUser, PDO::PARAM_STR);
         $stmt->execute();
-        if(false === $dbHash = $stmt->fetchColumn(0)) {
+        if (false === $dbHash = $stmt->fetchColumn(0)) {
             // user not found
             return false;
         }

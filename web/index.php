@@ -44,15 +44,15 @@ use LC\Portal\Http\UpdateSessionInfoHook;
 use LC\Portal\Http\VpnPortalModule;
 use LC\Portal\Init;
 use LC\Portal\LdapClient;
-use LC\Portal\Logger;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OpenVpn\ServerManager;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Storage;
 use LC\Portal\Tpl;
+use Psr\Log\NullLogger;
 
-$logger = new Logger('vpn-user-portal');
+$logger = new NullLogger();
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
