@@ -32,6 +32,9 @@ class LdapClient
         if (false === ldap_set_option($this->ldapResource, LDAP_OPT_PROTOCOL_VERSION, 3)) {
             throw new LdapClientException('unable to set LDAP option');
         }
+        if (false === ldap_set_option($this->ldapResource, LDAP_OPT_REFERRALS, 0)) {
+            throw new LdapClientException('unable to set LDAP option');
+        }
     }
 
     /**
