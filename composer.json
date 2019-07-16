@@ -43,6 +43,10 @@
         {
             "type": "vcs",
             "url": "https://git.tuxed.net/fkooman/php-saml-sp"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.tuxed.net/fkooman/php-secookie"
         }
     ],
     "require": {
