@@ -105,7 +105,7 @@ class TwoFactorHook implements BeforeHookInterface
         }
 
         // 2FA not required, and user not enrolled...
-        $this->session->regenerate(true);
+        $this->session->regenerate();
         $this->session->set('_two_factor_verified', $userInfo->getUserId());
 
         return true;

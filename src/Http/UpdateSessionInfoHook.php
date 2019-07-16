@@ -83,6 +83,6 @@ class UpdateSessionInfoHook implements BeforeHookInterface
 
         // XXX we can just provide the UserInfo object to the method perhaps?
         $this->storage->updateSessionInfo($userInfo->getUserId(), $sessionExpiresAt, $userInfo->getPermissionList());
-        $this->session->set('_update_session_info', true);
+        $this->session->set('_update_session_info', '');
     }
 }

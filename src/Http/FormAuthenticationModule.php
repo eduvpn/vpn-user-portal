@@ -13,6 +13,7 @@ namespace LC\Portal\Http;
 
 use fkooman\SeCookie\SessionInterface;
 use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Json;
 use LC\Portal\TplInterface;
 
 class FormAuthenticationModule implements ServiceModuleInterface
@@ -78,9 +79,9 @@ class FormAuthenticationModule implements ServiceModuleInterface
                     return $response;
                 }
 
-                $this->session->regenerate(true);
+                $this->session->regenerate();
                 $this->session->set('_form_auth_user', $userInfo->getUserId());
-                $this->session->set('_form_auth_permission_list', $userInfo->getPermissionList());
+                $this->session->set('_form_auth_permission_list', Json::encode($userInfo->getPermissionList()));
 
                 return new RedirectResponse($redirectTo, 302);
             }

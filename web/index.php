@@ -15,7 +15,9 @@ $baseDir = dirname(__DIR__);
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\SeCookie\Cookie;
+use fkooman\SeCookie\CookieOptions;
 use fkooman\SeCookie\Session;
+use fkooman\SeCookie\SessionOptions;
 use LC\OpenVpn\ManagementSocket;
 use LC\Portal\CA\EasyRsaCa;
 use LC\Portal\Config\PortalConfig;
@@ -87,41 +89,26 @@ try {
 
     $secureCookie = $portalConfig->getSecureCookie();
 
-    $cookie = new Cookie(
-        [
-            'SameSite' => 'Lax',
-            'Secure' => $secureCookie,
-            'Max-Age' => 60 * 60 * 24 * 90,   // 90 days
-        ]
-    );
+    $cookieOptions = CookieOptions::init()->setSameSite('Strict')->setSecure($secureCookie)->setMaxAge(60 * 60 * 24 * 90);
+    $cookie = new Cookie($cookieOptions);
 
-    $session = new Session(
-        [
-            'SessionName' => 'SID',
-            'DomainBinding' => $request->getServerName(),
-            'PathBinding' => $request->getRoot(),
-            'SessionExpiry' => $browserSessionExpiry,
-        ],
-        new Cookie(
-            [
-                // we need to bind to "Path", otherwise the (Basic)
-                // authentication mechanism will set a cookie for
-                // {ROOT}/_form/auth/
-                'Path' => $request->getRoot(),
-                // we can't set "SameSite" to Lax if we want to support the
-                // SAML HTTP-POST binding...
-                'SameSite' => null,
-                'Secure' => $secureCookie,
-            ]
-        )
-    );
+    $sessionCookieOptions = CookieOptions::init()->setSameSite('Strict')->setSecure($secureCookie)->setPath($request->getRoot());
+    $sessionOptions = $sessionOptions = SessionOptions::init();
+    $sessionOptions->cookieOptions = $sessionCookieOptions;
+    $session = new Session('SID', $sessionOptions);
+    $session->start();
+
+    $samlSessionCookieOptions = CookieOptions::init()->setSameSite(null)->setSecure($secureCookie)->setPath($request->getRoot().'_saml');
+    $samlSessionOptions = SessionOptions::init();
+    $samlSessionOptions->cookieOptions = $samlSessionCookieOptions;
+    $samlSession = new Session('SAML_SID', $samlSessionOptions);
 
     $supportedLanguages = $portalConfig->getSupportedLanguages();
     // the first listed language is the default language
     $uiLang = array_keys($supportedLanguages)[0];
     $languageFile = null;
-    if (array_key_exists('ui_lang', $_COOKIE)) {
-        $uiLang = InputValidation::uiLang($_COOKIE['ui_lang']);
+    if ($cookie->has('ui_lang')) {
+        $uiLang = InputValidation::uiLang($cookie->get('ui_lang'));
     }
     if ('en_US' !== $uiLang) {
         if (array_key_exists($uiLang, $supportedLanguages)) {
@@ -188,7 +175,8 @@ try {
             break;
         case 'SamlAuthentication':
             $samlModule = new SamlModule(
-                $portalConfig->getSamlAuthenticationConfig()
+                $portalConfig->getSamlAuthenticationConfig(),
+                $samlSession
             );
             $service->addBeforeHook('auth', $samlModule);
             $service->addModule($samlModule);

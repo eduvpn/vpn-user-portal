@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c885ddcabb283121075d2000ea32e626",
+    "content-hash": "da4ebed3e55fecf28ebab57b11668db2",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -58,7 +58,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-jwt",
-                "reference": "8405cfa0a99cea36a3574200e7e0514ff3eaab60"
+                "reference": "0c61a11f6972de80213a8ee1bb1c7994ece7cd11"
             },
             "require": {
                 "ext-date": "*",
@@ -98,7 +98,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-jwt"
             },
-            "time": "2019-07-09T13:23:35+00:00"
+            "time": "2019-07-09T16:27:02+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -260,19 +260,21 @@
         },
         {
             "name": "fkooman/secookie",
-            "version": "2.0.1",
+            "version": "dev-devel",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-secookie",
-                "reference": "4cabcd6e49633b4ffcffb6f5978b90b7996de866"
+                "reference": "f3f264bbf674a8647e48efb54df347dad8491313"
             },
             "require": {
                 "ext-date": "*",
+                "ext-json": "*",
+                "ext-pcre": "*",
                 "ext-session": "*",
-                "php": ">=5.4"
+                "php": ">=7.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5|^6|^7"
+                "phpunit/phpunit": "^7|^8"
             },
             "type": "library",
             "autoload": {
@@ -280,18 +282,26 @@
                     "fkooman\\SeCookie\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "fkooman\\SeCookie\\Tests\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net"
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
                 }
             ],
             "description": "Secure cookie and session library",
-            "time": "2018-06-02T00:21:18+00:00"
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.tuxed.net/fkooman/php-secookie"
+            },
+            "time": "2019-07-15T17:10:27+00:00"
         },
         {
             "name": "fkooman/sqlite-migrate",
@@ -1318,16 +1328,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.2.4",
+            "version": "8.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "25fe0b5031b24722f66a75ad479a074cccc1bb37"
+                "reference": "c1b8534b3730f20f58600124129197bf1183dc92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/25fe0b5031b24722f66a75ad479a074cccc1bb37",
-                "reference": "25fe0b5031b24722f66a75ad479a074cccc1bb37",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c1b8534b3730f20f58600124129197bf1183dc92",
+                "reference": "c1b8534b3730f20f58600124129197bf1183dc92",
                 "shasum": ""
             },
             "require": {
@@ -1397,7 +1407,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-07-03T08:30:33+00:00"
+            "time": "2019-07-15T06:26:24+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2168,7 +2178,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "fkooman/jwt": 20,
-        "fkooman/otp-verifier": 20
+        "fkooman/otp-verifier": 20,
+        "fkooman/secookie": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

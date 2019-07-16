@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use fkooman\SeCookie\SessionInterface;
+use LC\Portal\Json;
 use LC\Portal\TplInterface;
 
 class FormAuthenticationHook implements BeforeHookInterface
@@ -38,7 +39,7 @@ class FormAuthenticationHook implements BeforeHookInterface
         }
 
         if ($this->session->has('_form_auth_user')) {
-            $permissionList = $this->session->has('_form_auth_permission_list') ? $this->session->get('_form_auth_permission_list') : [];
+            $permissionList = $this->session->has('_form_auth_permission_list') ? Json::decode($this->session->get('_form_auth_permission_list')) : [];
 
             return new UserInfo(
                 $this->session->get('_form_auth_user'),

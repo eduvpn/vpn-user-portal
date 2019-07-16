@@ -105,7 +105,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                     $this->session->delete('_two_factor_enroll_redirect_to');
 
                     // mark as 2FA verified
-                    $this->session->regenerate(true);
+                    $this->session->regenerate();
                     $this->session->set('_two_factor_verified', $userId);
 
                     return new RedirectResponse($twoFactorEnrollRedirectTo);

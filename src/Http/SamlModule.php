@@ -19,6 +19,7 @@ use fkooman\SAML\SP\PublicKey;
 use fkooman\SAML\SP\SP;
 use fkooman\SAML\SP\SpInfo;
 use fkooman\SAML\SP\XmlIdpInfoSource;
+use fkooman\SeCookie\Session;
 use LC\Portal\Config\SamlAuthenticationConfig;
 use LC\Portal\Http\Exception\HttpException;
 
@@ -27,13 +28,18 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
     /** @var \LC\Portal\Config\SamlAuthenticationConfig */
     private $samlAuthenticationConfig;
 
+    /** @var \fkooman\SeCookie\Session */
+    private $session;
+
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(SamlAuthenticationConfig $samlAuthenticationConfig)
+    public function __construct(SamlAuthenticationConfig $samlAuthenticationConfig, Session $session)
     {
         $this->samlAuthenticationConfig = $samlAuthenticationConfig;
+        $this->session = $session;
         $this->dateTime = new DateTime();
+        $this->session->start();
     }
 
     /**
@@ -320,6 +326,7 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
             $spInfo,
             new XmlIdpInfoSource($this->samlAuthenticationConfig->getIdpMetadata())
         );
+        $samlSp->setSession(new SeCookieSession($this->session));
 
         return $samlSp;
     }

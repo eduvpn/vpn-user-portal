@@ -56,7 +56,7 @@ class TwoFactorModule implements ServiceModuleInterface
                 try {
                     $totp = new Totp($this->storage);
                     $totp->verify($userId, $totpKey);
-                    $this->session->regenerate(true);
+                    $this->session->regenerate();
                     $this->session->set('_two_factor_verified', $userId);
 
                     return new RedirectResponse($redirectTo, 302);
