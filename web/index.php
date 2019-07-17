@@ -21,6 +21,7 @@ use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use LC\Common\Config;
 use LC\Common\FileIO;
+use LC\Common\Http\ADLdapAuth;
 use LC\Common\Http\CsrfProtectionHook;
 use LC\Common\Http\FormAuthenticationHook;
 use LC\Common\Http\FormAuthenticationModule;
@@ -266,6 +267,33 @@ try {
                 $config->getSection('FormLdapAuthentication')->optionalItem('baseDn'),
                 $config->getSection('FormLdapAuthentication')->optionalItem('userFilterTemplate'),
                 $config->getSection('FormLdapAuthentication')->optionalItem('permissionAttribute')
+            );
+            $service->addModule(
+                new FormAuthenticationModule(
+                    $userAuth,
+                    $session,
+                    $tpl
+                )
+            );
+
+            break;
+        case 'FormADLdapAuthentication':
+            $service->addBeforeHook(
+                'auth',
+                new FormAuthenticationHook(
+                    $session,
+                    $tpl
+                )
+            );
+            $ldapClient = new LdapClient(
+                $config->getSection('FormADLdapAuthentication')->getItem('ldapUri')
+            );
+            $userAuth = new ADLdapAuth(
+                $logger,
+                $ldapClient,
+                $config->getSection('FormADLdapAuthentication')->getItem('bindDnTemplate'),
+                $config->getSection('FormADLdapAuthentication')->optionalItem('baseDn'),
+                $config->getSection('FormADLdapAuthentication')->optionalItem('permissionMemberships')
             );
             $service->addModule(
                 new FormAuthenticationModule(
