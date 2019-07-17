@@ -175,6 +175,7 @@ try {
             break;
         case 'SamlAuthentication':
             $samlModule = new SamlModule(
+                $configDir,
                 $portalConfig->getSamlAuthenticationConfig(),
                 $samlSession
             );

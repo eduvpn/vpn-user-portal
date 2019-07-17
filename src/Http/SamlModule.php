@@ -25,6 +25,9 @@ use LC\Portal\Http\Exception\HttpException;
 
 class SamlModule implements BeforeHookInterface, ServiceModuleInterface
 {
+    /** @var string */
+    private $configDir;
+
     /** @var \LC\Portal\Config\SamlAuthenticationConfig */
     private $samlAuthenticationConfig;
 
@@ -34,8 +37,9 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(SamlAuthenticationConfig $samlAuthenticationConfig, Session $session)
+    public function __construct(string $configDir, SamlAuthenticationConfig $samlAuthenticationConfig, Session $session)
     {
+        $this->configDir = $configDir;
         $this->samlAuthenticationConfig = $samlAuthenticationConfig;
         $this->session = $session;
         $this->dateTime = new DateTime();
@@ -312,13 +316,10 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
             $spEntityId = $request->getRootUri().'_saml/metadata';
         }
 
-        // XXX maybe move this in constructor?
-        $configDir = \dirname(\dirname(__DIR__)).'/config';
-
         $spInfo = new SpInfo(
             $spEntityId,
-            PrivateKey::fromFile(sprintf('%s/saml.key', $configDir)),
-            PublicKey::fromFile(sprintf('%s/saml.crt', $configDir)),
+            PrivateKey::fromFile(sprintf('%s/saml.key', $this->configDir)),
+            PublicKey::fromFile(sprintf('%s/saml.crt', $this->configDir)),
             $request->getRootUri().'_saml/acs'
         );
         $spInfo->setSloUrl($request->getRootUri().'_saml/slo');
