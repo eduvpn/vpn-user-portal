@@ -38,6 +38,17 @@ return [
     //    //'permissionAttributeList' => ['memberOf'],
     //],
 
+    // AD LDAP
+    //'FormADLdapAuthentication' => [
+    //    'ldapUri' => 'ldaps://example.org',
+    //    'bindDnTemplate' => '{{UID}}@example.org',
+    //    'baseDn' => 'DC=example,DC=org',
+    //    'permissionMemberships' => [
+    //        'CN=VPN Users,OU=SomeOU,OU=Groups,DC=example,DC=org' => 'VPN for Local Users',
+    //        'CN=VPN Guests,OU=SomeOU,OU=Groups,DC=example,DC=org' => 'VPN for Guests',
+    //    ]
+    //],
+
     // RADIUS
     //'RadiusAuthentication' => [
     //    'ServerList' => [

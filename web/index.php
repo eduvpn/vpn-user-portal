@@ -211,6 +211,34 @@ try {
             );
 
             break;
+// XXX fix the config for this auth module
+//        case 'FormADLdapAuthentication':
+//            $service->addBeforeHook(
+//                'auth',
+//                new FormAuthenticationHook(
+//                    $session,
+//                    $tpl
+//                )
+//            );
+//            $ldapClient = new LdapClient(
+//                $config->getSection('FormADLdapAuthentication')->getItem('ldapUri')
+//            );
+//            $userAuth = new ADLdapAuth(
+//                $logger,
+//                $ldapClient,
+//                $config->getSection('FormADLdapAuthentication')->getItem('bindDnTemplate'),
+//                $config->getSection('FormADLdapAuthentication')->optionalItem('baseDn'),
+//                $config->getSection('FormADLdapAuthentication')->optionalItem('permissionMemberships')
+//            );
+//            $service->addModule(
+//                new FormAuthenticationModule(
+//                    $userAuth,
+//                    $session,
+//                    $tpl
+//                )
+//            );
+
+//            break;
         case 'RadiusAuthentication':
             $radiusAuthenticationConfig = $portalConfig->getRadiusAuthenticationConfig();
             $service->addBeforeHook(
