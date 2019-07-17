@@ -20,42 +20,25 @@ class TestSession implements SessionInterface
     private $sessionData = [];
 
     /**
-     * Get the session ID.
-     *
-     * @return string
-     */
-    public function id()
-    {
-        return '12345';
-    }
-
-    /**
      * Regenerate the session ID.
-     *
-     * @param bool $deleteOldSession
      */
-    public function regenerate($deleteOldSession = false)
+    public function regenerate(): void
     {
         // NOP
     }
 
     /**
      * Set session value.
-     *
-     * @param string $key
-     * @param mixed  $value
      */
-    public function set($key, $value)
+    public function set(string $key, string $value): void
     {
         $this->sessionData[$key] = $value;
     }
 
     /**
      * Delete session key/value.
-     *
-     * @param string $key
      */
-    public function delete($key)
+    public function delete(string $key): void
     {
         if ($this->has($key)) {
             unset($this->sessionData[$key]);
@@ -64,24 +47,16 @@ class TestSession implements SessionInterface
 
     /**
      * Test if session key exists.
-     *
-     * @param string $key
-     *
-     * @return bool
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return \array_key_exists($key, $this->sessionData);
     }
 
     /**
      * Get session value.
-     *
-     * @param string $key
-     *
-     * @return mixed
      */
-    public function get($key)
+    public function get(string $key): string
     {
         if (!$this->has($key)) {
             throw new SessionException(sprintf('key "%s" not available in session', $key));
@@ -91,11 +66,11 @@ class TestSession implements SessionInterface
     }
 
     /**
-     * Empty the session.
+     * Destroy the session.
      */
-    public function destroy()
+    public function destroy(): void
     {
         $this->sessionData = [];
-        $this->regenerate(true);
+        $this->regenerate();
     }
 }
