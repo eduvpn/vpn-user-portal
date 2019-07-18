@@ -92,12 +92,16 @@ try {
     $cookieOptions = CookieOptions::init()->setSameSite('Strict')->setSecure($secureCookie)->setMaxAge(60 * 60 * 24 * 90);
     $cookie = new Cookie($cookieOptions);
 
+    // the Application session cookie has SameSite=Strict, only direct
+    // navigation should send cookies...
     $sessionCookieOptions = CookieOptions::init()->setSameSite('Strict')->setSecure($secureCookie)->setPath($request->getRoot());
     $sessionOptions = $sessionOptions = SessionOptions::init();
     $sessionOptions->cookieOptions = $sessionCookieOptions;
     $session = new Session('SID', $sessionOptions);
     $session->start();
 
+    // the SAML session cookie has no SameSite attribute, as that would break
+    // when accepting SAML responses on the ACS
     $samlSessionCookieOptions = CookieOptions::init()->setSameSite(null)->setSecure($secureCookie)->setPath($request->getRoot().'_saml');
     $samlSessionOptions = SessionOptions::init();
     $samlSessionOptions->cookieOptions = $samlSessionCookieOptions;
