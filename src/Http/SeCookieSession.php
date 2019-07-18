@@ -37,7 +37,7 @@ class SeCookieSession implements SessionInterface
     /**
      * @param string $key
      *
-     * @return mixed
+     * @return string
      */
     public function get($key)
     {
@@ -46,7 +46,20 @@ class SeCookieSession implements SessionInterface
 
     /**
      * @param string $key
-     * @param mixed  $value
+     *
+     * @return string
+     */
+    public function take($key)
+    {
+        $sessionValue = $this->session->get($key);
+        $this->session->delete($key);
+
+        return $sessionValue;
+    }
+
+    /**
+     * @param string $key
+     * @param string $value
      *
      * @return void
      */
