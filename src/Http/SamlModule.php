@@ -66,11 +66,12 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
             return false;
         }
 
-        if (false === $samlAssertion = $this->getSamlSp($request)->getAssertion()) {
+        $samlSp = $this->getSamlSp($request);
+        if (!$samlSp->hasAssertion()) {
             // user not (yet) authenticated, redirect to "login" endpoint
             return self::getLoginRedirect($request, $this->samlAuthenticationConfig->getAuthnContext());
         }
-
+        $samlAssertion = $samlSp->getAssertion();
         $samlAttributes = $samlAssertion->getAttributes();
 
         $userIdAttribute = $this->samlAuthenticationConfig->getUserIdAttribute();
@@ -207,12 +208,12 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
             '/_saml/acs',
             function (Request $request, array $hookData): Response {
                 try {
-                    $this->getSamlSp($request)->handleResponse(
+                    $returnTo = $this->getSamlSp($request)->handleResponse(
                         $request->requirePostParameter('SAMLResponse'),
-                        $request->requireQueryParameter('RelayState')
+                        $request->requirePostParameter('RelayState')
                     );
 
-                    return new RedirectResponse($request->requirePostParameter('RelayState'));
+                    return new RedirectResponse($returnTo);
                 } catch (SamlException $e) {
                     throw new HttpException($e->getMessage(), 500, [], $e);
                 }
@@ -236,11 +237,11 @@ class SamlModule implements BeforeHookInterface, ServiceModuleInterface
             '/_saml/slo',
             function (Request $request, array $hookData): Response {
                 try {
-                    $this->getSamlSp($request)->handleLogoutResponse(
+                    $returnTo = $this->getSamlSp($request)->handleLogoutResponse(
                         $request->getQueryString()
                     );
 
-                    return new RedirectResponse($request->requireQueryParameter('RelayState'));
+                    return new RedirectResponse($returnTo);
                 } catch (SamlException $e) {
                     throw new HttpException($e->getMessage(), 500, [], $e);
                 }
