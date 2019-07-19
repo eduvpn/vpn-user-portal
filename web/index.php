@@ -195,7 +195,15 @@ try {
             $serviceName = $config->getSection('SamlAuthentication')->optionalItem('serviceName', []);
 
             $userIdAttribute = $config->getSection('SamlAuthentication')->getItem('userIdAttribute');
+
+            /** @var array<string>|string|null */
             $permissionAttribute = $config->getSection('SamlAuthentication')->optionalItem('permissionAttribute');
+            if (is_string($permissionAttribute)) {
+                $permissionAttribute = [$permissionAttribute];
+            }
+            if (null === $permissionAttribute) {
+                $permissionAttribute = [];
+            }
 
             $spInfo = new SpInfo(
                 $spEntityId,
