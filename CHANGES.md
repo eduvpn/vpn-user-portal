@@ -5,6 +5,7 @@
 - make the log work with local timezone instead of UTC (issue #137)
 - do not allow to specify a time in the future on log page (issue #136)
 - update `nl_NL` and `nb_NO` translations
+- add `pl_PL` translation
 
 ## 2.0.6 (2019-06-27)
 - also show maximum number of concurrent connections possible per profile 
