@@ -22,7 +22,7 @@
             <?php foreach ($stats['profiles'] as $k => $v): ?>
                 <?php if (array_key_exists($k, $idNameMapping)): ?>
                     <tr>
-                        <td><span title="<?=$this->e($k); ?>"><?=$this->e($idNameMapping[$k]); ?></td>
+                        <td><span title="<?=$this->e($k); ?>"><?=$this->e($idNameMapping[$k]); ?></span></td>
                         <td><?=$this->e($v['total_traffic'], 'bytes_to_human'); ?></td>
                         <td><?=$this->e($v['unique_user_count']); ?></td>
                         <td><span title="<?=$this->e($v['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e($v['max_concurrent_connections']); ?> (<?=$this->e($maxConcurrentConnectionLimitList[$k]); ?>)</span></td>

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.8 (...)
+- close `</span>` on Stats page
+
 ## 2.0.7 (2019-07-20)
 - add Ubuntu 18.04 Roboto font path (issue #135)
 - make the log work with local timezone instead of UTC (issue #137)
