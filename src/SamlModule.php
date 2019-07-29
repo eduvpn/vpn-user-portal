@@ -137,9 +137,9 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 try {
-                    $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
+                    $returnTo = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
 
-                    return new RedirectResponse($logoutUrl);
+                    return new RedirectResponse($returnTo);
                 } catch (SamlException $e) {
                     throw new HttpException($e->getMessage(), 500, [], $e);
                 }
