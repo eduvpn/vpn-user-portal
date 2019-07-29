@@ -48,7 +48,7 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 try {
-                    $relayState = $request->getQueryParameter('ReturnTo');
+                    $returnTo = $request->getQueryParameter('ReturnTo');
                     $idpEntityId = $request->getQueryParameter('IdP', false);
                     $authnContextQuery = $request->getQueryParameter('AuthnContext', false);
                     $authnContextList = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
@@ -78,7 +78,7 @@ class SamlModule implements ServiceModuleInterface
 
                     // if an entityId is specified, use it
                     if (null !== $idpEntityId) {
-                        return new RedirectResponse($this->samlSp->login($idpEntityId, $relayState, $authnContextList));
+                        return new RedirectResponse($this->samlSp->login($idpEntityId, $returnTo, $authnContextList));
                     }
 
                     // we didn't get an IdP entityId so we MUST perform discovery
@@ -118,11 +118,12 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 try {
-                    $this->samlSp->handleResponse(
-                        $request->getPostParameter('SAMLResponse')
+                    $returnTo = $this->samlSp->handleResponse(
+                        $request->getPostParameter('SAMLResponse'),
+                        $request->getPostParameter('RelayState')
                     );
 
-                    return new RedirectResponse($request->getPostParameter('RelayState'));
+                    return new RedirectResponse($returnTo);
                 } catch (SamlException $e) {
                     throw new HttpException($e->getMessage(), 500, [], $e);
                 }
@@ -152,11 +153,11 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 try {
-                    $this->samlSp->handleLogoutResponse(
+                    $returnTo = $this->samlSp->handleLogoutResponse(
                         $request->getQueryString()
                     );
 
-                    return new RedirectResponse($request->getQueryParameter('RelayState'));
+                    return new RedirectResponse($returnTo);
                 } catch (SamlException $e) {
                     throw new HttpException($e->getMessage(), 500, [], $e);
                 }
