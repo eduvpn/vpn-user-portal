@@ -2,6 +2,8 @@
 
 ## 2.0.8 (...)
 - close `</span>` on Stats page
+- add credits for portal translations
+- update `fkooman/saml-sp` dependency
 
 ## 2.0.7 (2019-07-20)
 - add Ubuntu 18.04 Roboto font path (issue #135)
