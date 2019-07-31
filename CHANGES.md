@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.8 (...)
+## 2.0.8 (2019-07-31)
 - close `</span>` on Stats page
 - add credits for portal translations
 - update `fkooman/saml-sp` dependency
