@@ -136,6 +136,7 @@ return [
     //    //'nb_NO' => 'norsk bokmål',
     //    //'da_DK' => 'Dansk',
     //    //'fr_FR' => 'Français',
+    //    //'uk_UA' => 'Українська',
     //],
 
     // Enable OAuth API for Native Apps
