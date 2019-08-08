@@ -1,7 +1,9 @@
 # Changelog
 
-## 2.0.9 (...)
+## 2.0.9 (2019-08-08)
 - add `uk_UA` translation
+- document all (possible) configuration changes since 2.0.0 in 
+  `CONFIG_CHANGES.md`
 
 ## 2.0.8 (2019-07-31)
 - close `</span>` on Stats page
