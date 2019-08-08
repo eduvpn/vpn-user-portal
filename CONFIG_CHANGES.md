@@ -17,7 +17,8 @@ working!
 
 - due to the update of [php-saml-sp](https://github.com/fkooman/php-saml-sp/) 
   from this version on, also the "friendly" names can be used for the 
-  attributes instead of just the `urn:oid` variant. See 
+  attributes instead of just the `urn:oid` variant with the 
+  `SamlAuthentication` plugin. See 
   [this](https://github.com/fkooman/php-saml-sp/blob/7dfda19cfba2d5b84d3b2e99d6e77649cbc8bb7e/src/attribute_mapping.php#L32) 
   file for a mapping
 
