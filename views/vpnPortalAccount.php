@@ -1,7 +1,7 @@
 <?php $this->layout('base', ['activeItem' => 'account']); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('User Info'); ?></h2>
-    <table>
+    <table class="tbl">
         <tr>
             <th><?=$this->t('ID'); ?></th>
             <td><code><?=$this->e($userInfo->getUserId()); ?></code></td>
@@ -42,7 +42,7 @@
 
     <?php if (0 !== count($authorizedClients)): ?>
     <h2><?=$this->t('Authorized Applications'); ?></h2>
-    <table>
+    <table class="tbl">
         <thead>
             <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Authorized'); ?> (<?=$this->e(date('T')); ?>)</th><th></th></tr>
         </thead>

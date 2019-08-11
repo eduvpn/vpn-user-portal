@@ -7,7 +7,7 @@
     <?php if (0 === count($userMessages)): ?>
         <p class="plain"><?=$this->t('No events yet.'); ?></p>
     <?php else: ?>
-        <table>
+        <table class="tbl">
             <thead>
                 <tr><th><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</th><th><?=$this->t('Message'); ?></th><th><?=$this->t('Type'); ?></tr>
             </thead>

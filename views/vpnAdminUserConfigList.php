@@ -31,7 +31,7 @@
             <?=$this->t('This user does not have any configurations.'); ?>
         </p>
     <?php else: ?>
-        <table>
+        <table class="tbl">
             <thead>
                 <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Issued'); ?> (<?=$this->e(date('T')); ?>)</th><th><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</th></tr> 
             </thead>
@@ -54,7 +54,7 @@
     <?php if (empty($userMessages)): ?>
         <p class="plain"><?=$this->t('No events yet.'); ?></p>
     <?php else: ?>
-        <table>
+        <table class="tbl">
             <thead>
                 <tr><th><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</th><th><?=$this->t('Message'); ?></th><th><?=$this->t('Type'); ?></tr>
             </thead>

@@ -1,57 +1,111 @@
 <?php $this->layout('base', ['activeItem' => 'stats']); ?>
 <?php $this->start('content'); ?>
-    <?php if (false === $stats): ?>
-        <p class="plain">
-            <?=$this->t('VPN usage statistics not (yet) available. Check back after midnight.'); ?>
-        </p>
-    <?php else: ?>
-        <h2><?=$this->t('Summary'); ?></h2>
-        <p>
-            <?=$this->t('These statistics were last updated on %generated_at% (%generated_at_tz%) and cover the last month.'); ?>
-        </p>
-        <table>
-            <thead>
-                <tr>
-                    <th><?=$this->t('Profile'); ?></th>
-                    <th><?=$this->t('Total Traffic'); ?></th>
-                    <th><?=$this->t('Total # Unique Users'); ?></th>
-                    <th><?=$this->t('Highest (Maximum) # Concurrent Connections'); ?></th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($stats['profiles'] as $k => $v): ?>
-                <?php if (array_key_exists($k, $idNameMapping)): ?>
-                    <tr>
-                        <td><span title="<?=$this->e($k); ?>"><?=$this->e($idNameMapping[$k]); ?></span></td>
-                        <td><?=$this->e($v['total_traffic'], 'bytes_to_human'); ?></td>
-                        <td><?=$this->e($v['unique_user_count']); ?></td>
-                        <td><span title="<?=$this->e($v['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e($v['max_concurrent_connections']); ?> (<?=$this->e($maxConcurrentConnectionLimitList[$k]); ?>)</span></td>
-                    </tr>
-                <?php endif; ?>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    
-        <h2><?=$this->t('Traffic'); ?></h2>
-        <p>
-            <?=$this->t('VPN traffic over the last month.'); ?>
-        </p>
-        <?php foreach ($stats['profiles'] as $k => $v): ?>
-            <?php if (array_key_exists($k, $idNameMapping)): ?>
-                <h3><?=$this->e($idNameMapping[$k]); ?></h3>
-                <img src="stats/traffic?profile_id=<?=$this->e($k); ?>">
+<h2><?=$this->t('Summary'); ?></h2>
+<table class="tbl">
+    <thead>
+        <tr>
+            <th><?=$this->t('Profile'); ?></th>
+            <th><?=$this->t('Total Traffic'); ?></th>
+            <th><?=$this->t('Total # Unique Users'); ?></th>
+            <th><?=$this->t('Highest (Maximum) # Concurrent Connections'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
+        <tr>
+            <td><span title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig['displayName']); ?></span></td>
+            <?php if (array_key_exists($profileId, $statsData)): ?>
+                <td><?=$this->e((string) $statsData[$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
+                <td><?=$this->e((string) $statsData[$profileId]['unique_user_count']); ?></td>
+                <td><span title="<?=$this->e((string) $statsData[$profileId]['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e((string) $statsData[$profileId]['max_concurrent_connections']); ?> (<?=$this->e((string) $maxConcurrentConnectionLimit[$profileId]); ?>)</span></td>
+            <?php else: ?>
+                <td><em><?=$this->t('N/A'); ?></em></td>
+                <td><em><?=$this->t('N/A'); ?></em></td>
+                <td><em><?=$this->t('N/A'); ?></em></td>
             <?php endif; ?>
-        <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
 
-        <h2><?=$this->t('Users'); ?></h2>
-        <p>
+<?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
+<?php if (array_key_exists($profileId, $graphStats) && 0 !== count($graphStats[$profileId]['date_list'])): ?>
+    <h3><?=$profileConfig['displayName']; ?></h3>
+
+<!-- #users -->
+<figure>
+    <table class="stats stats-users">
+        <tbody>
+<?php for ($y = 0; $y < 25; ++$y): ?>
+    <tr>
+<?php if (0 === $y): ?>
+    <th class="unit" rowspan="25"><?=$this->e($graphStats[$profileId]['max_unique_user_count']); ?> <?=$this->t('Users'); ?></th>
+<?php endif; ?>
+<?php foreach ($graphStats[$profileId]['date_list'] as $dayStr => $dayData): ?>
+<?php if ($graphStats[$profileId]['date_list'][$dayStr]['user_fraction'] >= 25 - $y): ?>
+    <td>X</td>
+<?php else: ?>
+    <td></td>
+<?php endif; ?>
+<?php endforeach; ?>
+    </tr>
+<?php endfor; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="date"><?=$this->t('Date'); ?></th>
+<?php foreach (array_keys($graphStats[$profileId]['date_list']) as $i => $dayStr): ?>
+        <th>
+<?php if (0 === $i % 3): ?>
+            <span><?=$dayStr; ?></span>
+<?php endif; ?>
+        </th>
+<?php endforeach; ?>
+            </tr>
+        </tfoot>
+    </table>
+<figcaption>
             <?=$this->t('Number of unique users of the VPN service over the last month.'); ?>
-        </p>
-        <?php foreach ($stats['profiles'] as $k => $v): ?>
-            <?php if (array_key_exists($k, $idNameMapping)): ?>
-                <h3><?=$this->e($idNameMapping[$k]); ?></h3>
-                <img src="stats/users?profile_id=<?=$this->e($k); ?>">
-            <?php endif; ?>
-        <?php endforeach; ?>
-    <?php endif; ?>
+</figcaption>
+</figure>
+
+<!-- #traffic -->
+<figure>
+    <table class="stats stats-traffic">
+        <tbody>
+<?php for ($y = 0; $y < 25; ++$y): ?>
+    <tr>
+<?php if (0 === $y): ?>
+    <th class="unit" rowspan="25"><?=$this->batch($graphStats[$profileId]['max_traffic_count'], 'escape|bytes_to_human'); ?></th>
+<?php endif; ?>
+
+<?php foreach ($graphStats[$profileId]['date_list'] as $dayStr => $dayData): ?>
+<?php if ($graphStats[$profileId]['date_list'][$dayStr]['traffic_fraction'] >= 25 - $y): ?>
+    <td>X</td>
+<?php else: ?>
+    <td></td>
+<?php endif; ?>
+<?php endforeach; ?>
+    </tr>
+<?php endfor; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="date"><?=$this->t('Date'); ?></th>
+<?php foreach (array_keys($graphStats[$profileId]['date_list']) as $i => $dayStr): ?>
+        <th>
+<?php if (0 === $i % 3): ?>
+            <span><?=$dayStr; ?></span>
+<?php endif; ?>
+        </th>
+<?php endforeach; ?>
+            </tr>
+        </tfoot>
+    </table>
+<figcaption>
+            <?=$this->t('VPN traffic over the last month.'); ?>
+</figcaption>
+</figure>
+<?php endif; ?>
+<?php endforeach; ?>
 <?php $this->stop(); ?>

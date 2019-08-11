@@ -18,7 +18,6 @@ use LC\Common\Http\HtmlResponse;
 use LC\Common\Http\InputValidation;
 use LC\Common\Http\RedirectResponse;
 use LC\Common\Http\Request;
-use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\HttpClient\ServerClient;
@@ -35,25 +34,20 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var Graph */
-    private $graph;
-
     /** @var \DateTime */
-    private $dateTimeToday;
+    private $dateTime;
 
     /**
      * @param \LC\Common\TplInterface            $tpl
      * @param Storage                            $storage
      * @param \LC\Common\HttpClient\ServerClient $serverClient
-     * @param Graph                              $graph
      */
-    public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient, Graph $graph)
+    public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient)
     {
         $this->tpl = $tpl;
         $this->storage = $storage;
         $this->serverClient = $serverClient;
-        $this->graph = $graph;
-        $this->dateTimeToday = new DateTime('today');
+        $this->dateTime = new DateTime();
     }
 
     /**
@@ -258,124 +252,19 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $stats = $this->serverClient->get('stats');
-                if (!\is_array($stats) || !\array_key_exists('profiles', $stats)) {
-                    // this is an old "stats" format we no longer support,
-                    // vpn-server-api-stats has to run again first, which is
-                    // done by the crontab running at midnight...
-                    $stats = false;
-                }
-                // get the fancy profile name
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-
-                $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $idNameMapping[$profileId] = $profileData['displayName'];
-                }
-
-                $maxConcurrentConnectionLimitList = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    list($ipFour, $ipFourPrefix) = explode('/', $profileData['range']);
-                    $vpnProtoPortsCount = \count($profileData['vpnProtoPorts']);
-                    $maxConcurrentConnectionLimitList[$profileId] = ((int) pow(2, 32 - (int) $ipFourPrefix)) - 3 * $vpnProtoPortsCount;
-                }
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
-                            'stats' => $stats,
-                            'generated_at' => false !== $stats ? $stats['generated_at'] : false,
-                            'generated_at_tz' => date('T'),
-                            'maxConcurrentConnectionLimitList' => $maxConcurrentConnectionLimitList,
-                            'idNameMapping' => $idNameMapping,
+                            'statsData' => $this->getStatsData(),
+                            'graphStats' => $this->getGraphStats(),
+                            'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit($profileList),
+                            'profileConfigList' => $profileList,
                         ]
                     )
                 );
-            }
-        );
-
-        $service->get(
-            '/stats/traffic',
-            /**
-             * @return \LC\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
-
-                $profileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
-                $response = new Response(
-                    200,
-                    'image/png'
-                );
-
-                $stats = $this->serverClient->getRequireArray('stats');
-                $dateByteList = [];
-                foreach ($stats['profiles'][$profileId]['days'] as $v) {
-                    $dateByteList[$v['date']] = $v['bytes_transferred'];
-                }
-
-                $imageData = $this->graph->draw(
-                    $dateByteList,
-                    /**
-                     * @param int $v
-                     *
-                     * @return string
-                     */
-                    function ($v) {
-                        $suffix = 'B';
-                        if ($v > 1024) {
-                            $v /= 1024;
-                            $suffix = 'kiB';
-                        }
-                        if ($v > 1024) {
-                            $v /= 1024;
-                            $suffix = 'MiB';
-                        }
-                        if ($v > 1024) {
-                            $v /= 1024;
-                            $suffix = 'GiB';
-                        }
-                        if ($v > 1024) {
-                            $v /= 1024;
-                            $suffix = 'TiB';
-                        }
-
-                        return sprintf('%.1f %s ', $v, $suffix);
-                    }
-                );
-                $response->setBody($imageData);
-
-                return $response;
-            }
-        );
-
-        $service->get(
-            '/stats/users',
-            /**
-             * @return \LC\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                AuthUtils::requireAdmin($hookData);
-
-                $profileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
-                $response = new Response(
-                    200,
-                    'image/png'
-                );
-
-                $stats = $this->serverClient->getRequireArray('stats');
-                $dateUsersList = [];
-                foreach ($stats['profiles'][$profileId]['days'] as $v) {
-                    $dateUsersList[$v['date']] = $v['unique_user_count'];
-                }
-
-                $imageData = $this->graph->draw(
-                    $dateUsersList
-                );
-                $response->setBody($imageData);
-
-                return $response;
             }
         );
 
@@ -482,23 +371,119 @@ class AdminPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \DateInterval $dateInterval
-     *
-     * @return array<string, int>
+     * @return array
      */
-    private function createDateList(DateInterval $dateInterval)
+    private function getStatsData()
     {
-        $currentDay = $this->dateTimeToday->format('Y-m-d');
-        $dateTime = clone $this->dateTimeToday;
-        $dateTime->sub($dateInterval);
-        $oneDay = new DateInterval('P1D');
-
-        $dateList = [];
-        while ($dateTime < $this->dateTimeToday) {
-            $dateList[$dateTime->format('Y-m-d')] = 0;
-            $dateTime->add($oneDay);
+        $stats = $this->serverClient->get('stats');
+        if (!\is_array($stats) || !\array_key_exists('profiles', $stats)) {
+            return [];
         }
 
-        return $dateList;
+        // here we clean up the data obtained from the API, not sure WHAT I was
+        // thinking back then...what a shitty format!
+
+        // get a list of all the data for which we want to have the statistics,
+        // ideally this is exactly the same the API provides, otherwise the
+        // "global" profile statistics may not be right (anymore). Ah well.
+        $dateList = [];
+        $currentDate = date_sub(clone $this->dateTime, new DateInterval('P1M'));
+        while ($currentDate < $this->dateTime) {
+            $dateList[] = $currentDate->format('Y-m-d');
+            $currentDate->add(new DateInterval('P1D'));
+        }
+
+        $statsData = [];
+        foreach ($stats['profiles'] as $profileId => $profileStats) {
+            // the "per profile" (aggregate) stats as determined by the API
+            // server, we cannot influence the exact period over which this
+            // data was computed, let's hope it was correctly provided!
+            $statsData[$profileId] = [
+                'unique_user_count' => $profileStats['unique_user_count'],
+                'total_traffic' => $profileStats['total_traffic'],
+                'max_concurrent_connections_time' => $profileStats['max_concurrent_connections_time'],
+                'max_concurrent_connections' => $profileStats['max_concurrent_connections'],
+            ];
+            // we only want to have the data for the days in dateList
+            $dayStats = [];
+            foreach ($dateList as $dateStr) {
+                $dayStats[$dateStr] = [
+                    'bytes_transferred' => 0,
+                    'unique_user_count' => 0,
+                ];
+            }
+
+            foreach ($profileStats['days'] as $dayData) {
+                if (\array_key_exists($dayData['date'], $dayStats)) {
+                    // we have this day, so replace the data!
+                    $dayStats[$dayData['date']] = [
+                        'bytes_transferred' => $dayData['bytes_transferred'],
+                        'unique_user_count' => $dayData['unique_user_count'],
+                    ];
+                }
+            }
+
+            $statsData[$profileId]['date_list'] = $dayStats;
+        }
+
+        error_log(json_encode($statsData));
+
+        return $statsData;
+    }
+
+    /**
+     * @return array
+     */
+    private function getGraphStats()
+    {
+        $outputData = [];
+        $statsData = $this->getStatsData();
+        foreach ($statsData as $profileId => $profileStats) {
+            $outputData[$profileId] = [];
+            // find max number of unique users/traffic per day
+            $maxUniqueUserCount = 0;
+            $maxTrafficCount = 0;
+            foreach ($profileStats['date_list'] as $dayData) {
+                if ($dayData['unique_user_count'] > $maxUniqueUserCount) {
+                    $maxUniqueUserCount = $dayData['unique_user_count'];
+                }
+                if ($dayData['bytes_transferred'] > $maxTrafficCount) {
+                    $maxTrafficCount = $dayData['bytes_transferred'];
+                }
+            }
+
+            $outputData[$profileId]['max_traffic_count'] = $maxTrafficCount;
+            $outputData[$profileId]['max_unique_user_count'] = $maxUniqueUserCount;
+            $outputData[$profileId]['date_list'] = [];
+
+            // convert users/traffic to a number between 0 and 25
+            $maxUserDivider = $maxUniqueUserCount / 25;
+            $maxTrafficDivider = $maxTrafficCount / 25;
+            foreach ($profileStats['date_list'] as $dayDate => $dayData) {
+                $outputData[$profileId]['date_list'][$dayDate] = [
+                    'user_fraction' => 0 === $maxUserDivider ? 0 : (int) floor($dayData['unique_user_count'] / $maxUserDivider),
+                    'traffic_fraction' => 0 === $maxTrafficDivider ? 0 : (int) floor($dayData['bytes_transferred'] / $maxTrafficDivider),
+                ];
+            }
+        }
+
+        return $outputData;
+    }
+
+    /**
+     * @param array $profileList
+     *
+     * @return array
+     */
+    private function getMaxConcurrentConnectionLimit(array $profileList)
+    {
+        $maxConcurrentConnectionLimitList = [];
+        foreach ($profileList as $profileId => $profileData) {
+            list($ipFour, $ipFourPrefix) = explode('/', $profileData['range']);
+            $vpnProtoPortsCount = \count($profileData['vpnProtoPorts']);
+            $maxConcurrentConnectionLimitList[$profileId] = ((int) pow(2, 32 - (int) $ipFourPrefix)) - 3 * $vpnProtoPortsCount;
+        }
+
+        return $maxConcurrentConnectionLimitList;
     }
 }

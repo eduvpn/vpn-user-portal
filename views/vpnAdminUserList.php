@@ -5,9 +5,9 @@
             <?=$this->t('There are no users with VPN configurations.'); ?>
         </p>
     <?php else: ?>
-        <table>
+        <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('User ID'); ?></th><th class="text-right"><?=$this->t('Status'); ?></th></tr>
+                <tr><th><?=$this->t('User ID'); ?></th><th></th></tr>
             </thead>
             <tbody>
                 <?php foreach ($userList as $user): ?>

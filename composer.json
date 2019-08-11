@@ -51,8 +51,9 @@
     ],
     "require": {
         "bacon/bacon-qr-code": "^1.0",
+        "ext-curl": "*",
         "ext-date": "*",
-        "ext-json": "*",
+        "ext-hash": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
@@ -67,6 +68,7 @@
         "php": ">=5.4.0"
     },
     "require-dev": {
+        "ext-json": "*",
         "phpunit/phpunit": "^4.8.35|^5|^6|^7"
     },
     "suggest": {

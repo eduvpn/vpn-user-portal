@@ -5,7 +5,7 @@
         <?php if (0 === count($profile['connections'])): ?>
             <p class="plain"><?=$this->t('No clients connected.'); ?></p>
         <?php else: ?>
-            <table>
+            <table class="tbl">
             <thead>
                 <tr>
                     <th><?=$this->t('User ID'); ?></th>

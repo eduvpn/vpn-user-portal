@@ -27,7 +27,7 @@
                 <?=$this->t('There are no results matching your criteria.'); ?>
             </p>
         <?php else: ?>
-            <table>
+            <table class="tbl">
                 <tbody>
                     <tr>
                         <th><?=$this->t('Profile'); ?></th>

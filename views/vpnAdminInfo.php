@@ -2,7 +2,7 @@
 <?php $this->start('content'); ?>
     <?php foreach ($profileList as $profile): ?>
         <h2><?=$this->e($profile['displayName']); ?></h2>
-        <table>
+        <table class="tbl">
             <tbody>
                 <?php foreach ($profile as $k => $v): ?>
                     <tr>

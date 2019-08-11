@@ -116,26 +116,26 @@ ul.menu li a, ul.menu li span {
     color: #555;
 }
 
-table {
+table.tbl {
     border: 1px solid #ccc;
     width: 100%;
     border-collapse: collapse;
 }
 
-thead tr {
+table.tbl thead tr {
     background-color: #eee;
     color: #555;
 }
 
-tbody th {
+table.tbl tbody th {
     vertical-align: top;
 }
 
-td, th {
+table.tbl td, table.tbl th {
     padding: 0.8em 0.5em;
 }
 
-tbody tr:nth-child(even) {
+table.tbl tbody tr:nth-child(even) {
    background-color: #f4f4f4;
 }
 
@@ -164,4 +164,71 @@ div.footer button {
     color: #888;
     text-decoration: underline;
     cursor: pointer;
+}
+
+table.stats {
+    font-size: 85%;
+    margin: 0 auto;
+    border-spacing: 0.3em 0;
+}
+
+table.stats tbody td {
+    background-color: #555;
+    line-height: 0.5;
+    color: transparent;
+    width: 1em;
+}
+
+table.stats tbody td:empty {
+    background-color: white;
+    color: transparent;
+}
+
+table.stats tbody th {
+    font-weight: normal;
+}
+
+table.stats tbody th.unit, tbody th.date {
+    font-weight: bold;
+}
+
+table.stats tbody th.unit {
+    border-top: 1px solid #444;
+    text-align: right;
+    vertical-align: top;
+    width: 6em;
+}
+
+table.stats tbody th {
+    width: 1em;
+    line-height: 1em;
+    color: #444;
+    padding-top: 0.3em;
+}
+
+table.stats tfoot th.date {
+    border-top: 0;
+    text-align: center;
+}
+
+table.stats tfoot th {
+    border-top: 1px solid #555;
+}
+
+table.stats tfoot th span {
+    /* explicit height is needed for Chrome... otherwise it breaks over multiple lines for some reason */
+    height: 6em;
+    padding-top: 0.5em;
+    font-weight: normal;
+    line-height: 1;
+    writing-mode: vertical-rl;
+    -webkit-writing-mode: vertical-rl;
+    -ms-writing-mode: vertical-rl;
+}
+
+figcaption {
+    text-align: center;
+    padding-bottom: 2em;
+    font-size: 85%;
+    font-style: italic;
 }
