@@ -142,10 +142,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
                 $otpAuthUrl = sprintf(
                     'otpauth://totp/%s:%s?secret=%s&issuer=%s',
-                    rawurlencode(str_replace(':', '_', $request->getServerName())),
-                    rawurlencode(str_replace(':', '_', $userInfo->getUserId())),
+                    self::labelEncode($request->getServerName()),
+                    self::labelEncode($userInfo->getUserId()),
                     $totpSecret,
-                    rawurlencode(str_replace(':', '_', $request->getServerName()))
+                    self::labelEncode($request->getServerName())
                 );
 
                 $renderer = new Png();
@@ -160,5 +160,15 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 return $response;
             }
         );
+    }
+
+    /**
+     * @param string $labelStr
+     *
+     * @return string
+     */
+    private static function labelEncode($labelStr)
+    {
+        return rawurlencode(str_replace(':', '_', $labelStr));
     }
 }
