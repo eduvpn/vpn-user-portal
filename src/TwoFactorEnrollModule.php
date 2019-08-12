@@ -143,7 +143,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 $otpAuthUrl = sprintf(
                     'otpauth://totp/%s:%s?secret=%s&issuer=%s',
                     $request->getServerName(),
-                    $userInfo->getUserId(),
+                    urlencode($userInfo->getUserId()),
                     $totpSecret,
                     $request->getServerName()
                 );
