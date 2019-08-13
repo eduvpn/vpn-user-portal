@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.10 (...)
+## 2.0.10 (2019-08-13)
 - URL encode the user ID and issuer when generating OTP QR code
 
 ## 2.0.9 (2019-08-08)
