@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.10 (...)
+- URL encode the user ID and issuer when generating OTP QR code
+
 ## 2.0.9 (2019-08-08)
 - add `uk_UA` translation
 - document all (possible) configuration changes since 2.0.0 in 
