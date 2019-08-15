@@ -167,68 +167,46 @@ div.footer button {
 }
 
 table.stats {
-    font-size: 85%;
-    margin: 0 auto;
-    border-spacing: 0.3em 0;
+    border-spacing: 0.2em 0;
 }
 
-table.stats tbody td {
-    background-color: #555;
-    line-height: 0.5;
-    color: transparent;
+table.stats td, table.stats th {
     width: 1em;
+    text-align: center;
+    line-height: 0.5;
 }
 
-table.stats tbody td:empty {
-    background-color: white;
+table.stats tbody th span, table.stats tfoot th span {
+    writing-mode: vertical-rl;
+    font-weight: normal;
+    white-space: nowrap;
+    line-height: 1em;
+    padding-top: 0.5em;
+    font-size: 85%;
+}
+
+table.stats tbody th span {
+    writing-mode: vertical-rl;
+}
+
+table.stats tbody td:not(:empty) {
+    background-color: #888;
     color: transparent;
 }
 
-table.stats tbody th {
-    font-weight: normal;
+table.stats th.index {
+    vertical-align: top;
+    padding: 0 0.5em;
+    border-top: 1px solid #888;
 }
 
-table.stats tbody th.unit, tbody th.date {
+table.stats th.index span {
     font-weight: bold;
 }
 
-table.stats tbody th.unit {
-    border-top: 1px solid #444;
-    text-align: right;
-    vertical-align: top;
-    width: 6em;
-}
-
-table.stats tbody th {
-    width: 1em;
-    line-height: 1em;
-    color: #444;
-    padding-top: 0.3em;
-}
-
-table.stats tfoot th.date {
-    border-top: 0;
-    text-align: center;
-}
-
-table.stats tfoot th {
-    border-top: 1px solid #555;
-}
-
-table.stats tfoot th span {
-    /* explicit height is needed for Chrome... otherwise it breaks over multiple lines for some reason */
-    height: 6em;
-    padding-top: 0.5em;
-    font-weight: normal;
-    line-height: 1;
-    writing-mode: vertical-rl;
-    -webkit-writing-mode: vertical-rl;
-    -ms-writing-mode: vertical-rl;
-}
-
 figcaption {
-    text-align: center;
-    padding-bottom: 2em;
     font-size: 85%;
+    text-align: center;
     font-style: italic;
+    padding: 1em;
 }

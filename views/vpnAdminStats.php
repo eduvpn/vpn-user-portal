@@ -34,12 +34,12 @@
 
 <!-- #users -->
 <figure>
-    <table class="stats stats-users">
+    <table class="stats">
         <tbody>
 <?php for ($y = 0; $y < 25; ++$y): ?>
     <tr>
 <?php if (0 === $y): ?>
-    <th class="unit" rowspan="25"><?=$this->e($graphStats[$profileId]['max_unique_user_count']); ?> <?=$this->t('Users'); ?></th>
+    <th class="index" rowspan="25"><span><?=$this->e($graphStats[$profileId]['max_unique_user_count']); ?> <?=$this->t('Users'); ?></span></th>
 <?php endif; ?>
 <?php foreach ($graphStats[$profileId]['date_list'] as $dayStr => $dayData): ?>
 <?php if ($graphStats[$profileId]['date_list'][$dayStr]['user_fraction'] >= 25 - $y): ?>
@@ -53,7 +53,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th class="date"><?=$this->t('Date'); ?></th>
+                <th class="index"><span><?=$this->t('Date'); ?></span></th>
 <?php foreach (array_keys($graphStats[$profileId]['date_list']) as $i => $dayStr): ?>
         <th>
 <?php if (0 === $i % 3): ?>
@@ -71,12 +71,12 @@
 
 <!-- #traffic -->
 <figure>
-    <table class="stats stats-traffic">
+    <table class="stats">
         <tbody>
 <?php for ($y = 0; $y < 25; ++$y): ?>
     <tr>
 <?php if (0 === $y): ?>
-    <th class="unit" rowspan="25"><?=$this->batch($graphStats[$profileId]['max_traffic_count'], 'escape|bytes_to_human'); ?></th>
+    <th class="index" rowspan="25"><span><?=$this->batch($graphStats[$profileId]['max_traffic_count'], 'escape|bytes_to_human'); ?></span></th>
 <?php endif; ?>
 
 <?php foreach ($graphStats[$profileId]['date_list'] as $dayStr => $dayData): ?>
@@ -91,7 +91,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th class="date"><?=$this->t('Date'); ?></th>
+                <th class="index"><span><?=$this->t('Date'); ?></span></th>
 <?php foreach (array_keys($graphStats[$profileId]['date_list']) as $i => $dayStr): ?>
         <th>
 <?php if (0 === $i % 3): ?>
