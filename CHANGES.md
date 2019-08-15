@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.11 (...)
+- rework "Stats" graphs using HTML/CSS instead of PNG image, allowing for 
+  simpler code and translation of text used in graphs
+
 ## 2.0.10 (2019-08-13)
 - URL encode the user ID and issuer when generating OTP QR code
 
