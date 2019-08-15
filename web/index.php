@@ -69,11 +69,10 @@ try {
         sprintf('%s/views', $baseDir),
         sprintf('%s/config/views', $baseDir),
     ];
-    $styleConfig = null;
+
     if ($config->hasItem('styleName')) {
         $styleName = $config->getItem('styleName');
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
-        $styleConfig = Config::fromFile(sprintf('%s/config/%s.php', $baseDir, $styleName));
     }
 
     $sessionExpiry = $config->getItem('sessionExpiry');
