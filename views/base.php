@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?=$this->t('VPN Portal'); ?></title>
     <link href="<?=$this->e($requestRoot); ?>css/normalize.css" media="screen" rel="stylesheet">
     <link href="<?=$this->e($requestRoot); ?>css/screen.css" media="screen" rel="stylesheet">
