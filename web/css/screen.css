@@ -204,6 +204,10 @@ table.stats th.index span {
     font-weight: bold;
 }
 
+figure {
+    margin-bottom: 2em;
+}
+
 figcaption {
     font-size: 85%;
     text-align: center;
