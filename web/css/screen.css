@@ -167,7 +167,7 @@ div.footer button {
 }
 
 table.stats {
-    border-spacing: 0.2em 0;
+    border-spacing: 3px 0;
 }
 
 table.stats td, table.stats th {
