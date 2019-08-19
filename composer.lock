@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5d7b02c6f1da57acd8696a9c409e779",
+    "content-hash": "3f2c3d53ff327fcf6f9844e0a9799dcd",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,11 +54,11 @@
         },
         {
             "name": "fkooman/jwt",
-            "version": "1.0.0",
+            "version": "v1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-jwt",
-                "reference": "b4de428759b1bd56195ae0c22e140799c5d13c40"
+                "reference": "f1eae4967dcd6cb1d75cd7522b7d4d6f128ba5fb"
             },
             "require": {
                 "ext-date": "*",
@@ -68,21 +68,15 @@
                 "ext-spl": "*",
                 "paragonie/constant_time_encoding": "^1.0.3|^2.2.0",
                 "paragonie/random_compat": ">=1",
+                "paragonie/sodium_compat": "^1",
                 "php": ">= 5.4.8",
                 "symfony/polyfill-php56": "^1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4|^5|^6|^7"
             },
-            "suggest": {
-                "ext-libsodium": "PHP < 7.2 sodium implementation",
-                "ext-sodium": "PHP >= 7.2 sodium implementation"
-            },
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/sodium_compat.php"
-                ],
                 "psr-4": {
                     "fkooman\\Jwt\\": "src/"
                 }
@@ -106,7 +100,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-jwt"
             },
-            "time": "2019-03-06T11:07:25+00:00"
+            "time": "2019-08-19T13:26:52+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -2223,6 +2217,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "fkooman/jwt": 20,
         "lc/common": 20
     },
     "prefer-stable": true,

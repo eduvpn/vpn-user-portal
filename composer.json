@@ -54,7 +54,7 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
-        "fkooman/jwt": "^1",
+        "fkooman/jwt": "v1.x-dev",
         "fkooman/oauth2-server": "^5",
         "fkooman/php-saml-sp": "^0.2",
         "fkooman/secookie": "^2",
