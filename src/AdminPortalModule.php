@@ -426,8 +426,6 @@ class AdminPortalModule implements ServiceModuleInterface
             $statsData[$profileId]['date_list'] = $dayStats;
         }
 
-        error_log(json_encode($statsData));
-
         return $statsData;
     }
 
