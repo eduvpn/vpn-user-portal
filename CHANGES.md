@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.11 (...)
+## 2.0.11 (2019-08-19)
 - rework "Stats" graphs using HTML/CSS instead of PNG image, allowing for 
   simpler code, translation of graph text and styling using CSS
 
