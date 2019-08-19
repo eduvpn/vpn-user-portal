@@ -7,9 +7,6 @@
         }
     ],
     "autoload": {
-        "files": [
-            "src/sodium_compat.php"
-        ],
         "psr-4": {
             "LC\\Portal\\": "src/"
         }
@@ -65,15 +62,12 @@
         "lc/common": "v2.x-dev",
         "paragonie/constant_time_encoding": "^1|^2",
         "paragonie/random_compat": "^1|^2",
+        "paragonie/sodium_compat": "^1",
         "php": ">=5.4.0"
     },
     "require-dev": {
         "ext-json": "*",
         "phpunit/phpunit": "^4.8.35|^5|^6|^7"
-    },
-    "suggest": {
-        "ext-libsodium": "PHP < 7.2 sodium implementation",
-        "ext-sodium": "PHP >= 7.2 sodium implementation"
     },
     "support": {
         "email": "eduvpn@surfnet.nl",
