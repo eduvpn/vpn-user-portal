@@ -120,17 +120,25 @@ try {
     $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
     // the first listed language is the default language
     $uiLang = array_keys($supportedLanguages)[0];
-    $languageFile = null;
     if (array_key_exists('ui_lang', $_COOKIE)) {
         $uiLang = InputValidation::uiLang($_COOKIE['ui_lang']);
     }
+    $languageFileList = [];
     if ('en_US' !== $uiLang) {
         if (array_key_exists($uiLang, $supportedLanguages)) {
-            $languageFile = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
+            $languageFileList[] = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
+        }
+        // check whether the theme also installed a language file, and add this
+        // as well then...
+        if ($config->hasItem('styleName')) {
+            $styleName = $config->getItem('styleName');
+            if (FileIO::exists(sprintf('%s/locale/%s/%s.php', $baseDir, $styleName, $uiLang))) {
+                $languageFileList[] = sprintf('%s/locale/%s/%s.php', $baseDir, $styleName, $uiLang);
+            }
         }
     }
 
-    $tpl = new Tpl($templateDirs, $languageFile);
+    $tpl = new Tpl($templateDirs, $languageFileList);
     $tpl->addDefault(
         [
             'requestUri' => $request->getUri(),
