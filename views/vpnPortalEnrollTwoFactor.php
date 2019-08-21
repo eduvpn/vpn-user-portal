@@ -56,4 +56,4 @@
             <?php endif; ?>
         <?php endif; ?>
     <?php endif; ?>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

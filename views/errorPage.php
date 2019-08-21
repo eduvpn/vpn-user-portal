@@ -8,4 +8,4 @@
     <p class="error">
         <code><?=$this->e($message); ?></code>
     </p>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

@@ -14,4 +14,4 @@
         <button type="submit" name="approve" value="no"><?=$this->t('Reject'); ?></button>
         <button type="submit" name="approve" value="yes"><?=$this->t('Approve'); ?></button>
     </form>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

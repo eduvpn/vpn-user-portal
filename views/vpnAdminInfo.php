@@ -29,4 +29,4 @@
             </tbody>
         </table>
     <?php endforeach; ?>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

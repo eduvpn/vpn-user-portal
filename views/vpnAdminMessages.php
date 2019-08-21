@@ -18,4 +18,4 @@
             <?php endif; ?>
         </fieldset>
     </form>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

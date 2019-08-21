@@ -35,4 +35,4 @@
             </table>
         <?php endif; ?>
     <?php endforeach; ?>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

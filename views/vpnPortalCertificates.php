@@ -26,4 +26,4 @@
             </tbody>
         </table>
     <?php endif; ?>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

@@ -31,4 +31,4 @@
             <button type="submit"><?=$this->t('Sign In'); ?></button>
         </fieldset>
     </form>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

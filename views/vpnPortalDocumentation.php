@@ -152,4 +152,4 @@
         This is <strong>NOT</strong> recommended! On a computer this can be 
         dealt with by using Tails mentioned above.
     </p>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

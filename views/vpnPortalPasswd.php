@@ -34,4 +34,4 @@
             <button type="submit"><?=$this->t('Confirm'); ?></button>
         </fieldset>
     </form>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>

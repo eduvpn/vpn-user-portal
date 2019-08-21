@@ -27,4 +27,4 @@
         <?=$this->t('Contact support if you lost your TOTP.'); ?>
         <?=$this->t('Your ID is <code>%_two_factor_user_id%</code>.'); ?>
     </p>
-<?php $this->stop(); ?>
+<?php $this->stop('content'); ?>
