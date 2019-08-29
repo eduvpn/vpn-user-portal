@@ -4,6 +4,7 @@
 - switch to `paragonie/sodium_compat` for Composer installations
 - make border spacing for stats diagrams absolute 3px instead of relative 0.2em
 - support translation for themes/styles as well
+- update templates for new `Tpl` class
 
 ## 2.0.11 (2019-08-19)
 - rework "Stats" graphs using HTML/CSS instead of PNG image, allowing for 
