@@ -28,15 +28,7 @@ working!
   instead of only a string, to allow multiple attributes to be used.
 - add `pl_PL` translation. It can be added under `supportedLanguages` as
   `'pl_PL' => 'polski'`
-
-## 2.0.6
-
-_N/A_
-
-## 2.0.5
-
-_N/A_
-
+    
 ## 2.0.4
 
 - Add `MellonAuthentication` -> `nameIdSerialization` (`bool`) and 
@@ -45,15 +37,3 @@ _N/A_
   In order to use it, the `nameIdSerialization` option has to be set to `true` 
   and the `spEntityId` MUST be the entity ID of the SAML SP as configured in 
   mod_auth_mellon
-
-## 2.0.3
-
-_N/A_
-
-## 2.0.2
-
-_N/A_
-
-## 2.0.1
-
-_N/A_
