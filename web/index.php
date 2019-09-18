@@ -31,6 +31,7 @@ use LC\Common\Http\LdapAuth;
 use LC\Common\Http\RadiusAuth;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
+use LC\Common\Http\StaticPermissions;
 use LC\Common\Http\TwoFactorHook;
 use LC\Common\Http\TwoFactorModule;
 use LC\Common\HttpClient\CurlHttpClient;
@@ -177,6 +178,14 @@ try {
         $returnParameter = 'return';
     }
 
+    // StaticPermissions for the local authentiction mechanisms
+    // (PDO, LDAP, RADIUS)
+    $staticPermissions = null;
+    $staticPermissionsFile = sprintf('%s/config/static_permissions.json', $baseDir);
+    if (FileIO::exists($staticPermissionsFile)) {
+        $staticPermissions = new StaticPermissions($staticPermissionsFile);
+    }
+
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
@@ -271,13 +280,16 @@ try {
                 $config->getSection('FormLdapAuthentication')->optionalItem('userFilterTemplate'),
                 $config->getSection('FormLdapAuthentication')->optionalItem('permissionAttribute')
             );
-            $service->addModule(
-                new FormAuthenticationModule(
-                    $userAuth,
-                    $session,
-                    $tpl
-                )
+
+            $fam = new FormAuthenticationModule(
+                $userAuth,
+                $session,
+                $tpl
             );
+            if (null !== $staticPermissions) {
+                $fam->setStaticPermissions($staticPermissions);
+            }
+            $service->addModule($fam);
 
             break;
         case 'FormPdoAuthentication':
@@ -289,13 +301,16 @@ try {
                 )
             );
 
-            $service->addModule(
-                new FormAuthenticationModule(
-                    $storage,
-                    $session,
-                    $tpl
-                )
+            $fam = new FormAuthenticationModule(
+                $storage,
+                $session,
+                $tpl
             );
+            if (null !== $staticPermissions) {
+                $fam->setStaticPermissions($staticPermissions);
+            }
+            $service->addModule($fam);
+
             // add module for changing password
             $service->addModule(
                 new PasswdModule(
@@ -323,13 +338,15 @@ try {
                 $userAuth->setNasIdentifier($config->getSection('FormRadiusAuthentication')->getItem('nasIdentifier'));
             }
 
-            $service->addModule(
-                new FormAuthenticationModule(
-                    $userAuth,
-                    $session,
-                    $tpl
-                )
+            $fam = new FormAuthenticationModule(
+                $userAuth,
+                $session,
+                $tpl
             );
+            if (null !== $staticPermissions) {
+                $fam->setStaticPermissions($staticPermissions);
+            }
+            $service->addModule($fam);
 
             break;
         default:
