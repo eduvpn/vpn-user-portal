@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.13 (...)
+## 2.0.13 (2019-09-25)
 - implement static permissions for PDO|LDAP|RADIUS authentication backends
 
 ## 2.0.12 (2019-08-29)
