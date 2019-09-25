@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.13 (...)
+- implement static permissions for PDO|LDAP|RADIUS authentication backends
+
 ## 2.0.12 (2019-08-29)
 - switch to `paragonie/sodium_compat` for Composer installations
 - make border spacing for stats diagrams absolute 3px instead of relative 0.2em
