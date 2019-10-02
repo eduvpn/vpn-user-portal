@@ -39,6 +39,7 @@ use LC\Common\HttpClient\ServerClient;
 use LC\Common\LdapClient;
 use LC\Common\Logger;
 use LC\Common\Tpl;
+use LC\Portal\AccessHook;
 use LC\Portal\AdminHook;
 use LC\Portal\AdminPortalModule;
 use LC\Portal\ClientFetcher;
@@ -358,6 +359,16 @@ try {
             'authMethod' => $authMethod,
         ]
     );
+
+    if (null !== $accessPermissionList = $config->optionalItem('accessPermissionList')) {
+        // hasAccess
+        $service->addBeforeHook(
+            'has_access',
+            new AccessHook(
+                $accessPermissionList
+            )
+        );
+    }
 
     $twoFactorMethods = $config->optionalItem('twoFactorMethods', ['totp']);
     if (0 !== count($twoFactorMethods)) {

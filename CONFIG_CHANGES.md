@@ -8,6 +8,20 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.0.14
+
+It is now possible to completely reject users from the portal / API by 
+requiring them to have a certain permission to get access.
+
+The configuration option `accessPermissionList` takes an array of permissions, 
+where the user is allowed access when they have at least one of the permissions
+listed. The permissions are taken from the `permissionAttribute` for the 
+supporting authentication backends, or from static permissions.
+
+For example:
+
+    'accessPermissionList' => ['administrators', 'employees'],
+
 ## 2.0.9
 
 - add `uk_UA` translation. It can be added under `supportedLanguages` as 
