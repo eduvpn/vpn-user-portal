@@ -51,13 +51,6 @@ class ClientConfig
             // wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
 
-            // CRYPTO (CONTROL CHANNEL)
-            // @see RFC 7525
-            // @see https://bettercrypto.org
-            // @see https://community.openvpn.net/openvpn/wiki/Hardening
-            'tls-version-min 1.2',
-            'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
-
             // only allow AES-256-GCM
             'ncp-ciphers AES-256-GCM',
             'cipher AES-256-GCM',
@@ -66,6 +59,19 @@ class ClientConfig
             trim($serverInfo['ca']),
             '</ca>',
         ];
+
+        if (\array_key_exists('tlsOneThree', $profileConfig) && $profileConfig['tlsOneThree']) {
+            // for TLSv1.3 we don't care about the tls-ciphers, they are all
+            // fine, let the client choose
+            $clientConfig[] = 'tls-version-min 1.3';
+        } else {
+            // CRYPTO (CONTROL CHANNEL)
+            // @see RFC 7525
+            // @see https://bettercrypto.org
+            // @see https://community.openvpn.net/openvpn/wiki/Hardening
+            $clientConfig[] = 'tls-version-min 1.2';
+            $clientConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384';
+        }
 
         // API 1, if clientCertificate is provided, we add it directly to the
         // configuration file, XXX can be removed for API 2
