@@ -61,7 +61,6 @@ class ClientConfig
             // only allow AES-256-GCM
             'ncp-ciphers AES-256-GCM',
             'cipher AES-256-GCM',
-            'auth none',
 
             '<ca>',
             trim($serverInfo['ca']),
