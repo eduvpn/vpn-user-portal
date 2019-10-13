@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.14 (...)
+- drop "auth none" from client configuration file
+- support TLSv1.3-only configurations
+- allow restricting any access to portal/API based on permissions
+
 ## 2.0.13 (2019-09-25)
 - implement static permissions for PDO|LDAP|RADIUS authentication backends
 
