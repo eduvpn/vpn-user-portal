@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.14 (...)
+## 2.0.14 (2010-10-14)
 - drop "auth none" from client configuration file
 - support TLSv1.3-only configurations
 - allow restricting any access to portal/API based on permissions
