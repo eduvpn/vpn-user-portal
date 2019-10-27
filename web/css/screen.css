@@ -1,21 +1,135 @@
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    max-width: 50rem;
+    max-width: 60em;
     margin: 0 auto;
-    color: #555;
+    padding: 0.5em;
+}
+
+header {
+    text-align: right;
+}
+
+ul.languageSwitcher {
+    padding: 0;
+    list-style: none;
+    font-size: 85%;
+}
+
+ul.languageSwitcher li {
+    display: inline-block;
+}
+
+ul.languageSwitcher li button {
+    border: 0;
+    margin: 0 0.5em 0.5em 0.5em;
+    padding: 0;
+    background-color: #fff;
+}
+
+div.page {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2em;
+}
+
+nav {
+    min-width: 10em;
+}
+
+nav ul {
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    margin: 0.5em;
     padding: 0.3em;
-    text-align: justify;
+    list-style: none;
+    display: inline-block;
 }
 
-h1 {
-    display: none;
+nav ul li a {
+    color: #212529;
+    text-decoration: none;
 }
 
-a {
-    color: #222;
+nav ul li.active a {
+    color: #007bff;
+}
+
+nav ul li a:hover {
+    text-decoration: none;
+    color: #007bff;
+}
+
+main {
+    padding: 0 0.5em;
+}
+
+main h1 {
+    text-align: center;
+	margin-bottom: 0.5em;
+}
+
+main label {
+    font-weight: bold;
+    display: block;
+    margin: 0.5em 0 0 0;
+}
+
+@media (min-width: 800px) {
+    div.page {
+        grid-template-columns: auto 4fr;
+    }
+    
+    nav ul li {
+        display: block;
+    }
+}
+
+/* form elements */
+input[type=text], input[type=password], button, select, textarea {
+    padding: 0.3em;
+    border: 1px solid #ccc;
+    outline: none;
+    margin: 0.5em 0;
+}
+
+form.frm {
+	margin: 1em auto;
+	width: 100%;
+}
+
+form.frm select, form.frm input[type=text] {
+    width: 100%;
+}
+
+form.frm button {
+/*    margin-top: 0.5em;*/
+}
+
+button {
+    padding: 0.3em 1em;
+    background-color: #f8f8f8;
+}
+
+textarea {
+    width: 100%;
+}
+
+/* auth */
+div.auth {
+    max-width: 20em;
+    margin: 0 auto;
+}
+
+div.auth form input[type=text], div.auth form input[type=password] {
+    width: 100%;
+}
+
+form.logout {
+    font-size: 75%;
+    margin: 1.5em 0;
+    text-align: center;
 }
 
 dt {
@@ -27,50 +141,37 @@ dt {
     text-align: right;
 }
 
-fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
-}
-
-fieldset textarea {
-    width: 100%;
-}
-
-fieldset button {
-    margin-top: 1em;
+.text-center {
+    text-align: center;
 }
 
 p.small {
     font-size: 85%;
 }
 
+p.big {
+    font-size: 115%;
+}
+
 p.success, p.success a, span.success, span.success a {
-    background-color: #008000;
-    border: 1px solid #007000;
-    color: #fff;
+    border: 1px solid #008000;
+    color: #008000;
 }
 
 p.warning, p.warning a, span.warning, span.warning a {
-    background-color: #ff8c00;
-    border: 1px solid #ef7c00;
-    color: #fff;
+    border: 1px solid #ff8c00;
+    color: #ff8c00;
 }
 
 p.error, p.error a, span.error, span.error a {
-    background-color: #dc143c;
-    border: 1px solid #cc042c;
-    color: #fff;
+    border: 1px solid #dc143c;
+    color: #dc143c;
 }
 
 p.plain, p.plain a, span.plain, span.plain a {
-    background-color: #f4f4f4;
-    border: 1px solid #e4e4e4;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
     color: #000;
-}
-
-p.plain, p.success, p.warning, p.error, span.plain, span.success, span.warning, span.error {
-    border-radius: 0.5em;
 }
 
 span.plain, span.success, span.warning, span.error {
@@ -83,47 +184,20 @@ p.plain, p.success, p.warning, p.error {
     padding: 1em;
 }
 
-p img {
-    display: block;
-    margin: 1em auto;
-}
-  
-ul.simple {
-    padding: 0 1em;
-    margin: 0;
-}
-
-ul.menu {
-    padding: 0;
-}
-
-ul.menu li {
-    display: inline-block;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
-
-ul.menu li.active a, ul.menu li.active span {
-    color: #fff;
-    background-color: #555;
-    border-radius: 0.5em;
-}
-
-ul.menu li a, ul.menu li span {
-    display: inline-block;
-    padding: 0.7em;
-    text-decoration: none;
-    color: #555;
-}
-
 table.tbl {
     border: 1px solid #ccc;
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+table.tbl ul {
+    margin: 0;
+    padding: 0 0 0 1em;
 }
 
 table.tbl thead tr {
-    background-color: #eee;
+    background-color: #f8f8f8;
     color: #555;
 }
 
@@ -136,38 +210,18 @@ table.tbl td, table.tbl th {
 }
 
 table.tbl tbody tr:nth-child(even) {
-   background-color: #f4f4f4;
+    background-color: #f8f8f8;
 }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin: 0.7em 0 0.3em 0;
-}
-
-hr {
-    display: none;
-}
-
-div.footer {
-    margin: 2em 0;
-    text-align: center;
-}
-
-div.footer form {
-    display: inline;
-}
-
-div.footer button {
-    border: 0;
-    background-color: #fff;
-    color: #888;
-    text-decoration: underline;
-    cursor: pointer;
+table.tbl button, table.tbl form {
+    margin: 0;
 }
 
 table.stats {
+    margin: 2em auto 0 auto;
+    border-collapse: separate;
     border-spacing: 3px 0;
+    width: 90%;
 }
 
 table.stats td, table.stats th {
@@ -195,6 +249,7 @@ table.stats tbody td:not(:empty) {
 }
 
 table.stats th.index {
+    box-sizing: content-box;
     vertical-align: top;
     padding: 0 0.5em;
     border-top: 1px solid #888;
@@ -213,4 +268,10 @@ figcaption {
     text-align: center;
     font-style: italic;
     padding: 1em;
+}
+
+footer {
+	margin-top: 2em;
+	font-size: 75%;
+	text-align: center;
 }

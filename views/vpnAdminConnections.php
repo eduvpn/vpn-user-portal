@@ -1,5 +1,6 @@
 <?php $this->layout('base', ['activeItem' => 'connections']); ?>
 <?php $this->start('content'); ?>
+    <h1><?=$this->t('Connections'); ?></h1>
     <?php foreach ($connections as $profile): ?>
         <h2 id="<?=$this->e($profile['id']); ?>"><?=$this->e($idNameMapping[$profile['id']]); ?></h2>
         <?php if (0 === count($profile['connections'])): ?>
@@ -17,10 +18,10 @@
                 <?php foreach ($profile['connections'] as $connection): ?>
                 <tr>
                     <td>
-                        <a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($connection['user_id'], 'rawurlencode'); ?>"><?=$this->e($connection['user_id']); ?></a>
+                        <a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($connection['user_id'], 'rawurlencode'); ?>" title="<?=$this->e($connection['user_id']); ?>"><?=$this->etr($connection['user_id'], 25); ?></a>
                     </td>
                     <td>
-                        <span title="<?=$this->e($connection['common_name']); ?>"><?=$this->e($connection['display_name']); ?></span>
+                        <span title="<?=$this->e($connection['display_name']); ?>"><?=$this->etr($connection['display_name'], 25); ?></span>
                     </td>
                     <td>
                         <ul>

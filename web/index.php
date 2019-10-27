@@ -151,6 +151,7 @@ try {
     $tpl->addDefault(
         [
             'supportedLanguages' => $supportedLanguages,
+            'uiLang' => $uiLang,
         ]
     );
 

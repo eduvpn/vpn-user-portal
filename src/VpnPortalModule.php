@@ -9,6 +9,7 @@
 
 namespace LC\Portal;
 
+use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\SeCookie\SessionInterface;
@@ -47,6 +48,9 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var bool */
     private $shuffleHosts = true;
 
+    /** @var \DateTime */
+    private $dateTime;
+
     public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, ClientDbInterface $clientDb)
     {
         $this->config = $config;
@@ -55,6 +59,17 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->session = $session;
         $this->storage = $storage;
         $this->clientDb = $clientDb;
+        $this->dateTime = new DateTime();
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     *
+     * @return void
+     */
+    public function setDateTime(DateTime $dateTime)
+    {
+        $this->dateTime = $dateTime;
     }
 
     /**
@@ -78,12 +93,12 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request) {
-                return new RedirectResponse($request->getRootUri().'new', 302);
+                return new RedirectResponse($request->getRootUri().'home', 302);
             }
         );
 
         $service->get(
-            '/new',
+            '/home',
             /**
              * @return \LC\Common\Http\Response
              */
@@ -104,9 +119,8 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 return new HtmlResponse(
                     $this->tpl->render(
-                        'vpnPortalNew',
+                        'vpnPortalHome',
                         [
-                            'profileList' => $visibleProfileList,
                             'motdMessage' => $motdMessage,
                         ]
                     )
@@ -114,8 +128,49 @@ class VpnPortalModule implements ServiceModuleInterface
             }
         );
 
+        $service->get(
+            '/configurations',
+            /**
+             * @return \LC\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                /** @var \LC\Common\Http\UserInfo */
+                $userInfo = $hookData['auth'];
+
+                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $userPermissions = $userInfo->getPermissionList();
+                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
+
+                $userCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->getUserId()]);
+
+                // if query parameter "all" is set, show all certificates, also
+                // those issued to OAuth clients
+                $showAll = null !== $request->getQueryParameter('all', false);
+
+                $manualCertificateList = [];
+                if (false === $showAll) {
+                    foreach ($userCertificateList as $userCertificate) {
+                        if (null === $userCertificate['client_id']) {
+                            $manualCertificateList[] = $userCertificate;
+                        }
+                    }
+                }
+
+                return new HtmlResponse(
+                    $this->tpl->render(
+                        'vpnPortalConfigurations',
+                        [
+                            'expiryDate' => $this->getExpiryDate(new DateInterval($this->config->getItem('sessionExpiry'))),
+                            'profileList' => $visibleProfileList,
+                            'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
+                        ]
+                    )
+                );
+            }
+        );
+
         $service->post(
-            '/new',
+            '/configurations',
             /**
              * @return \LC\Common\Http\Response
              */
@@ -150,40 +205,6 @@ class VpnPortalModule implements ServiceModuleInterface
             }
         );
 
-        $service->get(
-            '/certificates',
-            /**
-             * @return \LC\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-                $userCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->getUserId()]);
-
-                // if query parameter "all" is set, show all certificates, also
-                // those issued to OAuth clients
-                $showAll = null !== $request->getQueryParameter('all', false);
-
-                $manualCertificateList = [];
-                if (false === $showAll) {
-                    foreach ($userCertificateList as $userCertificate) {
-                        if (null === $userCertificate['client_id']) {
-                            $manualCertificateList[] = $userCertificate;
-                        }
-                    }
-                }
-
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalCertificates',
-                        [
-                            'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
-                        ]
-                    )
-                );
-            }
-        );
-
         $service->post(
             '/deleteCertificate',
             /**
@@ -194,7 +215,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $this->serverClient->post('delete_client_certificate', ['common_name' => $commonName]);
                 $this->serverClient->post('kill_client', ['common_name' => $commonName]);
 
-                return new RedirectResponse($request->getRootUri().'certificates', 302);
+                return new RedirectResponse($request->getRootUri().'configurations', 302);
             }
         );
 
@@ -439,5 +460,17 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return $profileList;
+    }
+
+    /**
+     * @param \DateInterval $dateInterval
+     *
+     * @return string
+     */
+    private function getExpiryDate(DateInterval $dateInterval)
+    {
+        $expiryDate = date_add(clone $this->dateTime, $dateInterval);
+
+        return $expiryDate->format('Y-m-d');
     }
 }

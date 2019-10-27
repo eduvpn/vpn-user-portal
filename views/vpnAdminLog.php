@@ -1,5 +1,6 @@
 <?php $this->layout('base', ['activeItem' => 'log']); ?>
 <?php $this->start('content'); ?>
+    <h1><?=$this->t('Log'); ?></h1>
     <h2><?=$this->t('Search'); ?></h2>
     <p>
         <?=$this->t('Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.'); ?>
@@ -11,9 +12,9 @@
     <form method="post">
         <fieldset>
             <label for="dateTime"><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</label>
-            <input id="dateTime" name="date_time" type="text" size="40" value="<?php if ($date_time): ?><?=$this->d($date_time); ?><?php else: ?><?=$this->d($now); ?><?php endif; ?>" required>
+            <input id="dateTime" name="date_time" type="text" size="30" value="<?php if ($date_time): ?><?=$this->d($date_time); ?><?php else: ?><?=$this->d($now); ?><?php endif; ?>" required>
             <label for="ipAddress"><?=$this->t('IP Address'); ?></label>
-            <input id="ipAddress" name="ip_address" type="text" size="40" value="<?php if ($ip_address): ?><?=$this->e($ip_address); ?><?php endif; ?>" placeholder="fdc6:6794:d2bf:1::1000" required>
+            <input id="ipAddress" name="ip_address" type="text" size="30" value="<?php if ($ip_address): ?><?=$this->e($ip_address); ?><?php endif; ?>" placeholder="fdc6:6794:d2bf:1::1000" required>
         </fieldset>
         <fieldset>
             <button type="submit"><?=$this->t('Search'); ?></button>

@@ -1,5 +1,6 @@
 <?php $this->layout('base', ['activeItem' => 'info']); ?>
 <?php $this->start('content'); ?>
+    <h1><?=$this->t('Info'); ?></h1>
     <?php foreach ($profileList as $profile): ?>
         <h2><?=$this->e($profile['displayName']); ?></h2>
         <table class="tbl">
@@ -25,7 +26,7 @@
                             <td><?=$this->e($v); ?></td>
                         <?php endif; ?>
                     </tr>
-                <?php endforeach; ?> 
+                <?php endforeach; ?>
             </tbody>
         </table>
     <?php endforeach; ?>

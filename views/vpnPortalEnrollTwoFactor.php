@@ -1,5 +1,6 @@
 <?php $this->layout('base', ['activeItem' => 'account']); ?>
 <?php $this->start('content'); ?>
+    <h1><?=$this->t('Account'); ?></h1>
     <h2><?=$this->t('Two-factor Enrollment'); ?></h2>
 
     <?php if ($requireTwoFactorEnrollment): ?>
@@ -47,7 +48,7 @@
                     <fieldset>
                         <label for="otp_key"><?=$this->t('OTP'); ?></label>
                         <input type="text" id="totp_key" inputmode="numeric" name="totp_key" autocomplete="off" maxlength="6" required pattern="[0-9]{6}" autofocus>
-                        <input type="hidden" name="totp_secret" value="<?=$this->e($totpSecret); ?>"> 
+                        <input type="hidden" name="totp_secret" value="<?=$this->e($totpSecret); ?>">
                     </fieldset>
                     <fieldset>
                         <button><?=$this->t('Verify'); ?></button>

@@ -1,7 +1,7 @@
 <?php $this->layout('base'); ?>
 <?php $this->start('content'); ?>
-    <h2><?=$this->t('Error'); ?></h2>
-    <h3><?=$this->e($code); ?></h3>
+    <h1><?=$this->t('Error'); ?></h1>
+    <h2><?=$this->e($code); ?></h2>
 
     <p><?=$this->t('An error occurred.'); ?></p>
 

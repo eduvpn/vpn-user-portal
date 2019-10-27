@@ -1,5 +1,6 @@
 <?php $this->layout('base', ['activeItem' => 'account']); ?>
 <?php $this->start('content'); ?>
+    <h1><?=$this->t('Account'); ?></h1>
     <h2><?=$this->t('User Info'); ?></h2>
     <table class="tbl">
         <tr>
@@ -19,7 +20,7 @@
             <td>
                 <ul>
                     <?php foreach ($userPermissions as $userPermission): ?>
-                        <li><?=$this->e($userPermission); ?></li>
+                        <li><code><?=$this->e($userPermission); ?></code></li>
                     <?php endforeach; ?>
                 </ul>
             </td>

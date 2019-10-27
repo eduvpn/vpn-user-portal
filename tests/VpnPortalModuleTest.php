@@ -9,6 +9,7 @@
 
 namespace LC\Portal\Tests;
 
+use DateTime;
 use LC\Common\Config;
 use LC\Common\Http\NullAuthenticationHook;
 use LC\Common\Http\Request;
@@ -36,7 +37,7 @@ class VpnPortalModuleTest extends TestCase
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(
-            new Config([]),
+            new Config(['sessionExpiry' => 'P90D']),
             new JsonTpl(),
             $serverClient,
             new TestSession(),
@@ -44,7 +45,7 @@ class VpnPortalModuleTest extends TestCase
             new ClientFetcher(new Config(['Api' => []]))
         );
         $vpnPortalModule->setShuffleHosts(false);
-
+        $vpnPortalModule->setDateTime(new DateTime('2019-01-01'));
         $this->service = new Service();
         $this->service->addModule($vpnPortalModule);
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
@@ -53,16 +54,11 @@ class VpnPortalModuleTest extends TestCase
     /**
      * @return void
      */
-    public function testNewGet()
+    public function testHomeGet()
     {
         $this->assertSame(
             [
-                'vpnPortalNew' => [
-                    'profileList' => [
-                        'internet' => [
-                            'displayName' => 'Internet Access',
-                        ],
-                    ],
+                'vpnPortalHome' => [
                     'motdMessage' => [
                         'id' => 1,
                         'message_type' => 'motd',
@@ -70,20 +66,20 @@ class VpnPortalModuleTest extends TestCase
                     ],
                 ],
             ],
-            $this->makeRequest('GET', '/new')
+            $this->makeRequest('GET', '/home')
         );
     }
 
     /**
      * @return void
      */
-    public function testNewPost()
+    public function testConfigurtionsPost()
     {
         $this->assertSame(
             trim(file_get_contents(sprintf('%s/data/foo_MyConfig.ovpn', __DIR__))),
             $this->makeRequest(
                 'POST',
-                '/new',
+                '/configurations',
                 [],
                 ['displayName' => 'MyConfig', 'profileId' => 'internet'],
                 true
@@ -115,11 +111,17 @@ class VpnPortalModuleTest extends TestCase
     /**
      * @return void
      */
-    public function testCertificates()
+    public function testConfigurations()
     {
         $this->assertSame(
             [
-                'vpnPortalCertificates' => [
+                'vpnPortalConfigurations' => [
+                    'expiryDate' => '2019-04-01',
+                    'profileList' => [
+                        'internet' => [
+                            'displayName' => 'Internet Access',
+                        ],
+                    ],
                     'userCertificateList' => [
                         [
                             'display_name' => 'Foo',
@@ -130,7 +132,7 @@ class VpnPortalModuleTest extends TestCase
                     ],
                 ],
             ],
-            $this->makeRequest('GET', '/certificates')
+            $this->makeRequest('GET', '/configurations')
         );
     }
 
