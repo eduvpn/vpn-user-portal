@@ -2,6 +2,7 @@ body {
     max-width: 60em;
     margin: 0 auto;
     padding: 0.5em;
+    text-align: inherit;    /* override for bootstrap-reboot */
 }
 
 header {
