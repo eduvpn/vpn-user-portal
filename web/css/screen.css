@@ -5,7 +5,7 @@ body {
 }
 
 header {
-    text-align: right;
+    text-align: end;
 }
 
 ul.languageSwitcher {
@@ -138,7 +138,7 @@ dt {
 }
 
 .text-right {
-    text-align: right;
+    text-align: end;
 }
 
 .text-center {
