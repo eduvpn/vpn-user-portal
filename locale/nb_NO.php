@@ -11,7 +11,7 @@ return [
     'Account' => 'Konto',
     'Active' => 'Aktiv',
     'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => 'Alle brukere vil se denne "Message of the Day" (MOTD)-meldingen når de logger inn i portalen, eller kobler til VPN med en applikasjon som støtter APIen.',
-    'An application attempts to establish a VPN connection.' => 'En applikasjon prøver å koble til VPN.',
+    'An application attempts to establish a VPN connection.' => 'En applikasjon prøver å koble til VPN.',
     'An error occurred.' => 'Noe har gått galt.',
     'Approve Application' => 'Tillat Applikasjon',
     'Authorized' => 'Autorisert',
