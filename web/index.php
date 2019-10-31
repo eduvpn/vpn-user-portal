@@ -146,12 +146,9 @@ try {
             'requestUri' => $request->getUri(),
             'requestRoot' => $request->getRoot(),
             'requestRootUri' => $request->getRootUri(),
-        ]
-    );
-    $tpl->addDefault(
-        [
             'supportedLanguages' => $supportedLanguages,
             'uiLang' => $uiLang,
+            'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
         ]
     );
 
