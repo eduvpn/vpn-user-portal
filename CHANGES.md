@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.0 (...)
+## 2.1.0 (2019-11-04)
 - completely redone the UI (CSS, templates) of the portal
 - support translations for themes / branding
 - support RTL (right to left) language translations
