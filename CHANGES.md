@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.0 (...)
+- completely redone the UI (CSS, templates) of the portal
+- support translations for themes / branding
+- support RTL (right to left) language translations
+
 ## 2.0.14 (2010-10-14)
 - drop "auth none" from client configuration file
 - support TLSv1.3-only configurations
