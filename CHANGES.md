@@ -4,6 +4,8 @@
 - completely redone the UI (CSS, templates) of the portal
 - support translations for themes / branding
 - support RTL (right to left) language translations
+- add `ar_MA` translation
+- update various translations
 
 ## 2.0.14 (2010-10-14)
 - drop "auth none" from client configuration file
