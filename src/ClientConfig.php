@@ -15,11 +15,11 @@ class ClientConfig
      * @param array $profileConfig
      * @param array $serverInfo
      * @param array $clientCertificate
-     * @param bool  $shufflePorts
+     * @param bool  $pickAtRandom
      *
      * @return string
      */
-    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $shufflePorts)
+    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $pickAtRandom)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig['hostName'];
@@ -31,7 +31,7 @@ class ClientConfig
             }
         }
 
-        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $shufflePorts);
+        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $pickAtRandom);
 
         $clientConfig = [
             '# OpenVPN Client Configuration',

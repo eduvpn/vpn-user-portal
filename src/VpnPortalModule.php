@@ -46,7 +46,7 @@ class VpnPortalModule implements ServiceModuleInterface
     private $clientDb;
 
     /** @var bool */
-    private $shuffleHosts = true;
+    private $pickRemotesAtRandom = true;
 
     /** @var \DateTime */
     private $dateTime;
@@ -73,13 +73,13 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param mixed $shuffleHosts
+     * @param bool $pickRemotesAtRandom
      *
      * @return void
      */
-    public function setShuffleHosts($shuffleHosts)
+    public function setPickRemotesAtRandom($pickRemotesAtRandom)
     {
-        $this->shuffleHosts = (bool) $shuffleHosts;
+        $this->pickRemotesAtRandom = $pickRemotesAtRandom;
     }
 
     /**
@@ -411,7 +411,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info');
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->pickRemotesAtRandom);
 
         // convert the OpenVPN file to "Windows" format, no platform cares, but
         // in Notepad on Windows it looks not so great everything on one line

@@ -37,7 +37,7 @@ class VpnApiModule implements ServiceModuleInterface
     private $sessionExpiry;
 
     /** @var bool */
-    private $shuffleHosts = true;
+    private $pickRemotesAtRandom = true;
 
     /** @var \DateTime */
     private $dateTime;
@@ -56,13 +56,13 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @param bool $shuffleHosts
+     * @param bool $pickRemotesAtRandom
      *
      * @return void
      */
-    public function setShuffleHosts($shuffleHosts)
+    public function setPickRemotesAtRandom($pickRemotesAtRandom)
     {
-        $this->shuffleHosts = (bool) $shuffleHosts;
+        $this->pickRemotesAtRandom = $pickRemotesAtRandom;
     }
 
     /**
@@ -278,7 +278,7 @@ class VpnApiModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info');
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->shuffleHosts);
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->pickRemotesAtRandom);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');
