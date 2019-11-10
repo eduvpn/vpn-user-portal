@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.1 (...)
+- better implementation for "remote" lines added to generated client 
+  configuration, "special" ports are always added (last).
+
 ## 2.1.0 (2019-11-04)
 - completely redone the UI (CSS, templates) of the portal
 - support translations for themes / branding
