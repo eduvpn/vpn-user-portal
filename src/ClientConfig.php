@@ -103,82 +103,74 @@ class ClientConfig
 
         // remote entries
         foreach ($remoteProtoPortList as $remoteProtoPort) {
-            $clientConfig[] = sprintf('remote %s %d %s', $hostName, $remoteProtoPort['port'], $remoteProtoPort['proto']);
+            $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) substr($remoteProtoPort, 4), substr($remoteProtoPort, 0, 3));
         }
 
         return implode(PHP_EOL, $clientConfig);
     }
 
     /**
-     * @param array $vpnProtoPorts
-     * @param bool  $shufflePorts
+     * Pick a "normal" UDP and TCP port. Pick a "special" UDP and TCP
+     * port. Take one at random if $pickAtRandom is true.
      *
-     * @return array
+     * @param array $vpnProtoPorts
+     * @param bool  $pickAtRandom
+     *
+     * @return array<string>
      */
-    public static function remotePortProtoList(array $vpnProtoPorts, $shufflePorts)
+    public static function remotePortProtoList(array $vpnProtoPorts, $pickAtRandom)
     {
-        // if these ports are listed in vpnProtoPorts they are ALWAYS added to
-        // the client configuration file
-        $specialUdpPorts = ['udp/53', 'udp/443'];
-        $specialTcpPorts = ['tcp/80', 'tcp/443'];
-
-        $udpPorts = [];
-        $tcpPorts = [];
+        $specialUdpPorts = [];
+        $specialTcpPorts = [];
         $normalUdpPorts = [];
         $normalTcpPorts = [];
 
         foreach ($vpnProtoPorts as $vpnProtoPort) {
             if (0 === strpos($vpnProtoPort, 'udp')) {
-                // UDP
-                if (!\in_array($vpnProtoPort, $specialUdpPorts, true)) {
-                    $normalUdpPorts[] = $vpnProtoPort;
-                } else {
-                    $udpPorts[] = $vpnProtoPort;
+                if (\in_array($vpnProtoPort, ['udp/53', 'udp/443'], true)) {
+                    $specialUdpPorts[] = $vpnProtoPort;
+                    continue;
                 }
+                $normalUdpPorts[] = $vpnProtoPort;
+                continue;
             }
 
             if (0 === strpos($vpnProtoPort, 'tcp')) {
-                // TCP
-                if (!\in_array($vpnProtoPort, $specialTcpPorts, true)) {
-                    $normalTcpPorts[] = $vpnProtoPort;
-                } else {
-                    $tcpPorts[] = $vpnProtoPort;
+                if (\in_array($vpnProtoPort, ['tcp/80', 'tcp/443'], true)) {
+                    $specialTcpPorts[] = $vpnProtoPort;
+                    continue;
                 }
+                $normalTcpPorts[] = $vpnProtoPort;
+                continue;
             }
         }
 
-        // pick one normal UDP port, if available
-        if (0 !== \count($normalUdpPorts)) {
-            if ($shufflePorts) {
-                $udpPorts[] = $normalUdpPorts[random_int(0, \count($normalUdpPorts) - 1)];
-            } else {
-                $udpPorts[] = reset($normalUdpPorts);
-            }
-        }
+        $clientPortList = [];
+        self::getItem($clientPortList, $normalUdpPorts, $pickAtRandom);
+        self::getItem($clientPortList, $normalTcpPorts, $pickAtRandom);
+        self::getItem($clientPortList, $specialUdpPorts, $pickAtRandom);
+        self::getItem($clientPortList, $specialTcpPorts, $pickAtRandom);
 
-        // pick one normal TCP port, if available
-        if (0 !== \count($normalTcpPorts)) {
-            if ($shufflePorts) {
-                $tcpPorts[] = $normalTcpPorts[random_int(0, \count($normalTcpPorts) - 1)];
-            } else {
-                $tcpPorts[] = reset($normalTcpPorts);
-            }
-        }
+        return $clientPortList;
+    }
 
-        if ($shufflePorts) {
-            // this is only "really" random in PHP >= 7.1
-            shuffle($udpPorts);
-            shuffle($tcpPorts);
+    /**
+     * @param array<string> &$clientPortList
+     * @param array<string> $pickFrom
+     * @param bool          $pickAtRandom
+     *
+     * @return void
+     */
+    private static function getItem(array &$clientPortList, array $pickFrom, $pickAtRandom)
+    {
+        if (0 === \count($pickFrom)) {
+            return;
         }
+        if ($pickAtRandom) {
+            $clientPortList[] = $pickFrom[random_int(0, \count($pickFrom) - 1)];
 
-        $protoPortList = [];
-        foreach ($udpPorts as $udpPort) {
-            $protoPortList[] = ['proto' => 'udp', 'port' => (int) substr($udpPort, 4)];
+            return;
         }
-        foreach ($tcpPorts as $tcpPort) {
-            $protoPortList[] = ['proto' => 'tcp', 'port' => (int) substr($tcpPort, 4)];
-        }
-
-        return $protoPortList;
+        $clientPortList[] = reset($pickFrom);
     }
 }
