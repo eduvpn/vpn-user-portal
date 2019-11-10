@@ -76,7 +76,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminConnections',
                         [
                             'idNameMapping' => $idNameMapping,
-                            'connections' => $this->serverClient->getRequireArray('client_connections'),
+                            'vpnConnections' => $this->serverClient->getRequireArray('client_connections'),
                         ]
                     )
                 );
