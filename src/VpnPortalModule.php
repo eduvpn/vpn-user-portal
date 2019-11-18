@@ -103,13 +103,6 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-
-                $profileList = $this->serverClient->getRequireArray('profile_list');
-                $userPermissions = $userInfo->getPermissionList();
-                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
-
                 $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
                 if (0 === \count($motdMessages)) {
                     $motdMessage = false;
