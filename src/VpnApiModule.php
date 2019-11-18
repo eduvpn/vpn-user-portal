@@ -168,8 +168,6 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
-                $accessTokenInfo = $hookData['auth'];
                 $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
                 $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
