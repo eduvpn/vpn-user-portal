@@ -181,15 +181,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
                 // better prevent it early
-                if (!\in_array($profileId, array_keys($profileList), true)) {
+                if (!\in_array($profileId, array_keys($visibleProfileList), true)) {
                     throw new HttpException('no permission to download a configuration for this profile', 400);
-                }
-
-                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
-                if (0 === \count($motdMessages)) {
-                    $motdMessage = false;
-                } else {
-                    $motdMessage = $motdMessages[0];
                 }
 
                 $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userInfo->getUserId()]));
@@ -243,10 +236,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
-                $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userPermissions = $userInfo->getPermissionList();
-                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
-
                 $authorizedClients = $this->storage->getAuthorizations($userInfo->getUserId());
                 foreach ($authorizedClients as $k => $v) {
                     // false means no longer registered
