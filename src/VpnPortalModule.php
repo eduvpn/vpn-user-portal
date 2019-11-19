@@ -63,8 +63,6 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \DateTime $dateTime
-     *
      * @return void
      */
     public function setDateTime(DateTime $dateTime)
@@ -299,15 +297,15 @@ class VpnPortalModule implements ServiceModuleInterface
                 // NOTE: we have to get the list first before deleting the
                 // certificates, otherwise the clients no longer show up the
                 // list... this is NOT good, possible race condition...
-                $clientConnections = $this->serverClient->getRequireArray('client_connections', ['client_id' => $clientId, 'user_id' => $userInfo->getUserId()]);
+                $connectionList = $this->serverClient->getRequireArray('client_connections', ['client_id' => $clientId, 'user_id' => $userInfo->getUserId()]);
 
                 // delete the certificates from the server
                 $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userInfo->getUserId(), 'client_id' => $clientId]);
 
-                // kill the connections
-                foreach ($clientConnections as $profile) {
-                    foreach ($profile['connections'] as $connection) {
-                        $this->serverClient->post('kill_client', ['common_name' => $connection['common_name']]);
+                // kill all active connections for this user/client_id
+                foreach ($connectionList as $profileId => $clientConnectionList) {
+                    foreach ($clientConnectionList as $clientInfo) {
+                        $this->serverClient->post('kill_client', ['common_name' => $clientInfo['common_name']]);
                     }
                 }
 
@@ -368,11 +366,10 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param string    $serverName
-     * @param string    $profileId
-     * @param string    $userId
-     * @param string    $displayName
-     * @param \DateTime $expiresAt
+     * @param string $serverName
+     * @param string $profileId
+     * @param string $userId
+     * @param string $displayName
      *
      * @return \LC\Common\Http\Response
      */
@@ -446,8 +443,6 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \DateInterval $dateInterval
-     *
      * @return string
      */
     private function getExpiryDate(DateInterval $dateInterval)

@@ -191,7 +191,6 @@ class AdminPortalModule implements ServiceModuleInterface
                         }
 
                         // kill all active connections for this user
-                        // profileId is the key, but we don't care about the key...
                         foreach ($connectionList as $profileId => $clientConnectionList) {
                             foreach ($clientConnectionList as $clientInfo) {
                                 $this->serverClient->post('kill_client', ['common_name' => $clientInfo['common_name']]);
