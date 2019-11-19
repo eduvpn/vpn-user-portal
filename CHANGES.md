@@ -3,6 +3,10 @@
 ## 2.1.1 (...)
 - better implementation for "remote" lines added to generated client 
   configuration, "special" ports are always added (last).
+- update to new internal API format for retrieving list of connected clients
+- remove some dead code that does nothing except slow down the portal
+- fix bug where it was possible to obtain a configuration for a profile you
+  had no access to, even though you still wouldn't be able to actually use it 
 
 ## 2.1.0 (2019-11-04)
 - completely redone the UI (CSS, templates) of the portal
