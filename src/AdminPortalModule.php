@@ -37,11 +37,6 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    /**
-     * @param \LC\Common\TplInterface            $tpl
-     * @param Storage                            $storage
-     * @param \LC\Common\HttpClient\ServerClient $serverClient
-     */
     public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient)
     {
         $this->tpl = $tpl;
@@ -183,7 +178,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 switch ($userAction) {
                     case 'disableUser':
                         // get active connections for this user
-                        $clientConnections = $this->serverClient->getRequireArray('client_connections', ['user_id' => $userId]);
+                        $connectionList = $this->serverClient->getRequireArray('client_connections', ['user_id' => $userId]);
 
                         // disable the user
                         $this->serverClient->post('disable_user', ['user_id' => $userId]);
@@ -196,9 +191,10 @@ class AdminPortalModule implements ServiceModuleInterface
                         }
 
                         // kill all active connections for this user
-                        foreach ($clientConnections as $profile) {
-                            foreach ($profile['connections'] as $connection) {
-                                $this->serverClient->post('kill_client', ['common_name' => $connection['common_name']]);
+                        // profileId is the key, but we don't care about the key...
+                        foreach ($connectionList as $profileId => $clientConnectionList) {
+                            foreach ($clientConnectionList as $clientInfo) {
+                                $this->serverClient->post('kill_client', ['common_name' => $clientInfo['common_name']]);
                             }
                         }
                         break;
@@ -469,8 +465,6 @@ class AdminPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param array $profileList
-     *
      * @return array
      */
     private function getMaxConcurrentConnectionLimit(array $profileList)
