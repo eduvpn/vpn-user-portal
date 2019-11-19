@@ -9,6 +9,7 @@
 
 namespace LC\Portal\Tests;
 
+use DateInterval;
 use DateTime;
 use LC\Common\Config;
 use LC\Common\Http\NullAuthenticationHook;
@@ -33,7 +34,7 @@ class VpnPortalModuleTest extends TestCase
     {
         $schemaDir = \dirname(__DIR__).'/schema';
         $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');
-        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir, $serverClient);
+        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir, new DateInterval('P90D'));
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(

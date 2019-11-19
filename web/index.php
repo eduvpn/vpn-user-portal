@@ -188,7 +188,7 @@ try {
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        $serverClient
+        new DateInterval($sessionExpiry)
     );
     $storage->update();
 

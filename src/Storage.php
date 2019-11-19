@@ -9,14 +9,13 @@
 
 namespace LC\Portal;
 
+use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\SqliteMigrate\Migration;
 use LC\Common\Http\CredentialValidatorInterface;
 use LC\Common\Http\UserInfo;
-use LC\Common\HttpClient\ServerClient;
 use PDO;
-use RuntimeException;
 
 class Storage implements CredentialValidatorInterface, StorageInterface
 {
@@ -31,15 +30,13 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     /** @var \fkooman\SqliteMigrate\Migration */
     private $migration;
 
-    /** @var \LC\Common\HttpClient\ServerClient|null */
-    private $serverClient;
+    /** @var \DateInterval */
+    private $sessionExpiry;
 
     /**
-     * @param \PDO                                    $db
-     * @param string                                  $schemaDir
-     * @param \LC\Common\HttpClient\ServerClient|null $serverClient
+     * @param string $schemaDir
      */
-    public function __construct(PDO $db, $schemaDir, ServerClient $serverClient = null)
+    public function __construct(PDO $db, $schemaDir, DateInterval $sessionExpiry)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
@@ -47,13 +44,11 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         }
         $this->db = $db;
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
-        $this->serverClient = $serverClient;
+        $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = new DateTime();
     }
 
     /**
-     * @param \DateTime $dateTime
-     *
      * @return void
      */
     public function setDateTime(DateTime $dateTime)
@@ -171,7 +166,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     {
         $stmt = $this->db->prepare(
             'SELECT
-                user_id
+                auth_time
              FROM authorizations
              WHERE
                 auth_key = :auth_key'
@@ -180,20 +175,13 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
 
-        if (false === $userId = $stmt->fetchColumn()) {
+        if (false === $authTime = $stmt->fetchColumn()) {
+            // auth_key does not exist (anymore)
             return false;
         }
 
-        // this is very ugly, but we MUST know the user_session_expires_at here
-        // to be able to prevent *both* the acceptance of Bearer tokens as well
-        // as whether or not to accept refresh_tokens for this particular
-        // user. This will go away once we merge vpn-user-portal and
-        // vpn-server-api...
-        if (null === $this->serverClient) {
-            throw new RuntimeException('MUST have serverClient set!');
-        }
-
-        $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userId]));
+        $authTimeDateTime = new DateTime($authTime);
+        $expiresAt = date_add($authTimeDateTime, $this->sessionExpiry);
 
         return $expiresAt > $this->dateTime;
     }

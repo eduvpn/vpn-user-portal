@@ -14,12 +14,10 @@ use DateTime;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
 use LC\Common\Config;
-use LC\Common\HttpClient\ServerClient;
 use LC\Portal\ClientFetcher;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\Storage;
-use LC\Portal\Tests\TestHttpClient;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
@@ -47,7 +45,7 @@ class BearerValidatorTest extends TestCase
         $storage = new Storage(
             new PDO('sqlite::memory:'),
             \dirname(\dirname(__DIR__)).'/schema',
-            new ServerClient(new TestHttpClient(), 'serverClient')
+            new DateInterval('P90D')
         );
         $storage->setDateTime($this->dateTime);
         $storage->init();
