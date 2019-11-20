@@ -45,7 +45,6 @@ class CurlHttpClient implements HttpClientInterface
     }
 
     /**
-     * @param array                $curlOptions
      * @param array<string,string> $requestHeaders
      *
      * @return Response

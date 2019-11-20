@@ -27,9 +27,8 @@ class LogoutModule implements ServiceModuleInterface
     private $returnParameter;
 
     /**
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param string|null                        $logoutUrl
-     * @param string                             $returnParameter
+     * @param string|null $logoutUrl
+     * @param string      $returnParameter
      */
     public function __construct(SessionInterface $session, $logoutUrl, $returnParameter)
     {
@@ -39,8 +38,6 @@ class LogoutModule implements ServiceModuleInterface
     }
 
     /**
-     * @param \LC\Common\Http\Service $service
-     *
      * @return void
      */
     public function init(Service $service)

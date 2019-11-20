@@ -31,9 +31,8 @@ class AdminHook implements BeforeHookInterface
     private $tpl;
 
     /**
-     * @param array<string>           $adminPermissionList
-     * @param array<string>           $adminUserIdList
-     * @param \LC\Common\TplInterface $tpl
+     * @param array<string> $adminPermissionList
+     * @param array<string> $adminUserIdList
      */
     public function __construct(array $adminPermissionList, array $adminUserIdList, TplInterface &$tpl)
     {
@@ -43,9 +42,6 @@ class AdminHook implements BeforeHookInterface
     }
 
     /**
-     * @param Request $request
-     * @param array   $hookData
-     *
      * @return bool
      */
     public function executeBefore(Request $request, array $hookData)

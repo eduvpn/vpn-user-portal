@@ -46,7 +46,6 @@ class SamlAuthenticationHook implements BeforeHookInterface
     private $dateTime;
 
     /**
-     * @param \fkooman\SAML\SP\SP         $samlSp
      * @param string|null                 $idpEntityId
      * @param string                      $userIdAttribute
      * @param array<string>               $permissionAttributeList
@@ -67,9 +66,6 @@ class SamlAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LC\Common\Http\Request $request
-     * @param array                   $hookData
-     *
      * @return false|\LC\Common\Http\RedirectResponse|\LC\Common\Http\UserInfo
      */
     public function executeBefore(Request $request, array $hookData)
@@ -173,8 +169,7 @@ class SamlAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param \LC\Common\Http\Request $request
-     * @param array<string>           $authnContext
+     * @param array<string> $authnContext
      *
      * @return \LC\Common\Http\RedirectResponse
      */

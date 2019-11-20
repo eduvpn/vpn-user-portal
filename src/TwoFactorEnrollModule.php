@@ -39,10 +39,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     private $serverClient;
 
     /**
-     * @param array<string>                      $twoFactorMethods
-     * @param \fkooman\SeCookie\SessionInterface $session
-     * @param \LC\Common\TplInterface            $tpl
-     * @param \LC\Common\HttpClient\ServerClient $serverClient
+     * @param array<string> $twoFactorMethods
      */
     public function __construct(array $twoFactorMethods, SessionInterface $session, TplInterface $tpl, ServerClient $serverClient)
     {

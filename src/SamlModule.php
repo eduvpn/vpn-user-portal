@@ -27,8 +27,7 @@ class SamlModule implements ServiceModuleInterface
     private $discoUrl;
 
     /**
-     * @param \fkooman\SAML\SP\SP $samlSp
-     * @param string|null         $discoUrl
+     * @param string|null $discoUrl
      */
     public function __construct(SP $samlSp, $discoUrl)
     {

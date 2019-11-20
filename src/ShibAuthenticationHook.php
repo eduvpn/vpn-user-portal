@@ -32,9 +32,6 @@ class ShibAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @param Request $request
-     * @param array   $hookData
-     *
      * @return UserInfo
      */
     public function executeBefore(Request $request, array $hookData)

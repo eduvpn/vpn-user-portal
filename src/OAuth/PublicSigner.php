@@ -24,10 +24,6 @@ class PublicSigner implements SignerInterface
     /** @var \fkooman\Jwt\EdDSA */
     private $edDsa;
 
-    /**
-     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey      $publicKey
-     * @param \fkooman\Jwt\Keys\EdDSA\SecretKey|null $secretKey
-     */
     public function __construct(PublicKey $publicKey, SecretKey $secretKey = null)
     {
         $this->edDsa = new EdDSA($publicKey, $secretKey);
@@ -35,8 +31,6 @@ class PublicSigner implements SignerInterface
     }
 
     /**
-     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey $publicKey
-     *
      * @return string
      */
     public static function calculateKeyId(PublicKey $publicKey)

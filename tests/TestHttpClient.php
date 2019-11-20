@@ -84,8 +84,6 @@ class TestHttpClient implements HttpClientInterface
 
     /**
      * @param string $requestUri
-     * @param array  $postData
-     * @param array  $requestHeaders
      *
      * @return array
      */

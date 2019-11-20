@@ -41,10 +41,7 @@ class BearerValidator
     private $dateTime;
 
     /**
-     * @param \fkooman\OAuth\Server\StorageInterface  $storage
-     * @param \fkooman\OAuth\Server\ClientDbInterface $clientDb
-     * @param \fkooman\Jwt\Keys\EdDSA\PublicKey       $localPublicKey
-     * @param array<string,array<string,string>>      $keyInstanceMapping
+     * @param array<string,array<string,string>> $keyInstanceMapping
      */
     public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
     {
@@ -56,8 +53,6 @@ class BearerValidator
     }
 
     /**
-     * @param DateTime $dateTime
-     *
      * @return void
      */
     public function setDateTime(DateTime $dateTime)

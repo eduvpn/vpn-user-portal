@@ -16,7 +16,6 @@ use LC\Common\Http\NullAuthenticationHook;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\HttpClient\ServerClient;
-use LC\Portal\ClientConfig;
 use LC\Portal\ClientFetcher;
 use LC\Portal\Storage;
 use LC\Portal\VpnPortalModule;

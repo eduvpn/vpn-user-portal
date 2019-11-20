@@ -33,7 +33,6 @@ class ForeignKeyListFetcher
 
     /**
      * @param HttpClient\HttpClientInterface $httpClient
-     * @param array                          $remoteAccessList
      *
      * @return void
      */
@@ -107,8 +106,6 @@ class ForeignKeyListFetcher
     }
 
     /**
-     * @param array $discoveryData
-     *
      * @return array
      */
     private static function generateMapping(array $discoveryData)
