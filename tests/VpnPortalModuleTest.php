@@ -16,6 +16,7 @@ use LC\Common\Http\NullAuthenticationHook;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\HttpClient\ServerClient;
+use LC\Portal\ClientConfig;
 use LC\Portal\ClientFetcher;
 use LC\Portal\Storage;
 use LC\Portal\VpnPortalModule;
@@ -45,7 +46,6 @@ class VpnPortalModuleTest extends TestCase
             $storage,
             new ClientFetcher(new Config(['Api' => []]))
         );
-        $vpnPortalModule->setPickRemotesAtRandom(false);
         $vpnPortalModule->setDateTime(new DateTime('2019-01-01'));
         $this->service = new Service();
         $this->service->addModule($vpnPortalModule);

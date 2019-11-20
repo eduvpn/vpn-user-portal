@@ -23,7 +23,7 @@ class ClientConfigTest extends TestCase
             ['udp/1194', 'tcp/1194'],
             ClientConfig::remotePortProtoList(
                 ['udp/1194', 'tcp/1194'],
-                false
+                ClientConfig::MODE_FIRST
             )
         );
     }
@@ -34,7 +34,7 @@ class ClientConfigTest extends TestCase
             ['udp/1194'],
             ClientConfig::remotePortProtoList(
                 ['udp/1194'],
-                true
+                ClientConfig::MODE_RANDOM
             )
         );
     }
@@ -45,7 +45,7 @@ class ClientConfigTest extends TestCase
             ['udp/443'],
             ClientConfig::remotePortProtoList(
                 ['udp/443'],
-                true
+                ClientConfig::MODE_RANDOM
             )
         );
     }
@@ -56,7 +56,7 @@ class ClientConfigTest extends TestCase
             [],
             ClientConfig::remotePortProtoList(
                 [],
-                true
+                ClientConfig::MODE_RANDOM
             )
         );
     }
@@ -70,7 +70,7 @@ class ClientConfigTest extends TestCase
             ['udp/1194', 'tcp/1194'],
             ClientConfig::remotePortProtoList(
                 ['udp/1194', 'tcp/1194', 'udp/1195', 'tcp/1195'],
-                false
+                ClientConfig::MODE_FIRST
             )
         );
     }
@@ -84,7 +84,7 @@ class ClientConfigTest extends TestCase
             ['udp/1194', 'tcp/1194', 'tcp/443'],
             ClientConfig::remotePortProtoList(
                 ['udp/1194', 'tcp/1194', 'udp/1195', 'tcp/443'],
-                false
+                ClientConfig::MODE_FIRST
             )
         );
     }
@@ -98,7 +98,7 @@ class ClientConfigTest extends TestCase
             ['udp/1194', 'tcp/1194', 'udp/53'],
             ClientConfig::remotePortProtoList(
                 ['udp/1194', 'tcp/1194', 'udp/53', 'tcp/1195'],
-                false
+                ClientConfig::MODE_FIRST
             )
         );
     }
@@ -112,7 +112,7 @@ class ClientConfigTest extends TestCase
             ['udp/1194', 'tcp/1194'],
             ClientConfig::remotePortProtoList(
                 ['udp/1194', 'tcp/1194', 'udp/1195', 'tcp/1195', 'udp/1196', 'tcp/1196', 'udp/1197', 'tcp/1197'],
-                false
+                ClientConfig::MODE_FIRST
             )
         );
     }
@@ -126,7 +126,18 @@ class ClientConfigTest extends TestCase
             ['udp/1194', 'tcp/1194', 'udp/443', 'tcp/443'],
             ClientConfig::remotePortProtoList(
                 ['udp/1194', 'tcp/1194', 'udp/443', 'tcp/443'],
-                false
+                ClientConfig::MODE_FIRST
+            )
+        );
+    }
+
+    public function testAll()
+    {
+        $this->assertSame(
+            ['udp/1194', 'udp/1195', 'udp/1196', 'udp/1197', 'tcp/1194', 'tcp/1195', 'tcp/1196', 'tcp/443'],
+            ClientConfig::remotePortProtoList(
+                ['udp/1194', 'tcp/1194', 'udp/1195', 'tcp/1195', 'udp/1196', 'tcp/1196', 'udp/1197', 'tcp/443'],
+                ClientConfig::MODE_ALL
             )
         );
     }
