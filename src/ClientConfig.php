@@ -11,16 +11,16 @@ namespace LC\Portal;
 
 class ClientConfig
 {
-    const MODE_FIRST = 0;
-    const MODE_RANDOM = 1;
-    const MODE_ALL = 2;
+    const STRATEGY_FIRST = 0;
+    const STRATEGY_RANDOM = 1;
+    const STRATEGY_ALL = 2;
 
     /**
-     * @param int $pickMode
+     * @param int $remoteStrategy
      *
      * @return string
      */
-    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $pickMode)
+    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $remoteStrategy)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig['hostName'];
@@ -32,7 +32,7 @@ class ClientConfig
             }
         }
 
-        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $pickMode);
+        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy);
 
         $clientConfig = [
             '# OpenVPN Client Configuration',
@@ -114,11 +114,11 @@ class ClientConfig
      * Pick a "normal" UDP and TCP port. Pick a "special" UDP and TCP
      * port.
      *
-     * @param int $pickMode
+     * @param int $remoteStrategy
      *
      * @return array<string>
      */
-    public static function remotePortProtoList(array $vpnProtoPorts, $pickMode)
+    public static function remotePortProtoList(array $vpnProtoPorts, $remoteStrategy)
     {
         $specialUdpPorts = [];
         $specialTcpPorts = [];
@@ -146,46 +146,46 @@ class ClientConfig
         }
 
         $clientPortList = [];
-        self::getItem($clientPortList, $normalUdpPorts, $pickMode);
-        self::getItem($clientPortList, $normalTcpPorts, $pickMode);
-        self::getItem($clientPortList, $specialUdpPorts, $pickMode);
-        self::getItem($clientPortList, $specialTcpPorts, $pickMode);
+        self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
+        self::getItem($clientPortList, $normalTcpPorts, $remoteStrategy);
+        self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
+        self::getItem($clientPortList, $specialTcpPorts, $remoteStrategy);
 
         return $clientPortList;
     }
 
     /**
-     * @param int $pickMode
+     * @param int $remoteStrategy
      *
      * @return int
      */
-    public static function validatePickMode($pickMode)
+    public static function validateRemoteStrategy($remoteStrategy)
     {
-        if (\in_array($pickMode, [self::MODE_FIRST, self::MODE_RANDOM, self::MODE_ALL], true)) {
-            return $pickMode;
+        if (\in_array($remoteStrategy, [self::STRATEGY_FIRST, self::STRATEGY_RANDOM, self::STRATEGY_ALL], true)) {
+            return $remoteStrategy;
         }
 
-        return self::MODE_RANDOM;
+        return self::STRATEGY_RANDOM;
     }
 
     /**
      * @param array<string> &$clientPortList
      * @param array<string> $pickFrom
-     * @param int           $pickMode
+     * @param int           $remoteStrategy
      *
      * @return void
      */
-    private static function getItem(array &$clientPortList, array $pickFrom, $pickMode)
+    private static function getItem(array &$clientPortList, array $pickFrom, $remoteStrategy)
     {
         if (0 === \count($pickFrom)) {
             return;
         }
 
-        switch ($pickMode) {
-            case self::MODE_ALL:
+        switch ($remoteStrategy) {
+            case self::STRATEGY_ALL:
                 $clientPortList = array_merge($clientPortList, $pickFrom);
                 break;
-            case self::MODE_RANDOM:
+            case self::STRATEGY_RANDOM:
                 $clientPortList[] = $pickFrom[random_int(0, \count($pickFrom) - 1)];
                 break;
             default:

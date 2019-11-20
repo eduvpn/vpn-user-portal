@@ -7,8 +7,9 @@
 - remove some dead code that does nothing except slow down the portal
 - fix bug where it was possible to obtain a configuration for a profile you
   had no access to, even though you still wouldn't be able to actually use it 
-- allow API clients to request all `remote` lines from the server instead of
-  a random subset using the `pick_mode` query parameter
+- allow API clients to request first (0), random (1) or all (2) `remote` lines
+  in the configuration obtained through `/profile_config` API call using the 
+  `remote_strategy` parameter taking an integer
 
 ## 2.1.0 (2019-11-04)
 - completely redone the UI (CSS, templates) of the portal

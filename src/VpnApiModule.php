@@ -172,7 +172,7 @@ class VpnApiModule implements ServiceModuleInterface
                 $accessTokenInfo = $hookData['auth'];
                 try {
                     $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
-                    $pickMode = ClientConfig::validatePickMode((int) $request->getQueryParameter('pick_mode', false, ClientConfig::MODE_RANDOM));
+                    $remoteStrategy = ClientConfig::validateRemoteStrategy((int) $request->getQueryParameter('remote_strategy', false, ClientConfig::STRATEGY_RANDOM));
                     $profileList = $this->serverClient->getRequireArray('profile_list');
                     $userPermissions = $this->getPermissionList($accessTokenInfo);
 
@@ -193,7 +193,7 @@ class VpnApiModule implements ServiceModuleInterface
                         return new ApiErrorResponse('profile_config', 'user has no access to this profile');
                     }
 
-                    return $this->getConfigOnly($requestedProfileId, $pickMode);
+                    return $this->getConfigOnly($requestedProfileId, $remoteStrategy);
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('profile_config', $e->getMessage());
                 }
@@ -246,11 +246,11 @@ class VpnApiModule implements ServiceModuleInterface
 
     /**
      * @param string $profileId
-     * @param int    $pickMode
+     * @param int    $remoteStrategy
      *
      * @return Response
      */
-    private function getConfigOnly($profileId, $pickMode)
+    private function getConfigOnly($profileId, $remoteStrategy)
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
@@ -260,7 +260,7 @@ class VpnApiModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info');
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $pickMode);
+        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $remoteStrategy);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');
