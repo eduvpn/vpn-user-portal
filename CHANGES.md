@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.2 (2019-11-21)
+- fix issue with init script and add-user script
+
 ## 2.1.1 (2019-11-21)
 - better implementation for "remote" lines added to generated client 
   configuration, "special" ports are always added (last).
