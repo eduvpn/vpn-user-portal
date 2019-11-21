@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.1 (...)
+## 2.1.1 (2019-11-21)
 - better implementation for "remote" lines added to generated client 
   configuration, "special" ports are always added (last).
 - update to new internal API format for retrieving list of connected clients
@@ -10,6 +10,7 @@
 - allow API clients to request first (0), random (1) or all (2) `remote` lines
   in the configuration obtained through `/profile_config` API call using the 
   `remote_strategy` parameter taking an integer
+- remove some dead code
 
 ## 2.1.0 (2019-11-04)
 - completely redone the UI (CSS, templates) of the portal
