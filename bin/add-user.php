@@ -73,7 +73,7 @@ try {
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        $config->getItem('sessionExpiry')
+        new DateInterval($config->getItem('sessionExpiry'))
     );
     $storage->add($userId, $userPass);
 } catch (Exception $e) {
