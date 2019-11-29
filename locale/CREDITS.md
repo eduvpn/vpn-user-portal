@@ -7,3 +7,4 @@
 * `nl_NL`: François Kooman (DeiC)
 * `pl_PL`: Adam Osuchowski (Silesian University of Technology)
 * `uk_UA`: Volodymyr Yemzhyn (URAN)
+* `et_EE`: Anne Märdimäe (EENet of HITSA)

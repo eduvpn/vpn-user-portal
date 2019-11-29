@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.3 (...)
+- add Estionian translation
+
 ## 2.1.2 (2019-11-21)
 - fix issue with init script and add-user script
 

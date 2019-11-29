@@ -8,6 +8,13 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.1.3
+
+We added the translation for Estionian (Estonia). You can add it to 
+`config.php` under `supportedLanguages` to enable it in your portal:
+
+    'et_EE' => 'Eesti',
+
 ## 2.1.0
 
 We added the translation for Arabic (Morocco). You can add it to `config.php` 
