@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.3 (...)
+## 2.1.3 (2019-12-02)
 - add Estionian translation
 
 ## 2.1.2 (2019-11-21)
