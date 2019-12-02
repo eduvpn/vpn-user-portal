@@ -96,7 +96,7 @@ class ClientConfig
                 $clientConfig,
                 [
                     '<tls-crypt>',
-                    trim($serverInfo['ta']),
+                    trim($serverInfo['tls_crypt']),
                     '</tls-crypt>',
                 ]
             );

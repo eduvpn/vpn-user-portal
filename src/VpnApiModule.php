@@ -258,7 +258,7 @@ class VpnApiModule implements ServiceModuleInterface
         $profileData = $profileList[$profileId];
 
         // get the CA & tls-auth
-        $serverInfo = $this->serverClient->getRequireArray('server_info');
+        $serverInfo = $this->serverClient->getRequireArray('server_info', ['profile_id' => $profileId]);
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $remoteStrategy);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);

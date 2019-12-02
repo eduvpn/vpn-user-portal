@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.4 (...)
+- update for server API to handle per profile tls-crypt keys
+
 ## 2.1.3 (2019-12-02)
 - add Estionian translation
 

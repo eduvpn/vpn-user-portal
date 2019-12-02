@@ -69,12 +69,12 @@ class TestHttpClient implements HttpClientInterface
                 return self::wrap('is_disabled_user', false);
             case 'serverClient/client_certificate_info?common_name=12345678901234567890123456789012':
                 return self::wrap('client_certificate_info', ['display_name' => 'Foo']);
-            case 'serverClient/server_info':
+            case 'serverClient/server_info?profile_id=internet':
                 return self::wrap(
                     'server_info',
                     [
                         'ca' => 'CAPEM',
-                        'ta' => 'TAKEY',
+                        'tls_crypt' => 'TLS_CRYPT_KEY',
                     ]
                 );
             default:
