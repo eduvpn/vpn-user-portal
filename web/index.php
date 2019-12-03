@@ -170,10 +170,10 @@ try {
         $logoutUrl = $request->getRootUri().'_saml/logout';
     }
     if ('MellonAuthentication' === $authMethod) {
-        $logoutUrl = $request->getAuthority().'/saml/logout';
+        $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/saml/logout';
     }
     if ('ShibAuthentication' === $authMethod) {
-        $logoutUrl = $request->getAuthority().'/Shibboleth.sso/Logout';
+        $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/Shibboleth.sso/Logout';
         $returnParameter = 'return';
     }
 
