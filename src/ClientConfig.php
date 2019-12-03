@@ -57,6 +57,8 @@ class ClientConfig
             'cipher AES-256-GCM',
 
             '<ca>',
+            // in legacy situation some trimming may be required, for clean
+            // installs this is no longer needed though
             trim($serverInfo['ca']),
             '</ca>',
         ];
@@ -96,6 +98,8 @@ class ClientConfig
                 $clientConfig,
                 [
                     '<tls-crypt>',
+                    // in legacy situation some trimming may be required, for
+                    // clean installs this is no longer needed
                     trim($serverInfo['tls_crypt']),
                     '</tls-crypt>',
                 ]
