@@ -2,7 +2,9 @@
 
 ## 2.1.4 (...)
 - update for server API to handle per profile tls-crypt keys
-
+- expose `/.well-known/vpn-user-portal` and `/info.json` alias through 
+  vpn-user-portal, allowing for software updates to the API definition
+  
 ## 2.1.3 (2019-12-02)
 - add Estionian translation
 
