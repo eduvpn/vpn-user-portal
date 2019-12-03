@@ -57,7 +57,7 @@ class ClientConfig
             'cipher AES-256-GCM',
 
             '<ca>',
-            trim($serverInfo['ca']),
+            $serverInfo['ca'],
             '</ca>',
         ];
 
@@ -96,7 +96,7 @@ class ClientConfig
                 $clientConfig,
                 [
                     '<tls-crypt>',
-                    trim($serverInfo['tls_crypt']),
+                    $serverInfo['tls_crypt'],
                     '</tls-crypt>',
                 ]
             );
