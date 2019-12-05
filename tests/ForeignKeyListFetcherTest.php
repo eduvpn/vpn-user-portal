@@ -11,6 +11,7 @@ namespace LC\Portal\Tests;
 
 use LC\Portal\ForeignKeyListFetcher;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 class ForeignKeyListFetcherTest extends TestCase
 {
@@ -49,26 +50,27 @@ class ForeignKeyListFetcherTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     *
-     * @expectedExceptionMessage unable to verify signature
-     *
      * @return void
      */
     public function testFetchWrongSignature()
     {
-        $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
-        mkdir($tmpDir);
-        $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpDir);
-        $foreignKeyListFetcher->update(
-            new TestForeignKeyHttpClient(),
-            [
-                'development_v2' => [
-                    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev_v2.wrong.json',
-                    'public_key' => 's8YDiDF/6zN5cvdeHLaptla/ZWgr7MRCnrANQNKGWBE=',
-                ],
-            ]
-        );
+        try {
+            $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
+            mkdir($tmpDir);
+            $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpDir);
+            $foreignKeyListFetcher->update(
+                new TestForeignKeyHttpClient(),
+                [
+                    'development_v2' => [
+                        'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev_v2.wrong.json',
+                        'public_key' => 's8YDiDF/6zN5cvdeHLaptla/ZWgr7MRCnrANQNKGWBE=',
+                    ],
+                ]
+            );
+            self::fail();
+        } catch (RuntimeException $e) {
+            self::assertSame('unable to verify signature', $e->getMessage());
+        }
     }
 
     /**
