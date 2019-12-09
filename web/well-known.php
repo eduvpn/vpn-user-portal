@@ -8,7 +8,9 @@
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
+$baseDir = dirname(__DIR__);
 
+use LC\Common\FileIO;
 use LC\Common\Http\JsonResponse;
 use LC\Common\Http\Request;
 
@@ -29,6 +31,7 @@ try {
                 'token_endpoint' => $appRootUri.'/oauth.php/token',
             ],
         ],
+        'v' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
     ];
 
     $response = new JsonResponse($jsonData);
