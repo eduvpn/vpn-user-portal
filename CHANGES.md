@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.4 (...)
+## 2.1.4 (2019-12-10)
 - update for server API to handle per profile tls-crypt keys
 - expose `/.well-known/vpn-user-portal` and `/info.json` alias through 
   vpn-user-portal, allowing for software updates to the API definition
