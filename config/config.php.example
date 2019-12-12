@@ -12,6 +12,7 @@ return [
     //'authMethod' => 'SamlAuthentication',         // SAML (php-saml-sp)
     //'authMethod' => 'MellonAuthentication',       // SAML (mod_auth_mellon)
     //'authMethod' => 'ShibAuthentication',         // SAML (Shibboleth)
+    //'authMethod' => 'OpenidcAuthentication',      // OIDC (mod_auth_openidc)
 
     // Default Session Expiry
     // The session expiry will be used to determine the "Not After" of the
@@ -121,6 +122,14 @@ return [
         // ** AUTHORIZATION | PERMISSIONS **
         //'permissionAttribute' => 'entitlement',
         //'permissionAttribute' => 'affiliation',
+    ],
+
+    // OIDC (mod_auth_openidc)
+    'OpenidcAuthentication' => [
+        'subjectClaim' => 'OIDC_CLAIM_sub',
+
+        // ** AUTHORIZATION | PERMISSIONS **
+        //'permissionClaim' => 'OIDC_CLAIM_eduperson_entitlement',
     ],
 
     // the permission required to be able to access the "admin" portion of

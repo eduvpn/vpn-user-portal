@@ -66,6 +66,7 @@ class LogoutModule implements ServiceModuleInterface
                     $this->session->delete('_form_auth_time');
 
                     // a logout URL is defined, this is used by SAML/Mellon
+                    // TODO: check for OIDC using session logout endpoint of mod_auth_openidc
                     return new RedirectResponse(
                         sprintf(
                             '%s?%s',

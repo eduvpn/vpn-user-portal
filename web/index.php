@@ -52,6 +52,7 @@ use LC\Portal\PasswdModule;
 use LC\Portal\SamlAuthenticationHook;
 use LC\Portal\SamlModule;
 use LC\Portal\ShibAuthenticationHook;
+use LC\Portal\OpenidcAuthenticationHook;
 use LC\Portal\Storage;
 use LC\Portal\TwoFactorEnrollModule;
 use LC\Portal\UpdateSessionInfoHook;
@@ -257,6 +258,15 @@ try {
                 new ShibAuthenticationHook(
                     $config->getSection('ShibAuthentication')->getItem('userIdAttribute'),
                     $config->getSection('ShibAuthentication')->optionalItem('permissionAttribute')
+                )
+            );
+            break;
+        case 'OpenidcAuthentication':
+            $service->addBeforeHook(
+                'auth',
+                new OpenidcAuthenticationHook(
+                    $config->getSection('OpenidcAuthentication')->getItem('subjectClaim'),
+                    $config->getSection('OpenidcAuthentication')->optionalItem('permissionClaim')
                 )
             );
             break;
