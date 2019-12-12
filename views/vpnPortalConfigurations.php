@@ -19,7 +19,7 @@
         <form method="post" class="frm">
             <fieldset>
                 <label for="profileId"><?=$this->t('Profile'); ?></label>
-                <select name="profileId" id="profileId" size="5" required>
+                <select name="profileId" id="profileId" size="<?=count($profileList); ?>" required>
 <?php foreach ($profileList as $profileId => $profileData): ?>
                     <option value="<?=$this->e($profileId); ?>"><?=$this->e($profileData['displayName']); ?></option>
 <?php endforeach; ?>
