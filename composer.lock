@@ -340,7 +340,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "fc65d068f9c139f49a997c73be795e043b3a27d8"
+                "reference": "478434415c77579f2f16f1e082905f58832d1efa"
             },
             "require": {
                 "ext-curl": "*",
