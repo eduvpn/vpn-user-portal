@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.5 (...)
+- the select box for downloading a new configuration in the portal has the 
+  exact size of the number of available profiles
+- switch to our own `SessionInterface` and `CookieInterface` instead of 
+  using the one of fkooman/secookie
+ 
 ## 2.1.4 (2019-12-10)
 - update for server API to handle per profile tls-crypt keys
 - expose `/.well-known/vpn-user-portal` and `/info.json` alias through 
