@@ -9,8 +9,8 @@
 
 namespace LC\Portal\Tests;
 
-use fkooman\SeCookie\Exception\SessionException;
-use fkooman\SeCookie\SessionInterface;
+use LC\Common\Http\SessionInterface;
+use RuntimeException;
 
 class TestSession implements SessionInterface
 {
@@ -18,8 +18,6 @@ class TestSession implements SessionInterface
     private $sessionData = [];
 
     /**
-     * Get the session ID.
-     *
      * @return string
      */
     public function id()
@@ -28,72 +26,116 @@ class TestSession implements SessionInterface
     }
 
     /**
-     * Regenerate the session ID.
-     *
-     * @param bool $deleteOldSession
+     * @return void
      */
-    public function regenerate($deleteOldSession = false)
+    public function regenerate()
     {
         // NOP
     }
 
     /**
-     * Set session value.
+     * @param string $sessionKey
+     * @param string $sessionValue
      *
-     * @param string $key
-     * @param mixed  $value
+     * @return void
      */
-    public function set($key, $value)
+    public function setString($sessionKey, $sessionValue)
     {
-        $this->sessionData[$key] = $value;
+        $this->sessionData[$sessionKey] = $sessionValue;
     }
 
     /**
-     * Delete session key/value.
+     * @param string $sessionKey
      *
-     * @param string $key
+     * @return void
      */
-    public function delete($key)
+    public function delete($sessionKey)
     {
-        if ($this->has($key)) {
-            unset($this->sessionData[$key]);
+        if ($this->has($sessionKey)) {
+            unset($this->sessionData[$sessionKey]);
         }
     }
 
     /**
-     * Test if session key exists.
-     *
-     * @param string $key
+     * @param string $sessionKey
      *
      * @return bool
      */
-    public function has($key)
+    public function has($sessionKey)
     {
-        return \array_key_exists($key, $this->sessionData);
+        return \array_key_exists($sessionKey, $this->sessionData);
     }
 
     /**
-     * Get session value.
+     * @param string $sessionKey
      *
-     * @param string $key
-     *
-     * @return mixed
+     * @return string
      */
-    public function get($key)
+    public function getString($sessionKey)
     {
-        if (!$this->has($key)) {
-            throw new SessionException(sprintf('key "%s" not available in session', $key));
+        if (!$this->has($sessionKey)) {
+            throw new RuntimeException(sprintf('key "%s" not available in session', $sessionKey));
         }
 
-        return $this->sessionData[$key];
+        return $this->sessionData[$sessionKey];
     }
 
     /**
-     * Empty the session.
+     * @param string $sessionKey
+     *
+     * @return array<string>
+     */
+    public function getStringArray($sessionKey)
+    {
+        if (!$this->has($sessionKey)) {
+            throw new RuntimeException(sprintf('key "%s" not available in session', $sessionKey));
+        }
+
+        return $this->sessionData[$sessionKey];
+    }
+
+    /**
+     * @param string        $sessionKey
+     * @param array<string> $sessionValue
+     *
+     * @return void
+     */
+    public function setStringArray($sessionKey, array $sessionValue)
+    {
+        $this->sessionData[$sessionKey] = $sessionValue;
+    }
+
+    /**
+     * @param string $sessionKey
+     *
+     * @return bool
+     */
+    public function getBool($sessionKey)
+    {
+        if (!$this->has($sessionKey)) {
+            throw new RuntimeException(sprintf('key "%s" not available in session', $sessionKey));
+        }
+
+        return $this->sessionData[$sessionKey];
+    }
+
+    /**
+     * @param string $sessionKey
+     * @param bool   $sessionValue
+     *
+     * @return void
+     */
+    public function setBool($sessionKey, $sessionValue)
+    {
+        $this->sessionData[$sessionKey] = $sessionValue;
+    }
+
+    /**
+     * @return void
      */
     public function destroy()
     {
         $this->sessionData = [];
-        $this->regenerate(true);
+        $this->regenerate();
     }
 }

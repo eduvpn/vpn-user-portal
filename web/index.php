@@ -51,6 +51,8 @@ use LC\Portal\OAuthModule;
 use LC\Portal\PasswdModule;
 use LC\Portal\SamlAuthenticationHook;
 use LC\Portal\SamlModule;
+use LC\Portal\SeCookie;
+use LC\Portal\SeSession;
 use LC\Portal\ShibAuthenticationHook;
 use LC\Portal\Storage;
 use LC\Portal\TwoFactorEnrollModule;
@@ -97,6 +99,7 @@ try {
             'Max-Age' => 60 * 60 * 24 * 90,   // 90 days
         ]
     );
+    $seCookie = new SeCookie($cookie);
 
     $session = new Session(
         [
@@ -118,6 +121,8 @@ try {
             ]
         )
     );
+
+    $seSession = new SeSession($session);
 
     $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
     // the first listed language is the default language
@@ -159,7 +164,7 @@ try {
 
     $service = new Service($tpl);
     $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());
-    $service->addBeforeHook('language_switcher', new LanguageSwitcherHook(array_keys($supportedLanguages), $cookie));
+    $service->addBeforeHook('language_switcher', new LanguageSwitcherHook(array_keys($supportedLanguages), $seCookie));
 
     // Authentication
     $authMethod = $config->getItem('authMethod');
@@ -192,7 +197,7 @@ try {
     );
     $storage->update();
 
-    $service->addModule(new LogoutModule($session, $logoutUrl, $returnParameter));
+    $service->addModule(new LogoutModule($seSession, $logoutUrl, $returnParameter));
     switch ($authMethod) {
         case 'SamlAuthentication':
             $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
@@ -264,7 +269,7 @@ try {
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
-                    $session,
+                    $seSession,
                     $tpl
                 )
             );
@@ -282,7 +287,7 @@ try {
 
             $fam = new FormAuthenticationModule(
                 $userAuth,
-                $session,
+                $seSession,
                 $tpl
             );
             if (null !== $staticPermissions) {
@@ -295,14 +300,14 @@ try {
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
-                    $session,
+                    $seSession,
                     $tpl
                 )
             );
 
             $fam = new FormAuthenticationModule(
                 $storage,
-                $session,
+                $seSession,
                 $tpl
             );
             if (null !== $staticPermissions) {
@@ -323,7 +328,7 @@ try {
             $service->addBeforeHook(
                 'auth',
                 new FormAuthenticationHook(
-                    $session,
+                    $seSession,
                     $tpl
                 )
             );
@@ -339,7 +344,7 @@ try {
 
             $fam = new FormAuthenticationModule(
                 $userAuth,
-                $session,
+                $seSession,
                 $tpl
             );
             if (null !== $staticPermissions) {
@@ -373,7 +378,7 @@ try {
         $service->addBeforeHook(
             'two_factor',
             new TwoFactorHook(
-                $session,
+                $seSession,
                 $tpl,
                 $serverClient,
                 $config->hasItem('requireTwoFactor') ? $config->getItem('requireTwoFactor') : false
@@ -382,11 +387,11 @@ try {
     }
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
-    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($session, $serverClient, new DateInterval($sessionExpiry)));
+    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $serverClient, new DateInterval($sessionExpiry)));
 
     // two factor module
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorModule = new TwoFactorModule($serverClient, $session, $tpl);
+        $twoFactorModule = new TwoFactorModule($serverClient, $seSession, $tpl);
         $service->addModule($twoFactorModule);
     }
 
@@ -407,7 +412,7 @@ try {
         $config,
         $tpl,
         $serverClient,
-        $session,
+        $seSession,
         $storage,
         $clientFetcher
     );
@@ -421,7 +426,7 @@ try {
     $service->addModule($adminPortalModule);
 
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $session, $tpl, $serverClient);
+        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $seSession, $tpl, $serverClient);
         $service->addModule($twoFactorEnrollModule);
     }
 

@@ -340,7 +340,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "478434415c77579f2f16f1e082905f58832d1efa"
+                "reference": "8cff088ddbf39b8eaa8cca8f14ef8b93cec6d9f6"
             },
             "require": {
                 "ext-curl": "*",
@@ -352,7 +352,6 @@
                 "ext-pcre": "*",
                 "ext-pdo": "*",
                 "ext-spl": "*",
-                "fkooman/secookie": "^2",
                 "ircmaxell/password-compat": "^1",
                 "paragonie/constant_time_encoding": "^1|^2",
                 "paragonie/random_compat": ">=1",

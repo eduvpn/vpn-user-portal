@@ -9,15 +9,15 @@
 
 namespace LC\Portal;
 
-use fkooman\SeCookie\SessionInterface;
 use LC\Common\Http\RedirectResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\Http\SessionInterface;
 
 class LogoutModule implements ServiceModuleInterface
 {
-    /** @var \fkooman\SeCookie\SessionInterface */
+    /** @var \LC\Common\Http\SessionInterface */
     private $session;
 
     /** @var string|null */

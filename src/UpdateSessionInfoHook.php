@@ -11,11 +11,11 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
-use fkooman\SeCookie\SessionInterface;
 use LC\Common\Http\BeforeHookInterface;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
+use LC\Common\Http\SessionInterface;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\Json;
 
@@ -24,7 +24,7 @@ use LC\Common\Json;
  */
 class UpdateSessionInfoHook implements BeforeHookInterface
 {
-    /** @var \fkooman\SeCookie\SessionInterface */
+    /** @var \LC\Common\Http\SessionInterface */
     private $session;
 
     /** @var \LC\Common\HttpClient\ServerClient */
@@ -91,6 +91,6 @@ class UpdateSessionInfoHook implements BeforeHookInterface
                 'permission_list' => Json::encode($userInfo->getPermissionList()),
             ]
         );
-        $this->session->set('_update_session_info', true);
+        $this->session->setBool('_update_session_info', true);
     }
 }

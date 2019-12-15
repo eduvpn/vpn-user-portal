@@ -12,7 +12,6 @@ namespace LC\Portal;
 use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\ClientDbInterface;
-use fkooman\SeCookie\SessionInterface;
 use LC\Common\Config;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\HtmlResponse;
@@ -22,6 +21,7 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\Http\SessionInterface;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\TplInterface;
 
@@ -36,7 +36,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var \fkooman\SeCookie\SessionInterface */
+    /** @var \LC\Common\Http\SessionInterface */
     private $session;
 
     /** @var \LC\Portal\Storage */

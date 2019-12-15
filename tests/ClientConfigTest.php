@@ -28,6 +28,9 @@ class ClientConfigTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testOne()
     {
         $this->assertSame(
@@ -39,6 +42,9 @@ class ClientConfigTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testOneSpecial()
     {
         $this->assertSame(
@@ -50,6 +56,9 @@ class ClientConfigTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testNone()
     {
         $this->assertSame(
@@ -131,6 +140,9 @@ class ClientConfigTest extends TestCase
         );
     }
 
+    /**
+     * @return void
+     */
     public function testAll()
     {
         $this->assertSame(
