@@ -32,4 +32,22 @@ class SeCookie implements CookieInterface
     {
         $this->cookie->set($cookieName, $cookieValue);
     }
+
+    /**
+     * @param string $cookieName
+     *
+     * @return string|null
+     */
+    public function get($cookieName)
+    {
+        if (!\array_key_exists($cookieName, $_COOKIE)) {
+            return null;
+        }
+
+        if (!\is_string($_COOKIE[$cookieName])) {
+            return null;
+        }
+
+        return $_COOKIE[$cookieName];
+    }
 }

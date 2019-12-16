@@ -127,8 +127,8 @@ try {
     $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
     // the first listed language is the default language
     $uiLang = array_keys($supportedLanguages)[0];
-    if (array_key_exists('ui_lang', $_COOKIE)) {
-        $uiLang = InputValidation::uiLang($_COOKIE['ui_lang']);
+    if (null !== $cookieUiLang = $seCookie->get('ui_lang')) {
+        $uiLang = InputValidation::uiLang($cookieUiLang);
     }
     $languageFileList = [];
     if ('en_US' !== $uiLang) {
