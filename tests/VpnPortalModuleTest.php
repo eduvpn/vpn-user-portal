@@ -154,7 +154,7 @@ class VpnPortalModuleTest extends TestCase
      * @param array<string,string> $postData
      * @param bool                 $returnResponseObj
      *
-     * @return \LC\Common\Http\Response
+     * @return \LC\Common\Http\Response|array
      */
     private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $returnResponseObj = false)
     {

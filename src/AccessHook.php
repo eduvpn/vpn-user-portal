@@ -45,7 +45,7 @@ class AccessHook implements BeforeHookInterface
             ],
         ];
         if (Service::isWhitelisted($request, $whiteList)) {
-            return false;
+            return null;
         }
 
         if (!\array_key_exists('auth', $hookData)) {
@@ -56,6 +56,8 @@ class AccessHook implements BeforeHookInterface
         if (!$this->hasPermissions($userInfo->getPermissionList())) {
             throw new HttpException('account is not allowed to access this service', 403);
         }
+
+        return null;
     }
 
     /**

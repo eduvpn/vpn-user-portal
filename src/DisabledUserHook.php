@@ -44,7 +44,7 @@ class DisabledUserHook implements BeforeHookInterface
             ],
         ];
         if (Service::isWhitelisted($request, $whiteList)) {
-            return false;
+            return null;
         }
 
         if (!\array_key_exists('auth', $hookData)) {
@@ -56,5 +56,7 @@ class DisabledUserHook implements BeforeHookInterface
             // user is disabled, show a special message
             throw new HttpException('account disabled', 403);
         }
+
+        return null;
     }
 }
