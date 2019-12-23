@@ -152,6 +152,7 @@ try {
             'requestRoot' => $request->getRoot(),
             'requestRootUri' => $request->getRootUri(),
             'supportedLanguages' => $supportedLanguages,
+            '_show_logout_button' => true,
             'uiLang' => $uiLang,
             'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
         ]
