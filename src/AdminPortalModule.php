@@ -129,7 +129,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
-                $userId = $request->getQueryParameter('user_id');
+                $userId = $request->requireQueryParameter('user_id');
                 InputValidation::userId($userId);
 
                 $clientCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userId]);
@@ -161,7 +161,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
-                $userId = $request->getPostParameter('user_id');
+                $userId = $request->requirePostParameter('user_id');
                 InputValidation::userId($userId);
 
                 // if the current user being managed is the account itself,
@@ -171,7 +171,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     throw new HttpException('cannot manage own account', 400);
                 }
 
-                $userAction = $request->getPostParameter('user_action');
+                $userAction = $request->requirePostParameter('user_action');
                 // no need to explicitly validate userAction, as we will have
                 // switch below with whitelisted acceptable values
 
@@ -299,7 +299,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $messageAction = $request->getPostParameter('message_action');
+                $messageAction = $request->requirePostParameter('message_action');
                 switch ($messageAction) {
                     case 'set':
                         // we can only have one "motd", so remove the ones that
@@ -310,11 +310,11 @@ class AdminPortalModule implements ServiceModuleInterface
                         }
 
                         // no need to validate, we accept everything
-                        $messageBody = $request->getPostParameter('message_body');
+                        $messageBody = $request->requirePostParameter('message_body');
                         $this->serverClient->post('add_system_message', ['message_type' => 'motd', 'message_body' => $messageBody]);
                         break;
                     case 'delete':
-                        $messageId = InputValidation::messageId($request->getPostParameter('message_id'));
+                        $messageId = InputValidation::messageId($request->requirePostParameter('message_id'));
 
                         $this->serverClient->post('delete_system_message', ['message_id' => $messageId]);
                         break;
@@ -336,7 +336,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $dateTime = InputValidation::dateTime($request->getPostParameter('date_time'));
+                $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
                 $dateTimeLocalStr = $dateTime->format('Y-m-d H:i:s');
 
                 // make sure it is NOT in the future
@@ -347,7 +347,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 // convert it to UTC as our server logs are all in UTC
                 $dateTime->setTimeZone(new DateTimeZone('UTC'));
 
-                $ipAddress = $request->getPostParameter('ip_address');
+                $ipAddress = $request->requirePostParameter('ip_address');
                 InputValidation::ipAddress($ipAddress);
 
                 return new HtmlResponse(

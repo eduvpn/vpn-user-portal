@@ -47,9 +47,9 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 try {
-                    $returnTo = $request->getQueryParameter('ReturnTo');
-                    $idpEntityId = $request->getQueryParameter('IdP', false);
-                    $authnContextQuery = $request->getQueryParameter('AuthnContext', false);
+                    $returnTo = $request->requireQueryParameter('ReturnTo');
+                    $idpEntityId = $request->optionalQueryParameter('IdP');
+                    $authnContextQuery = $request->optionalQueryParameter('AuthnContext');
                     $authnContextList = null !== $authnContextQuery ? explode(',', $authnContextQuery) : [];
 
                     // verify the requested AuthnContext in the whitelist
@@ -118,8 +118,8 @@ class SamlModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 try {
                     $returnTo = $this->samlSp->handleResponse(
-                        $request->getPostParameter('SAMLResponse'),
-                        $request->getPostParameter('RelayState')
+                        $request->requirePostParameter('SAMLResponse'),
+                        $request->requirePostParameter('RelayState')
                     );
 
                     return new RedirectResponse($returnTo);
@@ -136,7 +136,7 @@ class SamlModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 try {
-                    $returnTo = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
+                    $returnTo = $this->samlSp->logout($request->requireQueryParameter('ReturnTo'));
 
                     return new RedirectResponse($returnTo);
                 } catch (SamlException $e) {
@@ -169,7 +169,7 @@ class SamlModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $logoutUrl = $this->samlSp->logout($request->getQueryParameter('ReturnTo'));
+                $logoutUrl = $this->samlSp->logout($request->requireQueryParameter('ReturnTo'));
 
                 return new RedirectResponse($logoutUrl);
             }

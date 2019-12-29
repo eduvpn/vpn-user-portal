@@ -123,7 +123,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 // if query parameter "all" is set, show all certificates, also
                 // those issued to OAuth clients
-                $showAll = null !== $request->getQueryParameter('all', false);
+                $showAll = null !== $request->optionalQueryParameter('all');
 
                 $manualCertificateList = [];
                 if (false === $showAll) {
@@ -156,8 +156,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
-                $displayName = InputValidation::displayName($request->getPostParameter('displayName'));
-                $profileId = InputValidation::profileId($request->getPostParameter('profileId'));
+                $displayName = InputValidation::displayName($request->requirePostParameter('displayName'));
+                $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
                 $userPermissions = $userInfo->getPermissionList();
@@ -182,7 +182,7 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $commonName = InputValidation::commonName($request->getPostParameter('commonName'));
+                $commonName = InputValidation::commonName($request->requirePostParameter('commonName'));
                 $this->serverClient->post('delete_client_certificate', ['common_name' => $commonName]);
                 $this->serverClient->post('kill_client', ['common_name' => $commonName]);
 
@@ -261,8 +261,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 // no need to validate the input as we do a strict string match...
-                $authKey = $request->getPostParameter('auth_key');
-                $clientId = InputValidation::clientId($request->getPostParameter('client_id'));
+                $authKey = $request->requirePostParameter('auth_key');
+                $clientId = InputValidation::clientId($request->requirePostParameter('client_id'));
 
                 // verify whether the user_id owns the specified auth_key
                 $authorizations = $this->storage->getAuthorizations($userInfo->getUserId());

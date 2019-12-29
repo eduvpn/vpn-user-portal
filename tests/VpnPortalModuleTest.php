@@ -161,7 +161,7 @@ class VpnPortalModuleTest extends TestCase
         $response = $this->service->run(
             new Request(
                 [
-                    'SERVER_PORT' => 80,
+                    'SERVER_PORT' => '80',
                     'SERVER_NAME' => 'vpn.example',
                     'REQUEST_METHOD' => $requestMethod,
                     'REQUEST_URI' => $pathInfo,

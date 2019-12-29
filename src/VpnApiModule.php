@@ -150,7 +150,7 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $commonName = InputValidation::commonName($request->getQueryParameter('common_name'));
+                $commonName = InputValidation::commonName($request->requireQueryParameter('common_name'));
                 $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
 
@@ -171,8 +171,14 @@ class VpnApiModule implements ServiceModuleInterface
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 try {
-                    $requestedProfileId = InputValidation::profileId($request->getQueryParameter('profile_id'));
-                    $remoteStrategy = ClientConfig::validateRemoteStrategy((int) $request->getQueryParameter('remote_strategy', false, ClientConfig::STRATEGY_RANDOM));
+                    $requestedProfileId = InputValidation::profileId($request->requireQueryParameter('profile_id'));
+
+                    $remoteStrategy = $request->optionalQueryParameter('remote_strategy');
+                    if (null === $remoteStrategy) {
+                        $remoteStrategy = ClientConfig::STRATEGY_RANDOM;
+                    }
+                    $remoteStrategy = (int) $remoteStrategy;
+
                     $profileList = $this->serverClient->getRequireArray('profile_list');
                     $userPermissions = $this->getPermissionList($accessTokenInfo);
 
