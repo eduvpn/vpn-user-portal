@@ -62,12 +62,6 @@ try {
     FileIO::createDir($dataDir, 0700);
 
     $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
-
-    // we make the root URL part of the configuration, agreed, it is a bit
-    // hacky, but avoids needing to manually specify the URL on which the
-    // service is configured...
-    $config->setItem('_rootUri', $request->getRootUri());
-
     $templateDirs = [
         sprintf('%s/views', $baseDir),
         sprintf('%s/config/views', $baseDir),
@@ -200,7 +194,10 @@ try {
     $service->addModule(new LogoutModule($seSession, $logoutUrl, $returnParameter));
     switch ($authMethod) {
         case 'SamlAuthentication':
-            $samlAuthentication = new SamlAuthentication($baseDir, $config->getSection('SamlAuthentication'));
+            // we make the root URL part of the configuration, agreed, it is a bit
+            // hacky, but avoids needing to manually specify the URL on which the
+            // service is configured...
+            $samlAuthentication = new SamlAuthentication($baseDir, $config->getSection('SamlAuthentication')->setItem('_rootUri', $request->getRootUri()));
             $service->addBeforeHook('auth', $samlAuthentication);
             $service->addModule($samlAuthentication);
             break;
