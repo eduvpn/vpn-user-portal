@@ -11,7 +11,7 @@ namespace LC\Portal\Tests;
 
 use LC\Common\Config;
 use LC\Common\Http\Request;
-use LC\Portal\ShibAuthenticationHook;
+use LC\Portal\ShibAuthentication;
 use PHPUnit\Framework\TestCase;
 
 class ShibAuthenticationHookTest extends TestCase
@@ -23,7 +23,7 @@ class ShibAuthenticationHookTest extends TestCase
                 'userIdAttribute' => 'persistent-id',
             ]
         );
-        $authHook = new ShibAuthenticationHook($config);
+        $authHook = new ShibAuthentication('', $config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
@@ -44,7 +44,7 @@ class ShibAuthenticationHookTest extends TestCase
                 'permissionAttribute' => 'entitlement',
             ]
         );
-        $authHook = new ShibAuthenticationHook($config);
+        $authHook = new ShibAuthentication('', $config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [

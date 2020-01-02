@@ -12,11 +12,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
-use fkooman\SAML\SP\PrivateKey;
-use fkooman\SAML\SP\PublicKey;
-use fkooman\SAML\SP\SP;
-use fkooman\SAML\SP\SpInfo;
-use fkooman\SAML\SP\XmlIdpInfoSource;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\Session;
 use LC\Common\Config;
@@ -45,15 +40,14 @@ use LC\Portal\AdminPortalModule;
 use LC\Portal\ClientFetcher;
 use LC\Portal\DisabledUserHook;
 use LC\Portal\LogoutModule;
-use LC\Portal\MellonAuthenticationHook;
+use LC\Portal\MellonAuthentication;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
 use LC\Portal\PasswdModule;
-use LC\Portal\SamlAuthenticationHook;
-use LC\Portal\SamlModule;
+use LC\Portal\SamlAuthentication;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSession;
-use LC\Portal\ShibAuthenticationHook;
+use LC\Portal\ShibAuthentication;
 use LC\Portal\Storage;
 use LC\Portal\TwoFactorEnrollModule;
 use LC\Portal\UpdateSessionInfoHook;
@@ -68,6 +62,11 @@ try {
     FileIO::createDir($dataDir, 0700);
 
     $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
+
+    // we make the root URL part of the configuration, agreed, it is a bit
+    // hacky, but avoids needing to manually specify the URL on which the
+    // service is configured...
+    $config->setItem('_rootUri', $request->getRootUri());
 
     $templateDirs = [
         sprintf('%s/views', $baseDir),
@@ -201,62 +200,15 @@ try {
     $service->addModule(new LogoutModule($seSession, $logoutUrl, $returnParameter));
     switch ($authMethod) {
         case 'SamlAuthentication':
-            $spEntityId = $config->getSection('SamlAuthentication')->optionalItem('spEntityId', $request->getRootUri().'_saml/metadata');
-            $serviceName = $config->getSection('SamlAuthentication')->optionalItem('serviceName', []);
-
-            $userIdAttribute = $config->getSection('SamlAuthentication')->getItem('userIdAttribute');
-
-            /** @var array<string>|string|null */
-            $permissionAttribute = $config->getSection('SamlAuthentication')->optionalItem('permissionAttribute');
-            if (is_string($permissionAttribute)) {
-                $permissionAttribute = [$permissionAttribute];
-            }
-            if (null === $permissionAttribute) {
-                $permissionAttribute = [];
-            }
-
-            $spInfo = new SpInfo(
-                $spEntityId,
-                PrivateKey::fromFile(sprintf('%s/config/sp.key', $baseDir)),
-                PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir)),
-                $request->getRootUri().'_saml/acs'
-            );
-            $spInfo->setSloUrl($request->getRootUri().'_saml/slo');
-            $samlSp = new SP(
-                $spInfo,
-                new XmlIdpInfoSource($config->getSection('SamlAuthentication')->getItem('idpMetadata'))
-            );
-            $service->addBeforeHook(
-                'auth',
-                new SamlAuthenticationHook(
-                    $samlSp,
-                    $config->getSection('SamlAuthentication')->optionalItem('idpEntityId'),
-                    $userIdAttribute,
-                    $permissionAttribute,
-                    $config->getSection('SamlAuthentication')->optionalItem('authnContext', []),
-                    $config->getSection('SamlAuthentication')->optionalItem('permissionAuthnContext', []),
-                    $config->getSection('SamlAuthentication')->optionalItem('permissionSessionExpiry', [])
-                )
-            );
-            $service->addModule(
-                new SamlModule(
-                    $samlSp,
-                    $config->getSection('SamlAuthentication')->optionalItem('discoUrl')
-                )
-            );
-
+            $samlAuthentication = new SamlAuthentication($baseDir, $config->getSection('SamlAuthentication'));
+            $service->addBeforeHook('auth', $samlAuthentication);
+            $service->addModule($samlAuthentication);
             break;
         case 'MellonAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new MellonAuthenticationHook($config->getSection('MellonAuthentication'))
-            );
+            $service->addBeforeHook('auth', new MellonAuthentication($baseDir, $config->getSection('MellonAuthentication')));
             break;
         case 'ShibAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new ShibAuthenticationHook($config->getSection('ShibAuthentication'))
-            );
+            $service->addBeforeHook('auth', new ShibAuthentication($baseDir, $config->getSection('ShibAuthentication')));
             break;
         case 'FormLdapAuthentication':
             $service->addBeforeHook(
@@ -352,7 +304,7 @@ try {
 
     $tpl->addDefault(
         [
-            'authMethod' => $authMethod,
+            'allowPasswordChange' => 'FormPdoAuthentication' === $authMethod,
         ]
     );
 

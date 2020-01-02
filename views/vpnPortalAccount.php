@@ -7,7 +7,7 @@
             <th><?=$this->t('ID'); ?></th>
             <td><code><?=$this->e($userInfo->getUserId()); ?></code></td>
         </tr>
-        <?php if ('FormPdoAuthentication' === $authMethod): ?>
+        <?php if ($allowPasswordChange): ?>
             <tr>
                 <th></th>
                 <td><a href="passwd"><?=$this->t('Change Password'); ?></a></td>

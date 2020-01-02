@@ -11,7 +11,7 @@ namespace LC\Portal\Tests;
 
 use LC\Common\Config;
 use LC\Common\Http\Request;
-use LC\Portal\MellonAuthenticationHook;
+use LC\Portal\MellonAuthentication;
 use PHPUnit\Framework\TestCase;
 
 class MellonAuthenticationHookTest extends TestCase
@@ -23,7 +23,7 @@ class MellonAuthenticationHookTest extends TestCase
                 'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
             ]
         );
-        $authHook = new MellonAuthenticationHook($config);
+        $authHook = new MellonAuthentication('', $config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
@@ -45,7 +45,7 @@ class MellonAuthenticationHookTest extends TestCase
                 'spEntityId' => 'https://sp.example.org/saml',
             ]
         );
-        $authHook = new MellonAuthenticationHook($config);
+        $authHook = new MellonAuthentication('', $config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
@@ -67,7 +67,7 @@ class MellonAuthenticationHookTest extends TestCase
                 'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
             ]
         );
-        $authHook = new MellonAuthenticationHook($config);
+        $authHook = new MellonAuthentication('', $config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
