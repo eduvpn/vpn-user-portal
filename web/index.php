@@ -249,12 +249,7 @@ try {
         case 'MellonAuthentication':
             $service->addBeforeHook(
                 'auth',
-                new MellonAuthenticationHook(
-                    $config->getSection('MellonAuthentication')->getItem('userIdAttribute'),
-                    $config->getSection('MellonAuthentication')->optionalItem('permissionAttribute'),
-                    $config->getSection('MellonAuthentication')->optionalItem('nameIdSerialization', false),
-                    $config->getSection('MellonAuthentication')->optionalItem('spEntityId')
-                )
+                new MellonAuthenticationHook($config->getSection('MellonAuthentication'))
             );
             break;
         case 'ShibAuthentication':

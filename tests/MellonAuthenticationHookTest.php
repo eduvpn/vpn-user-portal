@@ -9,6 +9,7 @@
 
 namespace LC\Portal\Tests;
 
+use LC\Common\Config;
 use LC\Common\Http\Request;
 use LC\Portal\MellonAuthenticationHook;
 use PHPUnit\Framework\TestCase;
@@ -17,12 +18,12 @@ class MellonAuthenticationHookTest extends TestCase
 {
     public function testBasic()
     {
-        $authHook = new MellonAuthenticationHook(
-            'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
-            null,
-            false,
-            null
+        $config = new Config(
+            [
+                'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
+            ]
         );
+        $authHook = new MellonAuthenticationHook($config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
@@ -37,12 +38,14 @@ class MellonAuthenticationHookTest extends TestCase
 
     public function testSerialization()
     {
-        $authHook = new MellonAuthenticationHook(
-            'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
-            null,
-            true,
-            'https://sp.example.org/saml',
+        $config = new Config(
+            [
+                'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
+                'nameIdSerialization' => true,
+                'spEntityId' => 'https://sp.example.org/saml',
+            ]
         );
+        $authHook = new MellonAuthenticationHook($config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
@@ -58,12 +61,13 @@ class MellonAuthenticationHookTest extends TestCase
 
     public function testPermissionList()
     {
-        $authHook = new MellonAuthenticationHook(
-            'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
-            'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
-            false,
-            null
+        $config = new Config(
+            [
+                'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
+                'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
+            ]
         );
+        $authHook = new MellonAuthenticationHook($config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
