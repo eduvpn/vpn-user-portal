@@ -255,10 +255,7 @@ try {
         case 'ShibAuthentication':
             $service->addBeforeHook(
                 'auth',
-                new ShibAuthenticationHook(
-                    $config->getSection('ShibAuthentication')->getItem('userIdAttribute'),
-                    $config->getSection('ShibAuthentication')->optionalItem('permissionAttribute')
-                )
+                new ShibAuthenticationHook($config->getSection('ShibAuthentication'))
             );
             break;
         case 'FormLdapAuthentication':

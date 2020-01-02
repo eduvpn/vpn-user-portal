@@ -9,26 +9,19 @@
 
 namespace LC\Portal;
 
+use LC\Common\Config;
 use LC\Common\Http\BeforeHookInterface;
 use LC\Common\Http\Request;
 use LC\Common\Http\UserInfo;
 
 class ShibAuthenticationHook implements BeforeHookInterface
 {
-    /** @var string */
-    private $userIdAttribute;
+    /** @var \LC\Common\Config */
+    private $config;
 
-    /** @var string|null */
-    private $permissionAttribute;
-
-    /**
-     * @param string      $userIdAttribute
-     * @param string|null $permissionAttribute
-     */
-    public function __construct($userIdAttribute, $permissionAttribute)
+    public function __construct(Config $config)
     {
-        $this->userIdAttribute = $userIdAttribute;
-        $this->permissionAttribute = $permissionAttribute;
+        $this->config = $config;
     }
 
     /**
@@ -36,16 +29,21 @@ class ShibAuthenticationHook implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
+        /** @var string */
+        $userIdAttribute = $this->config->getItem('userIdAttribute');
+        /** @var string|null */
+        $permissionAttribute = $this->config->optionalItem('permissionAttribute');
+
         $userPermissions = [];
-        if (null !== $this->permissionAttribute) {
-            $permissionHeaderValue = $request->optionalHeader($this->permissionAttribute);
+        if (null !== $permissionAttribute) {
+            $permissionHeaderValue = $request->optionalHeader($permissionAttribute);
             if (null !== $permissionHeaderValue) {
                 $userPermissions = explode(';', $permissionHeaderValue);
             }
         }
 
         return new UserInfo(
-            $request->requireHeader($this->userIdAttribute),
+            $request->requireHeader($userIdAttribute),
             $userPermissions
         );
     }
