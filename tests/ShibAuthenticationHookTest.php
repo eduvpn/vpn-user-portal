@@ -23,7 +23,7 @@ class ShibAuthenticationHookTest extends TestCase
                 'userIdAttribute' => 'persistent-id',
             ]
         );
-        $authHook = new ShibAuthentication('', $config);
+        $authHook = new ShibAuthentication($config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
@@ -44,7 +44,7 @@ class ShibAuthenticationHookTest extends TestCase
                 'permissionAttribute' => 'entitlement',
             ]
         );
-        $authHook = new ShibAuthentication('', $config);
+        $authHook = new ShibAuthentication($config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [

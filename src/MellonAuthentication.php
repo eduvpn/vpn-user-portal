@@ -19,10 +19,7 @@ class MellonAuthentication implements BeforeHookInterface
     /** @var \LC\Common\Config */
     private $config;
 
-    /**
-     * @param string $baseDir
-     */
-    public function __construct($baseDir, Config $config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
     }

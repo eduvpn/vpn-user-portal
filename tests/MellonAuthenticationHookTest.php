@@ -23,7 +23,7 @@ class MellonAuthenticationHookTest extends TestCase
                 'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
             ]
         );
-        $authHook = new MellonAuthentication('', $config);
+        $authHook = new MellonAuthentication($config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
@@ -45,7 +45,7 @@ class MellonAuthenticationHookTest extends TestCase
                 'spEntityId' => 'https://sp.example.org/saml',
             ]
         );
-        $authHook = new MellonAuthentication('', $config);
+        $authHook = new MellonAuthentication($config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [
@@ -67,7 +67,7 @@ class MellonAuthenticationHookTest extends TestCase
                 'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
             ]
         );
-        $authHook = new MellonAuthentication('', $config);
+        $authHook = new MellonAuthentication($config);
         $userInfo = $authHook->executeBefore(
             new Request(
                 [

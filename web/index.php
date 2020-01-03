@@ -194,18 +194,22 @@ try {
     $service->addModule(new LogoutModule($seSession, $logoutUrl, $returnParameter));
     switch ($authMethod) {
         case 'SamlAuthentication':
-            // we make the root URL part of the configuration, agreed, it is a bit
-            // hacky, but avoids needing to manually specify the URL on which the
-            // service is configured...
-            $samlAuthentication = new SamlAuthentication($baseDir, $config->getSection('SamlAuthentication')->setItem('_rootUri', $request->getRootUri()));
+            // we make the root URL and baseDir part of the configuration,
+            // agreed, it is a bit hacky, but avoids needing to manually specify
+            // the URL on which the service is configured...
+            $samlAuthentication = new SamlAuthentication(
+                $config->getSection('SamlAuthentication')
+                    ->setItem('_rootUri', $request->getRootUri())
+                    ->setItem('_baseDir', $baseDir)
+            );
             $service->addBeforeHook('auth', $samlAuthentication);
             $service->addModule($samlAuthentication);
             break;
         case 'MellonAuthentication':
-            $service->addBeforeHook('auth', new MellonAuthentication($baseDir, $config->getSection('MellonAuthentication')));
+            $service->addBeforeHook('auth', new MellonAuthentication($config->getSection('MellonAuthentication')));
             break;
         case 'ShibAuthentication':
-            $service->addBeforeHook('auth', new ShibAuthentication($baseDir, $config->getSection('ShibAuthentication')));
+            $service->addBeforeHook('auth', new ShibAuthentication($config->getSection('ShibAuthentication')));
             break;
         case 'FormLdapAuthentication':
             $service->addBeforeHook(

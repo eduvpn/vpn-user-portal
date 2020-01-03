@@ -38,10 +38,7 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    /**
-     * @param string $baseDir
-     */
-    public function __construct($baseDir, Config $config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
 
@@ -53,8 +50,8 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
         }
         $spInfo = new SpInfo(
             $spEntityId,
-            PrivateKey::fromFile(sprintf('%s/config/sp.key', $baseDir)),
-            PublicKey::fromFile(sprintf('%s/config/sp.crt', $baseDir)),
+            PrivateKey::fromFile(sprintf('%s/config/sp.key', $config->getItem('_baseDir'))),
+            PublicKey::fromFile(sprintf('%s/config/sp.crt', $config->getItem('_baseDir'))),
             $rootUri.'_saml/acs'
         );
         $spInfo->setSloUrl($rootUri.'_saml/slo');
