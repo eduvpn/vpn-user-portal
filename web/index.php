@@ -17,13 +17,9 @@ use fkooman\SeCookie\Session;
 use LC\Common\Config;
 use LC\Common\FileIO;
 use LC\Common\Http\CsrfProtectionHook;
-use LC\Common\Http\FormAuthenticationHook;
-use LC\Common\Http\FormAuthenticationModule;
 use LC\Common\Http\HtmlResponse;
 use LC\Common\Http\InputValidation;
 use LC\Common\Http\LanguageSwitcherHook;
-use LC\Common\Http\LdapAuth;
-use LC\Common\Http\RadiusAuth;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Http\StaticPermissions;
@@ -31,7 +27,6 @@ use LC\Common\Http\TwoFactorHook;
 use LC\Common\Http\TwoFactorModule;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
-use LC\Common\LdapClient;
 use LC\Common\Logger;
 use LC\Common\Tpl;
 use LC\Portal\AccessHook;
@@ -39,11 +34,13 @@ use LC\Portal\AdminHook;
 use LC\Portal\AdminPortalModule;
 use LC\Portal\ClientFetcher;
 use LC\Portal\DisabledUserHook;
+use LC\Portal\FormLdapAuthentication;
+use LC\Portal\FormPdoAuthentication;
+use LC\Portal\FormRadiusAuthentication;
 use LC\Portal\LogoutModule;
 use LC\Portal\MellonAuthentication;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
-use LC\Portal\PasswdModule;
 use LC\Portal\SamlAuthentication;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSession;
@@ -212,92 +209,41 @@ try {
             $service->addBeforeHook('auth', new ShibAuthentication($config->getSection('ShibAuthentication')));
             break;
         case 'FormLdapAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new FormAuthenticationHook(
-                    $seSession,
-                    $tpl
-                )
-            );
-            $ldapClient = new LdapClient(
-                $config->getSection('FormLdapAuthentication')->getItem('ldapUri')
-            );
-            $userAuth = new LdapAuth(
-                $logger,
-                $ldapClient,
-                $config->getSection('FormLdapAuthentication')->getItem('bindDnTemplate'),
-                $config->getSection('FormLdapAuthentication')->optionalItem('baseDn'),
-                $config->getSection('FormLdapAuthentication')->optionalItem('userFilterTemplate'),
-                $config->getSection('FormLdapAuthentication')->optionalItem('permissionAttribute')
-            );
-
-            $fam = new FormAuthenticationModule(
-                $userAuth,
+            $formLdapAuthentication = new FormLdapAuthentication(
+                $config->getSection('FormLdapAuthentication'),
                 $seSession,
                 $tpl
             );
             if (null !== $staticPermissions) {
-                $fam->setStaticPermissions($staticPermissions);
+                $formLdapAuthentication->setStaticPermissions($staticPermissions);
             }
-            $service->addModule($fam);
-
-            break;
-        case 'FormPdoAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new FormAuthenticationHook(
-                    $seSession,
-                    $tpl
-                )
-            );
-
-            $fam = new FormAuthenticationModule(
-                $storage,
-                $seSession,
-                $tpl
-            );
-            if (null !== $staticPermissions) {
-                $fam->setStaticPermissions($staticPermissions);
-            }
-            $service->addModule($fam);
-
-            // add module for changing password
-            $service->addModule(
-                new PasswdModule(
-                    $tpl,
-                    $storage
-                )
-            );
-
+            $service->addBeforeHook('auth', $formLdapAuthentication);
+            $service->addModule($formLdapAuthentication);
             break;
         case 'FormRadiusAuthentication':
-            $service->addBeforeHook(
-                'auth',
-                new FormAuthenticationHook(
-                    $seSession,
-                    $tpl
-                )
-            );
-
-            $serverList = $config->getSection('FormRadiusAuthentication')->getItem('serverList');
-            $userAuth = new RadiusAuth($logger, $serverList);
-            if ($config->getSection('FormRadiusAuthentication')->hasItem('addRealm')) {
-                $userAuth->setRealm($config->getSection('FormRadiusAuthentication')->getItem('addRealm'));
-            }
-            if ($config->getSection('FormRadiusAuthentication')->hasItem('nasIdentifier')) {
-                $userAuth->setNasIdentifier($config->getSection('FormRadiusAuthentication')->getItem('nasIdentifier'));
-            }
-
-            $fam = new FormAuthenticationModule(
-                $userAuth,
+            $formRadiusAuthentication = new FormRadiusAuthentication(
+                $config->getSection('FormRadiusAuthentication'),
                 $seSession,
                 $tpl
             );
             if (null !== $staticPermissions) {
-                $fam->setStaticPermissions($staticPermissions);
+                $formRadiusAuthentication->setStaticPermissions($staticPermissions);
             }
-            $service->addModule($fam);
-
+            $service->addBeforeHook('auth', $formRadiusAuthentication);
+            $service->addModule($formRadiusAuthentication);
+            break;
+        case 'FormPdoAuthentication':
+            $formPdoAuthentication = new FormPdoAuthentication(
+                new Config([]),
+                $seSession,
+                $tpl,
+                $storage
+            );
+            if (null !== $staticPermissions) {
+                $formPdoAuthentication->setStaticPermissions($staticPermissions);
+            }
+            $service->addBeforeHook('auth', $formPdoAuthentication);
+            $service->addModule($formPdoAuthentication);
             break;
         default:
             throw new RuntimeException('unsupported authentication mechanism');
