@@ -15,17 +15,17 @@ use LC\Common\Http\LdapAuth;
 use LC\Common\Http\SessionInterface;
 use LC\Common\LdapClient;
 use LC\Common\TplInterface;
-use Psr\Log\NullLogger;
+use Psr\Log\LoggerInterface;
 
 class FormLdapAuthentication extends FormAuthentication
 {
-    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl)
+    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
     {
         $ldapClient = new LdapClient(
             $config->getItem('ldapUri')
         );
         $userAuth = new LdapAuth(
-            new NullLogger(),   // XXX fix logger
+            $logger,
             $ldapClient,
             $config->getItem('bindDnTemplate'),
             $config->optionalItem('baseDn'),

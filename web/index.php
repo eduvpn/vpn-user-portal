@@ -212,7 +212,8 @@ try {
             $formLdapAuthentication = new FormLdapAuthentication(
                 $config->getSection('FormLdapAuthentication'),
                 $seSession,
-                $tpl
+                $tpl,
+                $logger
             );
             if (null !== $staticPermissions) {
                 $formLdapAuthentication->setStaticPermissions($staticPermissions);
@@ -224,7 +225,8 @@ try {
             $formRadiusAuthentication = new FormRadiusAuthentication(
                 $config->getSection('FormRadiusAuthentication'),
                 $seSession,
-                $tpl
+                $tpl,
+                $logger
             );
             if (null !== $staticPermissions) {
                 $formRadiusAuthentication->setStaticPermissions($staticPermissions);

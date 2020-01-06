@@ -14,15 +14,14 @@ use LC\Common\Http\FormAuthentication;
 use LC\Common\Http\RadiusAuth;
 use LC\Common\Http\SessionInterface;
 use LC\Common\TplInterface;
-use Psr\Log\NullLogger;
+use Psr\Log\LoggerInterface;
 
 class FormRadiusAuthentication extends FormAuthentication
 {
-    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl)
+    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
     {
         $serverList = $config->getItem('serverList');
-        // XXX fix logger
-        $userAuth = new RadiusAuth(new NullLogger(), $serverList);
+        $userAuth = new RadiusAuth($logger, $serverList);
         if (null !== $addRealm = $config->optionalItem('addRealm')) {
             $userAuth->setRealm($addRealm);
         }
