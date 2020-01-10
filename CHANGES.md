@@ -6,6 +6,8 @@
 - switch to our own `SessionInterface` and `CookieInterface` instead of 
   using the one of fkooman/secookie
 - do not show the "Sign Out" button on the OAuth authorization dialog
+- simplify authentication mechanisms and allow adding custom authentication
+  classes without modifying the portal code
 
 ## 2.1.4 (2019-12-10)
 - update for server API to handle per profile tls-crypt keys
