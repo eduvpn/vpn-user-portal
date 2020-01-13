@@ -55,9 +55,14 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
             $rootUri.'_saml/acs'
         );
         $spInfo->setSloUrl($rootUri.'_saml/slo');
+
+        $idpMetadata = $config->getItem('idpMetadata');
+        if (\is_string($idpMetadata)) {
+            $idpMetadata = [$idpMetadata];
+        }
         $this->samlSp = new SP(
             $spInfo,
-            new XmlIdpInfoSource($config->getItem('idpMetadata'))
+            new XmlIdpInfoSource($idpMetadata)
         );
         $this->dateTime = new DateTime();
     }
