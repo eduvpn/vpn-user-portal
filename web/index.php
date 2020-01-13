@@ -41,6 +41,7 @@ use LC\Portal\LogoutModule;
 use LC\Portal\MellonAuthentication;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
+use LC\Portal\PhpSamlSpAuthentication;
 use LC\Portal\SamlAuthentication;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSamlSession;
@@ -203,6 +204,13 @@ try {
             );
             $service->addBeforeHook('auth', $samlAuthentication);
             $service->addModule($samlAuthentication);
+            break;
+        case 'PhpSamlSpAuthentication':
+            $phpSamlSpAuthentication = new PhpSamlSpAuthentication(
+                $config->getSection('PhpSamlSpAuthentication'),
+                new SeSamlSession($session)
+            );
+            $service->addBeforeHook('auth', $phpSamlSpAuthentication);
             break;
         case 'MellonAuthentication':
             $service->addBeforeHook('auth', new MellonAuthentication($config->getSection('MellonAuthentication')));
