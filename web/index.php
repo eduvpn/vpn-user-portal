@@ -43,6 +43,7 @@ use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
 use LC\Portal\SamlAuthentication;
 use LC\Portal\SeCookie;
+use LC\Portal\SeSamlSession;
 use LC\Portal\SeSession;
 use LC\Portal\ShibAuthentication;
 use LC\Portal\Storage;
@@ -197,7 +198,8 @@ try {
             $samlAuthentication = new SamlAuthentication(
                 $config->getSection('SamlAuthentication')
                     ->setItem('_rootUri', $request->getRootUri())
-                    ->setItem('_baseDir', $baseDir)
+                    ->setItem('_baseDir', $baseDir),
+                new SeSamlSession($session)
             );
             $service->addBeforeHook('auth', $samlAuthentication);
             $service->addModule($samlAuthentication);
