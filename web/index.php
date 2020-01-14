@@ -97,17 +97,12 @@ try {
         [
             'SessionName' => 'SID',
             'DomainBinding' => $request->getServerName(),
-            'PathBinding' => $request->getRoot(),
             'SessionExpiry' => $browserSessionExpiry,
         ],
         new Cookie(
             [
-                // we need to bind to "Path", otherwise the (Basic)
-                // authentication mechanism will set a cookie for
-                // {ROOT}/_form/auth/
-                'Path' => $request->getRoot(),
-                // we can't set "SameSite" to Lax if we want to support the
-                // SAML HTTP-POST binding...
+                'Path' => '/',
+                //'SameSite' => 'None',
                 'SameSite' => null,
                 'Secure' => $secureCookie,
             ]
@@ -166,6 +161,9 @@ try {
     $returnParameter = 'ReturnTo';
     if ('SamlAuthentication' === $authMethod) {
         $logoutUrl = $request->getRootUri().'_saml/logout';
+    }
+    if ('PhpSamlSpAuthentication' === $authMethod) {
+        $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/php-saml-sp/logout';
     }
     if ('MellonAuthentication' === $authMethod) {
         $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/saml/logout';
