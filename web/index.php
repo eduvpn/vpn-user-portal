@@ -95,12 +95,17 @@ try {
         [
             'SessionName' => 'SID',
             'DomainBinding' => $request->getServerName(),
+            'PathBinding' => $request->getRoot(),
             'SessionExpiry' => $browserSessionExpiry,
         ],
         new Cookie(
             [
-                'Path' => '/',
-                //'SameSite' => 'None',
+                // we need to bind to "Path", otherwise the (Basic)
+                // authentication mechanism will set a cookie for
+                // {ROOT}/_form/auth/
+                'Path' => $request->getRoot(),
+                // we can't set "SameSite" to Lax if we want to support the
+                // SAML HTTP-POST binding...
                 'SameSite' => null,
                 'Secure' => $secureCookie,
             ]
