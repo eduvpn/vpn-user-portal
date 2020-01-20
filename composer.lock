@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "25b956d0419b024cbb2eb2b9cf884e45",
+    "content-hash": "9d6146362d7963bb1fa855768528cbfe",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -154,11 +154,11 @@
         },
         {
             "name": "fkooman/php-saml-sp",
-            "version": "dev-master",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "dcfdebf1d1353f400f73dcb6e2048a018b7634fb"
+                "reference": "c913ee158193350371e181f2490a16125cade809"
             },
             "require": {
                 "ext-date": "*",
@@ -203,7 +203,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2020-01-15T11:09:44+00:00"
+            "time": "2019-08-06T08:15:39+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -340,7 +340,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "667914ddd7ec5407f9ea9c6df996b2d487dfd73f"
+                "reference": "2d68f9cd51d1c2a358258724e8deaeea5b29b4ad"
             },
             "require": {
                 "ext-curl": "*",
@@ -2214,7 +2214,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fkooman/php-saml-sp": 20,
         "lc/common": 20
     },
     "prefer-stable": true,
