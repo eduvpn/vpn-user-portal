@@ -13,7 +13,9 @@ $baseDir = dirname(__DIR__);
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\SeCookie\Cookie;
+use fkooman\SeCookie\CookieOptions;
 use fkooman\SeCookie\Session;
+use fkooman\SeCookie\SessionOptions;
 use LC\Common\Config;
 use LC\Common\FileIO;
 use LC\Common\Http\CsrfProtectionHook;
@@ -81,38 +83,25 @@ try {
     }
 
     $secureCookie = $config->hasItem('secureCookie') ? $config->getItem('secureCookie') : true;
-
-    $cookie = new Cookie(
-        [
-            'SameSite' => 'Lax',
-            'Secure' => $secureCookie,
-            'Max-Age' => 60 * 60 * 24 * 90,   // 90 days
-        ]
-    );
-    $seCookie = new SeCookie($cookie);
-
-    $session = new Session(
-        [
-            'SessionName' => 'SID',
-            'DomainBinding' => $request->getServerName(),
-            'PathBinding' => $request->getRoot(),
-            'SessionExpiry' => $browserSessionExpiry,
-        ],
+    $seCookie = new SeCookie(
         new Cookie(
-            [
-                // we need to bind to "Path", otherwise the (Basic)
-                // authentication mechanism will set a cookie for
-                // {ROOT}/_form/auth/
-                'Path' => $request->getRoot(),
-                // we can't set "SameSite" to Lax if we want to support the
-                // SAML HTTP-POST binding...
-                'SameSite' => null,
-                'Secure' => $secureCookie,
-            ]
+            CookieOptions::init()
+                ->setSecure($secureCookie)
+                ->setSameSite('Lax')
+                ->setMaxAge(60 * 60 * 24 * 90)  // 90 days
         )
     );
-
-    $seSession = new SeSession($session);
+    $seSession = new SeSession(
+        new Session(
+            SessionOptions::init(),
+            new Cookie(
+                CookieOptions::init()
+                    ->setPath('/')
+                    ->setSecure($secureCookie)
+                    ->setSameSite(null)
+            )
+        )
+    );
 
     $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
     // the first listed language is the default language

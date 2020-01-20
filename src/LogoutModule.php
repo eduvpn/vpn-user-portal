@@ -54,16 +54,16 @@ class LogoutModule implements ServiceModuleInterface
                     // we can't destroy the complete session here, we need to
                     // delete the keys one by one as some may be used by e.g.
                     // the SAML authentication backend...
-                    $this->session->delete('_update_session_info');
-                    $this->session->delete('_saml_auth_time');
-                    $this->session->delete('_two_factor_verified');
-                    $this->session->delete('_mellon_auth_user');
-                    $this->session->delete('_mellon_auth_time');
-                    $this->session->delete('_two_factor_enroll_redirect_to');
-                    $this->session->delete('_two_factor_verified');
-                    $this->session->delete('_form_auth_user');
-                    $this->session->delete('_form_auth_permission_list');
-                    $this->session->delete('_form_auth_time');
+                    $this->session->remove('_update_session_info');
+                    $this->session->remove('_saml_auth_time');
+                    $this->session->remove('_two_factor_verified');
+                    $this->session->remove('_mellon_auth_user');
+                    $this->session->remove('_mellon_auth_time');
+                    $this->session->remove('_two_factor_enroll_redirect_to');
+                    $this->session->remove('_two_factor_verified');
+                    $this->session->remove('_form_auth_user');
+                    $this->session->remove('_form_auth_permission_list');
+                    $this->session->remove('_form_auth_time');
 
                     // a logout URL is defined, this is used by SAML/Mellon
                     return new RedirectResponse(

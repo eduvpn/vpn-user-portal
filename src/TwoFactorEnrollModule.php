@@ -68,7 +68,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalEnrollTwoFactor',
                         [
-                            'requireTwoFactorEnrollment' => $this->session->has('_two_factor_enroll_redirect_to'),
+                            'requireTwoFactorEnrollment' => null !== $this->session->get('_two_factor_enroll_redirect_to'),
                             'twoFactorMethods' => $this->twoFactorMethods,
                             'hasTotpSecret' => $hasTotpSecret,
                             'totpSecret' => Base32::encodeUpper(random_bytes(20)),
@@ -89,7 +89,8 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
                 $totpSecret = InputValidation::totpSecret($request->requirePostParameter('totp_secret'));
                 $totpKey = InputValidation::totpKey($request->requirePostParameter('totp_key'));
-                $hasTwoFactorEnrollRedirectTo = $this->session->has('_two_factor_enroll_redirect_to');
+
+                $redirectTo = $this->session->get('_two_factor_enroll_redirect_to');
 
                 try {
                     $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->getUserId(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
@@ -101,7 +102,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                         $this->tpl->render(
                             'vpnPortalEnrollTwoFactor',
                             [
-                                'requireTwoFactorEnrollment' => $hasTwoFactorEnrollRedirectTo,
+                                'requireTwoFactorEnrollment' => null !== $redirectTo,
                                 'twoFactorMethods' => $this->twoFactorMethods,
                                 'hasTotpSecret' => $hasTotpSecret,
                                 'totpSecret' => $totpSecret,
@@ -111,15 +112,14 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                     );
                 }
 
-                if ($hasTwoFactorEnrollRedirectTo) {
-                    $twoFactorEnrollRedirectTo = $this->session->getString('_two_factor_enroll_redirect_to');
-                    $this->session->delete('_two_factor_enroll_redirect_to');
+                if (null !== $redirectTo) {
+                    $this->session->remove('_two_factor_enroll_redirect_to');
 
                     // mark as 2FA verified
                     $this->session->regenerate();
-                    $this->session->setString('_two_factor_verified', $userInfo->getUserId());
+                    $this->session->set('_two_factor_verified', $userInfo->getUserId());
 
-                    return new RedirectResponse($twoFactorEnrollRedirectTo);
+                    return new RedirectResponse($redirectTo);
                 }
 
                 return new RedirectResponse($request->getRootUri().'account', 302);

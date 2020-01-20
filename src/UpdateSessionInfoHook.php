@@ -65,7 +65,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
             return false;
         }
 
-        if ($this->session->has('_update_session_info')) {
+        if ('yes' === $this->session->get('_update_session_info')) {
             // only sent the ping once per browser session, not on every
             // request
             return false;
@@ -91,6 +91,6 @@ class UpdateSessionInfoHook implements BeforeHookInterface
                 'permission_list' => Json::encode($userInfo->getPermissionList()),
             ]
         );
-        $this->session->setBool('_update_session_info', true);
+        $this->session->set('_update_session_info', 'yes');
     }
 }

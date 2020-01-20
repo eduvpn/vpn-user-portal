@@ -19,6 +19,7 @@ class SeSession implements SessionInterface
 
     public function __construct(Session $session)
     {
+        $session->start();
         $this->session = $session;
     }
 
@@ -27,25 +28,15 @@ class SeSession implements SessionInterface
      */
     public function regenerate()
     {
-        $this->session->regenerate(true);
+        $this->session->regenerate();
     }
 
     /**
      * @param string $sessionKey
      *
-     * @return bool
+     * @return string|null
      */
-    public function has($sessionKey)
-    {
-        return $this->session->has($sessionKey);
-    }
-
-    /**
-     * @param string $sessionKey
-     *
-     * @return string
-     */
-    public function getString($sessionKey)
+    public function get($sessionKey)
     {
         return $this->session->get($sessionKey);
     }
@@ -56,49 +47,7 @@ class SeSession implements SessionInterface
      *
      * @return void
      */
-    public function setString($sessionKey, $sessionValue)
-    {
-        $this->session->set($sessionKey, $sessionValue);
-    }
-
-    /**
-     * @param string $sessionKey
-     *
-     * @return array<string>
-     */
-    public function getStringArray($sessionKey)
-    {
-        return $this->session->get($sessionKey);
-    }
-
-    /**
-     * @param string        $sessionKey
-     * @param array<string> $sessionValue
-     *
-     * @return void
-     */
-    public function setStringArray($sessionKey, array $sessionValue)
-    {
-        $this->session->set($sessionKey, $sessionValue);
-    }
-
-    /**
-     * @param string $sessionKey
-     *
-     * @return bool
-     */
-    public function getBool($sessionKey)
-    {
-        return $this->session->get($sessionKey);
-    }
-
-    /**
-     * @param string $sessionKey
-     * @param bool   $sessionValue
-     *
-     * @return void
-     */
-    public function setBool($sessionKey, $sessionValue)
+    public function set($sessionKey, $sessionValue)
     {
         $this->session->set($sessionKey, $sessionValue);
     }
@@ -108,9 +57,9 @@ class SeSession implements SessionInterface
      *
      * @return void
      */
-    public function delete($sessionKey)
+    public function remove($sessionKey)
     {
-        $this->session->delete($sessionKey);
+        $this->session->remove($sessionKey);
     }
 
     /**
