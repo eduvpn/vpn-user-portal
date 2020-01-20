@@ -38,7 +38,7 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(Config $config)
+    public function __construct(Config $config, SeSamlSession $session)
     {
         $this->config = $config;
 
@@ -61,6 +61,7 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
             $spInfo,
             new XmlIdpInfoSource($idpMetadata)
         );
+        $this->samlSp->setSession($session);
         $this->dateTime = new DateTime();
     }
 

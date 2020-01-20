@@ -45,6 +45,7 @@ use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
 use LC\Portal\SamlAuthentication;
 use LC\Portal\SeCookie;
+use LC\Portal\SeSamlSession;
 use LC\Portal\SeSession;
 use LC\Portal\ShibAuthentication;
 use LC\Portal\Storage;
@@ -96,9 +97,9 @@ try {
             SessionOptions::init(),
             new Cookie(
                 CookieOptions::init()
-                    ->setPath('/')
+                    ->setPath($request->getRoot())
                     ->setSecure($secureCookie)
-                    ->setSameSite(null)
+                    ->setSameSite('Lax')
             )
         )
     );
@@ -180,13 +181,25 @@ try {
     $service->addModule(new LogoutModule($seSession, $logoutUrl, $returnParameter));
     switch ($authMethod) {
         case 'SamlAuthentication':
+            $seSamlSession = new SeSamlSession(
+                new Session(
+                    SessionOptions::init()
+                        ->setName('SAML'),
+                    new Cookie(
+                        CookieOptions::init()
+                            ->setSecure($secureCookie)
+                            ->setSameSite(null)
+                    )
+                )
+            );
             // we make the root URL and baseDir part of the configuration,
             // agreed, it is a bit hacky, but avoids needing to manually specify
             // the URL on which the service is configured...
             $samlAuthentication = new SamlAuthentication(
                 $config->getSection('SamlAuthentication')
                     ->setItem('_rootUri', $request->getRootUri())
-                    ->setItem('_baseDir', $baseDir)
+                    ->setItem('_baseDir', $baseDir),
+                $seSamlSession
             );
             $service->addBeforeHook('auth', $samlAuthentication);
             $service->addModule($samlAuthentication);
