@@ -159,20 +159,6 @@ class ClientConfig
     }
 
     /**
-     * @param int $remoteStrategy
-     *
-     * @return int
-     */
-    public static function validateRemoteStrategy($remoteStrategy)
-    {
-        if (\in_array($remoteStrategy, [self::STRATEGY_FIRST, self::STRATEGY_RANDOM, self::STRATEGY_ALL], true)) {
-            return $remoteStrategy;
-        }
-
-        return self::STRATEGY_RANDOM;
-    }
-
-    /**
      * @param array<string> &$clientPortList
      * @param array<string> $pickFrom
      * @param int           $remoteStrategy
