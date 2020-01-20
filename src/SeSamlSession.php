@@ -20,6 +20,7 @@ class SeSamlSession implements SessionInterface
 
     public function __construct(Session $session)
     {
+        $session->start();
         $this->session = $session;
     }
 
