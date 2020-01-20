@@ -56,7 +56,7 @@
         "ext-spl": "*",
         "fkooman/jwt": "^1",
         "fkooman/oauth2-server": "^6",
-        "fkooman/php-saml-sp": "^0",
+        "fkooman/php-saml-sp": "^0.2",
         "fkooman/secookie": "^2",
         "fkooman/sqlite-migrate": "^0",
         "lc/common": "v2.x-dev",

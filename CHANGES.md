@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.5 (...)
+## 2.1.5 (2020-01-20)
 - the select box for downloading a new configuration in the portal has the 
   exact size of the number of available profiles
 - switch to our own `SessionInterface` and `CookieInterface` instead of 
