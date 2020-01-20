@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0314352eb081167d1762fae865fad951",
+    "content-hash": "25b956d0419b024cbb2eb2b9cf884e45",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -104,11 +104,11 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "5.0.1",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-oauth2-server",
-                "reference": "d5fca179de2e09212db20df2bf8187c3320124d0"
+                "reference": "0fa0e58f782890424d9f1a25aef0ec9f510a9691"
             },
             "require": {
                 "ext-date": "*",
@@ -145,12 +145,12 @@
                     "name": "François Kooman"
                 }
             ],
-            "description": "Very simple OAuth 2.0 server",
+            "description": "Opinionated OAuth 2.0 server",
             "support": {
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-oauth2-server"
             },
-            "time": "2019-07-21T12:12:59+00:00"
+            "time": "2020-01-20T10:18:55+00:00"
         },
         {
             "name": "fkooman/php-saml-sp",
@@ -158,7 +158,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "155e9b05b8b4aa59b6224a49aaa7369d830aafc2"
+                "reference": "dcfdebf1d1353f400f73dcb6e2048a018b7634fb"
             },
             "require": {
                 "ext-date": "*",
@@ -203,7 +203,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2020-01-13T18:57:50+00:00"
+            "time": "2020-01-15T11:09:44+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -800,16 +800,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.9.4",
+            "version": "1.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "579bb7356d91f9456ccd505f24ca8b667966a0a7"
+                "reference": "b2c28789e80a97badd14145fda39b545d83ca3ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/579bb7356d91f9456ccd505f24ca8b667966a0a7",
-                "reference": "579bb7356d91f9456ccd505f24ca8b667966a0a7",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/b2c28789e80a97badd14145fda39b545d83ca3ef",
+                "reference": "b2c28789e80a97badd14145fda39b545d83ca3ef",
                 "shasum": ""
             },
             "require": {
@@ -844,7 +844,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2019-12-15T19:12:40+00:00"
+            "time": "2020-01-17T21:11:47+00:00"
         },
         {
             "name": "phar-io/manifest",
