@@ -43,6 +43,7 @@ use LC\Portal\LogoutModule;
 use LC\Portal\MellonAuthentication;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
+use LC\Portal\PhpSamlSpAuthentication;
 use LC\Portal\SamlAuthentication;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSamlSession;
@@ -155,6 +156,9 @@ try {
     if ('SamlAuthentication' === $authMethod) {
         $logoutUrl = $request->getRootUri().'_saml/logout';
     }
+    if ('PhpSamlSpAuthentication' === $authMethod) {
+        $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/php-saml-sp/logout';
+    }
     if ('MellonAuthentication' === $authMethod) {
         $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/saml/logout';
     }
@@ -204,6 +208,12 @@ try {
             );
             $service->addBeforeHook('auth', $samlAuthentication);
             $service->addModule($samlAuthentication);
+            break;
+        case 'PhpSamlSpAuthentication':
+            $phpSamlSpAuthentication = new PhpSamlSpAuthentication(
+                $config->getSection('PhpSamlSpAuthentication')
+            );
+            $service->addBeforeHook('auth', $phpSamlSpAuthentication);
             break;
         case 'MellonAuthentication':
             $service->addBeforeHook('auth', new MellonAuthentication($config->getSection('MellonAuthentication')));
