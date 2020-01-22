@@ -48,11 +48,15 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
         if (null === $spEntityId = $config->optionalItem('spEntityId')) {
             $spEntityId = $rootUri.'_saml/metadata';
         }
+        if (null === $requireEncryption = $config->optionalItem('requireEncryption')) {
+            $requireEncryption = false;
+        }
         $spInfo = new SpInfo(
             $spEntityId,
             PrivateKey::fromFile(sprintf('%s/config/sp.key', $config->getItem('_baseDir'))),
             PublicKey::fromFile(sprintf('%s/config/sp.crt', $config->getItem('_baseDir'))),
-            $rootUri.'_saml/acs'
+            $rootUri.'_saml/acs',
+            $requireEncryption
         );
         $spInfo->setSloUrl($rootUri.'_saml/slo');
 
