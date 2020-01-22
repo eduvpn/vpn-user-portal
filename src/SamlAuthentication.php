@@ -63,9 +63,9 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
         $idpMetadata = $config->getItem('idpMetadata');
         $this->samlSp = new SP(
             $spInfo,
-            new XmlIdpInfoSource([$idpMetadata])
+            new XmlIdpInfoSource([$idpMetadata]),
+            $session
         );
-        $this->samlSp->setSession($session);
         $this->dateTime = new DateTime();
     }
 

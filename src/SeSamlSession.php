@@ -71,7 +71,7 @@ class SeSamlSession implements SessionInterface
      *
      * @return void
      */
-    public function delete($key)
+    public function remove($key)
     {
         $this->session->remove($key);
     }
