@@ -9,7 +9,6 @@
 
 namespace LC\Portal;
 
-use fkooman\SAML\SP\Exception\SessionException;
 use fkooman\SAML\SP\SessionInterface;
 use fkooman\SeCookie\Session;
 
@@ -25,16 +24,6 @@ class SeSamlSession implements SessionInterface
     }
 
     /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function has($key)
-    {
-        return null !== $this->session->get($key);
-    }
-
-    /**
      * @return void
      */
     public function regenerate()
@@ -45,26 +34,23 @@ class SeSamlSession implements SessionInterface
     /**
      * @param string $key
      *
-     * @return string
+     * @return string|null
      */
     public function get($key)
     {
-        if (null === $sessionValue = $this->session->get($key)) {
-            throw new SessionException(sprintf('key "%s" not found in session', $key));
-        }
-
-        return $sessionValue;
+        return $this->session->get($key);
     }
 
     /**
      * @param string $key
      *
-     * @return string
+     * @return string|null
      */
     public function take($key)
     {
-        $sessionValue = $this->get($key);
-        $this->session->remove($key);
+        if (null !== $sessionValue = $this->session->get($key)) {
+            $this->session->remove($key);
+        }
 
         return $sessionValue;
     }

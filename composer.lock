@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5ecb75876ecbc94c672b073e38c39c91",
+    "content-hash": "29fbc91c3bf9ecee1eb4011f173395bc",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -154,11 +154,11 @@
         },
         {
             "name": "fkooman/php-saml-sp",
-            "version": "0.2.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "c913ee158193350371e181f2490a16125cade809"
+                "reference": "dcfdebf1d1353f400f73dcb6e2048a018b7634fb"
             },
             "require": {
                 "ext-date": "*",
@@ -203,7 +203,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2019-08-06T08:15:39+00:00"
+            "time": "2020-01-15T11:09:44+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -211,7 +211,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-secookie",
-                "reference": "50dafc5f2a6e61759d1bc856a76e3a17baff8ec8"
+                "reference": "a727391d6f21c606fd094995397d1fec72ca4cb5"
             },
             "require": {
                 "ext-date": "*",
@@ -247,7 +247,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-secookie"
             },
-            "time": "2020-01-20T19:32:58+00:00"
+            "time": "2020-01-21T12:28:00+00:00"
         },
         {
             "name": "fkooman/sqlite-migrate",
@@ -341,7 +341,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "2d68f9cd51d1c2a358258724e8deaeea5b29b4ad"
+                "reference": "30e47ab3e5045f56368fae0c9a6e727770e6b078"
             },
             "require": {
                 "ext-curl": "*",
@@ -2215,6 +2215,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "fkooman/php-saml-sp": 20,
         "fkooman/secookie": 20,
         "lc/common": 20
     },

@@ -188,6 +188,7 @@ try {
                     new Cookie(
                         CookieOptions::init()
                             ->setSecure($secureCookie)
+                            ->setPath($request->getRoot())
                             ->setSameSite(null)
                     )
                 )
