@@ -96,12 +96,10 @@ try {
     $seSession = new SeSession(
         new Session(
             SessionOptions::init(),
-            new Cookie(
-                CookieOptions::init()
-                    ->setPath($request->getRoot())
-                    ->setSecure($secureCookie)
-                    ->setSameSite('Lax')
-            )
+            CookieOptions::init()
+                ->setPath($request->getRoot())
+                ->setSecure($secureCookie)
+                ->setSameSite('Lax')
         )
     );
 
@@ -189,12 +187,10 @@ try {
                 new Session(
                     SessionOptions::init()
                         ->setName('SAML'),
-                    new Cookie(
-                        CookieOptions::init()
-                            ->setSecure($secureCookie)
-                            ->setPath($request->getRoot())
-                            ->setSameSite(null)
-                    )
+                    CookieOptions::init()
+                        ->setSecure($secureCookie)
+                        ->setPath($request->getRoot())
+                        ->setSameSite(null)
                 )
             );
             // we make the root URL and baseDir part of the configuration,
