@@ -186,7 +186,7 @@ try {
             $seSamlSession = new SeSamlSession(
                 new Session(
                     SessionOptions::init()
-                        ->setName('SAML'),
+                        ->setName('PSSSID'),
                     CookieOptions::init()
                         ->setSecure($secureCookie)
                         ->setPath($request->getRoot())
