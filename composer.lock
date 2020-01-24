@@ -158,7 +158,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "b006283767aca9b79f2851f7877948eac56aab71"
+                "reference": "8acc381ef48daedd89efb5a01e1eb04c6e8a4a50"
             },
             "require": {
                 "ext-date": "*",
@@ -203,7 +203,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2020-01-23T10:34:42+00:00"
+            "time": "2020-01-23T15:36:39+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -211,7 +211,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-secookie",
-                "reference": "112b7fc78821f5c97483307004bdbb6d150265aa"
+                "reference": "7ea847fb6ec82db45739c143e76599404b5e5913"
             },
             "require": {
                 "ext-date": "*",
@@ -247,7 +247,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-secookie"
             },
-            "time": "2020-01-23T13:02:52+00:00"
+            "time": "2020-01-24T14:43:08+00:00"
         },
         {
             "name": "fkooman/sqlite-migrate",
