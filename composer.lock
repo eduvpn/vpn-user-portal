@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0dce5128c598043289e8e6624adbbc38",
+    "content-hash": "cf05908772845a498c14bc58fdfcafe8",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -158,7 +158,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "5c131231df4e00c5dbd286ddaa730e58a7f4508a"
+                "reference": "c7376decd137e74ea16cc232060cdd5a05de9645"
             },
             "require": {
                 "ext-date": "*",
@@ -170,7 +170,7 @@
                 "ext-session": "*",
                 "ext-spl": "*",
                 "ext-zlib": "*",
-                "fkooman/secookie": "dev-master",
+                "fkooman/secookie": "^3",
                 "paragonie/constant_time_encoding": "^1|^2",
                 "paragonie/random_compat": ">=1",
                 "php": ">=5.4",
@@ -204,15 +204,15 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2020-01-24T14:45:49+00:00"
+            "time": "2020-01-27T10:09:52+00:00"
         },
         {
             "name": "fkooman/secookie",
-            "version": "dev-master",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-secookie",
-                "reference": "7ea847fb6ec82db45739c143e76599404b5e5913"
+                "reference": "1ba90e063dae78e9e6f8303749c73e183b79d90c"
             },
             "require": {
                 "ext-date": "*",
@@ -248,7 +248,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-secookie"
             },
-            "time": "2020-01-24T14:43:08+00:00"
+            "time": "2020-01-27T10:06:53+00:00"
         },
         {
             "name": "fkooman/sqlite-migrate",
@@ -2217,7 +2217,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "fkooman/saml-sp": 20,
-        "fkooman/secookie": 20,
         "lc/common": 20
     },
     "prefer-stable": true,
