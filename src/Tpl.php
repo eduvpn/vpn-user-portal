@@ -49,6 +49,7 @@ class Tpl implements TplInterface
     {
         $this->templateFolderList = $templateFolderList;
         $this->translationFolderList = $translationFolderList;
+        $this->addCallback('bytes_to_human', [__CLASS__, 'toHuman']);
     }
 
     /**
