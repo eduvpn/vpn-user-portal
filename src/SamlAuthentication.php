@@ -56,7 +56,8 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
             PrivateKey::fromFile(sprintf('%s/config/sp.key', $config->getItem('_baseDir'))),
             PublicKey::fromFile(sprintf('%s/config/sp.crt', $config->getItem('_baseDir'))),
             $rootUri.'_saml/acs',
-            $requireEncryption
+            $requireEncryption,
+            ['en-US' => 'VPN Service']
         );
         $spInfo->setSloUrl($rootUri.'_saml/slo');
 
