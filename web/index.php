@@ -30,7 +30,6 @@ use LC\Common\Http\TwoFactorModule;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
-use LC\Common\Tpl;
 use LC\Portal\AccessHook;
 use LC\Portal\AdminHook;
 use LC\Portal\AdminPortalModule;
@@ -50,6 +49,7 @@ use LC\Portal\SeSamlSession;
 use LC\Portal\SeSession;
 use LC\Portal\ShibAuthentication;
 use LC\Portal\Storage;
+use LC\Portal\Tpl;
 use LC\Portal\TwoFactorEnrollModule;
 use LC\Portal\UpdateSessionInfoHook;
 use LC\Portal\VpnPortalModule;
@@ -67,10 +67,14 @@ try {
         sprintf('%s/views', $baseDir),
         sprintf('%s/config/views', $baseDir),
     ];
-
+    $localeDirs = [
+        sprintf('%s/locale', $baseDir),
+        sprintf('%s/config/locale', $baseDir),
+    ];
     if ($config->hasItem('styleName')) {
         $styleName = $config->getItem('styleName');
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
+        $localeDirs[] = sprintf('%s/locale/%s', $baseDir, $styleName);
     }
 
     $sessionExpiry = $config->getItem('sessionExpiry');
@@ -109,22 +113,8 @@ try {
     if (null !== $cookieUiLang = $seCookie->get('ui_lang')) {
         $uiLang = InputValidation::uiLang($cookieUiLang);
     }
-    $languageFileList = [];
-    if ('en_US' !== $uiLang) {
-        if (array_key_exists($uiLang, $supportedLanguages)) {
-            $languageFileList[] = sprintf('%s/locale/%s.php', $baseDir, $uiLang);
-        }
-        // check whether the theme also installed a language file, and add this
-        // as well then...
-        if ($config->hasItem('styleName')) {
-            $styleName = $config->getItem('styleName');
-            if (FileIO::exists(sprintf('%s/locale/%s/%s.php', $baseDir, $styleName, $uiLang))) {
-                $languageFileList[] = sprintf('%s/locale/%s/%s.php', $baseDir, $styleName, $uiLang);
-            }
-        }
-    }
-
-    $tpl = new Tpl($templateDirs, $languageFileList);
+    $tpl = new Tpl($templateDirs, $localeDirs);
+    $tpl->setLanguage($uiLang);
     $tpl->addDefault(
         [
             'requestUri' => $request->getUri(),
