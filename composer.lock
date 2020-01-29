@@ -158,16 +158,16 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "c7376decd137e74ea16cc232060cdd5a05de9645"
+                "reference": "161f9d1edaff57ee370124b3b29c8524703cc244"
             },
             "require": {
                 "ext-date": "*",
                 "ext-dom": "*",
+                "ext-filter": "*",
                 "ext-hash": "*",
                 "ext-libxml": "*",
                 "ext-openssl": "*",
                 "ext-pcre": "*",
-                "ext-session": "*",
                 "ext-spl": "*",
                 "ext-zlib": "*",
                 "fkooman/secookie": "^3",
@@ -204,19 +204,20 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2020-01-27T10:09:52+00:00"
+            "time": "2020-01-29T11:24:11+00:00"
         },
         {
             "name": "fkooman/secookie",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-secookie",
-                "reference": "1ba90e063dae78e9e6f8303749c73e183b79d90c"
+                "reference": "7516933fd26e50c77d220d013d06a67be608db1e"
             },
             "require": {
                 "ext-date": "*",
                 "ext-pcre": "*",
+                "paragonie/constant_time_encoding": "^1|^2",
                 "paragonie/random_compat": ">=2",
                 "php": ">=5.4"
             },
@@ -248,7 +249,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-secookie"
             },
-            "time": "2020-01-27T10:06:53+00:00"
+            "time": "2020-01-29T09:28:11+00:00"
         },
         {
             "name": "fkooman/sqlite-migrate",
@@ -342,7 +343,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "30e47ab3e5045f56368fae0c9a6e727770e6b078"
+                "reference": "4c6331eebe99107af8e9861806642762d9d048fb"
             },
             "require": {
                 "ext-curl": "*",
