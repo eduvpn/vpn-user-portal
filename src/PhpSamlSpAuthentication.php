@@ -53,7 +53,7 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
             return false;
         }
 
-        $authOptions = new AuthOptions();
+        $authOptions = new AuthOptions($request->getUri());
 
         if (null === $authnContext = $this->config->optionalItem('authnContext')) {
             $authnContext = [];
