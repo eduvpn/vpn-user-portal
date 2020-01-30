@@ -180,7 +180,7 @@ try {
                     CookieOptions::init()
                         ->setSecure($secureCookie)
                         ->setPath($request->getRoot())
-                        ->setSameSite(null)
+                        ->setSameSite('None')
                 )
             );
             // we make the root URL and baseDir part of the configuration,
