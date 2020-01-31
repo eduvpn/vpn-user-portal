@@ -89,21 +89,20 @@ try {
     }
 
     $secureCookie = $config->hasItem('secureCookie') ? $config->getItem('secureCookie') : true;
+    $cookieOptions = $secureCookie ? CookieOptions::init() : CookieOptions::init()->withoutSecure();
     $seCookie = new SeCookie(
         new Cookie(
-            CookieOptions::init()
-                ->setSecure($secureCookie)
-                ->setSameSite('Lax')
-                ->setMaxAge(60 * 60 * 24 * 90)  // 90 days
+            $cookieOptions
+                ->withSameSiteLax()
+                ->withMaxAge(60 * 60 * 24 * 90)  // 90 days
         )
     );
     $seSession = new SeSession(
         new Session(
             SessionOptions::init(),
-            CookieOptions::init()
-                ->setPath($request->getRoot())
-                ->setSecure($secureCookie)
-                ->setSameSite('Lax')
+            $cookieOptions
+                ->withPath($request->getRoot())
+                ->withSameSiteLax()
         )
     );
 
@@ -176,11 +175,10 @@ try {
             $seSamlSession = new SeSamlSession(
                 new Session(
                     SessionOptions::init()
-                        ->setName('PSSSID'),
-                    CookieOptions::init()
-                        ->setSecure($secureCookie)
-                        ->setPath($request->getRoot())
-                        ->setSameSite('None')
+                        ->withName('PSSSID'),
+                    $cookieOptions
+                        ->withPath($request->getRoot())
+                        ->withSameSiteNone()
                 )
             );
             // we make the root URL and baseDir part of the configuration,
