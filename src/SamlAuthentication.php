@@ -11,9 +11,8 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
+use fkooman\SAML\SP\CryptoKeys;
 use fkooman\SAML\SP\Exception\SamlException;
-use fkooman\SAML\SP\PrivateKey;
-use fkooman\SAML\SP\PublicKey;
 use fkooman\SAML\SP\SP;
 use fkooman\SAML\SP\SpInfo;
 use fkooman\SAML\SP\XmlIdpInfoSource;
@@ -53,8 +52,7 @@ class SamlAuthentication implements BeforeHookInterface, ServiceModuleInterface
         }
         $spInfo = new SpInfo(
             $spEntityId,
-            PrivateKey::fromFile(sprintf('%s/config/sp.key', $config->getItem('_baseDir'))),
-            PublicKey::fromFile(sprintf('%s/config/sp.crt', $config->getItem('_baseDir'))),
+            CryptoKeys::load(sprintf('%s/config', $config->getItem('_baseDir'))),
             $rootUri.'_saml/acs',
             $requireEncryption,
             ['en-US' => 'VPN Service']
