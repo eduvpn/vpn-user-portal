@@ -54,16 +54,24 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
         }
 
         $authOptions = new AuthOptions($request->getUri());
-
-        if (null === $authnContext = $this->config->optionalItem('authnContext')) {
-            $authnContext = [];
+        if (null !== $authnContext = $this->config->optionalItem('authnContext')) {
+            $authOptions->setAuthnContextClassRef($authnContext);
         }
-        $authOptions->setAuthnContextClassRef($authnContext);
-
         if (!$this->samlAuth->isAuthenticated()) {
             return new RedirectResponse($this->samlAuth->getLoginURL($authOptions));
         }
+
+        // user authenticated
         $samlAssertion = $this->samlAuth->getAssertion();
+
+        // do they actually have the requested authnContext? unfortunately
+        // php-saml-sp API does not yet support AuthOptions on isAuthenticated
+        // to make sure of this, so we check here manually
+        // XXX fix this in php-saml-sp 0.4!
+        if (!\in_array($samlAssertion->getAuthnContext(), $authOptions->getAuthnContextClassRef(), true)) {
+            return new RedirectResponse($this->samlAuth->getLoginURL($authOptions));
+        }
+
         $samlAttributes = $samlAssertion->getAttributes();
         /** @var string $userIdAttribute */
         $userIdAttribute = $this->config->getItem('userIdAttribute');
