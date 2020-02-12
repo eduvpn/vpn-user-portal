@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.2.0 (...)
+- update `fkooman/secookie` supporting multiple sessions
+- update `fkooman/saml-sp` and use a separate session for SAML with 
+  `SameSite=None`
+- add support for php-saml-sp (external SAML SP written in PHP) 
+- include `Tpl` class and update API use regarding locale(s)
+
 ## 2.1.6 (2020-01-20)
 - fix session cookie `Path` parameter
 
