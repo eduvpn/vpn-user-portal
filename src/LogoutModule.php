@@ -42,46 +42,38 @@ class LogoutModule implements ServiceModuleInterface
      */
     public function init(Service $service)
     {
-        // new URL since we introduce SAML / Mellon logout
         $service->post(
             '/_logout',
             /**
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $httpReferrer = $request->requireHeader('HTTP_REFERER');
-                if (null !== $this->logoutUrl) {
-                    // we can't destroy the complete session here, we need to
-                    // delete the keys one by one as some may be used by e.g.
-                    // the SAML authentication backend...
-                    $this->session->remove('_update_session_info');
-                    $this->session->remove('_saml_auth_time');
-                    $this->session->remove('_two_factor_verified');
-                    $this->session->remove('_mellon_auth_user');
-                    $this->session->remove('_mellon_auth_time');
-                    $this->session->remove('_two_factor_enroll_redirect_to');
-                    $this->session->remove('_two_factor_verified');
-                    $this->session->remove('_form_auth_user');
-                    $this->session->remove('_form_auth_permission_list');
-                    $this->session->remove('_form_auth_time');
-
-                    // a logout URL is defined, this is used by SAML/Mellon
-                    return new RedirectResponse(
-                        sprintf(
-                            '%s?%s',
-                            $this->logoutUrl,
-                            http_build_query(
-                                [
-                                    $this->returnParameter => $httpReferrer,
-                                ]
-                            )
-                        )
-                    );
-                }
-
                 $this->session->destroy();
 
-                return new RedirectResponse($httpReferrer);
+                // figure out where to return after logout
+                $httpReferrer = $request->requireHeader('HTTP_REFERER');
+
+                if (null === $logoutUrl = $this->logoutUrl) {
+                    // no external authentication source we need to go to to
+                    // complete the logout
+                    return new RedirectResponse($httpReferrer);
+                }
+
+                // we have an external authentication module that wants to
+                // be triggered on logout before returning to the place we came
+                // from
+                return new RedirectResponse(
+                    sprintf(
+                        '%s%s%s',
+                        $logoutUrl,
+                        false === strpos($logoutUrl, '?') ? '?' : '&',
+                        http_build_query(
+                            [
+                                $this->returnParameter => $httpReferrer,
+                            ]
+                        )
+                    )
+                );
             }
         );
     }
