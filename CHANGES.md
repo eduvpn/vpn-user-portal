@@ -7,8 +7,9 @@
 - add support for php-saml-sp (external SAML SP written in PHP) with 
   `PhpSamlAuthentication` authentication module
   - `SamlAuthentication` authentication module is now deprecated and will be 
-    removed in the following release
+    removed in the next release
 - include `Tpl` class here and update API use regarding locale(s)
+- cleanup/simplify `LogoutModule`
 
 ## 2.1.6 (2020-01-20)
 - fix session cookie `Path` parameter
