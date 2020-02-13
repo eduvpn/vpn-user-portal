@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.0 (...)
+## 2.2.0 (2020-02-13)
 - update `fkooman/secookie` (2.1.0 -> 4.0.0) to supporting multiple parallel 
   sessions and properly support `SameSite=None` with SAML session cookies
 - update `fkooman/saml-sp` (0.2.2 -> 0.3.0), supporting `<EncryptedAssertion>` 
