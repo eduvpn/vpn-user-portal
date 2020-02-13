@@ -8,9 +8,19 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.2.0 
+
+We now support `PhpSamlSpAuthentication` authentication module. It takes all 
+the options of `SamlAuthentication`, except `spEntityId`, `idpMetadata`, 
+`idpEntityId` and `discoUrl`. See 
+[PHP_SAML_SP_UPGRADE](https://github.com/eduvpn/documentation/blob/v2/PHP_SAML_SP_UPGRADE.md)
+
+The use of `SamlAuthentication` is DEPRECATED and `PhpSamlSpAuthentication` is 
+STILL not supported!
+
 ## 2.1.3
 
-We added the translation for Estionian (Estonia). You can add it to 
+We added the translation for Estonian (Estonia). You can add it to 
 `config.php` under `supportedLanguages` to enable it in your portal:
 
     'et_EE' => 'Eesti',
