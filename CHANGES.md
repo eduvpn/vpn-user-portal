@@ -1,13 +1,14 @@
 # Changelog
 
 ## 2.2.0 (...)
-- update `fkooman/secookie` supporting multiple sessions
-- update `fkooman/saml-sp` and use a separate session for SAML with 
-  `SameSite=None`
+- update `fkooman/secookie` (2.1.0 -> 4.0.0) to supporting multiple parallel 
+  sessions and properly support `SameSite=None` with SAML session cookies
+- update `fkooman/saml-sp` (0.2.2 -> 0.3.0), supporting `<EncryptedAssertion>` 
+  and some other small change
 - add support for php-saml-sp (external SAML SP written in PHP) with 
   `PhpSamlAuthentication` authentication module
-  - `SamlAuthentication` authentication module is now deprecated and will be 
-    removed in the next release
+  - `SamlAuthentication` authentication module was never officially supported 
+    and is now deprecated. It will be removed in the next release
 - include `Tpl` class here and update API use regarding locale(s)
 - cleanup/simplify `LogoutModule`
 
