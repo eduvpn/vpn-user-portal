@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.1 (2020-02-14)
+- session cookie for `SamlAuthentication` rename to make switching to 
+  `PhpSamlSpAuthentication` possible without running into a big session 
+  confusion situation
+
 ## 2.2.0 (2020-02-13)
 - update `fkooman/secookie` (2.1.0 -> 4.0.0) to supporting multiple parallel 
   sessions and properly support `SameSite=None` with SAML session cookies

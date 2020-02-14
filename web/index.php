@@ -175,7 +175,7 @@ try {
             $seSamlSession = new SeSamlSession(
                 new Session(
                     SessionOptions::init()
-                        ->withName('PSSSID'),
+                        ->withName('PFSSSID'),
                     $cookieOptions
                         ->withPath($request->getRoot())
                         ->withSameSiteNone()
