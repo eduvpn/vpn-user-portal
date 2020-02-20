@@ -10,6 +10,8 @@
 namespace LC\Portal;
 
 use Exception;
+use ParagonIE\ConstantTime\Base64;
+use ParagonIE\ConstantTime\Binary;
 
 /*
  * eduVPN - End-user friendly VPN.
@@ -57,23 +59,23 @@ class Signify
     public function verify($messageText, $messageSignature)
     {
         $signatureData = self::getSecondLine($messageSignature);
-        $msgSig = base64_decode($signatureData, true);
+        $msgSig = Base64::decode($signatureData, true);
         // <signature_algorithm> || <key_id> || <signature>
         //    signature_algorithm: Ed
         //    key_id: 8 random bytes, matching the public key
         //    signature (PureEdDSA): ed25519(<file data>)
-        if (\strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_RANDOM_BYTES_LENGTH + self::ED_SIGNATURE_LENGTH !== \strlen($msgSig)) {
+        if (Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_RANDOM_BYTES_LENGTH + self::ED_SIGNATURE_LENGTH !== Binary::safeStrlen($msgSig)) {
             throw new Exception('invalid signature (not long enough)');
         }
-        if (self::SIGNIFY_ALGO_DESCRIPTION !== substr($msgSig, 0, \strlen(self::SIGNIFY_ALGO_DESCRIPTION))) {
+        if (self::SIGNIFY_ALGO_DESCRIPTION !== Binary::safeSubstr($msgSig, 0, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION))) {
             throw new Exception('unsupported algorithm, we only support "Ed"');
         }
-        if ($this->keyId !== substr($msgSig, \strlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_RANDOM_BYTES_LENGTH)) {
+        if ($this->keyId !== Binary::safeSubstr($msgSig, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_RANDOM_BYTES_LENGTH)) {
             throw new Exception('signature does not match public key');
         }
 
         return sodium_crypto_sign_verify_detached(
-            substr($msgSig, \strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_RANDOM_BYTES_LENGTH),
+            Binary::safeSubstr($msgSig, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_RANDOM_BYTES_LENGTH),
             $messageText,
             $this->publicKey
         );
@@ -87,21 +89,21 @@ class Signify
     private static function verifyPublicKey($publicKeyText)
     {
         $publicKeyData = self::getSecondLine($publicKeyText);
-        $pubKey = base64_decode($publicKeyData, true);
+        $pubKey = Base64::decode($publicKeyData, true);
         // <signature_algorithm> || <key_id> || <public_key>
         //    signature_algorithm: Ed
         //    key_id: 8 random bytes
         //    public_key: Ed25519 public key
-        if (\strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_RANDOM_BYTES_LENGTH + self::ED_PUBLIC_KEY_LENGTH !== \strlen($pubKey)) {
+        if (Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_RANDOM_BYTES_LENGTH + self::ED_PUBLIC_KEY_LENGTH !== Binary::safeStrlen($pubKey)) {
             throw new Exception('invalid public key (not long enough)');
         }
-        if (self::SIGNIFY_ALGO_DESCRIPTION !== substr($pubKey, 0, \strlen(self::SIGNIFY_ALGO_DESCRIPTION))) {
+        if (self::SIGNIFY_ALGO_DESCRIPTION !== Binary::safeSubstr($pubKey, 0, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION))) {
             throw new Exception('unsupported algorithm, we only support "Ed"');
         }
 
         return [
-            substr($pubKey, \strlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_RANDOM_BYTES_LENGTH),
-            substr($pubKey, \strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_RANDOM_BYTES_LENGTH),
+            Binary::safeSubstr($pubKey, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_RANDOM_BYTES_LENGTH),
+            Binary::safeSubstr($pubKey, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_RANDOM_BYTES_LENGTH),
         ];
     }
 
