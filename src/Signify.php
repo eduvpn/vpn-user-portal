@@ -13,13 +13,11 @@ use Exception;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\ConstantTime\Binary;
 
-/*
- * eduVPN - End-user friendly VPN.
+/**
+ * Validate Signify/Minisign signatures.
  *
- * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
- * SPDX-License-Identifier: AGPL-3.0+
+ * @see https://jedisct1.github.io/minisign/
  */
-
 class Signify
 {
     /** @var string */
