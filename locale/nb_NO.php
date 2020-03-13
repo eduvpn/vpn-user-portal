@@ -8,6 +8,7 @@
  */
 
 return [
+    //'#Active Connections' => '',
     'Account' => 'Konto',
     'Active' => 'Aktiv',
     'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => 'Alle brukere vil se denne "Message of the Day" (MOTD)-meldingen når de logger inn i portalen, eller kobler til VPN med en applikasjon som støtter APIen.',
@@ -32,6 +33,7 @@ return [
     'Date/Time' => 'Dato/Tid',
     'Delete' => 'Slett',
     'Delete TOTP Secret' => 'Slett TOTP Hemmelighet',
+    //'Details...' => '',
     'Disable User' => 'Sperr Bruker',
     'Disabled' => 'Sperret',
     'Disconnected' => 'Frakoblet',

@@ -1,6 +1,24 @@
 <?php $this->layout('base', ['activeItem' => 'connections']); ?>
 <?php $this->start('content'); ?>
     <h1><?=$this->t('Connections'); ?></h1>
+    <table class="tbl">
+        <thead>
+            <tr>
+                <th><?=$this->t('Profile'); ?></th>
+                <th><?=$this->t('#Active Connections'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+    <?php foreach ($vpnConnections as $profileId => $connectionList): ?>
+        <tr>
+            <td><span title="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></span></td>
+            <td><?=count($connectionList); ?></td>
+        </tr>
+    <?php endforeach; ?>
+        </tbody>
+    </table>
+    <details>
+        <summary><?=$this->t('Details...'); ?></summary>
     <?php foreach ($vpnConnections as $profileId => $connectionList): ?>
         <h2 id="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></h2>
         <?php if (0 === count($connectionList)): ?>
@@ -36,4 +54,5 @@
             </table>
         <?php endif; ?>
     <?php endforeach; ?>
+    </details>
 <?php $this->stop('content'); ?>

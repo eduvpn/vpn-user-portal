@@ -8,6 +8,7 @@
  */
 
 return [
+    //'#Active Connections' => '',
     'Account' => 'Konto',
     'Active' => 'Aktywny',
     'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => 'Wszyscy użytkownicy będą widzieć poniższą wiadomość dnia (MOTD) gdy zalogują się do portalu lub połączą z VPN za pomocą aplikacji z obsługą API.',
@@ -32,6 +33,7 @@ return [
     'Date/Time' => 'Data/Czas',
     'Delete' => 'Skasuj',
     'Delete TOTP Secret' => 'Skasuj sekrety TOTP',
+    //'Details...' => '',
     'Disable User' => 'Zablokuj użytkownika',
     'Disabled' => 'Zablokowany',
     'Disconnected' => 'Rozłączono',
@@ -122,14 +124,4 @@ return [
     'You cannot manage your own user account.' => 'Nie możesz zarządzać swoim kontem.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Twój identyfikator to <code>%_two_factor_user_id%</code>.',
     //'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => '',
-    // [DELETED] '<strong title="%client_id%">%display_name%</strong> wants to manage your VPN configurations.' => '<strong title="%client_id%">%display_name%</strong> chce zarządzać Twoją konfiguracją VPN.',
-    // [DELETED] 'Approve' => 'Zaakceptuj',
-    // [DELETED] 'Download' => 'Pobierz',
-    // [DELETED] 'Download a new VPN configuration by choosing a profile and a name, e.g. <em>Phone</em>.' => 'Pobierz nową konfigurację VPN określając profil połączenia i podając nazwę, np. <em>Telefon</em>.',
-    // [DELETED] 'Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.' => 'Nie zdefiniowano żadnego profilu połączenia lub konto nie ma wymaganych uprawnień do dostępu do bieżących profili.',
-    // [DELETED] 'Issued' => 'Wydano',
-    // [DELETED] 'Managing user <em>%userId%</em>.' => 'Zarządzanie użytkownikiem <em>%userId%</em>.',
-    // [DELETED] 'New' => 'Nowy',
-    // [DELETED] 'Reject' => 'Odrzuć',
-    // [DELETED] 'There are currently no issued certificates. <a href="new">Download</a> a new configuration.' => 'Aktualnie nie masz żadnych certyfikatów. <a href="new">Pobierz</a> nową konfigurację.',
 ];

@@ -8,6 +8,7 @@
  */
 
 return [
+    //'#Active Connections' => '',
     'Account' => 'حساب',
     'Active' => 'نشط',
     'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => 'كل المستعملين سيرون رسالة اليوم هذه عند التسجيل على البوابة، او عند الاتصال مع الشبكة الخاصة الافتراضية عن طريق تطبيق يدعم هذا الامر.',
@@ -32,6 +33,7 @@ return [
     'Date/Time' => 'التاريخ/الوقت',
     'Delete' => 'حذف',
     'Delete TOTP Secret' => 'حذف سر كلمة المرور وحيدة الاستخدام المؤقتة',
+    //'Details...' => '',
     'Disable User' => 'تعطيل المستخدم',
     'Disabled' => 'معطل',
     'Disconnected' => 'غير متصل',

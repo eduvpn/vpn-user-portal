@@ -8,6 +8,7 @@
  */
 
 return [
+    //'#Active Connections' => '',
     'Account' => 'Konto',
     //'Active' => '',
     //'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => '',
@@ -32,6 +33,7 @@ return [
     'Date/Time' => 'Dato/klokkeslæt',
     'Delete' => 'Slet',
     //'Delete TOTP Secret' => '',
+    //'Details...' => '',
     //'Disable User' => '',
     //'Disabled' => '',
     //'Disconnected' => '',
@@ -122,13 +124,4 @@ return [
     //'You cannot manage your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Dit ID er <code>%_two_factor_user_id%</code>.',
     //'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => '',
-    // [DELETED] '<strong title="%client_id%">%display_name%</strong> wants to manage your VPN configurations.' => '<strong title="%client_id%">%display_name%</strong> ønsker at administrere din VPN konfigurationer.',
-    // [DELETED] 'Approve' => 'Godkend',
-    // [DELETED] 'Download' => 'Download',
-    // [DELETED] 'Download a new VPN configuration by choosing a profile and a name, e.g. <em>Phone</em>.' => 'Opret en ny VPN-konfiguration ved at vælge en profil og et navn, f.eks. <em>Mobil</em>.',
-    // [DELETED] 'Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.' => 'Der er enten ikke defineret en VPN-profil, eller også har denne konto ikke de nødvendige tilladelser til at lave en ny VPN-konfiguration for de tilgængelige profiler.',
-    // [DELETED] 'Issued' => 'Udstedt',
-    // [DELETED] 'New' => 'Ny',
-    // [DELETED] 'Reject' => 'Afvis',
-    // [DELETED] 'There are currently no issued certificates. <a href="new">Download</a> a new configuration.' => 'Der er ingen konfigurationer på nuværende tidspunkt. <a href="new">Download</a> en konfiguration.',
 ];

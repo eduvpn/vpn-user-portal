@@ -8,6 +8,7 @@
  */
 
 return [
+    //'#Active Connections' => '',
     'Account' => 'Акаунт',
     'Active' => 'Активний',
     'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => 'Всі користувачі побачать це "Повідомлення дня" коли потраплять на портал або при підключення до VPN за допомогою додатка який підтримує API.',
@@ -32,6 +33,7 @@ return [
     'Date/Time' => 'Дата/Час',
     'Delete' => 'Видалити',
     'Delete TOTP Secret' => 'Видалити секретний TOTP',
+    //'Details...' => '',
     'Disable User' => 'Деактивувати користувача',
     'Disabled' => 'Деактивовано',
     'Disconnected' => 'Роз’єднано',
@@ -122,14 +124,4 @@ return [
     'You cannot manage your own user account.' => 'Ви не можете керувати власним обліковим записом користувача.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Ваш ідентифікатор <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Срок дії вашої нової конфігурації сплине %expiryDate%. Поверніться сюди, щоб отримати нову конфігурацію після закінчення терміну дії!',
-    // [DELETED] '<strong title="%client_id%">%display_name%</strong> wants to manage your VPN configurations.' => '<strong title="%client_id%">%display_name%</strong> хоче керувати вашими VPN налаштуваннями.',
-    // [DELETED] 'Approve' => 'Підтвердити',
-    // [DELETED] 'Download' => 'Завантижити',
-    // [DELETED] 'Download a new VPN configuration by choosing a profile and a name, e.g. <em>Phone</em>.' => 'Завантижити нову VPN конфігурацію вибравши профайл та його ім\`я, тощо.<em>Телефон</em>.',
-    // [DELETED] 'Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.' => 'Або VPN профайл не визначено або Акаунт не має прав доступу до існуючих профайлів.',
-    // [DELETED] 'Issued' => 'Виданий',
-    // [DELETED] 'Managing user <em>%userId%</em>.' => 'Керування користувачем <em>%userId%</em>.',
-    // [DELETED] 'New' => 'Новий',
-    // [DELETED] 'Reject' => 'Зкинуто',
-    // [DELETED] 'There are currently no issued certificates. <a href="new">Download</a> a new configuration.' => 'Наразі виданих сертифікатів немає. <a href="new">Завантажте</a> нову конфігурацію.',
 ];

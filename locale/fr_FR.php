@@ -8,6 +8,7 @@
  */
 
 return [
+    //'#Active Connections' => '',
     'Account' => 'Compte',
     //'Active' => '',
     //'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => '',
@@ -32,6 +33,7 @@ return [
     'Date/Time' => 'Date/Heure',
     'Delete' => 'Supprimer',
     //'Delete TOTP Secret' => '',
+    //'Details...' => '',
     //'Disable User' => '',
     //'Disabled' => '',
     //'Disconnected' => '',
@@ -122,13 +124,4 @@ return [
     //'You cannot manage your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Votre identifiant est <code>%_two_factor_user_id%</code>.',
     //'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => '',
-    // [DELETED] '<strong title="%client_id%">%display_name%</strong> wants to manage your VPN configurations.' => '<strong title="%client_id%">%display_name%</strong> veut gérer vos configurations VPN.',
-    // [DELETED] 'Approve' => 'Approuver',
-    // [DELETED] 'Download' => 'Télécharger',
-    // [DELETED] 'Download a new VPN configuration by choosing a profile and a name, e.g. <em>Phone</em>.' => 'Téléchargez une nouvelle configuration VPN en choisissant un profil et un nom, par example <em>Téléphone</em>.',
-    // [DELETED] 'Either, no VPN profiles are defined, or this account does not have the required permissions to access any of the available profiles.' => 'Aucun profil n\'a été défini ou ce compte ne dispose pas des permissions requises pour accéder aux profils disponibles.',
-    // [DELETED] 'Issued' => 'Émis',
-    // [DELETED] 'New' => 'Nouveau',
-    // [DELETED] 'Reject' => 'Rejetter',
-    // [DELETED] 'There are currently no issued certificates. <a href="new">Download</a> a new configuration.' => 'Aucun certificat n\'a été émis pour l\'instant. <a href="new">Téléchargez</a> une nouvelle configuration.',
 ];

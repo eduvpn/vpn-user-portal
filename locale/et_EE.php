@@ -8,6 +8,7 @@
  */
 
 return [
+    //'#Active Connections' => '',
     'Account' => 'Konto',
     'Active' => 'Aktiivne',
     'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => 'Kõik kasutajad näevad seda päevasõnumit, kui logivad portaali või ühenduvad VPNiga APIt toetava rakenduse abil.',
@@ -32,6 +33,7 @@ return [
     'Date/Time' => 'Kuupäev/kellaaeg',
     'Delete' => 'Kustuta',
     'Delete TOTP Secret' => 'Kustuta ajapõhise ühekordse parooli (TOTP) saladus',
+    //'Details...' => '',
     'Disable User' => 'Desaktiveeri kasutaja',
     'Disabled' => 'Desaktiveeritud',
     'Disconnected' => 'Lahti ühendatud',
