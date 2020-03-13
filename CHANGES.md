@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.2 (2020-03-13)
+- rework "Connections" page to list number of connected clients by default per
+  profile instead of all connected clients
+
 ## 2.2.1 (2020-02-14)
 - session cookie for `SamlAuthentication` rename to make switching to 
   `PhpSamlSpAuthentication` possible without running into a big session 
