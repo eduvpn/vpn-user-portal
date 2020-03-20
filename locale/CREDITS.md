@@ -8,3 +8,4 @@
 * `pl_PL`: Adam Osuchowski (Silesian University of Technology)
 * `uk_UA`: Volodymyr Yemzhyn (URAN)
 * `et_EE`: Anne Märdimäe (EENet of HITSA)
+* `de_DE`: Fred-Oliver Jury (University of applied Sciences Osnabrück)
