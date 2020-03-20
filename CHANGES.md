@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.3 (...)
+- add Germany translation
+
 ## 2.2.2 (2020-03-13)
 - rework "Connections" page to list number of connected clients by default per
   profile instead of all connected clients

@@ -8,6 +8,13 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.2.3
+
+We added the translation for German (Germany). You can add it to 
+`config.php` under `supportedLanguages` to enable it in your portal:
+
+    'de_DE' => 'Deutsch',
+
 ## 2.2.0 
 
 We now support `PhpSamlSpAuthentication` authentication module. It takes all 
