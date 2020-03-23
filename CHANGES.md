@@ -1,7 +1,7 @@
 # Changelog
 
-## 2.2.3 (...)
-- add German translation
+## 2.2.3 (2020-03-23)
+- add German portal translation
 
 ## 2.2.2 (2020-03-13)
 - rework "Connections" page to list number of connected clients by default per
