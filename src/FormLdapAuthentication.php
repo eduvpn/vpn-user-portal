@@ -30,7 +30,8 @@ class FormLdapAuthentication extends FormAuthentication
             $config->getItem('bindDnTemplate'),
             $config->optionalItem('baseDn'),
             $config->optionalItem('userFilterTemplate'),
-            $config->optionalItem('permissionAttribute')
+            $config->optionalItem('permissionAttribute'),
+            $config->optionalItem('stripRealm')
         );
 
         parent::__construct($userAuth, $session, $tpl);

@@ -8,6 +8,12 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.2.4
+
+Support `stripRealm` option for the LDAP authentication method. Under 
+`FormLdapAuthentication` you can use the `stripRealm` option and set it to 
+`true` or `false`. The default is `false`.
+
 ## 2.2.3
 
 We added the translation for German (Germany). You can add it to 

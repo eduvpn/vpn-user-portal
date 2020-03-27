@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.4 (...)
+- update for LDAP backend to support `stripRealm`
+
 ## 2.2.3 (2020-03-23)
 - add German portal translation
 
