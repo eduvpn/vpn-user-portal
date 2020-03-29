@@ -11,9 +11,7 @@ namespace LC\Portal;
 
 use LC\Common\Config;
 use LC\Common\Http\FormAuthentication;
-use LC\Common\Http\LdapAuth;
 use LC\Common\Http\SessionInterface;
-use LC\Common\LdapClient;
 use LC\Common\TplInterface;
 use Psr\Log\LoggerInterface;
 
@@ -30,8 +28,7 @@ class FormLdapAuthentication extends FormAuthentication
             $config->getItem('bindDnTemplate'),
             $config->optionalItem('baseDn'),
             $config->optionalItem('userFilterTemplate'),
-            $config->optionalItem('permissionAttribute'),
-            $config->optionalItem('stripRealm')
+            $config->optionalItem('permissionAttribute')
         );
 
         parent::__construct($userAuth, $session, $tpl);
