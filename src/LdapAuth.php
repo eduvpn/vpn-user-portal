@@ -32,21 +32,26 @@ class LdapAuth implements CredentialValidatorInterface
     private $userFilterTemplate;
 
     /** @var string|null */
+    private $userIdAttribute;
+
+    /** @var string|null */
     private $permissionAttribute;
 
     /**
      * @param string      $bindDnTemplate
      * @param string|null $baseDn
      * @param string|null $userFilterTemplate
+     * @param string|null $userIdAttribute
      * @param string|null $permissionAttribute
      */
-    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $permissionAttribute)
+    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $userIdAttribute, $permissionAttribute)
     {
         $this->logger = $logger;
         $this->ldapClient = $ldapClient;
         $this->bindDnTemplate = $bindDnTemplate;
         $this->baseDn = $baseDn;
         $this->userFilterTemplate = $userFilterTemplate;
+        $this->userIdAttribute = $userIdAttribute;
         $this->permissionAttribute = $permissionAttribute;
     }
 
@@ -72,7 +77,25 @@ class LdapAuth implements CredentialValidatorInterface
                 $userFilter = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->userFilterTemplate);
             }
 
-            return new UserInfo($authUser, $this->getPermissionList($baseDn, $userFilter));
+            $userId = $authUser;
+            $permissionList = [];
+
+            if (null !== $userIdAttribute = $this->userIdAttribute) {
+                // normalize the userId by querying it from the LDAP, benefits:
+                // (1) we get the exact same capitalization as in the LDAP
+                // (2) we can take a completely different attribute as the user
+                //     id, e.g. mail, ipaUniqueID, ...
+                if (null !== $directoryUserId = $this->getUserId($baseDn, $userFilter, $userIdAttribute)) {
+                    $userId = $directoryUserId;
+                }
+            }
+
+            // obtain permissions
+            if (null !== $permissionAttribute = $this->permissionAttribute) {
+                $permissionList = $this->getPermissionList($baseDn, $userFilter, $permissionAttribute);
+            }
+
+            return new UserInfo($userId, $permissionList);
         } catch (LdapClientException $e) {
             $this->logger->warning(
                 sprintf('unable to bind with DN "%s" (%s)', $bindDn, $e->getMessage())
@@ -85,41 +108,48 @@ class LdapAuth implements CredentialValidatorInterface
     /**
      * @param string $baseDn
      * @param string $userFilter
+     * @param string $userIdAttribute
      *
-     * @return array<string>
+     * @return string|null
      */
-    private function getPermissionList($baseDn, $userFilter)
+    private function getUserId($baseDn, $userFilter, $userIdAttribute)
     {
-        if (null === $this->permissionAttribute) {
-            return [];
-        }
-
         $ldapEntries = $this->ldapClient->search(
             $baseDn,
             $userFilter,
-            [$this->permissionAttribute]
+            [$userIdAttribute]
         );
 
-        if (0 === $ldapEntries['count']) {
-            // user does not exist
-            return [];
+        // it turns out that PHP's LDAP client converts the attribute name to
+        // lowercase before populating the array...
+        if (isset($ldapEntries[0][strtolower($userIdAttribute)][0])) {
+            return $ldapEntries[0][strtolower($userIdAttribute)][0];
         }
 
-        return self::extractPermission($ldapEntries, $this->permissionAttribute);
+        return null;
     }
 
     /**
+     * @param string $baseDn
+     * @param string $userFilter
      * @param string $permissionAttribute
      *
      * @return array<string>
      */
-    private static function extractPermission(array $ldapEntries, $permissionAttribute)
+    private function getPermissionList($baseDn, $userFilter, $permissionAttribute)
     {
-        if (0 === $ldapEntries[0]['count']) {
-            // attribute not found for this user
-            return [];
+        $ldapEntries = $this->ldapClient->search(
+            $baseDn,
+            $userFilter,
+            [$permissionAttribute]
+        );
+
+        // it turns out that PHP's LDAP client converts the attribute name to
+        // lowercase before populating the array...
+        if (isset($ldapEntries[0][strtolower($permissionAttribute)][0])) {
+            return \array_slice($ldapEntries[0][strtolower($permissionAttribute)], 1);
         }
 
-        return \array_slice($ldapEntries[0][strtolower($permissionAttribute)], 1);
+        return [];
     }
 }

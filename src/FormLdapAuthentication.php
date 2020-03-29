@@ -28,6 +28,7 @@ class FormLdapAuthentication extends FormAuthentication
             $config->getItem('bindDnTemplate'),
             $config->optionalItem('baseDn'),
             $config->optionalItem('userFilterTemplate'),
+            $config->optionalItem('userIdAttribute'),
             $config->optionalItem('permissionAttribute')
         );
 

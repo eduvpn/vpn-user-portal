@@ -10,9 +10,14 @@ working!
 
 ## 2.2.4
 
-Support `stripRealm` option for the LDAP authentication method. Under 
-`FormLdapAuthentication` you can use the `stripRealm` option and set it to 
-`true` or `false`. The default is `false`.
+You can now set `userIdAttribute` under `FormLdapAuthentication`. The value of
+the obtained attribute, instead of the provided "authUser" in the login form 
+will be used as the user ID. For example:
+
+    'userIdAttribute' => 'uid',
+
+If not provided, the exact user ID used for binding to the LDAP server will be
+used as the user ID in the VPN service.
 
 ## 2.2.3
 

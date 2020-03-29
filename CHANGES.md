@@ -1,7 +1,8 @@
 # Changelog
 
 ## 2.2.4 (...)
-- update for LDAP backend to support `stripRealm`
+- introduce `userIdAttribute` for `FormLdapAuthentication` to "normalize" the
+  user ID used inside the VPN service (issue #151)
 
 ## 2.2.3 (2020-03-23)
 - add German portal translation
