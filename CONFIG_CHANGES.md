@@ -19,6 +19,12 @@ will be used as the user ID. For example:
 If not provided, the exact user ID used for binding to the LDAP server will be
 used as the user ID in the VPN service.
 
+You can also specify the `addRealm` option that takes a `string` value that 
+will add a "realm" to the users specified "authUser". For example, if the user 
+provides `foo`, an `addRealm` with value `example.org` would convert the 
+"authUser" to `foo@example.org`. If the user specifies `foo@bar.com` and the
+`addRealm` value is `example.org` nothing will be changed.
+
 ## 2.2.3
 
 We added the translation for German (Germany). You can add it to 

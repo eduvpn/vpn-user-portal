@@ -35,6 +35,9 @@ class LdapAuth implements CredentialValidatorInterface
     private $userIdAttribute;
 
     /** @var string|null */
+    private $addRealm;
+
+    /** @var string|null */
     private $permissionAttribute;
 
     /**
@@ -42,9 +45,10 @@ class LdapAuth implements CredentialValidatorInterface
      * @param string|null $baseDn
      * @param string|null $userFilterTemplate
      * @param string|null $userIdAttribute
+     * @param string|null $addRealm
      * @param string|null $permissionAttribute
      */
-    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $userIdAttribute, $permissionAttribute)
+    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $userIdAttribute, $addRealm, $permissionAttribute)
     {
         $this->logger = $logger;
         $this->ldapClient = $ldapClient;
@@ -52,6 +56,7 @@ class LdapAuth implements CredentialValidatorInterface
         $this->baseDn = $baseDn;
         $this->userFilterTemplate = $userFilterTemplate;
         $this->userIdAttribute = $userIdAttribute;
+        $this->addRealm = $addRealm;
         $this->permissionAttribute = $permissionAttribute;
     }
 
@@ -63,6 +68,13 @@ class LdapAuth implements CredentialValidatorInterface
      */
     public function isValid($authUser, $authPass)
     {
+        // add "realm" after user name if none is specified
+        if (null !== $addRealm = $this->addRealm) {
+            if (false === strpos($authUser, '@')) {
+                $authUser .= '@'.$addRealm;
+            }
+        }
+
         $bindDn = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->bindDnTemplate);
         try {
             $this->ldapClient->bind($bindDn, $authPass);
