@@ -1,10 +1,11 @@
 # Changelog
 
-## 2.2.4 (...)
+## 2.2.4 (2020-03-30)
 - introduce `userIdAttribute` for `FormLdapAuthentication` to "normalize" the
   user ID used inside the VPN service (issue #151)
-- implement `addRealm` option for `FormLdapAuthentication` that adds a provided
-  domain to the user specified "authUser" if no domain is specified yet
+- implement `addRealm` option for `FormLdapAuthentication` that adds a 
+  configured domain to the user specified "authUser" if no domain is specified 
+  yet
 
 ## 2.2.3 (2020-03-23)
 - add German portal translation
