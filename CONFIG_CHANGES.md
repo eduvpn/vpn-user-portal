@@ -8,6 +8,13 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.2.5 
+
+We added the translation for Portuguese (Portugal). You can add it to 
+`config.php` under `supportedLanguages` to enable it in your portal:
+
+    'pt_PT' => 'Português',
+
 ## 2.2.4
 
 You can now set `userIdAttribute` under `FormLdapAuthentication`. The value of
