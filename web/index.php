@@ -74,7 +74,9 @@ try {
     if ($config->hasItem('styleName')) {
         $styleName = $config->getItem('styleName');
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
+        $templateDirs[] = sprintf('%s/config/views/%s', $baseDir, $styleName);
         $localeDirs[] = sprintf('%s/locale/%s', $baseDir, $styleName);
+        $localeDirs[] = sprintf('%s/config/locale/%s', $baseDir, $styleName);
     }
 
     $sessionExpiry = $config->getItem('sessionExpiry');

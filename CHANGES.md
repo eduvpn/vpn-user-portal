@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.5 (...)
+- fix styling of links in styled `<p>` and `<span>` elements
+- allow overriding locales and templates in `config/` folder for themes as well
+
 ## 2.2.4 (2020-03-30)
 - introduce `userIdAttribute` for `FormLdapAuthentication` to "normalize" the
   user ID used inside the VPN service (issue #151)
