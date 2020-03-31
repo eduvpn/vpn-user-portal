@@ -154,8 +154,12 @@ p.big {
     font-size: 115%;
 }
 
-p.success, p.success a, span.success, span.success a {
+p.success, span.success {
     border: 1px solid #008000;
+    color: #008000;
+}
+
+p.success a, span.success a {
     color: #008000;
 }
 
@@ -164,15 +168,27 @@ p.warning, p.warning a, span.warning, span.warning a {
     color: #ff8c00;
 }
 
+p.warning a, span.warning a {
+    color: #ff8c00;
+}
+
 p.error, p.error a, span.error, span.error a {
     border: 1px solid #dc143c;
     color: #dc143c;
 }
 
-p.plain, p.plain a, span.plain, span.plain a {
+p.error a, span.error a {
+    color: #dc143c;
+}
+
+p.plain, span.plain {
     background-color: #f8f8f8;
     border: 1px solid #ccc;
-    color: #000;
+    color: #555;
+}
+
+p.plain a, span.plain a {
+    color: #555;
 }
 
 span.plain, span.success, span.warning, span.error {
@@ -183,6 +199,11 @@ span.plain, span.success, span.warning, span.error {
 
 p.plain, p.success, p.warning, p.error {
     padding: 1em;
+}
+
+p.success a, span.success a, p.warning a, span.warning a, p.error a, span.error a, p.plain a, span.plain a {
+    border: 0;
+    text-decoration: underline;
 }
 
 table.tbl {
