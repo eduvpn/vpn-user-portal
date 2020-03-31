@@ -19,7 +19,7 @@ foreach ($tplFileList as $tplFile) {
     preg_match_all("/this->t\('(.*?)'\)/", $phpFile, $matches);
     foreach ($matches[1] as $m) {
         if (!in_array($m, $sourceStr, true)) {
-            $sourceStr[] = $m;
+            $sourceStr[] = stripslashes($m);
         }
     }
 }
