@@ -39,7 +39,7 @@ return [
     'Disconnected' => 'Desconetado',
     'Documentation' => 'Documentação',
     'Enable User' => 'Ativar utilizador',
-    //'Enroll' => '',
+    'Enroll' => 'Registar',
     'Error' => 'Erro',
     'Events' => 'Eventos',
     'Existing' => 'Existentes',
