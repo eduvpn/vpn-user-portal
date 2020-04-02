@@ -138,7 +138,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'expiryDate' => $this->getExpiryDate(new DateInterval($this->config->getItem('sessionExpiry'))),
+                            'expiryDate' => ($userInfo->getSessionExpiresAt())->format("Y-m-d H:i:s"),
                             'profileList' => $visibleProfileList,
                             'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
                         ]
