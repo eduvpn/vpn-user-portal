@@ -264,12 +264,12 @@ try {
             );
 
             $implementedInterfaces = class_implements($userAuth);
-            if (!in_array('\LC\Common\Http\BeforeHookInterface', $implementedInterfaces, true)) {
+            if (!in_array('LC\Common\Http\BeforeHookInterface', $implementedInterfaces, true)) {
                 throw new RuntimeException('authentication class MUST implement "LC\Common\Http\BeforeHookInterface"');
             }
             $service->addBeforeHook('auth', $userAuth);
             // optional "ServiceModuleInterface"
-            if (in_array('\LC\Common\Http\ServiceModuleInterface', $implementedInterfaces, true)) {
+            if (in_array('LC\Common\Http\ServiceModuleInterface', $implementedInterfaces, true)) {
                 $service->addModule($userAuth);
             }
     }
