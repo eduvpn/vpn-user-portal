@@ -56,6 +56,9 @@ class ClientConfig
             'ncp-ciphers AES-256-GCM',
             'cipher AES-256-GCM',
 
+            // server dictates data channel key renegotiation interval
+            'reneg-sec 0',
+
             '<ca>',
             // in legacy situation some trimming may be required, for clean
             // installs this is no longer needed though

@@ -5,6 +5,7 @@
 - allow overriding locales and templates in `config/` folder for themes as well
 - add `pt_PT` translation
 - update `fr_FR` translation
+- let server dictate data channel key renegotiation interval
 
 ## 2.2.4 (2020-03-30)
 - introduce `userIdAttribute` for `FormLdapAuthentication` to "normalize" the
