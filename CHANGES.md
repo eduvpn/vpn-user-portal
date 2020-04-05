@@ -1,11 +1,12 @@
 # Changelog
 
-## 2.2.5 (...)
+## 2.2.5 (2020-04-05)
 - fix styling of links in styled `<p>` and `<span>` elements
 - allow overriding locales and templates in `config/` folder for themes as well
 - add `pt_PT` translation
 - update `fr_FR` translation
 - let server dictate data channel key renegotiation interval
+- fix custom authentication class loader
 
 ## 2.2.4 (2020-03-30)
 - introduce `userIdAttribute` for `FormLdapAuthentication` to "normalize" the
