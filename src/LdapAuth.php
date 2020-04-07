@@ -37,18 +37,18 @@ class LdapAuth implements CredentialValidatorInterface
     /** @var string|null */
     private $addRealm;
 
-    /** @var string|null */
-    private $permissionAttribute;
+    /** @var array<string> */
+    private $permissionAttributeList;
 
     /**
-     * @param string      $bindDnTemplate
-     * @param string|null $baseDn
-     * @param string|null $userFilterTemplate
-     * @param string|null $userIdAttribute
-     * @param string|null $addRealm
-     * @param string|null $permissionAttribute
+     * @param string        $bindDnTemplate
+     * @param string|null   $baseDn
+     * @param string|null   $userFilterTemplate
+     * @param string|null   $userIdAttribute
+     * @param string|null   $addRealm
+     * @param array<string> $permissionAttributeList
      */
-    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $userIdAttribute, $addRealm, $permissionAttribute)
+    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $userIdAttribute, $addRealm, array $permissionAttributeList)
     {
         $this->logger = $logger;
         $this->ldapClient = $ldapClient;
@@ -57,7 +57,7 @@ class LdapAuth implements CredentialValidatorInterface
         $this->userFilterTemplate = $userFilterTemplate;
         $this->userIdAttribute = $userIdAttribute;
         $this->addRealm = $addRealm;
-        $this->permissionAttribute = $permissionAttribute;
+        $this->permissionAttributeList = $permissionAttributeList;
     }
 
     /**
@@ -102,12 +102,10 @@ class LdapAuth implements CredentialValidatorInterface
                 }
             }
 
-            // obtain permissions
-            if (null !== $permissionAttribute = $this->permissionAttribute) {
-                $permissionList = $this->getPermissionList($baseDn, $userFilter, $permissionAttribute);
-            }
-
-            return new UserInfo($userId, $permissionList);
+            return new UserInfo(
+                $userId,
+                $this->getPermissionList($baseDn, $userFilter, $this->permissionAttributeList)
+            );
         } catch (LdapClientException $e) {
             $this->logger->warning(
                 sprintf('unable to bind with DN "%s" (%s)', $bindDn, $e->getMessage())
@@ -142,26 +140,33 @@ class LdapAuth implements CredentialValidatorInterface
     }
 
     /**
-     * @param string $baseDn
-     * @param string $userFilter
-     * @param string $permissionAttribute
+     * @param string        $baseDn
+     * @param string        $userFilter
+     * @param array<string> $permissionAttributeList
      *
      * @return array<string>
      */
-    private function getPermissionList($baseDn, $userFilter, $permissionAttribute)
+    private function getPermissionList($baseDn, $userFilter, array $permissionAttributeList)
     {
+        if (0 === \count($permissionAttributeList)) {
+            return [];
+        }
+
         $ldapEntries = $this->ldapClient->search(
             $baseDn,
             $userFilter,
-            [$permissionAttribute]
+            $permissionAttributeList
         );
 
-        // it turns out that PHP's LDAP client converts the attribute name to
-        // lowercase before populating the array...
-        if (isset($ldapEntries[0][strtolower($permissionAttribute)][0])) {
-            return \array_slice($ldapEntries[0][strtolower($permissionAttribute)], 1);
+        $permissionList = [];
+        foreach ($permissionAttributeList as $permissionAttribute) {
+            // it turns out that PHP's LDAP client converts the attribute name to
+            // lowercase before populating the array...
+            if (isset($ldapEntries[0][strtolower($permissionAttribute)][0])) {
+                $permissionList = array_merge($permissionList, \array_slice($ldapEntries[0][strtolower($permissionAttribute)], 1));
+            }
         }
 
-        return [];
+        return $permissionList;
     }
 }

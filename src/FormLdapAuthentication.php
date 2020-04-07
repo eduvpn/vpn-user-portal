@@ -22,6 +22,15 @@ class FormLdapAuthentication extends FormAuthentication
         $ldapClient = new LdapClient(
             $config->getItem('ldapUri')
         );
+
+        // convert permissionAttribute to (empty) array
+        if (null === $permissionAttribute = $config->optionalItem('permissionAttribute')) {
+            $permissionAttribute = [];
+        }
+        if (!\is_array($permissionAttribute)) {
+            $permissionAttribute = [$permissionAttribute];
+        }
+
         $userAuth = new LdapAuth(
             $logger,
             $ldapClient,
@@ -30,7 +39,7 @@ class FormLdapAuthentication extends FormAuthentication
             $config->optionalItem('userFilterTemplate'),
             $config->optionalItem('userIdAttribute'),
             $config->optionalItem('addRealm'),
-            $config->optionalItem('permissionAttribute')
+            $permissionAttribute
         );
 
         parent::__construct($userAuth, $session, $tpl);

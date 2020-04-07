@@ -8,6 +8,13 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.2.6
+
+We added support for `array` values of `permissionAttribute` in the 
+`FormLdapAuthentication` module. Until now it only took a `string`. The values
+of the attributes will be merged and can be used for ACLs or access to the 
+portal admin.
+
 ## 2.2.5 
 
 We added the translation for Portuguese (Portugal). You can add it to 
