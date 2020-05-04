@@ -185,6 +185,9 @@ class VpnApiModule implements ServiceModuleInterface
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
                         $profileConfig = new ProfileConfig($profileData);
+                        if ($profileConfig->getItem('hideProfile')) {
+                            continue;
+                        }
                         if ($profileConfig->getItem('enableAcl')) {
                             // is the user member of the userPermissions?
                             if (!VpnPortalModule::isMember($profileConfig->getSection('aclPermissionList')->toArray(), $userPermissions)) {
@@ -196,7 +199,7 @@ class VpnApiModule implements ServiceModuleInterface
                     }
 
                     if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                        return new ApiErrorResponse('profile_config', 'user has no access to this profile');
+                        return new ApiErrorResponse('profile_config', 'profile not available or no permission');
                     }
 
                     return $this->getConfigOnly($requestedProfileId, $remoteStrategy);
