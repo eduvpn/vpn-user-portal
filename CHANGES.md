@@ -3,6 +3,7 @@
 ## 2.2.6 (...)
 - support `array` next to `string` for `permissionAttribute` in 
   `FormLdapAuthentication` module
+- show CA info on "Info" page
 
 ## 2.2.5 (2020-04-05)
 - fix styling of links in styled `<p>` and `<span>` elements

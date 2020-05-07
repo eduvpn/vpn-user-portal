@@ -91,6 +91,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminInfo',
                         [
                             'profileList' => $this->serverClient->getRequireArray('profile_list'),
+                            'caInfo' => $this->serverClient->getRequireArray('ca_info'),
                         ]
                     )
                 );

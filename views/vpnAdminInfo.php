@@ -1,6 +1,13 @@
 <?php $this->layout('base', ['activeItem' => 'info']); ?>
 <?php $this->start('content'); ?>
     <h1><?=$this->t('Info'); ?></h1>
+    <h2>CA</h2>
+    <table class="tbl">
+        <tbody>
+            <tr><th>Created On</th><td><?=$this->d('@'.$caInfo['valid_from']); ?></td></tr>
+            <tr><th>Valid Until</th><td><?=$this->d('@'.$caInfo['valid_to']); ?></td></tr>
+        </tbody>
+    </table>
     <?php foreach ($profileList as $profile): ?>
         <h2><?=$this->e($profile['displayName']); ?></h2>
         <table class="tbl">
