@@ -27,6 +27,7 @@ return [
     'Contact support if you lost your TOTP.' => 'Kontakt supporten, hvis du har mistet dit TOTP. ',
     //'Create' => '',
     //'Create and Download' => '',
+    //'Created' => '',
     'Current Password' => 'Nuværende adgangskode',
     'Current Password not correct!' => 'Nuværende adgangskode er ikke korrekt!',
     //'Date' => '',

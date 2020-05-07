@@ -27,6 +27,7 @@ return [
     'Contact support if you lost your TOTP.' => 'Melden Sie sich beim Service, wenn Sie Ihr TOTP verloren haben.',
     'Create' => 'Erstellen',
     'Create and Download' => 'Erstellen und herunterladen',
+    //'Created' => '',
     'Current Password' => 'Derzeitiges Password',
     'Current Password not correct!' => 'Eingegebenes Password ist nicht korrekt!',
     'Date' => 'Datum',

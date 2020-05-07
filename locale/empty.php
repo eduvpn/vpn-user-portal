@@ -27,6 +27,7 @@ return [
     'Contact support if you lost your TOTP.' => '',
     'Create' => '',
     'Create and Download' => '',
+    'Created' => '',
     'Current Password' => '',
     'Current Password not correct!' => '',
     'Date' => '',

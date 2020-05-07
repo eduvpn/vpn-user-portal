@@ -27,6 +27,7 @@ return [
     'Contact support if you lost your TOTP.' => 'Skontaktuj się z administratorem jeżeli zgubiłeś swój kod TOTP.',
     //'Create' => '',
     //'Create and Download' => '',
+    //'Created' => '',
     'Current Password' => 'Aktualne hasło',
     'Current Password not correct!' => 'Aktualne hasło jest nieprawidłowe!',
     //'Date' => '',

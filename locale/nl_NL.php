@@ -27,6 +27,7 @@ return [
     'Contact support if you lost your TOTP.' => 'Neem contact op met de helpdesk als je je TOTP verloren bent.',
     'Create' => 'Aanmaken',
     'Create and Download' => 'Aanmaken en downloaden',
+    'Created' => 'Aangemaakt',
     'Current Password' => 'Huidig wachtwoord',
     'Current Password not correct!' => 'Huidig wachtwoord niet correct!',
     'Date' => 'Datum',

@@ -4,8 +4,8 @@
     <h2>CA</h2>
     <table class="tbl">
         <tbody>
-            <tr><th>Created On</th><td><?=$this->d('@'.$caInfo['valid_from']); ?></td></tr>
-            <tr><th>Valid Until</th><td><?=$this->d('@'.$caInfo['valid_to']); ?></td></tr>
+            <tr><th><?=$this->t('Created'); ?> (<?=$this->e(date('T')); ?>)</th><td><?=$this->d($caInfo['valid_from']); ?></td></tr>
+            <tr><th><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</th><td><?=$this->d($caInfo['valid_to']); ?></td></tr>
         </tbody>
     </table>
     <?php foreach ($profileList as $profile): ?>

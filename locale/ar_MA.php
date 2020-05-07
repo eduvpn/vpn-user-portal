@@ -27,6 +27,7 @@ return [
     'Contact support if you lost your TOTP.' => 'اتصل بمكتب المساعدة إذا فقدت كلمة المرور وحيدة الاستخدام المؤقتة.',
     'Create' => 'أنشأ',
     'Create and Download' => 'أنشأ و حمل',
+    //'Created' => '',
     'Current Password' => 'كلمة المرور الحالية',
     'Current Password not correct!' => 'كلمة المرور الحالية غير صحيحة!',
     'Date' => 'التاريخ',

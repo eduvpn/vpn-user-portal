@@ -27,6 +27,7 @@ return [
     'Contact support if you lost your TOTP.' => 'Kui oled kaotanud oma ajapõhise ühekordse parooli (TOTP), palun võta ühendust kasutajatoega.',
     'Create' => 'Loo',
     'Create and Download' => 'Loo ja lae alla',
+    //'Created' => '',
     'Current Password' => 'Praegune salasõna',
     'Current Password not correct!' => 'See salasõna ei ole õige!',
     'Date' => 'Kuupäev',

@@ -27,6 +27,7 @@ return [
     'Contact support if you lost your TOTP.' => 'Зв’яжіться з підтримкою якщо ви втратили TOTP.',
     'Create' => 'Створити',
     'Create and Download' => 'Створити за завантажити',
+    //'Created' => '',
     'Current Password' => 'Актуальний пароль',
     'Current Password not correct!' => 'Актуальний пароль не коректний!',
     'Date' => 'Дата',
