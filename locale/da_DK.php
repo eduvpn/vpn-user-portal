@@ -79,6 +79,7 @@ return [
     'Please provide your TOTP.' => 'Indtast venligst dit TOTP.',
     'Please sign in with your username and password.' => 'Log ind med dit brugernavn og adgangskode.',
     'Profile' => 'Profil',
+    //'Profiles' => '',
     //'QR' => '',
     //'Results' => '',
     'Revoke' => 'Ophæve',

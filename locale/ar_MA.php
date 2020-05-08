@@ -79,6 +79,7 @@ return [
     'Please provide your TOTP.' => 'أدخل من فضلك كلمة المرور وحيدة الاستخدام المؤقتة.',
     'Please sign in with your username and password.' => 'سجل دخولك من فضلك باستعمال اسم المستخدم وكلمة المرور.',
     'Profile' => 'مظهر',
+    //'Profiles' => '',
     'QR' => 'الاستجابة السريعة',
     'Results' => 'نتائج',
     'Revoke' => 'سحب',

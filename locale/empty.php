@@ -79,6 +79,7 @@ return [
     'Please provide your TOTP.' => '',
     'Please sign in with your username and password.' => '',
     'Profile' => '',
+    'Profiles' => '',
     'QR' => '',
     'Results' => '',
     'Revoke' => '',

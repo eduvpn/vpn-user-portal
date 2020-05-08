@@ -79,6 +79,7 @@ return [
     'Please provide your TOTP.' => 'Voer de TOTP-code in.',
     'Please sign in with your username and password.' => 'Log in met je gebruikersnaam en wachtwoord.',
     'Profile' => 'Profiel',
+    'Profiles' => 'Profielen',
     'QR' => 'QR',
     'Results' => 'Resultaten',
     'Revoke' => 'Intrekken',

@@ -79,6 +79,7 @@ return [
     'Please provide your TOTP.' => 'Будь ласка, надайте свій TOTP.',
     'Please sign in with your username and password.' => 'Будь ласка, увійдіть, використовуючи своє ім’я користувача та пароль.',
     'Profile' => 'Профайл',
+    //'Profiles' => '',
     'QR' => 'Код QR',
     'Results' => 'Результат',
     'Revoke' => 'Відкликати',

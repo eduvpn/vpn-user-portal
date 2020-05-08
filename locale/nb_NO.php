@@ -79,6 +79,7 @@ return [
     'Please provide your TOTP.' => 'Fyll ut TOTP-koden din.',
     'Please sign in with your username and password.' => 'Logg inn med ditt brukernavn og passord.',
     'Profile' => 'Profil',
+    //'Profiles' => '',
     'QR' => 'QR',
     'Results' => 'Resultater',
     'Revoke' => 'Tilbakekall',

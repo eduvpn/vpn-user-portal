@@ -8,8 +8,14 @@
             <tr><th><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</th><td><?=$this->d($caInfo['valid_to']); ?></td></tr>
         </tbody>
     </table>
-    <?php foreach ($profileList as $profile): ?>
-        <h2><?=$this->e($profile['displayName']); ?></h2>
+    <h2><?=$this->t('Profiles'); ?></h2>
+    <ul>
+    <?php foreach ($profileList as $profileId => $profile): ?>
+        <li><a href="#profile_<?=$this->e($profileId); ?>"><?=$this->e($profile['displayName']); ?></a></li>
+    <?php endforeach; ?>
+    </ul>
+    <?php foreach ($profileList as $profileId => $profile): ?>
+        <h3 id="profile_<?=$this->e($profileId); ?>"><?=$this->e($profile['displayName']); ?></h3>
         <table class="tbl">
             <tbody>
                 <?php foreach ($profile as $k => $v): ?>

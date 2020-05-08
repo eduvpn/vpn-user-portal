@@ -79,6 +79,7 @@ return [
     'Please provide your TOTP.' => 'Bitte geben Sie Ihr TOTP ein.',
     'Please sign in with your username and password.' => 'Bitte melden Sie Sich mit Ihrem Benutzernamen und Password an.',
     'Profile' => 'Profil',
+    //'Profiles' => '',
     'QR' => 'QR',
     'Results' => 'Ergebnisse',
     'Revoke' => 'Zurückweisen',

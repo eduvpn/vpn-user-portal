@@ -79,6 +79,7 @@ return [
     'Please provide your TOTP.' => 'Palun sisesta oma ajapõhine ühekordne parool (TOTP).',
     'Please sign in with your username and password.' => 'Palun logi oma kasutajanime ja parooliga sisse.',
     'Profile' => 'Profiil',
+    //'Profiles' => '',
     'QR' => 'QR',
     'Results' => 'Tulemused',
     'Revoke' => 'Tühista',
