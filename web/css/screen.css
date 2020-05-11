@@ -9,6 +9,11 @@ header {
     text-align: end;
 }
 
+ul.profileList {
+    list-style: none;
+    padding: 0;
+}
+
 ul.languageSwitcher {
     padding: 0;
     list-style: none;

@@ -9,40 +9,38 @@
         </tbody>
     </table>
     <h2><?=$this->t('Profiles'); ?></h2>
-<?php if (1 < count($profileList)): ?>
-    <ul>
-<?php foreach ($profileList as $profileId => $profile): ?>
-        <li><a href="#profile_<?=$this->e($profileId); ?>"><?=$this->e($profile['displayName']); ?></a></li>
-<?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+    <ul class="profileList">
     <?php foreach ($profileList as $profileId => $profile): ?>
-        <h3 id="profile_<?=$this->e($profileId); ?>"><?=$this->e($profile['displayName']); ?></h3>
-        <table class="tbl">
-            <tbody>
-                <?php foreach ($profile as $k => $v): ?>
-                    <tr>
-                        <th><?=$this->e($k); ?></th>
-                        <?php if (is_array($v) && 0 !== count($v)): ?>
-                            <td>
-                            <ul>
-                                <?php foreach ($v as $vv): ?>
-                                    <li><?=$this->e($vv); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                            </td>
-                        <?php elseif (true === $v): ?>
-                            <td><span class="plain"><?=$this->t('Yes'); ?></span></td>
-                        <?php elseif (false === $v): ?>
-                            <td><span class="plain"><?=$this->t('No'); ?></span></td>
-                        <?php elseif (empty($v)): ?>
-                            <td><em><?=$this->t('N/A'); ?></em></td>
-                        <?php else: ?>
-                            <td><?=$this->e($v); ?></td>
-                        <?php endif; ?>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <li>
+        <details>
+            <summary><?=$this->e($profile['displayName']); ?></summary>
+            <table class="tbl">
+                <tbody>
+                    <?php foreach ($profile as $k => $v): ?>
+                        <tr>
+                            <th><?=$this->e($k); ?></th>
+                            <?php if (is_array($v) && 0 !== count($v)): ?>
+                                <td>
+                                <ul>
+                                    <?php foreach ($v as $vv): ?>
+                                        <li><?=$this->e($vv); ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                </td>
+                            <?php elseif (true === $v): ?>
+                                <td><span class="plain"><?=$this->t('Yes'); ?></span></td>
+                            <?php elseif (false === $v): ?>
+                                <td><span class="plain"><?=$this->t('No'); ?></span></td>
+                            <?php elseif (empty($v)): ?>
+                                <td><em><?=$this->t('N/A'); ?></em></td>
+                            <?php else: ?>
+                                <td><?=$this->e($v); ?></td>
+                            <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </details></li>
     <?php endforeach; ?>
+    </ul>
 <?php $this->stop('content'); ?>
