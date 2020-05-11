@@ -9,11 +9,13 @@
         </tbody>
     </table>
     <h2><?=$this->t('Profiles'); ?></h2>
+<?php if (1 < count($profileList)): ?>
     <ul>
-    <?php foreach ($profileList as $profileId => $profile): ?>
+<?php foreach ($profileList as $profileId => $profile): ?>
         <li><a href="#profile_<?=$this->e($profileId); ?>"><?=$this->e($profile['displayName']); ?></a></li>
-    <?php endforeach; ?>
+<?php endforeach; ?>
     </ul>
+<?php endif; ?>
     <?php foreach ($profileList as $profileId => $profile): ?>
         <h3 id="profile_<?=$this->e($profileId); ?>"><?=$this->e($profile['displayName']); ?></h3>
         <table class="tbl">
