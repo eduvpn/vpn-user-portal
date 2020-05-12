@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.6 (...)
+## 2.2.6 (2020-05-12)
 - support `array` next to `string` for `permissionAttribute` in 
   `FormLdapAuthentication` module
 - show CA info on "Info" page
