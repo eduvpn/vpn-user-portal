@@ -122,7 +122,11 @@
     <tbody>
 <?php foreach ($appUsage as $appInfo): ?>
         <tr>
+<?php if (null === $appInfo['client_id']): ?>
+            <td><em><?=$this->t('Manual Configuration Download'); ?></em></td><td><?=$this->e($appInfo['client_count_rel']); ?>% (<?=$this->e($appInfo['client_count']); ?>)</td>
+<?php else: ?>
             <td><?=$this->clientIdToDisplayName($appInfo['client_id']); ?></td><td><?=$this->e($appInfo['client_count_rel']); ?>% (<?=$this->e($appInfo['client_count']); ?>)</td>
+<?php endif; ?>
         </tr>
 <?php endforeach; ?>
     </tbody>
