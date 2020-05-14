@@ -122,7 +122,7 @@
     <tbody>
 <?php foreach ($appUsage as $appInfo): ?>
         <tr>
-            <td><?=$this->clientIdToDisplayName($appInfo['client_id']); ?></td><td><?=$this->e($appInfo['client_count']); ?></td>
+            <td><?=$this->clientIdToDisplayName($appInfo['client_id']); ?></td><td><?=$this->e($appInfo['client_count_rel']); ?>% (<?=$this->e($appInfo['client_count']); ?>)</td>
         </tr>
 <?php endforeach; ?>
     </tbody>

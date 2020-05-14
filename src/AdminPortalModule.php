@@ -249,7 +249,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 AuthUtils::requireAdmin($hookData);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $appUsage = $this->serverClient->getRequireArray('app_usage');
+                $appUsage = self::getRelAppUsage($this->serverClient->getRequireArray('app_usage'));
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -479,5 +479,24 @@ class AdminPortalModule implements ServiceModuleInterface
         }
 
         return $maxConcurrentConnectionLimitList;
+    }
+
+    /**
+     * @return array
+     */
+    private static function getRelAppUsage(array $appUsage)
+    {
+        $totalClientCount = 0;
+        foreach ($appUsage as $appInfo) {
+            $totalClientCount += $appInfo['client_count'];
+        }
+
+        $realAppUsage = [];
+        foreach ($appUsage as $appInfo) {
+            $appInfo['client_count_rel'] = (int) round($appInfo['client_count'] / $totalClientCount * 100);
+            $relAppUsage[] = $appInfo;
+        }
+
+        return $relAppUsage;
     }
 }
