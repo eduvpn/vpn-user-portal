@@ -111,18 +111,18 @@
 <?php endforeach; ?>
 
 <?php if (0 !== count($appUsage)): ?>
-<h2>Foo</h2>
+<h2><?=$this->t('Application Usage'); ?></h2>
 <table class="tbl">
     <thead>
         <tr>
             <th><?=$this->t('Application'); ?></th>
-            <th><?=$this->t('# Users'); ?></th>
+            <th><?=$this->t('# Clients'); ?></th>
         </tr>
     </thead>
     <tbody>
-<?php foreach ($appUsage as $clientId => $userCount): ?>
+<?php foreach ($appUsage as $appInfo): ?>
         <tr>
-            <td><?=$this->e($clientId); ?></td><td><?=$this->e($userCount); ?></td>
+            <td><?=$this->e($appInfo['client_id']); ?></td><td><?=$this->e($appInfo['client_count']); ?></td>
         </tr>
 <?php endforeach; ?>
     </tbody>
