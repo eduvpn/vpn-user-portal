@@ -132,6 +132,20 @@ class Tpl implements TplInterface
     }
 
     /**
+     * @param string $clientId
+     *
+     * @return string
+     */
+    public function clientIdToDisplayName($clientId)
+    {
+        if (false === $clientInfo = OAuthClientInfo::getClient($clientId)) {
+            return $this->e($clientId);
+        }
+
+        return $this->e($clientInfo->getDisplayName());
+    }
+
+    /**
      * @param int $byteSize
      *
      * @return string
