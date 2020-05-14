@@ -249,11 +249,13 @@ class AdminPortalModule implements ServiceModuleInterface
                 AuthUtils::requireAdmin($hookData);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
+                $appUsage = $this->serverClient->getRequireArray('app_usage');
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
+                            'appUsage' => $appUsage,
                             'statsData' => $this->getStatsData(),
                             'graphStats' => $this->getGraphStats(),
                             'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit($profileList),

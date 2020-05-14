@@ -109,4 +109,23 @@
 </figure>
 <?php endif; ?>
 <?php endforeach; ?>
+
+<?php if (0 !== count($appUsage)): ?>
+<h2>Foo</h2>
+<table class="tbl">
+    <thead>
+        <tr>
+            <th><?=$this->t('Application'); ?></th>
+            <th><?=$this->t('# Users'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+<?php foreach ($appUsage as $clientId => $userCount): ?>
+        <tr>
+            <td><?=$this->e($clientId); ?></td><td><?=$this->e($userCount); ?></td>
+        </tr>
+<?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>
 <?php $this->stop('content'); ?>
