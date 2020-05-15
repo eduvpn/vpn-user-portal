@@ -116,14 +116,14 @@
     <thead>
         <tr>
             <th><?=$this->t('Application'); ?></th>
-            <th><?=$this->t('# Clients'); ?></th>
+            <th><?=$this->t('Total # Unique Users'); ?></th>
         </tr>
     </thead>
     <tbody>
 <?php foreach ($appUsage as $appInfo): ?>
         <tr>
 <?php if (null === $appInfo['client_id']): ?>
-            <td><em><?=$this->t('Configuration Download'); ?></em></td><td><?=$this->e($appInfo['client_count']); ?> (<?=$this->e($appInfo['client_count_rel']); ?>%)</td>
+            <td><em><?=$this->t('Portal Configuration Download'); ?></em></td><td><?=$this->e($appInfo['client_count']); ?> (<?=$this->e($appInfo['client_count_rel']); ?>%)</td>
 <?php else: ?>
             <td><?=$this->clientIdToDisplayName($appInfo['client_id']); ?></td><td><?=$this->e($appInfo['client_count']); ?> (<?=$this->e($appInfo['client_count_rel']); ?>%)</td>
 <?php endif; ?>
