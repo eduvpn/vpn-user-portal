@@ -84,10 +84,10 @@ try {
     // we always want browser session to expiry after PT8H hours, *EXCEPT* when
     // the configured "sessionExpiry" is < PT8H, then we want to follow that
     // setting...
-    $browserSessionExpiry = 'PT8H';
+    $sessionOptions = SessionOptions::init();
     $dateTime = new DateTime();
-    if (date_add(clone $dateTime, new DateInterval($browserSessionExpiry)) > date_add(clone $dateTime, new DateInterval($sessionExpiry))) {
-        $browserSessionExpiry = $sessionExpiry;
+    if (date_add(clone $dateTime, new DateInterval('PT30M')) > date_add(clone $dateTime, new DateInterval($sessionExpiry))) {
+        $sessionOptions->withExpiresIn($sessionExpiry);
     }
 
     $secureCookie = $config->hasItem('secureCookie') ? $config->getItem('secureCookie') : true;
@@ -101,7 +101,7 @@ try {
     );
     $seSession = new SeSession(
         new Session(
-            SessionOptions::init(),
+            $sessionOptions,
             $cookieOptions
                 ->withPath($request->getRoot())
                 ->withSameSiteLax()
