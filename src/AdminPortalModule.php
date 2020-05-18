@@ -491,7 +491,7 @@ class AdminPortalModule implements ServiceModuleInterface
             $totalClientCount += $appInfo['client_count'];
         }
 
-        $realAppUsage = [];
+        $relAppUsage = [];
         foreach ($appUsage as $appInfo) {
             $appInfo['client_count_rel'] = (int) round($appInfo['client_count'] / $totalClientCount * 100);
             $relAppUsage[] = $appInfo;

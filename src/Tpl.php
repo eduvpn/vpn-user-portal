@@ -142,7 +142,11 @@ class Tpl implements TplInterface
             return $this->e($clientId);
         }
 
-        return $this->e($clientInfo->getDisplayName());
+        if (null === $displayName = $clientInfo->getDisplayName()) {
+            return $this->e($clientId);
+        }
+
+        return $this->e($displayName);
     }
 
     /**
