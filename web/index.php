@@ -87,7 +87,7 @@ try {
     $sessionOptions = SessionOptions::init();
     $dateTime = new DateTime();
     if (date_add(clone $dateTime, new DateInterval('PT30M')) > date_add(clone $dateTime, new DateInterval($sessionExpiry))) {
-        $sessionOptions->withExpiresIn($sessionExpiry);
+        $sessionOptions = SessionOptions::init()->withExpiresIn(new DateInterval($sessionExpiry));
     }
 
     $secureCookie = $config->hasItem('secureCookie') ? $config->getItem('secureCookie') : true;
