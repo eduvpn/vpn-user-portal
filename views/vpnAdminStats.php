@@ -14,7 +14,7 @@
     <tbody>
     <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
         <tr>
-            <td><a href="#stats_<?=$this->e($profileId); ?>" title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig['displayName']); ?></a></td>
+            <td title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig['displayName']); ?></td>
             <?php if (array_key_exists($profileId, $statsData)): ?>
                 <td><?=$this->e((string) $statsData[$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
                 <td><?=$this->e((string) $statsData[$profileId]['unique_user_count']); ?></td>
@@ -29,9 +29,13 @@
     </tbody>
 </table>
 
+<h2><?=$this->t('Profiles'); ?></h2>
+    <ul class="profileList">
 <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
 <?php if (array_key_exists($profileId, $graphStats) && 0 !== count($graphStats[$profileId]['date_list'])): ?>
-    <h3 id="stats_<?=$this->e($profileId); ?>"><?=$profileConfig['displayName']; ?></h3>
+        <li>
+        <details>
+            <summary><?=$this->e($profileConfig['displayName']); ?></summary>
 
 <!-- #users -->
 <figure>
@@ -108,7 +112,9 @@
 </figcaption>
 </figure>
 <?php endif; ?>
+    </li>
 <?php endforeach; ?>
+    </ul>
 
 <?php if (0 !== count($appUsage)): ?>
 <h2><?=$this->t('Application Use'); ?></h2>
