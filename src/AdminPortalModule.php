@@ -498,7 +498,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $cumulativePercent = 0;
         foreach ($appUsage as $appInfo) {
             $appInfo['client_count_rel'] = $appInfo['client_count'] / $totalClientCount;
-            $appInfo['client_count_rel_pct'] = (int) floor($appInfo['client_count'] / $totalClientCount * 100);
+            $appInfo['client_count_rel_pct'] = (int) round($appInfo['client_count'] / $totalClientCount * 100);
             $appInfo['slice_no'] = $i;
             $appInfo['path_data'] = self::getPathData($cumulativePercent, $appInfo['client_count_rel']);
             $relAppUsage[] = $appInfo;
@@ -509,38 +509,29 @@ class AdminPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param float $cumulativePercent
-     * @param float $slicePercent
+     * @param float $cumulativeFraction
+     * @param float $sliceFraction
      *
      * @return string
      */
-    private static function getPathData(&$cumulativePercent, $slicePercent)
+    private static function getPathData(&$cumulativeFraction, $sliceFraction)
     {
-        // destructuring assignment sets the two variables at once
-        $startXy = self::getCoordinatesForPercent($cumulativePercent);
-        // each slice starts where the last slice ended, so keep a cumulative percent
-        $cumulativePercent += $slicePercent;
-        $endXy = self::getCoordinatesForPercent($cumulativePercent);
-        // if the slice is more than 50%, take the large arc (the long way around)
-        $largeArcFlag = $slicePercent > 0.5 ? 1 : 0;
-        // create an array and join it just for code readability
-        $pathData = implode(' ', [
-        'M '.$startXy[0].' '.$startXy[1], // Move
-        'A 1 1 0 '.$largeArcFlag.'1 '.$endXy[0].' '.$endXy[1], // Arc
-        'L 0 0', ]); // Line
-        return $pathData;
+        // Lots of ideas from https://medium.com/hackernoon/a-simple-pie-chart-in-svg-dbdd653b6936
+        $startXy = self::getCoordinates($cumulativeFraction);
+        $cumulativeFraction += $sliceFraction;
+        $endXy = self::getCoordinates($cumulativeFraction);
+        $largeArcFlag = $sliceFraction > 0.5 ? 1 : 0;
+
+        return sprintf('M %s %s A 1 1 0 %s 1 %s %s L 0 0', $startXy[0], $startXy[1], $largeArcFlag, $endXy[0], $endXy[1]);
     }
 
     /**
-     * @param float $p
+     * @param float $f
      *
      * @return array<float,float>
      */
-    private static function getCoordinatesForPercent($p)
+    private static function getCoordinates($f)
     {
-        $x = cos(2 * M_PI * $p);
-        $y = sin(2 * M_PI * $p);
-
-        return [$x, $y];
+        return [cos(2 * M_PI * $f), sin(2 * M_PI * $f)];
     }
 }
