@@ -249,7 +249,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 AuthUtils::requireAdmin($hookData);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
-                $appUsage = self::getRelAppUsage($this->serverClient->getRequireArray('app_usage'));
+                $appUsage = self::getAppUsage($this->serverClient->getRequireArray('app_usage'));
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -484,10 +484,10 @@ class AdminPortalModule implements ServiceModuleInterface
     /**
      * @return array
      */
-    private static function getRelAppUsage(array $appUsage)
+    private static function getAppUsage(array $appUsage)
     {
-        // XXX we have to limit this to max 8! if there are more than 8 move
-        // of of them in the last category "Other" or something!
+        // limit to top 8, we don't care about the small ones...
+        $appUsage = \array_slice($appUsage, 0, 8);
         $totalClientCount = 0;
         foreach ($appUsage as $appInfo) {
             $totalClientCount += $appInfo['client_count'];
@@ -498,6 +498,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $cumulativePercent = 0;
         foreach ($appUsage as $appInfo) {
             $appInfo['client_count_rel'] = $appInfo['client_count'] / $totalClientCount;
+            $appInfo['client_count_rel_pct'] = (int) floor($appInfo['client_count'] / $totalClientCount * 100);
             $appInfo['slice_no'] = $i;
             $appInfo['path_data'] = self::getPathData($cumulativePercent, $appInfo['client_count_rel']);
             $relAppUsage[] = $appInfo;

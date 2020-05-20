@@ -111,22 +111,27 @@
 <?php endforeach; ?>
 
 <?php if (0 !== count($appUsage)): ?>
-<h2><?=$this->t('Application Usage'); ?></h2>
-<svg class="appUsage" xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 2 2" style="transform: rotate(-90deg)">
+<h2><?=$this->t('Application Use'); ?></h2>
+<figure>
+    <svg class="appUsage" xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 2 2" style="transform: rotate(-90deg)">
 <?php foreach ($appUsage as $appInfo): ?>
-    <path class="pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>" d="<?=$this->e($appInfo['path_data']); ?>"/>
+        <path class="pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>" d="<?=$this->e($appInfo['path_data']); ?>"/>
 <?php endforeach; ?>
-</svg>
-<ul class="appUsage">
+    </svg>
+<figcaption>
+<?=$this->t('Distribution of unique users over the VPN applications.'); ?>
+    <ul class="appUsage">
 <?php foreach ($appUsage as $appInfo): ?>
-    <li>
+        <li>
 <?php if (null === $appInfo['client_id']): ?>
-    <span class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"></span> <em><?=$this->t('Portal Configuration Download'); ?></em> (<?=$this->e($appInfo['client_count']); ?>)
+            <span class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"><?=$this->e($appInfo['client_count_rel_pct']); ?>%</span><?=$this->t('Manual Configuration Download'); ?>
 <?php else: ?>
-    <span class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"></span> <?=$this->clientIdToDisplayName($appInfo['client_id']); ?> (<?=$this->e($appInfo['client_count']); ?>)
+            <span class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"><?=$this->e($appInfo['client_count_rel_pct']); ?>%</span><?=$this->clientIdToDisplayName($appInfo['client_id']); ?>
 <?php endif; ?>
-    </li>
+        </li>
 <?php endforeach; ?>
-</ul>
+    </ul>
+</figcaption>
+</figure>
 <?php endif; ?>
 <?php $this->stop('content'); ?>

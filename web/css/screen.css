@@ -304,11 +304,13 @@ footer {
 }
 
 svg.appUsage {
-    margin: 1em;
+    display: block;
+    margin: 1em auto;
     width: 30%;
 }
 
 ul.appUsage {
+    margin-top: 0.5em;
     list-style: none;
     padding: 0;
 }
@@ -319,9 +321,10 @@ ul.appUsage li {
 }
 
 .pieLegend {
-    width: 1em;
-    height: 1em;
-    display: inline-block;
+    color: #fff;
+    font-weight: bold;
+    padding: 0.3em;
+    margin: 0.3em;
 }
 
 .pieColor1 {
