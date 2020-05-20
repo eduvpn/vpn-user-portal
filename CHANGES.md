@@ -2,6 +2,8 @@
 
 ## 2.2.7 (...)
 - make sure browser session never outlives `sessionExpiry`
+- add "Application Use" pie-chart on "Stats" page showing the distribution of
+  the VPN client application use by users
 
 ## 2.2.6 (2020-05-12)
 - support `array` next to `string` for `permissionAttribute` in 
