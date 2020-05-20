@@ -327,6 +327,7 @@ ul.appUsage li {
     margin: 0.3em;
 }
 
+/* @see https://learnui.design/tools/data-color-picker.html#palette */
 .pieColor1 {
     fill: #003f5c;
     background-color: #003f5c;
