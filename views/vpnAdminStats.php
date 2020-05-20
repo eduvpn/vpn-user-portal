@@ -112,24 +112,21 @@
 
 <?php if (0 !== count($appUsage)): ?>
 <h2><?=$this->t('Application Usage'); ?></h2>
-<table class="tbl">
-    <thead>
-        <tr>
-            <th><?=$this->t('Application'); ?></th>
-            <th><?=$this->t('Total # Unique Users'); ?></th>
-        </tr>
-    </thead>
-    <tbody>
+<svg class="appUsage" xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 2 2" style="transform: rotate(-90deg)">
 <?php foreach ($appUsage as $appInfo): ?>
-        <tr>
-<?php if (null === $appInfo['client_id']): ?>
-            <td><em><?=$this->t('Portal Configuration Download'); ?></em></td><td><?=$this->e($appInfo['client_count']); ?> (<?=$this->e($appInfo['client_count_rel']); ?>%)</td>
-<?php else: ?>
-            <td><?=$this->clientIdToDisplayName($appInfo['client_id']); ?></td><td><?=$this->e($appInfo['client_count']); ?> (<?=$this->e($appInfo['client_count_rel']); ?>%)</td>
-<?php endif; ?>
-        </tr>
+    <path class="pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>" d="<?=$this->e($appInfo['path_data']); ?>"/>
 <?php endforeach; ?>
-    </tbody>
-</table>
+</svg>
+<ul class="appUsage">
+<?php foreach ($appUsage as $appInfo): ?>
+    <li>
+<?php if (null === $appInfo['client_id']): ?>
+    <span class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"></span> <em><?=$this->t('Portal Configuration Download'); ?></em> (<?=$this->e($appInfo['client_count']); ?>)
+<?php else: ?>
+    <span class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"></span> <?=$this->clientIdToDisplayName($appInfo['client_id']); ?> (<?=$this->e($appInfo['client_count']); ?>)
+<?php endif; ?>
+    </li>
+<?php endforeach; ?>
+</ul>
 <?php endif; ?>
 <?php $this->stop('content'); ?>

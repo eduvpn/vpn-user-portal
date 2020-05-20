@@ -486,17 +486,60 @@ class AdminPortalModule implements ServiceModuleInterface
      */
     private static function getRelAppUsage(array $appUsage)
     {
+        // XXX we have to limit this to max 8! if there are more than 8 move
+        // of of them in the last category "Other" or something!
         $totalClientCount = 0;
         foreach ($appUsage as $appInfo) {
             $totalClientCount += $appInfo['client_count'];
         }
 
         $relAppUsage = [];
+        $i = 0;
+        $cumulativePercent = 0;
         foreach ($appUsage as $appInfo) {
-            $appInfo['client_count_rel'] = (int) round($appInfo['client_count'] / $totalClientCount * 100);
+            $appInfo['client_count_rel'] = $appInfo['client_count'] / $totalClientCount;
+            $appInfo['slice_no'] = $i;
+            $appInfo['path_data'] = self::getPathData($cumulativePercent, $appInfo['client_count_rel']);
             $relAppUsage[] = $appInfo;
+            ++$i;
         }
 
         return $relAppUsage;
+    }
+
+    /**
+     * @param float $cumulativePercent
+     * @param float $slicePercent
+     *
+     * @return string
+     */
+    private static function getPathData(&$cumulativePercent, $slicePercent)
+    {
+        // destructuring assignment sets the two variables at once
+        $startXy = self::getCoordinatesForPercent($cumulativePercent);
+        // each slice starts where the last slice ended, so keep a cumulative percent
+        $cumulativePercent += $slicePercent;
+        $endXy = self::getCoordinatesForPercent($cumulativePercent);
+        // if the slice is more than 50%, take the large arc (the long way around)
+        $largeArcFlag = $slicePercent > 0.5 ? 1 : 0;
+        // create an array and join it just for code readability
+        $pathData = implode(' ', [
+        'M '.$startXy[0].' '.$startXy[1], // Move
+        'A 1 1 0 '.$largeArcFlag.'1 '.$endXy[0].' '.$endXy[1], // Arc
+        'L 0 0', ]); // Line
+        return $pathData;
+    }
+
+    /**
+     * @param float $p
+     *
+     * @return array<float,float>
+     */
+    private static function getCoordinatesForPercent($p)
+    {
+        $x = cos(2 * M_PI * $p);
+        $y = sin(2 * M_PI * $p);
+
+        return [$x, $y];
     }
 }
