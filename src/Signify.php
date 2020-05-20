@@ -56,7 +56,7 @@ class Signify
      */
     public function verify($messageText, $messageSignature)
     {
-        $signatureData = self::getSecondLine($messageSignature);
+        $signatureData = self::getLine($messageSignature, 1);
         $msgSig = Base64::decode($signatureData, true);
         // <signature_algorithm> || <key_id> || <signature>
         //    signature_algorithm: Ed
@@ -86,7 +86,7 @@ class Signify
      */
     private static function verifyPublicKey($publicKeyText)
     {
-        $publicKeyData = self::getSecondLine($publicKeyText);
+        $publicKeyData = self::getLine($publicKeyText, 1);
         $pubKey = Base64::decode($publicKeyData, true);
         // <signature_algorithm> || <key_id> || <public_key>
         //    signature_algorithm: Ed
@@ -107,16 +107,17 @@ class Signify
 
     /**
      * @param string $inputFile
+     * @param int    $lineNo
      *
      * @return string
      */
-    private static function getSecondLine($inputFile)
+    private static function getLine($inputFile, $lineNo)
     {
         $fileLines = explode("\n", $inputFile);
-        if (2 > \count($fileLines)) {
-            throw new Exception('file does not contain >= 2 lines');
+        if ($lineNo > \count($fileLines)) {
+            throw new Exception('file does not contain >= '.$lineNo.' lines');
         }
 
-        return $fileLines[1];
+        return $fileLines[$lineNo];
     }
 }
