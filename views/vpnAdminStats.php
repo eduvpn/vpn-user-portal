@@ -112,7 +112,8 @@
 </figcaption>
 </figure>
 <?php endif; ?>
-    </li>
+        </details>
+        </li>
 <?php endforeach; ?>
     </ul>
 
