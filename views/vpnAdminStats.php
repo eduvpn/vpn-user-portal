@@ -131,9 +131,9 @@
 <?php foreach ($appUsage as $appInfo): ?>
         <li>
 <?php if (null === $appInfo['client_id']): ?>
-            <span class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"><?=$this->e($appInfo['client_count_rel_pct']); ?>%</span><?=$this->t('Manual Configuration Download'); ?>
+            <span title="<?=$this->e($appInfo['client_count']); ?>" class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"><?=$this->e($appInfo['client_count_rel_pct']); ?>%</span><?=$this->t('Manual Configuration Download'); ?>
 <?php else: ?>
-            <span class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"><?=$this->e($appInfo['client_count_rel_pct']); ?>%</span><?=$this->clientIdToDisplayName($appInfo['client_id']); ?>
+            <span title="<?=$this->e($appInfo['client_count']); ?>" class="pieLegend pieColor<?=$this->e($appInfo['slice_no'] + 1); ?>"><?=$this->e($appInfo['client_count_rel_pct']); ?>%</span><?=$this->clientIdToDisplayName($appInfo['client_id']); ?>
 <?php endif; ?>
         </li>
 <?php endforeach; ?>
