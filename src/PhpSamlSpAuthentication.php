@@ -53,9 +53,9 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
             return false;
         }
 
-        $authOptions = new AuthOptions($request->getUri());
+        $authOptions = new AuthOptions();
         if (null !== $authnContext = $this->config->optionalItem('authnContext')) {
-            $authOptions->setAuthnContextClassRef($authnContext);
+            $authOptions->withAuthnContextClassRef($authnContext);
         }
         if (!$this->samlAuth->isAuthenticated()) {
             return new RedirectResponse($this->samlAuth->getLoginURL($authOptions));
@@ -99,7 +99,7 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
                     if (!\in_array($userAuthnContext, $authnContext, true)) {
                         // we do not have the required AuthnContext, trigger login
                         // and request the first acceptable AuthnContext
-                        $authOptions->setAuthnContextClassRef($authnContext);
+                        $authOptions->withAuthnContextClassRef($authnContext);
 
                         return new RedirectResponse($this->samlAuth->getLoginURL($authOptions));
                     }
