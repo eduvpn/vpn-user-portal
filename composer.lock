@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "adbdf95bbf65be808bb57bf0033c38ad",
+    "content-hash": "7feda344b2975643c8b76bcd799576e2",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -154,11 +154,11 @@
         },
         {
             "name": "fkooman/saml-sp",
-            "version": "dev-master",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "aabdf451413d972064bea2fc37dc25e2858df6ec"
+                "reference": "f07a52b5c5f5089c0ca46bd0fb090316459b1497"
             },
             "require": {
                 "ext-date": "*",
@@ -204,7 +204,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2020-05-24T20:47:37+00:00"
+            "time": "2020-05-25T19:47:51+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -2259,7 +2259,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fkooman/saml-sp": 20,
         "lc/common": 20
     },
     "prefer-stable": true,
