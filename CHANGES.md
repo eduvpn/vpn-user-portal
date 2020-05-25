@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.8 (...)
+- update `PhpSamlSpAuthentication` for php-saml-sp API changes
+  - skip WAYF when "upgrading" `AuthnContextClassRef` (MFA)
+  - remove support for `permissionSessionExpiry` as it is not used by anyone
+
 ## 2.2.7 (2020-05-21)
 - add "Application Use" pie-chart on "Stats" page showing the distribution of
   the VPN client application use by users

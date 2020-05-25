@@ -9,7 +9,6 @@
 
 namespace LC\Portal;
 
-use DateInterval;
 use DateTime;
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
@@ -57,23 +56,13 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
         if (null !== $authnContext = $this->config->optionalItem('authnContext')) {
             $authOptions->withAuthnContextClassRef($authnContext);
         }
-        if (!$this->samlAuth->isAuthenticated()) {
+        if (!$this->samlAuth->isAuthenticated($authOptions)) {
             return new RedirectResponse($this->samlAuth->getLoginURL($authOptions));
         }
 
-        // user authenticated
-        $samlAssertion = $this->samlAuth->getAssertion();
-
-        // do they actually have the requested authnContext? unfortunately
-        // php-saml-sp API does not yet support AuthOptions on isAuthenticated
-        // to make sure of this, so we check here manually
-        // XXX fix this in php-saml-sp 0.4!
-        if (0 !== \count($authOptions->getAuthnContextClassRef())) {
-            if (!\in_array($samlAssertion->getAuthnContext(), $authOptions->getAuthnContextClassRef(), true)) {
-                return new RedirectResponse($this->samlAuth->getLoginURL($authOptions));
-            }
-        }
-
+        // user is authenticated, get the assertion, make sure the authOptions,
+        // i.e. the AuthnContextClassRef are verified here...
+        $samlAssertion = $this->samlAuth->getAssertion($authOptions);
         $samlAttributes = $samlAssertion->getAttributes();
         /** @var string $userIdAttribute */
         $userIdAttribute = $this->config->getItem('userIdAttribute');
@@ -81,7 +70,6 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
             throw new HttpException(sprintf('missing SAML user_id attribute "%s"', $userIdAttribute), 500);
         }
         $userId = $samlAttributes[$userIdAttribute][0];
-        $sessionExpiresAt = null;
         $userAuthnContext = $samlAssertion->getAuthnContext();
         if (0 !== \count($this->getPermissionAttributeList())) {
             $userPermissions = $this->getPermissionList($samlAttributes);
@@ -97,51 +85,23 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
             foreach ($permissionAuthnContext as $permission => $authnContext) {
                 if (\in_array($permission, $userPermissions, true)) {
                     if (!\in_array($userAuthnContext, $authnContext, true)) {
-                        // we do not have the required AuthnContext, trigger login
-                        // and request the first acceptable AuthnContext
-                        $authOptions->withAuthnContextClassRef($authnContext);
-
-                        return new RedirectResponse($this->samlAuth->getLoginURL($authOptions));
+                        // we need another AuthnContextClassRef, but we DO want
+                        // to use the same IdP as before to skip the WAYF
+                        // (if any)
+                        return new RedirectResponse(
+                            $this->samlAuth->getLoginURL(
+                                $authOptions->withAuthnContextClassRef($authnContext)->withIdp($samlAssertion->getIssuer())
+                            )
+                        );
                     }
                 }
             }
-
-            // if we got a permission that's part of the
-            // permissionSessionExpiry we use it to determine the time we want
-            // the session to expire
-            $minSessionExpiresAt = null;
-
-            /* @var array<string,string>|null */
-            if (null === $permissionSessionExpiry = $this->config->optionalItem('permissionSessionExpiry')) {
-                $permissionSessionExpiry = [];
-            }
-
-            foreach ($permissionSessionExpiry as $permission => $sessionExpiry) {
-                if (\in_array($permission, $userPermissions, true)) {
-                    // make sure we take the sessionExpiresAt belonging to the
-                    // permission that has the shortest expiry configured
-                    $tmpSessionExpiresAt = date_add(clone $this->dateTime, new DateInterval($sessionExpiry));
-                    if (null === $minSessionExpiresAt) {
-                        $minSessionExpiresAt = $tmpSessionExpiresAt;
-                    }
-                    if ($tmpSessionExpiresAt < $minSessionExpiresAt) {
-                        $minSessionExpiresAt = $tmpSessionExpiresAt;
-                    }
-                }
-            }
-
-            // take the minimum
-            $sessionExpiresAt = $minSessionExpiresAt;
         }
 
         $userInfo = new UserInfo(
             $userId,
             $this->getPermissionList($samlAttributes)
         );
-
-        if (null !== $sessionExpiresAt) {
-            $userInfo->setSessionExpiresAt($sessionExpiresAt);
-        }
 
         return $userInfo;
     }
