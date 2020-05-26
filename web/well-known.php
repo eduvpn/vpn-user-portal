@@ -10,13 +10,11 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
 use LC\Common\FileIO;
 use LC\Common\Http\JsonResponse;
 use LC\Common\Http\Request;
 
 try {
-    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
     $request = new Request($_SERVER, $_GET, $_POST);
 
     if (false === $appRoot = getenv('VPN_APP_ROOT')) {
@@ -35,10 +33,6 @@ try {
         ],
         'v' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
     ];
-
-    if (null !== $authUrlTemplate = $config->optionalItem('authenticationUrlTemplate')) {
-        $jsonData['authentication_url_template'] = $authUrlTemplate;
-    }
 
     $response = new JsonResponse($jsonData);
     $response->send();
