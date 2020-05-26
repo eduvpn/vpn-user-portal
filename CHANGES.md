@@ -1,9 +1,9 @@
 # Changelog
 
-## 2.2.8 (...)
+## 2.2.8 (2020-05-26)
 - update `PhpSamlSpAuthentication` for php-saml-sp API changes
   - skip WAYF when "upgrading" `AuthnContextClassRef` (MFA)
-  - remove support for `permissionSessionExpiry` as it is not used by anyone
+  - remove support for `permissionSessionExpiry` as it is never used
 
 ## 2.2.7 (2020-05-21)
 - add "Application Use" pie-chart on "Stats" page showing the distribution of
