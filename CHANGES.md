@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.9 (...)
+- expose `default_gateway` in `/profile_list` indicating whether or not the 
+  profile expects all traffic over the VPN
+
 ## 2.2.8 (2020-05-26)
 - update `PhpSamlSpAuthentication` for php-saml-sp API changes
   - skip WAYF when "upgrading" `AuthnContextClassRef` (MFA)

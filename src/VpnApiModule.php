@@ -83,6 +83,7 @@ class VpnApiModule implements ServiceModuleInterface
                         // 2FA is now decided by vpn-user-portal setting, so
                         // we "lie" here to the client
                         'two_factor' => false,
+                        'default_gateway' => $profileConfig->getItem('defaultGateway'),
                     ];
                 }
 
