@@ -1,4 +1,4 @@
-<?php $this->layout('base', ['activeItem' => 'messages', 'pageTitle' => $this->t('Messages')]); ?>]); ?>
+<?php $this->layout('base', ['activeItem' => 'messages', 'pageTitle' => $this->t('Messages')]); ?>
 <?php $this->start('content'); ?>
     <h1><?=$this->t('Messages'); ?></h1>
     <h2><?=$this->t('System'); ?></h2>
