@@ -1,369 +1,369 @@
 body {
-    max-width: 60em;
-    margin: 0 auto;
-    padding: 0.5em;
-    text-align: inherit;    /* override for bootstrap-reboot */
+  max-width: 60em;
+  margin: 0 auto;
+  padding: 0.5em;
+  text-align: inherit;
+  /* override for bootstrap-reboot */
 }
 
 header {
-    text-align: end;
+  text-align: end;
 }
 
 ul.profileList {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 ul.languageSwitcher {
-    padding: 0;
-    list-style: none;
-    font-size: 85%;
+  padding: 0;
+  list-style: none;
+  font-size: 85%;
 }
 
 ul.languageSwitcher li {
-    display: inline-block;
+  display: inline-block;
 }
 
 ul.languageSwitcher li button {
-    border: 0;
-    margin: 0 0.5em 0.5em 0.5em;
-    padding: 0;
-    background-color: #fff;
+  border: 0;
+  margin: 0 0.5em 0.5em 0.5em;
+  padding: 0;
+  background-color: #fff;
 }
 
 div.page {
-    display: grid;
-    grid-template-columns: 1fr;
-    column-gap: 2em;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2em;
 }
 
 nav {
-    min-width: 10em;
+  min-width: 10em;
 }
 
 nav ul {
-    padding: 0;
-    text-align: center;
+  padding: 0;
+  text-align: center;
 }
 
 nav ul li {
-    margin: 0.5em;
-    padding: 0.3em;
-    list-style: none;
-    display: inline-block;
+  margin: 0.5em;
+  padding: 0.3em;
+  list-style: none;
+  display: inline-block;
 }
 
 nav ul li a {
-    color: #212529;
-    text-decoration: none;
+  color: #212529;
+  text-decoration: none;
 }
 
 nav ul li.active a {
-    color: #007bff;
+  color: #007bff;
 }
 
 nav ul li a:hover {
-    text-decoration: none;
-    color: #007bff;
+  text-decoration: none;
+  color: #007bff;
 }
 
 main {
-    padding: 0 0.5em;
+  padding: 0 0.5em;
 }
 
 main h1 {
-    text-align: center;
-	margin-bottom: 0.5em;
+  text-align: center;
+  margin-bottom: 0.5em;
 }
 
 main label {
-    font-weight: bold;
-    display: block;
-    margin: 0.5em 0 0 0;
+  font-weight: bold;
+  display: block;
+  margin: 0.5em 0 0 0;
 }
 
 @media (min-width: 800px) {
-    div.page {
-        grid-template-columns: auto 4fr;
-    }
-    
-    nav ul li {
-        display: block;
-    }
+  div.page {
+    grid-template-columns: auto 4fr;
+  }
+  nav ul li {
+    display: block;
+  }
 }
 
 /* form elements */
 input[type=text], input[type=password], button, select, textarea {
-    padding: 0.3em;
-    border: 1px solid #ccc;
-    outline: none;
-    margin: 0.5em 0;
+  padding: 0.3em;
+  border: 1px solid #ccc;
+  outline: none;
+  margin: 0.5em 0;
 }
 
 form.frm {
-	margin: 1em auto;
-	width: 100%;
+  margin: 1em auto;
+  width: 100%;
 }
 
 form.frm select, form.frm input[type=text] {
-    width: 100%;
+  width: 100%;
 }
 
 form.frm button {
-/*    margin-top: 0.5em;*/
+  /*    margin-top: 0.5em;*/
 }
 
 button {
-    padding: 0.3em 1em;
-    background-color: #f8f8f8;
+  padding: 0.3em 1em;
+  background-color: #f8f8f8;
 }
 
 textarea {
-    width: 100%;
+  width: 100%;
 }
 
 /* auth */
 div.auth {
-    max-width: 20em;
-    margin: 0 auto;
+  max-width: 20em;
+  margin: 0 auto;
 }
 
 div.auth form input[type=text], div.auth form input[type=password] {
-    width: 100%;
+  width: 100%;
 }
 
 form.logout {
-    font-size: 75%;
-    margin: 1.5em 0;
-    text-align: center;
+  font-size: 75%;
+  margin: 1.5em 0;
+  text-align: center;
 }
 
 dt {
-    margin: 0.5em 0;
-    font-weight: bold;
+  margin: 0.5em 0;
+  font-weight: bold;
 }
 
 .text-right {
-    text-align: end;
+  text-align: end;
 }
 
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 p.small {
-    font-size: 85%;
+  font-size: 85%;
 }
 
 p.big {
-    font-size: 115%;
+  font-size: 115%;
 }
 
 p.success, span.success {
-    border: 1px solid #008000;
-    color: #008000;
+  border: 1px solid #008000;
+  color: #008000;
 }
 
 p.success a, span.success a {
-    color: #008000;
+  color: #008000;
 }
 
 p.warning, p.warning a, span.warning, span.warning a {
-    border: 1px solid #ff8c00;
-    color: #ff8c00;
+  border: 1px solid #ff8c00;
+  color: #ff8c00;
 }
 
 p.warning a, span.warning a {
-    color: #ff8c00;
+  color: #ff8c00;
 }
 
 p.error, p.error a, span.error, span.error a {
-    border: 1px solid #dc143c;
-    color: #dc143c;
+  border: 1px solid #dc143c;
+  color: #dc143c;
 }
 
 p.error a, span.error a {
-    color: #dc143c;
+  color: #dc143c;
 }
 
 p.plain, span.plain {
-    background-color: #f8f8f8;
-    border: 1px solid #ccc;
-    color: #555;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  color: #555;
 }
 
 p.plain a, span.plain a {
-    color: #555;
+  color: #555;
 }
 
 span.plain, span.success, span.warning, span.error {
-    padding: 0.3em 0.5em;
-    font-weight: bold;
-    font-size: 85%;
+  padding: 0.3em 0.5em;
+  font-weight: bold;
+  font-size: 85%;
 }
 
 p.plain, p.success, p.warning, p.error {
-    padding: 1em;
+  padding: 1em;
 }
 
 p.success a, span.success a, p.warning a, span.warning a, p.error a, span.error a, p.plain a, span.plain a {
-    border: 0;
-    text-decoration: underline;
+  border: 0;
+  text-decoration: underline;
 }
 
 table.tbl {
-    border: 1px solid #ccc;
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1em;
+  border: 1px solid #ccc;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
 }
 
 table.tbl ul {
-    margin: 0;
-    padding: 0 0 0 1em;
+  margin: 0;
+  padding: 0 0 0 1em;
 }
 
 table.tbl thead tr {
-    background-color: #f8f8f8;
-    color: #555;
+  background-color: #f8f8f8;
+  color: #555;
 }
 
 table.tbl tbody th {
-    vertical-align: top;
+  vertical-align: top;
 }
 
 table.tbl td, table.tbl th {
-    padding: 0.8em 0.5em;
+  padding: 0.8em 0.5em;
 }
 
 table.tbl tbody tr:nth-child(even) {
-    background-color: #f8f8f8;
+  background-color: #f8f8f8;
 }
 
 table.tbl button, table.tbl form {
-    margin: 0;
+  margin: 0;
 }
 
 table.stats {
-    margin: 2em auto 0 auto;
-    border-collapse: separate;
-    border-spacing: 3px 0;
-    width: 90%;
+  margin: 2em auto 0 auto;
+  border-collapse: separate;
+  border-spacing: 3px 0;
+  width: 90%;
 }
 
 table.stats td, table.stats th {
-    width: 1em;
-    text-align: center;
-    line-height: 0.5;
+  width: 1em;
+  text-align: center;
+  line-height: 0.5;
 }
 
 table.stats tbody th span, table.stats tfoot th span {
-    writing-mode: vertical-rl;
-    font-weight: normal;
-    white-space: nowrap;
-    line-height: 1em;
-    padding-top: 0.5em;
-    font-size: 85%;
+  writing-mode: vertical-rl;
+  font-weight: normal;
+  white-space: nowrap;
+  line-height: 1em;
+  padding-top: 0.5em;
+  font-size: 85%;
 }
 
 table.stats tbody th span {
-    writing-mode: vertical-rl;
+  writing-mode: vertical-rl;
 }
 
 table.stats tbody td:not(:empty) {
-    background-color: #888;
-    color: transparent;
+  background-color: #888;
+  color: transparent;
 }
 
 table.stats th.index {
-    box-sizing: content-box;
-    vertical-align: top;
-    padding: 0 0.5em;
-    border-top: 1px solid #888;
+  box-sizing: content-box;
+  vertical-align: top;
+  padding: 0 0.5em;
+  border-top: 1px solid #888;
 }
 
 table.stats th.index span {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 figure {
-    margin-bottom: 2em;
+  margin-bottom: 2em;
 }
 
 figcaption {
-    font-size: 85%;
-    text-align: center;
-    font-style: italic;
-    padding: 1em;
+  font-size: 85%;
+  text-align: center;
+  font-style: italic;
+  padding: 1em;
 }
 
 footer {
-	margin-top: 2em;
-	font-size: 75%;
-	text-align: center;
+  margin-top: 2em;
+  font-size: 75%;
+  text-align: center;
 }
 
 svg.appUsage {
-    display: block;
-    margin: 1em auto;
-    width: 30%;
+  display: block;
+  margin: 1em auto;
+  width: 30%;
 }
 
 ul.appUsage {
-    margin-top: 0.5em;
-    list-style: none;
-    padding: 0;
+  margin-top: 0.5em;
+  list-style: none;
+  padding: 0;
 }
 
 ul.appUsage li {
-    display: inline-block;
-    margin: 0.5em;
+  display: inline-block;
+  margin: 0.5em;
 }
 
 .pieLegend {
-    color: #fff;
-    font-weight: bold;
-    padding: 0.3em;
-    margin: 0.3em;
+  color: #fff;
+  font-weight: bold;
+  padding: 0.3em;
+  margin: 0.3em;
 }
 
 /* @see https://learnui.design/tools/data-color-picker.html#palette */
 .pieColor1 {
-    fill: #003f5c;
-    background-color: #003f5c;
+  fill: #003f5c;
+  background-color: #003f5c;
 }
 
 .pieColor2 {
-    fill: #2f4b7c;
-    background-color: #2f4b7c; 
+  fill: #2f4b7c;
+  background-color: #2f4b7c;
 }
 
 .pieColor3 {
-    fill: #665191;
-    background-color: #665191; 
+  fill: #665191;
+  background-color: #665191;
 }
 
 .pieColor4 {
-    fill: #a05195;
-    background-color: #a05195;
+  fill: #a05195;
+  background-color: #a05195;
 }
 
 .pieColor5 {
-    fill: #d45087;
-    background-color: #d45087;
+  fill: #d45087;
+  background-color: #d45087;
 }
 
 .pieColor6 {
-    fill: #f95d6a;
-    background-color: #f95d6a;
+  fill: #f95d6a;
+  background-color: #f95d6a;
 }
 
 .pieColor7 {
-    fill: #ff7c43;
-    background-color: #ff7c43;
+  fill: #ff7c43;
+  background-color: #ff7c43;
 }
 
 .pieColor8 {
-    fill: #ffa600;
-    background-color: #ffa600;
+  fill: #ffa600;
+  background-color: #ffa600;
 }
