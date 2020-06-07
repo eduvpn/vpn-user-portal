@@ -1,4 +1,4 @@
-<?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>]); ?>
+<?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
     <h1><?=$this->t('Info'); ?></h1>
     <h2>CA</h2>
