@@ -16,10 +16,10 @@
                 <?php if ($isDisabled): ?>
                     <button name="user_action" value="enableUser"><?=$this->t('Enable User'); ?></button>
                 <?php else: ?>
-                    <button name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
+                    <button class="warning" name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
                 <?php endif; ?>
                 <?php if ($hasTotpSecret): ?>
-                    <button name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
+                    <button class="warning" name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
                 <?php endif; ?>
             <?php endif; ?>
         </fieldset>

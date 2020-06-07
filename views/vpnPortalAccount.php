@@ -56,7 +56,7 @@
                     <form method="post" action="removeClientAuthorization">
                         <input type="hidden" name="client_id" value="<?=$this->e($client['client_id']); ?>">
                         <input type="hidden" name="auth_key" value="<?=$this->e($client['auth_key']); ?>">
-                        <button><?=$this->t('Revoke'); ?></button>
+                        <button class="warning"><?=$this->t('Revoke'); ?></button>
                     </form>
                 </td>
             </tr>

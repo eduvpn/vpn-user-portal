@@ -15,7 +15,7 @@
             <button name="message_action" value="set" type="submit"><?=$this->t('Set'); ?></button>
             <?php if ($motdMessage): ?>
                 <input type="hidden" name="message_id" value="<?=$this->e($motdMessage['id']); ?>">
-                <button name="message_action" value="delete"><?=$this->t('Delete'); ?></button>
+                <button class="warning" name="message_action" value="delete"><?=$this->t('Delete'); ?></button>
             <?php endif; ?>
         </fieldset>
     </form>

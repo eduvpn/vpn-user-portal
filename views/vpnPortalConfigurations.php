@@ -47,7 +47,7 @@
                     <td class="text-right">
                         <form method="post" action="deleteCertificate">
                             <input type="hidden" name="commonName" value="<?=$this->e($userCertificate['common_name']); ?>">
-                            <button type="submit"><?=$this->t('Delete'); ?></button>
+                            <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>
                         </form>
                     </td>
                 </tr>
