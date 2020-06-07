@@ -1,4 +1,4 @@
-<?php $this->layout('base', ['activeItem' => 'home']); ?>
+<?php $this->layout('base', ['activeItem' => 'home', 'pageTitle' => $this->t('Home')]); ?>
 <?php $this->start('content'); ?>
 <h1><?=$this->t('Home'); ?></h1>
 <?php if ($motdMessage): ?>

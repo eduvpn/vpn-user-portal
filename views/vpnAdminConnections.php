@@ -1,4 +1,4 @@
-<?php $this->layout('base', ['activeItem' => 'connections']); ?>
+<?php $this->layout('base', ['activeItem' => 'connections', 'pageTitle' => $this->t('Connections')]); ?>
 <?php $this->start('content'); ?>
     <h1><?=$this->t('Connections'); ?></h1>
     <table class="tbl">

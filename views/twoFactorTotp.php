@@ -1,4 +1,4 @@
-<?php $this->layout('base'); ?>
+<?php $this->layout('base', ['pageTitle' => $this->t('Two-factor Authentication')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Two-factor Authentication'); ?></h2>
 

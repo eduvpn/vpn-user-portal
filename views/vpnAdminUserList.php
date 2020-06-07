@@ -1,4 +1,4 @@
-<?php $this->layout('base', ['activeItem' => 'users']); ?>
+<?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
 <?php $this->start('content'); ?>
     <h1><?=$this->t('Users'); ?></h1>
     <?php if (empty($userList)): ?>

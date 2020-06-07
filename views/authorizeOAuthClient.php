@@ -1,4 +1,4 @@
-<?php $this->layout('base'); ?>
+<?php $this->layout('base', ['pageTitle' => $this->t('Approve Application')]); ?>
 <?php $this->start('content'); ?>
     <h1><?=$this->t('Approve Application'); ?></h1>
 

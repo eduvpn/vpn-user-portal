@@ -1,4 +1,4 @@
-<?php $this->layout('base'); ?>
+<?php $this->layout('base', ['pageTitle' => $this->t('Sign In')]); ?>
 <?php $this->start('content'); ?>
     <h1><?=$this->t('Sign In'); ?></h1>
     <div class="auth">
