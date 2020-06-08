@@ -9,7 +9,7 @@
         <p class="warning"><?=$this->t('You cannot manage your own user account.'); ?></p>
     <?php endif; ?>
 
-    <form method="post" action="<?=$this->e($requestRoot); ?>user">
+    <form class="frm" method="post" action="<?=$this->e($requestRoot); ?>user">
         <fieldset>
             <input type="hidden" name="user_id" value="<?=$this->e($userId); ?>">
             <?php if (!$isSelf): ?>

@@ -12,7 +12,7 @@
         </p>
 <?php endif; ?>
 
-        <form method="post" action="<?=$this->e($requestRoot); ?>_form/auth/verify">
+        <form class="frm" method="post" action="<?=$this->e($requestRoot); ?>_form/auth/verify">
             <fieldset>
 <?php if ($_form_auth_invalid_credentials): ?>
                 <input type="text" name="userName" autocapitalize="off" placeholder="<?=$this->t('Username'); ?>" value="<?=$this->e($_form_auth_invalid_credentials_user); ?>" required>
