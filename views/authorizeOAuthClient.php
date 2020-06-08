@@ -24,7 +24,7 @@
 <?=$this->t('To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.'); ?>
     </details>
 
-    <form method="post">
+    <form class="frm" method="post">
         <button type="submit" name="approve" value="yes"><?=$this->t('Approve Application'); ?></button>
     </form>
 <?php $this->stop('content'); ?>

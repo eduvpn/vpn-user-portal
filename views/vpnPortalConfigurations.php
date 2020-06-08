@@ -12,7 +12,7 @@
 		<?=$this->t('Select a profile and choose a name, e.g. "Phone".'); ?>
 		</p>
 
-        <p class="warning small">
+        <p class="warning">
 		<?=$this->t('Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!'); ?>
 		</p>
 

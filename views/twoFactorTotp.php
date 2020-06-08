@@ -12,7 +12,7 @@
         </p>
     <?php endif; ?>
 
-    <form method="post" action="<?=$this->e($requestRoot); ?>_two_factor/auth/verify/totp">
+    <form class="frm" method="post" action="<?=$this->e($requestRoot); ?>_two_factor/auth/verify/totp">
         <fieldset>
                 <label for="totpKey"><?=$this->t('TOTP'); ?></label>
                 <input type="text" inputmode="numeric" id="totpKey" name="_two_factor_auth_totp_key" autocomplete="off" maxlength="6" required pattern="[0-9]{6}" autofocus>
@@ -23,7 +23,7 @@
         </fieldset>
     </form>
 
-    <p class="small">
+    <p>
         <?=$this->t('Contact support if you lost your TOTP.'); ?>
         <?=$this->t('Your ID is <code>%_two_factor_user_id%</code>.'); ?>
     </p>
