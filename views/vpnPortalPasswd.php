@@ -17,7 +17,7 @@
         </p>
     <?php endif; ?>
 
-    <form method="post">
+    <form class="frm" method="post">
         <fieldset>
             <label for="userName"><?=$this->t('Username'); ?></label>
             <input size="30" type="text"     id="userName" name="userName" value="<?=$this->e($userId); ?>" autocapitalize="off" disabled="disabled" required>

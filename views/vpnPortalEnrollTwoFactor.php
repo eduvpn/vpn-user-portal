@@ -44,7 +44,7 @@
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <form method="post">
+                <form class="frm" method="post">
                     <fieldset>
                         <label for="otp_key"><?=$this->t('OTP'); ?></label>
                         <input type="text" id="totp_key" inputmode="numeric" name="totp_key" autocomplete="off" maxlength="6" required pattern="[0-9]{6}" autofocus>

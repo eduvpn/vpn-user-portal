@@ -6,7 +6,7 @@
         <?=$this->t('All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.'); ?>
     </p>
 
-    <form method="post">
+    <form class="frm" method="post">
         <fieldset>
             <label for="motd_message"><?=$this->t('MOTD'); ?></label>
             <textarea id="motd_message" name="message_body" rows="8"><?php if ($motdMessage): ?><?=$this->e($motdMessage['message']); ?><?php endif; ?></textarea>

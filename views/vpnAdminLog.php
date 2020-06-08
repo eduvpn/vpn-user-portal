@@ -9,7 +9,7 @@
         <?=$this->t('The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.'); ?>
     </p>
 
-    <form method="post">
+    <form class="frm" method="post">
         <fieldset>
             <label for="dateTime"><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</label>
             <input id="dateTime" name="date_time" type="text" size="30" value="<?php if ($date_time): ?><?=$this->d($date_time); ?><?php else: ?><?=$this->d($now); ?><?php endif; ?>" required>
