@@ -53,7 +53,7 @@
                 <td><span title="<?=$this->e($client['client_id']); ?>"><?php if ($client['display_name']): ?><?=$this->e($client['display_name']); ?><?php else: ?><em><?=$this->t('Unregistered Client'); ?></em><?php endif; ?></span></td>
                 <td><?=$this->d($client['auth_time']); ?></td>
                 <td class="text-right">
-                    <form class="fmt" method="post" action="removeClientAuthorization">
+                    <form class="frm" method="post" action="removeClientAuthorization">
                         <input type="hidden" name="client_id" value="<?=$this->e($client['client_id']); ?>">
                         <input type="hidden" name="auth_key" value="<?=$this->e($client['auth_key']); ?>">
                         <button class="warning"><?=$this->t('Revoke'); ?></button>
