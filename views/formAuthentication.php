@@ -15,10 +15,14 @@
         <form class="frm" method="post" action="<?=$this->e($requestRoot); ?>_form/auth/verify">
             <fieldset>
 <?php if ($_form_auth_invalid_credentials): ?>
-                <input type="text" name="userName" autocapitalize="off" placeholder="<?=$this->t('Username'); ?>" value="<?=$this->e($_form_auth_invalid_credentials_user); ?>" required>
-                <input type="password" name="userPass" placeholder="<?=$this->t('Password'); ?>" autofocus required>
+                <label for="userName"><?=$this->t('Username'); ?></label>
+                <input type="text" id="userName" name="userName" autocapitalize="off" placeholder="<?=$this->t('Username'); ?>" value="<?=$this->e($_form_auth_invalid_credentials_user); ?>" required>
+                <label for="userPass"><?=$this->t('Password'); ?></label>
+                <input type="password" id="userPass" name="userPass" placeholder="<?=$this->t('Password'); ?>" autofocus required>
 <?php else: ?>
+                <label for="userName"><?=$this->t('Username'); ?></label>
                 <input type="text" name="userName" autocapitalize="off" placeholder="<?=$this->t('Username'); ?>" autofocus required>
+                <label for="userPass"><?=$this->t('Password'); ?></label>
                 <input type="password" name="userPass" placeholder="<?=$this->t('Password'); ?>" required>
 <?php endif; ?>
             </fieldset>
