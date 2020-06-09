@@ -21,10 +21,14 @@
         <summary>
 <?=$this->t('Why is this necessary?'); ?>
         </summary>
+        <p>
 <?=$this->t('To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.'); ?>
+        </p>
     </details>
 
     <form class="frm" method="post">
-        <button type="submit" name="approve" value="yes"><?=$this->t('Approve Application'); ?></button>
+        <fieldset>
+            <button type="submit" name="approve" value="yes"><?=$this->t('Approve Application'); ?></button>
+        </fieldset>
     </form>
 <?php $this->stop('content'); ?>
