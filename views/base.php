@@ -9,8 +9,8 @@
 <?php else: ?>
     <title><?=$this->t('VPN Portal'); ?> - <?=$this->t(ucfirst($activeItem)); ?></title>
 <?php endif; ?>
-    <link href="<?=$this->e($requestRoot); ?>css/bootstrap-reboot.min.css" media="screen" rel="stylesheet">
-    <link href="<?=$this->e($requestRoot); ?>css/screen.css" media="screen" rel="stylesheet">
+    <link href="<?=$this->getCssUrl($requestRoot, 'bootstrap-reboot.min.css'); ?>" media="screen" rel="stylesheet">
+    <link href="<?=$this->getCssUrl($requestRoot, 'screen.css'); ?>" media="screen" rel="stylesheet">
 </head>
 <body>
     <header>			
