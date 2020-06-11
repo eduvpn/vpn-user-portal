@@ -41,15 +41,20 @@ class Tpl implements TplInterface
     /** @var string|null */
     private $uiLanguage = null;
 
+    /** @var string|null */
+    private $cssRoot = null;
+
     /**
      * @param array<string> $templateFolderList
      * @param array<string> $translationFolderList
+     * @param string|null   $cssRoot
      */
-    public function __construct(array $templateFolderList, array $translationFolderList = [])
+    public function __construct(array $templateFolderList, array $translationFolderList = [], $cssRoot = null)
     {
         $this->templateFolderList = $templateFolderList;
         $this->translationFolderList = $translationFolderList;
         $this->addCallback('bytes_to_human', [__CLASS__, 'toHuman']);
+        $this->cssRoot = $cssRoot;
     }
 
     /**
@@ -190,6 +195,30 @@ class Tpl implements TplInterface
     private function insert($templateName, array $templateVariables = [])
     {
         return $this->render($templateName, $templateVariables);
+    }
+
+    /**
+     * Get a URL with cache busting query parameter.
+     *
+     * @param string $requestRoot
+     * @param string $cssPath
+     *
+     * @return string
+     */
+    private function getCssUrl($requestRoot, $cssPath)
+    {
+        if (null === $cssRoot = $this->cssRoot) {
+            // CSS root not set, don't include cache busting query parameter
+            $this->e($requestRoot.'css/'.$cssPath);
+        }
+
+        if (false === $mTime = @filemtime($cssRoot.'/'.$cssPath)) {
+            // can't find file or determine last modified time, do not include
+            // cache busting query parameter
+            $this->e($requestRoot.'css/'.$cssPath);
+        }
+
+        return $this->e($requestRoot.'css/'.$cssPath.'?mTime='.$mTime);
     }
 
     /**

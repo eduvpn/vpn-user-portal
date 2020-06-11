@@ -114,7 +114,8 @@ try {
     if (null !== $cookieUiLang = $seCookie->get('ui_lang')) {
         $uiLang = InputValidation::uiLang($cookieUiLang);
     }
-    $tpl = new Tpl($templateDirs, $localeDirs);
+    $cssRoot = sprintf('%s/web/css', $baseDir);
+    $tpl = new Tpl($templateDirs, $localeDirs, $cssRoot);
     $tpl->setLanguage($uiLang);
     $tpl->addDefault(
         [
