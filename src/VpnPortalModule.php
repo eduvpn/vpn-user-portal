@@ -200,12 +200,14 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
 
                 $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->getUserId()]);
+                $userConnectionLogEntries = $this->serverClient->getRequireArray('user_connection_log', ['user_id' => $userInfo->getUserId()]);
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalEvents',
                         [
                             'userMessages' => $userMessages,
+                            'userConnectionLogEntries' => $userConnectionLogEntries,
                         ]
                     )
                 );
