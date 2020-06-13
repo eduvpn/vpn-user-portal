@@ -3,7 +3,7 @@
     <h1><?=$this->t('Account'); ?></h1>
     <h2><?=$this->t('Connection History'); ?></h2>
     <p>
-        <?=$this->t('This is a list of your most recent VPN connections.'); ?>
+        <?=$this->t('Your most recent, concluded, VPN connections.'); ?>
     </p>
 <?php if (0 === count($userConnectionLogEntries)): ?>
     <p class="plain"><?=$this->t('No connections yet.'); ?></p>
@@ -37,7 +37,7 @@
 
     <h2><?=$this->t('Events'); ?></h2>
     <p>
-        <?=$this->t('This is a list of the most recent events for your account.'); ?>
+        <?=$this->t('The most recent events related to your account.'); ?>
     </p>
     <?php if (0 === count($userMessages)): ?>
         <p class="plain"><?=$this->t('No events yet.'); ?></p>
