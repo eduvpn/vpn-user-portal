@@ -38,7 +38,7 @@ return [
     'Details...' => 'Details...',
     'Disable User' => 'Blokkeer account',
     'Disabled' => 'Uitgeschakeld',
-    'Disconnected' => 'Niet verbonden',
+    'Disconnected' => 'Verbroken',
     'Distribution of unique users over the VPN applications.' => 'Verdeling van unieke gebruikers over de VPN-applicaties.',
     'Documentation' => 'Documentatie',
     'Enable User' => 'Activeer account',

@@ -3,7 +3,7 @@
     <h1><?=$this->t('Account'); ?></h1>
     <h2><?=$this->t('Connection History'); ?></h2>
     <p>
-        <?=$this->t('This is a list of VPN connections with your account.'); ?>
+        <?=$this->t('This is a list of your most recent VPN connections.'); ?>
     </p>
 <?php if (0 === count($userConnectionLogEntries)): ?>
     <p class="plain"><?=$this->t('No connections yet.'); ?></p>
@@ -15,6 +15,7 @@
                 <th><?=$this->t('IPs'); ?></th>
                 <th><?=$this->t('Connected'); ?> (<?=$this->e(date('T')); ?>)</th>
                 <th><?=$this->t('Disconnected'); ?> (<?=$this->e(date('T')); ?>)</th>
+                <th><?=$this->t('Traffic'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -27,14 +28,15 @@
                         <li><?=$this->e($logEntry['ip6']); ?></li>
                     </ul>
                 </td>
-                <td><?=$this->d($result['connected_at']); ?></td>
+                <td><?=$this->d($logEntry['connected_at']); ?></td>
                 <td>
-                    <?php if ($result['disconnected_at']): ?>
-                        <?=$this->d($result['disconnected_at']); ?>
+                    <?php if ($logEntry['disconnected_at']): ?>
+                        <?=$this->d($logEntry['disconnected_at']); ?>
                     <?php else: ?>
-                        <em><?=$this->t('N/A'); ?></em>
+                        <em>...</em>
                     <?php endif; ?>
                 </td>
+                <td><?=$this->e((string) $logEntry['bytes_transferred'], 'bytes_to_human'); ?></td>
             </tr>
 <?php endforeach; ?>
         </tbody>
@@ -43,7 +45,7 @@
 
     <h2><?=$this->t('Events'); ?></h2>
     <p>
-        <?=$this->t('This is a list of events that occurred related to your account.'); ?>
+        <?=$this->t('This is a list of the most recent events for your account.'); ?>
     </p>
     <?php if (0 === count($userMessages)): ?>
         <p class="plain"><?=$this->t('No events yet.'); ?></p>
