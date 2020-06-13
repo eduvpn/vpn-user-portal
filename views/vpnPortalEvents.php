@@ -12,32 +12,24 @@
         <thead>
             <tr>
                 <th><?=$this->t('Profile'); ?></th>
-                <th><?=$this->t('IPs'); ?></th>
                 <th><?=$this->t('Connected'); ?> (<?=$this->e(date('T')); ?>)</th>
                 <th><?=$this->t('Disconnected'); ?> (<?=$this->e(date('T')); ?>)</th>
-                <th><?=$this->t('Traffic'); ?></th>
             </tr>
         </thead>
         <tbody>
 <?php foreach ($userConnectionLogEntries as $logEntry): ?>
+<?php if (null !== $logEntry['disconnected_at']): ?>
             <tr>
-                <td><?=$this->e($logEntry['profile_id']); ?></td>
-                <td>
-                    <ul>
-                        <li><?=$this->e($logEntry['ip4']); ?></li>
-                        <li><?=$this->e($logEntry['ip6']); ?></li>
-                    </ul>
-                </td>
-                <td><?=$this->d($logEntry['connected_at']); ?></td>
-                <td>
-                    <?php if ($logEntry['disconnected_at']): ?>
-                        <?=$this->d($logEntry['disconnected_at']); ?>
-                    <?php else: ?>
-                        <em>...</em>
-                    <?php endif; ?>
-                </td>
-                <td><?=$this->e((string) $logEntry['bytes_transferred'], 'bytes_to_human'); ?></td>
+                <td title="<?=$this->e($logEntry['profile_id']); ?>">
+<?php if (array_key_exists($logEntry['profile_id'], $idNameMapping)): ?>
+                    <?=$this->e($idNameMapping[$logEntry['profile_id']]); ?>
+<?php else: ?>
+                    <?=$this->e($logEntry['profile_id']); ?>
+<?php endif; ?>
+                <td title="IPv4: <?=$this->e($logEntry['ip4']); ?>, IPv6: <?=$this->e($logEntry['ip6']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
+                <td title="<?=$this->e((string) $logEntry['bytes_transferred'], 'bytes_to_human'); ?>"><?=$this->d($logEntry['disconnected_at']); ?></td>
             </tr>
+<?php endif; ?>
 <?php endforeach; ?>
         </tbody>
     </table>

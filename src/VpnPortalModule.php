@@ -202,12 +202,21 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->getUserId()]);
                 $userConnectionLogEntries = $this->serverClient->getRequireArray('user_connection_log', ['user_id' => $userInfo->getUserId()]);
 
+                // get the fancy profile name
+                $profileList = $this->serverClient->getRequireArray('profile_list');
+
+                $idNameMapping = [];
+                foreach ($profileList as $profileId => $profileData) {
+                    $idNameMapping[$profileId] = $profileData['displayName'];
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalEvents',
                         [
                             'userMessages' => $userMessages,
                             'userConnectionLogEntries' => $userConnectionLogEntries,
+                            'idNameMapping' => $idNameMapping,
                         ]
                     )
                 );
