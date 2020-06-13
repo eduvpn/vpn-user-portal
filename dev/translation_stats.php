@@ -20,7 +20,7 @@ foreach ($localeFileList as $localeFile) {
     $translationStats[basename($localeFile, '.php')] = sprintf('%3d', (count($translationList) / $translationCount * 100));
 }
 
-asort($translationStats);
+arsort($translationStats);
 
 foreach ($translationStats as $l => $cnt) {
     echo $l."\t".sprintf('%3d', $cnt).'%'.PHP_EOL;
