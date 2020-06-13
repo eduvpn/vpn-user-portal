@@ -13,8 +13,8 @@
 
         <form class="frm" method="post" action="<?=$this->e($requestRoot); ?>_two_factor/auth/verify/totp">
             <fieldset>
-                    <label for="totpKey"><?=$this->t('TOTP'); ?></label>
-                    <input type="text" inputmode="numeric" id="totpKey" name="_two_factor_auth_totp_key" autocomplete="off" maxlength="6" required pattern="[0-9]{6}" autofocus>
+                    <label for="totpKey"><?=$this->t('OTP'); ?></label>
+                    <input type="text" inputmode="numeric" placeholder="<?=$this->t('OTP'); ?>" id="totpKey" name="_two_factor_auth_totp_key" autocomplete="off" maxlength="6" required pattern="[0-9]{6}" autofocus>
             </fieldset>
             <fieldset>
                 <input type="hidden" name="_two_factor_auth_redirect_to" value="<?=$this->e($_two_factor_auth_redirect_to); ?>">

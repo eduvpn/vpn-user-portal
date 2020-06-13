@@ -10,7 +10,7 @@
         <?php if ($allowPasswordChange): ?>
             <tr>
                 <th></th>
-                <td><a href="passwd"><?=$this->t('Change Password'); ?></a></td>
+                <td><form class="frm" method="get" action="passwd"><button><?=$this->t('Change Password'); ?></button></form></td>
             </tr>
         <?php endif; ?>
 
@@ -34,11 +34,19 @@
                 <?php if ($hasTotpSecret): ?>
                     <span class="plain"><?=$this->t('TOTP'); ?></span>
                 <?php else: ?>
-                    <a href="two_factor_enroll"><?=$this->t('Enroll'); ?></a>
+                    <form class="frm" method="get" action="two_factor_enroll"><button type="submit"><?=$this->t('Enroll'); ?></button></form>
                 <?php endif; ?>
             </td>
         </tr>
         <?php endif; ?>
+
+        <tr>
+            <th><?=$this->t('Events'); ?></th>
+            <td>
+                <form class="frm" method="get" action="events"><button type="submit"><?=$this->t('View'); ?></button></form>
+            </td>
+        </tr>
+
     </table>
 
     <?php if (0 !== count($authorizedClients)): ?>

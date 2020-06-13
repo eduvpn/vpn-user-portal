@@ -10,14 +10,13 @@
     <?php else: ?>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</th><th><?=$this->t('Message'); ?></th><th><?=$this->t('Type'); ?></tr>
+                <tr><th><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</th><th><?=$this->t('Message'); ?></th></tr>
             </thead>
             <tbody>
                 <?php foreach ($userMessages as $message): ?>
                     <tr>
                         <td><?=$this->d($message['date_time']); ?></td>
                         <td><?=$this->e($message['message']); ?></td>
-                        <td><span class="plain"><?=$this->e($message['type']); ?></span></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
