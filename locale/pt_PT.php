@@ -113,7 +113,6 @@ return [
     'Two-factor Authentication' => 'Autenticação de dois fatores',
     'Two-factor Enrollment' => 'Registo de dois factores',
     'Two-factor authentication (2FA) is disabled by the administrator.' => 'Autenticação de dois fatores (2FA) está desactivada pelo administrador',
-    'Type' => 'Tipo',
     'Unregistered Client' => 'Cliente não registado',
     'User ID' => 'Identificação do Utilizador',
     'User Info' => 'Informação do Utilizador',
@@ -122,6 +121,7 @@ return [
     'VPN Portal' => 'Portal VPN',
     'VPN traffic over the last month.' => 'Tráfego VPN do último mês',
     'Verify' => 'Verifique',
+    //'View' => '',
     'Welcome to this VPN service!' => 'Bem-vindo a este serviço VPN!',
     'Why is this necessary?' => 'Porque é que isto é necessário?',
     'Yes' => 'Sim',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Não pode gerir a sua própria conta de utilizador.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'O seu identificador é <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'A sua nova configuração expira em %expiryDate%. Volte aqui para criar uma nova configuração após esta expirar!',
+    // [DELETED] 'Type' => 'Tipo',
 ];

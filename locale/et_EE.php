@@ -113,7 +113,6 @@ return [
     'Two-factor Authentication' => 'Kahefaktoriline autentimine',
     'Two-factor Enrollment' => 'Registreeri kahefaktoriliseks autentimiseks',
     'Two-factor authentication (2FA) is disabled by the administrator.' => 'Administraator on kahefaktorilise autentimise (2FA) desaktiveerinud.',
-    'Type' => 'Tüüp',
     'Unregistered Client' => 'Registreerimata klient',
     'User ID' => 'Kasutaja ID',
     'User Info' => 'Kasutaja teave',
@@ -122,6 +121,7 @@ return [
     'VPN Portal' => 'VPN-portaal',
     'VPN traffic over the last month.' => 'VPN liiklus viimasel kuul.',
     'Verify' => 'Kontrolli',
+    //'View' => '',
     'Welcome to this VPN service!' => 'Tere tulemast VPN teenusesse!',
     'Why is this necessary?' => 'Miks seda vaja on?',
     'Yes' => 'Jah',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Sa ei saa ise enda kasutajakontot hallata.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Su ID on <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Su uue seadistuse aegumiskuupäev on %expiryDate%. Pärast aegumist tule palun tagasi uut seadistust saama.',
+    // [DELETED] 'Type' => 'Tüüp',
 ];

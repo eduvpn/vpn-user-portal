@@ -113,7 +113,6 @@ return [
     'Two-factor Authentication' => 'To-faktor autentisering',
     'Two-factor Enrollment' => 'To-faktor autentisering',
     'Two-factor authentication (2FA) is disabled by the administrator.' => 'Administratoren har skrudd av tofaktorautentisering (2FA).',
-    'Type' => 'Type',
     'Unregistered Client' => 'Uregistrert Klient',
     'User ID' => 'Bruker-ID',
     'User Info' => 'Brukerinformasjon',
@@ -122,6 +121,7 @@ return [
     'VPN Portal' => 'VPN-Portal',
     'VPN traffic over the last month.' => 'VPN-trafikk i den siste måneden.',
     'Verify' => 'Verifiser',
+    //'View' => '',
     'Welcome to this VPN service!' => 'Velkommen til VPN-tjenesten!',
     'Why is this necessary?' => 'Hvor er dette nødvendig?',
     'Yes' => 'Ja',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Du kan ikke styre din egen brukerkonto.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Din ID er <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Din konfigurasjon går ut på %expiryDate%. Da kan du komme tilbake til denne siden for hente en ny.',
+    // [DELETED] 'Type' => 'Type',
 ];

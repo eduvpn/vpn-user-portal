@@ -113,7 +113,6 @@ return [
     'Two-factor Authentication' => 'توثيق ذو عاملين',
     'Two-factor Enrollment' => 'تسجيل ذو عاملين',
     'Two-factor authentication (2FA) is disabled by the administrator.' => 'التوثيق ذو عاملين معطل من طرف مدير الشبكة.',
-    'Type' => 'صنف',
     'Unregistered Client' => 'زبون غير مسجل',
     'User ID' => 'هوية المستخدم',
     'User Info' => 'معلومات على المستخدم',
@@ -122,6 +121,7 @@ return [
     'VPN Portal' => 'بوابة الشبكة الخاصة الافتراضية',
     'VPN traffic over the last month.' => 'حركة المرور عبر الشبكة الخاصة الافتراضية خلال الشهر المنصرم.',
     'Verify' => 'تحقق',
+    //'View' => '',
     'Welcome to this VPN service!' => 'مرحبا بك على خدمة الشبكة الخاصة الافتراضية هذه!',
     'Why is this necessary?' => 'لماذا هذا ضروري؟',
     'Yes' => 'نعم',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'لا يمكنك إدارة حساب المستخدم الخاص بك.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'هويتك هي <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'تنتهي صلاحية الاعداد الجديد عند %expiryDate%. عد هنا للحصول على اعداد جديد بعد انتهاء الصلاحية!',
+    // [DELETED] 'Type' => 'صنف',
 ];

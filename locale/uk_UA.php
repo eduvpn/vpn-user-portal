@@ -113,7 +113,6 @@ return [
     'Two-factor Authentication' => 'Двофакторна аутентифікація',
     'Two-factor Enrollment' => 'Двофакторна реєстрація (2FA)',
     'Two-factor authentication (2FA) is disabled by the administrator.' => 'Двофакторна аутентифікація (2FA) відключена адміністратором.',
-    'Type' => 'Тип',
     'Unregistered Client' => 'Незареєстрований клієнт',
     'User ID' => 'ID користувача',
     'User Info' => 'Інформація про користувача',
@@ -122,6 +121,7 @@ return [
     'VPN Portal' => 'VPN портал',
     'VPN traffic over the last month.' => 'VPN трафік за останній місяць.',
     'Verify' => 'Перевірити',
+    //'View' => '',
     'Welcome to this VPN service!' => 'Ласкаво просимо до нашої послуги VPN!',
     'Why is this necessary?' => 'Чому це потрібно?',
     'Yes' => 'Так',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Ви не можете керувати власним обліковим записом користувача.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Ваш ідентифікатор <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Срок дії вашої нової конфігурації сплине %expiryDate%. Поверніться сюди, щоб отримати нову конфігурацію після закінчення терміну дії!',
+    // [DELETED] 'Type' => 'Тип',
 ];

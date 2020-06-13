@@ -113,7 +113,6 @@ return [
     'Two-factor Authentication' => 'To-faktor-autentifikation (2FA)',
     'Two-factor Enrollment' => 'To-faktor-autentifikation (2FA)',
     //'Two-factor authentication (2FA) is disabled by the administrator.' => '',
-    'Type' => 'Type',
     //'Unregistered Client' => '',
     //'User ID' => '',
     'User Info' => 'Brugerinformation',
@@ -122,6 +121,7 @@ return [
     //'VPN Portal' => '',
     //'VPN traffic over the last month.' => '',
     'Verify' => 'Bekræft',
+    //'View' => '',
     //'Welcome to this VPN service!' => '',
     //'Why is this necessary?' => '',
     //'Yes' => '',
@@ -129,4 +129,5 @@ return [
     //'You cannot manage your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Dit ID er <code>%_two_factor_user_id%</code>.',
     //'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => '',
+    // [DELETED] 'Type' => 'Type',
 ];
