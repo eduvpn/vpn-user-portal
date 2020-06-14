@@ -191,39 +191,6 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->get(
-            '/events',
-            /**
-             * @return \LC\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-
-                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->getUserId()]);
-                $userConnectionLogEntries = $this->serverClient->getRequireArray('user_connection_log', ['user_id' => $userInfo->getUserId()]);
-
-                // get the fancy profile name
-                $profileList = $this->serverClient->getRequireArray('profile_list');
-
-                $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $idNameMapping[$profileId] = $profileData['displayName'];
-                }
-
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalEvents',
-                        [
-                            'userMessages' => $userMessages,
-                            'userConnectionLogEntries' => $userConnectionLogEntries,
-                            'idNameMapping' => $idNameMapping,
-                        ]
-                    )
-                );
-            }
-        );
-
-        $service->get(
             '/account',
             /**
              * @return \LC\Common\Http\Response
@@ -247,6 +214,17 @@ class VpnPortalModule implements ServiceModuleInterface
                     $authorizedClients[$k]['display_name'] = $displayName;
                 }
 
+                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->getUserId()]);
+                $userConnectionLogEntries = $this->serverClient->getRequireArray('user_connection_log', ['user_id' => $userInfo->getUserId()]);
+
+                // get the fancy profile name
+                $profileList = $this->serverClient->getRequireArray('profile_list');
+
+                $idNameMapping = [];
+                foreach ($profileList as $profileId => $profileData) {
+                    $idNameMapping[$profileId] = $profileData['displayName'];
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalAccount',
@@ -256,6 +234,9 @@ class VpnPortalModule implements ServiceModuleInterface
                             'userPermissions' => $userPermissions,
                             'authorizedClients' => $authorizedClients,
                             'twoFactorMethods' => $this->config->optionalItem('twoFactorMethods', ['totp']),
+                            'userMessages' => $userMessages,
+                            'userConnectionLogEntries' => $userConnectionLogEntries,
+                            'idNameMapping' => $idNameMapping,
                         ]
                     )
                 );
