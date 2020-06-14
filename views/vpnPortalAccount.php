@@ -40,12 +40,14 @@
         </tr>
         <?php endif; ?>
 
+<!--
         <tr>
             <th><?=$this->t('Events'); ?></th>
             <td>
                 <form class="frm" method="get" action="events"><button type="submit"><?=$this->t('View'); ?></button></form>
             </td>
         </tr>
+--> 
 
     </table>
 

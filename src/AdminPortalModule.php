@@ -136,6 +136,16 @@ class AdminPortalModule implements ServiceModuleInterface
                 $clientCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userId]);
                 $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userId]);
 
+                $userConnectionLogEntries = $this->serverClient->getRequireArray('user_connection_log', ['user_id' => $userId]);
+
+                // get the fancy profile name
+                $profileList = $this->serverClient->getRequireArray('profile_list');
+
+                $idNameMapping = [];
+                foreach ($profileList as $profileId => $profileData) {
+                    $idNameMapping[$profileId] = $profileData['displayName'];
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminUserConfigList',
@@ -146,6 +156,8 @@ class AdminPortalModule implements ServiceModuleInterface
                             'hasTotpSecret' => $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]),
                             'isDisabled' => $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
+                            'userConnectionLogEntries' => $userConnectionLogEntries,
+                            'idNameMapping' => $idNameMapping,
                         ]
                     )
                 );
