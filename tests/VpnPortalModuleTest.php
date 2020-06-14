@@ -102,6 +102,11 @@ class VpnPortalModuleTest extends TestCase
                     'twoFactorMethods' => [
                         'totp',
                     ],
+                    'userMessages' => [],
+                    'userConnectionLogEntries' => [],
+                    'idNameMapping' => [
+                        'internet' => 'Internet Access',
+                    ],
                 ],
             ],
             $this->makeRequest('GET', '/account')

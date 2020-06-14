@@ -57,6 +57,8 @@ class TestHttpClient implements HttpClientInterface
                         ],
                     ]
                 );
+            case 'serverClient/user_connection_log?user_id=foo':
+                return self::wrap('user_connection_log', []);
             case 'serverClient/user_session_expires_at?user_id=foo':
                 return self::wrap('user_session_expires_at', $dateTime->format(DateTime::ATOM));
             case 'serverClient/user_messages?user_id=foo':
