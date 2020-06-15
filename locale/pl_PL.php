@@ -108,7 +108,7 @@ return [
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'Brak wyników wyszukiwania.',
     'There are no users with VPN configurations.' => 'Brak użytkowników z konfiguracjami VPN.',
-    'This user does not have any configurations.' => 'Ten użytkownik nie ma żadnych konfiguracji.',
+    //'This user does not have any active certificates.' => '',
     //'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => '',
     'Total # Unique Users' => 'Całkowita liczba unikalnych użytkowników',
     'Total Traffic' => 'Całkowity ruch sieciowy',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Nie możesz zarządzać swoim kontem.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Twój identyfikator to <code>%_two_factor_user_id%</code>.',
     //'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => '',
+    // [DELETED] 'This user does not have any configurations.' => 'Ten użytkownik nie ma żadnych konfiguracji.',
 ];

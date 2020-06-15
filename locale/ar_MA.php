@@ -108,7 +108,7 @@ return [
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'لا توجد نتائج مطابقة لهذه المعايير.',
     'There are no users with VPN configurations.' => 'لا يوجد مستخدمين باعدادات الشبكة الخاصة الافتراضية. ',
-    'This user does not have any configurations.' => 'ليس لدى هذا المستخدم اي اعدادات.',
+    //'This user does not have any active certificates.' => '',
     'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => 'لمنع التطبيقات الضارة من الاتصال بالشبكة الخاصة الافتراضية نيابة عنك، عليك الموافقة  صراحة على هذا التطبيق اولا.',
     'Total # Unique Users' => 'مجموع # المستخدمين الفرادى',
     'Total Traffic' => 'مجموع حركات المرور',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'لا يمكنك إدارة حساب المستخدم الخاص بك.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'هويتك هي <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'تنتهي صلاحية الاعداد الجديد عند %expiryDate%. عد هنا للحصول على اعداد جديد بعد انتهاء الصلاحية!',
+    // [DELETED] 'This user does not have any configurations.' => 'ليس لدى هذا المستخدم اي اعدادات.',
 ];

@@ -108,7 +108,7 @@ return [
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'Ingen treff på dette søket.',
     'There are no users with VPN configurations.' => 'Ingen brukere med VPN-konfigurasjon.',
-    'This user does not have any configurations.' => 'Denne brukeren har ingen konfigurasjoner.',
+    //'This user does not have any active certificates.' => '',
     'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => 'For å forhindre at onde applikasjoner kan koble til VPN på din vegne i hemmelighet, må du eksplisitt tillate denne applikasjonen først.',
     'Total # Unique Users' => 'Totalt # Unike Brukere',
     'Total Traffic' => 'Total Trafikk',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Du kan ikke styre din egen brukerkonto.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Din ID er <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Din konfigurasjon går ut på %expiryDate%. Da kan du komme tilbake til denne siden for hente en ny.',
+    // [DELETED] 'This user does not have any configurations.' => 'Denne brukeren har ingen konfigurasjoner.',
 ];

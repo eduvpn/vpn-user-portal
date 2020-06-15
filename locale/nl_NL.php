@@ -108,7 +108,7 @@ return [
     'The most recent, concluded, VPN connections with this account.' => 'De meest recente (afgesloten) VPN-verbindingen van dit account.',
     'There are no results matching your criteria.' => 'Er zijn geen resultaten die voldoen aan de criteria.',
     'There are no users with VPN configurations.' => 'Er zijn geen gebruikers met VPN-configuraties.',
-    'This user does not have any configurations.' => 'Deze gebruiker heeft geen configuraties.',
+    'This user does not have any active certificates.' => 'Deze gebruiker heeft geen actieve certificaten.',
     'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => 'Om te voorkomen dat kwaadaardige applicaties namens jou in het geheim een VPN-verbinding op kunnen zetten moet je dit eerst expliciet toestaan.',
     'Total # Unique Users' => 'Totaal # unieke gebruikers',
     'Total Traffic' => 'Totaal verkeer',

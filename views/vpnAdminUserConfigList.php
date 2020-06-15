@@ -29,7 +29,7 @@
 
     <?php if (0 === count($clientCertificateList)): ?>
         <p class="plain">
-            <?=$this->t('This user does not have any configurations.'); ?>
+            <?=$this->t('This user does not have any active certificates.'); ?>
         </p>
     <?php else: ?>
         <table class="tbl">

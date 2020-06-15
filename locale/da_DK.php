@@ -108,7 +108,7 @@ return [
     //'The most recent, concluded, VPN connections with this account.' => '',
     //'There are no results matching your criteria.' => '',
     //'There are no users with VPN configurations.' => '',
-    //'This user does not have any configurations.' => '',
+    //'This user does not have any active certificates.' => '',
     //'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => '',
     //'Total # Unique Users' => '',
     //'Total Traffic' => '',

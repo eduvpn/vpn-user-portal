@@ -108,7 +108,7 @@ return [
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'Es gibt keine Ergebnisse zu Ihrer Suche.',
     'There are no users with VPN configurations.' => 'Es gibt keine Benutzer mit einer VPN-Konfiguration.',
-    'This user does not have any configurations.' => 'Dieser Benutzer hat noch keine Konfigurationen.',
+    //'This user does not have any active certificates.' => '',
     'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => 'Um zu verhindern, dass unsichere Zugriffe auf diese VPN-Verbindung möglich sind, müssen Sie diese Anwendung zuerst genehmigen.',
     'Total # Unique Users' => 'Alle # einzigartige Benutzer',
     'Total Traffic' => 'Gesamter Netzwerkverkehr',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Sie können keine Änderungen an Ihrem Benutzerkonto durchführen.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Ihre ID ist <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Ihr Konfiguration läuft am %expiryDate% ab. Erstellen Sie sich kurz vor Ablauf eine neue Konfiguration!',
+    // [DELETED] 'This user does not have any configurations.' => 'Dieser Benutzer hat noch keine Konfigurationen.',
 ];

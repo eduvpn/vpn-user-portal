@@ -108,7 +108,7 @@ return [
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'Otsingutingimustele vastavaid tulemusi ei leitud.',
     'There are no users with VPN configurations.' => 'VPN seadistustega kasutajaid ei ole.',
-    'This user does not have any configurations.' => 'Sellel kasutajal ei ole seadistusi.',
+    //'This user does not have any active certificates.' => '',
     'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => 'Vältimaks kahjurrakenduste poolt Sinu nimel salaja VPN ühenduste loomist, pead selle rakenduse esmalt ilmutatult heaks kiitma.',
     'Total # Unique Users' => 'Unikaalsete kasutajate koguarv',
     'Total Traffic' => 'Summaarne liiklus',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Sa ei saa ise enda kasutajakontot hallata.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Su ID on <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Su uue seadistuse aegumiskuupäev on %expiryDate%. Pärast aegumist tule palun tagasi uut seadistust saama.',
+    // [DELETED] 'This user does not have any configurations.' => 'Sellel kasutajal ei ole seadistusi.',
 ];
