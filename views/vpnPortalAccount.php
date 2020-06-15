@@ -27,20 +27,16 @@
         <?php endif; ?>
     </table>
 
-<?php if (0 !== count($twoFactorMethods)): ?>
     <details>
-        <summary><?=$this->t('Two-factor Authentication'); ?></summary>
-        <?php if ($hasTotpSecret): ?>
-            <span class="plain"><?=$this->t('TOTP'); ?></span>
-        <?php else: ?>
-            <form class="frm" method="get" action="two_factor_enroll"><button type="submit"><?=$this->t('Enroll'); ?></button></form>
-        <?php endif; ?>
-    </details>
-<?php endif; ?>
-
-<?php if (0 !== count($authorizedClients)): ?>
-    <details>
+        <p>
+            <?=$this->t('The list of applications you authorized to create a VPN connection.'); ?>
+        </p>
         <summary><?=$this->t('Authorized Applications'); ?></summary>
+<?php if (0 === count($authorizedClients)): ?>
+        <p class="plain">
+            <?=$this->t('No authorized applications yet.'); ?>
+        </p>
+<?php else: ?>
         <table class="tbl">
             <thead>
                 <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Authorized'); ?> (<?=$this->e(date('T')); ?>)</th><th></th></tr>
@@ -61,8 +57,8 @@
 <?php endforeach; ?>
             </tbody>
         </table>
-    </details>
 <?php endif; ?>
+    </details>
 
     <details>
         <summary><?=$this->t('Connections'); ?></summary>
@@ -123,4 +119,15 @@
         </table>
 <?php endif; ?>
     </details>
+
+<?php if (0 !== count($twoFactorMethods)): ?>
+    <details>
+        <summary><?=$this->t('Two-factor Authentication'); ?></summary>
+        <?php if ($hasTotpSecret): ?>
+            <span class="plain"><?=$this->t('TOTP'); ?></span>
+        <?php else: ?>
+            <form class="frm" method="get" action="two_factor_enroll"><button type="submit"><?=$this->t('Enroll'); ?></button></form>
+        <?php endif; ?>
+    </details>
+<?php endif; ?>
 <?php $this->stop('content'); ?>

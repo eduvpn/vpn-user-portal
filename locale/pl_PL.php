@@ -71,6 +71,7 @@ return [
     'New Password and New Password (confirm) MUST match!' => 'Podano dwa różne nowe hasła!',
     'No' => 'Nie',
     //'No VPN profiles are available for your account.' => '',
+    //'No authorized applications yet.' => '',
     'No clients connected.' => 'Żaden klient nie jest podłączony.',
     //'No connections yet.' => '',
     'No events yet.' => 'Brak zdarzeń.',
@@ -102,6 +103,7 @@ return [
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'Podany kod OTP nie pasuje do zdefiniowanego sekretu.',
     'The TOTP you provided is incorrect.' => 'Kod TOTP, który podałeś, jest nieprawidłowy.',
     'The credentials you provided were not correct.' => 'Dane uwierzytelniające są nieprawidłowe.',
+    //'The list of applications you authorized to create a VPN connection.' => '',
     //'The most recent events related to this account.' => '',
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'Brak wyników wyszukiwania.',
@@ -127,6 +129,4 @@ return [
     'You cannot manage your own user account.' => 'Nie możesz zarządzać swoim kontem.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Twój identyfikator to <code>%_two_factor_user_id%</code>.',
     //'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => '',
-    // [DELETED] 'ID' => 'Identyfikator',
-    // [DELETED] 'User Info' => 'Dane użytkownika',
 ];

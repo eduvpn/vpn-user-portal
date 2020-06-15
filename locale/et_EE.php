@@ -71,6 +71,7 @@ return [
     'New Password and New Password (confirm) MUST match!' => 'Uus parool tuleb mõlemal korral ühtemoodi sisestada!',
     'No' => 'Ei',
     'No VPN profiles are available for your account.' => 'Su konto jaoks ei ole VPN profiile saadaval.',
+    //'No authorized applications yet.' => '',
     'No clients connected.' => 'Kliente ei ole ühendatud',
     //'No connections yet.' => '',
     'No events yet.' => 'Sündmusi veel ei ole.',
@@ -102,6 +103,7 @@ return [
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'Sisestatud ühekordse parooli (OTP) võti ei klapi selle OTP saladusega.',
     'The TOTP you provided is incorrect.' => 'Sisestatud ajapõhine ühekordne parool (TOTP) ei ole õige.',
     'The credentials you provided were not correct.' => 'Kasutajakonto andmed ei olnud õiged.',
+    //'The list of applications you authorized to create a VPN connection.' => '',
     //'The most recent events related to this account.' => '',
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'Otsingutingimustele vastavaid tulemusi ei leitud.',
@@ -127,6 +129,4 @@ return [
     'You cannot manage your own user account.' => 'Sa ei saa ise enda kasutajakontot hallata.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Su ID on <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Su uue seadistuse aegumiskuupäev on %expiryDate%. Pärast aegumist tule palun tagasi uut seadistust saama.',
-    // [DELETED] 'ID' => 'ID',
-    // [DELETED] 'User Info' => 'Kasutaja teave',
 ];

@@ -71,6 +71,7 @@ return [
     'New Password and New Password (confirm) MUST match!' => 'Nytt Passord og Nytt Passord (bekreft) MÅ være det samme!',
     'No' => 'Nei',
     'No VPN profiles are available for your account.' => 'Ingen VPN-profiler er tilgjengelig.',
+    //'No authorized applications yet.' => '',
     'No clients connected.' => 'Ingen klient koblet til.',
     //'No connections yet.' => '',
     'No events yet.' => 'Ingen henvendelser.',
@@ -102,6 +103,7 @@ return [
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'OTP-koden du brukte stemmer ikke overens med OTP-hemmeligheten.',
     'The TOTP you provided is incorrect.' => 'TOTP-koden er ugyldig.',
     'The credentials you provided were not correct.' => 'Innloggingsdetaljene er ikke riktige.',
+    //'The list of applications you authorized to create a VPN connection.' => '',
     //'The most recent events related to this account.' => '',
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'Ingen treff på dette søket.',
@@ -127,6 +129,4 @@ return [
     'You cannot manage your own user account.' => 'Du kan ikke styre din egen brukerkonto.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Din ID er <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Din konfigurasjon går ut på %expiryDate%. Da kan du komme tilbake til denne siden for hente en ny.',
-    // [DELETED] 'ID' => 'ID',
-    // [DELETED] 'User Info' => 'Brukerinformasjon',
 ];

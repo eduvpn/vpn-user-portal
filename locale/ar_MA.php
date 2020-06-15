@@ -71,6 +71,7 @@ return [
     'New Password and New Password (confirm) MUST match!' => 'كلمة مرور جديدة و كلمة مرور جديدة (تأكيد) يجب أن يتطابقا!',
     'No' => 'لا',
     'No VPN profiles are available for your account.' => 'لا مظاهر للشبكة الخاصة الافتراضية متاحة لحسابك.',
+    //'No authorized applications yet.' => '',
     'No clients connected.' => 'لا زبائن متصلة.',
     //'No connections yet.' => '',
     'No events yet.' => 'لا احداث بعد.',
@@ -102,6 +103,7 @@ return [
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'لا يتطابق مفتاح كلمة المرور وحيدة الاستخدام الذي أدخلته مع القيمة المتوقعة لسر كلمة المرور وحيدة الاستخدام هذه.',
     'The TOTP you provided is incorrect.' => 'كلمة المرور وحيدة الاستخدام المؤقتة التي قدمتها غير صحيحة.',
     'The credentials you provided were not correct.' => 'بيانات الاعتماد التي قدمتها غير صحيحة.',
+    //'The list of applications you authorized to create a VPN connection.' => '',
     //'The most recent events related to this account.' => '',
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'لا توجد نتائج مطابقة لهذه المعايير.',
@@ -127,6 +129,4 @@ return [
     'You cannot manage your own user account.' => 'لا يمكنك إدارة حساب المستخدم الخاص بك.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'هويتك هي <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'تنتهي صلاحية الاعداد الجديد عند %expiryDate%. عد هنا للحصول على اعداد جديد بعد انتهاء الصلاحية!',
-    // [DELETED] 'ID' => 'هوية',
-    // [DELETED] 'User Info' => 'معلومات على المستخدم',
 ];

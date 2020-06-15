@@ -71,6 +71,7 @@ return [
     'New Password and New Password (confirm) MUST match!' => 'Паролі повинні співпадати!',
     'No' => 'Ні',
     'No VPN profiles are available for your account.' => 'Немає доступних профілів VPN для вашого облікового запису.',
+    //'No authorized applications yet.' => '',
     'No clients connected.' => 'Нема підключенних клієнтів.',
     //'No connections yet.' => '',
     'No events yet.' => 'Події відсутні.',
@@ -102,6 +103,7 @@ return [
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'Введений вами ключ OTP не відповідає очікуваному значенню для цього коду OTP.',
     'The TOTP you provided is incorrect.' => 'Наданий вами TOTP невірний.',
     'The credentials you provided were not correct.' => 'Надані вами облікові дані були невірними.',
+    //'The list of applications you authorized to create a VPN connection.' => '',
     //'The most recent events related to this account.' => '',
     //'The most recent, concluded, VPN connections with this account.' => '',
     'There are no results matching your criteria.' => 'Немає результатів, що відповідають вашим критеріям.',
@@ -127,6 +129,4 @@ return [
     'You cannot manage your own user account.' => 'Ви не можете керувати власним обліковим записом користувача.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Ваш ідентифікатор <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Срок дії вашої нової конфігурації сплине %expiryDate%. Поверніться сюди, щоб отримати нову конфігурацію після закінчення терміну дії!',
-    // [DELETED] 'ID' => 'Ідентифікатор',
-    // [DELETED] 'User Info' => 'Інформація про користувача',
 ];

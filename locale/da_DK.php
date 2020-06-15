@@ -71,6 +71,7 @@ return [
     'New Password and New Password (confirm) MUST match!' => 'Den nye adgangskode og den nye adgangskode (bekræft) skal være identiske!',
     //'No' => '',
     //'No VPN profiles are available for your account.' => '',
+    //'No authorized applications yet.' => '',
     //'No clients connected.' => '',
     //'No connections yet.' => '',
     'No events yet.' => 'Endnu ingen begivenheder.',
@@ -102,6 +103,7 @@ return [
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'Det indtastede YubiKey-engangspassword matcher ikke den forventede værdi af passwordet.',
     'The TOTP you provided is incorrect.' => 'Det indtastede TOTP er ikke korrekt.',
     'The credentials you provided were not correct.' => 'De indtastede brugeroplysninger er ikke korrekte.',
+    //'The list of applications you authorized to create a VPN connection.' => '',
     //'The most recent events related to this account.' => '',
     //'The most recent, concluded, VPN connections with this account.' => '',
     //'There are no results matching your criteria.' => '',
@@ -127,6 +129,4 @@ return [
     //'You cannot manage your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Dit ID er <code>%_two_factor_user_id%</code>.',
     //'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => '',
-    // [DELETED] 'ID' => 'ID',
-    // [DELETED] 'User Info' => 'Brugerinformation',
 ];
