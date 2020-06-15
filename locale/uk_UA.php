@@ -15,6 +15,7 @@ return [
     'An application attempts to establish a VPN connection.' => 'Програма намагається встановити VPN-з’єднання.',
     'An error occurred.' => 'Сталася помилка.',
     //'Application Use' => '',
+    //'Approve' => '',
     'Approve Application' => 'Підтвердити додаток',
     'Authorized' => 'Авторизовати',
     'Authorized Applications' => 'Авторизовати додаток',
@@ -129,5 +130,4 @@ return [
     'You cannot manage your own user account.' => 'Ви не можете керувати власним обліковим записом користувача.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Ваш ідентифікатор <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Срок дії вашої нової конфігурації сплине %expiryDate%. Поверніться сюди, щоб отримати нову конфігурацію після закінчення терміну дії!',
-    // [DELETED] 'This user does not have any configurations.' => 'У цього користувача немає жодної конфігурації.',
 ];

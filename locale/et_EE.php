@@ -15,6 +15,7 @@ return [
     'An application attempts to establish a VPN connection.' => 'Rakendus proovib luua VPN ühendust.',
     'An error occurred.' => 'Tekkis viga',
     //'Application Use' => '',
+    //'Approve' => '',
     'Approve Application' => 'Rakenduse heakskiitmine',
     'Authorized' => 'Volitatud',
     'Authorized Applications' => 'Lubatud rakendused',
@@ -129,5 +130,4 @@ return [
     'You cannot manage your own user account.' => 'Sa ei saa ise enda kasutajakontot hallata.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Su ID on <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Su uue seadistuse aegumiskuupäev on %expiryDate%. Pärast aegumist tule palun tagasi uut seadistust saama.',
-    // [DELETED] 'This user does not have any configurations.' => 'Sellel kasutajal ei ole seadistusi.',
 ];

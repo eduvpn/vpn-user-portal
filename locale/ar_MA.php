@@ -15,6 +15,7 @@ return [
     'An application attempts to establish a VPN connection.' => 'يحاول تطبيق الاتصال مع الشبكة الخاصة الافتراضية.',
     'An error occurred.' => 'حدث خطأ ما.',
     //'Application Use' => '',
+    //'Approve' => '',
     'Approve Application' => 'الموافقة على التطبيق',
     'Authorized' => 'مسموح',
     'Authorized Applications' => 'التطبيقات المسموحة',
@@ -129,5 +130,4 @@ return [
     'You cannot manage your own user account.' => 'لا يمكنك إدارة حساب المستخدم الخاص بك.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'هويتك هي <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'تنتهي صلاحية الاعداد الجديد عند %expiryDate%. عد هنا للحصول على اعداد جديد بعد انتهاء الصلاحية!',
-    // [DELETED] 'This user does not have any configurations.' => 'ليس لدى هذا المستخدم اي اعدادات.',
 ];

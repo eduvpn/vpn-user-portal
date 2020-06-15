@@ -15,6 +15,7 @@ return [
     'An application attempts to establish a VPN connection.' => 'Uma aplicação tenta estabelecer uma ligação VPN',
     'An error occurred.' => 'Ocorreu um erro.',
     //'Application Use' => '',
+    //'Approve' => '',
     'Approve Application' => 'Autorizar aplicação',
     'Authorized' => 'Autorizada',
     'Authorized Applications' => 'Aplicações autorizadas',
@@ -129,5 +130,4 @@ return [
     'You cannot manage your own user account.' => 'Não pode gerir a sua própria conta de utilizador.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'O seu identificador é <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'A sua nova configuração expira em %expiryDate%. Volte aqui para criar uma nova configuração após esta expirar!',
-    // [DELETED] 'This user does not have any configurations.' => 'Este utilizador não possui configurações',
 ];

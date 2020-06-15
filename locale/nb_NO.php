@@ -15,6 +15,7 @@ return [
     'An application attempts to establish a VPN connection.' => 'En applikasjon prøver å koble til VPN.',
     'An error occurred.' => 'Noe har gått galt.',
     //'Application Use' => '',
+    //'Approve' => '',
     'Approve Application' => 'Tillat Applikasjon',
     'Authorized' => 'Autorisert',
     'Authorized Applications' => 'Autoriserte applikasjoner',
@@ -129,5 +130,4 @@ return [
     'You cannot manage your own user account.' => 'Du kan ikke styre din egen brukerkonto.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Din ID er <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Din konfigurasjon går ut på %expiryDate%. Da kan du komme tilbake til denne siden for hente en ny.',
-    // [DELETED] 'This user does not have any configurations.' => 'Denne brukeren har ingen konfigurasjoner.',
 ];

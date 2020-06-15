@@ -15,6 +15,7 @@ return [
     'An application attempts to establish a VPN connection.' => '',
     'An error occurred.' => '',
     'Application Use' => '',
+    'Approve' => '',
     'Approve Application' => '',
     'Authorized' => '',
     'Authorized Applications' => '',

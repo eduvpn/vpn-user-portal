@@ -15,6 +15,7 @@ return [
     'An application attempts to establish a VPN connection.' => 'Een applicatie probeert een VPN-verbinding op te zetten.',
     'An error occurred.' => 'Er is een fout opgetreden.',
     'Application Use' => 'Applicatiegebruik',
+    'Approve' => 'Toestaan',
     'Approve Application' => 'Applicatie toestaan',
     'Authorized' => 'Geautoriseerd',
     'Authorized Applications' => 'Geautoriseerde applicaties',

@@ -147,16 +147,8 @@ dt {
   text-align: end;
 }
 
-.text-center {
-  text-align: center;
-}
-
 p.small {
   font-size: 85%;
-}
-
-p.big {
-  font-size: 115%;
 }
 
 p.success, span.success {
@@ -209,6 +201,17 @@ p.plain, p.success, p.warning, p.error {
 p.success a, span.success a, p.warning a, span.warning a, p.error a, span.error a, p.plain a, span.plain a {
   border: 0;
   text-decoration: underline;
+}
+
+div.appApproval span {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+details, summary {
+	margin: 1em 0;
 }
 
 table.tbl {
