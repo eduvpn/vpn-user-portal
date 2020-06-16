@@ -10,6 +10,8 @@
 - remove the (hidden) `/events` page and show account events on "Account" page
 - various minor template changes to allow for better CSS styling
 - redesign the OAuth consent dialog
+- the `/info.json` (and `/.well-known/vpn-user-portal`) response headers will 
+  now indicate that the files MUST NOT be cached in applications
 
 ## 2.2.8 (2020-05-26)
 - update `PhpSamlSpAuthentication` for php-saml-sp API changes
