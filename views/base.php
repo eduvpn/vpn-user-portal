@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>VPN Portal - <?=$this->e($pageTitle); ?></title>
+    <title><?=$this->t('VPN Portal'); ?> - <?=$this->e($pageTitle); ?></title>
     <link href="<?=$this->getCssUrl($requestRoot, 'screen.css'); ?>" media="screen" rel="stylesheet">
 </head>
 <body>
