@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.2.9 (...)
+## 2.3.0 (...)
 - expose `default_gateway` in `/profile_list` API response indicating whether 
   or not the profile expects all traffic over the VPN
 - implement CSS cache busting
@@ -13,6 +13,8 @@
 - the `/info.json` (and `/.well-known/vpn-user-portal`) response headers will 
   now indicate that the files MUST NOT be cached in applications
 - complete redesign of the portal UI
+- remove `SamlAuthentication` module, we only include `PhpSamlSpAuthentication` 
+  from now on
 
 ## 2.2.8 (2020-05-26)
 - update `PhpSamlSpAuthentication` for php-saml-sp API changes

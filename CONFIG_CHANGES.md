@@ -8,6 +8,12 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.3.0
+
+The `SamlAuthentication` module is removed. Use `PhpSamlSpAuthentication` 
+instead. See 
+[PHP_SAML_SP_UPGRADE](https://github.com/eduvpn/documentation/blob/v2/PHP_SAML_SP_UPGRADE.md)
+
 ## 2.2.6
 
 We added support for `array` values of `permissionAttribute` in the 

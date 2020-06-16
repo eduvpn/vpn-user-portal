@@ -43,9 +43,7 @@ use LC\Portal\MellonAuthentication;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
 use LC\Portal\PhpSamlSpAuthentication;
-use LC\Portal\SamlAuthentication;
 use LC\Portal\SeCookie;
-use LC\Portal\SeSamlSession;
 use LC\Portal\SeSession;
 use LC\Portal\ShibAuthentication;
 use LC\Portal\Storage;
@@ -143,9 +141,6 @@ try {
 
     $logoutUrl = null;
     $returnParameter = 'ReturnTo';
-    if ('SamlAuthentication' === $authMethod) {
-        $logoutUrl = $request->getRootUri().'_saml/logout';
-    }
     if ('PhpSamlSpAuthentication' === $authMethod) {
         $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/php-saml-sp/logout';
     }
@@ -174,28 +169,6 @@ try {
 
     $service->addModule(new LogoutModule($seSession, $logoutUrl, $returnParameter));
     switch ($authMethod) {
-        case 'SamlAuthentication':
-            $seSamlSession = new SeSamlSession(
-                new Session(
-                    SessionOptions::init()
-                        ->withName('PFSSSID'),
-                    $cookieOptions
-                        ->withPath($request->getRoot())
-                        ->withSameSiteNone()
-                )
-            );
-            // we make the root URL and baseDir part of the configuration,
-            // agreed, it is a bit hacky, but avoids needing to manually specify
-            // the URL on which the service is configured...
-            $samlAuthentication = new SamlAuthentication(
-                $config->getSection('SamlAuthentication')
-                    ->setItem('_rootUri', $request->getRootUri())
-                    ->setItem('_baseDir', $baseDir),
-                $seSamlSession
-            );
-            $service->addBeforeHook('auth', $samlAuthentication);
-            $service->addModule($samlAuthentication);
-            break;
         case 'PhpSamlSpAuthentication':
             $phpSamlSpAuthentication = new PhpSamlSpAuthentication(
                 $config->getSection('PhpSamlSpAuthentication')
