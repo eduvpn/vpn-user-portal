@@ -1,9 +1,15 @@
 # Changelog
 
 ## 2.2.9 (...)
-- expose `default_gateway` in `/profile_list` indicating whether or not the 
-  profile expects all traffic over the VPN
-- CSS cache busting in case CSS files change
+- expose `default_gateway` in `/profile_list` API response indicating whether 
+  or not the profile expects all traffic over the VPN
+- implement CSS cache busting
+- redesign the "Account" page
+- show most recent VPN connections on the "Account" page
+- allow admins to see the most recent VPN connections of the users
+- remove the (hidden) `/events` page and show account events on "Account" page
+- various minor template changes to allow for better CSS styling
+- redesign the OAuth consent dialog
 
 ## 2.2.8 (2020-05-26)
 - update `PhpSamlSpAuthentication` for php-saml-sp API changes
