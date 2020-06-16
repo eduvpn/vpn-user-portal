@@ -1,7 +1,5 @@
 <?php $this->layout('base', ['pageTitle' => $this->t('Approve Application')]); ?>
 <?php $this->start('content'); ?>
-    <h1><?=$this->t('Approve Application'); ?></h1>
-
     <div class="appAuth">
     <p>
 <?=$this->t('An application attempts to establish a VPN connection.'); ?>

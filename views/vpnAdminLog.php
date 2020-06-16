@@ -1,6 +1,5 @@
 <?php $this->layout('base', ['activeItem' => 'log', 'pageTitle' => $this->t('Log')]); ?>
 <?php $this->start('content'); ?>
-    <h1><?=$this->t('Log'); ?></h1>
     <h2><?=$this->t('Search'); ?></h2>
     <p>
         <?=$this->t('Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.'); ?>

@@ -1,6 +1,5 @@
 <?php $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Account')]); ?>
 <?php $this->start('content'); ?>
-    <h1><?=$this->t('Account'); ?></h1>
     <p>
         <?=$this->t('Here you can change the password for your account.'); ?>
     </p>

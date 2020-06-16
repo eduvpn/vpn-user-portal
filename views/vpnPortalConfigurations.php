@@ -1,6 +1,5 @@
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
-    <h1><?=$this->t('Configurations'); ?></h1>
     <h2><?=$this->t('Create'); ?></h2>
     <?php if (0 === count($profileList)): ?>
         <p class="warning">

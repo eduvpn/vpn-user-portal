@@ -1,6 +1,5 @@
 <?php $this->layout('base', ['activeItem' => 'messages', 'pageTitle' => $this->t('Messages')]); ?>
 <?php $this->start('content'); ?>
-    <h1><?=$this->t('Messages'); ?></h1>
     <h2><?=$this->t('System'); ?></h2>
     <p>
         <?=$this->t('All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.'); ?>

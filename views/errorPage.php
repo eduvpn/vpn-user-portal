@@ -1,6 +1,5 @@
 <?php $this->layout('base', ['pageTitle' => $this->t('Error')]); ?>
 <?php $this->start('content'); ?>
-    <h1><?=$this->t('Error'); ?></h1>
     <h2><?=$this->e($code); ?></h2>
 
     <p><?=$this->t('An error occurred.'); ?></p>
