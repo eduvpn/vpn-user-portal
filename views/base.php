@@ -4,29 +4,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<?php if (!isset($activeItem)): ?>
-    <title><?=$this->t('VPN Portal'); ?></title>
-<?php else: ?>
-    <title><?=$this->t('VPN Portal'); ?> - <?=$this->t(ucfirst($activeItem)); ?></title>
-<?php endif; ?>
-    <link href="<?=$this->getCssUrl($requestRoot, 'bootstrap-reboot.min.css'); ?>" media="screen" rel="stylesheet">
+    <title>VPN Portal - <?=$this->e($pageTitle); ?></title>
     <link href="<?=$this->getCssUrl($requestRoot, 'screen.css'); ?>" media="screen" rel="stylesheet">
 </head>
 <body>
-    <header>			
+    <header class="page">
         <?=$this->insert('languageSwitcher'); ?>
+        <?=$this->insert('logoutButton'); ?>
     </header>
-    <div class="page">
-        <nav>
 <?php if (isset($activeItem)): ?>
-            <?=$this->insert('menu', ['activeItem' => $activeItem]); ?>
+    <nav>
+<?=$this->insert('menu', ['activeItem' => $activeItem]); ?>
+    </nav>
 <?php endif; ?>
-        	<?=$this->insert('logoutButton'); ?>
-        </nav>
-        <main>
-            <?=$this->section('content'); ?>
-        </main>
-    </div> <!-- /page -->
+    <header class="main">
+        <h1><?=$this->e($pageTitle); ?></h1>
+    </header>
+    <main>
+<?=$this->section('content'); ?>
+    </main>
     <footer>
 <?php if ($this->exists('customFooter')): ?>
     <?=$this->insert('customFooter'); ?>

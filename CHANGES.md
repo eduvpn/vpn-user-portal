@@ -12,6 +12,7 @@
 - redesign the OAuth consent dialog
 - the `/info.json` (and `/.well-known/vpn-user-portal`) response headers will 
   now indicate that the files MUST NOT be cached in applications
+- complete redesign of the portal UI
 
 ## 2.2.8 (2020-05-26)
 - update `PhpSamlSpAuthentication` for php-saml-sp API changes

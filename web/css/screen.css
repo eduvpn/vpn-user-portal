@@ -1,13 +1,308 @@
-body {
-  max-width: 60em;
-  margin: 0 auto;
-  padding: 0.5em;
-  text-align: inherit;
-  /* override for bootstrap-reboot */
+* {
+  box-sizing: border-box;
 }
 
-header {
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1.1rem;
+  background-color: #ededed;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  line-height: 1.4;
+  color: #505050;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h1, h2, h3, h4 {
+  color: #000;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+
+details {
+  margin: 0.5em 0;
+}
+
+summary {
+  margin: 1em 0;
+}
+
+a, summary {
+  color: #216aed;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
+  font-size: 1em;
+  line-height: inherit;
+}
+
+pre, code {
+  font-size: inherit;
+}
+
+button, summary {
+  cursor: pointer;
+}
+
+header.page {
   text-align: end;
+  padding: 0 1em;
+  background-color: #222;
+  font-size: 90%;
+}
+
+header.page ul.languageSwitcher {
+  margin: 0 0.5em;
+  display: inline-block;
+}
+
+header.page ul.languageSwitcher li {
+  display: inline-block;
+}
+
+header.page ul.languageSwitcher button, header.page form.logout button {
+  border: 0;
+  color: #fff;
+  background-color: #222;
+  padding: 0.5em 0.5em;
+}
+
+header.page ul.languageSwitcher button:hover, header.page form.logout button:hover {
+  background-color: #4e4e4e;
+  border-radius: 2em;
+  text-decoration: underline;
+}
+
+header.page form.logout {
+  display: inline-block;
+  margin: 0 0.5em;
+}
+
+header.page form.logout button {
+  margin: 0.25em;
+  font-weight: bold;
+}
+
+nav {
+  background-color: #fff;
+  text-align: center;
+  min-height: calc(50px + 2em);
+}
+
+nav ul {
+  margin: 0 auto;
+  max-width: 60rem;
+  display: block;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline-block;
+  padding: 0;
+  margin: 1.5em 0;
+}
+
+nav ul li a {
+  padding: 1em 1.5em;
+  color: #216aed;
+  font-weight: bold;
+}
+
+nav ul li.active a {
+  color: #216aed;
+  font-weight: bold;
+  border-bottom: 5px solid #216aed;
+}
+
+nav ul li a:hover {
+  background-color: #ededed;
+  border-radius: 2em;
+}
+
+nav ul li.active a:hover {
+  border-radius: 0;
+  background-color: #fff;
+}
+
+footer {
+  background-color: #222;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+footer p {
+  margin: 0;
+  padding: 1em;
+  text-align: center;
+  color: #fff;
+}
+
+form.frm label {
+  font-weight: bold;
+  display: block;
+  margin: 0.5em 0 0.3em 0;
+}
+
+form.frm {
+  width: 100%;
+}
+
+form.frm button {
+  border: 0;
+  border-radius: 2em;
+  color: #fff;
+  background-color: #216aed;
+  padding: 0.5em 1.5em;
+  font-weight: bold;
+  font-size: 110%;
+}
+
+form.frm button.warning {
+  background-color: #ff9900;
+}
+
+form.frm select, form.frm input[type=text], form.frm input[type=password], form.frm textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  display: block;
+}
+
+fieldset {
+  border: 0;
+  margin: 1em 0;
+  padding: 0;
+}
+
+table.tbl {
+  width: 100%;
+  border: 1px solid #ededed;
+  border-radius: 0.5em;
+  margin: 0.5em 0;
+  padding: 0.5em;
+}
+
+ul li, ol li {
+  margin: 0.25em;
+}
+
+table.tbl th {
+  text-align: start;
+}
+
+table.tbl td.text-right {
+  text-align: end;
+}
+
+table.tbl td, table.tbl th {
+  padding: 0.75em;
+}
+
+table.tbl ul {
+  padding: 0 0 0 1em;
+}
+
+table.tbl form.frm {
+  margin: 0;
+}
+
+table.tbl form.frm button {
+  margin: 0;
+}
+
+main {
+  min-height: 75vh;
+  max-width: 60rem;
+  background-color: #fff;
+  padding: 0.5em 1em;
+}
+
+header.main h1 {
+  background-color: #888;
+  color: #fff;
+  text-align: center;
+  padding: 0.75em;
+  margin: 0;
+}
+
+p.warning, p.error, p.plain {
+  padding: 1.2em;
+  border-radius: 0.5em;
+}
+
+p.plain {
+  color: #505050;
+  background-color: #ededed;
+}
+
+span.plain, span.success, span.error {
+  padding: 0.5em;
+  border-radius: 0.5em;
+  font-weight: bold;
+  font-size: 110%;
+  display: inline-block;
+}
+
+span.plain {
+  color: #505050;
+  background-color: #ededed;
+}
+
+span.success {
+  color: #fff;
+  background-color: #16a566;
+}
+
+span.error {
+  color: #fff;
+  background-color: #ed3415;
+}
+
+p.warning {
+  color: #fff;
+  background-color: #ff9900;
+}
+
+p.error {
+  color: #fff;
+  background-color: #ed3415;
+}
+
+main div.auth {
+  margin: 0 auto;
+  max-width: 20em;
+}
+
+main div.appAuth {
+  margin: 0 auto;
+  max-width: 30em;
 }
 
 ul.profileList {
@@ -15,282 +310,14 @@ ul.profileList {
   padding: 0;
 }
 
-ul.languageSwitcher {
-  padding: 0;
-  list-style: none;
-  font-size: 85%;
+ul.profileList li {
+  margin: 0.5em 0;
 }
 
-ul.languageSwitcher li {
-  display: inline-block;
-}
-
-ul.languageSwitcher li button {
-  border: 0;
-  margin: 0 0.5em 0.5em 0.5em;
-  padding: 0;
-  background-color: #fff;
-}
-
-div.page {
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 2em;
-}
-
-nav {
-  min-width: 10em;
-}
-
-nav ul {
-  padding: 0;
-  text-align: center;
-}
-
-nav ul li {
-  margin: 0.5em;
-  padding: 0.3em;
-  list-style: none;
-  display: inline-block;
-}
-
-nav ul li a {
-  color: #212529;
-  text-decoration: none;
-}
-
-nav ul li.active a {
-  color: #007bff;
-}
-
-nav ul li a:hover {
-  text-decoration: none;
-  color: #007bff;
-}
-
-main {
-  padding: 0 0.5em;
-}
-
-main h1 {
-  text-align: center;
-  margin-bottom: 0.5em;
-}
-
-main label {
-  font-weight: bold;
+dl dt {
+  margin: 0.5em 0;
   display: block;
-  margin: 0.5em 0 0 0;
-}
-
-@media (min-width: 800px) {
-  div.page {
-    grid-template-columns: auto 4fr;
-  }
-  nav ul li {
-    display: block;
-  }
-}
-
-/* form elements */
-input[type=text], input[type=password], button, select, textarea {
-  padding: 0.3em;
-  border: 1px solid #ccc;
-  outline: none;
-  margin: 0.5em 0;
-}
-
-form.frm {
-  margin: 1em auto;
-  width: 100%;
-}
-
-form.frm select, form.frm input[type=text] {
-  width: 100%;
-}
-
-form.frm button {
-  /*    margin-top: 0.5em;*/
-}
-
-button {
-  padding: 0.3em 1em;
-  background-color: #f8f8f8;
-}
-
-textarea {
-  width: 100%;
-}
-
-/* auth */
-div.auth {
-  max-width: 20em;
-  margin: 0 auto;
-}
-
-div.auth form input[type=text], div.auth form input[type=password] {
-  width: 100%;
-}
-
-form.logout {
-  font-size: 75%;
-  margin: 1.5em 0;
-  text-align: center;
-}
-
-dt {
-  margin: 0.5em 0;
   font-weight: bold;
-}
-
-.text-right {
-  text-align: end;
-}
-
-p.small {
-  font-size: 85%;
-}
-
-p.success, span.success {
-  border: 1px solid #008000;
-  color: #008000;
-}
-
-p.success a, span.success a {
-  color: #008000;
-}
-
-p.warning, p.warning a, span.warning, span.warning a {
-  border: 1px solid #ff8c00;
-  color: #ff8c00;
-}
-
-p.warning a, span.warning a {
-  color: #ff8c00;
-}
-
-p.error, p.error a, span.error, span.error a {
-  border: 1px solid #dc143c;
-  color: #dc143c;
-}
-
-p.error a, span.error a {
-  color: #dc143c;
-}
-
-p.plain, span.plain {
-  background-color: #f8f8f8;
-  border: 1px solid #ccc;
-  color: #555;
-}
-
-p.plain a, span.plain a {
-  color: #555;
-}
-
-span.plain, span.success, span.warning, span.error {
-  padding: 0.3em 0.5em;
-  font-weight: bold;
-  font-size: 85%;
-}
-
-p.plain, p.success, p.warning, p.error {
-  padding: 1em;
-}
-
-p.success a, span.success a, p.warning a, span.warning a, p.error a, span.error a, p.plain a, span.plain a {
-  border: 0;
-  text-decoration: underline;
-}
-
-div.appApproval span {
-    display: block;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.2em;
-}
-
-details, summary {
-	margin: 1em 0;
-}
-
-table.tbl {
-  border: 1px solid #ccc;
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1em;
-}
-
-table.tbl ul {
-  margin: 0;
-  padding: 0 0 0 1em;
-}
-
-table.tbl thead tr {
-  background-color: #f8f8f8;
-  color: #555;
-}
-
-table.tbl tbody th {
-  vertical-align: top;
-}
-
-table.tbl td, table.tbl th {
-  padding: 0.8em 0.5em;
-}
-
-table.tbl tbody tr:nth-child(even) {
-  background-color: #f8f8f8;
-}
-
-table.tbl button, table.tbl form {
-  margin: 0;
-}
-
-table.stats {
-  margin: 2em auto 0 auto;
-  border-collapse: separate;
-  border-spacing: 3px 0;
-  width: 90%;
-}
-
-table.stats td, table.stats th {
-  width: 1em;
-  text-align: center;
-  line-height: 0.5;
-}
-
-table.stats tbody th span, table.stats tfoot th span {
-  writing-mode: vertical-rl;
-  font-weight: normal;
-  white-space: nowrap;
-  line-height: 1em;
-  padding-top: 0.5em;
-  font-size: 85%;
-}
-
-table.stats tbody th span {
-  writing-mode: vertical-rl;
-}
-
-table.stats tbody td:not(:empty) {
-  background-color: #888;
-  color: transparent;
-}
-
-table.stats th.index {
-  box-sizing: content-box;
-  vertical-align: top;
-  padding: 0 0.5em;
-  border-top: 1px solid #888;
-}
-
-table.stats th.index span {
-  font-weight: bold;
-}
-
-figure {
-  margin-bottom: 2em;
 }
 
 figcaption {
@@ -300,34 +327,29 @@ figcaption {
   padding: 1em;
 }
 
-footer {
-  margin-top: 2em;
-  font-size: 75%;
-  text-align: center;
-}
-
 svg.appUsage {
   display: block;
-  margin: 1em auto;
-  width: 30%;
+  margin: 0 auto;
+  max-width: 40%;
 }
 
 ul.appUsage {
-  margin-top: 0.5em;
   list-style: none;
   padding: 0;
 }
 
 ul.appUsage li {
   display: inline-block;
-  margin: 0.5em;
+  margin: 0;
 }
 
 .pieLegend {
   color: #fff;
   font-weight: bold;
-  padding: 0.3em;
-  margin: 0.3em;
+  padding: 0.5em;
+  margin: 0.5em;
+  display: inline-block;
+  border-radius: 1em;
 }
 
 /* @see https://learnui.design/tools/data-color-picker.html#palette */
@@ -369,4 +391,119 @@ ul.appUsage li {
 .pieColor8 {
   fill: #ffa600;
   background-color: #ffa600;
+}
+
+blockquote {
+  margin: 0;
+  padding: 1em;
+  background-color: #ededed;
+  border-left: 0.2em solid #888;
+  border-radius: 0 0.5em 0.5em 0;
+}
+
+blockquote:lang(ar-MA) {
+  margin-right: 0;
+  border-left: 0;
+  border-right: 0.2em solid #888;
+  border-radius: 0 0.5em 0.5em 0;
+  border-radius: 0.5em 0 0 0.5em;
+}
+
+div.appApproval {
+  background-color: #ededed;
+  display: flex;
+  align-items: center;
+  padding: 1em 0;
+  justify-content: space-evenly;
+  border-radius: 0.5em;
+  flex-wrap: wrap;
+  margin: 1em 0;
+}
+
+div.appApproval span {
+  font-size: 1.25rem;
+  color: #000;
+  display: inline-block;
+  background-image: url("../../img/icon-Unknown.png");
+  background-repeat: no-repeat;
+  background-size: 64px 64px;
+  background-position: 50% 1em;
+  min-height: 64px;
+  text-align: center;
+  padding: calc(64px + 1.5em) 0.5em 1em 0.5em;
+  font-weight: bold;
+}
+
+div.appApproval span[class^="org.letsconnect-vpn.app"] {
+  background-image: url("../../img/icon-LC.png");
+}
+
+div.appApproval span[class^="org.eduvpn.app"] {
+  background-image: url("../../img/icon-eduVPN.png");
+}
+
+div.appApproval form.frm {
+  display: inline-block;
+  width: initial;
+  padding: 0.5em;
+}
+
+p.lead {
+  text-align: center;
+  padding: 0em;
+  font-size: 1.75rem;
+  color: #888;
+  font-style: italic;
+}
+
+table.stats {
+  border-collapse: separate;
+  border-spacing: 3px 0;
+  width: 90%;
+}
+
+table.stats td, table.stats th {
+  width: 1em;
+  text-align: center;
+  line-height: 0.5;
+}
+
+table.stats tbody th span, table.stats tfoot th span {
+  writing-mode: vertical-rl;
+  font-weight: normal;
+  white-space: nowrap;
+  line-height: 1em;
+  padding-top: 0.5em;
+  font-size: 85%;
+}
+
+table.stats tbody th span {
+  writing-mode: vertical-rl;
+}
+
+table.stats tbody td:not(:empty) {
+  background-color: #9a2e00;
+  color: transparent;
+}
+
+table.stats th.index {
+  box-sizing: content-box;
+  vertical-align: top;
+  padding: 0 0.5em;
+  border-top: 1px solid #888;
+}
+
+table.stats th.index span {
+  font-weight: bold;
+}
+
+@media screen and (min-width: 800px) {
+  main {
+    margin: -3em auto 0 auto;
+    padding: 3em 5em;
+    border-radius: 1em 1em 0 0;
+  }
+  header.main h1 {
+    padding: 0.75em 0 2em 0;
+  }
 }
