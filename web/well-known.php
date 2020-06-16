@@ -36,7 +36,6 @@ try {
 
     $response = new JsonResponse($jsonData);
     $response->addHeader('Cache-Control', 'no-store');
-    $response->addHeader('Pragma', 'no-cache');
     $response->send();
 } catch (Exception $e) {
     $response = new JsonResponse(['error' => $e->getMessage()], 500);
