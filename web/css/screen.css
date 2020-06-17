@@ -45,7 +45,7 @@ details summary {
   background-image: url("../../img/icon-Chevron-closed.png");
   background-repeat: no-repeat;
   background-position: 0 50%;
-  background-size: 10px auto;
+  background-size: 18px auto;
   padding-left: 1.5em;
 }
 
@@ -416,7 +416,6 @@ blockquote:lang(ar-MA) {
   margin-right: 0;
   border-left: 0;
   border-right: 0.2em solid #888;
-  border-radius: 0 0.5em 0.5em 0;
   border-radius: 0.5em 0 0 0.5em;
 }
 
