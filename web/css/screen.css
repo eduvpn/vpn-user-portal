@@ -42,7 +42,7 @@ details {
 details summary {
   margin: 1em 0;
   list-style: none;
-  background-image: url("../../img/icon-Chevron-closed.png");
+  background-image: url("../img/icon-Chevron-closed.png");
   background-repeat: no-repeat;
   background-position: 0 50%;
   background-size: 18px auto;
@@ -50,7 +50,7 @@ details summary {
 }
 
 details[open] summary {
-  background-image: url("../../img/icon-Chevron-open.png");
+  background-image: url("../img/icon-Chevron-open.png");
   background-repeat: no-repeat;
 }
 
@@ -434,7 +434,7 @@ div.appApproval span {
   font-size: 1.25rem;
   color: #000;
   display: inline-block;
-  background-image: url("../../img/icon-Unknown.png");
+  background-image: url("../img/icon-Unknown.png");
   background-repeat: no-repeat;
   background-size: 64px 64px;
   background-position: 50% 1em;
@@ -445,11 +445,11 @@ div.appApproval span {
 }
 
 div.appApproval span[class^="org.letsconnect-vpn.app"] {
-  background-image: url("../../img/icon-LC.png");
+  background-image: url("../img/icon-LC.png");
 }
 
 div.appApproval span[class^="org.eduvpn.app"] {
-  background-image: url("../../img/icon-eduVPN.png");
+  background-image: url("../img/icon-eduVPN.png");
 }
 
 div.appApproval form.frm {
