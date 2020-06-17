@@ -39,14 +39,19 @@ details {
   margin: 0.5em 0;
 }
 
-summary {
+details summary {
   margin: 1em 0;
   list-style: none;
-  background-image: url("../../img/icon-Chevron.png");
+  background-image: url("../../img/icon-Chevron-closed.png");
   background-repeat: no-repeat;
-  background-position: 1em 50%;
+  background-position: 0 50%;
   background-size: 10px auto;
-  padding-left: 2.5em;
+  padding-left: 1.5em;
+}
+
+details[open] summary {
+  background-image: url("../../img/icon-Chevron-open.png");
+  background-repeat: no-repeat;
 }
 
 a, summary {
@@ -259,7 +264,7 @@ header.main h1 {
 }
 
 p.warning, p.error, p.plain {
-  padding: 1.2em;
+  padding: 1.5em;
   border-radius: 0.5em;
 }
 
