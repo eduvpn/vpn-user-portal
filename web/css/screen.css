@@ -41,6 +41,12 @@ details {
 
 summary {
   margin: 1em 0;
+  list-style: none;
+  background-image: url("../../img/icon-Chevron.png");
+  background-repeat: no-repeat;
+  background-position: 1% 50%;
+  background-size: 10px auto;
+  padding-left: 1.3em;
 }
 
 a, summary {
