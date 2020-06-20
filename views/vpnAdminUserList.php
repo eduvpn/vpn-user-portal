@@ -2,7 +2,7 @@
 <?php $this->start('content'); ?>
     <?php if (empty($userList)): ?>
         <p class="plain">
-            <?=$this->t('There are no users with VPN configurations.'); ?>
+            <?=$this->t('No user account(s) to show.'); ?>
         </p>
     <?php else: ?>
         <table class="tbl">

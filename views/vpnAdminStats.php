@@ -1,6 +1,6 @@
 <?php $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')]); ?>
 <?php $this->start('content'); ?>
-<h2><?=$this->t('Summary'); ?></h2>
+<h2><?=$this->t('Profile Usage'); ?></h2>
 <table class="tbl">
     <thead>
         <tr>
@@ -28,7 +28,6 @@
     </tbody>
 </table>
 
-<h2><?=$this->t('Profiles'); ?></h2>
     <ul class="profileList">
 <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
 <?php if (array_key_exists($profileId, $graphStats) && 0 !== count($graphStats[$profileId]['date_list'])): ?>

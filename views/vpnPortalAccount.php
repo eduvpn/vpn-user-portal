@@ -1,5 +1,6 @@
 <?php $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Account')]); ?>
 <?php $this->start('content'); ?>
+    <h2><?=$this->t('Info'); ?></h2>
     <table class="tbl">
         <tr>
             <th><?=$this->t('User ID'); ?></th>
