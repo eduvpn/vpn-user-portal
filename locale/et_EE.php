@@ -14,7 +14,7 @@ return [
     'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => 'Kõik kasutajad näevad seda päevasõnumit, kui logivad portaali või ühenduvad VPNiga APIt toetava rakenduse abil.',
     'An application attempts to establish a VPN connection.' => 'Rakendus proovib luua VPN ühendust.',
     'An error occurred.' => 'Tekkis viga',
-    //'Application Use' => '',
+    //'Application Usage' => '',
     //'Approve' => '',
     'Approve Application' => 'Rakenduse heakskiitmine',
     'Authorized' => 'Volitatud',
@@ -130,6 +130,4 @@ return [
     'You cannot manage your own user account.' => 'Sa ei saa ise enda kasutajakontot hallata.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Su ID on <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Su uue seadistuse aegumiskuupäev on %expiryDate%. Pärast aegumist tule palun tagasi uut seadistust saama.',
-    // [DELETED] 'Summary' => 'Kokkuvõte',
-    // [DELETED] 'There are no users with VPN configurations.' => 'VPN seadistustega kasutajaid ei ole.',
 ];

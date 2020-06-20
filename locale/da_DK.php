@@ -14,7 +14,7 @@ return [
     //'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => '',
     //'An application attempts to establish a VPN connection.' => '',
     'An error occurred.' => 'Der opstod en fejl.',
-    //'Application Use' => '',
+    //'Application Usage' => '',
     //'Approve' => '',
     //'Approve Application' => '',
     //'Authorized' => '',

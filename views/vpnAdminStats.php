@@ -116,7 +116,7 @@
     </ul>
 
 <?php if (0 !== count($appUsage)): ?>
-<h2><?=$this->t('Application Use'); ?></h2>
+<h2><?=$this->t('Application Usage'); ?></h2>
 <figure>
     <svg class="appUsage" xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 2 2" style="transform: rotate(-90deg)">
 <?php foreach ($appUsage as $appInfo): ?>

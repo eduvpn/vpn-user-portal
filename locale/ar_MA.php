@@ -14,7 +14,7 @@ return [
     'All users will see this "Message of the Day" (MOTD) message when logging in to the portal, or when connecting to the VPN using an application supporting the API.' => 'كل المستعملين سيرون رسالة اليوم هذه عند التسجيل على البوابة، او عند الاتصال مع الشبكة الخاصة الافتراضية عن طريق تطبيق يدعم هذا الامر.',
     'An application attempts to establish a VPN connection.' => 'يحاول تطبيق الاتصال مع الشبكة الخاصة الافتراضية.',
     'An error occurred.' => 'حدث خطأ ما.',
-    //'Application Use' => '',
+    //'Application Usage' => '',
     //'Approve' => '',
     'Approve Application' => 'الموافقة على التطبيق',
     'Authorized' => 'مسموح',
@@ -130,6 +130,4 @@ return [
     'You cannot manage your own user account.' => 'لا يمكنك إدارة حساب المستخدم الخاص بك.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'هويتك هي <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'تنتهي صلاحية الاعداد الجديد عند %expiryDate%. عد هنا للحصول على اعداد جديد بعد انتهاء الصلاحية!',
-    // [DELETED] 'Summary' => 'ملخص',
-    // [DELETED] 'There are no users with VPN configurations.' => 'لا يوجد مستخدمين باعدادات الشبكة الخاصة الافتراضية. ',
 ];
