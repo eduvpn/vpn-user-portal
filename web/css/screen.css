@@ -31,7 +31,7 @@ h4 {
 
 h1, h2, h3, h4 {
   color: #000;
-  margin-bottom: 0.5em;
+  margin: 0 0 0.5em 0;
   line-height: 1.25;
 }
 
@@ -47,6 +47,11 @@ details summary {
   background-position: 0 50%;
   background-size: 18px auto;
   padding-left: 1.5em;
+}
+
+/* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details */
+details summary::-webkit-details-marker {
+  display: none;
 }
 
 details[open] summary {
@@ -198,6 +203,14 @@ form.frm button.warning {
   background-color: #ff9900;
 }
 
+form.frm button.success {
+  background-color: #16a566;
+}
+
+form.frm button.error {
+  background-color: #ed3415;
+}
+
 form.frm select, form.frm input[type=text], form.frm input[type=password], form.frm textarea {
   width: 100%;
   border: 1px solid #ddd;
@@ -216,7 +229,7 @@ table.tbl {
   width: 100%;
   border: 1px solid #ededed;
   border-radius: 0.5em;
-  margin: 0.5em 0;
+  margin: 1em 0;
   padding: 0.5em;
 }
 
@@ -510,7 +523,7 @@ table.stats th.index span {
 @media screen and (min-width: 800px) {
   main {
     margin: -3em auto 0 auto;
-    padding: 3em 5em;
+    padding: 2em 5em;
     border-radius: 1em 1em 0 0;
   }
   header.main h1 {
