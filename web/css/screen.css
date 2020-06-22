@@ -91,6 +91,7 @@ header.page {
 }
 
 header.page ul.languageSwitcher {
+  font-size: 85%;
   margin: 0 0.5em;
   display: inline-block;
 }
@@ -113,6 +114,7 @@ header.page ul.languageSwitcher button:hover, header.page form.logout button:hov
 }
 
 header.page form.logout {
+  font-size: 85%;
   display: inline-block;
   margin: 0 0.5em;
 }
@@ -126,6 +128,7 @@ nav {
   background-color: #fff;
   text-align: center;
   min-height: calc(50px + 2em);
+  padding: 1em 0;
 }
 
 nav ul {
@@ -164,6 +167,7 @@ nav ul li.active a:hover {
 }
 
 footer {
+  font-size: 85%;
   background-color: #222;
 }
 
