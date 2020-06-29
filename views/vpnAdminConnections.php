@@ -28,7 +28,7 @@
                 <tr>
                     <th><?=$this->t('User ID'); ?></th>
                     <th><?=$this->t('Name'); ?></th>
-                    <th><?=$this->t('IP address'); ?></th>
+                    <th><?=$this->t('IP Address'); ?></th>
                 </tr>
             </thead>
             <tbody>
