@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.0 (...)
+## 2.3.0 (2020-06-29)
 - expose `default_gateway` in `/profile_list` API response indicating whether 
   or not the profile expects all traffic over the VPN
 - implement CSS cache busting

@@ -12,6 +12,8 @@ working!
 
 The `SamlAuthentication` module is removed. Use `PhpSamlSpAuthentication` 
 instead. See 
+[PHP_SAML_SP](https://github.com/eduvpn/documentation/blob/v2/PHP_SAML_SP.md) 
+and
 [PHP_SAML_SP_UPGRADE](https://github.com/eduvpn/documentation/blob/v2/PHP_SAML_SP_UPGRADE.md)
 
 ## 2.2.6
