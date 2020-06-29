@@ -53,7 +53,6 @@ return [
     'Highest (Maximum) # Concurrent Connections' => 'Hoogste (Maximum) # gelijktijdige verbindingen',
     'Home' => 'Home',
     'IP Address' => 'IP-adres',
-    'IP address' => 'IP-adres',
     'IPs' => 'IP’s',
     'In order to continue, you must first enroll for Two-factor authentication!' => 'Om verder te gaan moet je je eerst aanmelden voor twee-factor authenticatie (2FA)!',
     'Info' => 'Info',

@@ -53,7 +53,6 @@ return [
     'Highest (Maximum) # Concurrent Connections' => '',
     'Home' => '',
     'IP Address' => '',
-    'IP address' => '',
     'IPs' => '',
     'In order to continue, you must first enroll for Two-factor authentication!' => '',
     'Info' => '',

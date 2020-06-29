@@ -54,7 +54,7 @@ return [
     'Home' => 'Hjem',
     'IP Address' => 'IP-adresse',
     'IPs' => 'IPer',
-    'In order to continue, you must first enroll for Two-factor authentication!' => 'For å fortsette må du først skru på tofaktor-autentisering!',
+    'In order to continue, you must first enroll for Two-factor authentication!' => 'For å fortsette må du først skru på tofaktor-autentisering!',
     'Info' => 'Informasjon',
     'Log' => 'Logg',
     'Managing user <code>%userId%</code>.' => 'Styrer bruker <code>%userId%</code>.',
