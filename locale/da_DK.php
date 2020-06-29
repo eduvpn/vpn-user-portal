@@ -129,4 +129,8 @@ return [
     //'You cannot manage your own user account.' => '',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Dit ID er <code>%_two_factor_user_id%</code>.',
     //'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => '',
+    // [DELETED] 'ID' => 'ID',
+    // [DELETED] 'This is a list of events that occurred related to your account.' => 'Dette er en oversigt med begivenheder, der er relateret til din konto.',
+    // [DELETED] 'Type' => 'Type',
+    // [DELETED] 'User Info' => 'Brugerinformation',
 ];
