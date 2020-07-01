@@ -103,7 +103,7 @@ return [
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'Введений вами ключ OTP не відповідає очікуваному значенню для цього коду OTP.',
     'The TOTP you provided is incorrect.' => 'Наданий вами TOTP невірний.',
     'The credentials you provided were not correct.' => 'Надані вами облікові дані були невірними.',
-    'The list of applications you authorized to create a VPN connection.' => 'Список програм, яким ви надали дозвіл на створення VPN-з'єднання.',
+    'The list of applications you authorized to create a VPN connection.' => 'Список програм, яким ви надали дозвіл на створення VPN-з\'єднання.',
     'The most recent events related to this account.' => 'Останні події, пов’язані з цим обліковим записом',
     'The most recent, concluded, VPN connections with this account.' => 'Останні, укладені, VPN-зв’язки, пов’язані з цим обліковим записом',
     'There are no results matching your criteria.' => 'Немає результатів, що відповідають вашим критеріям.',
