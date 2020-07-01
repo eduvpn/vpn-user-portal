@@ -4,6 +4,7 @@
 - update `uk_UA` translation
 - update `pl_PL` translation
 - update `nb_NO` translation
+- update `de_DE` translation
 - small CSS style updates
 
 ## 2.3.0 (2020-06-29)
