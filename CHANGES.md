@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.1 (...)
+- update `uk_UA` translation
+- update `pl_PL` translation
+- update `nb_NO` translation
+- small CSS style updates
+
 ## 2.3.0 (2020-06-29)
 - expose `default_gateway` in `/profile_list` API response indicating whether 
   or not the profile expects all traffic over the VPN
