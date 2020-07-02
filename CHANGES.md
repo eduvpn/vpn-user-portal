@@ -6,6 +6,7 @@
 - update `nb_NO` translation
 - update `de_DE` translation
 - update `fr_FR` translation
+- update `ar_MA` translation
 - small CSS style updates
 
 ## 2.3.0 (2020-06-29)
