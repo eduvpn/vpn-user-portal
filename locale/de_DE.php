@@ -59,7 +59,7 @@ return [
     'Log' => 'Log',
     'Managing user <code>%userId%</code>.' => 'Verwalte Benutzer <code>%userId%</code>.',
     'Manual Configuration Download' => 'Manuelle Konfiguration herunterladen',
-    'Manually create and download an OpenVPN configuration file for use in your OpenVPN client.' => 'OpenVPN-Konfigurationsdatei manuell erstellten und herunterladen für einen alternativen OpenVPN-Client.',
+    'Manually create and download an OpenVPN configuration file for use in your OpenVPN client.' => 'OpenVPN-Konfigurationsdatei manuell erstellen und für einen alternativen OpenVPN-Client herunterladen.',
     'Message' => 'Nachricht',
     'Message of the Day' => 'Nachricht des Tages',
     'Messages' => 'Nachrichten',
