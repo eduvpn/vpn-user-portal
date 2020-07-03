@@ -10,6 +10,10 @@
 $localeFileList = glob(dirname(__DIR__).'/locale/*.php');
 $tplFileList = glob(dirname(__DIR__).'/views/*.php');
 
+if ($argc > 1) {
+    $localeFileList = [dirname(__DIR__).'/locale/'.$argv[1].'.php'];
+}
+
 // extract all translatable strings from the PHP templates and put them in an
 // array
 $sourceStr = [];
