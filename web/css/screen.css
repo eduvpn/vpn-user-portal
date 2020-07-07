@@ -222,6 +222,10 @@ form.frm select, form.frm input[type=text], form.frm input[type=password], form.
   display: block;
 }
 
+form.frm select {
+  -webkit-appearance: none;
+}
+
 fieldset {
   border: 0;
   margin: 1em 0;
