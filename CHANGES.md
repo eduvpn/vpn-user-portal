@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.1 (...)
+## 2.3.1 (2020-07-10)
 - update `uk_UA` translation
 - update `pl_PL` translation
 - update `nb_NO` translation
