@@ -11,6 +11,9 @@ body {
   width: 100%;
   line-height: 1.4;
   color: #505050;
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto auto auto 1fr auto;
 }
 
 h1 {
@@ -269,7 +272,7 @@ table.tbl form.frm button {
 }
 
 main {
-  min-height: 75vh;
+  width: 100%;
   max-width: 60rem;
   background-color: #fff;
   padding: 0.5em 1em;
