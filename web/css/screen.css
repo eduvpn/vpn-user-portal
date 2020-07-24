@@ -130,12 +130,10 @@ header.page form.logout button {
 nav {
   background-color: #fff;
   text-align: center;
-  min-height: calc(50px + 2em);
-  padding: 1em 0;
 }
 
 nav ul {
-  margin: 0 auto;
+  margin: 1em auto;
   display: block;
   padding: 0;
 }

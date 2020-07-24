@@ -12,11 +12,11 @@
         <?=$this->insert('languageSwitcher'); ?>
         <?=$this->insert('logoutButton'); ?>
     </header>
-<?php if (isset($activeItem)): ?>
     <nav>
+<?php if (isset($activeItem)): ?>
 <?=$this->insert('menu', ['activeItem' => $activeItem]); ?>
-    </nav>
 <?php endif; ?>
+    </nav>
     <header class="main">
         <h1><?=$this->e($pageTitle); ?></h1>
     </header>
