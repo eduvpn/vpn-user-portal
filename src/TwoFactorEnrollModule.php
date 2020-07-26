@@ -9,8 +9,6 @@
 
 namespace LC\Portal;
 
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Writer;
 use LC\Common\Http\HtmlResponse;
 use LC\Common\Http\InputValidation;
 use LC\Common\Http\RedirectResponse;
@@ -26,6 +24,8 @@ use ParagonIE\ConstantTime\Base32;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
 {
+    const QR_ENCODE_PATH = '/usr/bin/qrencode';
+
     /** @var array<string> */
     private $twoFactorMethods;
 
@@ -145,14 +145,10 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                     self::labelEncode($request->getServerName())
                 );
 
-                $renderer = new Png();
-                $renderer->setHeight(256);
-                $renderer->setWidth(256);
-                $writer = new Writer($renderer);
-                $qrCode = $writer->writeString($otpAuthUrl);
-
+                ob_start();
+                passthru(sprintf('%s -s 5 -t PNG -o - %s', self::QR_ENCODE_PATH, $otpAuthUrl));
                 $response = new Response(200, 'image/png');
-                $response->setBody($qrCode);
+                $response->setBody(ob_get_clean());
 
                 return $response;
             }
