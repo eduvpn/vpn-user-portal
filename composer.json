@@ -47,7 +47,6 @@
         }
     ],
     "require": {
-        "bacon/bacon-qr-code": "^1.0",
         "ext-curl": "*",
         "ext-date": "*",
         "ext-hash": "*",
