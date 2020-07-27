@@ -148,7 +148,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 ob_start();
                 passthru(
                     sprintf(
-                        '%s -s 5 -t PNG -o - %s',
+                        '%s -m 0 -s 5 -t PNG -o - %s',
                         self::QR_ENCODE_PATH,
                         escapeshellarg($otpAuthUrl)
                     )
