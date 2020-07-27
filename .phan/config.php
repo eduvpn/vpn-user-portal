@@ -361,7 +361,6 @@ return [
         'web',
         'bin',
         'tests',
-        'vendor/bacon/bacon-qr-code/src',
         'vendor/fkooman/jwt/src',
         'vendor/fkooman/oauth2-server/src',
         'vendor/fkooman/saml-sp/src',
