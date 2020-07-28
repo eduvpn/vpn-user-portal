@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f28e1e9c2a3c238d030bb8a00db4ac6",
+    "content-hash": "0758fc950af7e2947ca5567bdcf15c94",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -108,11 +108,11 @@
         },
         {
             "name": "fkooman/secookie",
-            "version": "4.0.1",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-secookie",
-                "reference": "38fa261f9ff81ad44b7c7b22e6709ee4321935c3"
+                "reference": "4e808b708d196f9486053dae7b402e2610dab401"
             },
             "require": {
                 "ext-date": "*",
@@ -124,7 +124,8 @@
                 "phpunit/phpunit": "^4.8.35|^5|^6|^7"
             },
             "suggest": {
-                "ext-sodium": "https://www.php.net/sodium_bin2hex"
+                "ext-libsodium": "PHP < 7 for constant-time encoding",
+                "ext-sodium": "PHP >= 7 for constant-time encoding"
             },
             "type": "library",
             "autoload": {
@@ -151,7 +152,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-secookie"
             },
-            "time": "2020-07-20T12:15:43+00:00"
+            "time": "2020-07-28T16:42:28+00:00"
         },
         {
             "name": "fkooman/sqlite-migrate",
@@ -757,30 +758,34 @@
         },
         {
             "name": "fkooman/saml-sp",
-            "version": "0.4.2",
+            "version": "0.5.2",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-saml-sp",
-                "reference": "83aad5ab2822763dce22184643e910e0372d3c0a"
+                "reference": "4adb75abe96a371d4485d797f586544b042b0782"
             },
             "require": {
+                "ext-curl": "*",
                 "ext-date": "*",
                 "ext-dom": "*",
                 "ext-filter": "*",
                 "ext-hash": "*",
                 "ext-libxml": "*",
+                "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "ext-pcre": "*",
                 "ext-spl": "*",
                 "ext-zlib": "*",
-                "fkooman/secookie": "^4",
-                "paragonie/constant_time_encoding": "^1|^2",
+                "fkooman/secookie": "^5",
                 "paragonie/random_compat": ">=1",
-                "php": ">=5.4",
+                "php": ">=5.4.8",
                 "symfony/polyfill-php56": "^1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4|^5|^6|^7"
+            },
+            "suggest": {
+                "ext-sodium": "constant time encoding/decoding"
             },
             "type": "project",
             "autoload": {
@@ -807,7 +812,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2020-07-06T14:27:14+00:00"
+            "time": "2020-07-28T17:09:22+00:00"
         },
         {
             "name": "myclabs/deep-copy",
