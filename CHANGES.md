@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.3 (2020-07-28)
+- update `fkooman/secookie`
+
 ## 2.3.2 (2020-07-27)
 - use grid layout for vertical alignment on page
 - drop `bacon/bacon-qr-code` PHP dependency and use `/usr/bin/qrencode` 
