@@ -246,7 +246,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "e56c298a3bd56082457b7d6986f0731b2474bb60"
+                "reference": "154ce02d0fde38e0d717f1ee18625ab8cfffd833"
             },
             "require": {
                 "ext-curl": "*",
@@ -291,7 +291,7 @@
                     "name": "François Kooman"
                 }
             ],
-            "description": "Common VPN library",
+            "description": "Shared library for Let's Connect! and eduVPN",
             "support": {
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
