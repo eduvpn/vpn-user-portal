@@ -41,20 +41,20 @@ class Tpl implements TplInterface
     /** @var string|null */
     private $uiLanguage = null;
 
-    /** @var string|null */
-    private $cssRoot = null;
+    /** @var string */
+    private $assetDir;
 
     /**
      * @param array<string> $templateFolderList
      * @param array<string> $translationFolderList
-     * @param string|null   $cssRoot
+     * @param string        $assetDir
      */
-    public function __construct(array $templateFolderList, array $translationFolderList = [], $cssRoot = null)
+    public function __construct(array $templateFolderList, array $translationFolderList, $assetDir)
     {
         $this->templateFolderList = $templateFolderList;
         $this->translationFolderList = $translationFolderList;
         $this->addCallback('bytes_to_human', [__CLASS__, 'toHuman']);
-        $this->cssRoot = $cssRoot;
+        $this->assetDir = $assetDir;
     }
 
     /**
@@ -201,24 +201,19 @@ class Tpl implements TplInterface
      * Get a URL with cache busting query parameter.
      *
      * @param string $requestRoot
-     * @param string $cssPath
+     * @param string $assetPath
      *
      * @return string
      */
-    private function getCssUrl($requestRoot, $cssPath)
+    private function getAssetUrl($requestRoot, $assetPath)
     {
-        if (null === $cssRoot = $this->cssRoot) {
-            // CSS root not set, don't include cache busting query parameter
-            $this->e($requestRoot.'css/'.$cssPath);
-        }
-
-        if (false === $mTime = @filemtime($cssRoot.'/'.$cssPath)) {
+        if (false === $mTime = @filemtime($this->assetDir.'/'.$assetPath)) {
             // can't find file or determine last modified time, do not include
             // cache busting query parameter
-            $this->e($requestRoot.'css/'.$cssPath);
+            return $this->e($requestRoot.$assetPath);
         }
 
-        return $this->e($requestRoot.'css/'.$cssPath.'?mTime='.$mTime);
+        return $this->e($requestRoot.$assetPath.'?mTime='.$mTime);
     }
 
     /**
