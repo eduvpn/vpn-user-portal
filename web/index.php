@@ -33,6 +33,7 @@ use LC\Common\Logger;
 use LC\Portal\AccessHook;
 use LC\Portal\AdminHook;
 use LC\Portal\AdminPortalModule;
+use LC\Portal\ClientCertAuthentication;
 use LC\Portal\ClientFetcher;
 use LC\Portal\DisabledUserHook;
 use LC\Portal\FormLdapAuthentication;
@@ -112,19 +113,25 @@ try {
     if (null !== $cookieUiLang = $seCookie->get('ui_lang')) {
         $uiLang = InputValidation::uiLang($cookieUiLang);
     }
+
+    // Authentication
+    $authMethod = $config->getItem('authMethod');
+
     $tpl = new Tpl($templateDirs, $localeDirs, sprintf('%s/web', $baseDir));
     $tpl->setLanguage($uiLang);
-    $tpl->addDefault(
-        [
-            'requestUri' => $request->getUri(),
-            'requestRoot' => $request->getRoot(),
-            'requestRootUri' => $request->getRootUri(),
-            'supportedLanguages' => $supportedLanguages,
-            '_show_logout_button' => true,
-            'uiLang' => $uiLang,
-            'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
-        ]
-    );
+    $templateDefaults = [
+        'requestUri' => $request->getUri(),
+        'requestRoot' => $request->getRoot(),
+        'requestRootUri' => $request->getRootUri(),
+        'supportedLanguages' => $supportedLanguages,
+        '_show_logout_button' => true,
+        'uiLang' => $uiLang,
+        'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
+    ];
+    if ('ClientCertAuthentication' === $authMethod) {
+        $templateDefaults['_show_logout_button'] = false;
+    }
+    $tpl->addDefault($templateDefaults);
 
     $serverClient = new ServerClient(
         new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
@@ -134,9 +141,6 @@ try {
     $service = new Service($tpl);
     $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());
     $service->addBeforeHook('language_switcher', new LanguageSwitcherHook(array_keys($supportedLanguages), $seCookie));
-
-    // Authentication
-    $authMethod = $config->getItem('authMethod');
 
     $logoutUrl = null;
     $returnParameter = 'ReturnTo';
@@ -176,6 +180,9 @@ try {
             break;
         case 'MellonAuthentication':
             $service->addBeforeHook('auth', new MellonAuthentication($config->getSection('MellonAuthentication')));
+            break;
+        case 'ClientCertAuthentication':
+            $service->addBeforeHook('auth', new ClientCertAuthentication());
             break;
         case 'ShibAuthentication':
             $service->addBeforeHook('auth', new ShibAuthentication($config->getSection('ShibAuthentication')));
