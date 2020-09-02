@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.4 (...)
+- implement `ClientCertAuthentication`
+- fix CSS/JS cache busting
+
 ## 2.3.3 (2020-07-28)
 - update `fkooman/secookie`
 

@@ -8,6 +8,12 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.3.4
+
+We now support `ClientCertAuthentication` as well. It takes no configuration, 
+see 
+[AUTH_CLIENT_CERT](https://github.com/eduvpn/documentation/blob/v2/AUTH_CLIENT_CERT.md).
+
 ## 2.3.0
 
 The `SamlAuthentication` module is removed. Use `PhpSamlSpAuthentication` 
