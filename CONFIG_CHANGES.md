@@ -10,9 +10,10 @@ working!
 
 ## 2.3.4
 
-We now support `ClientCertAuthentication` as well. It takes no configuration, 
-see 
-[CLIENT_CERT_AUTH](https://github.com/eduvpn/documentation/blob/v2/CLIENT_CERT_AUTH.md).
+We now support `ClientCertAuthentication` as well. It takes no configuration in
+`config.php`, see 
+[CLIENT_CERT_AUTH](https://github.com/eduvpn/documentation/blob/v2/CLIENT_CERT_AUTH.md) 
+for how to set it up, together with web server configuration example.
 
 ## 2.3.0
 
