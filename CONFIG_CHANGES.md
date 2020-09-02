@@ -12,7 +12,7 @@ working!
 
 We now support `ClientCertAuthentication` as well. It takes no configuration, 
 see 
-[AUTH_CLIENT_CERT](https://github.com/eduvpn/documentation/blob/v2/AUTH_CLIENT_CERT.md).
+[CLIENT_CERT_AUTH](https://github.com/eduvpn/documentation/blob/v2/CLIENT_CERT_AUTH.md).
 
 ## 2.3.0
 
