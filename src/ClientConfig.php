@@ -76,7 +76,7 @@ class ClientConfig
             // @see https://bettercrypto.org
             // @see https://community.openvpn.net/openvpn/wiki/Hardening
             $clientConfig[] = 'tls-version-min 1.2';
-            $clientConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384';
+            $clientConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384';
         }
 
         // API 1, if clientCertificate is provided, we add it directly to the
