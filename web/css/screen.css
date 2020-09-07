@@ -43,7 +43,7 @@ details {
 }
 
 details summary {
-  margin: 1em 0;
+  margin: 1.5em 0;
   list-style: none;
   background-image: url("../img/icon-Chevron-closed.png");
   background-repeat: no-repeat;
@@ -74,7 +74,7 @@ a:hover {
 
 button, input, textarea, select {
   font-family: inherit;
-  font-size: 1em;
+  font-size: inherit;
   line-height: inherit;
 }
 
@@ -183,6 +183,10 @@ footer p {
   color: #fff;
 }
 
+footer p.plain, footer p.warning, footer p.error {
+  border-radius: 0;
+}
+
 form.frm label {
   font-weight: bold;
   display: block;
@@ -200,7 +204,7 @@ form.frm button {
   background-color: #216aed;
   padding: 0.5em 1.5em;
   font-weight: bold;
-  font-size: 110%;
+  font-size: inherit;
 }
 
 form.frm button.warning {
@@ -289,7 +293,7 @@ p.warning, p.error, p.plain {
   border-radius: 0.5em;
 }
 
-p.plain {
+p.plain, p.plain a {
   color: #505050;
   background-color: #ededed;
 }
@@ -298,7 +302,7 @@ span.plain, span.success, span.error {
   padding: 0.5em;
   border-radius: 0.5em;
   font-weight: bold;
-  font-size: 110%;
+  font-size: inherit;
   display: inline-block;
 }
 
@@ -490,7 +494,7 @@ p.lead {
 table.stats {
   border-collapse: separate;
   border-spacing: 3px 0;
-  width: 90%;
+  width: 85%;
 }
 
 table.stats td, table.stats th {
