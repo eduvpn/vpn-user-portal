@@ -183,10 +183,6 @@ footer p {
   color: #fff;
 }
 
-footer p.plain, footer p.warning, footer p.error {
-  border-radius: 0;
-}
-
 form.frm label {
   font-weight: bold;
   display: block;
@@ -293,7 +289,7 @@ p.warning, p.error, p.plain {
   border-radius: 0.5em;
 }
 
-p.plain, p.plain a {
+p.plain {
   color: #505050;
   background-color: #ededed;
 }
