@@ -5,8 +5,8 @@
         <tbody>
             <tr><th><?=$this->t('Created'); ?> (<?=$this->e(date('T')); ?>)</th><td><?=$this->d($caInfo['valid_from']); ?></td></tr>
             <tr><th><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</th><td><?=$this->d($caInfo['valid_to']); ?></td></tr>
-<?php if ('RSA' !== $caInfo['ca_key_algo']): ?>
-            <tr><th><?=$this->t('Key Algorithm'); ?></th><td><?=$this->e($caInfo['ca_key_algo']); ?></td></tr>
+<?php if ('RSA' !== $caInfo['ca_key_type']): ?>
+            <tr><th><?=$this->t('Key Type'); ?></th><td><?=$this->e($caInfo['ca_key_type']); ?></td></tr>
 <?php endif; ?>
         </tbody>
     </table>

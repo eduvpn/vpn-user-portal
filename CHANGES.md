@@ -3,7 +3,9 @@
 ## 2.3.4 (...)
 - support client certificate authentication (`ClientCertAuthentication`)
 - fix CSS/JS cache busting, `base.php` template changes
-- add `ECDSA` certificate support for TLSv1.2, already supported on TLSv1.3
+- add `ECDSA` certificate support for TLSv1.2, already supported with TLSv1.3
+- display used CA Key Type on "Info" page if not the default RSA
+- small CSS style fixes, giving more space to some elements on the page
 
 ## 2.3.3 (2020-07-28)
 - update `fkooman/secookie`
