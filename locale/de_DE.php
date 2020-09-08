@@ -56,6 +56,7 @@ return [
     'IPs' => 'IPs',
     'In order to continue, you must first enroll for Two-factor authentication!' => 'Um fortzufahren, musst Du dich zuerst die Zwei-Faktor-Authentifizierung aktivieren.',
     'Info' => 'Info',
+    //'Key Type' => '',
     'Log' => 'Log',
     'Managing user <code>%userId%</code>.' => 'Verwalte Benutzer <code>%userId%</code>.',
     'Manual Configuration Download' => 'Manuelle Konfiguration herunterladen',

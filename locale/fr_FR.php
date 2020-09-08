@@ -53,10 +53,10 @@ return [
     'Highest (Maximum) # Concurrent Connections' => 'Nombre maximal de connexions concurrentes',
     'Home' => 'Accueil',
     'IP Address' => 'Adresse IP',
-    'IP address' => 'Adresse IP',
     'IPs' => 'IP',
     'In order to continue, you must first enroll for Two-factor authentication!' => 'Pour continuer, vous devez vous inscrire à l\'authentification à deux facteurs.',
     'Info' => 'Informations',
+    //'Key Type' => '',
     'Log' => 'Journaux',
     'Managing user <code>%userId%</code>.' => 'Gestion de l\'utilisateur <code>%userId%</code>',
     'Manual Configuration Download' => 'Téléchargement de la configuration manuelle',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'Vous ne pouvez pas gérer votre propre compte utilisateur.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'Votre identifiant est <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Votre nouvelle configuration expirera le  %expiryDate%. revenez ici pour obtenir une nouvelle configuration après expiration.',
+    // [DELETED] 'IP address' => 'Adresse IP',
 ];

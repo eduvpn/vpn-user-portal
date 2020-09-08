@@ -56,6 +56,7 @@ return [
     'IPs' => 'IP’s',
     'In order to continue, you must first enroll for Two-factor authentication!' => 'Om verder te gaan moet je je eerst aanmelden voor twee-factor authenticatie (2FA)!',
     'Info' => 'Info',
+    'Key Type' => 'Sleuteltype',
     'Log' => 'Log',
     'Managing user <code>%userId%</code>.' => 'Beheer gebruiker <code>%userId%</code>.',
     'Manual Configuration Download' => 'Handmatige configuratiedownload',

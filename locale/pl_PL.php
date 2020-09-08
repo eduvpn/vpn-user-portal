@@ -56,6 +56,7 @@ return [
     'IPs' => 'IP',
     'In order to continue, you must first enroll for Two-factor authentication!' => 'Aby kontynuować trzeba najpierw aktywować uwierzytelnianie dwuskładnikowe (2FA)!',
     'Info' => 'Informacje',
+    //'Key Type' => '',
     'Log' => 'Log',
     'Managing user <code>%userId%</code>.' => 'Zarządzanie użytkownikiem <code>%userId%</code>.',
     'Manual Configuration Download' => 'Ręcznie pobierane konfiguracje',

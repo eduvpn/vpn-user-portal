@@ -53,10 +53,10 @@ return [
     'Highest (Maximum) # Concurrent Connections' => 'اعلى (اقصى) # الاتصالات المتزامنة',
     'Home' => 'الصفحة الرئيسية',
     'IP Address' => 'عنوان نظام الشبكات',
-    'IP address' => 'عنوان نظام الشبكات',
     'IPs' => 'عناوين نظام الشبكات',
     'In order to continue, you must first enroll for Two-factor authentication!' => 'من اجل المواصلة، يجب عليك اولا ان تتسجل من اجل توثيق ذو عاملين!',
     'Info' => 'معلومات',
+    //'Key Type' => '',
     'Log' => 'سجل',
     'Managing user <code>%userId%</code>.' => 'إدارة المستخدم <code>%userId%</code>.',
     'Manual Configuration Download' => 'تنزيل الاعدادات اليدوية',
@@ -129,4 +129,5 @@ return [
     'You cannot manage your own user account.' => 'لا يمكنك إدارة حساب المستخدم الخاص بك.',
     'Your ID is <code>%_two_factor_user_id%</code>.' => 'هويتك هي <code>%_two_factor_user_id%</code>.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'تنتهي صلاحية الاعداد الجديد عند %expiryDate%. عد هنا للحصول على اعداد جديد بعد انتهاء الصلاحية!',
+    // [DELETED] 'IP address' => 'عنوان نظام الشبكات',
 ];
