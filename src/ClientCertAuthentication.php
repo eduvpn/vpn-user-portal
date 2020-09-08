@@ -10,6 +10,7 @@
 namespace LC\Portal;
 
 use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\Request;
 use LC\Common\Http\UserInfo;
 
@@ -20,9 +21,10 @@ class ClientCertAuthentication implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
-        return new UserInfo(
-            $request->requireHeader('REMOTE_USER'),
-            []
-        );
+        if (null === $remoteUser = $request->optionalHeader('REMOTE_USER')) {
+            throw new HttpException('client certificate authentication failed, no certificate provided', 400);
+        }
+
+        return new UserInfo($remoteUser, []);
     }
 }
