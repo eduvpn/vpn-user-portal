@@ -198,6 +198,21 @@ class Tpl implements TplInterface
     }
 
     /**
+     * Get a URL with cache busting query parameter for CSS files.
+     *
+     * @param string $requestRoot
+     * @param string $cssPath
+     *
+     * @return string
+     *
+     * @deprecated
+     */
+    private function getCssUrl($requestRoot, $cssPath)
+    {
+        return $this->getAssetUrl($requestRoot, 'css/'.$cssPath);
+    }
+
+    /**
      * Get a URL with cache busting query parameter.
      *
      * @param string $requestRoot

@@ -1,8 +1,8 @@
 # Changelog
 
 ## 2.3.4 (...)
-- implement `ClientCertAuthentication`
-- fix CSS/JS cache busting
+- support client certificate authentication (`ClientCertAuthentication`)
+- fix CSS/JS cache busting, `base.php` template changes
 - add `ECDSA` certificate support for TLSv1.2, already supported on TLSv1.3
 
 ## 2.3.3 (2020-07-28)
