@@ -56,7 +56,7 @@ return [
     'IPs' => 'IPer',
     'In order to continue, you must first enroll for Two-factor authentication!' => 'For å fortsette må du først skru på tofaktor-autentisering!',
     'Info' => 'Informasjon',
-    //'Key Type' => '',
+    'Key Type' => 'Nøkkeltype',
     'Log' => 'Logg',
     'Managing user <code>%userId%</code>.' => 'Styrer bruker <code>%userId%</code>.',
     'Manual Configuration Download' => 'Manuell konfigurasjon nedlasting',
