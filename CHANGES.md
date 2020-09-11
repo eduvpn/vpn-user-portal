@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.5 (...)
+- update `pt_PT` translation
+
 ## 2.3.4 (2020-09-08)
 - support client certificate authentication (`ClientCertAuthentication`)
 - fix CSS/JS cache busting, `base.php` template changes
