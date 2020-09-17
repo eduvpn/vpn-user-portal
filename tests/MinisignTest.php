@@ -21,7 +21,7 @@ class MinisignTest extends TestCase
                 file_get_contents(__DIR__.'/data/minisign/message.txt'),
                 file_get_contents(__DIR__.'/data/minisign/message.txt.minisig'),
                 [
-                    file_get_contents(__DIR__.'/data/minisign/pub.key'),
+                    'RWT7vH6qeacXeCJvqdpeFDXsl+PkU2V8ATje/ZODt35x/j0H0LFbBeJR',
                 ]
             )
         );

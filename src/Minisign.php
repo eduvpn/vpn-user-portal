@@ -34,13 +34,13 @@ class Minisign
     /**
      * @param string        $messageText
      * @param string        $messageSignature
-     * @param array<string> $publicKeyList
+     * @param array<string> $encodedPublicKeyList
      *
      * XXX should we throw an exception always?
      *
      * @return bool
      */
-    public static function verify($messageText, $messageSignature, array $publicKeyList)
+    public static function verify($messageText, $messageSignature, array $encodedPublicKeyList)
     {
         $signatureData = self::getLine($messageSignature, 1);
         $msgSig = Base64::decode($signatureData, true);
@@ -57,7 +57,7 @@ class Minisign
 
         $signatureKeyId = substr($msgSig, \strlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_KEY_ID_LENGTH);
         // check whether we have a public key with this key ID
-        $publicKey = self::getPublicKey($signatureKeyId, $publicKeyList);
+        $publicKey = self::getPublicKey($signatureKeyId, $encodedPublicKeyList);
 
         return sodium_crypto_sign_verify_detached(
             substr($msgSig, \strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH),
@@ -68,18 +68,18 @@ class Minisign
 
     /**
      * @param string        $signatureKeyId
-     * @param array<string> $publicKeyList
+     * @param array<string> $encodedPublicKeyList
      *
      * @return string
      */
-    private static function getPublicKey($signatureKeyId, array $publicKeyList)
+    private static function getPublicKey($signatureKeyId, array $encodedPublicKeyList)
     {
         // <signature_algorithm> || <key_id> || <public_key>
         //    signature_algorithm: Ed
         //    key_id: 8 random bytes
         //    public_key: Ed25519 public key
-        foreach ($publicKeyList as $publicKeyFile) {
-            $publicKey = Base64::decode(self::getLine($publicKeyFile, 1), true);
+        foreach ($encodedPublicKeyList as $encodedPublicKey) {
+            $publicKey = Base64::decode($encodedPublicKey, true);
             if (\strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH + self::ED_PUBLIC_KEY_LENGTH !== \strlen($publicKey)) {
                 throw new Exception('invalid public key (not long enough)');
             }
