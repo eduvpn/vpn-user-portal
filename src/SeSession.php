@@ -14,7 +14,7 @@ use LC\Common\Http\SessionInterface;
 
 class SeSession implements SessionInterface
 {
-    /** var \fkooman\SeCookie\Session */
+    /** @var \fkooman\SeCookie\Session */
     private $session;
 
     public function __construct(Session $session)

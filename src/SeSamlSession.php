@@ -14,7 +14,7 @@ use fkooman\SeCookie\Session;
 
 class SeSamlSession implements SessionInterface
 {
-    /** var \fkooman\SeCookie\Session */
+    /** @var \fkooman\SeCookie\Session */
     private $session;
 
     public function __construct(Session $session)
