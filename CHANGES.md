@@ -2,6 +2,7 @@
 
 ## 2.3.5 (...)
 - update `pt_PT` translation
+- switch to new discovery files for eduVPN federation
 
 ## 2.3.4 (2020-09-08)
 - support client certificate authentication (`ClientCertAuthentication`)

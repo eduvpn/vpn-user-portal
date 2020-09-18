@@ -24,29 +24,17 @@ class TestForeignKeyHttpClient implements HttpClientInterface
     public function get($requestUri, array $requestHeaders = [])
     {
         switch ($requestUri) {
-            case 'https://static.eduvpn.nl/disco/secure_internet_dev_v2.json':
+            case 'https://disco.eduvpn.org/v2/server_list.json':
                 return new Response(
                     200,
-                    file_get_contents(sprintf('%s/data/secure_internet_dev_v2.json', __DIR__)),
+                    file_get_contents(sprintf('%s/data/server_list.json', __DIR__)),
                     ['Content-Type' => 'application/json']
                 );
-            case 'https://static.eduvpn.nl/disco/secure_internet_dev_v2.json.sig':
+            case 'https://disco.eduvpn.org/v2/server_list.json.minisig':
                 return new Response(
                     200,
-                    file_get_contents(sprintf('%s/data/secure_internet_dev_v2.json.sig', __DIR__)),
-                    ['Content-Type' => 'application/pgp-signature']
-                );
-            case 'https://static.eduvpn.nl/disco/secure_internet_dev_v2.wrong.json':
-                return new Response(
-                    200,
-                    file_get_contents(sprintf('%s/data/secure_internet_dev_v2.wrong.json', __DIR__)),
-                    ['Content-Type' => 'application/json']
-                );
-            case 'https://static.eduvpn.nl/disco/secure_internet_dev_v2.wrong.json.sig':
-                return new Response(
-                    200,
-                    file_get_contents(sprintf('%s/data/secure_internet_dev_v2.wrong.json.sig', __DIR__)),
-                    ['Content-Type' => 'application/pgp-signature']
+                    file_get_contents(sprintf('%s/data/server_list.json.minisig', __DIR__)),
+                    ['Content-Type' => 'foo/bar']
                 );
             default:
                 throw new RuntimeException('no such requestUri');

@@ -14,9 +14,7 @@ use LC\Common\FileIO;
 use LC\Common\Json;
 use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\OAuth\PublicSigner;
-use ParagonIE\ConstantTime\Base64;
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use RuntimeException;
 
 class ForeignKeyListFetcher
 {
@@ -33,47 +31,45 @@ class ForeignKeyListFetcher
 
     /**
      * @param HttpClient\HttpClientInterface $httpClient
+     * @param string                         $serverListUrl
+     * @param array<string>                  $trustedPublicKeyList
      *
      * @return void
      */
-    public function update(HttpClientInterface $httpClient, array $remoteAccessList)
+    public function update(HttpClientInterface $httpClient, $serverListUrl, array $trustedPublicKeyList)
     {
-        $agreggateDiscoveryData = [];
-        foreach ($remoteAccessList as $sourceName => $sourceInfo) {
-            $discoveryUrl = $sourceInfo['discovery_url'];
-            $encodedPublicKey = $sourceInfo['public_key'];
+        // XXX implement last modified stuff
+        $serverListResponse = $httpClient->get($serverListUrl);
+        $serverListSigResponse = $httpClient->get($serverListUrl.'.minisig');
 
-            $discoveryResponse = $httpClient->get($discoveryUrl);
-            $discoverySignatureResponse = $httpClient->get(sprintf('%s.sig', $discoveryUrl));
-
-            $discoveryBody = $discoveryResponse->getBody();
-            $discoverySignatureBody = Base64::decode($discoverySignatureResponse->getBody());
-
-            $publicKey = Base64::decode($encodedPublicKey);
-            if (!sodium_crypto_sign_verify_detached($discoverySignatureBody, $discoveryBody, $publicKey)) {
-                throw new RuntimeException('unable to verify signature');
-            }
-
-            // obtain the "seq" of the current stored discovery file
-            $currentSeq = $this->getCurrentSequence($sourceName);
-
-            $discoveryData = $discoveryResponse->json();
-            if ($discoveryData['seq'] < $currentSeq) {
-                throw new RuntimeException('existing "seq" is lower than "seq" of update!');
-            }
-
-            // write file when "seq" was incremented
-            if ($discoveryData['seq'] > $currentSeq) {
-                $discoveryFile = sprintf('%s/%s.json', $this->dataDir, $sourceName);
-                FileIO::writeFile($discoveryFile, $discoveryBody);
-            }
-            // do nothing when "seq" is the same as before
-            $agreggateDiscoveryData[$sourceName] = $discoveryData['instances'];
+        if (200 !== $serverListResponse->getStatusCode()) {
+            // unable to fetch server_list, or not modified
+            return;
+        }
+        if (200 !== $serverListSigResponse->getStatusCode()) {
+            // unable to fetch server_list signature, or not modified
+            return;
         }
 
-        // regenerate the mapping...
-        $mappingFile = sprintf('%s/key_instance_mapping.json', $this->dataDir);
-        FileIO::writeFile($mappingFile, Json::encode(self::generateMapping($agreggateDiscoveryData)));
+        if (false === Minisign::verify($serverListResponse->getBody(), $serverListSigResponse->getBody(), $trustedPublicKeyList)) {
+            // signature not valid
+            return;
+        }
+
+        $currentVersion = $this->getVersion();
+        $serverListData = Json::decode($serverListResponse->getBody());
+        if ($serverListData['v'] <= $currentVersion) {
+            // not newer
+            return;
+        }
+
+        FileIO::writeFile($this->dataDir.'/server_list.json', $serverListResponse->getBody());
+        FileIO::writeFile(
+            $this->dataDir.'/key_instance_mapping.json',
+            Json::encode(
+                self::generateMapping($serverListData)
+            )
+        );
     }
 
     /**
@@ -90,37 +86,34 @@ class ForeignKeyListFetcher
     }
 
     /**
-     * @param string $remoteSourceName
-     *
      * @return int
      */
-    private function getCurrentSequence($remoteSourceName)
+    private function getVersion()
     {
-        $discoveryFile = sprintf('%s/%s.json', $this->dataDir, $remoteSourceName);
-        if (false === FileIO::exists($discoveryFile)) {
+        if (!FileIO::exists($this->dataDir.'/server_list.json')) {
             return 0;
         }
-        $jsonData = FileIO::readJsonFile($discoveryFile);
+        $serverListData = FileIO::readJsonFile($this->dataDir.'/server_list.json');
 
-        return (int) $jsonData['seq'];
+        return $serverListData['v'];
     }
 
     /**
      * @return array
      */
-    private static function generateMapping(array $discoveryData)
+    private static function generateMapping(array $serverListData)
     {
         $mappingData = [];
-        foreach ($discoveryData as $sourceName => $sourceInfo) {
-            foreach ($sourceInfo as $instanceInfo) {
-                foreach ($instanceInfo['public_key_list'] as $publicKeyStr) {
-                    $publicKey = new PublicKey(Base64UrlSafe::decode($publicKeyStr));
-                    $mappingData[PublicSigner::calculateKeyId($publicKey)] = [
-                        'public_key' => $publicKey->encode(),
-                        'base_uri' => $instanceInfo['base_uri'],
-                        'source_name' => $sourceName,
-                    ];
-                }
+        foreach ($serverListData['server_list'] as $serverEntry) {
+            if ('secure_internet' !== $serverEntry['server_type']) {
+                continue;
+            }
+            foreach ($serverEntry['public_key_list'] as $publicKeyStr) {
+                $publicKey = new PublicKey(Base64UrlSafe::decode($publicKeyStr));
+                $mappingData[PublicSigner::calculateKeyId($publicKey)] = [
+                    'public_key' => $publicKey->encode(),
+                    'base_uri' => $serverEntry['base_url'],
+                ];
             }
         }
 

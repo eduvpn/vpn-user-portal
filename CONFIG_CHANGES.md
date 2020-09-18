@@ -8,6 +8,12 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.3.5
+
+Under `Api` the `remoteAccessList` is ignored from now on. When `remoteAccess` 
+is set to `true` the eduVPN `server_list.json` is downloaded, validated and 
+used to allow access from the servers listed in that file.
+
 ## 2.3.4
 
 We now support `ClientCertAuthentication` as well. It takes no configuration in
