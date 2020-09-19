@@ -9,6 +9,7 @@
 
 namespace LC\Portal\Federation;
 
+use DateTime;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use LC\Common\FileIO;
 use LC\Common\Json;
@@ -36,14 +37,17 @@ class ForeignKeyListFetcher
      */
     public function update(HttpClientInterface $httpClient, $serverListUrl, array $trustedPublicKeyList)
     {
-        // XXX implement last modified stuff
-        $serverListResponse = $httpClient->get($serverListUrl, []);
-        $serverListSigResponse = $httpClient->get($serverListUrl.'.minisig', []);
-
+        $requestHeaders = [];
+        if (false !== $filemTime = @filemtime($this->dataDir.'/server_list.json')) {
+            $fileModifiedDateTime = new DateTime('@'.$filemTime);
+            $requestHeaders[] = 'If-Modified-Since: '.$fileModifiedDateTime->format('D, d M Y H:i:s \G\M\T');
+        }
+        $serverListResponse = $httpClient->get($serverListUrl, $requestHeaders);
         if (200 !== $serverListResponse->getCode()) {
             // unable to fetch server_list, or not modified
             return;
         }
+        $serverListSigResponse = $httpClient->get($serverListUrl.'.minisig', []);
         if (200 !== $serverListSigResponse->getCode()) {
             // unable to fetch server_list signature, or not modified
             return;
@@ -68,6 +72,14 @@ class ForeignKeyListFetcher
                 self::generateMapping($serverListData)
             )
         );
+
+        if (null !== $lastModified = $serverListResponse->getHeader('Last-Modified')) {
+            // use Last-Modified header to set the file's modified time, if
+            // available from server to be used on future requests as the
+            // "If-Modified-Since" header value
+            $lastModifiedDateTime = new DateTime($lastModified);
+            touch($this->dataDir.'/server_list.json', $lastModifiedDateTime->getTimestamp());
+        }
     }
 
     /**
