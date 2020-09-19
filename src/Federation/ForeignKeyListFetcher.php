@@ -10,6 +10,7 @@
 namespace LC\Portal\Federation;
 
 use DateTime;
+use Exception;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use LC\Common\FileIO;
 use LC\Common\Json;
@@ -55,14 +56,14 @@ class ForeignKeyListFetcher
 
         if (false === Minisign::verify($serverListResponse->getBody(), $serverListSigResponse->getBody(), $trustedPublicKeyList)) {
             // signature not valid
-            return;
+            throw new Exception('unable to verify signature');
         }
 
         $currentVersion = $this->getVersion();
         $serverListData = Json::decode($serverListResponse->getBody());
         if ($serverListData['v'] <= $currentVersion) {
             // not newer
-            return;
+            throw new Exception('rollback to older version of file not allowed');
         }
 
         FileIO::writeFile($this->dataDir.'/server_list.json', $serverListResponse->getBody());
