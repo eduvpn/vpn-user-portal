@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace LC\Portal\Tests\Federation;
 
-use LC\Portal\Minisign;
+use LC\Portal\Federation\Minisign;
 use PHPUnit\Framework\TestCase;
 
 class MinisignTest extends TestCase
@@ -18,8 +18,8 @@ class MinisignTest extends TestCase
     {
         $this->assertTrue(
             Minisign::verify(
-                file_get_contents(__DIR__.'/data/minisign/message.txt'),
-                file_get_contents(__DIR__.'/data/minisign/message.txt.minisig'),
+                file_get_contents(__DIR__.'/data/message.txt'),
+                file_get_contents(__DIR__.'/data/message.txt.minisig'),
                 [
                     'RWT7vH6qeacXeCJvqdpeFDXsl+PkU2V8ATje/ZODt35x/j0H0LFbBeJR',
                 ]

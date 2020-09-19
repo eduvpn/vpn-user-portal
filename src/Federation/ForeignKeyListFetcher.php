@@ -7,12 +7,11 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Federation;
 
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use LC\Common\FileIO;
 use LC\Common\Json;
-use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\OAuth\PublicSigner;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 
@@ -30,23 +29,22 @@ class ForeignKeyListFetcher
     }
 
     /**
-     * @param HttpClient\HttpClientInterface $httpClient
-     * @param string                         $serverListUrl
-     * @param array<string>                  $trustedPublicKeyList
+     * @param string        $serverListUrl
+     * @param array<string> $trustedPublicKeyList
      *
      * @return void
      */
     public function update(HttpClientInterface $httpClient, $serverListUrl, array $trustedPublicKeyList)
     {
         // XXX implement last modified stuff
-        $serverListResponse = $httpClient->get($serverListUrl);
-        $serverListSigResponse = $httpClient->get($serverListUrl.'.minisig');
+        $serverListResponse = $httpClient->get($serverListUrl, []);
+        $serverListSigResponse = $httpClient->get($serverListUrl.'.minisig', []);
 
-        if (200 !== $serverListResponse->getStatusCode()) {
+        if (200 !== $serverListResponse->getCode()) {
             // unable to fetch server_list, or not modified
             return;
         }
-        if (200 !== $serverListSigResponse->getStatusCode()) {
+        if (200 !== $serverListSigResponse->getCode()) {
             // unable to fetch server_list signature, or not modified
             return;
         }

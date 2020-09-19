@@ -11,8 +11,8 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Common\Config;
-use LC\Portal\ForeignKeyListFetcher;
-use LC\Portal\HttpClient\CurlHttpClient;
+use LC\Portal\Federation\CurlHttpClient;
+use LC\Portal\Federation\ForeignKeyListFetcher;
 
 try {
     $configFile = sprintf('%s/config/config.php', $baseDir);

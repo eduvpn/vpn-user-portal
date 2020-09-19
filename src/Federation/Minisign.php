@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Federation;
 
 use Exception;
 use ParagonIE\ConstantTime\Base64;

@@ -7,9 +7,9 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace LC\Portal\Tests\Federation;
 
-use LC\Portal\ForeignKeyListFetcher;
+use LC\Portal\Federation\ForeignKeyListFetcher;
 use PHPUnit\Framework\TestCase;
 
 class ForeignKeyListFetcherTest extends TestCase
@@ -23,7 +23,7 @@ class ForeignKeyListFetcherTest extends TestCase
         mkdir($tmpDir);
         $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpDir);
         $foreignKeyListFetcher->update(
-            new TestForeignKeyHttpClient(),
+            new TestHttpClient(),
             'https://disco.eduvpn.org/v2/server_list.json',
             [
                 'RWQ68Y5/b8DED0TJ41B1LE7yAvkmavZWjDwCBUuC+Z2pP9HaSawzpEDA', // jornane@uninett.no

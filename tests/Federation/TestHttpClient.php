@@ -7,13 +7,13 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace LC\Portal\Tests\Federation;
 
-use LC\Portal\HttpClient\HttpClientInterface;
-use LC\Portal\HttpClient\Response;
+use LC\Portal\Federation\HttpClientInterface;
+use LC\Portal\Federation\HttpClientResponse;
 use RuntimeException;
 
-class TestForeignKeyHttpClient implements HttpClientInterface
+class TestHttpClient implements HttpClientInterface
 {
     /**
      * @param string                $requestUri
@@ -25,16 +25,16 @@ class TestForeignKeyHttpClient implements HttpClientInterface
     {
         switch ($requestUri) {
             case 'https://disco.eduvpn.org/v2/server_list.json':
-                return new Response(
+                return new HttpClientResponse(
                     200,
-                    file_get_contents(sprintf('%s/data/server_list.json', __DIR__)),
-                    ['Content-Type' => 'application/json']
+                    ['Content-Type' => 'application/json'],
+                    file_get_contents(sprintf('%s/data/server_list.json', __DIR__))
                 );
             case 'https://disco.eduvpn.org/v2/server_list.json.minisig':
-                return new Response(
+                return new HttpClientResponse(
                     200,
-                    file_get_contents(sprintf('%s/data/server_list.json.minisig', __DIR__)),
-                    ['Content-Type' => 'foo/bar']
+                    ['Content-Type' => 'foo/bar'],
+                    file_get_contents(sprintf('%s/data/server_list.json.minisig', __DIR__))
                 );
             default:
                 throw new RuntimeException('no such requestUri');
