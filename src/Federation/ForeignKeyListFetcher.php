@@ -59,11 +59,15 @@ class ForeignKeyListFetcher
             throw new Exception('unable to verify signature');
         }
 
-        $currentVersion = $this->getVersion();
+        $currentVersion = $this->getCurrentVersion();
         $serverListData = Json::decode($serverListResponse->getBody());
-        if ($serverListData['v'] <= $currentVersion) {
-            // not newer
-            throw new Exception('rollback to older version of file not allowed');
+        if ($serverListData['v'] === $currentVersion) {
+            // same version, do not update
+            return;
+        }
+        if ($serverListData['v'] < $currentVersion) {
+            // new file is older, that should never happen
+            throw new Exception(sprintf('rollback to older version of file not allowed, we have "%d", we got "%d"', $currentVersion, $serverListData['v']));
         }
 
         FileIO::writeFile($this->dataDir.'/server_list.json', $serverListResponse->getBody());
@@ -99,7 +103,7 @@ class ForeignKeyListFetcher
     /**
      * @return int
      */
-    private function getVersion()
+    private function getCurrentVersion()
     {
         if (!FileIO::exists($this->dataDir.'/server_list.json')) {
             return 0;

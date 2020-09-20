@@ -50,9 +50,9 @@ class ForeignKeyListFetcherTest extends TestCase
     public function testFetchRollback()
     {
         $this->expectException('Exception');
-        $this->expectExceptionMessage('rollback to older version of file not allowed');
+        $this->expectExceptionMessage('rollback to older version of file not allowed, we have "5", we got "4"');
 
-        $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
+        $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
         mkdir($tmpDir);
         // copy the v=5 file to the tmpDir
         copy(__DIR__.'/data/server_list.json', $tmpDir.'/server_list.json');
