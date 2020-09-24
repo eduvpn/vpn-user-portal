@@ -30,8 +30,16 @@ class ClientFetcher implements ClientDbInterface
      */
     public function get($clientId)
     {
+        if (false === $this->config->hasSection('Api')) {
+            // no Api section
+            return OAuthClientInfo::getClient($clientId);
+        }
+        if (false === $this->config->getSection('Api')->hasSection('consumerList')) {
+            // no Api -> consumerList section
+            return OAuthClientInfo::getClient($clientId);
+        }
         if (false === $this->config->getSection('Api')->getSection('consumerList')->hasItem($clientId)) {
-            // if not in configuration file, check if it is in the hardcoded list
+            // no manual entry in consumerList with this client_id
             return OAuthClientInfo::getClient($clientId);
         }
 
