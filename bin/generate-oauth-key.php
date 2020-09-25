@@ -14,14 +14,11 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Common\FileIO;
 
 try {
-    // generate OAuth key
     $configDir = sprintf('%s/config', $baseDir);
     $keyFile = sprintf('%s/oauth.key', $configDir);
     if (FileIO::exists($keyFile)) {
-        echo '[INFO] OAuth key already exists!'.PHP_EOL;
-        exit(0);
+        throw new Exception('"'.$keyFile.'" already exists');
     }
-    // only create key when there is no key yet
     $secretKey = SecretKey::generate();
     FileIO::writeFile($keyFile, $secretKey->encode(), 0644);
 } catch (Exception $e) {
