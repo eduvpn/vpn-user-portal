@@ -67,23 +67,23 @@ class VpnApiModule implements ServiceModuleInterface
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
                     $profileConfig = new ProfileConfig($profileData);
-                    if ($profileConfig->getItem('hideProfile')) {
+                    if ($profileConfig->requireBool('hideProfile')) {
                         continue;
                     }
-                    if ($profileConfig->getItem('enableAcl')) {
+                    if ($profileConfig->requireBool('enableAcl')) {
                         // is the user member of the aclPermissionList?
-                        if (!VpnPortalModule::isMember($profileConfig->getSection('aclPermissionList')->toArray(), $userPermissions)) {
+                        if (!VpnPortalModule::isMember($profileConfig->requireArray('aclPermissionList'), $userPermissions)) {
                             continue;
                         }
                     }
 
                     $userProfileList[] = [
                         'profile_id' => $profileId,
-                        'display_name' => $profileConfig->getItem('displayName'),
+                        'display_name' => $profileConfig->requireString('displayName'),
                         // 2FA is now decided by vpn-user-portal setting, so
                         // we "lie" here to the client
                         'two_factor' => false,
-                        'default_gateway' => $profileConfig->getItem('defaultGateway'),
+                        'default_gateway' => $profileConfig->requireBool('defaultGateway'),
                     ];
                 }
 
@@ -186,12 +186,12 @@ class VpnApiModule implements ServiceModuleInterface
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
                         $profileConfig = new ProfileConfig($profileData);
-                        if ($profileConfig->getItem('hideProfile')) {
+                        if ($profileConfig->requireBool('hideProfile')) {
                             continue;
                         }
-                        if ($profileConfig->getItem('enableAcl')) {
+                        if ($profileConfig->requireBool('enableAcl')) {
                             // is the user member of the userPermissions?
-                            if (!VpnPortalModule::isMember($profileConfig->getSection('aclPermissionList')->toArray(), $userPermissions)) {
+                            if (!VpnPortalModule::isMember($profileConfig->requireArray('aclPermissionList'), $userPermissions)) {
                                 continue;
                             }
                         }

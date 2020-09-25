@@ -29,10 +29,8 @@ class ShibAuthentication implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
-        /** @var string */
-        $userIdAttribute = $this->config->getItem('userIdAttribute');
-        /** @var string|null */
-        $permissionAttribute = $this->config->optionalItem('permissionAttribute');
+        $userIdAttribute = $this->config->requireString('userIdAttribute');
+        $permissionAttribute = $this->config->optionalString('permissionAttribute');
 
         $userPermissions = [];
         if (null !== $permissionAttribute) {

@@ -29,12 +29,9 @@ class MellonAuthentication implements BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
-        /** @var string */
-        $userIdAttribute = $this->config->getItem('userIdAttribute');
-        /** @var bool|null */
-        $nameIdSerialization = $this->config->optionalItem('nameIdSerialization');
-        /** @var string|null */
-        $permissionAttribute = $this->config->optionalItem('permissionAttribute');
+        $userIdAttribute = $this->config->requireString('userIdAttribute');
+        $nameIdSerialization = $this->config->optionalBool('nameIdSerialization');
+        $permissionAttribute = $this->config->optionalString('permissionAttribute');
 
         $userId = trim(strip_tags($request->requireHeader($userIdAttribute)));
         if (null !== $nameIdSerialization && true === $nameIdSerialization) {
@@ -43,7 +40,7 @@ class MellonAuthentication implements BeforeHookInterface
                 // it by prefixing it with the IdP entityID and SP entityID
                 $idpEntityId = $request->requireHeader('MELLON_IDP');
                 /** @var string */
-                $spEntityId = $this->config->getItem('spEntityId');
+                $spEntityId = $this->config->requireString('spEntityId');
                 $userId = sprintf('%s!%s!%s', $idpEntityId, $spEntityId, $userId);
             }
         }

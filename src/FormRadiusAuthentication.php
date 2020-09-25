@@ -20,12 +20,12 @@ class FormRadiusAuthentication extends FormAuthentication
 {
     public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
     {
-        $serverList = $config->getItem('serverList');
+        $serverList = $config->requireArray('serverList');
         $userAuth = new RadiusAuth($logger, $serverList);
-        if (null !== $addRealm = $config->optionalItem('addRealm')) {
+        if (null !== $addRealm = $config->optionalString('addRealm')) {
             $userAuth->setRealm($addRealm);
         }
-        if (null !== $nasIdentifier = $config->optionalItem('nasIdentifier')) {
+        if (null !== $nasIdentifier = $config->optionalString('nasIdentifier')) {
             $userAuth->setNasIdentifier($nasIdentifier);
         }
 

@@ -20,7 +20,7 @@ class FormLdapAuthentication extends FormAuthentication
     public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
     {
         $ldapClient = new LdapClient(
-            $config->getItem('ldapUri')
+            $config->requireString('ldapUri')
         );
 
         // convert permissionAttribute to (empty) array
@@ -34,11 +34,11 @@ class FormLdapAuthentication extends FormAuthentication
         $userAuth = new LdapAuth(
             $logger,
             $ldapClient,
-            $config->getItem('bindDnTemplate'),
-            $config->optionalItem('baseDn'),
-            $config->optionalItem('userFilterTemplate'),
-            $config->optionalItem('userIdAttribute'),
-            $config->optionalItem('addRealm'),
+            $config->requireString('bindDnTemplate'),
+            $config->optionalString('baseDn'),
+            $config->optionalString('userFilterTemplate'),
+            $config->optionalString('userIdAttribute'),
+            $config->optionalString('addRealm'),
             $permissionAttribute
         );
 

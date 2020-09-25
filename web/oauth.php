@@ -38,37 +38,29 @@ try {
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        new DateInterval($config->getItem('sessionExpiry'))
+        new DateInterval($config->requireString('sessionExpiry'))
     );
     $storage->update();
 
     $clientFetcher = new ClientFetcher($config);
 
     // OAuth module
-    if ($config->hasSection('Api')) {
-        $secretKey = SecretKey::fromEncodedString(
-            FileIO::readFile(
-                sprintf('%s/config/oauth.key', $baseDir)
-            )
-        );
-        $oauthServer = new OAuthServer(
-            $storage,
-            $clientFetcher,
-            new PublicSigner($secretKey->getPublicKey(), $secretKey)
-        );
+    $secretKey = SecretKey::fromEncodedString(
+        FileIO::readFile(
+            sprintf('%s/config/oauth.key', $baseDir)
+        )
+    );
+    $oauthServer = new OAuthServer(
+        $storage,
+        $clientFetcher,
+        new PublicSigner($secretKey->getPublicKey(), $secretKey)
+    );
 
-        $oauthServer->setAccessTokenExpiry(
-            new DateInterval(
-                $config->getSection('Api')->hasItem('tokenExpiry') ? $config->getSection('Api')->getItem('tokenExpiry') : 'PT1H'
-            )
-        );
-
-        $oauthModule = new OAuthTokenModule(
-            $oauthServer
-        );
-        $service->addModule($oauthModule);
-    }
-
+    $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
+    $oauthModule = new OAuthTokenModule(
+        $oauthServer
+    );
+    $service->addModule($oauthModule);
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());

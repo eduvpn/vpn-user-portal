@@ -53,7 +53,7 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
         }
 
         $authOptions = new AuthOptions();
-        if (null !== $authnContext = $this->config->optionalItem('authnContext')) {
+        if (null !== $authnContext = $this->config->optionalArray('authnContext')) {
             $authOptions->withAuthnContextClassRef($authnContext);
         }
         if (!$this->samlAuth->isAuthenticated($authOptions)) {
@@ -64,8 +64,7 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
         // i.e. the AuthnContextClassRef are verified here...
         $samlAssertion = $this->samlAuth->getAssertion($authOptions);
         $samlAttributes = $samlAssertion->getAttributes();
-        /** @var string $userIdAttribute */
-        $userIdAttribute = $this->config->getItem('userIdAttribute');
+        $userIdAttribute = $this->config->requireString('userIdAttribute');
         if (!\array_key_exists($userIdAttribute, $samlAttributes)) {
             throw new HttpException(sprintf('missing SAML user_id attribute "%s"', $userIdAttribute), 500);
         }
@@ -73,12 +72,7 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
         $userAuthnContext = $samlAssertion->getAuthnContext();
         if (0 !== \count($this->getPermissionAttributeList())) {
             $userPermissions = $this->getPermissionList($samlAttributes);
-
-            /** @var array<string,string>|null $permissionAuthnContext */
-            if (null === $permissionAuthnContext = $this->config->optionalItem('permissionAuthnContext')) {
-                $permissionAuthnContext = [];
-            }
-
+            $permissionAuthnContext = $this->config->requireArray('permissionAuthnContext', []);
             // if we got a permission that's part of the
             // permissionAuthnContext we have to make sure we have one of
             // the listed AuthnContexts

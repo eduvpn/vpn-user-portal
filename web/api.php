@@ -37,58 +37,55 @@ try {
 
     $service = new Service();
 
-    if ($config->hasSection('Api')) {
-        $serverClient = new ServerClient(
-            new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-            $config->getItem('apiUri')
-        );
+    $serverClient = new ServerClient(
+        new CurlHttpClient([$config->requireString('apiUser'), $config->requireString('apiPass')]),
+        $config->requireString('apiUri')
+    );
 
-        $storage = new Storage(
-            new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-            sprintf('%s/schema', $baseDir),
-            new DateInterval($config->getItem('sessionExpiry'))
-        );
-        $storage->update();
+    $storage = new Storage(
+        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+        sprintf('%s/schema', $baseDir),
+        new DateInterval($config->requireString('sessionExpiry'))
+    );
+    $storage->update();
 
-        $clientFetcher = new ClientFetcher($config);
+    $clientFetcher = new ClientFetcher($config);
 
-        $keyInstanceMapping = [];
-        $remoteAccess = $config->getSection('Api')->getItem('remoteAccess');
-        if ($remoteAccess) {
-            $keyInstanceMappingFile = sprintf('%s/key_instance_mapping.json', $dataDir);
-            if (FileIO::exists($keyInstanceMappingFile)) {
-                $keyInstanceMapping = FileIO::readJsonFile($keyInstanceMappingFile);
-            }
+    $keyInstanceMapping = [];
+    if ($config->s('Api')->requireBool('remoteAccess', false)) {
+        $keyInstanceMappingFile = sprintf('%s/key_instance_mapping.json', $dataDir);
+        if (FileIO::exists($keyInstanceMappingFile)) {
+            $keyInstanceMapping = FileIO::readJsonFile($keyInstanceMappingFile);
         }
-
-        $secretKey = SecretKey::fromEncodedString(
-            FileIO::readFile(
-                sprintf('%s/config/oauth.key', $baseDir)
-            )
-        );
-
-        $bearerValidator = new BearerValidator(
-            $storage,
-            $clientFetcher,
-            $secretKey->getPublicKey(),
-            $keyInstanceMapping
-        );
-
-        $service->addBeforeHook(
-            'auth',
-            new BearerAuthenticationHook(
-                $bearerValidator
-            )
-        );
-
-        // api module
-        $vpnApiModule = new VpnApiModule(
-            $config,
-            $serverClient,
-            new DateInterval($config->getItem('sessionExpiry'))
-        );
-        $service->addModule($vpnApiModule);
     }
+
+    $secretKey = SecretKey::fromEncodedString(
+        FileIO::readFile(
+            sprintf('%s/config/oauth.key', $baseDir)
+        )
+    );
+
+    $bearerValidator = new BearerValidator(
+        $storage,
+        $clientFetcher,
+        $secretKey->getPublicKey(),
+        $keyInstanceMapping
+    );
+
+    $service->addBeforeHook(
+        'auth',
+        new BearerAuthenticationHook(
+            $bearerValidator
+        )
+    );
+
+    // api module
+    $vpnApiModule = new VpnApiModule(
+        $config,
+        $serverClient,
+        new DateInterval($config->requireString('sessionExpiry'))
+    );
+    $service->addModule($vpnApiModule);
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());

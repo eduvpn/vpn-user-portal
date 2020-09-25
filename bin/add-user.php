@@ -66,14 +66,14 @@ try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
     $config = Config::fromFile($configFile);
 
-    if ('FormPdoAuthentication' !== $config->getItem('authMethod')) {
-        echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->getItem('authMethod')).PHP_EOL;
+    if ('FormPdoAuthentication' !== $config->requireString('authMethod')) {
+        echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->requireString('authMethod')).PHP_EOL;
     }
 
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        new DateInterval($config->getItem('sessionExpiry'))
+        new DateInterval($config->requireString('sessionExpiry'))
     );
     $storage->add($userId, $userPass);
 } catch (Exception $e) {

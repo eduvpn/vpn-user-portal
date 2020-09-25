@@ -70,15 +70,14 @@ try {
         sprintf('%s/locale', $baseDir),
         sprintf('%s/config/locale', $baseDir),
     ];
-    if ($config->hasItem('styleName')) {
-        $styleName = $config->getItem('styleName');
+    if (null !== $styleName = $config->optionalString('styleName')) {
         $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
         $templateDirs[] = sprintf('%s/config/views/%s', $baseDir, $styleName);
         $localeDirs[] = sprintf('%s/locale/%s', $baseDir, $styleName);
         $localeDirs[] = sprintf('%s/config/locale/%s', $baseDir, $styleName);
     }
 
-    $sessionExpiry = $config->getItem('sessionExpiry');
+    $sessionExpiry = $config->requireString('sessionExpiry');
 
     // we always want browser session to expiry after PT8H hours, *EXCEPT* when
     // the configured "sessionExpiry" is < PT8H, then we want to follow that
@@ -89,7 +88,7 @@ try {
         $sessionOptions = SessionOptions::init()->withExpiresIn(new DateInterval($sessionExpiry));
     }
 
-    $secureCookie = $config->hasItem('secureCookie') ? $config->getItem('secureCookie') : true;
+    $secureCookie = $config->requireBool('secureCookie', true);
     $cookieOptions = $secureCookie ? CookieOptions::init() : CookieOptions::init()->withoutSecure();
     $seCookie = new SeCookie(
         new Cookie(
@@ -107,7 +106,7 @@ try {
         )
     );
 
-    $supportedLanguages = $config->getSection('supportedLanguages')->toArray();
+    $supportedLanguages = $config->requireArray('supportedLanguages');
     // the first listed language is the default language
     $uiLang = array_keys($supportedLanguages)[0];
     if (null !== $cookieUiLang = $seCookie->get('ui_lang')) {
@@ -115,7 +114,7 @@ try {
     }
 
     // Authentication
-    $authMethod = $config->getItem('authMethod');
+    $authMethod = $config->requireString('authMethod');
 
     $tpl = new Tpl($templateDirs, $localeDirs, sprintf('%s/web', $baseDir));
     $tpl->setLanguage($uiLang);
@@ -134,8 +133,8 @@ try {
     $tpl->addDefault($templateDefaults);
 
     $serverClient = new ServerClient(
-        new CurlHttpClient([$config->getItem('apiUser'), $config->getItem('apiPass')]),
-        $config->getItem('apiUri')
+        new CurlHttpClient([$config->requireString('apiUser'), $config->requireString('apiPass')]),
+        $config->requireString('apiUri')
     );
 
     $service = new Service($tpl);
@@ -174,22 +173,22 @@ try {
     switch ($authMethod) {
         case 'PhpSamlSpAuthentication':
             $phpSamlSpAuthentication = new PhpSamlSpAuthentication(
-                $config->getSection('PhpSamlSpAuthentication')
+                $config->s('PhpSamlSpAuthentication')
             );
             $service->addBeforeHook('auth', $phpSamlSpAuthentication);
             break;
         case 'MellonAuthentication':
-            $service->addBeforeHook('auth', new MellonAuthentication($config->getSection('MellonAuthentication')));
+            $service->addBeforeHook('auth', new MellonAuthentication($config->s('MellonAuthentication')));
             break;
         case 'ClientCertAuthentication':
             $service->addBeforeHook('auth', new ClientCertAuthentication());
             break;
         case 'ShibAuthentication':
-            $service->addBeforeHook('auth', new ShibAuthentication($config->getSection('ShibAuthentication')));
+            $service->addBeforeHook('auth', new ShibAuthentication($config->s('ShibAuthentication')));
             break;
         case 'FormLdapAuthentication':
             $formLdapAuthentication = new FormLdapAuthentication(
-                $config->getSection('FormLdapAuthentication'),
+                $config->s('FormLdapAuthentication'),
                 $seSession,
                 $tpl,
                 $logger
@@ -202,7 +201,7 @@ try {
             break;
         case 'FormRadiusAuthentication':
             $formRadiusAuthentication = new FormRadiusAuthentication(
-                $config->getSection('FormRadiusAuthentication'),
+                $config->s('FormRadiusAuthentication'),
                 $seSession,
                 $tpl,
                 $logger
@@ -235,7 +234,7 @@ try {
                 // we make the rootUri and baseDir part of the configuration,
                 // agreed, it is a bit hacky, but avoids needing to manually
                 // specify the URL on which the service is configured...
-                $config->getSection($authMethod)
+                $config->s($authMethod)
                     ->setItem('_rootUri', $request->getRootUri())
                     ->setItem('_baseDir', $baseDir),
                 $seSession,
@@ -259,7 +258,7 @@ try {
         ]
     );
 
-    if (null !== $accessPermissionList = $config->optionalItem('accessPermissionList')) {
+    if (null !== $accessPermissionList = $config->optionalArray('accessPermissionList')) {
         // hasAccess
         $service->addBeforeHook(
             'has_access',
@@ -269,7 +268,7 @@ try {
         );
     }
 
-    $twoFactorMethods = $config->optionalItem('twoFactorMethods', ['totp']);
+    $twoFactorMethods = $config->requireArray('twoFactorMethods', ['totp']);
     if (0 !== count($twoFactorMethods)) {
         $service->addBeforeHook(
             'two_factor',
@@ -277,7 +276,7 @@ try {
                 $seSession,
                 $tpl,
                 $serverClient,
-                $config->hasItem('requireTwoFactor') ? $config->getItem('requireTwoFactor') : false
+                $config->requireBool('requireTwoFactor', false),
             )
         );
     }
@@ -295,8 +294,8 @@ try {
     $service->addBeforeHook(
         'is_admin',
         new AdminHook(
-            $config->optionalItem('adminPermissionList', []),
-            $config->optionalItem('adminUserIdList', []),
+            $config->requireArray('adminPermissionList', []),
+            $config->requireArray('adminUserIdList', []),
             $tpl
         )
     );
@@ -332,26 +331,17 @@ try {
             sprintf('%s/config/oauth.key', $baseDir)
         )
     );
-    if ($config->hasSection('Api')) {
-        $oauthServer = new OAuthServer(
-            $storage,
-            $clientFetcher,
-            new PublicSigner($secretKey->getPublicKey(), $secretKey)
-        );
-
-        $oauthServer->setAccessTokenExpiry(
-            new DateInterval(
-                $config->getSection('Api')->hasItem('tokenExpiry') ? sprintf('PT%dS', $config->getSection('Api')->getItem('tokenExpiry')) : 'PT1H'
-            )
-        );
-
-        $oauthModule = new OAuthModule(
-            $tpl,
-            $oauthServer
-        );
-        $service->addModule($oauthModule);
-    }
-
+    $oauthServer = new OAuthServer(
+        $storage,
+        $clientFetcher,
+        new PublicSigner($secretKey->getPublicKey(), $secretKey)
+    );
+    $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
+    $oauthModule = new OAuthModule(
+        $tpl,
+        $oauthServer
+    );
+    $service->addModule($oauthModule);
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());

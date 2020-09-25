@@ -10,21 +10,17 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
 use LC\Common\FileIO;
 use LC\Portal\Storage;
 
 try {
-    $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
-
     // initialize database
     $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir);
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        new DateInterval($config->getItem('sessionExpiry'))
+        new DateInterval('P90D')    // XXX code smell, not needed here!
     );
     $storage->init();
 } catch (Exception $e) {
