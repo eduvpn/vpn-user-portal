@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <psalm totallyTyped="false" resolveFromConfigFile="true">
   <projectFiles>
+    <directory name="bin"/>
     <directory name="src"/>
     <directory name="web"/>
     <ignoreFiles>

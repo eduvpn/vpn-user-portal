@@ -26,14 +26,12 @@ try {
     );
 
     $opt = $p->parse($argv);
-    if ($opt->hasItem('help')) {
+    if ($opt->requireBool('help', false)) {
         echo $p->help();
         exit(0);
     }
 
-    if ($opt->hasItem('user')) {
-        $userId = $opt->getItem('user');
-    } else {
+    if (null === $userId = $opt->optionalString('user')) {
         echo 'User ID: ';
         $userId = trim(fgets(STDIN));
     }
@@ -42,9 +40,7 @@ try {
         throw new RuntimeException('User ID cannot be empty');
     }
 
-    if ($opt->hasItem('pass')) {
-        $userPass = $opt->getItem('pass');
-    } else {
+    if (null === $userPass = $opt->optionalString('pass')) {
         echo sprintf('Setting password for user "%s"', $userId).PHP_EOL;
         // ask for password
         exec('stty -echo');
