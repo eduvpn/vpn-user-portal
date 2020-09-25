@@ -9,7 +9,6 @@
 
 namespace LC\Portal;
 
-use LC\Common\Config;
 use LC\Common\Http\FormAuthentication;
 use LC\Common\Http\Service;
 use LC\Common\Http\SessionInterface;
@@ -20,7 +19,7 @@ class FormPdoAuthentication extends FormAuthentication
     /** @var \LC\Portal\Storage */
     private $storage;
 
-    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, Storage $storage)
+    public function __construct(SessionInterface $session, TplInterface $tpl, Storage $storage)
     {
         parent::__construct($storage, $session, $tpl);
         $this->storage = $storage;

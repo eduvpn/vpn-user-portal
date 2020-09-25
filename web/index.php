@@ -215,7 +215,6 @@ try {
             break;
         case 'FormPdoAuthentication':
             $formPdoAuthentication = new FormPdoAuthentication(
-                new Config([]),
                 $seSession,
                 $tpl,
                 $storage
