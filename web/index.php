@@ -276,7 +276,7 @@ try {
                 $seSession,
                 $tpl,
                 $serverClient,
-                $config->requireBool('requireTwoFactor', false),
+                $config->requireBool('requireTwoFactor', false)
             )
         );
     }
