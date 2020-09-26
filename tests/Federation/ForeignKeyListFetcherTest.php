@@ -9,6 +9,7 @@
 
 namespace LC\Portal\Tests\Federation;
 
+use Exception;
 use LC\Portal\Federation\ForeignKeyListFetcher;
 use PHPUnit\Framework\TestCase;
 
@@ -49,20 +50,22 @@ class ForeignKeyListFetcherTest extends TestCase
      */
     public function testFetchRollback()
     {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('rollback to older version of file not allowed, we have "5", we got "4"');
-
-        $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
-        mkdir($tmpDir);
-        // copy the v=5 file to the tmpDir
-        copy(__DIR__.'/data/server_list.json', $tmpDir.'/server_list.json');
-        $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpDir);
-        $foreignKeyListFetcher->update(
-            new TestHttpClient(),
-            'https://disco.eduvpn.org/v2/server_list_rollback.json',
-            [
-                'RWTzeZBS1e59OQtxV7UBpG/NfCpuAeOxQQqvqLqp1zVq4rGT5Fyq2gGN',
-            ]
-        );
+        try {
+            $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));
+            mkdir($tmpDir);
+            // copy the v=5 file to the tmpDir
+            copy(__DIR__.'/data/server_list.json', $tmpDir.'/server_list.json');
+            $foreignKeyListFetcher = new ForeignKeyListFetcher($tmpDir);
+            $foreignKeyListFetcher->update(
+                new TestHttpClient(),
+                'https://disco.eduvpn.org/v2/server_list_rollback.json',
+                [
+                    'RWTzeZBS1e59OQtxV7UBpG/NfCpuAeOxQQqvqLqp1zVq4rGT5Fyq2gGN',
+                ]
+            );
+            $this->fail();
+        } catch (Exception $e) {
+            $this->assertSame('rollback to older version of file not allowed, we have "5", we got "4"', $e->getMessage());
+        }
     }
 }
