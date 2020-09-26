@@ -30,16 +30,16 @@ class MellonAuthentication implements BeforeHookInterface
     public function executeBefore(Request $request, array $hookData)
     {
         $userIdAttribute = $this->config->requireString('userIdAttribute');
-        $nameIdSerialization = $this->config->optionalBool('nameIdSerialization');
+        $nameIdSerialization = $this->config->requireBool('nameIdSerialization', false);
         $permissionAttribute = $this->config->optionalString('permissionAttribute');
 
         $userId = trim(strip_tags($request->requireHeader($userIdAttribute)));
-        if (null !== $nameIdSerialization && true === $nameIdSerialization) {
+
+        if ($nameIdSerialization) {
             if (\in_array($userIdAttribute, ['MELLON_NAME_ID', 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10'], true)) {
                 // only for NAME_ID and eduPersonTargetedID, serialize it the way Shibboleth does
                 // it by prefixing it with the IdP entityID and SP entityID
                 $idpEntityId = $request->requireHeader('MELLON_IDP');
-                /** @var string */
                 $spEntityId = $this->config->requireString('spEntityId');
                 $userId = sprintf('%s!%s!%s', $idpEntityId, $spEntityId, $userId);
             }
