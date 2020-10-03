@@ -9,8 +9,6 @@
 
 namespace LC\Portal;
 
-use RuntimeException;
-
 class Qr
 {
     const QR_ENCODE_PATH = '/usr/bin/qrencode';
@@ -25,17 +23,12 @@ class Qr
         ob_start();
         passthru(
             sprintf(
-                '%s -m 0 -s 5 -t SVG -o - %s',
+                '%s -m 0 -s 5 -t PNG -o - %s',
                 self::QR_ENCODE_PATH,
                 escapeshellarg($qrText)
             )
         );
 
-        // we only want the <svg></svg> part of the output
-        if (1 !== preg_match('|(<svg.*</svg>)|sm', ob_get_clean(), $m)) {
-            throw new RuntimeException('unable to get SVG encoded QR code');
-        }
-
-        return $m[1];
+        return ob_get_clean();
     }
 }

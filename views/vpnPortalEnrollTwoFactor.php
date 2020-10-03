@@ -28,7 +28,7 @@
                     <dt><?=$this->t('Secret'); ?></dt>
                     <dd><code><?=$this->e($totpSecret); ?></code></dd>
                     <dt><?=$this->t('QR'); ?></dt>
-                    <dd><?=$svgQrCode; ?></dd>
+                    <dd><img alt="<?=$this->t('QR'); ?>" src="data:image/png;base64,<?=$this->e($encodedQrCode); ?>"></dd>
                 </dl>
 
                 <p>
