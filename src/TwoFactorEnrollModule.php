@@ -21,7 +21,6 @@ use LC\Common\HttpClient\Exception\ApiException;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\TplInterface;
 use ParagonIE\ConstantTime\Base32;
-use ParagonIE\ConstantTime\Base64;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
 {
@@ -73,7 +72,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                             'twoFactorMethods' => $this->twoFactorMethods,
                             'hasTotpSecret' => $hasTotpSecret,
                             'totpSecret' => $totpSecret,
-                            'encodedQrCode' => Base64::encode(Qr::generate($otpAuthUrl)),
+                            'svgQrCode' => Qr::generate($otpAuthUrl),
                         ]
                     )
                 );
@@ -110,7 +109,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                                 'hasTotpSecret' => $hasTotpSecret,
                                 'totpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',
-                                'encodedQrCode' => Base64::encode(Qr::generate($otpAuthUrl)),
+                                'svgQrCode' => Qr::generate($otpAuthUrl),
                             ]
                         )
                     );
