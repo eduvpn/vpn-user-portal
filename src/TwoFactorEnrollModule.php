@@ -24,8 +24,6 @@ use ParagonIE\ConstantTime\Base32;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
 {
-    const QR_ENCODE_PATH = '/usr/bin/qrencode';
-
     /** @var array<string> */
     private $twoFactorMethods;
 
@@ -145,16 +143,8 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                     self::labelEncode($request->getServerName())
                 );
 
-                ob_start();
-                passthru(
-                    sprintf(
-                        '%s -m 0 -s 5 -t PNG -o - %s',
-                        self::QR_ENCODE_PATH,
-                        escapeshellarg($otpAuthUrl)
-                    )
-                );
                 $response = new Response(200, 'image/png');
-                $response->setBody(ob_get_clean());
+                $response->setBody(Qr::generate($otpAuthUrl));
 
                 return $response;
             }
