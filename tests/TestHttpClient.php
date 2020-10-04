@@ -12,20 +12,26 @@ namespace LC\Portal\Tests;
 use DateInterval;
 use DateTime;
 use LC\Common\HttpClient\HttpClientInterface;
+use LC\Common\HttpClient\HttpClientResponse;
 use RuntimeException;
 
 class TestHttpClient implements HttpClientInterface
 {
     /**
-     * @param mixed $requestUri
+     * @param string               $requestUrl
+     * @param array<string,string> $queryParameters
+     * @param array<string>        $requestHeaders
      *
-     * @return array
+     * @return \LC\Common\HttpClient\HttpClientResponse
      */
-    public function get($requestUri, array $getData = [], array $requestHeaders = [])
+    public function get($requestUrl, array $queryParameters, array $requestHeaders = [])
     {
         $dateTime = date_add(clone new DateTime(), new DateInterval('P90D'));
 
-        switch ($requestUri) {
+        if (0 !== \count($queryParameters)) {
+            $requestUrl .= '?'.http_build_query($queryParameters);
+        }
+        switch ($requestUrl) {
             case 'serverClient/profile_list':
                 return self::wrap(
                     'profile_list',
@@ -80,18 +86,25 @@ class TestHttpClient implements HttpClientInterface
                     ]
                 );
             default:
-                throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
+                throw new RuntimeException(sprintf('unexpected requestUrl "%s"', $requestUrl));
         }
     }
 
     /**
-     * @param string $requestUri
+     * @param string               $requestUrl
+     * @param array<string,string> $queryParameters
+     * @param array<string,string> $postData
+     * @param array<string>        $requestHeaders
      *
-     * @return array
+     * @return HttpClientResponse
      */
-    public function post($requestUri, array $postData = [], array $requestHeaders = [])
+    public function post($requestUrl, array $queryParameters, array $postData, array $requestHeaders = [])
     {
-        switch ($requestUri) {
+        if (0 !== \count($queryParameters)) {
+            $requestUrl .= '?'.http_build_query($queryParameters);
+        }
+
+        switch ($requestUrl) {
             case 'serverClient/add_client_certificate':
                 return self::wrap(
                     'add_client_certificate',
@@ -109,7 +122,7 @@ class TestHttpClient implements HttpClientInterface
             case 'serverClient/set_voot_token':
                 return self::wrap('set_voot_token', true);
             default:
-                throw new RuntimeException(sprintf('unexpected requestUri "%s"', $requestUri));
+                throw new RuntimeException(sprintf('unexpected requestUrl "%s"', $requestUrl));
         }
     }
 
@@ -118,12 +131,13 @@ class TestHttpClient implements HttpClientInterface
      * @param mixed  $responseData
      * @param int    $statusCode
      *
-     * @return array
+     * @return \LC\Common\HttpClient\HttpClientResponse
      */
     private static function wrap($key, $responseData, $statusCode = 200)
     {
-        return [
+        return new HttpClientResponse(
             $statusCode,
+            [],
             json_encode(
                 [
                     $key => [
@@ -132,7 +146,7 @@ class TestHttpClient implements HttpClientInterface
                     ],
                 ]
             ),
-        ];
+        );
     }
 
     /**
@@ -140,12 +154,13 @@ class TestHttpClient implements HttpClientInterface
      * @param string $errorMessage
      * @param int    $statusCode
      *
-     * @return array
+     * @return \LC\Common\HttpClient\HttpClientResponse
      */
     private static function wrapError($key, $errorMessage, $statusCode = 200)
     {
-        return [
+        return new HttpClientResponse(
             $statusCode,
+            [],
             json_encode(
                 [
                     $key => [
@@ -154,6 +169,6 @@ class TestHttpClient implements HttpClientInterface
                     ],
                 ]
             ),
-        ];
+        );
     }
 }

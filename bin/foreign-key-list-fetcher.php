@@ -11,7 +11,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Common\Config;
-use LC\Portal\Federation\CurlHttpClient;
+use LC\Common\HttpClient\CurlHttpClient;
 use LC\Portal\Federation\ForeignKeyListFetcher;
 
 try {

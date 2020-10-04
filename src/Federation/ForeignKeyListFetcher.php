@@ -13,6 +13,7 @@ use DateTime;
 use Exception;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use LC\Common\FileIO;
+use LC\Common\HttpClient\HttpClientInterface;
 use LC\Common\Json;
 use LC\Portal\OAuth\PublicSigner;
 use ParagonIE\ConstantTime\Base64UrlSafe;
@@ -43,12 +44,12 @@ class ForeignKeyListFetcher
             $fileModifiedDateTime = new DateTime('@'.$filemTime);
             $requestHeaders[] = 'If-Modified-Since: '.$fileModifiedDateTime->format('D, d M Y H:i:s \G\M\T');
         }
-        $serverListResponse = $httpClient->get($serverListUrl, $requestHeaders);
+        $serverListResponse = $httpClient->get($serverListUrl, [], $requestHeaders);
         if (200 !== $serverListResponse->getCode()) {
             // unable to fetch server_list, or not modified
             return;
         }
-        $serverListSigResponse = $httpClient->get($serverListUrl.'.minisig', []);
+        $serverListSigResponse = $httpClient->get($serverListUrl.'.minisig', [], []);
         if (200 !== $serverListSigResponse->getCode()) {
             // unable to fetch server_list signature, or not modified
             return;

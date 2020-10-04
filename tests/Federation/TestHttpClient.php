@@ -9,21 +9,22 @@
 
 namespace LC\Portal\Tests\Federation;
 
-use LC\Portal\Federation\HttpClientInterface;
-use LC\Portal\Federation\HttpClientResponse;
+use LC\Common\HttpClient\HttpClientInterface;
+use LC\Common\HttpClient\HttpClientResponse;
 use RuntimeException;
 
 class TestHttpClient implements HttpClientInterface
 {
     /**
-     * @param string                $requestUri
-     * @param array<string, string> $requestHeaders
+     * @param string               $requestUrl
+     * @param array<string,string> $queryParameters
+     * @param array<string>        $requestHeaders
      *
-     * @return Response
+     * @return \LC\Common\HttpClient\HttpClientResponse
      */
-    public function get($requestUri, array $requestHeaders = [])
+    public function get($requestUrl, array $queryParameters, array $requestHeaders = [])
     {
-        switch ($requestUri) {
+        switch ($requestUrl) {
             case 'https://disco.eduvpn.org/v2/server_list.json':
                 return new HttpClientResponse(
                     200,
@@ -49,7 +50,20 @@ class TestHttpClient implements HttpClientInterface
                     file_get_contents(sprintf('%s/data/server_list_rollback.json.minisig', __DIR__))
                 );
             default:
-                throw new RuntimeException('no such requestUri');
+                throw new RuntimeException('no such requestUrl');
         }
+    }
+
+    /**
+     * @param string               $requestUrl
+     * @param array<string,string> $queryParameters
+     * @param array<string,string> $postData
+     * @param array<string>        $requestHeaders
+     *
+     * @return HttpClientResponse
+     */
+    public function post($requestUrl, array $queryParameters, array $postData, array $requestHeaders = [])
+    {
+        throw new RuntimeException('POST not implemented');
     }
 }
