@@ -145,7 +145,7 @@ class TestHttpClient implements HttpClientInterface
                         'data' => $responseData,
                     ],
                 ]
-            ),
+            )
         );
     }
 
@@ -168,7 +168,7 @@ class TestHttpClient implements HttpClientInterface
                         'error' => $errorMessage,
                     ],
                 ]
-            ),
+            )
         );
     }
 }
