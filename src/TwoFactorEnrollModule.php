@@ -13,10 +13,10 @@ use LC\Common\Http\HtmlResponse;
 use LC\Common\Http\InputValidation;
 use LC\Common\Http\RedirectResponse;
 use LC\Common\Http\Request;
-use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\Http\SessionInterface;
+use LC\Common\Http\UserInfo;
 use LC\Common\HttpClient\Exception\ApiException;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\TplInterface;
@@ -61,6 +61,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
+                $totpSecret = Base32::encodeUpper(random_bytes(20));
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -69,7 +70,8 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                             'requireTwoFactorEnrollment' => null !== $this->session->get('_two_factor_enroll_redirect_to'),
                             'twoFactorMethods' => $this->twoFactorMethods,
                             'hasTotpSecret' => $hasTotpSecret,
-                            'totpSecret' => Base32::encodeUpper(random_bytes(20)),
+                            'totpSecret' => $totpSecret,
+                            'otpAuthUrl' => self::getOtpAuthUrl($request, $userInfo, $totpSecret),
                         ]
                     )
                 );
@@ -105,6 +107,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                                 'hasTotpSecret' => $hasTotpSecret,
                                 'totpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',
+                                'otpAuthUrl' => self::getOtpAuthUrl($request, $userInfo, $totpSecret),
                             ]
                         )
                     );
@@ -123,32 +126,6 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }
         );
-
-        $service->get(
-            '/two_factor_enroll_qr',
-            /**
-             * @return \LC\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-
-                $totpSecret = InputValidation::totpSecret($request->requireQueryParameter('totp_secret'));
-
-                $otpAuthUrl = sprintf(
-                    'otpauth://totp/%s:%s?secret=%s&issuer=%s',
-                    self::labelEncode($request->getServerName()),
-                    self::labelEncode($userInfo->getUserId()),
-                    $totpSecret,
-                    self::labelEncode($request->getServerName())
-                );
-
-                $response = new Response(200, 'image/png');
-                $response->setBody(Qr::generate($otpAuthUrl));
-
-                return $response;
-            }
-        );
     }
 
     /**
@@ -159,5 +136,21 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     private static function labelEncode($labelStr)
     {
         return rawurlencode(str_replace(':', '_', $labelStr));
+    }
+
+    /**
+     * @param string $totpSecret
+     *
+     * @return string
+     */
+    private static function getOtpAuthUrl(Request $request, UserInfo $userInfo, $totpSecret)
+    {
+        return sprintf(
+            'otpauth://totp/%s:%s?secret=%s&issuer=%s',
+            self::labelEncode($request->getServerName()),
+            self::labelEncode($userInfo->getUserId()),
+            $totpSecret,
+            self::labelEncode($request->getServerName())
+        );
     }
 }

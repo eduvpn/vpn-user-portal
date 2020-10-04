@@ -44,6 +44,7 @@ use LC\Portal\MellonAuthentication;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
 use LC\Portal\PhpSamlSpAuthentication;
+use LC\Portal\QrModule;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSession;
 use LC\Portal\ShibAuthentication;
@@ -283,6 +284,8 @@ try {
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $serverClient, new DateInterval($sessionExpiry)));
+
+    $service->addModule(new QrModule());
 
     // two factor module
     if (0 !== count($twoFactorMethods)) {
