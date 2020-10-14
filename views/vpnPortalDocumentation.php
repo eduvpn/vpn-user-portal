@@ -15,10 +15,10 @@
     <h3>Windows</h3>
 
         <ol>
-        <li>Download the <a target="_blank" href="https://openvpn.net/index.php/open-source/downloads.html">OpenVPN Community client</a>
+        <li>Download the <a target="_blank" href="https://openvpn.net/community-downloads/">OpenVPN Community client</a>
             <ul>
                 <li>Choose "Installer, Windows Vista and later";
-                <li>Make sure you have the installer from the 2.4 release, e.g. <code>openvpn-install-2.4.7-I603.exe</code>;</li>
+                <li>Make sure you have the installer (<code>.exe</code>) from the latest stable release;</li>
                 <li>Keep your version updated, there may be (security) releases from time to time!</li>
             </ul>
         </li>
@@ -42,13 +42,13 @@
     <h3>Android</h3>
 	<p>
         Install <a target="_blank" href="https://play.google.com/store/apps/details?id=de.blinkt.openvpn">OpenVPN for Android</a>,
-        also available via <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=de.blinkt.openvpn">F-Droid</a>.
-        The proprietary <a target="_blank" href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a> can also be used. See the OpenVPN Connect <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-android-faq.html">FAQ</a>.
+        also available via <a target="_blank" href="https://f-droid.org/packages/de.blinkt.openvpn/">F-Droid</a>.
+        The proprietary <a target="_blank" href="https://play.google.com/store/apps/details?id=net.openvpn.openvpn">OpenVPN Connect</a> can also be used. See the OpenVPN Connect <a target="_blank" href="https://openvpn.net/vpn-server-resources/faq-regarding-openvpn-connect-android/">FAQ</a>.
 	</p>
     <h3>iOS</h3>
     <p>
-        Install <a target="_blank" href="https://itunes.apple.com/us/app/openvpn-connect/id590379981">OpenVPN Connect</a>.
-        A <a target="_blank" href="https://docs.openvpn.net/docs/openvpn-connect/openvpn-connect-ios-faq.html">FAQ</a> is available.
+        Install <a target="_blank" href="https://apps.apple.com/us/app/openvpn-connect/id590379981">OpenVPN Connect</a>.
+        A <a target="_blank" href="https://openvpn.net/vpn-server-resources/faq-regarding-openvpn-connect-ios/">FAQ</a> is available.
     </p>
     <p>
         You may want to enable <code>Seamless tunnel (iOS8+)</code> in the OpenVPN Settings.
@@ -58,13 +58,13 @@
     <h3>Linux</h3>
     <p>
         Importing the VPN configuration in NetworkManager works fine on modern
-        Linux distributions. The following distributions were tested and work:
+        Linux distributions. The following distributions are tested and work:
     </p>
     <ul>
-        <li><a target="_blank" href="https://getfedora.org/">Fedora</a> >= 28;</li>
+        <li><a target="_blank" href="https://getfedora.org/">Fedora</a> >= 31;</li>
         <li><a target="_blank" href="https://www.centos.org/">CentOS</a> >= 7 (<code>yum install NetworkManager-openvpn-gnome</code>);</li>
-        <li><a target="_blank" href="https://www.debian.org/">Debian</a> >= 9 (<code>apt install network-manager-openvpn-gnome</code>);</li>
-        <li><a target="_blank" href="https://www.ubuntu.com/">Ubuntu</a> >= 18.04 LTS (<code>apt install network-manager-openvpn-gnome</code>);</li>
+        <li><a target="_blank" href="https://www.debian.org/">Debian</a> >= 10 (<code>apt install network-manager-openvpn-gnome</code>);</li>
+        <li><a target="_blank" href="https://www.ubuntu.com/">Ubuntu</a> >= 20.04 LTS (<code>apt install network-manager-openvpn-gnome</code>);</li>
     </ul>
 
     <?php if (0 !== count($twoFactorMethods)): ?>
@@ -87,8 +87,8 @@
             </p>
 
             <ul>
-                <li>Android (<a target="_blank" href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp">Google Play Store</a>, <a target="_blank" href="https://f-droid.org/repository/browse/?fdid=org.fedorahosted.freeotp">F-Droid</a>)</li>
-                <li>iOS (<a target="_blank" href="https://itunes.apple.com/us/app/freeotp-authenticator/id872559395">iTunes</a>)</li>
+                <li>Android (<a target="_blank" href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp">Google Play Store</a>, <a target="_blank" href="https://f-droid.org/packages/org.fedorahosted.freeotp/">F-Droid</a>)</li>
+                <li>iOS (<a target="_blank" href="https://apps.apple.com/app/freeotp-authenticator/id872559395">App Store</a>)</li>
 
             </ul>
         <?php endif; ?>
@@ -99,7 +99,7 @@
         Install the latest version of
         <a target="_blank" href="https://getfirefox.com">Mozilla Firefox</a> to browse the
         web, and install ONLY the following extensions. Remove ALL other
-        installed extensions!
+        installed extensions and add-ons!
     </p>
 
     <ul>
