@@ -49,15 +49,13 @@ window.onload = function() {
         if (u.endsWith('/'))
           u = u.substring(0, u.length - 1);
         document.getElementById('server').value = u;
-        document.getElementById('issuance').addEventListener('click', doIssuanceSession);
         document.getElementById('verification').addEventListener('click', doVerificationSession);
-        document.getElementById('method').addEventListener('change', methodChanged);
-        methodChanged();
       };
 </script>
 <form>
     <label for="attr" class="label">Attribute:</label>
     <input id="attr" type="text" value="pbdf.pbdf.email.email"><br/>
+    <input id="server" type="text">
     <button id="verification">Verify attribute</button>
 </form>
 <?php $this->stop('content'); ?>
