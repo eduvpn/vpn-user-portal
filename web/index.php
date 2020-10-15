@@ -39,6 +39,7 @@ use LC\Portal\DisabledUserHook;
 use LC\Portal\FormLdapAuthentication;
 use LC\Portal\FormPdoAuthentication;
 use LC\Portal\FormRadiusAuthentication;
+use LC\Portal\IrmaAuthentication;
 use LC\Portal\LogoutModule;
 use LC\Portal\MellonAuthentication;
 use LC\Portal\OAuth\PublicSigner;
@@ -225,7 +226,15 @@ try {
             $service->addBeforeHook('auth', $formPdoAuthentication);
             $service->addModule($formPdoAuthentication);
             break;
-         default:
+        case 'IrmaAuthentication':
+            $irmaAuthentication = new IrmaAuthentication(
+                $seSession,
+                $tpl
+            );
+            $service->addBeforeHook('auth', $irmaAuthentication);
+            $service->addModule($irmaAuthentication);
+            break;
+        default:
             // try to dynamically load the authentication mechanism
             $authClass = sprintf('LC\Portal\%s', $authMethod);
             if (!class_exists($authClass)) {
