@@ -5,9 +5,11 @@
 - switch to new discovery files for eduVPN federation
 - implement changes for updated `Config` API
 - switch to the common HTTP client
-- implement support to first search for DN based on attribute instead of 
-  providing `bindDnTemplate` with LDAP authentication
-  
+- deal with `Api` and/or `Api -> consumerList` configuration options missing, 
+  it broke the portal
+- implement support for anonymous LDAP search to find the DN to bind with in 
+  order to verify the user's password (based on arbitrary LDAP attribute)
+
 ## 2.3.4 (2020-09-08)
 - support client certificate authentication (`ClientCertAuthentication`)
 - fix CSS/JS cache busting, `base.php` template changes
