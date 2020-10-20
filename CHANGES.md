@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.5 (...)
+## 2.3.5 (2020-10-20)
 - update `pt_PT` translation
 - switch to new discovery files for eduVPN federation
 - implement changes for updated `Config` API
