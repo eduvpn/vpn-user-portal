@@ -152,11 +152,13 @@ class LdapAuth implements CredentialValidatorInterface
     private function getBindDn($authUser)
     {
         if (null !== $this->bindDnTemplate) {
-            // we have a bind DN template to bind to the LDAP, so use that
+            // we have a bind DN template to bind to the LDAP with the user's
+            // provided "Username", so use that
             return str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->bindDnTemplate);
         }
 
-        // we do not have a bind DN, so search for one based on userFilterTemplate
+        // we do not have a bind DN, so do an anonymous LDAP bind + search to
+        // find a DN we can bind with based on userFilterTemplate
         $this->ldapClient->bind();
         if (null === $this->userFilterTemplate) {
             $this->logger->error('"userFilterTemplate" not set, unable to search for DN');
@@ -165,7 +167,7 @@ class LdapAuth implements CredentialValidatorInterface
         }
         $userFilter = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->userFilterTemplate);
         if (null === $baseDn = $this->baseDn) {
-            $this->logger->error('"baseDN" not set, unable to search for DN');
+            $this->logger->error('"baseDn" not set, unable to search for DN');
 
             return false;
         }
