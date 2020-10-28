@@ -66,24 +66,24 @@ class VpnApiModule implements ServiceModuleInterface
                 $userPermissions = $this->getPermissionList($accessTokenInfo);
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileData) {
-                    $profileConfig = new ProfileConfig($profileData);
-                    if ($profileConfig->requireBool('hideProfile')) {
+                    $profileConfig = new ProfileConfig(new Config($profileData));
+                    if ($profileConfig->hideProfile()) {
                         continue;
                     }
-                    if ($profileConfig->requireBool('enableAcl')) {
+                    if ($profileConfig->enableAcl()) {
                         // is the user member of the aclPermissionList?
-                        if (!VpnPortalModule::isMember($profileConfig->requireArray('aclPermissionList'), $userPermissions)) {
+                        if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
                             continue;
                         }
                     }
 
                     $userProfileList[] = [
                         'profile_id' => $profileId,
-                        'display_name' => $profileConfig->requireString('displayName'),
+                        'display_name' => $profileConfig->displayName(),
                         // 2FA is now decided by vpn-user-portal setting, so
                         // we "lie" here to the client
                         'two_factor' => false,
-                        'default_gateway' => $profileConfig->requireBool('defaultGateway'),
+                        'default_gateway' => $profileConfig->defaultGateway(),
                     ];
                 }
 
@@ -185,13 +185,13 @@ class VpnApiModule implements ServiceModuleInterface
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileData) {
-                        $profileConfig = new ProfileConfig($profileData);
-                        if ($profileConfig->requireBool('hideProfile')) {
+                        $profileConfig = new ProfileConfig(new Config($profileData));
+                        if ($profileConfig->hideProfile()) {
                             continue;
                         }
-                        if ($profileConfig->requireBool('enableAcl')) {
+                        if ($profileConfig->enableAcl()) {
                             // is the user member of the userPermissions?
-                            if (!VpnPortalModule::isMember($profileConfig->requireArray('aclPermissionList'), $userPermissions)) {
+                            if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
                                 continue;
                             }
                         }
@@ -265,12 +265,12 @@ class VpnApiModule implements ServiceModuleInterface
         // obtain information about this profile to be able to construct
         // a client configuration file
         $profileList = $this->serverClient->getRequireArray('profile_list');
-        $profileData = $profileList[$profileId];
+        $profileConfig = new ProfileConfig(new Config($profileList[$profileId]));
 
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info', ['profile_id' => $profileId]);
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $remoteStrategy);
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, [], $remoteStrategy);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');

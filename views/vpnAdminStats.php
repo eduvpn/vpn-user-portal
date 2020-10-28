@@ -13,7 +13,7 @@
     <tbody>
     <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
         <tr>
-            <td title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig['displayName']); ?></td>
+            <td title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></td>
             <?php if (array_key_exists($profileId, $statsData)): ?>
                 <td><?=$this->e((string) $statsData[$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
                 <td><?=$this->e((string) $statsData[$profileId]['unique_user_count']); ?></td>
@@ -33,7 +33,7 @@
 <?php if (array_key_exists($profileId, $graphStats) && 0 !== count($graphStats[$profileId]['date_list'])): ?>
         <li>
         <details>
-            <summary><?=$this->e($profileConfig['displayName']); ?></summary>
+            <summary><?=$this->e($profileConfig->displayName()); ?></summary>
 
 <!-- #users -->
 <figure>

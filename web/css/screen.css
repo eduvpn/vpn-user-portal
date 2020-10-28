@@ -296,6 +296,7 @@ p.plain {
 
 span.plain, span.success, span.error {
   padding: 0.5em;
+  margin: 0.25em;
   border-radius: 0.5em;
   font-weight: bold;
   font-size: inherit;
