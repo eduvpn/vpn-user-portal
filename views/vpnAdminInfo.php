@@ -23,31 +23,31 @@
                         <td>
                         
 <?php if ($profileConfig->defaultGateway()): ?>
-                            <span class="success"><?=$this->t('Default Gateway'); ?></span>
+                            <span class="plain"><?=$this->t('Default Gateway'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->clientToClient()): ?>
-                            <span class="success"><?=$this->t('Client To Client'); ?></span>
+                            <span class="plain"><?=$this->t('Client To Client'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->enableLog()): ?>
-                            <span class="success"><?=$this->t('Logging'); ?></span>
+                            <span class="plain"><?=$this->t('Logging'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->enableAcl()): ?>
-                            <span class="success"><?=$this->t('Access Control'); ?></span>
+                            <span class="plain"><?=$this->t('Access Control'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->hideProfile()): ?>
-                            <span class="success"><?=$this->t('Hidden Profile'); ?></span>
+                            <span class="plain"><?=$this->t('Hidden Profile'); ?></span>
 <?php endif; ?>                    
 
 <?php if ($profileConfig->blockLan()): ?>
-                            <span class="success"><?=$this->t('LAN Traffic Blocked'); ?></span>
+                            <span class="plain"><?=$this->t('LAN Traffic Blocked'); ?></span>
 <?php endif; ?>     
 
 <?php if ($profileConfig->tlsOneThree()): ?>
-                            <span class="success"><?=$this->t('TLS >= 1.3'); ?></span>
+                            <span class="plain"><?=$this->t('TLS >= 1.3'); ?></span>
 <?php endif; ?>   
                         </td>
                     </tr>
@@ -148,9 +148,9 @@
                     <td><em><?=$this->t('N/A'); ?></em></td>
 <?php endif; ?>
                     </tr>   
-                    
-                    <tr><th><?=$this->t('DNS Suffix (legacy)'); ?></th>
+
 <?php if (0 !== count($profileConfig->dnsSuffix())): ?>
+                    <tr><th><?=$this->t('DNS Suffix');?> <span class="warning"><?=$this->t('legacy');?></span></th>
                     <td>
                         <ul>
 <?php foreach ($profileConfig->dnsSuffix() as $route): ?>
@@ -158,10 +158,7 @@
 <?php endforeach; ?>
                         </ul>
                     </td>
-<?php else: ?>
-                    <td><em><?=$this->t('N/A'); ?></em></td>
 <?php endif; ?>
-                    </tr>
             </table>
         </details></li>
     <?php endforeach; ?>
