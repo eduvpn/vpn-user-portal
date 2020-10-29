@@ -31,23 +31,23 @@
 <?php endif; ?>
 
 <?php if ($profileConfig->enableLog()): ?>
-                            <span class="plain"><?=$this->t('Logging'); ?></span>
+                            <span class="plain"><?=$this->t('Enable Log'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->enableAcl()): ?>
-                            <span class="plain"><?=$this->t('Access Control'); ?></span>
+                            <span class="plain"><?=$this->t('Enable ACL'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->hideProfile()): ?>
-                            <span class="plain"><?=$this->t('Hidden Profile'); ?></span>
+                            <span class="plain"><?=$this->t('Hide Profile'); ?></span>
 <?php endif; ?>                    
 
 <?php if ($profileConfig->blockLan()): ?>
-                            <span class="plain"><?=$this->t('LAN Traffic Blocked'); ?></span>
+                            <span class="plain"><?=$this->t('Block LAN'); ?></span>
 <?php endif; ?>     
 
 <?php if ($profileConfig->tlsOneThree()): ?>
-                            <span class="plain"><?=$this->t('TLS >= 1.3'); ?></span>
+                            <span class="plain"><?=$this->t('TLSv1.3'); ?></span>
 <?php endif; ?>   
                         </td>
                     </tr>
@@ -56,17 +56,16 @@
                     <tr><th><?=$this->t('Hostname'); ?></th><td><?=$this->e($profileConfig->hostName()); ?></td></tr>
                     <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><?=$this->e($profileConfig->range()); ?></td></tr>
                     <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><?=$this->e($profileConfig->range6()); ?></td></tr>
-                    <tr><th><?=$this->t('Listen Address'); ?></th><td><?=$this->e($profileConfig->listen()); ?></td></tr>
-                    <tr><th><?=$this->t('Management IP'); ?></th><td><?=$this->e($profileConfig->managementIp()); ?></td></tr>
+                    <tr><th><?=$this->t('OpenVPN Listen Address'); ?></th><td><?=$this->e($profileConfig->listen()); ?></td></tr>
+                    <tr><th><?=$this->t('OpenVPN Management IP'); ?></th><td><?=$this->e($profileConfig->managementIp()); ?></td></tr>
                     <tr><th><?=$this->t('TLS Protection'); ?></th><td><?=$this->e($profileConfig->tlsProtection()); ?></td></tr>
+
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
                     <tr><th><?=$this->t('DNS Domain'); ?></th><td><?=$this->e($dnsDomain); ?></td></tr>
-<?php else: ?>
-                    <tr><th><?=$this->t('DNS Domain'); ?></th><td><em><?=$this->t('N/A'); ?></em></td></tr>
 <?php endif; ?>                    
 
-                    <tr><th><?=$this->t('DNS Domain Search'); ?></th>
 <?php if (0 !== count($profileConfig->dnsDomainSearch())): ?>
+                    <tr><th><?=$this->t('DNS Domain Search'); ?></th>
                     <td>
                         <ul>
 <?php foreach ($profileConfig->dnsDomainSearch() as $route): ?>
@@ -74,13 +73,11 @@
 <?php endforeach; ?>
                         </ul>
                     </td>
-<?php else: ?>
-                    <td><em><?=$this->t('N/A'); ?></em></td>
-<?php endif; ?>
                     </tr>  
-                    
-                    <tr><th><?=$this->t('Routes'); ?></th>
+<?php endif; ?>
+
 <?php if (0 !== count($profileConfig->routes())): ?>
+                    <tr><th><?=$this->t('Routes'); ?></th>
                     <td>
                         <ul>
 <?php foreach ($profileConfig->routes() as $route): ?>
@@ -88,13 +85,11 @@
 <?php endforeach; ?>
                         </ul>
                     </td>
-<?php else: ?>
-                    <td><em><?=$this->t('N/A'); ?></em></td>
-<?php endif; ?>
                     </tr>
+<?php endif; ?>
 
-                    <tr><th><?=$this->t('DNS Servers'); ?></th>
 <?php if (0 !== count($profileConfig->dns())): ?>
+                    <tr><th><?=$this->t('DNS Servers'); ?></th>
                     <td>
                         <ul>
 <?php foreach ($profileConfig->dns() as $route): ?>
@@ -102,13 +97,11 @@
 <?php endforeach; ?>
                         </ul>
                     </td>
-<?php else: ?>
-                    <td><em><?=$this->t('N/A'); ?></em></td>
-<?php endif; ?>
                     </tr>
+<?php endif; ?>
 
-                    <tr><th><?=$this->t('ACL Permission List'); ?></th>
 <?php if (0 !== count($profileConfig->aclPermissionList())): ?>
+                    <tr><th><?=$this->t('ACL Permission List'); ?></th>
                     <td>
                         <ul>
 <?php foreach ($profileConfig->aclPermissionList() as $route): ?>
@@ -116,13 +109,11 @@
 <?php endforeach; ?>
                         </ul>
                     </td>
-<?php else: ?>
-                    <td><em><?=$this->t('N/A'); ?></em></td>
-<?php endif; ?>
                     </tr>                                        
+<?php endif; ?>
 
-                    <tr><th><?=$this->t('VPN Ports'); ?></th>
 <?php if (0 !== count($profileConfig->vpnProtoPorts())): ?>
+                    <tr><th><?=$this->t('OpenVPN Ports'); ?></th>
                     <td>
                         <ul>
 <?php foreach ($profileConfig->vpnProtoPorts() as $route): ?>
@@ -130,13 +121,11 @@
 <?php endforeach; ?>
                         </ul>
                     </td>
-<?php else: ?>
-                    <td><em><?=$this->t('N/A'); ?></em></td>
-<?php endif; ?>
                     </tr>    
+<?php endif; ?>
 
-                    <tr><th><?=$this->t('Exposed VPN Ports'); ?></th>
 <?php if (0 !== count($profileConfig->exposedVpnProtoPorts())): ?>
+                    <tr><th><?=$this->t('Exposed OpenVPN Ports'); ?></th>
                     <td>
                         <ul>
 <?php foreach ($profileConfig->exposedVpnProtoPorts() as $route): ?>
@@ -144,13 +133,11 @@
 <?php endforeach; ?>
                         </ul>
                     </td>
-<?php else: ?>
-                    <td><em><?=$this->t('N/A'); ?></em></td>
-<?php endif; ?>
                     </tr>   
+<?php endif; ?>
 
 <?php if (0 !== count($profileConfig->dnsSuffix())): ?>
-                    <tr><th><?=$this->t('DNS Suffix');?> <span class="warning"><?=$this->t('legacy');?></span></th>
+                    <tr><th><?=$this->t('DNS Suffix'); ?> <span class="warning"><?=$this->t('Legacy'); ?></span></th>
                     <td>
                         <ul>
 <?php foreach ($profileConfig->dnsSuffix() as $route): ?>
@@ -158,6 +145,7 @@
 <?php endforeach; ?>
                         </ul>
                     </td>
+                    </tr>
 <?php endif; ?>
             </table>
         </details></li>
