@@ -53,15 +53,15 @@
                     </tr>
                                
                     <tr><th><?=$this->t('Profile Number'); ?></th><td><?=$this->e($profileConfig->profileNumber()); ?></td></tr>
-                    <tr><th><?=$this->t('Hostname'); ?></th><td><?=$this->e($profileConfig->hostName()); ?></td></tr>
-                    <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><?=$this->e($profileConfig->range()); ?></td></tr>
-                    <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><?=$this->e($profileConfig->range6()); ?></td></tr>
-                    <tr><th><?=$this->t('OpenVPN Listen Address'); ?></th><td><?=$this->e($profileConfig->listen()); ?></td></tr>
-                    <tr><th><?=$this->t('OpenVPN Management IP'); ?></th><td><?=$this->e($profileConfig->managementIp()); ?></td></tr>
+                    <tr><th><?=$this->t('Hostname'); ?></th><td><code><?=$this->e($profileConfig->hostName()); ?></code></td></tr>
+                    <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range()); ?></code></td></tr>
+                    <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range6()); ?></code></td></tr>
+                    <tr><th><?=$this->t('OpenVPN Listen Address'); ?></th><td><code><?=$this->e($profileConfig->listen()); ?></code></td></tr>
+                    <tr><th><?=$this->t('OpenVPN Management IP'); ?></th><td><code><?=$this->e($profileConfig->managementIp()); ?></code></td></tr>
                     <tr><th><?=$this->t('TLS Protection'); ?></th><td><?=$this->e($profileConfig->tlsProtection()); ?></td></tr>
 
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
-                    <tr><th><?=$this->t('DNS Domain'); ?></th><td><?=$this->e($dnsDomain); ?></td></tr>
+                    <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($dnsDomain); ?></code></td></tr>
 <?php endif; ?>                    
 
 <?php if (0 !== count($profileConfig->dnsDomainSearch())): ?>
@@ -69,7 +69,7 @@
                     <td>
                         <ul>
 <?php foreach ($profileConfig->dnsDomainSearch() as $route): ?>
-                            <li><?=$this->e($route); ?></li>
+                            <li><code><?=$this->e($route); ?></code></li>
 <?php endforeach; ?>
                         </ul>
                     </td>
@@ -81,7 +81,7 @@
                     <td>
                         <ul>
 <?php foreach ($profileConfig->routes() as $route): ?>
-                            <li><?=$this->e($route); ?></li>
+                            <li><code><?=$this->e($route); ?></code></li>
 <?php endforeach; ?>
                         </ul>
                     </td>
@@ -93,7 +93,7 @@
                     <td>
                         <ul>
 <?php foreach ($profileConfig->dns() as $route): ?>
-                            <li><?=$this->e($route); ?></li>
+                            <li><code><?=$this->e($route); ?></code></li>
 <?php endforeach; ?>
                         </ul>
                     </td>
@@ -105,7 +105,7 @@
                     <td>
                         <ul>
 <?php foreach ($profileConfig->aclPermissionList() as $route): ?>
-                            <li><?=$this->e($route); ?></li>
+                            <li><code><?=$this->e($route); ?></code></li>
 <?php endforeach; ?>
                         </ul>
                     </td>
@@ -117,7 +117,7 @@
                     <td>
                         <ul>
 <?php foreach ($profileConfig->vpnProtoPorts() as $route): ?>
-                            <li><?=$this->e($route); ?></li>
+                            <li><code><?=$this->e($route); ?></code></li>
 <?php endforeach; ?>
                         </ul>
                     </td>
@@ -129,7 +129,7 @@
                     <td>
                         <ul>
 <?php foreach ($profileConfig->exposedVpnProtoPorts() as $route): ?>
-                            <li><?=$this->e($route); ?></li>
+                            <li><code><?=$this->e($route); ?></code></li>
 <?php endforeach; ?>
                         </ul>
                     </td>
@@ -141,7 +141,7 @@
                     <td>
                         <ul>
 <?php foreach ($profileConfig->dnsSuffix() as $route): ?>
-                            <li><?=$this->e($route); ?></li>
+                            <li><code><?=$this->e($route); ?></code></li>
 <?php endforeach; ?>
                         </ul>
                     </td>
