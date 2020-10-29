@@ -343,15 +343,6 @@ main div.appAuth {
   max-width: 30em;
 }
 
-ul.profileList {
-  list-style: none;
-  padding: 0;
-}
-
-ul.profileList li {
-  margin: 0.5em 0;
-}
-
 dl dt {
   margin: 0.5em 0;
   display: block;
