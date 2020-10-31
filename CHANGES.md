@@ -1,10 +1,14 @@
 # Changelog
 
-## 2.3.5 (...)
+## 2.3.5 (2020-10-20)
 - update `pt_PT` translation
 - switch to new discovery files for eduVPN federation
 - implement changes for updated `Config` API
 - switch to the common HTTP client
+- deal with `Api` and/or `Api -> consumerList` configuration options missing, 
+  it broke the portal
+- implement support for anonymous LDAP search to find the DN to bind with in 
+  order to verify the user's password (based on arbitrary LDAP attribute)
 
 ## 2.3.4 (2020-09-08)
 - support client certificate authentication (`ClientCertAuthentication`)

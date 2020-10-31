@@ -4,7 +4,7 @@
 
 body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-size: 1.1rem;
+  font-size: 1.0rem;
   background-color: #ededed;
   margin: 0;
   padding: 0;
@@ -34,7 +34,7 @@ h4 {
 
 h1, h2, h3, h4 {
   color: #000;
-  margin: 1em 0 0.5em 0;
+  margin: 1em 0;
   line-height: 1.25;
 }
 
@@ -294,11 +294,12 @@ p.plain {
   background-color: #ededed;
 }
 
-span.plain, span.success, span.error {
+span.plain, span.success, span.error, span.warning {
   padding: 0.5em;
+  margin: 0.25em;
   border-radius: 0.5em;
   font-weight: bold;
-  font-size: inherit;
+  font-size: 90%;
   display: inline-block;
 }
 
@@ -315,6 +316,11 @@ span.success {
 span.error {
   color: #fff;
   background-color: #ed3415;
+}
+
+span.warning {
+  color: #fff;
+  background-color: #ff9900;
 }
 
 p.warning {
@@ -337,15 +343,6 @@ main div.appAuth {
   max-width: 30em;
 }
 
-ul.profileList {
-  list-style: none;
-  padding: 0;
-}
-
-ul.profileList li {
-  margin: 0.5em 0;
-}
-
 dl dt {
   margin: 0.5em 0;
   display: block;
@@ -363,6 +360,11 @@ svg.appUsage {
   display: block;
   margin: 0 auto;
   max-width: 40%;
+}
+
+ul.toc {
+  padding: 0 1em;
+  list-style: none;
 }
 
 ul.appUsage {

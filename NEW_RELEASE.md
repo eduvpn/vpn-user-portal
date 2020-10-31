@@ -14,4 +14,4 @@ Before tagging a new release:
    version number;
 8. Push the tags: `git push origin 1.2.3`, `git push github 1.2.3`
 9. Run `make_release`
-10. Manually add the (signed) releases from `output` to the GitHub "Releases"
+10. Run `upload_release`

@@ -22,7 +22,7 @@ class LdapAuth implements CredentialValidatorInterface
     /** @var LdapClient */
     private $ldapClient;
 
-    /** @var string */
+    /** @var string|null */
     private $bindDnTemplate;
 
     /** @var string|null */
@@ -41,7 +41,7 @@ class LdapAuth implements CredentialValidatorInterface
     private $permissionAttributeList;
 
     /**
-     * @param string        $bindDnTemplate
+     * @param string|null   $bindDnTemplate
      * @param string|null   $baseDn
      * @param string|null   $userFilterTemplate
      * @param string|null   $userIdAttribute
@@ -75,7 +75,12 @@ class LdapAuth implements CredentialValidatorInterface
             }
         }
 
-        $bindDn = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->bindDnTemplate);
+        // get bind DN either from template, or from anonymous bind + search
+        if (false === $bindDn = $this->getBindDn($authUser)) {
+            // unable to find a DN to bind with...
+            return false;
+        }
+
         try {
             $this->ldapClient->bind($bindDn, $authPass);
 
@@ -137,6 +142,42 @@ class LdapAuth implements CredentialValidatorInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param string $authUser
+     *
+     * @return string|false
+     */
+    private function getBindDn($authUser)
+    {
+        if (null !== $this->bindDnTemplate) {
+            // we have a bind DN template to bind to the LDAP with the user's
+            // provided "Username", so use that
+            return str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->bindDnTemplate);
+        }
+
+        // we do not have a bind DN, so do an anonymous LDAP bind + search to
+        // find a DN we can bind with based on userFilterTemplate
+        $this->ldapClient->bind();
+        if (null === $this->userFilterTemplate) {
+            $this->logger->error('"userFilterTemplate" not set, unable to search for DN');
+
+            return false;
+        }
+        $userFilter = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->userFilterTemplate);
+        if (null === $baseDn = $this->baseDn) {
+            $this->logger->error('"baseDn" not set, unable to search for DN');
+
+            return false;
+        }
+        $ldapEntries = $this->ldapClient->search($baseDn, $userFilter);
+        if (!isset($ldapEntries[0]['dn'])) {
+            // unable to find an entry in this baseDn with this filter
+            return false;
+        }
+
+        return $ldapEntries[0]['dn'];
     }
 
     /**

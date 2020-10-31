@@ -12,6 +12,7 @@ namespace LC\Portal;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
+use LC\Common\Config;
 use LC\Common\Http\AuthUtils;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\HtmlResponse;
@@ -21,6 +22,7 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\HttpClient\ServerClient;
+use LC\Common\ProfileConfig;
 use LC\Common\TplInterface;
 
 class AdminPortalModule implements ServiceModuleInterface
@@ -86,11 +88,17 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
+                $profileConfigList = [];
+                $profileList = $this->serverClient->getRequireArray('profile_list');
+                foreach ($profileList as $profileId => $profileConfigData) {
+                    $profileConfigList[$profileId] = new ProfileConfig(new Config($profileConfigData));
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
-                            'profileList' => $this->serverClient->getRequireArray('profile_list'),
+                            'profileConfigList' => $profileConfigList,
                             'caInfo' => $this->serverClient->getRequireArray('ca_info'),
                         ]
                     )
@@ -261,6 +269,10 @@ class AdminPortalModule implements ServiceModuleInterface
                 AuthUtils::requireAdmin($hookData);
 
                 $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileConfigList = [];
+                foreach ($profileList as $profileId => $profileConfigData) {
+                    $profileConfigList[$profileId] = new ProfileConfig(new Config($profileConfigData));
+                }
                 $appUsage = self::getAppUsage($this->serverClient->getRequireArray('app_usage'));
 
                 return new HtmlResponse(
@@ -271,7 +283,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'statsData' => $this->getStatsData(),
                             'graphStats' => $this->getGraphStats(),
                             'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit($profileList),
-                            'profileConfigList' => $profileList,
+                            'profileConfigList' => $profileConfigList,
                         ]
                     )
                 );

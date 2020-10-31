@@ -11,8 +11,12 @@ working!
 ## 2.3.5
 
 Under `Api` the `remoteAccessList` is ignored from now on. When `remoteAccess` 
-is set to `true` the eduVPN `server_list.json` is downloaded, validated and 
-used to allow access from the servers listed in that file.
+is set to `true` the official eduVPN `server_list.json` is downloaded, 
+validated and used to allow access from token issued by the servers listed in 
+that file.
+
+The `Api` section is now completely optional. The `consumerList` option under
+`Api` is also optional now.
 
 ## 2.3.4
 

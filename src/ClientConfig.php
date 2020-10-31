@@ -9,6 +9,8 @@
 
 namespace LC\Portal;
 
+use LC\Common\ProfileConfig;
+
 class ClientConfig
 {
     const STRATEGY_FIRST = 0;
@@ -20,16 +22,14 @@ class ClientConfig
      *
      * @return string
      */
-    public static function get(array $profileConfig, array $serverInfo, array $clientCertificate, $remoteStrategy)
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, array $clientCertificate, $remoteStrategy)
     {
         // make a list of ports/proto to add to the configuration file
-        $hostName = $profileConfig['hostName'];
+        $hostName = $profileConfig->hostName();
 
-        $vpnProtoPorts = $profileConfig['vpnProtoPorts'];
-        if (\array_key_exists('exposedVpnProtoPorts', $profileConfig)) {
-            if (0 !== \count($profileConfig['exposedVpnProtoPorts'])) {
-                $vpnProtoPorts = $profileConfig['exposedVpnProtoPorts'];
-            }
+        $vpnProtoPorts = $profileConfig->vpnProtoPorts();
+        if (0 !== \count($profileConfig->exposedVpnProtoPorts())) {
+            $vpnProtoPorts = $profileConfig->exposedVpnProtoPorts();
         }
 
         $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy);
@@ -66,7 +66,7 @@ class ClientConfig
             '</ca>',
         ];
 
-        if (\array_key_exists('tlsOneThree', $profileConfig) && $profileConfig['tlsOneThree']) {
+        if ($profileConfig->tlsOneThree()) {
             // for TLSv1.3 we don't care about the tls-ciphers, they are all
             // fine, let the client choose
             $clientConfig[] = 'tls-version-min 1.3';
@@ -96,7 +96,7 @@ class ClientConfig
             );
         }
 
-        if ('tls-crypt' === $profileConfig['tlsProtection']) {
+        if ('tls-crypt' === $profileConfig->tlsProtection()) {
             $clientConfig = array_merge(
                 $clientConfig,
                 [
