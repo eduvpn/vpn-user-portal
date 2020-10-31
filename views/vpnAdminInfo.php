@@ -11,10 +11,10 @@
         </tbody>
     </table>
     <h2><?=$this->t('Profiles'); ?></h2>
-    <ul>
-    <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
+    <ul class="toc">
+<?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
         <li><a href="#<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
-    <?php endforeach; ?>
+<?php endforeach; ?>
     </ul>
     
     <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
@@ -30,8 +30,8 @@
 <?php endif; ?>
 
 <?php if ($profileConfig->clientToClient()): ?>
-                    <span class="plain"><?=$this->t('Client To Client'); ?></span>
-<?php endif; ?>
+                    <span class="plain"><?=$this->t('Client-to-client'); ?></span>
+    <?php endif; ?>
 
 <?php if ($profileConfig->enableLog()): ?>
                     <span class="plain"><?=$this->t('Enable Log'); ?></span>
@@ -50,7 +50,7 @@
 <?php endif; ?>     
 
 <?php if ($profileConfig->tlsOneThree()): ?>
-                    <span class="plain"><?=$this->t('TLSv1.3'); ?></span>
+                    <span class="plain"><?=$this->t('TLS >= 1.3'); ?></span>
 <?php endif; ?>   
                 </td>
             </tr>
@@ -59,8 +59,8 @@
             <tr><th><?=$this->t('Hostname'); ?></th><td><code><?=$this->e($profileConfig->hostName()); ?></code></td></tr>
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range()); ?></code></td></tr>
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range6()); ?></code></td></tr>
-            <tr><th><?=$this->t('OpenVPN Listen Address'); ?></th><td><code><?=$this->e($profileConfig->listen()); ?></code></td></tr>
-            <tr><th><?=$this->t('OpenVPN Management IP'); ?></th><td><code><?=$this->e($profileConfig->managementIp()); ?></code></td></tr>
+            <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($profileConfig->listen()); ?></code></td></tr>
+            <tr><th><?=$this->t('Management IP'); ?></th><td><code><?=$this->e($profileConfig->managementIp()); ?></code></td></tr>
             <tr><th><?=$this->t('TLS Protection'); ?></th><td><?=$this->e($profileConfig->tlsProtection()); ?></td></tr>
 
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
@@ -68,7 +68,7 @@
 <?php endif; ?>                    
 
 <?php if (0 !== count($profileConfig->dnsDomainSearch())): ?>
-            <tr><th><?=$this->t('DNS Domain Search'); ?></th>
+            <tr><th><?=$this->t('DNS Search Domain(s)'); ?></th>
             <td>
                 <ul>
 <?php foreach ($profileConfig->dnsDomainSearch() as $route): ?>
@@ -80,7 +80,7 @@
 <?php endif; ?>
 
 <?php if (0 !== count($profileConfig->routes())): ?>
-            <tr><th><?=$this->t('Routes'); ?></th>
+            <tr><th><?=$this->t('Route(s)'); ?></th>
             <td>
                 <ul>
 <?php foreach ($profileConfig->routes() as $route): ?>
@@ -92,7 +92,7 @@
 <?php endif; ?>
 
 <?php if (0 !== count($profileConfig->dns())): ?>
-            <tr><th><?=$this->t('DNS Servers'); ?></th>
+            <tr><th><?=$this->t('DNS Server(s)'); ?></th>
             <td>
                 <ul>
 <?php foreach ($profileConfig->dns() as $route): ?>
@@ -116,7 +116,7 @@
 <?php endif; ?>
 
 <?php if (0 !== count($profileConfig->vpnProtoPorts())): ?>
-            <tr><th><?=$this->t('OpenVPN Ports'); ?></th>
+            <tr><th><?=$this->t('Proto/Ports'); ?></th>
             <td>
                 <ul>
 <?php foreach ($profileConfig->vpnProtoPorts() as $route): ?>
@@ -128,7 +128,7 @@
 <?php endif; ?>
 
 <?php if (0 !== count($profileConfig->exposedVpnProtoPorts())): ?>
-            <tr><th><?=$this->t('Exposed OpenVPN Ports'); ?></th>
+            <tr><th><?=$this->t('Exposed Proto/Ports'); ?></th>
             <td>
                 <ul>
 <?php foreach ($profileConfig->exposedVpnProtoPorts() as $route): ?>

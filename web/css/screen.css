@@ -34,7 +34,7 @@ h4 {
 
 h1, h2, h3, h4 {
   color: #000;
-  margin: 1em 0 0.5em 0;
+  margin: 1em 0;
   line-height: 1.25;
 }
 
@@ -360,6 +360,11 @@ svg.appUsage {
   display: block;
   margin: 0 auto;
   max-width: 40%;
+}
+
+ul.toc {
+  padding: 0 1em;
+  list-style: none;
 }
 
 ul.appUsage {

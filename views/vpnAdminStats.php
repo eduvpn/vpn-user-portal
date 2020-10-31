@@ -29,7 +29,7 @@
 </table>
 
 <h2><?=$this->t('Profile Usage'); ?></h2>
-<ul>
+<ul class="toc">
 <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
 <?php if (array_key_exists($profileId, $graphStats) && 0 !== count($graphStats[$profileId]['date_list'])): ?>
         <li><a href="#<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
