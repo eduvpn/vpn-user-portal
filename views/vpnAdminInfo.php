@@ -116,7 +116,7 @@
 <?php endif; ?>
 
 <?php if (0 !== count($profileConfig->vpnProtoPorts())): ?>
-            <tr><th><?=$this->t('Proto/Ports'); ?></th>
+            <tr><th><?=$this->t('Protocols/Ports'); ?></th>
             <td>
                 <ul>
 <?php foreach ($profileConfig->vpnProtoPorts() as $route): ?>
@@ -128,7 +128,7 @@
 <?php endif; ?>
 
 <?php if (0 !== count($profileConfig->exposedVpnProtoPorts())): ?>
-            <tr><th><?=$this->t('Exposed Proto/Ports'); ?></th>
+            <tr><th><?=$this->t('Offered Protocols/Ports'); ?></th>
             <td>
                 <ul>
 <?php foreach ($profileConfig->exposedVpnProtoPorts() as $route): ?>
