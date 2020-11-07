@@ -68,11 +68,9 @@
 <?php if (0 !== count($profileConfig->dnsDomainSearch())): ?>
             <tr><th><?=$this->t('DNS Search Domain(s)'); ?></th>
             <td>
-                <ul>
 <?php foreach ($profileConfig->dnsDomainSearch() as $route): ?>
-                    <li><code><?=$this->e($route); ?></code></li>
+                <span class="plain"><code><?=$this->e($route); ?></code></span>
 <?php endforeach; ?>
-                </ul>
             </td>
             </tr>  
 <?php endif; ?>
@@ -80,11 +78,9 @@
 <?php if (0 !== count($profileConfig->routes())): ?>
             <tr><th><?=$this->t('Route(s)'); ?></th>
             <td>
-                <ul>
 <?php foreach ($profileConfig->routes() as $route): ?>
-                    <li><code><?=$this->e($route); ?></code></li>
+                    <span class="plain"><code><?=$this->e($route); ?></code></span>
 <?php endforeach; ?>
-                </ul>
             </td>
             </tr>
 <?php endif; ?>
@@ -92,11 +88,9 @@
 <?php if (0 !== count($profileConfig->dns())): ?>
             <tr><th><?=$this->t('DNS Server(s)'); ?></th>
             <td>
-                <ul>
 <?php foreach ($profileConfig->dns() as $route): ?>
-                    <li><code><?=$this->e($route); ?></code></li>
+                    <span class="plain"><code><?=$this->e($route); ?></code></span>
 <?php endforeach; ?>
-                </ul>
             </td>
             </tr>
 <?php endif; ?>
@@ -104,11 +98,9 @@
 <?php if (0 !== count($profileConfig->aclPermissionList())): ?>
             <tr><th><?=$this->t('ACL Permission List'); ?></th>
             <td>
-                <ul>
 <?php foreach ($profileConfig->aclPermissionList() as $route): ?>
-                    <li><code><?=$this->e($route); ?></code></li>
+                    <span class="plain"><code><?=$this->e($route); ?></code></span>
 <?php endforeach; ?>
-                </ul>
             </td>
             </tr>                                        
 <?php endif; ?>
@@ -116,11 +108,9 @@
 <?php if (0 !== count($profileConfig->vpnProtoPorts())): ?>
             <tr><th><?=$this->t('Protocols/Ports'); ?></th>
             <td>
-                <ul>
 <?php foreach ($profileConfig->vpnProtoPorts() as $route): ?>
-                    <li><code><?=$this->e($route); ?></code></li>
+                    <span class="plain"><code><?=$this->e($route); ?></code></span>
 <?php endforeach; ?>
-                </ul>
             </td>
             </tr>    
 <?php endif; ?>
@@ -128,11 +118,9 @@
 <?php if (0 !== count($profileConfig->exposedVpnProtoPorts())): ?>
             <tr><th><?=$this->t('Offered Protocols/Ports'); ?></th>
             <td>
-                <ul>
 <?php foreach ($profileConfig->exposedVpnProtoPorts() as $route): ?>
-                    <li><code><?=$this->e($route); ?></code></li>
+                    <span class="plain"><code><?=$this->e($route); ?></code></span>
 <?php endforeach; ?>
-                </ul>
             </td>
             </tr>   
 <?php endif; ?>
@@ -140,11 +128,9 @@
 <?php if (0 !== count($profileConfig->dnsSuffix())): ?>
             <tr><th><?=$this->t('DNS Suffix'); ?> <span class="warning"><?=$this->t('Legacy'); ?></span></th>
             <td>
-                <ul>
 <?php foreach ($profileConfig->dnsSuffix() as $route): ?>
-                    <li><code><?=$this->e($route); ?></code></li>
+                    <span class="plain"><code><?=$this->e($route); ?></code></span>
 <?php endforeach; ?>
-                </ul>
             </td>
             </tr>
 <?php endif; ?>
