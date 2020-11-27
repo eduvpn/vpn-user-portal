@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.6 (...)
+## 2.3.6 (2020-11-27)
 - update for `ProfileConfig` refactor
 - reduce font size
 - update "Info" page to make the "keys" translatable and show them in a more 
