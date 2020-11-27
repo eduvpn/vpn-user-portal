@@ -499,7 +499,7 @@ class AdminPortalModule implements ServiceModuleInterface
         foreach ($profileList as $profileId => $profileData) {
             list($ipFour, $ipFourPrefix) = explode('/', $profileData['range']);
             $vpnProtoPortsCount = \count($profileData['vpnProtoPorts']);
-            $maxConcurrentConnectionLimitList[$profileId] = ((int) pow(2, 32 - (int) $ipFourPrefix)) - 3 * $vpnProtoPortsCount;
+            $maxConcurrentConnectionLimitList[$profileId] = ((int) pow(2, 32 - (int) $ipFourPrefix)) - 4 * $vpnProtoPortsCount;
         }
 
         return $maxConcurrentConnectionLimitList;
