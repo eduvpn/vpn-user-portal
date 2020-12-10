@@ -2,6 +2,8 @@
 
 ## 2.3.7 (...)
 - `tlsProtection` is no longer a configuration option, it is always `tls-crypt`
+- only show "Management IP" and "Listen IP" if they are not the default of 
+  `127.0.0.1`, respectively `::`
 
 ## 2.3.6 (2020-11-27)
 - update for `ProfileConfig` refactor
