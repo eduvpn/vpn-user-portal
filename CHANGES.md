@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.7 (...)
+- `tlsProtection` is no longer a configuration option, it is always `tls-crypt`
+
 ## 2.3.6 (2020-11-27)
 - update for `ProfileConfig` refactor
 - reduce font size

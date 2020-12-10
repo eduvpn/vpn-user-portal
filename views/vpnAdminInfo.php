@@ -59,7 +59,6 @@
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range6()); ?></code></td></tr>
             <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($profileConfig->listen()); ?></code></td></tr>
             <tr><th><?=$this->t('Management IP'); ?></th><td><code><?=$this->e($profileConfig->managementIp()); ?></code></td></tr>
-            <tr><th><?=$this->t('TLS Protection'); ?></th><td><?=$this->e($profileConfig->tlsProtection()); ?></td></tr>
 
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
             <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($dnsDomain); ?></code></td></tr>
