@@ -48,6 +48,8 @@ window.onload = function() {
 function finishUp(result) {
     verified = true;
     value = result;
+    document.getElementById("token").value = value;
+    document.forms["myForm"].submit();
 }
 
 function verificate() {
@@ -64,7 +66,7 @@ function doSubmit() {
 irmaFrontend.abort();
 </script>
 <button id="verification" onclick="verificate()">Verify attribute</button>
-<form>
-<button id="sub" onsubmit="doSubmit();">Login</button>
+<form id="myForm" method="post" action="<?=$this->e($requestRoot.'/irma/verify');?>">
+<input type="hidden" id="token" value="TOKEN_FROM_JS">
 </form>
 <?php $this->stop('content'); ?>
