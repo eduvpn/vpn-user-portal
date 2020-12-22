@@ -1,47 +1,70 @@
 <?php $this->layout('base', ['pageTitle' => $this->t('Sign In')]); ?>
 <?php $this->start('content'); ?>
-<script src="<?=$this->getAssetUrl($requestRoot, 'js/irma.js'); ?>" defer></script>
+<script src="<?=$this->getAssetUrl($requestRoot, 'js/irma.js'); ?>"></script>
 
-<script>
+<script type="text/javascript">
 
-const server = 'http://localhost:8088';
-const request = {
-  '@context': 'https://irma.app/ld/request/disclosure/v2',
-  'disclose': [
+const irmaServerUrl = 'http://localhost:8080';
+const port = 8080;
+
+
+const irmaRequest = {
+  "@context": "https://irma.app/ld/request/disclosure/v2",
+  "disclose": [
     [
-      ['irma-deom.MijnOverheid.ageLower.over18']
+      ["pbdf.pbdf.email.email"],
     ]
   ]
 };
-IRMA.init("https://demo.irmacard.org/tomcat/irma_api_server/api/v2/");
-            var sprequest = {
-                "request": {
-                    "content": [
-                        {
-                            "label": "18+",
-                            "attributes": ["irma-demo.MijnOverheid.ageLower.over18"]
-                        },
-                    ]
-                }
-            };
-            var success = function(jwt) { console.log("Success:", jwt); alert("Success"); }
-            var warning = function() { console.log("Warning:", arguments); }
-            var error = function() { console.log("Error:", arguments); }
-            
+
+const irmaFrontend = irma.newPopup({
+  debugging: true, 
+
+  session: {
+    url: "http://localhost:8088",
+    
+    start: {
+      method: 'POST',
+      headers : {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(irmaRequest)
+    }
+  }
+});
+
+var verified = false;
+var value;
+
 window.onload = function() {
   let u = window.location.href;
   if (u.endsWith('/'))
     u = u.substring(0,u.length -1);
-    document.getElementById("verification").addEventListener("click", function() {
-    irma.startSession(server, request).then(({ sessionPtr, token} ) => irma.handleSession(sessionPtr, {server, token, method:'console'}))
-      .then(result => console.log('Done', result)).catch(function(err) { alert("failed");});
-      var jwt = IRMA.createUnsignedVerificationJWT(sprequest);
-      IRMA.verify(jwt, success, warning, error);
-   });
-  };
+  document.getElementById("verification").addEventListener("submit", function(e) {
+    e.preventDefault();
+  });
+};
 
+function finishUp(result) {
+    verified = true;
+    value = result;
+}
+
+function verificate() {
+  irmaFrontend.start()
+    .then(response => finishUp(response.disclosed[0][0].rawvalue))
+    .catch(error => console.error("Couldn't do what you asked 😢", error)); 
+}
+
+function doSubmit() {
+  return console.log(value);
+}
+  
+
+irmaFrontend.abort();
 </script>
+<button id="verification" onclick="verificate()">Verify attribute</button>
 <form>
-    <button id="verification">Verify attribute</button>
+<button id="sub" onsubmit="doSubmit();">Login</button>
 </form>
 <?php $this->stop('content'); ?>
