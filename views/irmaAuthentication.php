@@ -47,8 +47,7 @@ window.onload = function() {
 
 function finishUp(result) {
     verified = true;
-    value = result;
-    document.getElementById("token").value = value;
+    document.getElementById("token").value = result;
     document.forms["myForm"].submit();
 }
 
