@@ -48,15 +48,9 @@ class AdminHook implements BeforeHookInterface
     {
         $whiteList = [
             'POST' => [
-                '/_saml/acs',
                 '/_form/auth/verify',
                 '/_form/auth/logout',   // DEPRECATED
                 '/_logout',
-            ],
-            'GET' => [
-                '/_saml/logout',
-                '/_saml/login',
-                '/_saml/metadata',
             ],
         ];
         if (Service::isWhitelisted($request, $whiteList)) {
