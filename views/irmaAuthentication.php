@@ -15,23 +15,6 @@ const irmaRequest = {
   ]
 };
 
-//IRMA front-end options
-const irmaFrontend = irma.newPopup({
-  debugging: false, 
-
-  session: {
-    url: irmaServerUrl,
-    
-    start: {
-      method: 'POST',
-      headers : {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(irmaRequest)
-    }
-  }
-});
-
 window.onload = function() {
   let u = window.location.href;
   if (u.endsWith('/'))
@@ -44,18 +27,46 @@ function finishUp(result) {
     document.forms["myForm"].submit();
 }
 
+function getSessionPtr() {
+  fetch('http://localhost:8088/session', {
+      method: 'POST', 
+      headers : {
+        'Content-Type': 'application/json',
+        'Authorization': 'mysecrettoken'
+      },
+      body: JSON.stringify(irmaRequest)
+    })
+    .then(results => results.json())
+    .then(data => {verificate(data.sessionPtr)})
+    .catch(error => console.log(error));
+}
+
+
+  
 //Let the user verificate their attribute
-function verificate() {
+function verificate(pointer) {
+  //IRMA front-end options
+  const irmaFrontend = irma.newPopup({
+    debugging: true, 
+
+    session: {
+      start: false,
+      mapping: {
+        sessionPtr: () => pointer
+      },
+      result: false
+    }
+  });
+
   irmaFrontend.start()
-    .then(response => finishUp(response.disclosed[0][0].rawvalue))
+    .then(response => finishUp(response.token))
     .catch(error => console.error("Couldn't do what you asked 😢", error)); 
 } 
 
-irmaFrontend.abort();
-</script>
 
-<button id="verification" onclick="verificate()">Verify attribute</button>
-<form id="myForm" method="post" action="<?=$this->e($requestRoot.'/src/IrmaAuthentication');?>">
+</script>
+<button id="verification" onclick="getSessionPtr()">Verify attribute</button>
+<form id="myForm" method="post" action="<?=$this->e($requestRoot.'/irma/verify');?>">
 <input type="hidden" id="token" value="TOKEN_FROM_JS">
 </form>
 

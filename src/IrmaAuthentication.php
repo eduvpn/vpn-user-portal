@@ -10,6 +10,7 @@
 namespace LC\Portal;
 
 use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\RedirectResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Response;
@@ -60,26 +61,44 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 // we need to verify the IRMA token we got from the web browser
                 // here by calling the IRMA server API
                 // XXX validate irmaToken to make sure it only contains chars we expect!
-                $irmaToken = $request->requirePostParameter('irma_token');
+                $irmaToken = $request->requirePostParameter('irma_auth_token');
                 $irmaStatusUrl = sprintf('%s/session/%s/result', $this->irmaServerUrl, $irmaToken);
                 $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
-                $jsonData = json_decode($httpResponse->getBody());
-                $token = $jsonData->{'token'};
+                // @see https://irma.app/docs/api-irma-server/#get-session-token-result
+                $jsonData = Json::decode($httpResponse->getBody());
+                // validate the result
+                if (!\array_key_exists('proofStatus', $jsonData)) {
+                    throw new HttpException('missing "proofStatus"', 401);
+                }
+                // XXX we probably need to verify other items as well, but who
+                // knows... can we even trust this information?
+                if ('VALID' !== $jsonData['proofStatus']) {
+                    throw new HttpException('"proofStatus" MUST be "VALID"', 401);
+                }
 
-                if ($token == 'mysecrettoken')
-                    return $jsonData->{'disclosed'}[0][0]->rawvalue;
-                else
-                    exit();
-                var_dump($token);
-                exit();
+                $userIdAttribute = 'pbdf.pbdf.email.email'; 
+                $userId = null;
+                // extract the attribute, WTF double array...
+                foreach ($jsonData['disclosed'][0] as $attributeList) {
+                    if ($userIdAttribute === $attributeList['id']) {
+                        $userId = $attributeList['rawvalue'];
+                    }
+                }
 
-                return new RedirectResponse('/', 302);
+                if (null === $userId) {
+                    throw new HttpException('unable to extract "'.$userIdAttribute.'" attribute', 401);
+                }
+
+                $this->session->set('_irma_auth_user', 'XXX');
+                // XXX redirect to correct place, probably put HTTP_REFERER in
+                // form as well in template...
+                return new RedirectResponse($request->getRootUri(), 302);
             }
         );
     }
 
     /**
-     * @return \LC\Common\Http\UserInfo|\LC\Common\Http\Response
+     * @return \LC\Common\Http\UserInfo|\LC\Common\Http\Response|null
      */
     public function executeBefore(Request $request, array $hookData)
     {
