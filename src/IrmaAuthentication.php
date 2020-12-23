@@ -17,6 +17,8 @@ use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\Http\SessionInterface;
 use LC\Common\Http\UserInfo;
+use LC\Common\HttpClient\HttpClientInterface;
+use LC\Common\Json;
 use LC\Common\TplInterface;
 
 class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
@@ -27,10 +29,21 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
     /** @var SessionInterface */
     private $session;
 
-    public function __construct(SessionInterface $session, TplInterface $tpl)
+    /** @var \LC\Common\HttpClient\HttpClientInterface */
+    private $httpClient;
+
+    /** @var string */
+    private $irmaServerUrl;
+
+    /**
+     * @param string $irmaServerUrl
+     */
+    public function __construct(SessionInterface $session, TplInterface $tpl, HttpClientInterface $httpClient, $irmaServerUrl)
     {
         $this->session = $session;
         $this->tpl = $tpl;
+        $this->httpClient = $httpClient;
+        $this->irmaServerUrl = $irmaServerUrl;
     }
 
     /**
@@ -39,12 +52,27 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
     public function init(Service $service)
     {
         $service->post(
-            '/just/a/hook',
+            '/_irma/verify',
             /**
              * @return \LC\Common\Http\Response
              */
             function (Request $request) {
-                // maybe you need a FORM post? maybe not?
+                // we need to verify the IRMA token we got from the web browser
+                // here by calling the IRMA server API
+                // XXX validate irmaToken to make sure it only contains chars we expect!
+                $irmaToken = $request->requirePostParameter('irma_token');
+                $irmaStatusUrl = sprintf('%s/session/%s/result', $this->irmaServerUrl, $irmaToken);
+                $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
+                $jsonData = json_decode($httpResponse->getBody());
+                $token = $jsonData->{'token'};
+
+                if ($token == 'mysecrettoken')
+                    return $jsonData->{'disclosed'}[0][0]->rawvalue;
+                else
+                    exit();
+                var_dump($token);
+                exit();
+
                 return new RedirectResponse('/', 302);
             }
         );
@@ -55,6 +83,10 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
+        if (Service::isWhitelisted($request, ['POST' => ['/_irma/verify']])) {
+            return null;
+        }
+
         if (null !== $authUser = $this->session->get('_irma_auth_user')) {
             return new UserInfo(
                 $authUser,
@@ -67,6 +99,8 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
             $this->tpl->render(
                 'irmaAuthentication',
                 [
+                    // XXX do we need the irmaServerUrl in the template?
+                    //'irmaServerUrl' => $this->irmaServerUrl,
                 ]
             )
         );
