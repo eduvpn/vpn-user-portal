@@ -57,9 +57,12 @@
             <tr><th><?=$this->t('Hostname'); ?></th><td><code><?=$this->e($profileConfig->hostName()); ?></code></td></tr>
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range()); ?></code></td></tr>
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range6()); ?></code></td></tr>
-            <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($profileConfig->listen()); ?></code></td></tr>
-            <tr><th><?=$this->t('Management IP'); ?></th><td><code><?=$this->e($profileConfig->managementIp()); ?></code></td></tr>
-            <tr><th><?=$this->t('TLS Protection'); ?></th><td><?=$this->e($profileConfig->tlsProtection()); ?></td></tr>
+<?php if ('::' !== $listenIp = $profileConfig->listen()): ?>
+            <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($listenIp); ?></code></td></tr>
+<?php endif; ?>
+<?php if ('127.0.0.1' !== $managementIp = $profileConfig->managementIp()): ?>
+            <tr><th><?=$this->t('Management IP'); ?></th><td><code><?=$this->e($managementIp); ?></code></td></tr>
+<?php endif; ?>
 
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
             <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($dnsDomain); ?></code></td></tr>

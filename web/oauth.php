@@ -38,7 +38,7 @@ try {
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        new DateInterval($config->requireString('sessionExpiry'))
+        new DateInterval($config->requireString('sessionExpiry', 'P90D'))
     );
     $storage->update();
 

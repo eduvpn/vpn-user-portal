@@ -96,18 +96,16 @@ class ClientConfig
             );
         }
 
-        if ('tls-crypt' === $profileConfig->tlsProtection()) {
-            $clientConfig = array_merge(
-                $clientConfig,
-                [
-                    '<tls-crypt>',
-                    // in legacy situation some trimming may be required, for
-                    // clean installs this is no longer needed
-                    trim($serverInfo['tls_crypt']),
-                    '</tls-crypt>',
-                ]
-            );
-        }
+        $clientConfig = array_merge(
+            $clientConfig,
+            [
+                '<tls-crypt>',
+                // in legacy situation some trimming may be required, for
+                // clean installs this is no longer needed
+                trim($serverInfo['tls_crypt']),
+                '</tls-crypt>',
+            ]
+        );
 
         // remote entries
         foreach ($remoteProtoPortList as $remoteProtoPort) {

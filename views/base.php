@@ -13,7 +13,7 @@
         <?=$this->insert('logoutButton'); ?>
     </header>
     <nav>
-<?php if (isset($activeItem)): ?>
+<?php if (isset($activeItem)) : ?>
 <?=$this->insert('menu', ['activeItem' => $activeItem]); ?>
 <?php endif; ?>
     </nav>
@@ -24,7 +24,7 @@
 <?=$this->section('content'); ?>
     </main>
     <footer>
-<?php if ($this->exists('customFooter')): ?>
+<?php if ($this->exists('customFooter')) : ?>
     <?=$this->insert('customFooter'); ?>
 <?php endif; ?>
     </footer>

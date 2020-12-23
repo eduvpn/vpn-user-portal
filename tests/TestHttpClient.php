@@ -41,7 +41,6 @@ class TestHttpClient implements HttpClientInterface
                             'enableAcl' => false,
                             'displayName' => 'Internet Access',
                             'twoFactor' => false,
-                            'tlsProtection' => 'tls-crypt',
                             'vpnProtoPorts' => [
                                 'udp/1194',
                                 'tcp/1194',
