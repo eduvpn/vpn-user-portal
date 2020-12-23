@@ -48,6 +48,7 @@ class AdminHook implements BeforeHookInterface
     {
         $whiteList = [
             'POST' => [
+                '/_irma/verify',
                 '/_saml/acs',
                 '/_form/auth/verify',
                 '/_form/auth/logout',   // DEPRECATED

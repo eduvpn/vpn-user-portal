@@ -33,6 +33,7 @@ class DisabledUserHook implements BeforeHookInterface
     {
         $whiteList = [
             'POST' => [
+                '/_irma/verify',
                 '/_form/auth/verify',
                 '/_saml/acs',
                 '/_logout',

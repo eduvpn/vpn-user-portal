@@ -63,10 +63,10 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 $irmaToken = $request->requirePostParameter('irma_token');
                 $irmaStatusUrl = sprintf('%s/session/%s/result', $this->irmaServerUrl, $irmaToken);
                 $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
-                $jsonData = Json::decode($httpResponse->getBody());
+//                $jsonData = Json::decode($httpResponse->getBody());
 
                 // XXX validate the result...
-                var_dump($jsonData);
+                var_dump($httpResponse);
                 exit();
 
                 return new RedirectResponse('/', 302);
@@ -79,6 +79,10 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
      */
     public function executeBefore(Request $request, array $hookData)
     {
+        if (Service::isWhitelisted($request, ['POST' => ['/_irma/verify']])) {
+            return null;
+        }
+
         if (null !== $authUser = $this->session->get('_irma_auth_user')) {
             return new UserInfo(
                 $authUser,
