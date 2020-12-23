@@ -53,13 +53,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
             'POST' => [
                 '/_irma/verify',
                 '/_form/auth/verify',
-                '/_saml/acs',
                 '/_logout',
-            ],
-            'GET' => [
-                '/_saml/login',
-                '/_saml/logout',
-                '/_saml/metadata',
             ],
         ];
         if (Service::isWhitelisted($request, $whiteList)) {
