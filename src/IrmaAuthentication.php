@@ -76,7 +76,8 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                     throw new HttpException('"proofStatus" MUST be "VALID"', 401);
                 }
 
-                $userIdAttribute = 'email'; // XXX replace with actual "id"
+                // XXX make configurable
+                $userIdAttribute = 'pbdf.pbdf.email.email';
                 $userId = null;
                 // extract the attribute, WTF double array...
                 foreach ($jsonData['disclosed'][0] as $attributeList) {
@@ -89,7 +90,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                     throw new HttpException('unable to extract "'.$userIdAttribute.'" attribute', 401);
                 }
 
-                $this->session->set('_irma_auth_user', 'XXX');
+                $this->session->set('_irma_auth_user', $userId);
                 // XXX redirect to correct place, probably put HTTP_REFERER in
                 // form as well in template...
                 return new RedirectResponse($request->getRootUri(), 302);

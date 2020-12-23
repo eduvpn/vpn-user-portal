@@ -12,7 +12,7 @@
 </script>
 <!-- verify the IRMA token obtained to complete the authentication -->
 <form method="post" action="<?php echo $requestRoot; ?>_irma/verify">
-    <input type="hidden" name="irma_token" value="abc">
+    <input type="hidden" name="irma_auth_token" value="abc">
     <button type="submit">Verify</button>
 </form>
 <?php $this->stop('content'); ?>
