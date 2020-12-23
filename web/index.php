@@ -229,7 +229,9 @@ try {
         case 'IrmaAuthentication':
             $irmaAuthentication = new IrmaAuthentication(
                 $seSession,
-                $tpl
+                $tpl,
+                new CurlHttpClient(),
+                'http://localhost:8080' // XXX take this from configuration file
             );
             $service->addBeforeHook('auth', $irmaAuthentication);
             $service->addModule($irmaAuthentication);
