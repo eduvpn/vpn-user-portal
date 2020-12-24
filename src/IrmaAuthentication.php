@@ -72,7 +72,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 }
                 // XXX we probably need to verify other items as well, but who
                 // knows... can we even trust this information?
-                if ('VALID' !== $jsonData['proofStatus']) {
+                if ('VALID' !== $jsonData['proofStatus'] || 'mysecrettoken' !== $jsonData['token']) {
                     throw new HttpException('"proofStatus" MUST be "VALID"', 401);
                 }
 

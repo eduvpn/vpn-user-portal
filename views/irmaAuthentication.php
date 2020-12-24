@@ -23,7 +23,7 @@ window.onload = function() {
 
 //Get the result and submit the form with the token as value
 function finishUp(result) {
-    document.getElementsByName("irma_auth_token")[0].value = result;
+    document.getElementById("sessionPtr").value = result;
     document.forms["myForm"].submit();
 }
 
@@ -67,7 +67,7 @@ function verificate(pointer) {
 </script>
 <button id="verification" onclick="getSessionPtr()">Verify attribute</button>
 <form id="myForm" method="post" action="<?=$this->e($requestRoot.'/irma/verify');?>">
-<input type="hidden" name="irma_auth_token" value="TOKEN_FROM_JS">
+<input type="hidden" id="sessionPtr" name="irma_auth_token" value="TOKEN_FROM_JS">
 </form>
 
 <?php $this->stop('content'); ?>
