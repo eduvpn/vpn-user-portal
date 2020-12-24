@@ -59,7 +59,7 @@ function verificate(pointer) {
   });
 
   irmaFrontend.start()
-    .then(response => finishUp(response.token))
+    .then(response => finishUp(pointer))
     .catch(error => console.error("Couldn't do what you asked 😢", error)); 
 } 
 
