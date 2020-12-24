@@ -9,6 +9,7 @@
 
 namespace LC\Portal;
 
+use LC\Common\Config;
 use LC\Common\Http\BeforeHookInterface;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\RedirectResponse;
@@ -33,18 +34,15 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
     /** @var \LC\Common\HttpClient\HttpClientInterface */
     private $httpClient;
 
-    /** @var string */
-    private $irmaServerUrl;
+    /** @var \LC\Common\Config */
+    private $config;
 
-    /**
-     * @param string $irmaServerUrl
-     */
-    public function __construct(SessionInterface $session, TplInterface $tpl, HttpClientInterface $httpClient, $irmaServerUrl)
+    public function __construct(SessionInterface $session, TplInterface $tpl, HttpClientInterface $httpClient, Config $config)
     {
         $this->session = $session;
         $this->tpl = $tpl;
         $this->httpClient = $httpClient;
-        $this->irmaServerUrl = $irmaServerUrl;
+        $this->config = $config;
     }
 
     /**
@@ -62,7 +60,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 // here by calling the IRMA server API
                 // XXX validate irmaToken to make sure it only contains chars we expect!
                 $irmaToken = $request->requirePostParameter('irma_auth_token');
-                $irmaStatusUrl = sprintf('%s/session/%s/result', $this->irmaServerUrl, $irmaToken);
+                $irmaStatusUrl = sprintf('%s/session/%s/result', $this->config->requireString('irmaServerUrl'), $irmaToken);
                 $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
                 // @see https://irma.app/docs/api-irma-server/#get-session-token-result
                 $jsonData = Json::decode($httpResponse->getBody());
@@ -76,8 +74,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                     throw new HttpException('"proofStatus" MUST be "VALID"', 401);
                 }
 
-                // XXX make configurable
-                $userIdAttribute = 'pbdf.pbdf.email.email';
+                $userIdAttribute = $this->config->requireString('userIdAttribute');
                 $userId = null;
                 // extract the attribute, WTF double array...
                 foreach ($jsonData['disclosed'][0] as $attributeList) {

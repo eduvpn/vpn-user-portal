@@ -231,7 +231,7 @@ try {
                 $seSession,
                 $tpl,
                 new CurlHttpClient(),
-                'http://localhost:8080' // XXX take this from configuration file
+                $config->s('IrmaAuthentication')
             );
             $service->addBeforeHook('auth', $irmaAuthentication);
             $service->addModule($irmaAuthentication);
