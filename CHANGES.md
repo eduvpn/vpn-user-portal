@@ -1,10 +1,32 @@
 # Changelog
 
-## 2.3.5 (...)
+## 2.3.7 (...)
+- `tlsProtection` is no longer a configuration option, it is always `tls-crypt`
+- only show "Management IP" and "Listen IP" if they are not the default of 
+  `127.0.0.1`, respectively `::`
+
+## 2.3.6 (2020-11-27)
+- update for `ProfileConfig` refactor
+- reduce font size
+- update "Info" page to make the "keys" translatable and show them in a more 
+  "human readable" way
+- remove some overzealous use of `<details>` / `<summary>` on "Info" and 
+  "Stats" pages
+- always show the algorithm (RSA, ECDSA, EdDSA) for generating keys for OpenVPN 
+  clients
+- correct the number of maximum number of clients that can be simultaneously 
+  connected due to misunderstanding in available IPs in the OpenVPN managed IP
+  pools
+
+## 2.3.5 (2020-10-20)
 - update `pt_PT` translation
 - switch to new discovery files for eduVPN federation
 - implement changes for updated `Config` API
 - switch to the common HTTP client
+- deal with `Api` and/or `Api -> consumerList` configuration options missing, 
+  it broke the portal
+- implement support for anonymous LDAP search to find the DN to bind with in 
+  order to verify the user's password (based on arbitrary LDAP attribute)
 
 ## 2.3.4 (2020-09-08)
 - support client certificate authentication (`ClientCertAuthentication`)

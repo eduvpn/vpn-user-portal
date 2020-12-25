@@ -34,7 +34,7 @@ class FormLdapAuthentication extends FormAuthentication
         $userAuth = new LdapAuth(
             $logger,
             $ldapClient,
-            $config->requireString('bindDnTemplate'),
+            $config->optionalString('bindDnTemplate'),
             $config->optionalString('baseDn'),
             $config->optionalString('userFilterTemplate'),
             $config->optionalString('userIdAttribute'),
