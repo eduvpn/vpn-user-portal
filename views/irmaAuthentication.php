@@ -4,7 +4,7 @@
 
 <script type="text/javascript">
 
-const irmaServerUrl = 'http://localhost:8088';
+const irmaServerUrl = 'http://145.100.181.103:8088';
 
 const irmaRequest = {
   "@context": "https://irma.app/ld/request/disclosure/v2",
