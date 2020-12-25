@@ -117,6 +117,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 'irmaAuthentication',
                 [
                     'irmaServerUrl' => $this->config->requireString('irmaServerUrl'),
+                    'userIdAttribute' => $this->config->requireString('userIdAttribute'),
                 ]
             )
         );
