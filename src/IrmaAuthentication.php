@@ -116,8 +116,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
             $this->tpl->render(
                 'irmaAuthentication',
                 [
-                    // XXX do we need the irmaServerUrl in the template?
-                    //'irmaServerUrl' => $this->irmaServerUrl,
+                    'irmaServerUrl' => $this->config->requireString('irmaServerUrl'),
                 ]
             )
         );

@@ -6,9 +6,10 @@
 -->
 <script src="<?php echo $this->getAssetUrl($requestRoot, 'js/irma.js'); ?>"></script>
 <script>
+const irmaServerUrl = '<?php echo $this->e($irmaServerUrl); ?>';
 /*
     Put IRMA client code here
-*/
+ */
 </script>
 <!-- verify the IRMA token obtained to complete the authentication -->
 <form method="post" action="<?php echo $requestRoot; ?>_irma/verify">
