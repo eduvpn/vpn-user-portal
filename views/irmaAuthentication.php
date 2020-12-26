@@ -3,8 +3,8 @@
 <script src="<?=$this->getAssetUrl($requestRoot, 'js/irma.js'); ?>"></script>
 
 <script type="text/javascript">
-const irmaServerUrl = '<?=$this->e($irmaServerUrl); ?>';
-const userIdAttribute = '<?=$this->e($userIdAttribute); ?>'
+const irmaServerUrl = '<?php echo $this->e($irmaServerUrl); ?>';
+const userIdAttribute = '<?php echo $this->e($userIdAttribute); ?>'
 const irmaRequest = {
   "@context": "https://irma.app/ld/request/disclosure/v2",
   "disclose": [
@@ -22,13 +22,13 @@ window.onload = function() {
 
 //Get the result and submit the form with the token as value
 function finishUp(result) {
-    document.getElementsByName("irma_auth_token")[0].value = result;
+    document.getElementbyId("sessionPointer").value = result;
     document.forms["myForm"].submit();
 }
 
 function getSessionPtr() {
   fetch(irmaServerUrl + '/session', {
-      method: 'POST', 
+      method: 'POST',
       headers : {
         'Content-Type': 'application/json',
         'Authorization': 'mysecrettoken'
@@ -36,17 +36,17 @@ function getSessionPtr() {
       body: JSON.stringify(irmaRequest)
     })
     .then(results => results.json())
-    .then(data => {verificate(data.sessionPtr)})
+    .then(data => {verificate(data.sessionPtr, data.token)})
     .catch(error => console.log(error));
 }
 
 
-  
+
 //Let the user verificate their attribute
-function verificate(pointer) {
+function verificate(pointer, token) {
   //IRMA front-end options
   const irmaFrontend = irma.newPopup({
-    debugging: true, 
+    debugging: true,
 
     session: {
       start: false,
@@ -58,15 +58,15 @@ function verificate(pointer) {
   });
 
   irmaFrontend.start()
-    .then(response => finishUp(pointer))
-    .catch(error => console.error("Couldn't do what you asked 😢", error)); 
-} 
+    .then(response => finishUp(token))
+    .catch(error => console.error("Couldn't do what you asked 😢", error));
+}
 
 
 </script>
 <button id="verification" onclick="getSessionPtr()">Verify attribute</button>
-<form id="myForm" method="post" action="<?=$this->e($requestRoot.'/irma/verify');?>">
-<input type="hidden" name="irma_auth_token" value="TOKEN_FROM_JS">
+<form id="myForm" method="post" action="<?php echo $requestRoot; ?>_irma/verify">
+<input type="hidden" id="sessionPointer" name="irma_auth_token" value="TOKEN_FROM_JS">
 </form>
 
 <?php $this->stop('content'); ?>
