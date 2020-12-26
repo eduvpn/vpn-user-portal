@@ -34,29 +34,15 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
     /** @var \LC\Common\HttpClient\HttpClientInterface */
     private $httpClient;
 
-<<<<<<< HEAD
-    /** @var string */
-    private $irmaServerUrl;
-
-    /**
-     * @param string $irmaServerUrl
-     */
-    public function __construct(SessionInterface $session, TplInterface $tpl, HttpClientInterface $httpClient, $irmaServerUrl)
-=======
     /** @var \LC\Common\Config */
     private $config;
 
     public function __construct(SessionInterface $session, TplInterface $tpl, HttpClientInterface $httpClient, Config $config)
->>>>>>> upstream/irma
     {
         $this->session = $session;
         $this->tpl = $tpl;
         $this->httpClient = $httpClient;
-<<<<<<< HEAD
-        $this->irmaServerUrl = $irmaServerUrl;
-=======
         $this->config = $config;
->>>>>>> upstream/irma
     }
 
     /**
@@ -74,11 +60,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 // here by calling the IRMA server API
                 // XXX validate irmaToken to make sure it only contains chars we expect!
                 $irmaToken = $request->requirePostParameter('irma_auth_token');
-<<<<<<< HEAD
-                $irmaStatusUrl = sprintf('%s/session/%s/result', $this->irmaServerUrl, $irmaToken);
-=======
                 $irmaStatusUrl = sprintf('%s/session/%s/result', $this->config->requireString('irmaServerUrl'), $irmaToken);
->>>>>>> upstream/irma
                 $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
                 // @see https://irma.app/docs/api-irma-server/#get-session-token-result
                 $jsonData = Json::decode($httpResponse->getBody());
@@ -88,19 +70,12 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 }
                 // XXX we probably need to verify other items as well, but who
                 // knows... can we even trust this information?
-<<<<<<< HEAD
-                if ('VALID' !== $jsonData['proofStatus'] || 'mysecrettoken' !== $jsonData['token']) {
-                    throw new HttpException('"proofStatus" MUST be "VALID"', 401);
-                }
 
-                $userIdAttribute = 'pbdf.pbdf.email.email'; 
-=======
                 if ('VALID' !== $jsonData['proofStatus']) {
                     throw new HttpException('"proofStatus" MUST be "VALID"', 401);
                 }
 
                 $userIdAttribute = $this->config->requireString('userIdAttribute');
->>>>>>> upstream/irma
                 $userId = null;
                 // extract the attribute, WTF double array...
                 foreach ($jsonData['disclosed'][0] as $attributeList) {
@@ -142,13 +117,8 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
             $this->tpl->render(
                 'irmaAuthentication',
                 [
-<<<<<<< HEAD
-                    // XXX do we need the irmaServerUrl in the template?
-                    //'irmaServerUrl' => $this->irmaServerUrl,
-=======
                     'irmaServerUrl' => $this->config->requireString('irmaServerUrl'),
                     'userIdAttribute' => $this->config->requireString('userIdAttribute'),
->>>>>>> upstream/irma
                 ]
             )
         );
