@@ -22,7 +22,7 @@ window.onload = function() {
 
 //Get the result and submit the form with the token as value
 function finishUp(result) {
-    document.getElementbyId("sessionPointer").value = result;
+    document.getElementById("sessionPointer").value = result;
     document.forms["myForm"].submit();
 }
 
