@@ -7,7 +7,8 @@
 <script src="<?=$this->getAssetUrl($requestRoot, 'js/irma.js'); ?>"></script>
 
 <script type="text/javascript">
-    const sessionPtr = '<?php echo $this->e($sessionPtr); ?>'
+    const sessionPtr = '<?php echo $this->e($sessionPtr); ?>';
+    console.log(sessionPtr);
 
 
     document.addEventListener("DOMContentLoaded", function() {
