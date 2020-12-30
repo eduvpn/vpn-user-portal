@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function verificate(pointer, token) {
         //IRMA front-end options
         const irmaFrontend = irma.newPopup({
-            debugging: true,
+            debugging: false,
 
             session: {
                 start: false,
@@ -50,15 +50,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+    irmaFrontend.start()
+      .then(response => finishUp(token))
+      .catch(error => console.error("Couldn't do what you asked", error));
 });
-
-
-
-  irmaFrontend.start()
-    .then(response => finishUp(token))
-    .catch(error => console.error("Couldn't do what you asked 😢", error));
-}
-
 
 </script>
 <form id="myForm" method="post" action="<?php echo $requestRoot; ?>_irma/verify">
