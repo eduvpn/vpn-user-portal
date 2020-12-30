@@ -112,13 +112,38 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
             );
         }
 
+        // @see https://irma.app/docs/getting-started/#perform-a-session
+        $httpResponse = $this->httpClient->postJson(
+            $this->config->requireString('irmaServerUrl').'/session',
+            [],
+            [
+                '@context' => 'https://irma.app/ld/request/disclosure/v2',
+                [
+                    [
+                        [
+                            $this->config->requireString('userIdAttribute'),
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'Authorization: '.$this->config->requireString('secretToken'),
+            ]
+        );
+
+        $jsonData = Json::decode($httpResponse->getBody());
+        if (!\array_key_exists('sessionPtr', $jsonData)) {
+            throw new HttpException('"sessionPtr" not available', 500);
+        }
+        // extract sessionPtr and make available to frontend
+        $sessionPtr = Json::encode($jsonData['sessionPtr']);
+
         $response = new Response(200, 'text/html');
         $response->setBody(
             $this->tpl->render(
                 'irmaAuthentication',
                 [
-                    'irmaServerUrl' => $this->config->requireString('irmaServerUrl'),
-                    'userIdAttribute' => $this->config->requireString('userIdAttribute'),
+                    'sessionPtr' => $sessionPtr,
                 ]
             )
         );
