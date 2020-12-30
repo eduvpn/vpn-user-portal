@@ -25,12 +25,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     fetch(irmaServerUrl + '/session', {
-        method: 'POST',
-        headers : {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        },
-        body: JSON.stringify(irmaRequest)
+          method: 'POST',
+          headers : {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          },
+          body: JSON.stringify(irmaRequest)
       })
       .then(results => results.json())
       .then(data => {verificate(data.sessionPtr, data.token)})
@@ -39,15 +39,15 @@ document.addEventListener("DOMContentLoaded", function() {
     function verificate(pointer, token) {
         //IRMA front-end options
         const irmaFrontend = irma.newPopup({
-          debugging: true,
+            debugging: true,
 
-          session: {
-            start: false,
-            mapping: {
-              sessionPtr: () => pointer
-            },
-            result: false
-          }
+            session: {
+                start: false,
+                mapping: {
+                  sessionPtr: () => pointer
+                },
+                result: false
+            }
         });
     }
 });
@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 </script>
-<button id="verification" onclick="getSessionPtr()">Verify attribute</button>
 <form id="myForm" method="post" action="<?php echo $requestRoot; ?>_irma/verify">
 <input type="hidden" id="sessionPointer" name="irma_auth_token" value="TOKEN_FROM_JS">
 </form>
