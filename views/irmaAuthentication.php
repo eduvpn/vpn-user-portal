@@ -5,6 +5,7 @@
 <script type="text/javascript">
 const irmaServerUrl = '<?php echo $this->e($irmaServerUrl); ?>';
 const userIdAttribute = '<?php echo $this->e($userIdAttribute); ?>'
+const token = '<?php echo $this->e($token); ?>'
 const irmaRequest = {
   "@context": "https://irma.app/ld/request/disclosure/v2",
   "disclose": [
@@ -14,48 +15,44 @@ const irmaRequest = {
   ]
 };
 
-window.onload = function() {
-  let u = window.location.href;
-  if (u.endsWith('/'))
-    u = u.substring(0,u.length -1);
-};
-
-//Get the result and submit the form with the token as value
-function finishUp(result) {
-    document.getElementById("sessionPointer").value = result;
-    document.forms["myForm"].submit();
-}
-
-function getSessionPtr() {
-  fetch(irmaServerUrl + '/session', {
-      method: 'POST',
-      headers : {
-        'Content-Type': 'application/json',
-        'Authorization': 'mysecrettoken'
-      },
-      body: JSON.stringify(irmaRequest)
-    })
-    .then(results => results.json())
-    .then(data => {verificate(data.sessionPtr, data.token)})
-    .catch(error => console.log(error));
-}
 
 
-
-//Let the user verificate their attribute
-function verificate(pointer, token) {
-  //IRMA front-end options
-  const irmaFrontend = irma.newPopup({
-    debugging: true,
-
-    session: {
-      start: false,
-      mapping: {
-        sessionPtr: () => pointer
-      },
-      result: false
+document.addEventListener("DOMContentLoaded", function() {
+  //Get the result and submit the form with the token as value
+    function finishUp(result) {
+        document.getElementById("sessionPointer").value = result;
+        document.forms["myForm"].submit();
     }
-  });
+
+    fetch(irmaServerUrl + '/session', {
+        method: 'POST',
+        headers : {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify(irmaRequest)
+      })
+      .then(results => results.json())
+      .then(data => {verificate(data.sessionPtr, data.token)})
+      .catch(error => console.log(error));
+
+    function verificate(pointer, token) {
+        //IRMA front-end options
+        const irmaFrontend = irma.newPopup({
+          debugging: true,
+
+          session: {
+            start: false,
+            mapping: {
+              sessionPtr: () => pointer
+            },
+            result: false
+          }
+        });
+    }
+});
+
+
 
   irmaFrontend.start()
     .then(response => finishUp(token))
