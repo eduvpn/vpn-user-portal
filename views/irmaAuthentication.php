@@ -6,8 +6,7 @@
 -->
 <script src="<?php echo $this->getAssetUrl($requestRoot, 'js/irma.js'); ?>"></script>
 <script>
-const irmaServerUrl = '<?php echo $this->e($irmaServerUrl); ?>';
-const userIdAttribute = '<?php echo $this->e($userIdAttribute); ?>';
+const sessionPtr = '<?php echo $this->e($sessionPtr); ?>';
 /*
     Put IRMA client code here
  */
