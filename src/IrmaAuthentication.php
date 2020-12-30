@@ -56,11 +56,11 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request) {
-                // we need to verify the IRMA token we got from the web browser
-                // here by calling the IRMA server API
-                // XXX validate irmaToken to make sure it only contains chars we expect!
-                $irmaToken = $request->requirePostParameter('irma_auth_token');
-                $irmaStatusUrl = sprintf('%s/session/%s/result', $this->config->requireString('irmaServerUrl'), $irmaToken);
+                if (null === $sessionToken = $this->session->get('_irma_auth_token')) {
+                    throw new HttpException('token not found in session', 400);
+                }
+
+                $irmaStatusUrl = sprintf('%s/session/%s/result', $this->config->requireString('irmaServerUrl'), $sessionToken);
                 $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
                 // @see https://irma.app/docs/api-irma-server/#get-session-token-result
                 $jsonData = Json::decode($httpResponse->getBody());
@@ -132,8 +132,16 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
 
         $jsonData = Json::decode($httpResponse->getBody());
         if (!\array_key_exists('sessionPtr', $jsonData)) {
-            throw new HttpException('"sessionPtr" not available', 500);
+            throw new HttpException('"sessionPtr" not available JSON response', 500);
         }
+        // extract "token" and store it in the session to be used
+        // @ verification stage
+        if (!\array_key_exists('token', $jsonData)) {
+            throw new HttpException('"token" not available in JSON response', 500);
+        }
+        $sessionToken = $jsonData['token'];
+        $this->session->set('_irma_auth_token', $sessionToken);
+
         // extract sessionPtr and make available to frontend
         $sessionPtr = Json::encode($jsonData['sessionPtr']);
 
