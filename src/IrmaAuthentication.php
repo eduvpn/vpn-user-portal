@@ -124,6 +124,9 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                         ],
                     ],
                 ],
+            ],
+            [
+                'Authorization: '.$this->config->requireString('secretToken'),
             ]
         );
 
