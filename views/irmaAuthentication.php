@@ -3,7 +3,7 @@
 <script src="<?=$this->getAssetUrl($requestRoot, 'js/irma.js'); ?>"></script>
 
 <script type="text/javascript">
-    const irmaServerUrl = '<?php echo $this->e($irmaServerUrl); ?>';
+    const irmaServerUrl = '<?php echo $this->e($session); ?>';
     const userIdAttribute = '<?php echo $this->e($userIdAttribute); ?>'
     const token = 'mysecrettoken'
     const irmaRequest = {
@@ -21,18 +21,6 @@
             document.getElementById("sessionPointer").value = result;
             document.forms["myForm"].submit();
         }
-
-        fetch(irmaServerUrl + '/session', {
-              method: 'POST',
-              headers : {
-                'Content-Type': 'application/json',
-                'Authorization': token
-              },
-              body: JSON.stringify(irmaRequest)
-          })
-          .then(results => results.json())
-          .then(data => {verificate(data.sessionPtr, data.token)})
-          .catch(error => console.log(error));
 
         function verificate(pointer, sessionToken) {
             //IRMA front-end options
