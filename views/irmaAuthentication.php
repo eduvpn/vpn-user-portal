@@ -7,9 +7,7 @@
 <script src="<?=$this->getAssetUrl($requestRoot, 'js/irma.js'); ?>"></script>
 
 <script type="text/javascript">
-    const sessionPtr = '<?php echo $this->e($sessionPtr); ?>';
-    console.log(sessionPtr);
-
+    const sessionPtr = '<?php echo $sessionPtr; ?>';
 
     document.addEventListener("DOMContentLoaded", function() {
       //Get the result and submit the form with the token as value
@@ -26,13 +24,13 @@
                 session: {
                     start: false,
                     mapping: {
-                      sessionPtr: () => sessionPtr
+                      sessionPtr: () => JSON.parse(sessionPtr)
                     },
                     result: false
                 }
             });
             irmaFrontend.start()
-              .then(response => finishUp(sessionToken))
+              .then(response => finishUp("SEND"))
               .catch(error => console.error("Couldn't do what you asked", error));
         }
     });

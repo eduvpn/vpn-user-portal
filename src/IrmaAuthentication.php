@@ -118,12 +118,10 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
             [],
             [
                 '@context' => 'https://irma.app/ld/request/disclosure/v2',
-                [
+                'disclose' => [
                     [
-                        [
-                            $this->config->requireString('userIdAttribute'),
-                        ],
-                    ],
+                        [ $this->config->requireString('userIdAttribute') ]
+                    ]
                 ],
             ],
             [
