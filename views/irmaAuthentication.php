@@ -7,17 +7,18 @@
 <script src="<?=$this->getAssetUrl($requestRoot, 'js/irma.js'); ?>"></script>
 
 <script type="text/javascript">
+  //Get the session pointer from the back-end
     const sessionPtr = '<?php echo $sessionPtr; ?>';
 
     document.addEventListener("DOMContentLoaded", function() {
-      //Get the result and submit the form with the token as value
+    //  Send to the back-end that the QR-code has been scanned and the result can be retrieved from the IRMA server
         function finishUp(result) {
             document.getElementById("sessionPointer").value = result;
             document.forms["myForm"].submit();
         }
 
         function verificate() {
-            //IRMA front-end options
+            //IRMA front-end configuration
             const irmaFrontend = irma.newPopup({
                 debugging: false,
 
@@ -29,6 +30,7 @@
                     result: false
                 }
             });
+          //Start the popup and show the QR-code
             irmaFrontend.start()
               .then(response => finishUp("SEND"))
               .catch(error => console.error("Couldn't do what you asked", error));

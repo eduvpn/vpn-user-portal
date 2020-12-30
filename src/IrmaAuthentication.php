@@ -64,19 +64,18 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
                 // @see https://irma.app/docs/api-irma-server/#get-session-token-result
                 $jsonData = Json::decode($httpResponse->getBody());
-                // validate the result
+                // Validate the result
                 if (!\array_key_exists('proofStatus', $jsonData)) {
                     throw new HttpException('missing "proofStatus"', 401);
                 }
-                // XXX we probably need to verify other items as well, but who
-                // knows... can we even trust this information?
+
                 if ('VALID' !== $jsonData['proofStatus']) {
                     throw new HttpException('"proofStatus" MUST be "VALID"', 401);
                 }
 
                 $userIdAttribute = $this->config->requireString('userIdAttribute');
                 $userId = null;
-                // extract the attribute, WTF double array...
+                // extract the attribute
                 foreach ($jsonData['disclosed'][0] as $attributeList) {
                     if ($userIdAttribute === $attributeList['id']) {
                         $userId = $attributeList['rawvalue'];
@@ -88,8 +87,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 }
 
                 $this->session->set('_irma_auth_user', $userId);
-                // XXX redirect to correct place, probably put HTTP_REFERER in
-                // form as well in template...
+
                 return new RedirectResponse($request->getRootUri(), 302);
             }
         );
