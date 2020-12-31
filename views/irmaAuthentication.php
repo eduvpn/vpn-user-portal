@@ -31,7 +31,6 @@
 
 </script>
 <form id="authentication" method="post" action="<?php echo $requestRoot; ?>_irma/verify">
-<input type="hidden" name="irma_auth_token">
 </form>
 
 <?php $this->stop('content'); ?>
