@@ -2,8 +2,20 @@
 
 document.addEventListener("DOMContentLoaded", function() {
     const sessionPtr = document.getElementById('irmaAuth').dataset.sessionPtr;
-    console.log(JSON.parse(sessionPtr));
-    /*
-        Put IRMA client code here
-     */
+    // IRMA front-end configuration
+    const irmaFrontend = irma.newPopup({
+        debugging: false,
+
+        session: {
+            start: false,
+            mapping: {
+              sessionPtr: () => JSON.parse(sessionPtr)
+            },
+            result: false
+        }
+    });
+    // Start the popup and show the QR-code
+    irmaFrontend.start()
+      .then(response => document.forms["authentication"].submit())
+      .catch(error => console.error("Couldn't do what you asked", error));
 });
