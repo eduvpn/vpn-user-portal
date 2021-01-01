@@ -12,7 +12,7 @@
     IRMA server needs to be queried to obtain the attribute...
 -->
 <div id="irmaAuth" data-session-ptr="<?php echo $this->e($sessionPtr); ?>">
-    <form method="post" action="<?php echo $requestRoot; ?>_irma/verify">
+    <form method="post" id='authentication' action="<?php echo $requestRoot; ?>_irma/verify">
     </form>
 </div>
 <?php $this->stop('content'); ?>
