@@ -16,6 +16,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     // Start the popup and show the QR-code
     irmaFrontend.start()
-      .then(response => document.querySelector("div#irmaAuth form").submit())
+      .then(document.querySelector("div#irmaAuth form").submit())
       .catch(error => console.error("Couldn't do what you asked", error));
 });
