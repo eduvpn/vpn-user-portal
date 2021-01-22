@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", function() {
     const sessionPtr = document.getElementById('irmaAuth').dataset.sessionPtr;
-    // IRMA front-end configuration
+
     const irmaFrontend = irma.newPopup({
         debugging: false,
 
