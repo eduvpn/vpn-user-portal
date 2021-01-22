@@ -14,8 +14,9 @@ document.addEventListener("DOMContentLoaded", function() {
             result: false
         }
     });
-    // Start the popup and show the QR-code
-    irmaFrontend.start()
-      .then(document.querySelector("div#irmaAuth form").submit())
-      .catch(error => console.error("Couldn't do what you asked", error));
+    irmaFrontend.start().then(function(response) {
+        document.querySelector("div#irmaAuth form").submit();
+    }).catch(function(error) {
+        console.error("Couldn't do what you asked 😢", error);
+    });
 });
