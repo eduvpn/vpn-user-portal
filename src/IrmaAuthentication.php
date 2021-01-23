@@ -74,6 +74,18 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                     throw new HttpException('"proofStatus" MUST be "VALID"', 401);
                 }
 
+                if (!\array_key_exists('status', $jsonData)) {
+                    throw new HttpException('missing "status"', 401);
+                }
+
+                if ('DONE' !== $jsonData['status']) {
+                    throw new HttpException('"status" MUST be "DONE"', 401);
+                }
+
+                if (\array_key_exists('error', $jsonData)) {
+                    throw new HttpException('An error occured: ', $jsonData['error'], 401);
+                }
+
                 $userIdAttribute = $this->config->requireString('userIdAttribute');
                 $userId = null;
                 // extract the attribute
