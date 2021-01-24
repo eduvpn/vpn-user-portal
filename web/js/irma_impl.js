@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
         session: {
             start: false,
             mapping: {
-              sessionPtr: () => JSON.parse(sessionPtr)
+              sessionPtr: () => function() { return JSON.parse(sessionPtr);}
             },
             result: false
         }
