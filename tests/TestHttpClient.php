@@ -41,7 +41,6 @@ class TestHttpClient implements HttpClientInterface
                             'enableAcl' => false,
                             'displayName' => 'Internet Access',
                             'twoFactor' => false,
-                            'tlsProtection' => 'tls-crypt',
                             'vpnProtoPorts' => [
                                 'udp/1194',
                                 'tcp/1194',
@@ -124,6 +123,18 @@ class TestHttpClient implements HttpClientInterface
             default:
                 throw new RuntimeException(sprintf('unexpected requestUrl "%s"', $requestUrl));
         }
+    }
+
+    /**
+     * @param string               $requestUrl
+     * @param array<string,string> $queryParameters
+     * @param array<string>        $requestHeaders
+     *
+     * @return HttpClientResponse
+     */
+    public function postJson($requestUrl, array $queryParameters, array $jsonData, array $requestHeaders = [])
+    {
+        throw new RuntimeException('"postJson" not implemented');
     }
 
     /**

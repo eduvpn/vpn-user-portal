@@ -45,7 +45,7 @@ try {
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        new DateInterval($config->requireString('sessionExpiry'))
+        new DateInterval($config->requireString('sessionExpiry', 'P90D'))
     );
     $storage->update();
 
@@ -83,7 +83,7 @@ try {
     $vpnApiModule = new VpnApiModule(
         $config,
         $serverClient,
-        new DateInterval($config->requireString('sessionExpiry'))
+        new DateInterval($config->requireString('sessionExpiry', 'P90D'))
     );
     $service->addModule($vpnApiModule);
     $service->run($request)->send();

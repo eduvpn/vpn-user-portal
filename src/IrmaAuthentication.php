@@ -9,7 +9,9 @@
 
 namespace LC\Portal;
 
+use LC\Common\Config;
 use LC\Common\Http\BeforeHookInterface;
+use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\RedirectResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Response;
@@ -17,6 +19,8 @@ use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\Http\SessionInterface;
 use LC\Common\Http\UserInfo;
+use LC\Common\HttpClient\HttpClientInterface;
+use LC\Common\Json;
 use LC\Common\TplInterface;
 
 class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
@@ -27,10 +31,18 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
     /** @var SessionInterface */
     private $session;
 
-    public function __construct(SessionInterface $session, TplInterface $tpl)
+    /** @var \LC\Common\HttpClient\HttpClientInterface */
+    private $httpClient;
+
+    /** @var \LC\Common\Config */
+    private $config;
+
+    public function __construct(SessionInterface $session, TplInterface $tpl, HttpClientInterface $httpClient, Config $config)
     {
         $this->session = $session;
         $this->tpl = $tpl;
+        $this->httpClient = $httpClient;
+        $this->config = $config;
     }
 
     /**
@@ -39,22 +51,71 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
     public function init(Service $service)
     {
         $service->post(
-            '/just/a/hook',
+            '/_irma/verify',
             /**
              * @return \LC\Common\Http\Response
              */
             function (Request $request) {
-                // maybe you need a FORM post? maybe not?
-                return new RedirectResponse('/', 302);
+                if (null === $sessionToken = $this->session->get('_irma_auth_token')) {
+                    throw new HttpException('token not found in session', 400);
+                }
+
+                $irmaStatusUrl = sprintf('%s/session/%s/result', $this->config->requireString('irmaServerUrl'), $sessionToken);
+                $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
+                // @see https://irma.app/docs/api-irma-server/#get-session-token-result
+                $jsonData = Json::decode($httpResponse->getBody());
+                // XXX we probably need to verify other items as well, but who
+                // knows... can we even trust this information?
+                if (!\array_key_exists('proofStatus', $jsonData)) {
+                    throw new HttpException('missing "proofStatus"', 401);
+                }
+
+                if ('VALID' !== $jsonData['proofStatus']) {
+                    throw new HttpException('"proofStatus" MUST be "VALID"', 401);
+                }
+
+                if (!\array_key_exists('status', $jsonData)) {
+                    throw new HttpException('missing "status"', 401);
+                }
+
+                if ('DONE' !== $jsonData['status']) {
+                    throw new HttpException('"status" MUST be "DONE"', 401);
+                }
+
+                if (\array_key_exists('error', $jsonData)) {
+                    throw new HttpException('An error occured: ', $jsonData['error'], 401);
+                }
+
+                $userIdAttribute = $this->config->requireString('userIdAttribute');
+                $userId = null;
+                // extract the attribute
+                foreach ($jsonData['disclosed'][0] as $attributeList) {
+                    if ($userIdAttribute === $attributeList['id']) {
+                        $userId = $attributeList['rawvalue'];
+                    }
+                }
+
+                if (null === $userId) {
+                    throw new HttpException('unable to extract "'.$userIdAttribute.'" attribute', 401);
+                }
+
+                $this->session->set('_irma_auth_user', $userId);
+                // XXX redirect to correct place, probably put HTTP_REFERER in
+                // form as well in template...
+                return new RedirectResponse($request->getRootUri(), 302);
             }
         );
     }
 
     /**
-     * @return \LC\Common\Http\UserInfo|\LC\Common\Http\Response
+     * @return \LC\Common\Http\UserInfo|\LC\Common\Http\Response|null
      */
     public function executeBefore(Request $request, array $hookData)
     {
+        if (Service::isWhitelisted($request, ['POST' => ['/_irma/verify']])) {
+            return null;
+        }
+
         if (null !== $authUser = $this->session->get('_irma_auth_user')) {
             return new UserInfo(
                 $authUser,
@@ -62,11 +123,46 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
             );
         }
 
+        // @see https://irma.app/docs/getting-started/#perform-a-session
+        $httpResponse = $this->httpClient->postJson(
+            $this->config->requireString('irmaServerUrl').'/session',
+            [],
+            [
+                '@context' => 'https://irma.app/ld/request/disclosure/v2',
+                'disclose' => [
+                    [
+                        [
+                            $this->config->requireString('userIdAttribute'),
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'Authorization: '.$this->config->requireString('secretToken'),
+            ]
+        );
+
+        $jsonData = Json::decode($httpResponse->getBody());
+        if (!\array_key_exists('sessionPtr', $jsonData)) {
+            throw new HttpException('"sessionPtr" not available JSON response', 500);
+        }
+        // extract "token" and store it in the session to be used
+        // @ verification stage
+        if (!\array_key_exists('token', $jsonData)) {
+            throw new HttpException('"token" not available in JSON response', 500);
+        }
+        $sessionToken = $jsonData['token'];
+        $this->session->set('_irma_auth_token', $sessionToken);
+
+        // extract sessionPtr and make available to frontend
+        $sessionPtr = Json::encode($jsonData['sessionPtr']);
+
         $response = new Response(200, 'text/html');
         $response->setBody(
             $this->tpl->render(
                 'irmaAuthentication',
                 [
+                    'sessionPtr' => $sessionPtr,
                 ]
             )
         );

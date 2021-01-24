@@ -23,6 +23,7 @@ use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\Http\SessionInterface;
 use LC\Common\HttpClient\ServerClient;
+use LC\Common\ProfileConfig;
 use LC\Common\TplInterface;
 
 class VpnPortalModule implements ServiceModuleInterface
@@ -138,7 +139,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'expiryDate' => $this->getExpiryDate(new DateInterval($this->config->requireString('sessionExpiry'))),
+                            'expiryDate' => $this->getExpiryDate(new DateInterval($this->config->requireString('sessionExpiry', 'P90D'))),
                             'profileList' => $visibleProfileList,
                             'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
                         ]
@@ -365,12 +366,12 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $serverProfiles = $this->serverClient->getRequireArray('profile_list');
-        $profileData = $serverProfiles[$profileId];
+        $profileConfig = new ProfileConfig(new Config($serverProfiles[$profileId]));
 
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info', ['profile_id' => $profileId]);
 
-        $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, ClientConfig::STRATEGY_RANDOM);
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $clientCertificate, ClientConfig::STRATEGY_RANDOM);
 
         // convert the OpenVPN file to "Windows" format, no platform cares, but
         // in Notepad on Windows it looks not so great everything on one line
