@@ -64,19 +64,31 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 $httpResponse = $this->httpClient->get($irmaStatusUrl, [], []);
                 // @see https://irma.app/docs/api-irma-server/#get-session-token-result
                 $jsonData = Json::decode($httpResponse->getBody());
-                // validate the result
+                // XXX we probably need to verify other items as well, but who
+                // knows... can we even trust this information?
                 if (!\array_key_exists('proofStatus', $jsonData)) {
                     throw new HttpException('missing "proofStatus"', 401);
                 }
-                // XXX we probably need to verify other items as well, but who
-                // knows... can we even trust this information?
+
                 if ('VALID' !== $jsonData['proofStatus']) {
                     throw new HttpException('"proofStatus" MUST be "VALID"', 401);
                 }
 
+                if (!\array_key_exists('status', $jsonData)) {
+                    throw new HttpException('missing "status"', 401);
+                }
+
+                if ('DONE' !== $jsonData['status']) {
+                    throw new HttpException('"status" MUST be "DONE"', 401);
+                }
+
+                if (\array_key_exists('error', $jsonData)) {
+                    throw new HttpException('An error occured: ', $jsonData['error'], 401);
+                }
+
                 $userIdAttribute = $this->config->requireString('userIdAttribute');
                 $userId = null;
-                // extract the attribute, WTF double array...
+                // extract the attribute
                 foreach ($jsonData['disclosed'][0] as $attributeList) {
                     if ($userIdAttribute === $attributeList['id']) {
                         $userId = $attributeList['rawvalue'];
@@ -119,10 +131,8 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 '@context' => 'https://irma.app/ld/request/disclosure/v2',
                 'disclose' => [
                     [
-                        [
-                            $this->config->requireString('userIdAttribute'),
-                        ],
-                    ],
+                        [ $this->config->requireString('userIdAttribute') ]
+                    ]
                 ],
             ],
             [
