@@ -2,12 +2,19 @@
 
 document.addEventListener("DOMContentLoaded", function() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     const sessionPtr = document.getElementById("irmaAuth").dataset.sessionPtr;
+=======
+    const sessionPtr = document.getElementById('irmaAuth').dataset.sessionPtr;
+
+>>>>>>> b3277c8be6e94450ee1517cbe4a332e3fbe1221b
     const irmaFrontend = irma.newPopup({
         debugging: false,
+
         session: {
             start: false,
             mapping: {
+<<<<<<< HEAD
                 sessionPtr: function() {
                     return JSON.parse(sessionPtr);
                 }
@@ -26,6 +33,9 @@ document.addEventListener("DOMContentLoaded", function() {
 =======
               sessionPtr: () => function() { return JSON.parse(sessionPtr);}
 >>>>>>> 6f72016 (squashed commits?)
+=======
+              sessionPtr: () => function() { return JSON.parse(sessionPtr);}
+>>>>>>> b3277c8be6e94450ee1517cbe4a332e3fbe1221b
             },
             result: false
         }
