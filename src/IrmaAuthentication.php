@@ -77,6 +77,22 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                     throw new HttpException('"proofStatus" MUST be "VALID"', 401);
                 }
 
+                // the 'status' key is only 'DONE' when the
+                // authentication finished, here we make sure it is 'DONE'
+                if (!\array_key_exists('status', $jsonData)) {
+                    throw new HttpException('missing "status"', 401);
+                }
+
+                if ('DONE' !== $jsonData['satus']) {
+                    throw new HttpException('"status" MUST be "DONE"', 401);
+                }
+
+                // the 'error key is only available when an error occured'
+                // here we make sure we continue without an error
+                if (\array_key_exists('error', $jsonData)) {
+                    throw new HttpException('a error occured ', $jsonData['error'], 401);
+                }
+
                 $userIdAttribute = $this->config->requireString('userIdAttribute');
                 $userId = null;
 
