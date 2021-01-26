@@ -90,7 +90,7 @@ class IrmaAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 // the 'error key is only available when an error occured'
                 // here we make sure we continue without an error
                 if (\array_key_exists('error', $jsonData)) {
-                    throw new HttpException('a error occured ', $jsonData['error'], 401);
+                    throw new HttpException('an error occured ', $jsonData['error'], 401);
                 }
 
                 $userIdAttribute = $this->config->requireString('userIdAttribute');
