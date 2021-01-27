@@ -6,7 +6,7 @@
             <?=$this->t('No VPN profiles are available for your account.'); ?>
         </p>
     <?php else: ?>
-		<p>		
+		<p>
         <?=$this->t('Manually create and download an OpenVPN configuration file for use in your OpenVPN client.'); ?>
 		<?=$this->t('Select a profile and choose a name, e.g. "Phone".'); ?>
 		</p>

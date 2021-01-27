@@ -206,10 +206,10 @@ class Storage implements CredentialValidatorInterface, StorageInterface
                 client_id,
                 scope,
                 auth_time
-             ) 
+             )
              VALUES(
                 :auth_key,
-                :user_id, 
+                :user_id,
                 :client_id,
                 :scope,
                 :auth_time

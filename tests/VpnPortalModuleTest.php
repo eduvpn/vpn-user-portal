@@ -30,7 +30,7 @@ class VpnPortalModuleTest extends TestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         $schemaDir = \dirname(__DIR__).'/schema';
         $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');

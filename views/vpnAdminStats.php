@@ -34,7 +34,7 @@
 <?php if (array_key_exists($profileId, $graphStats) && 0 !== count($graphStats[$profileId]['date_list'])): ?>
         <li><a href="#<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
 <?php endif; ?>
-<?php endforeach; ?>   
+<?php endforeach; ?>
 </ul>
 
 <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>

@@ -38,13 +38,13 @@ class BearerValidatorTest extends TestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->dateTime = new DateTime('2018-01-01');
 
         $storage = new Storage(
             new PDO('sqlite::memory:'),
-            \dirname(\dirname(__DIR__)).'/schema',
+            \dirname(__DIR__, 2).'/schema',
             new DateInterval('P90D')
         );
         $storage->setDateTime($this->dateTime);

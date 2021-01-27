@@ -23,7 +23,7 @@ class StorageTest extends TestCase
     /**
      * @return void
      */
-    public function setUp()
+    protected function setUp()
     {
         $dateTime = new DateTime('2018-01-01 13:37:00');
         $db = new PDO('sqlite::memory:');
