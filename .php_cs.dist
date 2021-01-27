@@ -8,6 +8,10 @@ return PhpCsFixer\Config::create()
             '@Symfony:risky' => true,
             'ordered_imports' => true,
             'ordered_class_elements' => true,
+            'no_alternative_syntax' => false,
+            'echo_tag_syntax' => [
+                'format' => 'short',
+            ],
             'array_syntax' => ['syntax' => 'short'],
             'phpdoc_order' => true,
             'phpdoc_no_empty_return' => false,
@@ -22,7 +26,7 @@ eduVPN - End-user friendly VPN.
 Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
 SPDX-License-Identifier: AGPL-3.0+
 EOD
-             ]
+             ],
         ]
     )
     ->setFinder(PhpCsFixer\Finder::create()->in(__DIR__));
