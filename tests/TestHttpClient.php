@@ -135,7 +135,7 @@ class TestHttpClient implements HttpClientInterface
      */
     public function postRaw($requestUrl, array $queryParameters, $rawPost, array $requestHeaders = [])
     {
-        throw new RuntimeException('"postJson" not implemented');
+        throw new RuntimeException('"postRaw" not implemented');
     }
 
     /**
