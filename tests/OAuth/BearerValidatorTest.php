@@ -44,7 +44,7 @@ class BearerValidatorTest extends TestCase
 
         $storage = new Storage(
             new PDO('sqlite::memory:'),
-            \dirname(__DIR__, 2).'/schema',
+            \dirname(\dirname(__DIR__)).'/schema',
             new DateInterval('P90D')
         );
         $storage->setDateTime($this->dateTime);
