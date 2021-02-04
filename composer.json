@@ -27,23 +27,23 @@
         },
         {
             "type": "vcs",
-            "url": "https://git.tuxed.net/fkooman/php-oauth2-server"
+            "url": "https://git.sr.ht/~fkooman/php-oauth2-server"
         },
         {
             "type": "vcs",
-            "url": "https://git.tuxed.net/fkooman/php-jwt"
+            "url": "https://git.sr.ht/~fkooman/php-jwt"
         },
         {
             "type": "vcs",
-            "url": "https://git.tuxed.net/fkooman/php-sqlite-migrate"
+            "url": "https://git.sr.ht/~fkooman/php-sqlite-migrate"
         },
         {
             "type": "vcs",
-            "url": "https://git.tuxed.net/fkooman/php-saml-sp"
+            "url": "https://git.sr.ht/~fkooman/php-saml-sp"
         },
         {
             "type": "vcs",
-            "url": "https://git.tuxed.net/fkooman/php-secookie"
+            "url": "https://git.sr.ht/~fkooman/php-secookie"
         }
     ],
     "require": {
@@ -72,7 +72,7 @@
     },
     "support": {
         "email": "eduvpn@surfnet.nl",
-        "source": "https://github.com/eduvpn/vpn-user-portal"
+        "source": "https://git.sr.ht/~fkooman/vpn-user-portal"
     },
     "type": "project"
 }
