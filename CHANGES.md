@@ -4,6 +4,10 @@
 - `tlsProtection` is no longer a configuration option, it is always `tls-crypt`
 - only show "Management IP" and "Listen IP" if they are not the default of 
   `127.0.0.1`, respectively `::`
+- `sessionExpiry` is optional now, default is `P90D`
+- `authMethod` and `supportedLanguages` have default values now when omitted
+- remove obsolete `/_saml/*` whitelist
+- rework menu, reduce code duplication and make it easier to add optional items
 
 ## 2.3.6 (2020-11-27)
 - update for `ProfileConfig` refactor
