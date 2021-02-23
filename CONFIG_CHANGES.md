@@ -8,6 +8,13 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.3.7
+
+The `authMethod`, `supportedLanguages` and `sessionExpiry` now have defaults 
+when the option is not specified. The `authMethod` default is 
+`FormPdoAuthentication`, the `supportedLanguages` default is 
+`['en_US' => 'English']` and the `sessionExpiry` default is `P90D`.
+
 ## 2.3.5
 
 Under `Api` the `remoteAccessList` is ignored from now on. When `remoteAccess` 
