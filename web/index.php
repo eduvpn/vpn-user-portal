@@ -126,6 +126,8 @@ try {
         'supportedLanguages' => $supportedLanguages,
         '_show_logout_button' => true,
         'uiLang' => $uiLang,
+        'portalVersion' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
+        'isAdmin' => false,
         'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
     ];
     if ('ClientCertAuthentication' === $authMethod) {

@@ -27,6 +27,9 @@
 <?php if ($this->exists('customFooter')) : ?>
     <?=$this->insert('customFooter'); ?>
 <?php endif; ?>
+<?php if ($isAdmin): ?>
+    <p>v<?=$this->e($portalVersion); ?></p>
+<?php endif; ?>
     </footer>
 </body>
 </html>
