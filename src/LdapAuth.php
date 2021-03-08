@@ -40,6 +40,12 @@ class LdapAuth implements CredentialValidatorInterface
     /** @var array<string> */
     private $permissionAttributeList;
 
+    /** @var string|null */
+    private $searchBindDn;
+
+    /** @var string|null */
+    private $searchBindPass;
+
     /**
      * @param string|null   $bindDnTemplate
      * @param string|null   $baseDn
@@ -47,8 +53,10 @@ class LdapAuth implements CredentialValidatorInterface
      * @param string|null   $userIdAttribute
      * @param string|null   $addRealm
      * @param array<string> $permissionAttributeList
+     * @param string|null   $searchBindDn
+     * @param string|null   $searchBindPass
      */
-    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $userIdAttribute, $addRealm, array $permissionAttributeList)
+    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $userIdAttribute, $addRealm, array $permissionAttributeList, $searchBindDn, $searchBindPass)
     {
         $this->logger = $logger;
         $this->ldapClient = $ldapClient;
@@ -58,6 +66,8 @@ class LdapAuth implements CredentialValidatorInterface
         $this->userIdAttribute = $userIdAttribute;
         $this->addRealm = $addRealm;
         $this->permissionAttributeList = $permissionAttributeList;
+        $this->searchBindDn = $searchBindDn;
+        $this->searchBindPass = $searchBindPass;
     }
 
     /**
@@ -157,9 +167,9 @@ class LdapAuth implements CredentialValidatorInterface
             return str_replace('{{UID}}', LdapClient::escapeDn($authUser), $this->bindDnTemplate);
         }
 
-        // we do not have a bind DN, so do an anonymous LDAP bind + search to
+        // we do not have a bind DN, so do an (anonymous) LDAP bind + search to
         // find a DN we can bind with based on userFilterTemplate
-        $this->ldapClient->bind();
+        $this->ldapClient->bind($this->searchBindDn, $this->searchBindPass);
         if (null === $this->userFilterTemplate) {
             $this->logger->error('"userFilterTemplate" not set, unable to search for DN');
 
