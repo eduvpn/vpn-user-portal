@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3ac70eda9d73fc4c8c9a518bc2cf5f9",
+    "content-hash": "78509320d38e54600d776757cf25e08a",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -108,12 +108,60 @@
             "time": "2020-08-09T19:40:28+00:00"
         },
         {
+            "name": "fkooman/otp-verifier",
+            "version": "0.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.sr.ht/~fkooman/php-otp-verifier",
+                "reference": "adf2ad12f12c88d6243af8e153c0e7ddfe6c3f37"
+            },
+            "require": {
+                "ext-date": "*",
+                "ext-hash": "*",
+                "ext-pdo": "*",
+                "ext-spl": "*",
+                "paragonie/constant_time_encoding": "^1|^2",
+                "paragonie/random_compat": ">=1",
+                "php": ">= 5.4",
+                "symfony/polyfill-php56": "^1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4|^5|^6|^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fkooman\\Otp\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "fkooman\\Otp\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "OTP Validation Library",
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.tuxed.net/fkooman/php-otp-verifier"
+            },
+            "time": "2019-08-12T13:06:36+00:00"
+        },
+        {
             "name": "fkooman/secookie",
-            "version": "5.0.1",
+            "version": "5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-secookie",
-                "reference": "3b560a231daf11828b7a0c7ef9bbff4f0d5a52ab"
+                "reference": "f288021ca829cd96f8660162dd35cbc74e6bd2c2"
             },
             "require": {
                 "ext-date": "*",
@@ -148,9 +196,9 @@
             "description": "Modern HTTP cookie and session library",
             "support": {
                 "email": "fkooman@tuxed.net",
-                "source": "https://git.tuxed.net/fkooman/php-secookie"
+                "source": "https://git.sr.ht/~fkooman/php-secookie"
             },
-            "time": "2020-08-09T09:35:11+00:00"
+            "time": "2021-02-23T20:46:21+00:00"
         },
         {
             "name": "fkooman/sqlite-migrate",
