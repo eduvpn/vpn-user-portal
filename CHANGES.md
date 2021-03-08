@@ -2,6 +2,7 @@
 
 ## 2.3.8 (...)
 - show portal version in footer when user is admin
+- implement support for optional LDAP bind with credentials for initial search
 
 ## 2.3.7 (2021-02-23)
 - `tlsProtection` is no longer a configuration option, it is always `tls-crypt`
