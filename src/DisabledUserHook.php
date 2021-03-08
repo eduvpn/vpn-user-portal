@@ -13,7 +13,6 @@ use LC\Common\Http\BeforeHookInterface;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
-use LC\Common\HttpClient\ServerClient;
 
 /**
  * This hook is used to check if a user is disabled before allowing any other
@@ -21,14 +20,17 @@ use LC\Common\HttpClient\ServerClient;
  */
 class DisabledUserHook implements BeforeHookInterface
 {
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
+    /** @var Storage */
+    private $storage;
 
-    public function __construct(ServerClient $serverClient)
+    public function __construct(Storage $storage)
     {
-        $this->serverClient = $serverClient;
+        $this->storage = $storage;
     }
 
+    /**
+     * @return void
+     */
     public function executeBefore(Request $request, array $hookData)
     {
         $whiteList = [
@@ -38,7 +40,7 @@ class DisabledUserHook implements BeforeHookInterface
             ],
         ];
         if (Service::isWhitelisted($request, $whiteList)) {
-            return null;
+            return;
         }
 
         if (!\array_key_exists('auth', $hookData)) {
@@ -46,11 +48,9 @@ class DisabledUserHook implements BeforeHookInterface
         }
         /** @var \LC\Common\Http\UserInfo */
         $userInfo = $hookData['auth'];
-        if ($this->serverClient->get('is_disabled_user', ['user_id' => $userInfo->getUserId()])) {
-            // user is disabled, show a special message
+
+        if ($this->storage->isDisabledUser($userInfo->getUserId())) {
             throw new HttpException('account disabled', 403);
         }
-
-        return null;
     }
 }

@@ -260,7 +260,7 @@ try {
         );
     }
 
-    $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
+    $service->addBeforeHook('disabled_user', new DisabledUserHook($storage));
     $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $storage, new DateInterval($sessionExpiry)));
 
     $service->addModule(new QrModule());
