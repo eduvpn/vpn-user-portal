@@ -302,7 +302,7 @@ try {
     $service->addModule($adminPortalModule);
 
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $seSession, $tpl, $serverClient);
+        $twoFactorEnrollModule = new TwoFactorEnrollModule($twoFactorMethods, $seSession, $tpl, $storage);
         $service->addModule($twoFactorEnrollModule);
     }
 

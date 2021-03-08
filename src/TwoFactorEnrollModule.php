@@ -9,6 +9,8 @@
 
 namespace LC\Portal;
 
+use fkooman\Otp\Exception\OtpException;
+use fkooman\Otp\Totp;
 use LC\Common\Http\HtmlResponse;
 use LC\Common\Http\InputValidation;
 use LC\Common\Http\RedirectResponse;
@@ -16,11 +18,7 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\Http\SessionInterface;
-use LC\Common\Http\UserInfo;
-use LC\Common\HttpClient\Exception\ApiException;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\TplInterface;
-use ParagonIE\ConstantTime\Base32;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
 {
@@ -33,18 +31,18 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     /** @var \LC\Common\TplInterface */
     private $tpl;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
+    /** @var Storage */
+    private $storage;
 
     /**
      * @param array<string> $twoFactorMethods
      */
-    public function __construct(array $twoFactorMethods, SessionInterface $session, TplInterface $tpl, ServerClient $serverClient)
+    public function __construct(array $twoFactorMethods, SessionInterface $session, TplInterface $tpl, Storage $storage)
     {
         $this->twoFactorMethods = $twoFactorMethods;
         $this->session = $session;
         $this->tpl = $tpl;
-        $this->serverClient = $serverClient;
+        $this->storage = $storage;
     }
 
     /**
@@ -60,8 +58,9 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
-                $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
-                $totpSecret = Base32::encodeUpper(random_bytes(20));
+                $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
+                $totpSecret = Totp::generateSecret();
+                $totp = new Totp($this->storage);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -71,7 +70,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                             'twoFactorMethods' => $this->twoFactorMethods,
                             'hasTotpSecret' => $hasTotpSecret,
                             'totpSecret' => $totpSecret,
-                            'otpAuthUrl' => self::getOtpAuthUrl($request, $userInfo, $totpSecret),
+                            'otpAuthUrl' => $totp->getEnrollmentUri($userInfo->getUserId(), $totpSecret, $request->getServerName()),
                         ]
                     )
                 );
@@ -89,14 +88,30 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
 
                 $totpSecret = InputValidation::totpSecret($request->requirePostParameter('totp_secret'));
                 $totpKey = InputValidation::totpKey($request->requirePostParameter('totp_key'));
-
                 $redirectTo = $this->session->get('_two_factor_enroll_redirect_to');
 
+                $totp = new Totp($this->storage);
                 try {
-                    $this->serverClient->post('set_totp_secret', ['user_id' => $userInfo->getUserId(), 'totp_secret' => $totpSecret, 'totp_key' => $totpKey]);
-                } catch (ApiException $e) {
+                    $totp->register($userInfo->getUserId(), $totpSecret, $totpKey);
+                    $this->storage->addUserMessage($userInfo->getUserId(), 'notification', 'TOTP secret registered');
+                    if (null !== $redirectTo) {
+                        $this->session->remove('_two_factor_enroll_redirect_to');
+
+                        // mark as 2FA verified
+                        $this->session->regenerate();
+                        $this->session->set('_two_factor_verified', $userInfo->getUserId());
+
+                        return new RedirectResponse($redirectTo);
+                    }
+
+                    return new RedirectResponse($request->getRootUri().'account', 302);
+                } catch (OtpException $e) {
+                    $msg = sprintf('TOTP registration failed: %s', $e->getMessage());
+                    $this->storage->addUserMessage($userInfo->getUserId(), 'notification', $msg);
+
                     // we were unable to set the OTP secret
-                    $hasTotpSecret = $this->serverClient->get('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
+                    // XXX why is hasTotpSecret needed here?
+                    $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
 
                     return new HtmlResponse(
                         $this->tpl->render(
@@ -107,50 +122,12 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                                 'hasTotpSecret' => $hasTotpSecret,
                                 'totpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',
-                                'otpAuthUrl' => self::getOtpAuthUrl($request, $userInfo, $totpSecret),
+                                'otpAuthUrl' => $totp->getEnrollmentUri($userInfo->getUserId(), $totpSecret, $request->getServerName()),
                             ]
                         )
                     );
                 }
-
-                if (null !== $redirectTo) {
-                    $this->session->remove('_two_factor_enroll_redirect_to');
-
-                    // mark as 2FA verified
-                    $this->session->regenerate();
-                    $this->session->set('_two_factor_verified', $userInfo->getUserId());
-
-                    return new RedirectResponse($redirectTo);
-                }
-
-                return new RedirectResponse($request->getRootUri().'account', 302);
             }
-        );
-    }
-
-    /**
-     * @param string $labelStr
-     *
-     * @return string
-     */
-    private static function labelEncode($labelStr)
-    {
-        return rawurlencode(str_replace(':', '_', $labelStr));
-    }
-
-    /**
-     * @param string $totpSecret
-     *
-     * @return string
-     */
-    private static function getOtpAuthUrl(Request $request, UserInfo $userInfo, $totpSecret)
-    {
-        return sprintf(
-            'otpauth://totp/%s:%s?secret=%s&issuer=%s',
-            self::labelEncode($request->getServerName()),
-            self::labelEncode($userInfo->getUserId()),
-            $totpSecret,
-            self::labelEncode($request->getServerName())
         );
     }
 }

@@ -13,13 +13,14 @@ use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\Otp\OtpInfo;
+use fkooman\Otp\OtpStorageInterface;
 use fkooman\SqliteMigrate\Migration;
 use LC\Common\Http\CredentialValidatorInterface;
 use LC\Common\Http\UserInfo;
 use LC\Common\Json;
 use PDO;
 
-class Storage implements CredentialValidatorInterface, StorageInterface
+class Storage implements CredentialValidatorInterface, StorageInterface, OtpStorageInterface
 {
     const CURRENT_SCHEMA_VERSION = '2019032701';
 
