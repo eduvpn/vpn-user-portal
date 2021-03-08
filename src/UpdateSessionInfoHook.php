@@ -83,7 +83,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
             'notification',
             sprintf(
                 'updated session info {permission_list: [%s], expires_at: %s}',
-                $userInfo->getPermissionList(),
+                implode(' ', $userInfo->getPermissionList()),
                 $sessionExpiresAt->format(DateTime::ATOM)
             )
         );
