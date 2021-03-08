@@ -228,31 +228,7 @@ try {
             $service->addModule($formPdoAuthentication);
             break;
          default:
-            // try to dynamically load the authentication mechanism
-            $authClass = sprintf('LC\Portal\%s', $authMethod);
-            if (!class_exists($authClass)) {
-                throw new RuntimeException('unsupported authentication mechanism');
-            }
-            $userAuth = new $authClass(
-                // we make the rootUri and baseDir part of the configuration,
-                // agreed, it is a bit hacky, but avoids needing to manually
-                // specify the URL on which the service is configured...
-                $config->s($authMethod)
-                    ->setItem('_rootUri', $request->getRootUri())
-                    ->setItem('_baseDir', $baseDir),
-                $seSession,
-                $tpl
-            );
-
-            $implementedInterfaces = class_implements($userAuth);
-            if (!in_array('LC\Common\Http\BeforeHookInterface', $implementedInterfaces, true)) {
-                throw new RuntimeException('authentication class MUST implement "LC\Common\Http\BeforeHookInterface"');
-            }
-            $service->addBeforeHook('auth', $userAuth);
-            // optional "ServiceModuleInterface"
-            if (in_array('LC\Common\Http\ServiceModuleInterface', $implementedInterfaces, true)) {
-                $service->addModule($userAuth);
-            }
+            throw new RuntimeException('unsupported authentication mechanism');
     }
 
     $tpl->addDefault(
