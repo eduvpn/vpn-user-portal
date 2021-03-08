@@ -16,19 +16,17 @@ use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Http\SessionInterface;
-use LC\Common\HttpClient\ServerClient;
-use LC\Common\Json;
 
 /**
- * This hook is used to update the session info in vpn-server-api.
+ * This hook is used to update the session info.
  */
 class UpdateSessionInfoHook implements BeforeHookInterface
 {
     /** @var \LC\Common\Http\SessionInterface */
     private $session;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
+    /** @var Storage */
+    private $storage;
 
     /** @var \DateTime */
     private $dateTime;
@@ -36,10 +34,10 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     /** @var \DateInterval */
     private $sessionExpiry;
 
-    public function __construct(SessionInterface $session, ServerClient $serverClient, DateInterval $sessionExpiry)
+    public function __construct(SessionInterface $session, Storage $storage, DateInterval $sessionExpiry)
     {
         $this->session = $session;
-        $this->serverClient = $serverClient;
+        $this->storage = $storage;
         $this->dateTime = new DateTime();
         $this->sessionExpiry = $sessionExpiry;
     }
@@ -60,8 +58,8 @@ class UpdateSessionInfoHook implements BeforeHookInterface
         }
 
         if ('yes' === $this->session->get('_update_session_info')) {
-            // only sent the ping once per browser session, not on every
-            // request
+            // only update the session info once per browser session, not on
+            // every request
             return false;
         }
 
@@ -76,14 +74,18 @@ class UpdateSessionInfoHook implements BeforeHookInterface
         if (null === $sessionExpiresAt = $userInfo->getSessionExpiresAt()) {
             $sessionExpiresAt = date_add(clone $this->dateTime, $this->sessionExpiry);
         }
-
-        $this->serverClient->post(
-            'user_update_session_info',
-            [
-                'user_id' => $userInfo->getUserId(),
-                'session_expires_at' => $sessionExpiresAt->format(DateTime::ATOM),
-                'permission_list' => Json::encode($userInfo->getPermissionList()),
-            ]
+        // XXX if the authentication backend overrides the sessionExpiresAt, we
+        // must validate it is not in the past... also, probably get rid of this!
+        $this->storage->updateSessionInfo($userInfo->getUserId(), $sessionExpiresAt, $userInfo->getPermissionList());
+        // XXX maybe not necessary to log this anymore...
+        $this->storage->addUserMessage(
+            $userInfo->getUserId(),
+            'notification',
+            sprintf(
+                'updated session info {permission_list: [%s], expires_at: %s}',
+                $userInfo->getPermissionList(),
+                $sessionExpiresAt->format(DateTime::ATOM)
+            )
         );
         $this->session->set('_update_session_info', 'yes');
     }
