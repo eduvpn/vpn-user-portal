@@ -181,7 +181,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
                 // better prevent it early
-                if (!\in_array($profileId, array_keys($visibleProfileList), true)) {
+                if (!\array_key_exists($profileId, $visibleProfileList)) {
                     throw new HttpException('no permission to download a configuration for this profile', 400);
                 }
 
@@ -421,14 +421,14 @@ class VpnPortalModule implements ServiceModuleInterface
      * Filter the list of profiles by checking if the profile should be shown,
      * and that the user has the required permissions in case ACLs are enabled.
      *
-     * @param array<string,\LC\Common\ProfileConfig> $serverProfiles
+     * @param array<string,\LC\Common\ProfileConfig> $profileList
      *
-     * @return array<string,string>
+     * @return array<string,\LC\Common\ProfileConfig>
      */
-    private static function filterProfileList(array $serverProfiles, array $userPermissions)
+    private static function filterProfileList(array $profileList, array $userPermissions)
     {
-        $profileList = [];
-        foreach ($serverProfiles as $profileId => $profileConfig) {
+        $filteredProfileList = [];
+        foreach ($profileList as $profileId => $profileConfig) {
             if ($profileConfig->hideProfile()) {
                 continue;
             }
@@ -439,10 +439,10 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
             }
 
-            $profileList[$profileId] = $profileConfig->displayName();
+            $filteredProfileList[$profileId] = $profileConfig;
         }
 
-        return $profileList;
+        return $filteredProfileList;
     }
 
     /**

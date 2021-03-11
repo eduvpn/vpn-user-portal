@@ -19,8 +19,8 @@
             <fieldset>
                 <label for="profileId"><?=$this->t('Profile'); ?></label>
                 <select name="profileId" id="profileId" size="<?=count($profileList); ?>" required>
-<?php foreach ($profileList as $profileId => $profileData): ?>
-                    <option value="<?=$this->e($profileId); ?>"><?=$this->e($profileData['displayName']); ?></option>
+<?php foreach ($profileList as $profileId => $profileConfig): ?>
+                    <option value="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></option>
 <?php endforeach; ?>
                 </select>
                 <label for="displayName"><?=$this->t('Name'); ?></label>
