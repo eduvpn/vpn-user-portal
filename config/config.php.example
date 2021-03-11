@@ -51,35 +51,15 @@ return [
     ],
 
     // SAML (php-saml-sp)
-    'SamlAuthentication' => [
-        // 'OID for eduPersonTargetedID
-        'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.10',
-        // OID for eduPersonPrincipalName
-        //'userIdAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6',
+    'PhpSamlSpAuthentication' => [
+        'userIdAttribute' => 'eduPersonTargetedID',
+        //'userIdAttribute' => 'eduPersonPrincipalName',
 
         // ** AUTHORIZATION | PERMISSIONS **
-        // OID for eduPersonEntitlement
-        //'permissionAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.7',
-        // OID for eduPersonAffiliation
-        //'permissionAttribute' => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.1',
-
-        // override the SP entityId, the default is:
-        // https://vpn.example.org/vpn-user-portal/_saml/metadata
-        //'spEntityId' => 'https://vpn.example.org/saml',
-
-        // (Aggregate) SAML metadata file containing the IdP metadata of IdPs
-        // that are allowed to access this service
-        'idpMetadata' => '/path/to/idp/metadata.xml',
-
-        // set a fixed IdP for use with this service, it MUST be available in
-        // the IdP metadata file
-        'idpEntityId' => 'https://idp.example.org/saml',
-
-        // set a URL that performs IdP discovery, all IdPs listed in the
-        // discovery service MUST also be available in the IdP metadata file,
-        // NOTE: do NOT enable idpEntityId as it will take precedence over
-        // using discovery...
-        //'discoUrl' => 'http://vpn.example.org/php-saml-ds/index.php',
+        //'permissionAttribute' => [
+        //      'eduPersonEntitlement',
+        //      //'eduPersonAffiliation',
+        //],
 
         // AuthnContext required for *all* users
         //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
@@ -89,13 +69,7 @@ return [
         // AuthnContexts. If they currently don't, a new authentication is
         // triggered to obtain it
         //'permissionAuthnContext' => [
-        //    'urn:example:LC-admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
-        //],
-
-        // Allow for overriding global sessionExpiry based on SAML
-        // "permissionAttribute" value(s)
-        //'permissionSessionExpiry' => [
-        //    'urn:example:LC-admin' => 'PT12H',
+        //    'http://eduvpn.org/role/admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
     ],
 
@@ -165,20 +139,99 @@ return [
         // the below remoteAccessList files to access this VPN server through
         // the OAuth API
         'remoteAccess' => false,
-        'remoteAccessList' => [
-            'production' => [
-                'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet.json',
-                'public_key' => 'E5On0JTtyUVZmcWd+I/FXRm32nSq8R2ioyW7dcu/U88=',
+    ],
+    
+    // List of VPN profiles
+    'vpnProfiles' => [
+        'internet' => [
+            // The number of this profile, every profile per instance has a 
+            // unique number
+            // REQUIRED
+            'profileNumber' => 1,
+
+            // The name of the profile as shown in the user and admin portals
+            // REQUIRED
+            'displayName' => 'Internet Access',
+
+            // The IPv4 range of the network that will be assigned to clients
+            // REQUIRED
+            'range' => '10.0.0.0/25',
+
+            // The IPv6 range of the network that will be assigned to clients
+            // REQUIRED
+            'range6' => 'fd00:4242:4242:4242::/64',
+
+            // The hostname the VPN client(s) will connect to
+            // REQUIRED
+            'hostName' => 'vpn.example',
+
+            // The address the OpenVPN processes will listen on
+            // DEFAULT = '::'
+            'listen' => '::',
+
+            // The IP address to use for connecting to OpenVPN processes
+            // DEFAULT = '127.0.0.1'
+            'managementIp' => '127.0.0.1',
+
+            // Whether or not to route all traffic from the client over the VPN
+            // DEFAULT = false
+            'defaultGateway' => true,
+
+            // Block access to local LAN when VPN is active
+            // DEFAULT = false
+            'blockLan' => true,
+
+            // IPv4 and IPv6 routes to push to the client, only used when
+            // defaultGateway is false
+            // DEFAULT = []
+            'routes' => [
+                //'192.168.1.0/24',
+                //'fd01:1:1:1::/64',
             ],
-            //'development' => [
-            //    'discovery_url' => 'https://static.eduvpn.nl/disco/secure_internet_dev.json',
-            //    'public_key' => 'zzls4TZTXHEyV3yxaxag1DZw3tSpIdBoaaOjUGH/Rwg=',
-            //],
+
+            // IPv4 and IPv6 address of DNS server(s) to push to the client
+            // DEFAULT  = []
+            // Quad9 (https://www.quad9.net)
+            'dns' => ['9.9.9.9', '2620:fe::fe'],
+
+            // Whether or not to allow client-to-client traffic
+            // DEFAULT = false
+            'clientToClient' => false,
+
+            // Whether or not to enable OpenVPN logging
+            // DEFAULT = false
+            'enableLog' => false,
+
+            // Whether or not to enable ACLs for controlling who can connect
+            // DEFAULT = false
+            'enableAcl' => false,
+
+            // The list of permissions to allow access, requires enableAcl to 
+            // be true
+            // DEFAULT  = []
+            'aclPermissionList' => [],
+
+            // The protocols and ports the OpenVPN processes should use, MUST 
+            // be either 1, 2, 4, 8 or 16 proto/port combinations
+            // DEFAULT = ['udp/1194', 'tcp/1194']
+            'vpnProtoPorts' => [
+                'udp/1194',
+                'tcp/1194',
+            ],
+
+            // List the protocols and ports exposed to the VPN clients. Useful
+            // for OpenVPN port sharing. When empty (or missing), uses list 
+            // from vpnProtoPorts
+            // DEFAULT = []
+            'exposedVpnProtoPorts' => [
+                // 'udp/1194',
+                // 'tcp/443'
+            ],
+
+            // Hide the profile from the user portal, i.e. do not allow the 
+            // user to choose it
+            // DEFAULT = false
+            'hideProfile' => false,
         ],
     ],
-
-    // Connection to vpn-server-api
-    'apiUser' => 'vpn-user-portal',
-    'apiPass' => 'XXX-vpn-user-portal/vpn-server-api-XXX',
-    'apiUri' => 'http://localhost/vpn-server-api/api.php',
 ];
