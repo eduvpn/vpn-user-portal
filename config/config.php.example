@@ -165,7 +165,7 @@ return [
 
             // The IPv6 range of the network that will be assigned to clients
             // REQUIRED
-            'range6' => 'fd00:4242:4242:4242::/64',
+            'range6' => 'fd42::/64',
 
             // The hostname the VPN client(s) will connect to
             // REQUIRED
@@ -235,7 +235,7 @@ return [
             ],
 
             //'dnsDomain' => 'example.org',
-            'dnsDomain' => null,
+//            'dnsDomain' => null,
 
             //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
             'dnsDomainSearch' => [],
