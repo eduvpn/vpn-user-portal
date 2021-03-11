@@ -13,7 +13,6 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use LC\Common\Config;
-use LC\Common\Config;
 use LC\Common\FileIO;
 use LC\Common\Http\AuthUtils;
 use LC\Common\Http\Exception\HttpException;
@@ -546,8 +545,8 @@ class AdminPortalModule implements ServiceModuleInterface
     {
         $maxConcurrentConnectionLimitList = [];
         foreach ($profileList as $profileId => $profileData) {
-            list($ipFour, $ipFourPrefix) = explode('/', $profileData['range']);
-            $vpnProtoPortsCount = \count($profileData['vpnProtoPorts']);
+            list($ipFour, $ipFourPrefix) = explode('/', $profileData->range());
+            $vpnProtoPortsCount = \count($profileData->vpnProtoPorts());
             $maxConcurrentConnectionLimitList[$profileId] = pow(2, (32 - (int) $ipFourPrefix)) - 4 * $vpnProtoPortsCount;
         }
 
