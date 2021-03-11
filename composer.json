@@ -63,7 +63,7 @@
         "fkooman/secookie": "^5",
         "fkooman/otp-verifier": "^0.3",
         "fkooman/sqlite-migrate": "^0",
-        "lc/common": "v2.x-dev",
+        "lc/common": "dev-dev",
         "paragonie/constant_time_encoding": "^1.0.3|^2.2.0",
         "paragonie/random_compat": "^1|^2",
         "paragonie/sodium_compat": "^1",

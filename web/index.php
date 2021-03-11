@@ -25,10 +25,6 @@ use LC\Common\Http\LanguageSwitcherHook;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Http\StaticPermissions;
-use LC\Common\Http\TwoFactorHook;
-use LC\Common\Http\TwoFactorModule;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
 use LC\Common\Random;
 use LC\Portal\AccessHook;
@@ -56,6 +52,8 @@ use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
 use LC\Portal\TwoFactorEnrollModule;
+use LC\Portal\TwoFactorHook;
+use LC\Portal\TwoFactorModule;
 use LC\Portal\UpdateSessionInfoHook;
 use LC\Portal\VpnPortalModule;
 
@@ -140,11 +138,6 @@ try {
         $templateDefaults['_show_logout_button'] = false;
     }
     $tpl->addDefault($templateDefaults);
-
-    $serverClient = new ServerClient(
-        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
-        $config->requireString('apiUri')
-    );
 
     $service = new Service($tpl);
     $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());
@@ -258,9 +251,9 @@ try {
         $service->addBeforeHook(
             'two_factor',
             new TwoFactorHook(
+                $storage,
                 $seSession,
                 $tpl,
-                $serverClient,
                 $config->requireBool('requireTwoFactor', false)
             )
         );
@@ -273,7 +266,7 @@ try {
 
     // two factor module
     if (0 !== count($twoFactorMethods)) {
-        $twoFactorModule = new TwoFactorModule($serverClient, $seSession, $tpl);
+        $twoFactorModule = new TwoFactorModule($storage, $seSession, $tpl);
         $service->addModule($twoFactorModule);
     }
 
