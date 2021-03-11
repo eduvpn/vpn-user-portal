@@ -13,6 +13,8 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use LC\Common\Config;
+use LC\Common\Config;
+use LC\Common\FileIO;
 use LC\Common\Http\AuthUtils;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\HtmlResponse;
@@ -21,29 +23,46 @@ use LC\Common\Http\RedirectResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
 use LC\Common\TplInterface;
+use LC\Portal\CA\CaInterface;
+use LC\Portal\OpenVpn\DaemonWrapper;
+use RuntimeException;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
+    /** @var string */
+    private $dataDir;
+
+    /** @var \LC\Common\Config */
+    private $config;
+
     /** @var \LC\Common\TplInterface */
     private $tpl;
+
+    /** @var CA\CaInterface */
+    private $ca;
+
+    /** @var OpenVpn\DaemonWrapper */
+    private $daemonWrapper;
 
     /** @var Storage */
     private $storage;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
-
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient)
+    /**
+     * @param string $dataDir
+     */
+    public function __construct($dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage)
     {
+        $this->dataDir = $dataDir;
+        $this->config = $config;
         $this->tpl = $tpl;
+        $this->ca = $ca;
+        $this->daemonWrapper = $daemonWrapper;
         $this->storage = $storage;
-        $this->serverClient = $serverClient;
         $this->dateTime = new DateTime();
     }
 
@@ -61,19 +80,21 @@ class AdminPortalModule implements ServiceModuleInterface
                 AuthUtils::requireAdmin($hookData);
 
                 // get the fancy profile name
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->profileList();
 
                 $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $idNameMapping[$profileId] = $profileData['displayName'];
+                foreach ($profileList as $profileId => $profileConfig) {
+                    $idNameMapping[$profileId] = $profileConfig->displayName();
                 }
+
+                $connectionList = $this->daemonWrapper->getConnectionList(null, null);
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminConnections',
                         [
                             'idNameMapping' => $idNameMapping,
-                            'vpnConnections' => $this->serverClient->getRequireArray('client_connections'),
+                            'vpnConnections' => $connectionList,
                         ]
                     )
                 );
@@ -88,18 +109,31 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $profileConfigList = [];
-                $profileList = $this->serverClient->getRequireArray('profile_list');
-                foreach ($profileList as $profileId => $profileConfigData) {
-                    $profileConfigList[$profileId] = new ProfileConfig(new Config($profileConfigData));
-                }
+                $profileList = $this->profileList();
+
+                $certData = $this->ca->caCert();
+                // XXX probably wrap all this stuff in its own class...
+                $parsedCert = openssl_x509_parse($certData);
+                $validFrom = new DateTime('@'.$parsedCert['validFrom_time_t']);
+                $validTo = new DateTime('@'.$parsedCert['validTo_time_t']);
+
+                $caInfo = [
+                    'valid_from' => $validFrom->format(DateTime::ATOM),
+                    'valid_to' => $validTo->format(DateTime::ATOM),
+                    // XXX this is actually not read from the file itself, but
+                    // from the config... maybe fix that as the type can change
+                    // midway? in later versions we only support Ed25519
+                    // anyway, so maybe not important?
+                    'ca_key_type' => $this->config->requireString('vpnCaKeyType', 'RSA'),
+                ];
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
-                            'profileConfigList' => $profileConfigList,
-                            'caInfo' => $this->serverClient->getRequireArray('ca_info'),
+                            // XXX rename template var to profileList
+                            'profileConfigList' => $profileList,
+                            'caInfo' => $caInfo,
                         ]
                     )
                 );
@@ -114,7 +148,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $userList = $this->serverClient->getRequireArray('user_list');
+                $userList = $this->storage->getUsers();
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -141,17 +175,14 @@ class AdminPortalModule implements ServiceModuleInterface
                 $userId = $request->requireQueryParameter('user_id');
                 InputValidation::userId($userId);
 
-                $clientCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userId]);
-                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userId]);
-
-                $userConnectionLogEntries = $this->serverClient->getRequireArray('user_connection_log', ['user_id' => $userId]);
-
+                $clientCertificateList = $this->storage->getCertificates($userId);
+                $userMessages = $this->storage->userMessages($userId);
+                $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
                 // get the fancy profile name
-                $profileList = $this->serverClient->getRequireArray('profile_list');
-
+                $profileList = $this->profileList();
                 $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $idNameMapping[$profileId] = $profileData['displayName'];
+                foreach ($profileList as $profileId => $profileConfig) {
+                    $idNameMapping[$profileId] = $profileConfig->displayName();
                 }
 
                 return new HtmlResponse(
@@ -161,8 +192,8 @@ class AdminPortalModule implements ServiceModuleInterface
                             'userId' => $userId,
                             'userMessages' => $userMessages,
                             'clientCertificateList' => $clientCertificateList,
-                            'hasTotpSecret' => $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userId]),
-                            'isDisabled' => $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]),
+                            'hasTotpSecret' => false !== $this->storage->getOtpSecret($userId),
+                            'isDisabled' => $this->storage->isDisabledUser($userId),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
                             'userConnectionLogEntries' => $userConnectionLogEntries,
                             'idNameMapping' => $idNameMapping,
@@ -199,32 +230,44 @@ class AdminPortalModule implements ServiceModuleInterface
                 switch ($userAction) {
                     case 'disableUser':
                         // get active connections for this user
-                        $connectionList = $this->serverClient->getRequireArray('client_connections', ['user_id' => $userId]);
+                        $connectionList = $this->daemonWrapper->getConnectionList($userId, null);
 
                         // disable the user
-                        $this->serverClient->post('disable_user', ['user_id' => $userId]);
+                        $this->storage->disableUser($userId);
+                        $this->storage->addUserMessage($userId, 'notification', 'account disabled');
+
                         // * revoke all OAuth clients of this user
                         // * delete all client certificates associated with the OAuth clients of this user
                         $clientAuthorizations = $this->storage->getAuthorizations($userId);
                         foreach ($clientAuthorizations as $clientAuthorization) {
                             $this->storage->deleteAuthorization($clientAuthorization['auth_key']);
-                            $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userId, 'client_id' => $clientAuthorization['client_id']]);
+                            $this->storage->addUserMessage(
+                                $userId,
+                                'notification',
+                                sprintf('certificates for OAuth client "%s" deleted', $clientAuthorization['client_id'])
+                            );
+
+                            $this->storage->deleteCertificatesOfClientId($userId, $clientAuthorization['client_id']);
                         }
 
                         // kill all active connections for this user
                         foreach ($connectionList as $profileId => $clientConnectionList) {
                             foreach ($clientConnectionList as $clientInfo) {
-                                $this->serverClient->post('kill_client', ['common_name' => $clientInfo['common_name']]);
+                                $this->daemonWrapper->killClient($clientInfo['common_name']);
                             }
                         }
                         break;
 
                     case 'enableUser':
-                        $this->serverClient->post('enable_user', ['user_id' => $userId]);
+                        $this->storage->enableUser($userId);
+                        $this->storage->addUserMessage($userId, 'notification', 'account (re)enabled');
+
                         break;
 
                     case 'deleteTotpSecret':
-                        $this->serverClient->post('delete_totp_secret', ['user_id' => $userId]);
+                        $this->storage->deleteOtpSecret($userId);
+                        $this->storage->addUserMessage($userId, 'notification', 'TOTP secret deleted');
+
                         break;
 
                     default:
@@ -268,12 +311,8 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $profileList = $this->serverClient->getRequireArray('profile_list');
-                $profileConfigList = [];
-                foreach ($profileList as $profileId => $profileConfigData) {
-                    $profileConfigList[$profileId] = new ProfileConfig(new Config($profileConfigData));
-                }
-                $appUsage = self::getAppUsage($this->serverClient->getRequireArray('app_usage'));
+                $profileList = $this->profileList();
+                $appUsage = self::getAppUsage($this->storage->getAppUsage());
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -283,7 +322,8 @@ class AdminPortalModule implements ServiceModuleInterface
                             'statsData' => $this->getStatsData(),
                             'graphStats' => $this->getGraphStats(),
                             'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit($profileList),
-                            'profileConfigList' => $profileConfigList,
+                            // XXX rename to profileList
+                            'profileConfigList' => $profileList,
                         ]
                     )
                 );
@@ -298,8 +338,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
-
+                $motdMessages = $this->storage->systemMessages('motd');
                 // we only want the first one
                 if (0 === \count($motdMessages)) {
                     $motdMessage = false;
@@ -331,19 +370,20 @@ class AdminPortalModule implements ServiceModuleInterface
                     case 'set':
                         // we can only have one "motd", so remove the ones that
                         // already exist
-                        $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
+                        $motdMessages = $this->storage->systemMessages('motd');
                         foreach ($motdMessages as $motdMessage) {
-                            $this->serverClient->post('delete_system_message', ['message_id' => $motdMessage['id']]);
+                            $this->storage->deleteSystemMessage($motdMessage['id']);
                         }
 
                         // no need to validate, we accept everything
                         $messageBody = $request->requirePostParameter('message_body');
-                        $this->serverClient->post('add_system_message', ['message_type' => 'motd', 'message_body' => $messageBody]);
+                        $this->storage->addSystemMessage('motd', $messageBody);
+
                         break;
                     case 'delete':
                         $messageId = InputValidation::messageId($request->requirePostParameter('message_id'));
+                        $this->storage->deleteSystemMessage($messageId);
 
-                        $this->serverClient->post('delete_system_message', ['message_id' => $messageId]);
                         break;
                     default:
                         throw new HttpException('unsupported "message_action"', 400);
@@ -384,7 +424,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'now' => $now->format(DateTime::ATOM),
                             'date_time' => $dateTimeLocalStr,
                             'ip_address' => $ipAddress,
-                            'result' => $this->serverClient->getRequireArrayOrFalse('log', ['date_time' => $dateTime->format('Y-m-d H:i:s'), 'ip_address' => $ipAddress]),
+                            'result' => $this->storage->getLogEntry($dateTime, $ipAddress),
                         ]
                     )
                 );
@@ -397,8 +437,17 @@ class AdminPortalModule implements ServiceModuleInterface
      */
     private function getStatsData()
     {
-        $stats = $this->serverClient->get('stats');
-        if (!\is_array($stats) || !\array_key_exists('profiles', $stats)) {
+        // XXX probably do not use dataDir here directly, but a nice class
+        $statsFile = sprintf('%s/stats.json', $this->dataDir);
+        try {
+            $stats = FileIO::readJsonFile($statsFile);
+        } catch (RuntimeException $e) {
+            // unable to read stats file
+            return [];
+        }
+
+        if (!\array_key_exists('profiles', $stats)) {
+            // broken stats file
             return [];
         }
 
@@ -557,5 +606,21 @@ class AdminPortalModule implements ServiceModuleInterface
     private static function getCoordinates($f)
     {
         return [cos(2 * M_PI * $f), sin(2 * M_PI * $f)];
+    }
+
+    /**
+     * XXX duplicate in VpnPortalModule.
+     *
+     * @return array<string,\LC\Common\ProfileConfig>
+     */
+    private function profileList()
+    {
+        $profileList = [];
+        foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
+            $profileConfig = new ProfileConfig(new Config($profileData));
+            $profileList[$profileId] = $profileConfig;
+        }
+
+        return $profileList;
     }
 }

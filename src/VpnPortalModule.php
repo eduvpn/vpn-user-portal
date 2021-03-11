@@ -456,6 +456,8 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
+     * XXX duplicate in AdminPortalModule.
+     *
      * @return array<string,\LC\Common\ProfileConfig>
      */
     private function profileList()

@@ -294,17 +294,19 @@ try {
     $vpnCaKeyType = $config->requireString('vpnCaKeyType', 'RSA');
     $ca = new VpnCa($vpnCaDir, $vpnCaKeyType, $vpnCaPath);
 
+    $daemonWrapper = new DaemonWrapper(
+        $config,
+        $storage,
+        new DaemonSocket(sprintf('%s/vpn-daemon', $configDir), $config->requireBool('vpnDaemonTls', true)),
+        $logger
+    );
+
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $config,
         $tpl,
         $seSession,
-        new DaemonWrapper(
-            $config,
-            $storage,
-            new DaemonSocket(sprintf('%s/vpn-daemon', $configDir), $config->requireBool('vpnDaemonTls', true)),
-            $logger,
-        ),
+        $daemonWrapper,
         $storage,
         new TlsCrypt($dataDir),
         new Random(),
@@ -314,9 +316,12 @@ try {
     $service->addModule($vpnPortalModule);
 
     $adminPortalModule = new AdminPortalModule(
+        $dataDir,
+        $config,
         $tpl,
-        $storage,
-        $serverClient
+        $ca,
+        $daemonWrapper,
+        $storage
     );
     $service->addModule($adminPortalModule);
 
