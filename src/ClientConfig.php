@@ -52,9 +52,11 @@ class ClientConfig
             // wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
 
+            // >= TLSv1.3 
+            'tls-version-min 1.3',
+
             // only allow AES-256-GCM
-            'ncp-ciphers AES-256-GCM',
-            'cipher AES-256-GCM',
+            'data-ciphers AES-256-GCM',
 
             // server dictates data channel key renegotiation interval
             'reneg-sec 0',
@@ -64,23 +66,16 @@ class ClientConfig
             // installs this is no longer needed though
             trim($serverInfo['ca']),
             '</ca>',
+            
+            '<tls-crypt>',
+            // in legacy situation some trimming may be required, for
+            // clean installs this is no longer needed
+            trim($serverInfo['tls_crypt']),
+            '</tls-crypt>',
         ];
 
-        if ($profileConfig->tlsOneThree()) {
-            // for TLSv1.3 we don't care about the tls-ciphers, they are all
-            // fine, let the client choose
-            $clientConfig[] = 'tls-version-min 1.3';
-        } else {
-            // CRYPTO (CONTROL CHANNEL)
-            // @see RFC 7525
-            // @see https://bettercrypto.org
-            // @see https://community.openvpn.net/openvpn/wiki/Hardening
-            $clientConfig[] = 'tls-version-min 1.2';
-            $clientConfig[] = 'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384';
-        }
-
-        // API 1, if clientCertificate is provided, we add it directly to the
-        // configuration file, XXX can be removed for API 2
+        // if clientCertificate is provided, we add it directly to the
+        // configuration file
         if (0 !== \count($clientCertificate)) {
             $clientConfig = array_merge(
                 $clientConfig,
@@ -95,17 +90,6 @@ class ClientConfig
                 ]
             );
         }
-
-        $clientConfig = array_merge(
-            $clientConfig,
-            [
-                '<tls-crypt>',
-                // in legacy situation some trimming may be required, for
-                // clean installs this is no longer needed
-                trim($serverInfo['tls_crypt']),
-                '</tls-crypt>',
-            ]
-        );
 
         // remote entries
         foreach ($remoteProtoPortList as $remoteProtoPort) {

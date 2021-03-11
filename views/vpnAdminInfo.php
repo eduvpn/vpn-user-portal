@@ -46,10 +46,6 @@
 <?php if ($profileConfig->blockLan()): ?>
                     <span class="plain"><?=$this->t('Block LAN'); ?></span>
 <?php endif; ?>
-
-<?php if ($profileConfig->tlsOneThree()): ?>
-                    <span class="plain"><?=$this->t('TLS >= 1.3'); ?></span>
-<?php endif; ?>
                 </td>
             </tr>
 
@@ -122,16 +118,6 @@
             <tr><th><?=$this->t('Offered Protocols/Ports'); ?></th>
             <td>
 <?php foreach ($profileConfig->exposedVpnProtoPorts() as $route): ?>
-                    <span class="plain"><code><?=$this->e($route); ?></code></span>
-<?php endforeach; ?>
-            </td>
-            </tr>
-<?php endif; ?>
-
-<?php if (0 !== count($profileConfig->dnsSuffix())): ?>
-            <tr><th><?=$this->t('DNS Suffix'); ?> <span class="warning"><?=$this->t('Legacy'); ?></span></th>
-            <td>
-<?php foreach ($profileConfig->dnsSuffix() as $route): ?>
                     <span class="plain"><code><?=$this->e($route); ?></code></span>
 <?php endforeach; ?>
             </td>
