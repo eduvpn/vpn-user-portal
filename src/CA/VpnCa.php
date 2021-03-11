@@ -25,21 +25,16 @@ class VpnCa implements CaInterface
     /** @var string */
     private $vpnCaPath;
 
-    /** @var string */
-    private $easyRsaDataDir;
-
     /**
      * @param string $caDir
      * @param string $caKeyType
      * @param string $vpnCaPath
-     * @param string $easyRsaDataDir
      */
-    public function __construct($caDir, $caKeyType, $vpnCaPath, $easyRsaDataDir)
+    public function __construct($caDir, $caKeyType, $vpnCaPath)
     {
         $this->caDir = $caDir;
         $this->caKeyType = $caKeyType;
         $this->vpnCaPath = $vpnCaPath;
-        $this->easyRsaDataDir = $easyRsaDataDir;
         $this->init();
     }
 
@@ -114,21 +109,6 @@ class VpnCa implements CaInterface
         if (!FileIO::exists($this->caDir)) {
             // we do not have the CA dir, create it
             FileIO::createDir($this->caDir, 0700);
-        }
-
-        // copy the CA from easyRsaDataDir iff it is there
-        if (FileIO::exists($this->easyRsaDataDir)) {
-            $easyRsaCert = sprintf('%s/pki/ca.crt', $this->easyRsaDataDir);
-            $easyRsaKey = sprintf('%s/pki/private/ca.key', $this->easyRsaDataDir);
-            $hasEasyRsaCert = FileIO::exists($easyRsaCert);
-            $hasEasyRsaKey = FileIO::exists($easyRsaKey);
-            if ($hasEasyRsaCert && $hasEasyRsaKey) {
-                // we found old CA cert/key, copy it to new location
-                self::copy($easyRsaCert, sprintf('%s/ca.crt', $this->caDir));
-                self::copy($easyRsaKey, sprintf('%s/ca.key', $this->caDir));
-
-                return;
-            }
         }
 
         // intitialize new CA
@@ -221,19 +201,6 @@ class VpnCa implements CaInterface
 
         if (0 !== $returnValue) {
             throw new RuntimeException(sprintf('command "%s" did not complete successfully: "%s"', $execCmd, implode(PHP_EOL, $commandOutput)));
-        }
-    }
-
-    /**
-     * @param string $srcFile
-     * @param string $dstFile
-     *
-     * @return void
-     */
-    private static function copy($srcFile, $dstFile)
-    {
-        if (false === @copy($srcFile, $dstFile)) {
-            throw new RuntimeException(sprintf('unable to copy "%s" to "%s"', $srcFile, $dstFile));
         }
     }
 

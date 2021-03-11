@@ -22,9 +22,11 @@ use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\Http\SessionInterface;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
+use LC\Common\RandomInterface;
 use LC\Common\TplInterface;
+use LC\Portal\CA\CaInterface;
+use LC\Portal\OpenVpn\DaemonWrapper;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -34,14 +36,23 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LC\Common\TplInterface */
     private $tpl;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
-
     /** @var \LC\Common\Http\SessionInterface */
     private $session;
 
-    /** @var \LC\Portal\Storage */
+    /** @var OpenVpn\DaemonWrapper */
+    private $daemonWrapper;
+
+    /** @var Storage */
     private $storage;
+
+    /** @var TlsCrypt */
+    private $tlsCrypt;
+
+    /** @var \LC\Common\RandomInterface */
+    private $random;
+
+    /** @var CA\CaInterface */
+    private $ca;
 
     /** @var \fkooman\OAuth\Server\ClientDbInterface */
     private $clientDb;
@@ -49,13 +60,16 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, ClientDbInterface $clientDb)
+    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb)
     {
         $this->config = $config;
         $this->tpl = $tpl;
-        $this->serverClient = $serverClient;
         $this->session = $session;
         $this->storage = $storage;
+        $this->daemonWrapper = $daemonWrapper;
+        $this->tlsCrypt = $tlsCrypt;
+        $this->random = $random;
+        $this->ca = $ca;
         $this->clientDb = $clientDb;
         $this->dateTime = new DateTime();
     }
@@ -89,7 +103,7 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
+                $motdMessages = $this->storage->systemMessages('motd');
                 if (0 === \count($motdMessages)) {
                     $motdMessage = false;
                 } else {
@@ -116,11 +130,11 @@ class VpnPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->profileList();
                 $userPermissions = $userInfo->getPermissionList();
-                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
+                $visibleProfileList = self::filterProfileList($profileList, $userPermissions);
 
-                $userCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userInfo->getUserId()]);
+                $userCertificateList = $this->storage->getCertificates($userInfo->getUserId());
 
                 // if query parameter "all" is set, show all certificates, also
                 // those issued to OAuth clients
@@ -160,9 +174,9 @@ class VpnPortalModule implements ServiceModuleInterface
                 $displayName = InputValidation::displayName($request->requirePostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
 
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->profileList();
                 $userPermissions = $userInfo->getPermissionList();
-                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
+                $visibleProfileList = self::filterProfileList($profileList, $userPermissions);
 
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
@@ -171,7 +185,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to download a configuration for this profile', 400);
                 }
 
-                $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userInfo->getUserId()]));
+                $expiresAt = new DateTime($this->storage->getSessionExpiresAt($userInfo->getUserId()));
 
                 return $this->getConfig($request->getServerName(), $profileId, $userInfo->getUserId(), $displayName, $expiresAt);
             }
@@ -184,8 +198,19 @@ class VpnPortalModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->requirePostParameter('commonName'));
-                $this->serverClient->post('delete_client_certificate', ['common_name' => $commonName]);
-                $this->serverClient->post('kill_client', ['common_name' => $commonName]);
+                // XXX make sure certificate belongs to currently logged in user
+                if (false === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
+                    throw new HttpException('certificate does not exist', 400);
+                }
+
+                $this->storage->addUserMessage(
+                    $certInfo['user_id'],
+                    'notification',
+                    sprintf('certificate "%s" deleted by user', $certInfo['display_name'])
+                );
+
+                $this->storage->deleteCertificate($commonName);
+                $this->daemonWrapper->killClient($commonName);
 
                 return new RedirectResponse($request->getRootUri().'configurations', 302);
             }
@@ -199,7 +224,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
-                $hasTotpSecret = $this->serverClient->getRequireBool('has_totp_secret', ['user_id' => $userInfo->getUserId()]);
+                $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
                 $userPermissions = $userInfo->getPermissionList();
                 $authorizedClients = $this->storage->getAuthorizations($userInfo->getUserId());
                 foreach ($authorizedClients as $k => $v) {
@@ -214,16 +239,15 @@ class VpnPortalModule implements ServiceModuleInterface
                     }
                     $authorizedClients[$k]['display_name'] = $displayName;
                 }
-
-                $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userInfo->getUserId()]);
-                $userConnectionLogEntries = $this->serverClient->getRequireArray('user_connection_log', ['user_id' => $userInfo->getUserId()]);
+                $userMessages = $this->storage->userMessages($userInfo->getUserId());
+                $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userInfo->getUserId());
 
                 // get the fancy profile name
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->profileList();
 
                 $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $idNameMapping[$profileId] = $profileData['displayName'];
+                foreach ($profileList as $profileId => $profileConfig) {
+                    $idNameMapping[$profileId] = $profileConfig->displayName();
                 }
 
                 return new HtmlResponse(
@@ -277,15 +301,21 @@ class VpnPortalModule implements ServiceModuleInterface
                 // NOTE: we have to get the list first before deleting the
                 // certificates, otherwise the clients no longer show up the
                 // list... this is NOT good, possible race condition...
-                $connectionList = $this->serverClient->getRequireArray('client_connections', ['client_id' => $clientId, 'user_id' => $userInfo->getUserId()]);
+                $connectionList = $this->daemonWrapper->getConnectionList($clientId, $userInfo->getUserId());
 
                 // delete the certificates from the server
-                $this->serverClient->post('delete_client_certificates_of_client_id', ['user_id' => $userInfo->getUserId(), 'client_id' => $clientId]);
+                $this->storage->addUserMessage(
+                    $userInfo->getUserId(),
+                    'notification',
+                    sprintf('certificates for OAuth client "%s" deleted', $clientId)
+                );
+
+                $this->storage->deleteCertificatesOfClientId($userInfo->getUserId(), $clientId);
 
                 // kill all active connections for this user/client_id
                 foreach ($connectionList as $profileId => $clientConnectionList) {
                     foreach ($clientConnectionList as $clientInfo) {
-                        $this->serverClient->post('kill_client', ['common_name' => $clientInfo['common_name']]);
+                        $this->daemonWrapper->killClient($clientInfo['common_name']);
                     }
                 }
 
@@ -309,25 +339,6 @@ class VpnPortalModule implements ServiceModuleInterface
                 );
             }
         );
-    }
-
-    /**
-     * @param string $scope
-     *
-     * @return string
-     */
-    public static function validateScope($scope)
-    {
-        // scope       = scope-token *( SP scope-token )
-        // scope-token = 1*NQCHAR
-        // NQCHAR      = %x21 / %x23-5B / %x5D-7E
-        foreach (explode(' ', $scope) as $scopeToken) {
-            if (1 !== preg_match('/^[\x21\x23-\x5B\x5D-\x7E]+$/', $scopeToken)) {
-                throw new HttpException('invalid "scope"', 400);
-            }
-        }
-
-        return $scope;
     }
 
     /**
@@ -356,22 +367,34 @@ class VpnPortalModule implements ServiceModuleInterface
     private function getConfig($serverName, $profileId, $userId, $displayName, DateTime $expiresAt)
     {
         // create a certificate
-        $clientCertificate = $this->serverClient->postRequireArray(
-            'add_client_certificate',
-            [
-                'user_id' => $userId,
-                'display_name' => $displayName,
-                'expires_at' => $expiresAt->format(DateTime::ATOM),
-            ]
+        // generate a random string as the certificate's CN
+        $commonName = $this->random->get(16);
+        $certInfo = $this->ca->clientCert($commonName, $expiresAt);
+        $this->storage->addCertificate(
+            $userId,
+            $commonName,
+            $displayName,
+            new DateTime(sprintf('@%d', $certInfo['valid_from'])),
+            new DateTime(sprintf('@%d', $certInfo['valid_to'])),
+            null
         );
 
-        $serverProfiles = $this->serverClient->getRequireArray('profile_list');
-        $profileConfig = new ProfileConfig(new Config($serverProfiles[$profileId]));
+        $this->storage->addUserMessage(
+            $userId,
+            'notification',
+            sprintf('new certificate "%s" generated by user', $displayName)
+        );
 
-        // get the CA & tls-auth
-        $serverInfo = $this->serverClient->getRequireArray('server_info', ['profile_id' => $profileId]);
+        $profileList = $this->profileList();
+        $profileConfig = $profileList[$profileId];
 
-        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $clientCertificate, ClientConfig::STRATEGY_RANDOM);
+        // get the CA & tls-crypt
+        $serverInfo = [
+            'tls_crypt' => $this->tlsCrypt->get($profileId),
+            'ca' => $this->ca->caCert(),
+        ];
+
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $certInfo, ClientConfig::STRATEGY_RANDOM);
 
         // convert the OpenVPN file to "Windows" format, no platform cares, but
         // in Notepad on Windows it looks not so great everything on one line
@@ -398,13 +421,14 @@ class VpnPortalModule implements ServiceModuleInterface
      * Filter the list of profiles by checking if the profile should be shown,
      * and that the user has the required permissions in case ACLs are enabled.
      *
-     * @return array
+     * @param array<string,\LC\Common\ProfileConfig> $serverProfiles
+     *
+     * @return array<string,string>
      */
-    private static function getProfileList(array $serverProfiles, array $userPermissions)
+    private static function filterProfileList(array $serverProfiles, array $userPermissions)
     {
         $profileList = [];
-        foreach ($serverProfiles as $profileId => $profileData) {
-            $profileConfig = new ProfileConfig(new Config($profileData));
+        foreach ($serverProfiles as $profileId => $profileConfig) {
             if ($profileConfig->hideProfile()) {
                 continue;
             }
@@ -415,9 +439,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
             }
 
-            $profileList[$profileId] = [
-                'displayName' => $profileConfig->displayName(),
-            ];
+            $profileList[$profileId] = $profileConfig->displayName();
         }
 
         return $profileList;
@@ -431,5 +453,19 @@ class VpnPortalModule implements ServiceModuleInterface
         $expiryDate = date_add(clone $this->dateTime, $dateInterval);
 
         return $expiryDate->format('Y-m-d');
+    }
+
+    /**
+     * @return array<string,\LC\Common\ProfileConfig>
+     */
+    private function profileList()
+    {
+        $profileList = [];
+        foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
+            $profileConfig = new ProfileConfig(new Config($profileData));
+            $profileList[$profileId] = $profileConfig;
+        }
+
+        return $profileList;
     }
 }

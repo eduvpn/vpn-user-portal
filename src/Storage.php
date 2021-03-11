@@ -22,7 +22,7 @@ use PDO;
 
 class Storage implements CredentialValidatorInterface, StorageInterface, OtpStorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2019032701';
+    const CURRENT_SCHEMA_VERSION = '2021031101';
 
     /** @var \PDO */
     private $db;
@@ -70,7 +70,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt = $this->db->prepare(
             'SELECT
                 password_hash
-             FROM users
+             FROM local_users
              WHERE
                 user_id = :user_id'
         );
@@ -102,7 +102,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
 
         $stmt = $this->db->prepare(
             'INSERT INTO
-                users (user_id, password_hash, created_at)
+                local_users (user_id, password_hash, created_at)
             VALUES
                 (:user_id, :password_hash, :created_at)'
         );
@@ -124,7 +124,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt = $this->db->prepare(
             'SELECT
                 COUNT(*)
-             FROM users
+             FROM local_users
              WHERE
                 user_id = :user_id'
         );
@@ -145,7 +145,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
     {
         $stmt = $this->db->prepare(
             'UPDATE
-                users
+                local_users
              SET
                 password_hash = :password_hash
              WHERE

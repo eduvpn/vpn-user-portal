@@ -30,9 +30,11 @@ use LC\Common\Http\TwoFactorModule;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
+use LC\Common\Random;
 use LC\Portal\AccessHook;
 use LC\Portal\AdminHook;
 use LC\Portal\AdminPortalModule;
+use LC\Portal\CA\VpnCa;
 use LC\Portal\ClientCertAuthentication;
 use LC\Portal\ClientFetcher;
 use LC\Portal\DisabledUserHook;
@@ -43,12 +45,15 @@ use LC\Portal\LogoutModule;
 use LC\Portal\MellonAuthentication;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthModule;
+use LC\Portal\OpenVpn\DaemonSocket;
+use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\PhpSamlSpAuthentication;
 use LC\Portal\QrModule;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSession;
 use LC\Portal\ShibAuthentication;
 use LC\Portal\Storage;
+use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
 use LC\Portal\TwoFactorEnrollModule;
 use LC\Portal\UpdateSessionInfoHook;
@@ -61,8 +66,9 @@ try {
 
     $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
+    $configDir = sprintf('%s/config', $baseDir);
 
-    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
+    $config = Config::fromFile(sprintf('%s/config.php', $configDir));
     $templateDirs = [
         sprintf('%s/views', $baseDir),
         sprintf('%s/config/views', $baseDir),
@@ -283,13 +289,26 @@ try {
 
     $clientFetcher = new ClientFetcher($config);
 
+    $vpnCaDir = sprintf('%s/ca', $dataDir);
+    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
+    $vpnCaKeyType = $config->requireString('vpnCaKeyType', 'RSA');
+    $ca = new VpnCa($vpnCaDir, $vpnCaKeyType, $vpnCaPath);
+
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $config,
         $tpl,
-        $serverClient,
         $seSession,
+        new DaemonWrapper(
+            $config,
+            $storage,
+            new DaemonSocket(sprintf('%s/vpn-daemon', $configDir), $config->requireBool('vpnDaemonTls', true)),
+            $logger,
+        ),
         $storage,
+        new TlsCrypt($dataDir),
+        new Random(),
+        $ca,
         $clientFetcher
     );
     $service->addModule($vpnPortalModule);
