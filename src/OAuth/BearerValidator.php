@@ -17,7 +17,6 @@ use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
-use ParagonIE\ConstantTime\Binary;
 
 /**
  * Copy of fkooman/oauth2-server src/BearerValidator.php to support public
@@ -68,7 +67,7 @@ class BearerValidator
     public function validate($authorizationHeader)
     {
         SyntaxValidator::validateBearerToken($authorizationHeader);
-        $providedToken = Binary::safeSubstr($authorizationHeader, 7);
+        $providedToken = substr($authorizationHeader, 7);
 
         // extract the key ID from the received Bearer token
         if (null === $keyId = PublicSigner::extractKid($providedToken)) {

@@ -10,7 +10,6 @@
 namespace LC\Portal;
 
 use LC\Common\FileIO;
-use ParagonIE\ConstantTime\Hex;
 
 class TlsCrypt
 {
@@ -58,7 +57,7 @@ class TlsCrypt
     private static function generate()
     {
         // Same as $(openvpn --genkey --secret <file>)
-        $randomData = wordwrap(Hex::encode(random_bytes(256)), 32, "\n", true);
+        $randomData = wordwrap(sodium_bin2hex(random_bytes(256)), 32, "\n", true);
         $tlsCrypt = <<< EOF
 #
 # 2048 bit OpenVPN static key

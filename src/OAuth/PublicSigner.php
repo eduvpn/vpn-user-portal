@@ -14,7 +14,6 @@ use fkooman\Jwt\Exception\JwtException;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\SignerInterface;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 /**
  * JWT Signer, using EdDSA (Ed25519) algorithm.
@@ -35,12 +34,13 @@ class PublicSigner implements SignerInterface
      */
     public static function calculateKeyId(PublicKey $publicKey)
     {
-        return Base64UrlSafe::encodeUnpadded(
+        return sodium_bin2base64(
             hash(
                 'sha256',
                 $publicKey->raw(),
                 true
-            )
+            ),
+            \SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING
         );
     }
 

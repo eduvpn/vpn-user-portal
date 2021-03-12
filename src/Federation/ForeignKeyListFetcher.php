@@ -16,7 +16,6 @@ use LC\Common\FileIO;
 use LC\Common\HttpClient\HttpClientInterface;
 use LC\Common\Json;
 use LC\Portal\OAuth\PublicSigner;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 class ForeignKeyListFetcher
 {
@@ -125,7 +124,10 @@ class ForeignKeyListFetcher
                 continue;
             }
             foreach ($serverEntry['public_key_list'] as $publicKeyStr) {
-                $publicKey = new PublicKey(Base64UrlSafe::decode($publicKeyStr));
+                // XXX why first decode and then encode?
+                $publicKey = new PublicKey(
+                    sodium_base642bin($publicKeyStr, \SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING)
+                );
                 $mappingData[PublicSigner::calculateKeyId($publicKey)] = [
                     'public_key' => $publicKey->encode(),
                     'base_uri' => $serverEntry['base_url'],
