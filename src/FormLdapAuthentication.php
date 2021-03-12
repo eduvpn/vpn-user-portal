@@ -23,13 +23,8 @@ class FormLdapAuthentication extends FormAuthentication
             $config->requireString('ldapUri')
         );
 
-        // convert permissionAttribute to (empty) array
-        if (null === $permissionAttribute = $config->optionalItem('permissionAttribute')) {
-            $permissionAttribute = [];
-        }
-        if (!\is_array($permissionAttribute)) {
-            $permissionAttribute = [$permissionAttribute];
-        }
+        // XXX fix documentation for type permissionAttribute, can only be array<string> now!
+        $permissionAttribute = $config->requireArray('permissionAttribute', []);
 
         $userAuth = new LdapAuth(
             $logger,

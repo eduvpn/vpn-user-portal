@@ -70,7 +70,8 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
         }
         $userId = $samlAttributes[$userIdAttribute][0];
         $userAuthnContext = $samlAssertion->getAuthnContext();
-        if (0 !== \count($this->getPermissionAttributeList())) {
+        // XXX fix documentation for type permissionAttribute, can only be array<string> now!
+        if (0 !== \count($this->config->requireArray('permissionAttribute', []))) {
             $userPermissions = $this->getPermissionList($samlAttributes);
             $permissionAuthnContext = $this->config->requireArray('permissionAuthnContext', []);
             // if we got a permission that's part of the
@@ -108,29 +109,13 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
     private function getPermissionList(array $samlAttributes)
     {
         $permissionList = [];
-        foreach ($this->getPermissionAttributeList() as $permissionAttribute) {
+        // XXX fix documentation for type permissionAttribute, can only be array<string> now!
+        foreach ($this->config->requireArray('permissionAttribute', []) as $permissionAttribute) {
             if (\array_key_exists($permissionAttribute, $samlAttributes)) {
                 $permissionList = array_merge($permissionList, $samlAttributes[$permissionAttribute]);
             }
         }
 
         return $permissionList;
-    }
-
-    /**
-     * @return array<string>
-     */
-    private function getPermissionAttributeList()
-    {
-        /** @var array<string>|string|null */
-        $permissionAttributeList = $this->config->optionalItem('permissionAttribute');
-        if (\is_string($permissionAttributeList)) {
-            $permissionAttributeList = [$permissionAttributeList];
-        }
-        if (null === $permissionAttributeList) {
-            $permissionAttributeList = [];
-        }
-
-        return $permissionAttributeList;
     }
 }
