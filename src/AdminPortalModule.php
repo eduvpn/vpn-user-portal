@@ -119,11 +119,8 @@ class AdminPortalModule implements ServiceModuleInterface
                 $caInfo = [
                     'valid_from' => $validFrom->format(DateTime::ATOM),
                     'valid_to' => $validTo->format(DateTime::ATOM),
-                    // XXX this is actually not read from the file itself, but
-                    // from the config... maybe fix that as the type can change
-                    // midway? in later versions we only support Ed25519
-                    // anyway, so maybe not important?
-                    'ca_key_type' => $this->config->requireString('vpnCaKeyType', 'RSA'),
+                    // we only support EdDSA
+                    'ca_key_type' => 'EdDSA',
                 ];
 
                 return new HtmlResponse(
