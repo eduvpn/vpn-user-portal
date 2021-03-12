@@ -3,13 +3,15 @@
 return [
     // override default branding style (templates/CSS) with custom style.
     // NOTE: the styling/branding MUST be installed for this to work!
+    // DEFAULT = null
     //'styleName' => 'eduVPN',
     //'styleName' => 'LC',
 
-    'authMethod' => 'FormPdoAuthentication',        // PDO (database)
+    // DEFAULT = FormPdoAuthentication
+    //'authMethod' => 'FormPdoAuthentication',      // PDO (database)
     //'authMethod' => 'FormLdapAuthentication',     // LDAP
     //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
-    //'authMethod' => 'SamlAuthentication',         // SAML (php-saml-sp)
+    //'authMethod' => 'PhpSamlSpAuthentication',    // SAML (php-saml-sp)
     //'authMethod' => 'MellonAuthentication',       // SAML (mod_auth_mellon)
     //'authMethod' => 'ShibAuthentication',         // SAML (Shibboleth)
 
@@ -17,15 +19,16 @@ return [
     // The session expiry will be used to determine the "Not After" of the
     // issued X.509 certificates and the moment at which to start rejecting
     // the OAuth tokens.
-    'sessionExpiry' => 'P90D',      // 90 days
+    // DEFAULT = P90D
+    //'sessionExpiry' => 'P90D',      // 90 days
     //'sessionExpiry' => 'PT12H',   // 12 hours
     //'sessionExpiry' => 'P1D',     // 1 day
 
     // LDAP
-    'FormLdapAuthentication' => [
+    //'FormLdapAuthentication' => [
         // *** OpenLDAP / FreeIPA ***
-        'ldapUri' => 'ldaps://ipa.example.org',
-        'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
+        //'ldapUri' => 'ldaps://ipa.example.org',
+        //'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
         //'permissionAttribute' => 'eduPersonEntitlement',
         //'permissionAttribute' => 'memberOf',
 
@@ -35,24 +38,24 @@ return [
         //'baseDn' => 'dc=example,dc=org',
         //'userFilterTemplate' => '(sAMAccountName={{UID}})',
         //'permissionAttribute' => 'memberOf',
-    ],
+    //],
 
     // RADIUS
-    'FormRadiusAuthentication' => [
-        'serverList' => [
-            [
-                'host' => 'radius.example.org',
-                'secret' => 'testing123',
-                //'port' => 1812,
-            ],
-        ],
-        //'addRealm' => 'example.org',
-        //'nasIdentifier' => 'vpn.example.org',
-    ],
+    //'FormRadiusAuthentication' => [
+    //    'serverList' => [
+    //        [
+    //            'host' => 'radius.example.org',
+    //            'secret' => 'testing123',
+    //            //'port' => 1812,
+    //        ],
+    //    ],
+    //    //'addRealm' => 'example.org',
+    //    //'nasIdentifier' => 'vpn.example.org',
+    //],
 
     // SAML (php-saml-sp)
-    'PhpSamlSpAuthentication' => [
-        'userIdAttribute' => 'eduPersonTargetedID',
+    //'PhpSamlSpAuthentication' => [
+        //'userIdAttribute' => 'eduPersonTargetedID',
         //'userIdAttribute' => 'eduPersonPrincipalName',
 
         // ** AUTHORIZATION | PERMISSIONS **
@@ -71,31 +74,31 @@ return [
         //'permissionAuthnContext' => [
         //    'http://eduvpn.org/role/admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
         //],
-    ],
+    //],
 
-    // SAML (mod_auth_mellon)
-    'MellonAuthentication' => [
-        // OID for eduPersonTargetedId
-        'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
-        // OID for eduPersonPrincipalName
-        //'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6',
+//    // SAML (mod_auth_mellon)
+//    'MellonAuthentication' => [
+//        // OID for eduPersonTargetedId
+//        'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
+//        // OID for eduPersonPrincipalName
+//        //'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6',
 
-        // ** AUTHORIZATION | PERMISSIONS **
-        // OID for eduPersonEntitlement
-        //'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
-        // OID for eduPersonAffiliation
-        //'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_1',
-    ],
+//        // ** AUTHORIZATION | PERMISSIONS **
+//        // OID for eduPersonEntitlement
+//        //'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7',
+//        // OID for eduPersonAffiliation
+//        //'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_1',
+//    ],
 
-    // SAML (Shibboleth)
-    'ShibAuthentication' => [
-        'userIdAttribute' => 'persistent-id',
-        //'userIdAttribute' => 'eppn',
+//    // SAML (Shibboleth)
+//    'ShibAuthentication' => [
+//        'userIdAttribute' => 'persistent-id',
+//        //'userIdAttribute' => 'eppn',
 
-        // ** AUTHORIZATION | PERMISSIONS **
-        //'permissionAttribute' => 'entitlement',
-        //'permissionAttribute' => 'affiliation',
-    ],
+//        // ** AUTHORIZATION | PERMISSIONS **
+//        //'permissionAttribute' => 'entitlement',
+//        //'permissionAttribute' => 'affiliation',
+//    ],
 
     // the permission required to be able to access the "admin" portion of
     // the portal, see "permissionAttribute" in the authentication
@@ -106,46 +109,45 @@ return [
     'adminUserIdList' => ['admin'],
 
     // Require Users to use 2FA
-    'requireTwoFactor' => false,
-    //'requireTwoFactor' => true,
+    // DEFAULT = false
+    //'requireTwoFactor' => false,
 
     // Available 2FA methods
-    //'twoFactorMethods' => ['totp'],         // TOTP
-    'twoFactorMethods' => [],                 // 2FA disabled
+    // DEFAULT = []
+    //'twoFactorMethods' => ['totp'], // TOTP
 
     // supported languages in the UI, the first one mentioned is the default
-    'supportedLanguages' => [
-        'en_US' => 'English',
-        //'nl_NL' => 'Nederlands',
-        //'nb_NO' => 'norsk bokmål',
-        //'da_DK' => 'Dansk',
-        //'fr_FR' => 'Français',
-    ],
+//    'supportedLanguages' => [
+//        'en_US' => 'English',
+//        //'nl_NL' => 'Nederlands',
+//        //'nb_NO' => 'norsk bokmål',
+//        //'da_DK' => 'Dansk',
+//        //'fr_FR' => 'Français',
+//    ],
 
-    'Api' => [
-        'consumerList' => [
-            //'_CLIENT_ID_' => [
-            //    'redirect_uri_list' => [
-            //        '_REDIRECT_URI_1_',
-            //        '_REDIRECT_URI_2_',
-            //    ],
-            //    'display_name' => '_DISPLAY_NAME_',
-            //    'require_approval' => true,
-            //    'client_secret' => '_SECRET_',
-            //],
-        ],
+//    'Api' => [
+//        //'consumerList' => [
+//        //    '_CLIENT_ID_' => [
+//        //        'redirect_uri_list' => [
+//        //            '_REDIRECT_URI_1_',
+//        //            '_REDIRECT_URI_2_',
+//        //        ],
+//        //        'display_name' => '_DISPLAY_NAME_',
+//        //        'require_approval' => true,
+//        //        'client_secret' => '_SECRET_',
+//        //    ],
+//        //],
 
-        // Enable Remote Access, i.e. users from other VPN servers listed in
-        // the below remoteAccessList files to access this VPN server through
-        // the OAuth API
-        'remoteAccess' => false,
-    ],
+//        // Enable Remote Access, i.e. users from other VPN servers listed in
+//        // the below remoteAccessList files to access this VPN server through
+//        // the OAuth API
+//        // DEFAULT = false
+//        //'remoteAccess' => false,
+//    ],
 
-    // EdDSA, ECDSA, RSA
-    'vpnCaKeyType' => 'EdDSA',
-
-    'useVpnDaemon' => true,
-    'vpnDaemonTls' => false,
+    // DEFAULT = true (for remote connections)
+    // XXX make sure of this!
+    //'vpnDaemonTls' => false,
 
     // List of VPN profiles
     'vpnProfiles' => [
@@ -173,11 +175,11 @@ return [
 
             // The address the OpenVPN processes will listen on
             // DEFAULT = '::'
-            'listen' => '::',
+            //'listen' => '::',
 
             // The IP address to use for connecting to OpenVPN processes
             // DEFAULT = '127.0.0.1'
-            'managementIp' => '127.0.0.1',
+            //'managementIp' => '127.0.0.1',
 
             // Whether or not to route all traffic from the client over the VPN
             // DEFAULT = false
@@ -185,67 +187,65 @@ return [
 
             // Block access to local LAN when VPN is active
             // DEFAULT = false
-            'blockLan' => false,
+            //'blockLan' => false,
 
             // IPv4 and IPv6 routes to push to the client, only used when
             // defaultGateway is false
             // DEFAULT = []
-            'routes' => [
-                //'192.168.1.0/24',
-                //'fd01:1:1:1::/64',
-            ],
+            //'routes' => [
+            //    '192.168.1.0/24',
+            //    'fd01:1:1:1::/64',
+            //],
 
             // IPv4 and IPv6 address of DNS server(s) to push to the client
-            // DEFAULT  = []
+            // DEFAULT  = ['9.9.9.9', '2620:fe::fe']
             // Quad9 (https://www.quad9.net)
-            'dns' => ['9.9.9.9', '2620:fe::fe'],
+            //'dns' => ['9.9.9.9', '2620:fe::fe'],
 
             // Whether or not to allow client-to-client traffic
             // DEFAULT = false
-            'clientToClient' => false,
+            //'clientToClient' => false,
 
             // Whether or not to enable OpenVPN logging
             // DEFAULT = false
-            'enableLog' => false,
+            //'enableLog' => false,
 
             // Whether or not to enable ACLs for controlling who can connect
             // DEFAULT = false
-            'enableAcl' => false,
+            //'enableAcl' => false,
 
             // The list of permissions to allow access, requires enableAcl to
             // be true
             // DEFAULT  = []
-            'aclPermissionList' => [],
+            //'aclPermissionList' => [],
 
             // The protocols and ports the OpenVPN processes should use, MUST
             // be either 1, 2, 4, 8 or 16 proto/port combinations
             // DEFAULT = ['udp/1194', 'tcp/1194']
-            'vpnProtoPorts' => [
-                'udp/1194',
-                'tcp/1194',
-            ],
+            //'vpnProtoPorts' => [
+            //    'udp/1194',
+            //    'tcp/1194',
+            //],
 
             // List the protocols and ports exposed to the VPN clients. Useful
             // for OpenVPN port sharing. When empty (or missing), uses list
             // from vpnProtoPorts
             // DEFAULT = []
-            'exposedVpnProtoPorts' => [
-                // 'udp/1194',
-                // 'tcp/443'
-            ],
+            //'exposedVpnProtoPorts' => [
+            //    'udp/1194',
+            //    'tcp/443'
+            //],
 
+            // DEFAULT = null
             //'dnsDomain' => 'example.org',
-//            'dnsDomain' => null,
 
+            // DEFAULT = []
             //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
-            'dnsDomainSearch' => [],
 
             // Hide the profile from the user portal, i.e. do not allow the
             // user to choose it
             // DEFAULT = false
-            'hideProfile' => false,
-
-            'tlsOneThree' => true,
+            //'hideProfile' => false,
         ],
     ],
 ];
