@@ -284,8 +284,7 @@ try {
 
     $vpnCaDir = sprintf('%s/ca', $dataDir);
     $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
-    $vpnCaKeyType = $config->requireString('vpnCaKeyType', 'RSA');
-    $ca = new VpnCa($vpnCaDir, $vpnCaKeyType, $vpnCaPath);
+    $ca = new VpnCa($vpnCaDir, 'EdDSA', $vpnCaPath);
 
     $daemonWrapper = new DaemonWrapper(
         $config,
