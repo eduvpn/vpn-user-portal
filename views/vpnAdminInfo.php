@@ -1,11 +1,25 @@
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
-    <h2>CA</h2>
+    <h2><?=$this->t('Server');?></h2>
     <table class="tbl">
         <tbody>
-            <tr><th><?=$this->t('Created'); ?> (<?=$this->e(date('T')); ?>)</th><td><?=$this->d($caInfo['valid_from']); ?></td></tr>
-            <tr><th><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</th><td><?=$this->d($caInfo['valid_to']); ?></td></tr>
-            <tr><th><?=$this->t('Key Type'); ?></th><td><?=$this->e($caInfo['ca_key_type']); ?></td></tr>
+            <tr>
+                <th><?=$this->t('Version');?></th>
+                <td>v<?=$this->e($portalVersion); ?></td>
+            </tr>
+            <tr>
+                <th><?=$this->t('CA');?></th>
+                <td>
+                    <dl>
+                        <dt><?=$this->t('Created'); ?> (<?=$this->e(date('T')); ?>)</dt><dd><?=$this->d($caInfo['valid_from']); ?></dd>
+                        <dt><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</dt><dd><?=$this->d($caInfo['valid_to']); ?></dd>
+                    </dl>
+                </td>
+            </tr>
+            <tr>
+                <th><?=$this->t('Key Type'); ?></th>
+                <td><?=$this->e($caInfo['ca_key_type']); ?></td>
+            </tr>
         </tbody>
     </table>
     <h2><?=$this->t('Profiles'); ?></h2>
