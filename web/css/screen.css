@@ -247,6 +247,7 @@ ul li, ol li {
 
 table.tbl th {
   text-align: start;
+  vertical-align: top;
 }
 
 table.tbl td.text-right {
@@ -259,6 +260,16 @@ table.tbl td, table.tbl th {
 
 table.tbl ul {
   padding: 0 0 0 1em;
+}
+
+table.tbl dl, table.tbl dt {
+    margin: 0;
+    padding: 0;
+}
+
+table.tbl dd {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 table.tbl form.frm {
