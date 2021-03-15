@@ -210,7 +210,7 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
-        // API 1, 2
+        // NO LONGER USED
         $service->get(
             '/user_messages',
             /**
@@ -224,31 +224,16 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
-        // API 1, 2
+        // NO LONGER USED
         $service->get(
             '/system_messages',
             /**
              * @return ApiResponse
              */
             function (Request $request, array $hookData) {
-                $msgList = [];
-
-                $motdMessages = $this->serverClient->getRequireArray('system_messages', ['message_type' => 'motd']);
-                foreach ($motdMessages as $motdMessage) {
-                    $dateTime = new DateTime($motdMessage['date_time']);
-                    $dateTime->setTimezone(new DateTimeZone('UTC'));
-
-                    $msgList[] = [
-                        // no support yet for 'motd' type in application API
-                        'type' => 'notification',
-                        'date_time' => $dateTime->format('Y-m-d\TH:i:s\Z'),
-                        'message' => $motdMessage['message'],
-                    ];
-                }
-
                 return new ApiResponse(
                     'system_messages',
-                    $msgList
+                    []
                 );
             }
         );

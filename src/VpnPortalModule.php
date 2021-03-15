@@ -103,19 +103,10 @@ class VpnPortalModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $motdMessages = $this->storage->systemMessages('motd');
-                if (0 === \count($motdMessages)) {
-                    $motdMessage = false;
-                } else {
-                    $motdMessage = $motdMessages[0];
-                }
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalHome',
-                        [
-                            'motdMessage' => $motdMessage,
-                        ]
+                        []
                     )
                 );
             }

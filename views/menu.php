@@ -9,7 +9,6 @@ if ($isAdmin) {
     $menuItems['users'] = $this->t('Users');
     $menuItems['info'] = $this->t('Info');
     $menuItems['stats'] = $this->t('Stats');
-    $menuItems['messages'] = $this->t('Messages');
     $menuItems['log'] = $this->t('Log');
 }
 ?>

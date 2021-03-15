@@ -22,7 +22,7 @@ use PDO;
 
 class Storage implements CredentialValidatorInterface, StorageInterface, OtpStorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2021031101';
+    const CURRENT_SCHEMA_VERSION = '2021031501';
 
     /** @var \PDO */
     private $db;
@@ -874,72 +874,6 @@ SQL
 
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
 
-        $stmt->execute();
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return array
-     */
-    public function systemMessages($type)
-    {
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-    SELECT
-        id, message, date_time
-    FROM
-        system_messages
-    WHERE
-        type = :type
-SQL
-        );
-
-        $stmt->bindValue(':type', $type, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * @param string $type
-     * @param string $message
-     *
-     * @return void
-     */
-    public function addSystemMessage($type, $message)
-    {
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-    INSERT INTO system_messages
-        (type, message, date_time)
-    VALUES
-        (:type, :message, :date_time)
-SQL
-        );
-
-        $stmt->bindValue(':type', $type, PDO::PARAM_STR);
-        $stmt->bindValue(':message', $message, PDO::PARAM_STR);
-        $stmt->bindValue(':date_time', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    /**
-     * @param int $messageId
-     *
-     * @return void
-     */
-    public function deleteSystemMessage($messageId)
-    {
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-    DELETE FROM
-        system_messages
-    WHERE id = :message_id
-SQL
-        );
-
-        $stmt->bindValue(':message_id', $messageId, PDO::PARAM_INT);
         $stmt->execute();
     }
 
