@@ -296,7 +296,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "cb084e311ff3be8a0db978acbd42d422a0e5e1e9"
+                "reference": "3fd8a918c264d8573a0c2043fb01d4a07d5d5f5c"
             },
             "require": {
                 "ext-curl": "*",
