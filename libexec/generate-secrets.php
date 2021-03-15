@@ -15,12 +15,20 @@ use LC\Common\FileIO;
 
 try {
     $configDir = sprintf('%s/config', $baseDir);
+
+    // OAuth Key
     $keyFile = sprintf('%s/oauth.key', $configDir);
-    if (FileIO::exists($keyFile)) {
-        throw new Exception('"'.$keyFile.'" already exists');
+    if (!FileIO::exists($keyFile)) {
+        $secretKey = SecretKey::generate();
+        FileIO::writeFile($keyFile, $secretKey->encode(), 0644);
     }
-    $secretKey = SecretKey::generate();
-    FileIO::writeFile($keyFile, $secretKey->encode(), 0644);
+
+    // Node Key
+    $keyFile = sprintf('%s/node.key', $configDir);
+    if (!FileIO::exists($keyFile)) {
+        $secretKey = random_bytes(32);
+        FileIO::writeFile($keyFile, sodium_bin2hex($secretKey), 0644);    
+    }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
     exit(1);

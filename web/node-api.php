@@ -10,8 +10,8 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use DateInterval;
 use LC\Common\Config;
+use LC\Common\FileIO;
 use LC\Common\Http\BasicAuthenticationHook;
 use LC\Common\Http\Request;
 use LC\Common\Http\Response;
@@ -34,8 +34,10 @@ try {
 
     $service = new Service();
     $basicAuthentication = new BasicAuthenticationHook(
-        $config->requireArray('apiConsumers'),
-        'vpn-server-backend'
+        [
+            'vpn-server-node' => FileIO::readFile($configDir.'/node.key'),
+        ],
+        'Node API'
     );
     $service->addBeforeHook('auth', $basicAuthentication);
 
