@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.8 (...)
+## 2.3.8 (2021-03-15)
 - show portal version on "Info" page
 - implement support for optional LDAP bind with credentials for initial search
 
