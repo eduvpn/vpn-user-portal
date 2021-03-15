@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.3.8 (...)
-- show portal version in footer when user is admin
+- show portal version on "Info" page
 - implement support for optional LDAP bind with credentials for initial search
 
 ## 2.3.7 (2021-02-23)

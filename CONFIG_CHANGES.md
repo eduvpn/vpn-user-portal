@@ -8,6 +8,14 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.3.8
+
+The `FormLdapAuthentication` section also takes `searchBindDn` and 
+`searchBindPass` options now to allow binding to an LDAP server with an 
+account before performing the user's DN search. See 
+[LDAP](https://github.com/eduvpn/documentation/blob/v2/LDAP.md) on how to use
+it.
+
 ## 2.3.7
 
 The `authMethod`, `supportedLanguages` and `sessionExpiry` now have defaults 
