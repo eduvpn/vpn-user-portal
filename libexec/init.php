@@ -13,6 +13,8 @@ $baseDir = dirname(__DIR__);
 use LC\Common\FileIO;
 use LC\Portal\Storage;
 
+// XXX Move this to web/index.php, web/api.php and web/node-api.php so it
+// only does this on first run
 try {
     // initialize database
     $dataDir = sprintf('%s/data', $baseDir);
@@ -24,6 +26,6 @@ try {
     );
     $storage->init();
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
 }
