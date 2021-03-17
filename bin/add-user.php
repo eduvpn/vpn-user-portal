@@ -67,7 +67,7 @@ try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
     $config = Config::fromFile($configFile);
 
-    if ('FormPdoAuthentication' !== $config->requireString('authMethod')) {
+    if ('FormPdoAuthentication' !== $config->requireString('authMethod', 'FormPdoAuthentication')) {
         echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->requireString('authMethod')).PHP_EOL;
     }
 
