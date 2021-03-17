@@ -16,8 +16,6 @@ use LC\Common\FileIO;
 use LC\Common\Http\JsonResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
 use LC\Portal\BearerAuthenticationHook;
 use LC\Portal\ClientFetcher;
@@ -36,12 +34,6 @@ try {
     $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
 
     $service = new Service();
-
-    $serverClient = new ServerClient(
-        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
-        $config->requireString('apiUri')
-    );
-
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
@@ -82,7 +74,7 @@ try {
     // api module
     $vpnApiModule = new VpnApiModule(
         $config,
-        $serverClient,
+        $storage,
         new DateInterval($config->requireString('sessionExpiry', 'P90D'))
     );
     $service->addModule($vpnApiModule);

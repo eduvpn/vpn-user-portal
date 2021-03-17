@@ -11,7 +11,6 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
-use DateTimeZone;
 use LC\Common\Config;
 use LC\Common\Http\ApiErrorResponse;
 use LC\Common\Http\ApiResponse;
@@ -21,7 +20,6 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
 
@@ -30,8 +28,8 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \LC\Common\Config */
     private $config;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
+    /** @var Storage */
+    private $storage;
 
     /** @var \DateInterval */
     private $sessionExpiry;
@@ -39,10 +37,10 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(Config $config, ServerClient $serverClient, DateInterval $sessionExpiry)
+    public function __construct(Config $config, Storage $storage, DateInterval $sessionExpiry)
     {
         $this->config = $config;
-        $this->serverClient = $serverClient;
+        $this->storage = $storage;
         $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = new DateTime();
     }

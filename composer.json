@@ -64,13 +64,13 @@
         "fkooman/secookie": "^5",
         "fkooman/otp-verifier": "^0.3",
         "fkooman/sqlite-migrate": "^0",
-        "lc/common": "dev-dev",
+        "lc/common": "3.x-dev",
         "php": ">=7.4",
         "psr/log": "^1"
     },
     "require-dev": {
         "ext-json": "*",
-        "phpunit/phpunit": "^8|^9",
+        "phpunit/phpunit": "^9",
         "fkooman/saml-sp": "^0.5.2"
     },
     "support": {
