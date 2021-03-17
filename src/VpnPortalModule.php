@@ -447,7 +447,7 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * XXX duplicate in AdminPortalModule.
+     * XXX duplicate in AdminPortalModule|VpnApiModule.
      *
      * @return array<string,\LC\Common\ProfileConfig>
      */

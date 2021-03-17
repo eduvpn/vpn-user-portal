@@ -17,10 +17,13 @@ use LC\Common\Http\JsonResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Logger;
+use LC\Common\Random;
 use LC\Portal\BearerAuthenticationHook;
+use LC\Portal\CA\VpnCa;
 use LC\Portal\ClientFetcher;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\Storage;
+use LC\Portal\TlsCrypt;
 use LC\Portal\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
@@ -71,11 +74,18 @@ try {
         )
     );
 
+    $vpnCaDir = sprintf('%s/ca', $dataDir);
+    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
+    $ca = new VpnCa($vpnCaDir, 'EdDSA', $vpnCaPath);
+
     // api module
     $vpnApiModule = new VpnApiModule(
         $config,
         $storage,
-        new DateInterval($config->requireString('sessionExpiry', 'P90D'))
+        new DateInterval($config->requireString('sessionExpiry', 'P90D')),
+        new TlsCrypt($dataDir),
+        new Random(),
+        $ca
     );
     $service->addModule($vpnApiModule);
     $service->run($request)->send();

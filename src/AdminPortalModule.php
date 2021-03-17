@@ -536,11 +536,11 @@ class AdminPortalModule implements ServiceModuleInterface
      */
     private static function getCoordinates($f)
     {
-        return [cos(2 * M_PI * $f), sin(2 * M_PI * $f)];
+        return [cos(2 * \M_PI * $f), sin(2 * \M_PI * $f)];
     }
 
     /**
-     * XXX duplicate in VpnPortalModule.
+     * XXX duplicate in VpnPortalModule|VpnApiModule.
      *
      * @return array<string,\LC\Common\ProfileConfig>
      */

@@ -21,6 +21,8 @@ use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\ProfileConfig;
+use LC\Common\RandomInterface;
+use LC\Portal\CA\CaInterface;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
@@ -34,14 +36,26 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \DateInterval */
     private $sessionExpiry;
 
+    /** @var TlsCrypt */
+    private $tlsCrypt;
+
+    /** @var \LC\Common\RandomInterface */
+    private $random;
+
+    /** @var CA\CaInterface */
+    private $ca;
+
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(Config $config, Storage $storage, DateInterval $sessionExpiry)
+    public function __construct(Config $config, Storage $storage, DateInterval $sessionExpiry, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca)
     {
         $this->config = $config;
         $this->storage = $storage;
         $this->sessionExpiry = $sessionExpiry;
+        $this->tlsCrypt = $tlsCrypt;
+        $this->random = $random;
+        $this->ca = $ca;
         $this->dateTime = new DateTime();
     }
 
@@ -60,11 +74,10 @@ class VpnApiModule implements ServiceModuleInterface
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
 
-                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $profileList = $this->profileList();
                 $userPermissions = $this->getPermissionList($accessTokenInfo);
                 $userProfileList = [];
-                foreach ($profileList as $profileId => $profileData) {
-                    $profileConfig = new ProfileConfig(new Config($profileData));
+                foreach ($profileList as $profileId => $profileConfig) {
                     if ($profileConfig->hideProfile()) {
                         continue;
                     }
@@ -150,7 +163,7 @@ class VpnApiModule implements ServiceModuleInterface
              */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->requireQueryParameter('common_name'));
-                $clientCertificateInfo = $this->serverClient->getRequireArrayOrFalse('client_certificate_info', ['common_name' => $commonName]);
+                $clientCertificateInfo = $this->storage->getUserCertificateInfo($commonName);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
 
                 return new ApiResponse(
@@ -178,12 +191,11 @@ class VpnApiModule implements ServiceModuleInterface
                     }
                     $remoteStrategy = (int) $remoteStrategy;
 
-                    $profileList = $this->serverClient->getRequireArray('profile_list');
+                    $profileList = $this->profileList();
                     $userPermissions = $this->getPermissionList($accessTokenInfo);
 
                     $availableProfiles = [];
-                    foreach ($profileList as $profileId => $profileData) {
-                        $profileConfig = new ProfileConfig(new Config($profileData));
+                    foreach ($profileList as $profileId => $profileConfig) {
                         if ($profileConfig->hideProfile()) {
                             continue;
                         }
@@ -247,11 +259,15 @@ class VpnApiModule implements ServiceModuleInterface
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
-        $profileList = $this->serverClient->getRequireArray('profile_list');
-        $profileConfig = new ProfileConfig(new Config($profileList[$profileId]));
+        $profileList = $this->profileList();
+        // XXX we should really consider making an object for profileList!
+        $profileConfig = $profileList[$profileId];
 
-        // get the CA & tls-auth
-        $serverInfo = $this->serverClient->getRequireArray('server_info', ['profile_id' => $profileId]);
+        // get the CA & tls-crypt
+        $serverInfo = [
+            'tls_crypt' => $this->tlsCrypt->get($profileId),
+            'ca' => $this->ca->caCert(),
+        ];
 
         $clientConfig = ClientConfig::get($profileConfig, $serverInfo, [], $remoteStrategy);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
@@ -268,18 +284,26 @@ class VpnApiModule implements ServiceModuleInterface
     private function getCertificate(VpnAccessTokenInfo $accessTokenInfo)
     {
         // create a certificate
-        return $this->serverClient->postRequireArray(
-            'add_client_certificate',
-            [
-                'user_id' => $accessTokenInfo->getUserId(),
-                // we won't show the Certificate entry anyway on the
-                // "Certificates" page for certificates downloaded through the
-                // API
-                'display_name' => $accessTokenInfo->getClientId(),
-                'client_id' => $accessTokenInfo->getClientId(),
-                'expires_at' => $this->getExpiresAt($accessTokenInfo)->format(DateTime::ATOM),
-            ]
+        // generate a random string as the certificate's CN
+        $commonName = $this->random->get(16);
+        $certInfo = $this->ca->clientCert($commonName, $this->getExpiresAt($accessTokenInfo));
+        $this->storage->addCertificate(
+            $accessTokenInfo->getUserId(),
+            $commonName,
+            $accessTokenInfo->getClientId(),
+            new DateTime(sprintf('@%d', $certInfo['valid_from'])),
+            new DateTime(sprintf('@%d', $certInfo['valid_to'])),
+            $accessTokenInfo->getClientId()
         );
+
+        $this->storage->addUserMessage(
+            $accessTokenInfo->getUserId(),
+            'notification',
+            sprintf('new certificate "%s" generated by user', $accessTokenInfo->getClientId())
+        );
+
+        // XXX better return type...this is not ideal
+        return $certInfo;
     }
 
     /**
@@ -328,7 +352,7 @@ class VpnApiModule implements ServiceModuleInterface
             return [];
         }
 
-        return $this->serverClient->getRequireArray('user_permission_list', ['user_id' => $accessTokenInfo->getUserId()]);
+        return $this->storage->getPermissionList($accessTokenInfo->getUserId());
     }
 
     /**
@@ -340,6 +364,22 @@ class VpnApiModule implements ServiceModuleInterface
             return date_add(clone $this->dateTime, $this->sessionExpiry);
         }
 
-        return new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $accessTokenInfo->getUserId()]));
+        return new DateTime($this->storage->getSessionExpiresAt($accessTokenInfo->getUserId()));
+    }
+
+    /**
+     * XXX duplicate in AdminPortalModule|VpnPortalModule.
+     *
+     * @return array<string,\LC\Common\ProfileConfig>
+     */
+    private function profileList()
+    {
+        $profileList = [];
+        foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
+            $profileConfig = new ProfileConfig(new Config($profileData));
+            $profileList[$profileId] = $profileConfig;
+        }
+
+        return $profileList;
     }
 }
