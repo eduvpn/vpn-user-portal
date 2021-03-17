@@ -106,11 +106,15 @@ return [
     //'adminPermissionList' => ['urn:example:LC-admin'],
 
     // list of userIds that have access to the admin
+    // XXX this should also not be enable by default?
     'adminUserIdList' => ['admin'],
 
     // Require Users to use 2FA
     // DEFAULT = false
     //'requireTwoFactor' => false,
+
+    // XXX it seems two factor is enabled by default when not specifying anything,
+    // probably make that optional
 
     // Available 2FA methods
     // DEFAULT = []
@@ -183,6 +187,8 @@ return [
 
             // Whether or not to route all traffic from the client over the VPN
             // DEFAULT = false
+            // XXX make defaultGateway true in default config so it does not
+            // need to be specified
             'defaultGateway' => true,
 
             // Block access to local LAN when VPN is active
@@ -197,6 +203,7 @@ return [
             //    'fd01:1:1:1::/64',
             //],
 
+            // XXX think about DNS in default scenario, what about "split tunnel"?
             // IPv4 and IPv6 address of DNS server(s) to push to the client
             // DEFAULT  = ['9.9.9.9', '2620:fe::fe']
             // Quad9 (https://www.quad9.net)
