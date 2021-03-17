@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fed0f5e3de57708112bb3e79e4c500e2",
+    "content-hash": "dfb2306d43e0b09e6ce186159e6f13b6",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -744,11 +744,11 @@
         },
         {
             "name": "fkooman/saml-sp",
-            "version": "0.5.9",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "83693ae0a631ba04440c13b1b8bc22007e3f81e3"
+                "reference": "fce28d9077c613b10aa71984aad1478be22cc9aa"
             },
             "require": {
                 "ext-curl": "*",
@@ -795,7 +795,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-saml-sp"
             },
-            "time": "2020-10-12T08:24:51+00:00"
+            "time": "2021-01-14T12:24:40+00:00"
         },
         {
             "name": "myclabs/deep-copy",

@@ -71,7 +71,7 @@
     "require-dev": {
         "ext-json": "*",
         "phpunit/phpunit": "^9",
-        "fkooman/saml-sp": "^0.5.2"
+        "fkooman/saml-sp": "^1"
     },
     "support": {
         "email": "eduvpn@surfnet.nl",
