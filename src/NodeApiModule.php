@@ -13,7 +13,6 @@ use DateTime;
 use LC\Common\Config;
 use LC\Common\Http\ApiErrorResponse;
 use LC\Common\Http\ApiResponse;
-use LC\Common\Http\AuthUtils;
 use LC\Common\Http\InputValidation;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
@@ -59,8 +58,6 @@ class NodeApiModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireUser($hookData, ['vpn-server-node']);
-
                 $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
                 $profileConfig = new ProfileConfig($this->config->s('vpnProfiles')->s($profileId));
                 $serverName = $profileConfig->hostName();
@@ -78,8 +75,6 @@ class NodeApiModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireUser($hookData, ['vpn-server-node']);
-
                 try {
                     $this->connect($request);
 
@@ -100,8 +95,6 @@ class NodeApiModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireUser($hookData, ['vpn-server-node']);
-
                 try {
                     $this->disconnect($request);
 
@@ -122,8 +115,6 @@ class NodeApiModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                AuthUtils::requireUser($hookData, ['vpn-user-portal', 'vpn-server-node']);
-
                 $profileList = [];
                 foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
                     $profileConfig = new ProfileConfig(new Config($profileData));
