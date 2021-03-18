@@ -16,10 +16,6 @@
                     </dl>
                 </td>
             </tr>
-            <tr>
-                <th><?=$this->t('Key Type'); ?></th>
-                <td><?=$this->e($caInfo['ca_key_type']); ?></td>
-            </tr>
         </tbody>
     </table>
     <h2><?=$this->t('Profiles'); ?></h2>

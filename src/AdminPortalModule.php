@@ -119,8 +119,6 @@ class AdminPortalModule implements ServiceModuleInterface
                 $caInfo = [
                     'valid_from' => $validFrom->format(DateTime::ATOM),
                     'valid_to' => $validTo->format(DateTime::ATOM),
-                    // we only support EdDSA
-                    'ca_key_type' => 'EdDSA',
                 ];
 
                 return new HtmlResponse(
