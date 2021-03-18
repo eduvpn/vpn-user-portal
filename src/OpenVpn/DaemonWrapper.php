@@ -53,16 +53,16 @@ class DaemonWrapper
      */
     public function getConnectionList($userId, $clientId)
     {
-        // figure out the managementIp + portList for each profile...
-        $profileManagementIpPortList = [];
+        // figure out the nodeIp + portList for each profile...
+        $profileNodeIpPortList = [];
         foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
-            $profileManagementIpPortList[$profileId] = [];
+            $profileNodeIpPortList[$profileId] = [];
             $profileConfig = new ProfileConfig(new Config($profileData));
-            $profileManagementIpPortList[$profileId]['managementIp'] = $profileConfig->managementIp();
+            $profileNodeIpPortList[$profileId]['nodeIp'] = $profileConfig->nodeIp();
             $profileNumber = $profileConfig->profileNumber();
-            $profileManagementIpPortList[$profileId]['portList'] = [];
+            $profileNodeIpPortList[$profileId]['portList'] = [];
             for ($i = 0; $i < \count($profileConfig->vpnProtoPorts()); ++$i) {
-                $profileManagementIpPortList[$profileId]['portList'][] = 11940 + self::toPort($profileNumber, $i);
+                $profileNodeIpPortList[$profileId]['portList'][] = 11940 + self::toPort($profileNumber, $i);
             }
         }
 
@@ -70,15 +70,15 @@ class DaemonWrapper
         // that profile and augment it with info from storage,
         // optionally filter it...
         //
-        // FIXME: do not connect (again) as long as managementIp
+        // FIXME: do not connect (again) as long as nodeIp
         // remains the same!
         $connectionList = [];
-        foreach ($profileManagementIpPortList as $profileId => $managementIpPortList) {
+        foreach ($profileNodeIpPortList as $profileId => $nodeIpPortList) {
             $connectionList[$profileId] = [];
-            $managementIp = $managementIpPortList['managementIp'];
-            $portList = $managementIpPortList['portList'];
+            $nodeIp = $nodeIpPortList['nodeIp'];
+            $portList = $nodeIpPortList['portList'];
             try {
-                $this->daemonSocket->open($managementIp);
+                $this->daemonSocket->open($nodeIp);
                 $this->daemonSocket->setPorts($portList);
                 $daemonConnectionList = $this->daemonSocket->connections();
 
@@ -107,7 +107,7 @@ class DaemonWrapper
                 }
             } catch (RuntimeException $e) {
                 // can't do much here...
-                $this->logger->warning(sprintf('DAEMON %s [%s]: %s', $managementIp, implode(',', $portList), $e->getMessage()));
+                $this->logger->warning(sprintf('DAEMON %s [%s]: %s', $nodeIp, implode(',', $portList), $e->getMessage()));
             }
             $this->daemonSocket->close();
         }
@@ -122,29 +122,29 @@ class DaemonWrapper
      */
     public function killClient($commonName)
     {
-        $managementIpPortList = [];
+        $nodeIpPortList = [];
         foreach ($this->config->requireArray('vpnProfiles') as $profileData) {
             $profileConfig = new ProfileConfig(new Config($profileData));
-            $managementIp = $profileConfig->managementIp();
-            if (!\array_key_exists($managementIp, $managementIpPortList)) {
-                // multiple profiles can have the same managementIp
-                $managementIpPortList[$managementIp] = [];
+            $nodeIp = $profileConfig->nodeIp();
+            if (!\array_key_exists($nodeIp, $nodeIpPortList)) {
+                // multiple profiles can have the same nodeIp
+                $nodeIpPortList[$nodeIp] = [];
             }
             $profileNumber = $profileConfig->profileNumber();
             for ($i = 0; $i < \count($profileConfig->vpnProtoPorts()); ++$i) {
-                $managementIpPortList[$managementIp][] = 11940 + self::toPort($profileNumber, $i);
+                $nodeIpPortList[$nodeIp][] = 11940 + self::toPort($profileNumber, $i);
             }
         }
 
         // send the "DISCONNECT" command for all IPs and/ports
-        foreach ($managementIpPortList as $managementIp => $portList) {
+        foreach ($nodeIpPortList as $nodeIp => $portList) {
             try {
-                $this->daemonSocket->open($managementIp);
+                $this->daemonSocket->open($nodeIp);
                 $this->daemonSocket->setPorts($portList);
                 $this->daemonSocket->disconnect([$commonName]);
             } catch (RuntimeException $e) {
                 // can't do much here...
-                $this->logger->warning(sprintf('DAEMON %s [%s]: %s', $managementIp, implode(',', $portList), $e->getMessage()));
+                $this->logger->warning(sprintf('DAEMON %s [%s]: %s', $nodeIp, implode(',', $portList), $e->getMessage()));
             }
             $this->daemonSocket->close();
         }

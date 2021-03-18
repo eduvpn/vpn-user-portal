@@ -22,9 +22,6 @@ use LC\Common\TplInterface;
 
 class TwoFactorEnrollModule implements ServiceModuleInterface
 {
-    /** @var array<string> */
-    private $twoFactorMethods;
-
     /** @var \LC\Common\Http\SessionInterface */
     private $session;
 
@@ -34,12 +31,8 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
     /** @var Storage */
     private $storage;
 
-    /**
-     * @param array<string> $twoFactorMethods
-     */
-    public function __construct(array $twoFactorMethods, SessionInterface $session, TplInterface $tpl, Storage $storage)
+    public function __construct(SessionInterface $session, TplInterface $tpl, Storage $storage)
     {
-        $this->twoFactorMethods = $twoFactorMethods;
         $this->session = $session;
         $this->tpl = $tpl;
         $this->storage = $storage;
@@ -67,7 +60,6 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                         'vpnPortalEnrollTwoFactor',
                         [
                             'requireTwoFactorEnrollment' => null !== $this->session->get('_two_factor_enroll_redirect_to'),
-                            'twoFactorMethods' => $this->twoFactorMethods,
                             'hasTotpSecret' => $hasTotpSecret,
                             'totpSecret' => $totpSecret,
                             'otpAuthUrl' => $totp->getEnrollmentUri($userInfo->getUserId(), $totpSecret, $request->getServerName()),
@@ -118,7 +110,6 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                             'vpnPortalEnrollTwoFactor',
                             [
                                 'requireTwoFactorEnrollment' => null !== $redirectTo,
-                                'twoFactorMethods' => $this->twoFactorMethods,
                                 'hasTotpSecret' => $hasTotpSecret,
                                 'totpSecret' => $totpSecret,
                                 'error_code' => 'invalid_otp_code',

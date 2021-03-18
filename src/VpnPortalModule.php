@@ -245,11 +245,11 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalAccount',
                         [
+                            'enableTwoFactor' => $this->config->requireBool('enableTwoFactor', false),
                             'hasTotpSecret' => $hasTotpSecret,
                             'userInfo' => $userInfo,
                             'userPermissions' => $userPermissions,
                             'authorizedClients' => $authorizedClients,
-                            'twoFactorMethods' => $this->config->requireArray('twoFactorMethods', ['totp']),
                             'userMessages' => $userMessages,
                             'userConnectionLogEntries' => $userConnectionLogEntries,
                             'idNameMapping' => $idNameMapping,
@@ -323,9 +323,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalDocumentation',
-                        [
-                            'twoFactorMethods' => $this->config->requireArray('twoFactorMethods', ['totp']),
-                        ]
+                        []
                     )
                 );
             }

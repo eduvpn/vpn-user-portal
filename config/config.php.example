@@ -24,58 +24,106 @@ return [
     //'sessionExpiry' => 'PT12H',   // 12 hours
     //'sessionExpiry' => 'P1D',     // 1 day
 
-    // LDAP
-    //'FormLdapAuthentication' => [
-        // *** OpenLDAP / FreeIPA ***
-        //'ldapUri' => 'ldaps://ipa.example.org',
-        //'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=example,dc=org',
-        //'permissionAttribute' => 'eduPersonEntitlement',
-        //'permissionAttribute' => 'memberOf',
+    // XXX where is permissionAttribute? Make sure it is an array!
+//    // LDAP
+//    'FormLdapAuthentication' => [
+//        // *** FreeIPA ***
+//        // -H ldap://ipa.tuxed.example
+//        'ldapUri' => 'ldap://ipa.tuxed.example',
+//        // -D "uid=fkooman,cn=users,cn=accounts,dc=tuxed,dc=example"
+//        'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=tuxed,dc=example',
+//        // (if -b is the same -D we do NOT specify baseDn...)
+//        // to normalize the entered user ID, specify the attribute you want to
+//        // use to identify the user in the VPN server
+//        'userIdAttribute' => 'uid',
 
-        // *** Active Directory ***
-        //'ldapUri' => 'ldap://ad.example.org',
-        //'bindDnTemplate' => 'DOMAIN\{{UID}}',
-        //'baseDn' => 'dc=example,dc=org',
-        //'userFilterTemplate' => '(sAMAccountName={{UID}})',
-        //'permissionAttribute' => 'memberOf',
-    //],
+//        // *** AD (NetBIOS domain name) ***
+//        // -H ldap://ad.example.org \
+//        'ldapUri' => 'ldap://ad.example.org',
+//        // -D "DOMAIN\fkooman" \
+//        'bindDnTemplate' => 'DOMAIN\{{UID}}',
+//        // -b "dc=example,dc=org" \
+//        'baseDn' => 'dc=example,dc=org',
+//        // "(sAMAccountName=fkooman)"
+//        'userFilterTemplate' => '(sAMAccountName={{UID}})',
+//        // to normalize the entered user ID, specify the attribute you want to
+//        // use to identify the user in the VPN server
+//        'userIdAttribute' => 'sAMAccountName',
 
-    // RADIUS
-    //'FormRadiusAuthentication' => [
-    //    'serverList' => [
-    //        [
-    //            'host' => 'radius.example.org',
-    //            'secret' => 'testing123',
-    //            //'port' => 1812,
-    //        ],
-    //    ],
-    //    //'addRealm' => 'example.org',
-    //    //'nasIdentifier' => 'vpn.example.org',
-    //],
+//        // *** AD (userPrincipalName) ***
+//        // -H ldap://ad.example.org \
+//        'ldapUri' => 'ldap://ad.example.org',
+//        // -D "fkooman@example.org" \
+//        'bindDnTemplate' => '{{UID}}',
 
-    // SAML (php-saml-sp)
-    //'PhpSamlSpAuthentication' => [
-        //'userIdAttribute' => 'eduPersonTargetedID',
-        //'userIdAttribute' => 'eduPersonPrincipalName',
+//        // when the user does NOT specify the realm, e.g. only "fkooman", this
+//        // option will add "@example.org" to the "User Name" as specified on 
+//        // the login page. If and only if there is no "@" in the provided 
+//        // "User Name".!
+//        'addRealm' => 'example.org',
+//        // -b "dc=example,dc=org" \
+//        'baseDn' => 'dc=example,dc=org',
+//        // "(userPrincipalName=fkooman@example.org)"
+//        'userFilterTemplate' => '(userPrincipalName={{UID}})',
+//        // to normalize the entered user ID, specify the attribute you want to
+//        // use to identify the user in the VPN server
+//        'userIdAttribute' => 'userPrincipalName',
+//        
+//        // *** Search First ***
+//        // -H ldap://server.ipa.test \
+//        'ldapUri' => 'ldap://server.ipa.test',
+//        // -b "cn=users,cn=accounts,dc=ipa,dc=test" \
+//        'baseDn' => 'cn=users,cn=accounts,dc=ipa,dc=test',
+//        // "(uidNumber=572600001)" \
+//        'userFilterTemplate' => '(uidNumber={{UID}})',
+//        // to normalize the entered user ID, specify the attribute you want to
+//        // use to identify the user in the VPN server
+//        'userIdAttribute' => 'uidNumber',
+//        // in vpn-user-portal >= 2.3.8 you can also perform a bind before 
+//        // searching as not all LDAP servers allow anonymous bind to search the
+//        // directory. If at all possible, allow anonymous bind on your LDAP 
+//        // server from the VPN server. NEVER USE THE LDAP ADMIN ACCOUNT HERE!
+//        //'searchBindDn' => 'cn=Anonymous Search User,dc=example,dc=org',
+//        //'searchBindPass' => 's3r3t',
+//    ],
 
-        // ** AUTHORIZATION | PERMISSIONS **
-        //'permissionAttribute' => [
-        //      'eduPersonEntitlement',
-        //      //'eduPersonAffiliation',
-        //],
+//    // RADIUS
+//    'FormRadiusAuthentication' => [
+//        'serverList' => [
+//            [
+//                'host' => 'radius.example.org',
+//                'secret' => 'testing123',
+//                //'port' => 1812,
+//            ],
+//        ],
+//        //'addRealm' => 'example.org',
+//        //'nasIdentifier' => 'vpn.example.org',
+//    ],
 
-        // AuthnContext required for *all* users
-        //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+//    // SAML (php-saml-sp)
+//    'PhpSamlSpAuthentication' => [
+//        'userIdAttribute' => 'eduPersonTargetedID',
+//        //'userIdAttribute' => 'eduPersonPrincipalName',
 
-        // Users with certain permissions obtained through
-        // "permissionAttribute" MUST also have ANY of the listed
-        // AuthnContexts. If they currently don't, a new authentication is
-        // triggered to obtain it
-        //'permissionAuthnContext' => [
-        //    'http://eduvpn.org/role/admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
-        //],
-    //],
+//        // ** AUTHORIZATION | PERMISSIONS **
+//        //'permissionAttribute' => [
+//        //      'eduPersonEntitlement',
+//        //      //'eduPersonAffiliation',
+//        //],
 
+//        // AuthnContext required for *all* users
+//        //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+
+//        // Users with certain permissions obtained through
+//        // "permissionAttribute" MUST also have ANY of the listed
+//        // AuthnContexts. If they currently don't, a new authentication is
+//        // triggered to obtain it
+//        //'permissionAuthnContext' => [
+//        //    'http://eduvpn.org/role/admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+//        //],
+//    ],
+
+//// XXX make sure permissionAttribute is array
 //    // SAML (mod_auth_mellon)
 //    'MellonAuthentication' => [
 //        // OID for eduPersonTargetedId
@@ -90,6 +138,7 @@ return [
 //        //'permissionAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_1',
 //    ],
 
+//        // XXX make sure permissionAttribute is array
 //    // SAML (Shibboleth)
 //    'ShibAuthentication' => [
 //        'userIdAttribute' => 'persistent-id',
@@ -103,11 +152,15 @@ return [
     // the permission required to be able to access the "admin" portion of
     // the portal, see "permissionAttribute" in the authentication
     // configuration sections
-    //'adminPermissionList' => ['urn:example:LC-admin'],
+    //'adminPermissionList' => ['http://eduvpn.org/role/admin'],
 
     // list of userIds that have access to the admin
     // XXX this should also not be enable by default?
     'adminUserIdList' => ['admin'],
+
+    'enableTwoFactor' => false,
+    'requireTwoFactor' => false,
+    
 
     // Require Users to use 2FA
     // DEFAULT = false
@@ -177,23 +230,9 @@ return [
             // REQUIRED
             'hostName' => 'vpn.example',
 
-            // The address the OpenVPN processes will listen on
-            // DEFAULT = '::'
-            //'listen' => '::',
-
-            // The IP address to use for connecting to OpenVPN processes
-            // DEFAULT = '127.0.0.1'
-            //'managementIp' => '127.0.0.1',
-
             // Whether or not to route all traffic from the client over the VPN
-            // DEFAULT = false
-            // XXX make defaultGateway true in default config so it does not
-            // need to be specified
-            'defaultGateway' => true,
-
-            // Block access to local LAN when VPN is active
-            // DEFAULT = false
-            //'blockLan' => false,
+            // DEFAULT = true
+            //'defaultGateway' => false,
 
             // IPv4 and IPv6 routes to push to the client, only used when
             // defaultGateway is false
@@ -205,9 +244,23 @@ return [
 
             // XXX think about DNS in default scenario, what about "split tunnel"?
             // IPv4 and IPv6 address of DNS server(s) to push to the client
-            // DEFAULT  = ['9.9.9.9', '2620:fe::fe']
+            // default could be Quad9 when defaultGateway = true (default) and
+            // default could be [] when defaultGateway = true, might be confusing?!
+            // DEFAULT  = []
             // Quad9 (https://www.quad9.net)
-            //'dns' => ['9.9.9.9', '2620:fe::fe'],
+            'dns' => ['9.9.9.9', '2620:fe::fe'],
+
+            // The address the OpenVPN processes will listen on
+            // DEFAULT = '::'
+            //'listenIp' => '::',
+
+            // The IP address to use for connecting to VPN node
+            // DEFAULT = '127.0.0.1'
+            //'nodeIp' => '127.0.0.1',
+
+            // Block access to local LAN when VPN is active
+            // DEFAULT = false
+            //'blockLan' => false,
 
             // Whether or not to allow client-to-client traffic
             // DEFAULT = false

@@ -120,7 +120,7 @@
 <?php endif; ?>
     </details>
 
-<?php if (0 !== count($twoFactorMethods)): ?>
+<?php if($enableTwoFactor) : ?>
     <details>
         <summary><?=$this->t('Two-factor Authentication'); ?></summary>
         <?php if ($hasTotpSecret): ?>
