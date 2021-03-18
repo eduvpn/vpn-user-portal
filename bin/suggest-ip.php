@@ -7,8 +7,6 @@
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-require_once dirname(__DIR__).'/vendor/autoload.php';
-
 /*
  * Generate example IPv4 and IPv6 address ranges for VPN clients.
  *
