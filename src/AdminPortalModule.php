@@ -3,7 +3,7 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
@@ -479,7 +479,7 @@ class AdminPortalModule implements ServiceModuleInterface
         foreach ($profileList as $profileId => $profileData) {
             list($ipFour, $ipFourPrefix) = explode('/', $profileData->range());
             $vpnProtoPortsCount = \count($profileData->vpnProtoPorts());
-            $maxConcurrentConnectionLimitList[$profileId] = pow(2, (32 - (int) $ipFourPrefix)) - 4 * $vpnProtoPortsCount;
+            $maxConcurrentConnectionLimitList[$profileId] = 2 ** (32 - (int) $ipFourPrefix) - 4 * $vpnProtoPortsCount;
         }
 
         return $maxConcurrentConnectionLimitList;

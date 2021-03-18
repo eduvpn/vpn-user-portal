@@ -3,7 +3,7 @@
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
+ * Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
@@ -41,7 +41,7 @@ class BearerValidatorTest extends TestCase
 
         $storage = new Storage(
             new PDO('sqlite::memory:'),
-            \dirname(\dirname(__DIR__)).'/schema',
+            \dirname(__DIR__, 2).'/schema',
             new DateInterval('P90D')
         );
         $storage->setDateTime($this->dateTime);
