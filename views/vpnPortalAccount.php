@@ -120,7 +120,7 @@
 <?php endif; ?>
     </details>
 
-<?php if($enableTwoFactor) : ?>
+<?php if ($enableTwoFactor) : ?>
     <details>
         <summary><?=$this->t('Two-factor Authentication'); ?></summary>
         <?php if ($hasTotpSecret): ?>

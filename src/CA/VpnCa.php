@@ -200,7 +200,7 @@ class VpnCa implements CaInterface
         );
 
         if (0 !== $returnValue) {
-            throw new RuntimeException(sprintf('command "%s" did not complete successfully: "%s"', $execCmd, implode(PHP_EOL, $commandOutput)));
+            throw new RuntimeException(sprintf('command "%s" did not complete successfully: "%s"', $execCmd, implode(\PHP_EOL, $commandOutput)));
         }
     }
 

@@ -114,7 +114,7 @@ class DaemonSocket
             );
 
             $socketAddress = sprintf('ssl://%s:41194', $nodeIp);
-            if (false === $daemonSocket = @stream_socket_client($socketAddress, $errno, $errstr, 5, STREAM_CLIENT_CONNECT, $streamContext)) {
+            if (false === $daemonSocket = @stream_socket_client($socketAddress, $errno, $errstr, 5, \STREAM_CLIENT_CONNECT, $streamContext)) {
                 throw new RuntimeException(sprintf('unable to open socket to "%s": [%d]: %s', $socketAddress, $errno, $errstr));
             }
 
@@ -122,7 +122,7 @@ class DaemonSocket
         }
 
         $socketAddress = sprintf('tcp://%s:41194', $nodeIp);
-        if (false === $daemonSocket = @stream_socket_client($socketAddress, $errno, $errstr, 5, STREAM_CLIENT_CONNECT)) {
+        if (false === $daemonSocket = @stream_socket_client($socketAddress, $errno, $errstr, 5, \STREAM_CLIENT_CONNECT)) {
             throw new RuntimeException(sprintf('unable to open socket to "%s": [%d]: %s', $socketAddress, $errno, $errstr));
         }
 

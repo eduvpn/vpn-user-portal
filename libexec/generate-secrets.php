@@ -27,9 +27,9 @@ try {
     $keyFile = sprintf('%s/node.key', $configDir);
     if (!FileIO::exists($keyFile)) {
         $secretKey = random_bytes(32);
-        FileIO::writeFile($keyFile, sodium_bin2hex($secretKey), 0644);    
+        FileIO::writeFile($keyFile, sodium_bin2hex($secretKey), 0644);
     }
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
 }

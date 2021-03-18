@@ -35,10 +35,7 @@ class BearerValidatorTest extends TestCase
     /** @var \DateTime */
     private $dateTime;
 
-    /**
-     * @return void
-     */
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dateTime = new DateTime('2018-01-01');
 

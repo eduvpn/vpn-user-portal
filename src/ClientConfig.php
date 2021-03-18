@@ -52,7 +52,7 @@ class ClientConfig
             // wait this long (seconds) before trying the next server in the list
             'server-poll-timeout 10',
 
-            // >= TLSv1.3 
+            // >= TLSv1.3
             'tls-version-min 1.3',
 
             // only allow AES-256-GCM
@@ -66,7 +66,7 @@ class ClientConfig
             // installs this is no longer needed though
             trim($serverInfo['ca']),
             '</ca>',
-            
+
             '<tls-crypt>',
             // in legacy situation some trimming may be required, for
             // clean installs this is no longer needed
@@ -96,7 +96,7 @@ class ClientConfig
             $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) substr($remoteProtoPort, 4), substr($remoteProtoPort, 0, 3));
         }
 
-        return implode(PHP_EOL, $clientConfig);
+        return implode(\PHP_EOL, $clientConfig);
     }
 
     /**

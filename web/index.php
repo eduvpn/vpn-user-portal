@@ -246,7 +246,7 @@ try {
         );
     }
 
-    if($config->requireBool('enableTwoFactor', false)) {
+    if ($config->requireBool('enableTwoFactor', false)) {
         $service->addBeforeHook(
             'two_factor',
             new TwoFactorHook(
@@ -264,7 +264,7 @@ try {
     $service->addModule(new QrModule());
 
     // two factor module
-    if($config->requireBool('enableTwoFactor', false)) {
+    if ($config->requireBool('enableTwoFactor', false)) {
         $twoFactorModule = new TwoFactorModule($storage, $seSession, $tpl);
         $service->addModule($twoFactorModule);
     }
@@ -316,7 +316,7 @@ try {
     );
     $service->addModule($adminPortalModule);
 
-    if($config->requireBool('enableTwoFactor', false)) {
+    if ($config->requireBool('enableTwoFactor', false)) {
         $twoFactorEnrollModule = new TwoFactorEnrollModule($seSession, $tpl, $storage);
         $service->addModule($twoFactorEnrollModule);
     }

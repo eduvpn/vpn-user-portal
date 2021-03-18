@@ -30,10 +30,10 @@ class LdapClient
             // only with very old OpenLDAP will it ever return false...
             throw new LdapClientException(sprintf('unacceptable LDAP URI "%s"', $ldapUri));
         }
-        if (false === ldap_set_option($this->ldapResource, LDAP_OPT_PROTOCOL_VERSION, 3)) {
+        if (false === ldap_set_option($this->ldapResource, \LDAP_OPT_PROTOCOL_VERSION, 3)) {
             throw new LdapClientException('unable to set LDAP option');
         }
-        if (false === ldap_set_option($this->ldapResource, LDAP_OPT_REFERRALS, 0)) {
+        if (false === ldap_set_option($this->ldapResource, \LDAP_OPT_REFERRALS, 0)) {
             throw new LdapClientException('unable to set LDAP option');
         }
     }
@@ -61,7 +61,7 @@ class LdapClient
     public static function escapeDn($str)
     {
         // ldap_escape in PHP >= 5.6 (or symfony/polyfill-php56)
-        return ldap_escape($str, '', LDAP_ESCAPE_DN);
+        return ldap_escape($str, '', \LDAP_ESCAPE_DN);
     }
 
     /**
@@ -72,7 +72,7 @@ class LdapClient
     public static function escapeFilter($str)
     {
         // ldap_escape in PHP >= 5.6 (or symfony/polyfill-php56)
-        return ldap_escape($str, '', LDAP_ESCAPE_FILTER);
+        return ldap_escape($str, '', \LDAP_ESCAPE_FILTER);
     }
 
     /**
