@@ -245,58 +245,12 @@
             "time": "2018-06-26T07:47:46+00:00"
         },
         {
-            "name": "ircmaxell/password-compat",
-            "version": "v1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ircmaxell/password_compat.git",
-                "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ircmaxell/password_compat/zipball/5c5cde8822a69545767f7c7f3058cb15ff84614c",
-                "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/password.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anthony Ferrara",
-                    "email": "ircmaxell@php.net",
-                    "homepage": "http://blog.ircmaxell.com"
-                }
-            ],
-            "description": "A compatibility library for the proposed simplified password hashing algorithm: https://wiki.php.net/rfc/password_hash",
-            "homepage": "https://github.com/ircmaxell/password_compat",
-            "keywords": [
-                "hashing",
-                "password"
-            ],
-            "support": {
-                "issues": "https://github.com/ircmaxell/password_compat/issues",
-                "source": "https://github.com/ircmaxell/password_compat/tree/v1.0"
-            },
-            "time": "2014-11-20T16:49:30+00:00"
-        },
-        {
             "name": "lc/common",
             "version": "3.x-dev",
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "8f2ae182a9d5602820193fe95e1bb4191291f3ec"
+                "reference": "301f8cfc66fef1451a888e9b8be0c6a7a99af6ed"
             },
             "require": {
                 "ext-curl": "*",
@@ -306,16 +260,13 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-pcre": "*",
+                "ext-sodium": "*",
                 "ext-spl": "*",
-                "ircmaxell/password-compat": "^1",
-                "paragonie/constant_time_encoding": "^1|^2",
-                "paragonie/random_compat": ">=1",
-                "php": ">= 5.4",
-                "psr/log": "^1.0",
-                "symfony/polyfill-php56": "^1"
+                "php": ">= 7.4",
+                "psr/log": "^1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5|^6|^7"
+                "phpunit/phpunit": "^9"
             },
             "suggest": {
                 "ext-ldap": "Support LDAP user authentication",
