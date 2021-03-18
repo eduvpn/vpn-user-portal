@@ -12,7 +12,7 @@ $baseDir = dirname(__DIR__);
 
 use LC\Common\Config;
 use LC\Common\FileIO;
-use LC\Common\Http\BasicAuthenticationHook;
+use LC\Common\Http\BearerAuthenticationHook;
 use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
@@ -33,13 +33,11 @@ try {
     );
 
     $service = new Service();
-    $basicAuthentication = new BasicAuthenticationHook(
-        [
-            'vpn-server-node' => FileIO::readFile($configDir.'/node.key'),
-        ],
+    $bearerAuthentication = new BearerAuthenticationHook(
+        FileIO::readFile($configDir.'/node.key'),
         'Node API'
     );
-    $service->addBeforeHook('auth', $basicAuthentication);
+    $service->addBeforeHook('auth', $bearerAuthentication);
 
     $storage = new Storage(
         new PDO(
