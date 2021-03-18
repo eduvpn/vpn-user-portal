@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -59,10 +61,7 @@ class VpnApiModule implements ServiceModuleInterface
         $this->dateTime = new DateTime();
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         // API 1, 2
         $service->get(

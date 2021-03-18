@@ -1,4 +1,5 @@
-<?php if (1 < count($supportedLanguages)): ?>
+<?php declare(strict_types=1);
+if (1 < count($supportedLanguages)): ?>
 <ul class="languageSwitcher">
     <form class="languageSwitcher" method="post" action="<?=$this->e($requestRoot); ?>setLanguage">
 <?php foreach ($supportedLanguages as $k => $v): ?>

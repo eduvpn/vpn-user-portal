@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -18,10 +20,7 @@ class QrModule implements ServiceModuleInterface
 {
     const QR_ENCODE_PATH = '/usr/bin/qrencode';
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->get(
             '/qr',

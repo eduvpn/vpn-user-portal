@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,10 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class ClientConfigTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testDefault()
+    public function testDefault(): void
     {
         $this->assertSame(
             ['udp/1194', 'tcp/1194'],
@@ -28,10 +27,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testOne()
+    public function testOne(): void
     {
         $this->assertSame(
             ['udp/1194'],
@@ -42,10 +38,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testOneSpecial()
+    public function testOneSpecial(): void
     {
         $this->assertSame(
             ['udp/443'],
@@ -56,10 +49,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testNone()
+    public function testNone(): void
     {
         $this->assertSame(
             [],
@@ -70,10 +60,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testFourPorts()
+    public function testFourPorts(): void
     {
         $this->assertSame(
             ['udp/1194', 'tcp/1194'],
@@ -84,10 +71,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testFourPortsWithTcp443()
+    public function testFourPortsWithTcp443(): void
     {
         $this->assertSame(
             ['udp/1194', 'tcp/1194', 'tcp/443'],
@@ -98,10 +82,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testFourPortsWithUdp53()
+    public function testFourPortsWithUdp53(): void
     {
         $this->assertSame(
             ['udp/1194', 'tcp/1194', 'udp/53'],
@@ -112,10 +93,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testEightPorts()
+    public function testEightPorts(): void
     {
         $this->assertSame(
             ['udp/1194', 'tcp/1194'],
@@ -126,10 +104,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testTwoSpecial()
+    public function testTwoSpecial(): void
     {
         $this->assertSame(
             ['udp/1194', 'tcp/1194', 'udp/443', 'tcp/443'],
@@ -140,10 +115,7 @@ class ClientConfigTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testAll()
+    public function testAll(): void
     {
         $this->assertSame(
             ['udp/1194', 'udp/1195', 'udp/1196', 'udp/1197', 'tcp/1194', 'tcp/1195', 'tcp/1196', 'tcp/443'],

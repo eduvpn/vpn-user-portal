@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -147,10 +149,8 @@ class ClientConfig
      * @param array<string> &$clientPortList
      * @param array<string> $pickFrom
      * @param int           $remoteStrategy
-     *
-     * @return void
      */
-    private static function getItem(array &$clientPortList, array $pickFrom, $remoteStrategy)
+    private static function getItem(array &$clientPortList, array $pickFrom, $remoteStrategy): void
     {
         if (0 === \count($pickFrom)) {
             return;

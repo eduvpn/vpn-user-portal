@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -34,20 +36,16 @@ class DaemonSocket
 
     /**
      * @param string $nodeIp
-     *
-     * @return void
      */
-    public function open($nodeIp)
+    public function open($nodeIp): void
     {
         $this->daemonSocket = self::getSocket($nodeIp, $this->certDir, $this->useTls);
     }
 
     /**
      * @param array<int> $managementPortList
-     *
-     * @return void
      */
-    public function setPorts(array $managementPortList)
+    public function setPorts(array $managementPortList): void
     {
         $this->sendCommand(sprintf('SET_PORTS %s', implode(' ', $managementPortList)));
     }
@@ -64,18 +62,13 @@ class DaemonSocket
 
     /**
      * @param array<string> $commonNameList
-     *
-     * @return void
      */
-    public function disconnect(array $commonNameList)
+    public function disconnect(array $commonNameList): void
     {
         $this->sendCommand(sprintf('DISCONNECT %s', implode(' ', $commonNameList)));
     }
 
-    /**
-     * @return void
-     */
-    public function close()
+    public function close(): void
     {
         if (null !== $daemonSocket = $this->daemonSocket) {
             // we don't care if it fails, fail in silence...
@@ -181,10 +174,8 @@ class DaemonSocket
 
     /**
      * @param string $lineToWrite
-     *
-     * @return void
      */
-    private function writeLineToSocket($lineToWrite)
+    private function writeLineToSocket($lineToWrite): void
     {
         if (null === $this->daemonSocket) {
             throw new RuntimeException('socket not open');

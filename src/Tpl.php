@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -59,10 +61,8 @@ class Tpl implements TplInterface
 
     /**
      * @param string|null $uiLanguage
-     *
-     * @return void
      */
-    public function setLanguage($uiLanguage)
+    public function setLanguage($uiLanguage): void
     {
         if (null === $uiLanguage) {
             $this->uiLanguage = null;
@@ -91,31 +91,24 @@ class Tpl implements TplInterface
 
     /**
      * @param array<string,mixed> $templateVariables
-     *
-     * @return void
      */
-    public function addDefault(array $templateVariables)
+    public function addDefault(array $templateVariables): void
     {
         $this->templateVariables = array_merge($this->templateVariables, $templateVariables);
     }
 
     /**
      * @param string $callbackName
-     *
-     * @return void
      */
-    public function addCallback($callbackName, callable $cb)
+    public function addCallback($callbackName, callable $cb): void
     {
         $this->callbackList[$callbackName] = $cb;
     }
 
     /**
-     * @param string              $templateName
      * @param array<string,mixed> $templateVariables
-     *
-     * @return string
      */
-    public function render($templateName, array $templateVariables = [])
+    public function render(string $templateName, array $templateVariables = []): string
     {
         $this->templateVariables = array_merge($this->templateVariables, $templateVariables);
         extract($this->templateVariables);
@@ -233,10 +226,8 @@ class Tpl implements TplInterface
 
     /**
      * @param string $sectionName
-     *
-     * @return void
      */
-    private function start($sectionName)
+    private function start($sectionName): void
     {
         if (null !== $this->activeSectionName) {
             throw new TplException(sprintf('section "%s" already started', $this->activeSectionName));
@@ -248,10 +239,8 @@ class Tpl implements TplInterface
 
     /**
      * @param string $sectionName
-     *
-     * @return void
      */
-    private function stop($sectionName)
+    private function stop($sectionName): void
     {
         if (null === $this->activeSectionName) {
             throw new TplException('no section started');
@@ -268,10 +257,8 @@ class Tpl implements TplInterface
     /**
      * @param string              $layoutName
      * @param array<string,mixed> $templateVariables
-     *
-     * @return void
      */
-    private function layout($layoutName, array $templateVariables = [])
+    private function layout($layoutName, array $templateVariables = []): void
     {
         $this->layoutList[$layoutName] = $templateVariables;
     }

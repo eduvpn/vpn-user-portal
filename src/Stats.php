@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -44,21 +46,21 @@ class Stats
             $db = $this->storage->getPdo();
             $stmt = $db->prepare(
 <<< 'SQL'
-    SELECT
-        user_id,
-        common_name,
-        connected_at,
-        disconnected_at,
-        bytes_transferred
-    FROM
-        connection_log
-    WHERE
-        profile_id = :profile_id
-    AND
-        disconnected_at IS NOT NULL
-    ORDER BY
-        connected_at
-SQL
+        SELECT
+            user_id,
+            common_name,
+            connected_at,
+            disconnected_at,
+            bytes_transferred
+        FROM
+            connection_log
+        WHERE
+            profile_id = :profile_id
+        AND
+            disconnected_at IS NOT NULL
+        ORDER BY
+            connected_at
+    SQL
             );
 
             $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);

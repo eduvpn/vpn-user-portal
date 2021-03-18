@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Server'); ?></h2>
     <table class="tbl">

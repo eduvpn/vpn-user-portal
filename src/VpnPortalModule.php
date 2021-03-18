@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -74,27 +76,19 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->dateTime = new DateTime();
     }
 
-    /**
-     * @return void
-     */
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->get(
             '/',
-            /**
+            /*
              * @return \LC\Common\Http\Response
              */
-            function (Request $request) {
-                return new RedirectResponse($request->getRootUri().'home', 302);
-            }
+            fn (Request $request) => new RedirectResponse($request->getRootUri().'home', 302)
         );
 
         $service->get(

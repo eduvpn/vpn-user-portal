@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Account')]); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Account')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Two-factor Enrollment'); ?></h2>
 

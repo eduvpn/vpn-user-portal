@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class MinisignTest extends TestCase
 {
-    public function testVerify()
+    public function testVerify(): void
     {
         $this->assertTrue(
             Minisign::verify(

@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['pageTitle' => $this->t('Two-factor Authentication')]); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['pageTitle' => $this->t('Two-factor Authentication')]); ?>
 <?php $this->start('content'); ?>
     <div class="auth">
         <p>

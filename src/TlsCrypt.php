@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -59,13 +61,13 @@ class TlsCrypt
         // Same as $(openvpn --genkey --secret <file>)
         $randomData = wordwrap(sodium_bin2hex(random_bytes(256)), 32, "\n", true);
         $tlsCrypt = <<< EOF
-#
-# 2048 bit OpenVPN static key
-#
------BEGIN OpenVPN Static key V1-----
-$randomData
------END OpenVPN Static key V1-----
-EOF;
+            #
+            # 2048 bit OpenVPN static key
+            #
+            -----BEGIN OpenVPN Static key V1-----
+            $randomData
+            -----END OpenVPN Static key V1-----
+            EOF;
 
         return $tlsCrypt;
     }

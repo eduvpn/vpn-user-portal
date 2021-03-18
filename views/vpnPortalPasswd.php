@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Account')]); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Account')]); ?>
 <?php $this->start('content'); ?>
     <p>
         <?=$this->t('Here you can change the password for your account.'); ?>

@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['pageTitle' => $this->t('Sign In')]); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['pageTitle' => $this->t('Sign In')]); ?>
 <?php $this->start('content'); ?>
     <div class="auth">
         <p>

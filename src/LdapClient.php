@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -43,10 +45,8 @@ class LdapClient
      *
      * @param string|null $bindUser you MUST use LdapClient::escapeDn on any user input used to contruct the DN!
      * @param string|null $bindPass
-     *
-     * @return void
      */
-    public function bind($bindUser = null, $bindPass = null)
+    public function bind($bindUser = null, $bindPass = null): void
     {
         if (false === ldap_bind($this->ldapResource, $bindUser, $bindPass)) {
             throw new LdapClientException(sprintf('LDAP error: (%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));

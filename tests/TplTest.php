@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,10 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class TplTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testToHuman()
+    public function testToHuman(): void
     {
         $this->assertSame('0 B', Tpl::toHuman(0));
         $this->assertSame('1023 B', Tpl::toHuman(1023));

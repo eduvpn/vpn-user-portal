@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -33,10 +35,8 @@ class ForeignKeyListFetcher
     /**
      * @param string        $serverListUrl
      * @param array<string> $trustedPublicKeyList
-     *
-     * @return void
      */
-    public function update(HttpClientInterface $httpClient, $serverListUrl, array $trustedPublicKeyList)
+    public function update(HttpClientInterface $httpClient, $serverListUrl, array $trustedPublicKeyList): void
     {
         $requestHeaders = [];
         if (false !== $filemTime = @filemtime($this->dataDir.'/server_list.json')) {

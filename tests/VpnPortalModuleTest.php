@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -48,10 +50,7 @@ class VpnPortalModuleTest extends TestCase
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
     }
 
-    /**
-     * @return void
-     */
-    public function testHomeGet()
+    public function testHomeGet(): void
     {
         $this->assertSame(
             [
@@ -67,10 +66,7 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testConfigurtionsPost()
+    public function testConfigurtionsPost(): void
     {
         $this->assertSame(
             trim(file_get_contents(sprintf('%s/data/foo_MyConfig.ovpn', __DIR__))),
@@ -84,10 +80,7 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testAccount()
+    public function testAccount(): void
     {
         $this->assertSame(
             [
@@ -110,10 +103,7 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testConfigurations()
+    public function testConfigurations(): void
     {
         $this->assertSame(
             [
@@ -138,10 +128,7 @@ class VpnPortalModuleTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testDisableConfirm()
+    public function testDisableConfirm(): void
     {
         $this->assertSame(
             302,

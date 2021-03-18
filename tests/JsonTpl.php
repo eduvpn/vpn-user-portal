@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -15,10 +17,8 @@ class JsonTpl implements TplInterface
 {
     /**
      * @param array<string,mixed> $templateVariables
-     *
-     * @return void
      */
-    public function addDefault(array $templateVariables)
+    public function addDefault(array $templateVariables): void
     {
     }
 

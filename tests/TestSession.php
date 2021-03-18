@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -16,10 +18,7 @@ class TestSession implements SessionInterface
     /** @var array */
     private $sessionData = [];
 
-    /**
-     * @return void
-     */
-    public function regenerate()
+    public function regenerate(): void
     {
         // NOP
     }
@@ -27,20 +26,16 @@ class TestSession implements SessionInterface
     /**
      * @param string $sessionKey
      * @param string $sessionValue
-     *
-     * @return void
      */
-    public function set($sessionKey, $sessionValue)
+    public function set($sessionKey, $sessionValue): void
     {
         $this->sessionData[$sessionKey] = $sessionValue;
     }
 
     /**
      * @param string $sessionKey
-     *
-     * @return void
      */
-    public function remove($sessionKey)
+    public function remove($sessionKey): void
     {
         if (\array_key_exists($sessionKey, $this->sessionData)) {
             unset($this->sessionData[$sessionKey]);
@@ -61,10 +56,7 @@ class TestSession implements SessionInterface
         return $this->sessionData[$sessionKey];
     }
 
-    /**
-     * @return void
-     */
-    public function destroy()
+    public function destroy(): void
     {
         $this->sessionData = [];
     }

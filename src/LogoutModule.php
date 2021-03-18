@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -37,10 +39,7 @@ class LogoutModule implements ServiceModuleInterface
         $this->returnParameter = $returnParameter;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->post(
             '/_logout',

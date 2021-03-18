@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -29,84 +31,57 @@ class StorageTest extends TestCase
         $this->storage->init();
     }
 
-    /**
-     * @return void
-     */
-    public function testValid()
+    public function testValid(): void
     {
         $this->storage->add('foo', 'bar');
         $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
 
-    /**
-     * @return void
-     */
-    public function testInvalidPass()
+    public function testInvalidPass(): void
     {
         $this->storage->add('foo', 'bar');
         $this->assertFalse($this->storage->isValid('foo', 'baz'));
     }
 
-    /**
-     * @return void
-     */
-    public function testInvalidUser()
+    public function testInvalidUser(): void
     {
         $this->storage->add('foo', 'bar');
         $this->assertFalse($this->storage->isValid('fop', 'bar'));
     }
 
-    /**
-     * @return void
-     */
-    public function testInvalidUserPass()
+    public function testInvalidUserPass(): void
     {
         $this->storage->add('foo', 'bar');
         $this->assertFalse($this->storage->isValid('fop', 'baz'));
     }
 
-    /**
-     * @return void
-     */
-    public function testUpdatePasswordExistingUser()
+    public function testUpdatePasswordExistingUser(): void
     {
         $this->storage->add('foo', 'bar');
         $this->assertTrue($this->storage->updatePassword('foo', 'baz'));
         $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'baz'));
     }
 
-    /**
-     * @return void
-     */
-    public function testUserExists()
+    public function testUserExists(): void
     {
         $this->storage->add('foo', 'bar');
         $this->assertTrue($this->storage->userExists('foo'));
     }
 
-    /**
-     * @return void
-     */
-    public function testUserNotExists()
+    public function testUserNotExists(): void
     {
         $this->storage->add('foo', 'bar');
         $this->assertFalse($this->storage->userExists('bar'));
     }
 
-    /**
-     * @return void
-     */
-    public function testUpdatePasswordNonExistingUser()
+    public function testUpdatePasswordNonExistingUser(): void
     {
         $this->storage->add('foo', 'bar');
         $this->assertFalse($this->storage->updatePassword('bar', 'baz'));
         $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
 
-    /**
-     * @return void
-     */
-    public function testHasAuthorization()
+    public function testHasAuthorization(): void
     {
         $this->assertFalse($this->storage->hasAuthorization('random_1'));
         $this->storage->storeAuthorization('foo', 'client_id', 'scope', 'random_1');

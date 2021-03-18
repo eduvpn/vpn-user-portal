@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -25,10 +27,7 @@ class FormPdoAuthentication extends FormAuthentication
         $this->storage = $storage;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         parent::init($service);
 

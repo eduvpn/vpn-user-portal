@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -38,10 +40,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
         $this->storage = $storage;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->get(
             '/two_factor_enroll',

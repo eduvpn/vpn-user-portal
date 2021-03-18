@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -15,10 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 class ForeignKeyListFetcherTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testFetch()
+    public function testFetch(): void
     {
         $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
         mkdir($tmpDir);
@@ -45,10 +44,7 @@ class ForeignKeyListFetcherTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testFetchRollback()
+    public function testFetchRollback(): void
     {
         try {
             $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(16)));

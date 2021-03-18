@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -22,23 +24,12 @@ class SeCookie implements CookieInterface
         $this->cookie = $cookie;
     }
 
-    /**
-     * @param string $cookieName
-     * @param string $cookieValue
-     *
-     * @return void
-     */
-    public function set($cookieName, $cookieValue)
+    public function set(string $cookieName, string $cookieValue): void
     {
         $this->cookie->set($cookieName, $cookieValue);
     }
 
-    /**
-     * @param string $cookieName
-     *
-     * @return string|null
-     */
-    public function get($cookieName)
+    public function get(string $cookieName): ?string
     {
         if (!\array_key_exists($cookieName, $_COOKIE)) {
             return null;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -28,10 +30,7 @@ class DisabledUserHook implements BeforeHookInterface
         $this->storage = $storage;
     }
 
-    /**
-     * @return void
-     */
-    public function executeBefore(Request $request, array $hookData)
+    public function executeBefore(Request $request, array $hookData): void
     {
         $whiteList = [
             'POST' => [

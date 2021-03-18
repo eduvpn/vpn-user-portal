@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -16,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 class MellonAuthenticationHookTest extends TestCase
 {
-    public function testBasic()
+    public function testBasic(): void
     {
         $config = new Config(
             [
@@ -36,7 +38,7 @@ class MellonAuthenticationHookTest extends TestCase
         $this->assertSame([], $userInfo->getPermissionList());
     }
 
-    public function testSerialization()
+    public function testSerialization(): void
     {
         $config = new Config(
             [
@@ -59,7 +61,7 @@ class MellonAuthenticationHookTest extends TestCase
         $this->assertSame([], $userInfo->getPermissionList());
     }
 
-    public function testPermissionList()
+    public function testPermissionList(): void
     {
         $config = new Config(
             [

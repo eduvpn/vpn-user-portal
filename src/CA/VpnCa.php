@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -97,10 +99,7 @@ class VpnCa implements CaInterface
         return $hasKey && $hasCert;
     }
 
-    /**
-     * @return void
-     */
-    private function init()
+    private function init(): void
     {
         if ($this->isInitialized()) {
             return;
@@ -178,20 +177,16 @@ class VpnCa implements CaInterface
 
     /**
      * @param string $cmdArgs
-     *
-     * @return void
      */
-    private function execVpnCa($cmdArgs)
+    private function execVpnCa($cmdArgs): void
     {
         self::exec(sprintf('CA_DIR=%s CA_KEY_TYPE=%s %s %s', $this->caDir, $this->caKeyType, $this->vpnCaPath, $cmdArgs));
     }
 
     /**
      * @param string $execCmd
-     *
-     * @return void
      */
-    private static function exec($execCmd)
+    private static function exec($execCmd): void
     {
         exec(
             sprintf('%s 2>&1', $execCmd),
@@ -206,10 +201,8 @@ class VpnCa implements CaInterface
 
     /**
      * @param string $fileName
-     *
-     * @return void
      */
-    private static function delete($fileName)
+    private static function delete($fileName): void
     {
         if (false === @unlink($fileName)) {
             throw new RuntimeException(sprintf('unable to delete "%s"', $fileName));

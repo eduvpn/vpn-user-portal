@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -39,10 +41,7 @@ class TwoFactorModule implements ServiceModuleInterface
         $this->tpl = $tpl;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->post(
             '/_two_factor/auth/verify/totp',

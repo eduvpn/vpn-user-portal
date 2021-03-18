@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -51,10 +53,7 @@ class BearerValidator
         $this->dateTime = new DateTime();
     }
 
-    /**
-     * @return void
-     */
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }

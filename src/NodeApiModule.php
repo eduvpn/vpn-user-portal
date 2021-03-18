@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -47,10 +49,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->dateTime = new DateTime();
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->post(
             '/add_server_certificate',
@@ -126,10 +125,7 @@ class NodeApiModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @return void
-     */
-    public function connect(Request $request)
+    public function connect(Request $request): void
     {
         $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
@@ -141,10 +137,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->storage->clientConnect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)));
     }
 
-    /**
-     * @return void
-     */
-    public function disconnect(Request $request)
+    public function disconnect(Request $request): void
     {
         $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
@@ -161,10 +154,8 @@ class NodeApiModule implements ServiceModuleInterface
     /**
      * @param string $profileId
      * @param string $commonName
-     *
-     * @return void
      */
-    private function verifyConnection($profileId, $commonName)
+    private function verifyConnection($profileId, $commonName): void
     {
         // verify status of certificate/user
         if (false === $userCertInfo = $this->storage->getUserCertificateInfo($commonName)) {
@@ -198,10 +189,8 @@ class NodeApiModule implements ServiceModuleInterface
     /**
      * @param string $profileId
      * @param string $userId
-     *
-     * @return void
      */
-    private function verifyAcl($profileId, $userId)
+    private function verifyAcl($profileId, $userId): void
     {
         $profileConfig = new ProfileConfig($this->config->s('vpnProfiles')->s($profileId));
         if ($profileConfig->enableAcl()) {

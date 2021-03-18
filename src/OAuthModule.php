@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -34,10 +36,7 @@ class OAuthModule implements ServiceModuleInterface
         $this->oauthServer = $oauthServer;
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->get(
             '/_oauth/authorize',

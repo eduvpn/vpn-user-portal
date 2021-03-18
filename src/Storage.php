@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -53,10 +55,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $this->dateTime = new DateTime();
     }
 
-    /**
-     * @return void
-     */
-    public function setDateTime(DateTime $dateTime)
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
@@ -91,10 +90,8 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
     /**
      * @param string $userId
      * @param string $userPass
-     *
-     * @return void
      */
-    public function add($userId, $userPass)
+    public function add($userId, $userPass): void
     {
         if ($this->userExists($userId)) {
             $this->updatePassword($userId, $userPass);
@@ -196,10 +193,8 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
      * @param string $clientId
      * @param string $scope
      * @param string $authKey
-     *
-     * @return void
      */
-    public function storeAuthorization($userId, $clientId, $scope, $authKey)
+    public function storeAuthorization($userId, $clientId, $scope, $authKey): void
     {
         // the "authorizations" table has the UNIQUE constraint on the
         // "auth_key" column, thus preventing multiple entries with the same
@@ -255,10 +250,8 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
 
     /**
      * @param string $authKey
-     *
-     * @return void
      */
-    public function deleteAuthorization($authKey)
+    public function deleteAuthorization($authKey): void
     {
         $stmt = $this->db->prepare(
             'DELETE FROM
@@ -271,18 +264,12 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt->execute();
     }
 
-    /**
-     * @return void
-     */
-    public function init()
+    public function init(): void
     {
         $this->migration->init();
     }
 
-    /**
-     * @return void
-     */
-    public function update()
+    public function update(): void
     {
         $this->migration->run();
     }
@@ -294,15 +281,15 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        user_id,
-        (SELECT otp_secret FROM otp WHERE user_id = users.user_id) AS otp_secret,
-        session_expires_at,
-        permission_list,
-        is_disabled
-    FROM
-        users
-SQL
+        SELECT
+            user_id,
+            (SELECT otp_secret FROM otp WHERE user_id = users.user_id) AS otp_secret,
+            session_expires_at,
+            permission_list,
+            is_disabled
+        FROM
+            users
+    SQL
         );
         $stmt->execute();
 
@@ -330,13 +317,13 @@ SQL
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        session_expires_at
-    FROM
-        users
-    WHERE
-        user_id = :user_id
-SQL
+        SELECT
+            session_expires_at
+        FROM
+            users
+        WHERE
+            user_id = :user_id
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -354,13 +341,13 @@ SQL
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        permission_list
-    FROM
-        users
-    WHERE
-        user_id = :user_id
-SQL
+        SELECT
+            permission_list
+        FROM
+            users
+        WHERE
+            user_id = :user_id
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -375,16 +362,16 @@ SQL
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        client_id,
-        COUNT(DISTINCT user_id) AS client_count
-    FROM
-        certificates
-    GROUP BY
-        client_id
-    ORDER BY
-        client_count DESC
-SQL
+        SELECT
+            client_id,
+            COUNT(DISTINCT user_id) AS client_count
+        FROM
+            certificates
+        GROUP BY
+            client_id
+        ORDER BY
+            client_count DESC
+    SQL
         );
         $stmt->execute();
 
@@ -400,19 +387,19 @@ SQL
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        u.user_id AS user_id,
-        u.is_disabled AS user_is_disabled,
-        c.display_name AS display_name,
-        c.valid_from,
-        c.valid_to,
-        c.client_id
-    FROM
-        users u, certificates c
-    WHERE
-        u.user_id = c.user_id AND
-        c.common_name = :common_name
-SQL
+        SELECT
+            u.user_id AS user_id,
+            u.is_disabled AS user_is_disabled,
+            c.display_name AS display_name,
+            c.valid_from,
+            c.valid_to,
+            c.client_id
+        FROM
+            users u, certificates c
+        WHERE
+            u.user_id = c.user_id AND
+            c.common_name = :common_name
+    SQL
         );
 
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
@@ -423,19 +410,17 @@ SQL
 
     /**
      * @param string $userId
-     *
-     * @return void
      */
-    public function deleteUser($userId)
+    public function deleteUser($userId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    DELETE FROM
-        users
-    WHERE
-        user_id = :user_id
-SQL
+        DELETE FROM
+            users
+        WHERE
+            user_id = :user_id
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -444,22 +429,20 @@ SQL
     /**
      * @param string        $userId
      * @param array<string> $permissionList
-     *
-     * @return void
      */
-    public function updateSessionInfo($userId, DateTime $sessionExpiresAt, array $permissionList)
+    public function updateSessionInfo($userId, DateTime $sessionExpiresAt, array $permissionList): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    UPDATE
-        users
-    SET
-        session_expires_at = :session_expires_at,
-        permission_list = :permission_list
-    WHERE
-        user_id = :user_id
-SQL
+        UPDATE
+            users
+        SET
+            session_expires_at = :session_expires_at,
+            permission_list = :permission_list
+        WHERE
+            user_id = :user_id
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':session_expires_at', $sessionExpiresAt->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -473,19 +456,17 @@ SQL
      * @param string      $commonName
      * @param string      $displayName
      * @param string|null $clientId
-     *
-     * @return void
      */
-    public function addCertificate($userId, $commonName, $displayName, DateTime $validFrom, DateTime $validTo, $clientId)
+    public function addCertificate($userId, $commonName, $displayName, DateTime $validFrom, DateTime $validTo, $clientId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    INSERT INTO certificates
-        (common_name, user_id, display_name, valid_from, valid_to, client_id)
-    VALUES
-        (:common_name, :user_id, :display_name, :valid_from, :valid_to, :client_id)
-SQL
+        INSERT INTO certificates
+            (common_name, user_id, display_name, valid_from, valid_to, client_id)
+        VALUES
+            (:common_name, :user_id, :display_name, :valid_from, :valid_to, :client_id)
+    SQL
         );
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -506,19 +487,19 @@ SQL
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        common_name,
-        display_name,
-        valid_from,
-        valid_to,
-        client_id
-    FROM
-        certificates
-    WHERE
-        user_id = :user_id
-    ORDER BY
-        valid_from DESC
-SQL
+        SELECT
+            common_name,
+            display_name,
+            valid_from,
+            valid_to,
+            client_id
+        FROM
+            certificates
+        WHERE
+            user_id = :user_id
+        ORDER BY
+            valid_from DESC
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -528,18 +509,16 @@ SQL
 
     /**
      * @param string $commonName
-     *
-     * @return void
      */
-    public function deleteCertificate($commonName)
+    public function deleteCertificate($commonName): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    DELETE FROM
-        certificates
-    WHERE
-        common_name = :common_name
-SQL
+        DELETE FROM
+            certificates
+        WHERE
+            common_name = :common_name
+    SQL
         );
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->execute();
@@ -548,20 +527,18 @@ SQL
     /**
      * @param string $userId
      * @param string $clientId
-     *
-     * @return void
      */
-    public function deleteCertificatesOfClientId($userId, $clientId)
+    public function deleteCertificatesOfClientId($userId, $clientId): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    DELETE FROM
-        certificates
-    WHERE
-        user_id = :user_id
-    AND
-        client_id = :client_id
-SQL
+        DELETE FROM
+            certificates
+        WHERE
+            user_id = :user_id
+        AND
+            client_id = :client_id
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
@@ -570,21 +547,19 @@ SQL
 
     /**
      * @param string $userId
-     *
-     * @return void
      */
-    public function disableUser($userId)
+    public function disableUser($userId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    UPDATE
-        users
-    SET
-        is_disabled = 1
-    WHERE
-        user_id = :user_id
-SQL
+        UPDATE
+            users
+        SET
+            is_disabled = 1
+        WHERE
+            user_id = :user_id
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -592,21 +567,19 @@ SQL
 
     /**
      * @param string $userId
-     *
-     * @return void
      */
-    public function enableUser($userId)
+    public function enableUser($userId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    UPDATE
-        users
-    SET
-        is_disabled = 0
-    WHERE
-        user_id = :user_id
-SQL
+        UPDATE
+            users
+        SET
+            is_disabled = 0
+        WHERE
+            user_id = :user_id
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -622,13 +595,13 @@ SQL
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        is_disabled
-    FROM
-        users
-    WHERE
-        user_id = :user_id
-SQL
+        SELECT
+            is_disabled
+        FROM
+            users
+        WHERE
+            user_id = :user_id
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -644,10 +617,8 @@ SQL
      * @param string $commonName
      * @param string $ip4
      * @param string $ip6
-     *
-     * @return void
      */
-    public function clientConnect($profileId, $commonName, $ip4, $ip6, DateTime $connectedAt)
+    public function clientConnect($profileId, $commonName, $ip4, $ip6, DateTime $connectedAt): void
     {
         // update "lost" client entries when a new client connects that gets
         // the IP address of an existing entry that was not "closed" yet. This
@@ -656,20 +627,20 @@ SQL
         // wants to connect and gets this exact same IP address...
         $stmt = $this->db->prepare(
 <<< 'SQL'
-        UPDATE
-            connection_log
-        SET
-            disconnected_at = :date_time,
-            client_lost = 1
-        WHERE
-            profile_id = :profile_id
-        AND
-            ip4 = :ip4
-        AND
-            ip6 = :ip6
-        AND
-            disconnected_at IS NULL
-SQL
+            UPDATE
+                connection_log
+            SET
+                disconnected_at = :date_time,
+                client_lost = 1
+            WHERE
+                profile_id = :profile_id
+            AND
+                ip4 = :ip4
+            AND
+                ip6 = :ip6
+            AND
+                disconnected_at IS NULL
+    SQL
         );
 
         $stmt->bindValue(':date_time', $connectedAt->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -683,34 +654,34 @@ SQL
         // certificate, or the user account may be deleted...
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    INSERT INTO connection_log
-        (
-            user_id,
-            profile_id,
-            common_name,
-            ip4,
-            ip6,
-            connected_at
-        )
-    VALUES
-        (
+        INSERT INTO connection_log
             (
-                SELECT
-                    u.user_id
-                FROM
-                    users u, certificates c
-                WHERE
-                    u.user_id = c.user_id
-                AND
-                    c.common_name = :common_name
-            ),
-            :profile_id,
-            :common_name,
-            :ip4,
-            :ip6,
-            :connected_at
-        )
-SQL
+                user_id,
+                profile_id,
+                common_name,
+                ip4,
+                ip6,
+                connected_at
+            )
+        VALUES
+            (
+                (
+                    SELECT
+                        u.user_id
+                    FROM
+                        users u, certificates c
+                    WHERE
+                        u.user_id = c.user_id
+                    AND
+                        c.common_name = :common_name
+                ),
+                :profile_id,
+                :common_name,
+                :ip4,
+                :ip6,
+                :connected_at
+            )
+    SQL
         );
 
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
@@ -727,29 +698,27 @@ SQL
      * @param string $ip4
      * @param string $ip6
      * @param int    $bytesTransferred
-     *
-     * @return void
      */
-    public function clientDisconnect($profileId, $commonName, $ip4, $ip6, DateTime $connectedAt, DateTime $disconnectedAt, $bytesTransferred)
+    public function clientDisconnect($profileId, $commonName, $ip4, $ip6, DateTime $connectedAt, DateTime $disconnectedAt, $bytesTransferred): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    UPDATE
-        connection_log
-    SET
-        disconnected_at = :disconnected_at,
-        bytes_transferred = :bytes_transferred
-    WHERE
-        profile_id = :profile_id
-    AND
-        common_name = :common_name
-    AND
-        ip4 = :ip4
-    AND
-        ip6 = :ip6
-    AND
-        connected_at = :connected_at
-SQL
+        UPDATE
+            connection_log
+        SET
+            disconnected_at = :disconnected_at,
+            bytes_transferred = :bytes_transferred
+        WHERE
+            profile_id = :profile_id
+        AND
+            common_name = :common_name
+        AND
+            ip4 = :ip4
+        AND
+            ip6 = :ip6
+        AND
+            connected_at = :connected_at
+    SQL
         );
 
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
@@ -771,28 +740,28 @@ SQL
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        l.user_id,
-        l.common_name,
-        l.profile_id,
-        l.ip4,
-        l.ip6,
-        l.connected_at,
-        l.disconnected_at,
-        l.bytes_transferred,
-        l.client_lost,
-        c.client_id AS client_id
-    FROM
-        connection_log l,
-        certificates c
-    WHERE
-        l.user_id = :user_id
-    AND
-        l.common_name = c.common_name
-    ORDER BY
-        l.connected_at
-    DESC
-SQL
+        SELECT
+            l.user_id,
+            l.common_name,
+            l.profile_id,
+            l.ip4,
+            l.ip6,
+            l.connected_at,
+            l.disconnected_at,
+            l.bytes_transferred,
+            l.client_lost,
+            c.client_id AS client_id
+        FROM
+            connection_log l,
+            certificates c
+        WHERE
+            l.user_id = :user_id
+        AND
+            l.common_name = c.common_name
+        ORDER BY
+            l.connected_at
+        DESC
+    SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -809,24 +778,24 @@ SQL
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        user_id,
-        profile_id,
-        common_name,
-        ip4,
-        ip6,
-        connected_at,
-        disconnected_at,
-        client_lost
-    FROM
-        connection_log
-    WHERE
-        (ip4 = :ip_address OR ip6 = :ip_address)
-    AND
-        connected_at < :date_time
-    AND
-        (disconnected_at > :date_time OR disconnected_at IS NULL)
-SQL
+        SELECT
+            user_id,
+            profile_id,
+            common_name,
+            ip4,
+            ip6,
+            connected_at,
+            disconnected_at,
+            client_lost
+        FROM
+            connection_log
+        WHERE
+            (ip4 = :ip_address OR ip6 = :ip_address)
+        AND
+            connected_at < :date_time
+        AND
+            (disconnected_at > :date_time OR disconnected_at IS NULL)
+    SQL
         );
         $stmt->bindValue(':ip_address', $ipAddress, PDO::PARAM_STR);
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -837,20 +806,17 @@ SQL
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @return void
-     */
-    public function cleanConnectionLog(DateTime $dateTime)
+    public function cleanConnectionLog(DateTime $dateTime): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    DELETE FROM
-        connection_log
-    WHERE
-        connected_at < :date_time
-    AND
-        disconnected_at IS NOT NULL
-SQL
+        DELETE FROM
+            connection_log
+        WHERE
+            connected_at < :date_time
+        AND
+            disconnected_at IS NOT NULL
+    SQL
         );
 
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -858,18 +824,15 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @return void
-     */
-    public function cleanUserMessages(DateTime $dateTime)
+    public function cleanUserMessages(DateTime $dateTime): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    DELETE FROM
-        user_messages
-    WHERE
-        date_time < :date_time
-SQL
+        DELETE FROM
+            user_messages
+        WHERE
+            date_time < :date_time
+    SQL
         );
 
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -887,15 +850,15 @@ SQL
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        id, type, message, date_time
-    FROM
-        user_messages
-    WHERE
-        user_id = :user_id
-    ORDER BY
-        date_time DESC
-SQL
+        SELECT
+            id, type, message, date_time
+        FROM
+            user_messages
+        WHERE
+            user_id = :user_id
+        ORDER BY
+            date_time DESC
+    SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -908,19 +871,17 @@ SQL
      * @param string $userId
      * @param string $type
      * @param string $message
-     *
-     * @return void
      */
-    public function addUserMessage($userId, $type, $message)
+    public function addUserMessage($userId, $type, $message): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    INSERT INTO user_messages
-        (user_id, type, message, date_time)
-    VALUES
-        (:user_id, :type, :message, :date_time)
-SQL
+        INSERT INTO user_messages
+            (user_id, type, message, date_time)
+        VALUES
+            (:user_id, :type, :message, :date_time)
+    SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -957,10 +918,8 @@ SQL
 
     /**
      * @param string $userId
-     *
-     * @return void
      */
-    public function setOtpSecret($userId, OtpInfo $otpInfo)
+    public function setOtpSecret($userId, OtpInfo $otpInfo): void
     {
         $stmt = $this->db->prepare('INSERT INTO otp (user_id, otp_secret, otp_hash_algorithm, otp_digits, totp_period) VALUES(:user_id, :otp_secret, :otp_hash_algorithm, :otp_digits, :totp_period)');
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -974,10 +933,8 @@ SQL
 
     /**
      * @param string $userId
-     *
-     * @return void
      */
-    public function deleteOtpSecret($userId)
+    public function deleteOtpSecret($userId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare('DELETE FROM otp WHERE user_id = :user_id');
@@ -1031,10 +988,7 @@ SQL
         return true;
     }
 
-    /**
-     * @return void
-     */
-    public function cleanExpiredCertificates(DateTime $dateTime)
+    public function cleanExpiredCertificates(DateTime $dateTime): void
     {
         $stmt = $this->db->prepare('DELETE FROM certificates WHERE valid_to < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -1042,10 +996,7 @@ SQL
         $stmt->execute();
     }
 
-    /**
-     * @return void
-     */
-    public function cleanOtpLog(DateTime $dateTime)
+    public function cleanOtpLog(DateTime $dateTime): void
     {
         $stmt = $this->db->prepare('DELETE FROM otp_log WHERE date_time < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -1063,19 +1014,17 @@ SQL
 
     /**
      * @param string $userId
-     *
-     * @return void
      */
-    private function addUser($userId)
+    private function addUser($userId): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
-    SELECT
-        COUNT(*)
-    FROM
-        users
-    WHERE user_id = :user_id
-SQL
+        SELECT
+            COUNT(*)
+        FROM
+            users
+        WHERE user_id = :user_id
+    SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -1085,20 +1034,20 @@ SQL
             // user does not exist yet
             $stmt = $this->db->prepare(
 <<< 'SQL'
-    INSERT INTO
-        users (
-            user_id,
-            session_expires_at,
-            permission_list,
-            is_disabled
+        INSERT INTO
+            users (
+                user_id,
+                session_expires_at,
+                permission_list,
+                is_disabled
+            )
+        VALUES (
+            :user_id,
+            :session_expires_at,
+            :permission_list,
+            :is_disabled
         )
-    VALUES (
-        :user_id,
-        :session_expires_at,
-        :permission_list,
-        :is_disabled
-    )
-SQL
+    SQL
             );
             $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
             $stmt->bindValue(':session_expires_at', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);

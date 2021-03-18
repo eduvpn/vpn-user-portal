@@ -1,9 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * eduVPN - End-user friendly VPN.
+ *
+ * Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
+ * SPDX-License-Identifier: AGPL-3.0+
+ */
+
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules(
         [
+            '@PHP80Migration' => true,
+        '@PHP80Migration:risky' => true,
             '@Symfony' => true,
             '@Symfony:risky' => true,
             'ordered_imports' => true,
@@ -21,11 +32,11 @@ return PhpCsFixer\Config::create()
             'php_unit_strict' => true,
             'header_comment' => [
                 'header' => <<< 'EOD'
-eduVPN - End-user friendly VPN.
+                    eduVPN - End-user friendly VPN.
 
-Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
-SPDX-License-Identifier: AGPL-3.0+
-EOD
+                    Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
+                    SPDX-License-Identifier: AGPL-3.0+
+                    EOD
              ],
         ]
     )

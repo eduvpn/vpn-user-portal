@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -66,10 +68,7 @@ class BearerValidatorTest extends TestCase
         $this->bearerValidator->setDateTime($this->dateTime);
     }
 
-    /**
-     * @return void
-     */
-    public function testLocalToken()
+    public function testLocalToken(): void
     {
         $signer = new PublicSigner($this->secretKey->getPublicKey(), $this->secretKey);
         $bearerToken = $signer->sign(
@@ -91,10 +90,7 @@ class BearerValidatorTest extends TestCase
         $this->assertTrue($accessTokenInfo->getIsLocal());
     }
 
-    /**
-     * @return void
-     */
-    public function testRemoteToken()
+    public function testRemoteToken(): void
     {
         $signer = new PublicSigner($this->remoteSecretKey->getPublicKey(), $this->remoteSecretKey);
         $bearerToken = $signer->sign(

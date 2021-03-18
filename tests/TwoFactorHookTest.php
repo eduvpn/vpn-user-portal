@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -18,10 +20,7 @@ use PHPUnit\Framework\TestCase;
 
 class TwoFactorHookTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testAlreadyVerified()
+    public function testAlreadyVerified(): void
     {
         $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');
         $session = new TestSession();
@@ -32,10 +31,7 @@ class TwoFactorHookTest extends TestCase
         $this->assertTrue($formAuthentication->executeBefore($request, ['auth' => new UserInfo('foo', [])]));
     }
 
-    /**
-     * @return void
-     */
-    public function testNotRequiredEnrolled()
+    public function testNotRequiredEnrolled(): void
     {
         $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');
         $session = new TestSession();
@@ -46,10 +42,7 @@ class TwoFactorHookTest extends TestCase
         $this->assertSame('{"twoFactorTotp":{"_two_factor_user_id":"foo","_two_factor_auth_invalid":false,"_two_factor_auth_redirect_to":"http:\/\/vpn.example\/"}}', $response->getBody());
     }
 
-    /**
-     * @return void
-     */
-    public function testNotRequiredNotEnrolled()
+    public function testNotRequiredNotEnrolled(): void
     {
         $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');
         $session = new TestSession();
@@ -59,10 +52,7 @@ class TwoFactorHookTest extends TestCase
         $this->assertTrue($formAuthentication->executeBefore($request, ['auth' => new UserInfo('bar', [])]));
     }
 
-    /**
-     * @return void
-     */
-    public function testRequireTwoFactorNotEnrolled()
+    public function testRequireTwoFactorNotEnrolled(): void
     {
         $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');
         $session = new TestSession();
@@ -75,10 +65,7 @@ class TwoFactorHookTest extends TestCase
         $this->assertSame('http://vpn.example/two_factor_enroll', $response->getHeader('Location'));
     }
 
-    /**
-     * @return void
-     */
-    public function testNotBoundToAuth()
+    public function testNotBoundToAuth(): void
     {
         try {
             // if you have access to two accounts using e.g. MellonAuth you could

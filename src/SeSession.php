@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -23,49 +25,27 @@ class SeSession implements SessionInterface
         $this->session = $session;
     }
 
-    /**
-     * @return void
-     */
-    public function regenerate()
+    public function regenerate(): void
     {
         $this->session->regenerate();
     }
 
-    /**
-     * @param string $sessionKey
-     *
-     * @return string|null
-     */
-    public function get($sessionKey)
+    public function get(string $sessionKey): ?string
     {
         return $this->session->get($sessionKey);
     }
 
-    /**
-     * @param string $sessionKey
-     * @param string $sessionValue
-     *
-     * @return void
-     */
-    public function set($sessionKey, $sessionValue)
+    public function set(string $sessionKey, string $sessionValue): void
     {
         $this->session->set($sessionKey, $sessionValue);
     }
 
-    /**
-     * @param string $sessionKey
-     *
-     * @return void
-     */
-    public function remove($sessionKey)
+    public function remove(string $sessionKey): void
     {
         $this->session->remove($sessionKey);
     }
 
-    /**
-     * @return void
-     */
-    public function destroy()
+    public function destroy(): void
     {
         $this->session->destroy();
     }

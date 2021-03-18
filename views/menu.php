@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 $menuItems = [];
 $menuItems['home'] = $this->t('Home');
 $menuItems['configurations'] = $this->t('Configurations');

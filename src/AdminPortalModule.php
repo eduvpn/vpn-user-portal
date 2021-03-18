@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -65,10 +67,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->dateTime = new DateTime();
     }
 
-    /**
-     * @return void
-     */
-    public function init(Service $service)
+    public function init(Service $service): void
     {
         $service->get(
             '/connections',
@@ -475,7 +474,7 @@ class AdminPortalModule implements ServiceModuleInterface
     {
         $maxConcurrentConnectionLimitList = [];
         foreach ($profileList as $profileId => $profileData) {
-            list($ipFour, $ipFourPrefix) = explode('/', $profileData->range());
+            [$ipFour, $ipFourPrefix] = explode('/', $profileData->range());
             $vpnProtoPortsCount = \count($profileData->vpnProtoPorts());
             $maxConcurrentConnectionLimitList[$profileId] = 2 ** (32 - (int) $ipFourPrefix) - 4 * $vpnProtoPortsCount;
         }

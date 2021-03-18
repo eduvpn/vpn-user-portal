@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'connections', 'pageTitle' => $this->t('Connections')]); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'connections', 'pageTitle' => $this->t('Connections')]); ?>
 <?php $this->start('content'); ?>
     <table class="tbl">
         <thead>

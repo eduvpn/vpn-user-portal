@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -16,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 class ShibAuthenticationHookTest extends TestCase
 {
-    public function testBasic()
+    public function testBasic(): void
     {
         $config = new Config(
             [
@@ -36,7 +38,7 @@ class ShibAuthenticationHookTest extends TestCase
         $this->assertSame([], $userInfo->getPermissionList());
     }
 
-    public function testPermissionList()
+    public function testPermissionList(): void
     {
         $config = new Config(
             [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -117,10 +119,8 @@ class DaemonWrapper
 
     /**
      * @param string $commonName
-     *
-     * @return void
      */
-    public function killClient($commonName)
+    public function killClient($commonName): void
     {
         $nodeIpPortList = [];
         foreach ($this->config->requireArray('vpnProfiles') as $profileData) {

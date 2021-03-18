@@ -1,4 +1,5 @@
-<?php $this->layout('base', ['activeItem' => 'log', 'pageTitle' => $this->t('Log')]); ?>
+<?php declare(strict_types=1);
+$this->layout('base', ['activeItem' => 'log', 'pageTitle' => $this->t('Log')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Search'); ?></h2>
     <p>

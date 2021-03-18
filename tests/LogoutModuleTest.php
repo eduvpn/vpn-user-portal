@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -15,10 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 class LogoutModuleTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testVerifyLogout()
+    public function testVerifyLogout(): void
     {
         $session = new TestSession();
         $service = new Service();
@@ -38,10 +37,7 @@ class LogoutModuleTest extends TestCase
         $this->assertSame('http://example.org/foo', $response->getHeader('Location'));
     }
 
-    /**
-     * @return void
-     */
-    public function testVerifyMellonLogoutWithUrl()
+    public function testVerifyMellonLogoutWithUrl(): void
     {
         $session = new TestSession();
         $service = new Service();

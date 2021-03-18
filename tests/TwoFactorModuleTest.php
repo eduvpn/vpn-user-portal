@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -18,10 +20,7 @@ use PHPUnit\Framework\TestCase;
 
 class TwoFactorModuleTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testVerifyCorrect()
+    public function testVerifyCorrect(): void
     {
         $session = new TestSession();
         $tpl = new TestTpl();
@@ -55,10 +54,7 @@ class TwoFactorModuleTest extends TestCase
         $this->assertSame('http://vpn.example/account', $response->getHeader('Location'));
     }
 
-    /**
-     * @return void
-     */
-    public function testVerifyIncorrect()
+    public function testVerifyIncorrect(): void
     {
         $session = new TestSession();
         $tpl = new TestTpl();
