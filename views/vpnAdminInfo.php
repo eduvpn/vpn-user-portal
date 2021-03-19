@@ -33,6 +33,13 @@ $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')])
             <tr>
                 <th></th>
                 <td>
+<?php if ('openvpn' === $profileConfig->vpnType()): ?>
+        <span class="plain"><?=$this->t('OpenVPN'); ?></span>
+<?php else: ?>
+        <span class="plain"><?=$this->t('WireGuard'); ?></span>
+<?php endif; ?>
+
+<?php endif; ?>
 
 <?php if ($profileConfig->defaultGateway()): ?>
                     <span class="plain"><?=$this->t('Default Gateway'); ?></span>
