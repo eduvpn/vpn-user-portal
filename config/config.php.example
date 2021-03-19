@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * eduVPN - End-user friendly VPN.
+ *
+ * Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
+ * SPDX-License-Identifier: AGPL-3.0+
+ */
+
 return [
     // override default branding style (templates/CSS) with custom style.
     // NOTE: the styling/branding MUST be installed for this to work!
@@ -57,8 +66,8 @@ return [
 //        'bindDnTemplate' => '{{UID}}',
 
 //        // when the user does NOT specify the realm, e.g. only "fkooman", this
-//        // option will add "@example.org" to the "User Name" as specified on 
-//        // the login page. If and only if there is no "@" in the provided 
+//        // option will add "@example.org" to the "User Name" as specified on
+//        // the login page. If and only if there is no "@" in the provided
 //        // "User Name".!
 //        'addRealm' => 'example.org',
 //        // -b "dc=example,dc=org" \
@@ -68,7 +77,7 @@ return [
 //        // to normalize the entered user ID, specify the attribute you want to
 //        // use to identify the user in the VPN server
 //        'userIdAttribute' => 'userPrincipalName',
-//        
+//
 //        // *** Search First ***
 //        // -H ldap://server.ipa.test \
 //        'ldapUri' => 'ldap://server.ipa.test',
@@ -79,9 +88,9 @@ return [
 //        // to normalize the entered user ID, specify the attribute you want to
 //        // use to identify the user in the VPN server
 //        'userIdAttribute' => 'uidNumber',
-//        // in vpn-user-portal >= 2.3.8 you can also perform a bind before 
+//        // in vpn-user-portal >= 2.3.8 you can also perform a bind before
 //        // searching as not all LDAP servers allow anonymous bind to search the
-//        // directory. If at all possible, allow anonymous bind on your LDAP 
+//        // directory. If at all possible, allow anonymous bind on your LDAP
 //        // server from the VPN server. NEVER USE THE LDAP ADMIN ACCOUNT HERE!
 //        //'searchBindDn' => 'cn=Anonymous Search User,dc=example,dc=org',
 //        //'searchBindPass' => 's3r3t',
@@ -160,7 +169,6 @@ return [
 
     'enableTwoFactor' => false,
     'requireTwoFactor' => false,
-    
 
     // Require Users to use 2FA
     // DEFAULT = false
@@ -209,6 +217,11 @@ return [
     // List of VPN profiles
     'vpnProfiles' => [
         'default' => [
+            // The type of the VPN
+            // REQUIRED
+            'vpnType' => 'openvpn',
+            //'vpnType' => 'wireguard',
+
             // The number of this profile, every profile per instance has a
             // unique number
             // REQUIRED
