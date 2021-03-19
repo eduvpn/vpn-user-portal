@@ -39,8 +39,6 @@ $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')])
         <span class="plain"><?=$this->t('WireGuard'); ?></span>
 <?php endif; ?>
 
-<?php endif; ?>
-
 <?php if ($profileConfig->defaultGateway()): ?>
                     <span class="plain"><?=$this->t('Default Gateway'); ?></span>
 <?php endif; ?>
