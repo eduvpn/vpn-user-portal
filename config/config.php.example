@@ -1,14 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * eduVPN - End-user friendly VPN.
- *
- * Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
- * SPDX-License-Identifier: AGPL-3.0+
- */
-
 return [
     // override default branding style (templates/CSS) with custom style.
     // NOTE: the styling/branding MUST be installed for this to work!
@@ -167,8 +158,8 @@ return [
     // XXX this should also not be enable by default?
     'adminUserIdList' => ['admin'],
 
-    'enableTwoFactor' => false,
-    'requireTwoFactor' => false,
+    //'enableTwoFactor' => false,
+    //'requireTwoFactor' => false,
 
     // Require Users to use 2FA
     // DEFAULT = false

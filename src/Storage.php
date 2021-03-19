@@ -61,12 +61,9 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
     }
 
     /**
-     * @param string $authUser
-     * @param string $authPass
-     *
      * @return false|UserInfo
      */
-    public function isValid($authUser, $authPass)
+    public function isValid(string $authUser, string $authPass)
     {
         $stmt = $this->db->prepare(
             'SELECT
