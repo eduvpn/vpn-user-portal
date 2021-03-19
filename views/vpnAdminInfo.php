@@ -120,6 +120,7 @@ $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')])
             </tr>
 <?php endif; ?>
 
+<?php if ('openvpn' === $profileConfig->vpnType()): ?>
 <?php if (0 !== count($profileConfig->vpnProtoPorts())): ?>
             <tr><th><?=$this->t('Protocols/Ports'); ?></th>
             <td>
@@ -129,7 +130,9 @@ $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')])
             </td>
             </tr>
 <?php endif; ?>
+<?php endif; ?>
 
+<?php if ('openvpn' === $profileConfig->vpnType()): ?>
 <?php if (0 !== count($profileConfig->exposedVpnProtoPorts())): ?>
             <tr><th><?=$this->t('Offered Protocols/Ports'); ?></th>
             <td>
@@ -138,6 +141,7 @@ $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')])
 <?php endforeach; ?>
             </td>
             </tr>
+<?php endif; ?>
 <?php endif; ?>
         </table>
 <?php endforeach; ?>
