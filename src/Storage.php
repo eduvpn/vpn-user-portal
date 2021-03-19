@@ -24,7 +24,7 @@ use PDO;
 
 class Storage implements CredentialValidatorInterface, StorageInterface, OtpStorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2021031501';
+    const CURRENT_SCHEMA_VERSION = '2021031901';
 
     /** @var \PDO */
     private $db;
@@ -85,6 +85,148 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         }
 
         return false;
+    }
+
+    public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTime $createdAt, ?string $clientId): void
+    {
+        $stmt = $this->db->prepare(
+            'INSERT INTO wg_peers (
+                user_id,
+                profile_id,
+                display_name,
+                public_key,
+                ip_four,
+                ip_six,
+                created_at,
+                client_id
+             )
+             VALUES(
+                :user_id,
+                :profile_id,
+                :display_name,
+                :public_key,
+                :ip_four,
+                :ip_six,
+                :created_at,
+                :client_id
+             )'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->bindValue(':display_name', $displayName, PDO::PARAM_STR);
+        $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
+        $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
+        $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
+        $stmt->bindValue(':created_at', $createdAt->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR | PDO::PARAM_NULL);
+        $stmt->execute();
+    }
+
+    public function wgRemovePeer(string $userId, string $publicKey): void
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM
+                wg_peers
+             WHERE
+                user_id = :user_id
+             AND
+                public_key = :public_key'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function wgGetAllocatedIpFourAddresses(): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                ip_four
+             FROM wg_peers'
+        );
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * @return array<array{display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTime,client_id:string|null}>
+     */
+    public function wgGetPeers(string $userId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                profile_id,
+                display_name,
+                public_key,
+                ip_four,
+                ip_six,
+                created_at,
+                client_id
+             FROM wg_peers
+             WHERE
+                user_id = :user_id'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $wgPeers = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $wgPeers[] = [
+                'profile_id' => (string) $resultRow['profile_id'],
+                'display_name' => (string) $resultRow['display_name'],
+                'public_key' => (string) $resultRow['public_key'],
+                'ip_four' => (string) $resultRow['ip_four'],
+                'ip_six' => (string) $resultRow['ip_six'],
+                'created_at' => new DateTime($resultRow['created_at']),
+                'client_id' => null === $resultRow['client_id'] ? null : (string) $resultRow['client_id'],
+            ];
+        }
+
+        return $wgPeers;
+    }
+
+    /**
+     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTime,client_id:string|null}>
+     */
+    public function wgGetAllPeers(string $profileId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                user_id,
+                display_name,
+                public_key,
+                ip_four,
+                ip_six,
+                created_at,
+                client_id
+             FROM
+                wg_peers
+             WHERE
+                profile_id = :profile_id'
+        );
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->execute();
+        $wgPeers = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $wgPeers[] = [
+                'user_id' => (string) $resultRow['user_id'],
+                'display_name' => (string) $resultRow['display_name'],
+                'public_key' => (string) $resultRow['public_key'],
+                'ip_four' => (string) $resultRow['ip_four'],
+                'ip_six' => (string) $resultRow['ip_six'],
+                'created_at' => new DateTime($resultRow['created_at']),
+                'client_id' => null === $resultRow['client_id'] ? null : (string) $resultRow['client_id'],
+            ];
+        }
+
+        return $wgPeers;
     }
 
     /**

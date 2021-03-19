@@ -26,6 +26,16 @@ CREATE TABLE certificates(
   client_id VARCHAR(255) DEFAULT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS wg_peers (
+    profile_id VARCHAR(255) NOT NULL,
+    display_name VARCHAR(255) NOT NULL,
+    public_key VARCHAR(255) NOT NULL,
+    ip_four VARCHAR(255) NOT NULL UNIQUE,
+    ip_six VARCHAR(255) NOT NULL UNIQUE,
+    created_at VARCHAR(255) NOT NULL,
+    client_id VARCHAR(255) DEFAULT NULL,
+    user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+);
 CREATE TABLE connection_log(
   user_id VARCHAR(255) NOT NULL,
   common_name VARCHAR(255) NOT NULL,
