@@ -33,24 +33,23 @@ $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Accou
             <?=$this->t('The list of applications you authorized to create a VPN connection.'); ?>
         </p>
         <summary><?=$this->t('Authorized Applications'); ?></summary>
-<?php if (0 === count($authorizedClients)): ?>
+<?php if (0 === count($authorizedClientInfoList)): ?>
         <p class="plain">
             <?=$this->t('No authorized applications yet.'); ?>
         </p>
 <?php else: ?>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Authorized'); ?> (<?=$this->e(date('T')); ?>)</th><th></th></tr>
+                <tr><th><?=$this->t('Name'); ?></th><th></th></tr>
             </thead>
             <tbody>
-<?php foreach ($authorizedClients as $client): ?>
+<?php foreach ($authorizedClientInfoList as $authorizedClientInfo): ?>
                 <tr>
-                    <td><span title="<?=$this->e($client->clientId()); ?>"><?php if (null === $client->displayName()): ?><?=$this->e($client->clientId()); ?><?php else: ?><em><?=$this->e($client->displayName()); ?></em><?php endif; ?></span></td>
-                    <td><?=$this->d($client->authTime()); ?></td>
+                    <td><span title="<?=$this->e($authorizedClientInfo['client_id']); ?>"><?=$this->e($authorizedClientInfo['display_name']); ?></span></td>
                     <td class="text-right">
                         <form class="frm" method="post" action="removeClientAuthorization">
-                            <input type="hidden" name="client_id" value="<?=$this->e($client->clientId()); ?>">
-                            <input type="hidden" name="auth_key" value="<?=$this->e($client->authKey()); ?>">
+                            <input type="hidden" name="client_id" value="<?=$this->e($authorizedClientInfo['client_id']); ?>">
+                            <input type="hidden" name="auth_key" value="<?=$this->e($authorizedClientInfo['auth_key']); ?>">
                             <button class="warning"><?=$this->t('Revoke'); ?></button>
                         </form>
                     </td>

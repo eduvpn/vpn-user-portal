@@ -212,13 +212,15 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userInfo = $hookData['auth'];
                 $hasTotpSecret = false !== $this->storage->getOtpSecret($userInfo->getUserId());
                 $userPermissions = $userInfo->getPermissionList();
-                $authorizedClients = $this->storage->getAuthorizations($userInfo->getUserId());
-                foreach ($authorizedClients as $k => $authorizedClient) {
-                    // skip over unregistered client authorizations
-                    if (null === $clientInfo = $this->clientDb->get($authorizedClient->clientId())) {
-                        unset($authorizedClients[$k]);
-
-                        continue;
+                $authorizationList = $this->storage->getAuthorizations($userInfo->getUserId());
+                $authorizedClientInfoList = [];
+                foreach ($authorizationList as $authorization) {
+                    if (null !== $clientInfo = $this->clientDb->get($authorization->clientId())) {
+                        $authorizedClientInfoList[] = [
+                            'auth_key' => $authorization->authKey(),
+                            'client_id' => $authorization->clientId(),
+                            'display_name' => null !== $clientInfo->displayName() ? $clientInfo->displayName() : $authorization->clientId(),
+                        ];
                     }
                 }
                 $userMessages = $this->storage->userMessages($userInfo->getUserId());
@@ -240,7 +242,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'hasTotpSecret' => $hasTotpSecret,
                             'userInfo' => $userInfo,
                             'userPermissions' => $userPermissions,
-                            'authorizedClients' => $authorizedClients,
+                            'authorizedClientInfoList' => $authorizedClientInfoList,
                             'userMessages' => $userMessages,
                             'userConnectionLogEntries' => $userConnectionLogEntries,
                             'idNameMapping' => $idNameMapping,
