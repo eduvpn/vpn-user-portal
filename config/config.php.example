@@ -185,18 +185,8 @@ return [
 //    ],
 
 //    'Api' => [
-//        //'consumerList' => [
-//        //    '_CLIENT_ID_' => [
-//        //        'redirect_uri_list' => [
-//        //            '_REDIRECT_URI_1_',
-//        //            '_REDIRECT_URI_2_',
-//        //        ],
-//        //        'display_name' => '_DISPLAY_NAME_',
-//        //        'require_approval' => true,
-//        //        'client_secret' => '_SECRET_',
-//        //    ],
-//        //],
-
+//        // expire tokens after 1 hour (default)
+//        //'tokenExpiry' => 'PT1H',
 //        // Enable Remote Access, i.e. users from other VPN servers listed in
 //        // the below remoteAccessList files to access this VPN server through
 //        // the OAuth API
