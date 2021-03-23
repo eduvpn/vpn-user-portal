@@ -13,7 +13,6 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
-use fkooman\OAuth\Server\OAuthServer;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\CookieOptions;
 use fkooman\SeCookie\Session;
@@ -34,14 +33,15 @@ use LC\Portal\AdminHook;
 use LC\Portal\AdminPortalModule;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\ClientCertAuthentication;
-use LC\Portal\ClientFetcher;
 use LC\Portal\DisabledUserHook;
 use LC\Portal\FormLdapAuthentication;
 use LC\Portal\FormPdoAuthentication;
 use LC\Portal\FormRadiusAuthentication;
 use LC\Portal\LogoutModule;
 use LC\Portal\MellonAuthentication;
+use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
+use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OAuthModule;
 use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
@@ -168,8 +168,7 @@ try {
 
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-        sprintf('%s/schema', $baseDir),
-        new DateInterval($sessionExpiry)
+        sprintf('%s/schema', $baseDir)
     );
     $storage->update();
 
@@ -281,8 +280,6 @@ try {
         )
     );
 
-    $clientFetcher = new ClientFetcher($config);
-
     $vpnCaDir = sprintf('%s/ca', $dataDir);
     $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
     $ca = new VpnCa($vpnCaDir, 'EdDSA', $vpnCaPath);
@@ -294,6 +291,8 @@ try {
         $logger
     );
 
+    $oauthClientDb = new ClientDb();
+
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $config,
@@ -304,7 +303,7 @@ try {
         new TlsCrypt($dataDir),
         new Random(),
         $ca,
-        $clientFetcher
+        $oauthClientDb
     );
     $service->addModule($vpnPortalModule);
 
@@ -329,12 +328,14 @@ try {
             sprintf('%s/config/oauth.key', $baseDir)
         )
     );
-    $oauthServer = new OAuthServer(
+    $oauthServer = new VpnOAuthServer(
         $storage,
-        $clientFetcher,
+        $oauthClientDb,
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );
     $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
+    $oauthServer->setRefreshTokenExpiry(new DateInterval($sessionExpiry));
+
     $oauthModule = new OAuthModule(
         $tpl,
         $oauthServer

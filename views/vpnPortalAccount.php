@@ -45,12 +45,12 @@ $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Accou
             <tbody>
 <?php foreach ($authorizedClients as $client): ?>
                 <tr>
-                    <td><span title="<?=$this->e($client['client_id']); ?>"><?php if ($client['display_name']): ?><?=$this->e($client['display_name']); ?><?php else: ?><em><?=$this->t('Unregistered Client'); ?></em><?php endif; ?></span></td>
-                    <td><?=$this->d($client['auth_time']); ?></td>
+                    <td><span title="<?=$this->e($client->clientId()); ?>"><?php if (null === $client->displayName()): ?><?=$this->e($client->clientId()); ?><?php else: ?><em><?=$this->e($client->displayName()); ?></em><?php endif; ?></span></td>
+                    <td><?=$this->d($client->authTime()); ?></td>
                     <td class="text-right">
                         <form class="frm" method="post" action="removeClientAuthorization">
-                            <input type="hidden" name="client_id" value="<?=$this->e($client['client_id']); ?>">
-                            <input type="hidden" name="auth_key" value="<?=$this->e($client['auth_key']); ?>">
+                            <input type="hidden" name="client_id" value="<?=$this->e($client->clientId()); ?>">
+                            <input type="hidden" name="auth_key" value="<?=$this->e($client->authKey()); ?>">
                             <button class="warning"><?=$this->t('Revoke'); ?></button>
                         </form>
                     </td>

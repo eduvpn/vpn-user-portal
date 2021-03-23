@@ -80,7 +80,7 @@ class NodeApiModule implements ServiceModuleInterface
                     return new ApiResponse('connect');
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
-                        $this->storage->addUserMessage($userId, 'notification', '[CONNECT] ERROR: '.$e->getMessage());
+                        $this->storage->addUserMessage($userId, 'notification', '[CONNECT] ERROR: '.$e->getMessage(), $this->dateTime);
                     }
 
                     return new ApiErrorResponse('connect', '[CONNECT] ERROR: '.$e->getMessage());
@@ -100,7 +100,7 @@ class NodeApiModule implements ServiceModuleInterface
                     return new ApiResponse('disconnect');
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
-                        $this->storage->addUserMessage($userId, 'notification', '[DISCONNECT] ERROR: '.$e->getMessage());
+                        $this->storage->addUserMessage($userId, 'notification', '[DISCONNECT] ERROR: '.$e->getMessage(), $this->dateTime);
                     }
 
                     return new ApiErrorResponse('disconnect', '[DISCONNECT] ERROR: '.$e->getMessage());

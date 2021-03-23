@@ -87,7 +87,8 @@ class UpdateSessionInfoHook implements BeforeHookInterface
                 'updated session info {permission_list: [%s], expires_at: %s}',
                 implode(' ', $userInfo->getPermissionList()),
                 $sessionExpiresAt->format(DateTime::ATOM)
-            )
+            ),
+            $this->dateTime
         );
         $this->session->set('_update_session_info', 'yes');
     }

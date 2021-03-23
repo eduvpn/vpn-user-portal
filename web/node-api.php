@@ -45,8 +45,7 @@ try {
         new PDO(
             sprintf('sqlite://%s/db.sqlite', $dataDir)
         ),
-        sprintf('%s/schema', $baseDir),
-        new DateInterval('P90D')
+        sprintf('%s/schema', $baseDir)
     );
     $storage->update();
     $vpnCaDir = sprintf('%s/ca', $dataDir);

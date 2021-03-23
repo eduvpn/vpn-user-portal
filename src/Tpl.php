@@ -15,6 +15,7 @@ use DateTime;
 use DateTimeZone;
 use LC\Common\TplInterface;
 use LC\Portal\Exception\TplException;
+use LC\Portal\OAuth\ClientDb;
 use RangeException;
 
 class Tpl implements TplInterface
@@ -136,11 +137,13 @@ class Tpl implements TplInterface
      */
     public function clientIdToDisplayName($clientId)
     {
-        if (false === $clientInfo = OAuthClientInfo::getClient($clientId)) {
+        // XXX this should really not be here!
+        $clientDb = new ClientDb();
+        if (null === $clientInfo = $clientDb->get($clientId)) {
             return $this->e($clientId);
         }
 
-        if (null === $displayName = $clientInfo->getDisplayName()) {
+        if (null === $displayName = $clientInfo->displayName()) {
             return $this->e($clientId);
         }
 

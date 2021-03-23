@@ -1,6 +1,9 @@
 <?php
 
 return [
+
+
+
     // override default branding style (templates/CSS) with custom style.
     // NOTE: the styling/branding MUST be installed for this to work!
     // DEFAULT = null

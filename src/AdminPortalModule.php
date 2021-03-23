@@ -227,20 +227,21 @@ class AdminPortalModule implements ServiceModuleInterface
 
                         // disable the user
                         $this->storage->disableUser($userId);
-                        $this->storage->addUserMessage($userId, 'notification', 'account disabled');
+                        $this->storage->addUserMessage($userId, 'notification', 'account disabled', $this->dateTime);
 
                         // * revoke all OAuth clients of this user
                         // * delete all client certificates associated with the OAuth clients of this user
                         $clientAuthorizations = $this->storage->getAuthorizations($userId);
                         foreach ($clientAuthorizations as $clientAuthorization) {
-                            $this->storage->deleteAuthorization($clientAuthorization['auth_key']);
+                            $this->storage->deleteAuthorization($clientAuthorization->authKey());
                             $this->storage->addUserMessage(
                                 $userId,
                                 'notification',
-                                sprintf('certificates for OAuth client "%s" deleted', $clientAuthorization['client_id'])
+                                sprintf('certificates for OAuth client "%s" deleted', $clientAuthorization->clientId()),
+                                $this->dateTime
                             );
 
-                            $this->storage->deleteCertificatesOfClientId($userId, $clientAuthorization['client_id']);
+                            $this->storage->deleteCertificatesOfClientId($userId, $clientAuthorization->clientId());
                         }
 
                         // kill all active connections for this user
@@ -253,13 +254,13 @@ class AdminPortalModule implements ServiceModuleInterface
 
                     case 'enableUser':
                         $this->storage->enableUser($userId);
-                        $this->storage->addUserMessage($userId, 'notification', 'account (re)enabled');
+                        $this->storage->addUserMessage($userId, 'notification', 'account (re)enabled', $this->dateTime);
 
                         break;
 
                     case 'deleteTotpSecret':
                         $this->storage->deleteOtpSecret($userId);
-                        $this->storage->addUserMessage($userId, 'notification', 'TOTP secret deleted');
+                        $this->storage->addUserMessage($userId, 'notification', 'TOTP secret deleted', $this->dateTime);
 
                         break;
 

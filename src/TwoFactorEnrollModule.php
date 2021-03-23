@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use DateTime;
 use fkooman\Otp\Exception\OtpException;
 use fkooman\Otp\Totp;
 use LC\Common\Http\HtmlResponse;
@@ -84,7 +85,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                 $totp = new Totp($this->storage);
                 try {
                     $totp->register($userInfo->getUserId(), $totpSecret, $totpKey);
-                    $this->storage->addUserMessage($userInfo->getUserId(), 'notification', 'TOTP secret registered');
+                    $this->storage->addUserMessage($userInfo->getUserId(), 'notification', 'TOTP secret registered', new DateTime());
                     if (null !== $redirectTo) {
                         $this->session->remove('_two_factor_enroll_redirect_to');
 
@@ -98,7 +99,7 @@ class TwoFactorEnrollModule implements ServiceModuleInterface
                     return new RedirectResponse($request->getRootUri().'account', 302);
                 } catch (OtpException $e) {
                     $msg = sprintf('TOTP registration failed: %s', $e->getMessage());
-                    $this->storage->addUserMessage($userInfo->getUserId(), 'notification', $msg);
+                    $this->storage->addUserMessage($userInfo->getUserId(), 'notification', $msg, new DateTime());
 
                     // we were unable to set the OTP secret
                     // XXX why is hasTotpSecret needed here?

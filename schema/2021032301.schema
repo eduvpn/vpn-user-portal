@@ -8,7 +8,6 @@ CREATE TABLE authorizations (
     auth_key VARCHAR(255) NOT NULL,
     client_id VARCHAR(255) NOT NULL,
     scope VARCHAR(255) NOT NULL,
-    auth_time VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     UNIQUE(auth_key)
 );

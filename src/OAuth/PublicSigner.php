@@ -15,6 +15,8 @@ use fkooman\Jwt\EdDSA;
 use fkooman\Jwt\Exception\JwtException;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
+use fkooman\OAuth\Server\Exception\SignerException;
+use fkooman\OAuth\Server\Json;
 use fkooman\OAuth\Server\SignerInterface;
 
 /**
@@ -62,27 +64,20 @@ class PublicSigner implements SignerInterface
         }
     }
 
-    /**
-     * @param array<string,mixed> $codeTokenInfo
-     *
-     * @return string
-     */
-    public function sign(array $codeTokenInfo)
+    public function sign(string $string): string
     {
-        return $this->edDsa->encode($codeTokenInfo);
+        return $this->edDsa->encode(Json::decode($string));
     }
 
     /**
-     * @param string $codeTokenString
-     *
-     * @return false|array<string,mixed>
+     * @throws \fkooman\OAuth\Server\Exception\SignerException
      */
-    public function verify($codeTokenString)
+    public function verify(string $string): string
     {
         try {
-            return $this->edDsa->decode($codeTokenString);
+            return Json::encode($this->edDsa->decode($string));
         } catch (JwtException $e) {
-            return false;
+            throw new SignerException('invalid signature ('.$e->getMessage().')');
         }
     }
 }

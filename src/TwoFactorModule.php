@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use DateTime;
 use fkooman\Otp\Exception\OtpException;
 use fkooman\Otp\Totp;
 use LC\Common\Http\Exception\HttpException;
@@ -70,7 +71,7 @@ class TwoFactorModule implements ServiceModuleInterface
                 } catch (OtpException $e) {
                     // unable to validate the OTP
                     $msg = sprintf('TOTP validation failed: %s', $e->getMessage());
-                    $this->storage->addUserMessage($userInfo->getUserId(), 'notification', $msg);
+                    $this->storage->addUserMessage($userInfo->getUserId(), 'notification', $msg, new DateTime());
 
                     return new HtmlResponse(
                         $this->tpl->render(

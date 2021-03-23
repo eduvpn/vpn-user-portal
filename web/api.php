@@ -22,8 +22,8 @@ use LC\Common\Logger;
 use LC\Common\Random;
 use LC\Portal\BearerAuthenticationHook;
 use LC\Portal\CA\VpnCa;
-use LC\Portal\ClientFetcher;
 use LC\Portal\OAuth\BearerValidator;
+use LC\Portal\OAuth\ClientDb;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 use LC\Portal\VpnApiModule;
@@ -41,12 +41,9 @@ try {
     $service = new Service();
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-        sprintf('%s/schema', $baseDir),
-        new DateInterval($config->requireString('sessionExpiry', 'P90D'))
+        sprintf('%s/schema', $baseDir)
     );
     $storage->update();
-
-    $clientFetcher = new ClientFetcher($config);
 
     $keyInstanceMapping = [];
     if ($config->s('Api')->requireBool('remoteAccess', false)) {
@@ -64,7 +61,7 @@ try {
 
     $bearerValidator = new BearerValidator(
         $storage,
-        $clientFetcher,
+        new ClientDb(),
         $secretKey->getPublicKey(),
         $keyInstanceMapping
     );

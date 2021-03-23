@@ -11,24 +11,27 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use LC\Common\Http\CredentialValidatorInterface;
 use LC\Common\Http\HtmlResponse;
 use LC\Common\Http\InputValidation;
 use LC\Common\Http\RedirectResponse;
 use LC\Common\Http\Request;
+use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\TplInterface;
 
 class PasswdModule implements ServiceModuleInterface
 {
-    /** @var \LC\Common\TplInterface */
-    private $tpl;
+    private CredentialValidatorInterface $credentialValidator;
 
-    /** @var \LC\Portal\Storage */
-    private $storage;
+    private TplInterface $tpl;
 
-    public function __construct(TplInterface $tpl, Storage $storage)
+    private Storage $storage;
+
+    public function __construct(CredentialValidatorInterface $credentialValidator, TplInterface $tpl, Storage $storage)
     {
+        $this->credentialValidator = $credentialValidator;
         $this->tpl = $tpl;
         $this->storage = $storage;
     }
@@ -37,10 +40,7 @@ class PasswdModule implements ServiceModuleInterface
     {
         $service->get(
             '/passwd',
-            /**
-             * @return \LC\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
@@ -57,10 +57,7 @@ class PasswdModule implements ServiceModuleInterface
 
         $service->post(
             '/passwd',
-            /**
-             * @return \LC\Common\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
@@ -68,7 +65,7 @@ class PasswdModule implements ServiceModuleInterface
                 $newUserPass = InputValidation::userPass($request->requirePostParameter('newUserPass'));
                 $newUserPassConfirm = InputValidation::userPass($request->requirePostParameter('newUserPassConfirm'));
 
-                if (!$this->storage->isValid($userInfo->getUserId(), $userPass)) {
+                if (!$this->credentialValidator->isValid($userInfo->getUserId(), $userPass)) {
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalPasswd',

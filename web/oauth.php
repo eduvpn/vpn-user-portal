@@ -13,15 +13,15 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
-use fkooman\OAuth\Server\OAuthServer;
 use LC\Common\Config;
 use LC\Common\FileIO;
 use LC\Common\Http\JsonResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Logger;
-use LC\Portal\ClientFetcher;
+use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
+use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OAuthTokenModule;
 use LC\Portal\Storage;
 
@@ -39,12 +39,9 @@ try {
     // OAuth tokens
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
-        sprintf('%s/schema', $baseDir),
-        new DateInterval($config->requireString('sessionExpiry', 'P90D'))
+        sprintf('%s/schema', $baseDir)
     );
     $storage->update();
-
-    $clientFetcher = new ClientFetcher($config);
 
     // OAuth module
     $secretKey = SecretKey::fromEncodedString(
@@ -52,13 +49,15 @@ try {
             sprintf('%s/config/oauth.key', $baseDir)
         )
     );
-    $oauthServer = new OAuthServer(
+    $oauthServer = new VpnOAuthServer(
         $storage,
-        $clientFetcher,
+        new ClientDb(),
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );
 
     $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
+    $oauthServer->setRefreshTokenExpiry(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
+
     $oauthModule = new OAuthTokenModule(
         $oauthServer
     );

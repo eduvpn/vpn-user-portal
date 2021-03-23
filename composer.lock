@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfb2306d43e0b09e6ce186159e6f13b6",
+    "content-hash": "c63bc3a8ba1b16c3823123279b841348",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -58,11 +58,11 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "6.0.1",
+            "version": "v7.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "1f31213113b31173fd2549a61185aacfd3c6dc31"
+                "reference": "407250c2e6696662da3a6b49fd78add97344618d"
             },
             "require": {
                 "ext-date": "*",
@@ -70,15 +70,13 @@
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-pdo": "*",
+                "ext-sodium": "*",
                 "ext-spl": "*",
-                "paragonie/constant_time_encoding": "^1.0.3|^2.2.0",
-                "paragonie/random_compat": ">=1",
-                "php": ">=5.4",
-                "symfony/polyfill-php56": "^1"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "ext-sqlite3": "*",
-                "phpunit/phpunit": "^4.8.35|^5|^6|^7"
+                "phpunit/phpunit": "^9"
             },
             "type": "library",
             "autoload": {
@@ -103,9 +101,9 @@
             "description": "Simple and secure OAuth 2.0 server",
             "support": {
                 "email": "fkooman@tuxed.net",
-                "source": "https://git.tuxed.net/fkooman/php-oauth2-server"
+                "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2020-08-09T19:40:28+00:00"
+            "time": "2021-03-23T20:28:38+00:00"
         },
         {
             "name": "fkooman/otp-verifier",
@@ -250,7 +248,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "301f8cfc66fef1451a888e9b8be0c6a7a99af6ed"
+                "reference": "b90ab09682c3a96348bd90bf72e07b4ecd73813e"
             },
             "require": {
                 "ext-curl": "*",
@@ -1518,16 +1516,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.3",
+            "version": "9.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "27241ac75fc37ecf862b6e002bf713b6566cbe41"
+                "reference": "c73c6737305e779771147af66c96ca6a7ed8a741"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/27241ac75fc37ecf862b6e002bf713b6566cbe41",
-                "reference": "27241ac75fc37ecf862b6e002bf713b6566cbe41",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c73c6737305e779771147af66c96ca6a7ed8a741",
+                "reference": "c73c6737305e779771147af66c96ca6a7ed8a741",
                 "shasum": ""
             },
             "require": {
@@ -1605,7 +1603,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.3"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.4"
             },
             "funding": [
                 {
@@ -1617,7 +1615,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-17T07:30:34+00:00"
+            "time": "2021-03-23T07:16:29+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2774,6 +2772,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "fkooman/oauth2-server": 20,
         "lc/common": 20
     },
     "prefer-stable": true,

@@ -11,39 +11,24 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use DateInterval;
 use DateTime;
+use fkooman\OAuth\Server\Authorization;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\Otp\OtpInfo;
 use fkooman\Otp\OtpStorageInterface;
 use fkooman\SqliteMigrate\Migration;
-use LC\Common\Http\CredentialValidatorInterface;
-use LC\Common\Http\UserInfo;
 use LC\Common\Json;
 use PDO;
 
-class Storage implements CredentialValidatorInterface, StorageInterface, OtpStorageInterface
+class Storage implements StorageInterface, OtpStorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2021031901';
+    const CURRENT_SCHEMA_VERSION = '2021032301';
 
-    /** @var \PDO */
-    private $db;
+    private PDO $db;
 
-    /** @var \DateTime */
-    private $dateTime;
+    private Migration $migration;
 
-    /** @var \fkooman\SqliteMigrate\Migration */
-    private $migration;
-
-    /** @var \DateInterval */
-    private $sessionExpiry;
-
-    /**
-     * XXX get rid of sessionExpiry parameter here... so ugly!
-     *
-     * @param string $schemaDir
-     */
-    public function __construct(PDO $db, $schemaDir, DateInterval $sessionExpiry)
+    public function __construct(PDO $db, string $schemaDir)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
@@ -51,19 +36,9 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         }
         $this->db = $db;
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
-        $this->sessionExpiry = $sessionExpiry;
-        $this->dateTime = new DateTime();
     }
 
-    public function setDateTime(DateTime $dateTime): void
-    {
-        $this->dateTime = $dateTime;
-    }
-
-    /**
-     * @return false|UserInfo
-     */
-    public function isValid(string $authUser, string $authPass)
+    public function getPasswordHash(string $authUser): ?string
     {
         $stmt = $this->db->prepare(
             'SELECT
@@ -75,13 +50,9 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
 
         $stmt->bindValue(':user_id', $authUser, PDO::PARAM_STR);
         $stmt->execute();
-        $dbHash = $stmt->fetchColumn(0);
-        $isVerified = password_verify($authPass, $dbHash);
-        if ($isVerified) {
-            return new UserInfo($authUser, []);
-        }
+        $resultColumn = $stmt->fetchColumn(0);
 
-        return false;
+        return \is_string($resultColumn) ? $resultColumn : null;
     }
 
     public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTime $createdAt, ?string $clientId): void
@@ -226,11 +197,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         return $wgPeers;
     }
 
-    /**
-     * @param string $userId
-     * @param string $userPass
-     */
-    public function add($userId, $userPass): void
+    public function addLocalUser(string $userId, string $userPass, DateTime $createdAt): void
     {
         if ($this->userExists($userId)) {
             $this->updatePassword($userId, $userPass);
@@ -248,7 +215,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $passwordHash = password_hash($userPass, \PASSWORD_DEFAULT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
-        $stmt->bindValue(':created_at', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':created_at', $createdAt->format(DateTime::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -298,16 +265,11 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         return 1 === $stmt->rowCount();
     }
 
-    /**
-     * @param string $authKey
-     *
-     * @return bool
-     */
-    public function hasAuthorization($authKey)
+    public function hasAuthorization(string $authKey): bool
     {
         $stmt = $this->db->prepare(
             'SELECT
-                auth_time
+                COUNT(*)
              FROM authorizations
              WHERE
                 auth_key = :auth_key'
@@ -316,24 +278,10 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
 
-        if (false === $authTime = $stmt->fetchColumn()) {
-            // auth_key does not exist (anymore)
-            return false;
-        }
-
-        $authTimeDateTime = new DateTime($authTime);
-        $expiresAt = date_add($authTimeDateTime, $this->sessionExpiry);
-
-        return $expiresAt > $this->dateTime;
+        return 1 === (int) $stmt->fetchColumn(0);
     }
 
-    /**
-     * @param string $userId
-     * @param string $clientId
-     * @param string $scope
-     * @param string $authKey
-     */
-    public function storeAuthorization($userId, $clientId, $scope, $authKey): void
+    public function storeAuthorization(string $userId, string $clientId, string $scope, string $authKey): void
     {
         // the "authorizations" table has the UNIQUE constraint on the
         // "auth_key" column, thus preventing multiple entries with the same
@@ -343,15 +291,13 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
                 auth_key,
                 user_id,
                 client_id,
-                scope,
-                auth_time
+                scope
              )
              VALUES(
                 :auth_key,
                 :user_id,
                 :client_id,
-                :scope,
-                :auth_time
+                :scope
              )'
         );
 
@@ -359,23 +305,19 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
         $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
-        $stmt->bindValue(':auth_time', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
     /**
-     * @param string $userId
-     *
-     * @return array<array>
+     * @return array<\fkooman\OAuth\Server\Authorization>
      */
-    public function getAuthorizations($userId)
+    public function getAuthorizations(string $userId): array
     {
         $stmt = $this->db->prepare(
             'SELECT
                 auth_key,
                 client_id,
-                scope,
-                auth_time
+                scope
              FROM authorizations
              WHERE
                 user_id = :user_id'
@@ -384,13 +326,10 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_CLASS, Authorization::class);
     }
 
-    /**
-     * @param string $authKey
-     */
-    public function deleteAuthorization($authKey): void
+    public function deleteAuthorization(string $authKey): void
     {
         $stmt = $this->db->prepare(
             'DELETE FROM
@@ -1006,12 +945,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param string $userId
-     * @param string $type
-     * @param string $message
-     */
-    public function addUserMessage($userId, $type, $message): void
+    public function addUserMessage(string $userId, string $type, string $message, DateTime $dateTime): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -1026,7 +960,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':type', $type, PDO::PARAM_STR);
         $stmt->bindValue(':message', $message, PDO::PARAM_STR);
-        $stmt->bindValue(':date_time', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -1156,6 +1090,9 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
      */
     private function addUser($userId): void
     {
+        // XXX do something better with session_expires_at
+        // also rename it to something better!
+        $dateTime = new DateTime();
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
@@ -1189,7 +1126,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface, OtpStor
     SQL
             );
             $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-            $stmt->bindValue(':session_expires_at', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+            $stmt->bindValue(':session_expires_at', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
             $stmt->bindValue(':permission_list', '[]', PDO::PARAM_STR);
             $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
             $stmt->execute();
