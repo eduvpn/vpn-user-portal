@@ -14,7 +14,6 @@ namespace LC\Portal;
 use DateTime;
 use fkooman\OAuth\Server\Authorization;
 use fkooman\OAuth\Server\StorageInterface;
-use fkooman\SqliteMigrate\Migration;
 use LC\Common\Json;
 use PDO;
 
