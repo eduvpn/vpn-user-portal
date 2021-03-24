@@ -59,7 +59,7 @@
         "ext-sodium": "*",
         "ext-sqlite3": "*",
         "ext-spl": "*",
-        "fkooman/jwt": "^1",
+        "fkooman/jwt": "2.x-dev",
         "fkooman/oauth2-server": "7.x-dev",
         "fkooman/secookie": "^5",
         "fkooman/otp-verifier": "^0.3",

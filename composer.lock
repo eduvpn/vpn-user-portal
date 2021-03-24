@@ -4,30 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c63bc3a8ba1b16c3823123279b841348",
+    "content-hash": "981a9b15c41a34f16a86d0d32cd38fb8",
     "packages": [
         {
             "name": "fkooman/jwt",
-            "version": "1.1.0",
+            "version": "v2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-jwt",
-                "reference": "b9ef3a60e3389638154927dcc1e199b42892d2f8"
+                "reference": "a8e5ff7c8fec38371d4beffeab0383b64adae157"
             },
             "require": {
                 "ext-date": "*",
                 "ext-hash": "*",
                 "ext-json": "*",
                 "ext-openssl": "*",
+                "ext-sodium": "*",
                 "ext-spl": "*",
-                "paragonie/constant_time_encoding": "^1.0.3|^2.2.0",
-                "paragonie/random_compat": ">=1",
-                "paragonie/sodium_compat": "^1",
-                "php": ">= 5.4.8",
-                "symfony/polyfill-php56": "^1"
+                "php": ">= 7.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4|^5|^6|^7"
+                "phpunit/phpunit": "^9"
             },
             "type": "library",
             "autoload": {
@@ -52,9 +49,9 @@
             "description": "Small JSON Web Signature implementation",
             "support": {
                 "email": "fkooman@tuxed.net",
-                "source": "https://git.tuxed.net/fkooman/php-jwt"
+                "source": "https://git.sr.ht/~fkooman/php-jwt"
             },
-            "time": "2020-08-22T20:48:05+00:00"
+            "time": "2021-03-24T11:54:39+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -415,92 +412,6 @@
                 "source": "https://github.com/paragonie/random_compat"
             },
             "time": "2020-10-15T08:29:30+00:00"
-        },
-        {
-            "name": "paragonie/sodium_compat",
-            "version": "v1.14.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "a1cfe0b21faf9c0b61ac0c6188c4af7fd6fd0db3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/a1cfe0b21faf9c0b61ac0c6188c4af7fd6fd0db3",
-                "reference": "a1cfe0b21faf9c0b61ac0c6188c4af7fd6fd0db3",
-                "shasum": ""
-            },
-            "require": {
-                "paragonie/random_compat": ">=1",
-                "php": "^5.2.4|^5.3|^5.4|^5.5|^5.6|^7|^8"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^3|^4|^5|^6|^7|^8|^9"
-            },
-            "suggest": {
-                "ext-libsodium": "PHP < 7.0: Better performance, password hashing (Argon2i), secure memory management (memzero), and better security.",
-                "ext-sodium": "PHP >= 7.0: Better performance, password hashing (Argon2i), secure memory management (memzero), and better security."
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "autoload.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "ISC"
-            ],
-            "authors": [
-                {
-                    "name": "Paragon Initiative Enterprises",
-                    "email": "security@paragonie.com"
-                },
-                {
-                    "name": "Frank Denis",
-                    "email": "jedisct1@pureftpd.org"
-                }
-            ],
-            "description": "Pure PHP implementation of libsodium; uses the PHP extension if it exists",
-            "keywords": [
-                "Authentication",
-                "BLAKE2b",
-                "ChaCha20",
-                "ChaCha20-Poly1305",
-                "Chapoly",
-                "Curve25519",
-                "Ed25519",
-                "EdDSA",
-                "Edwards-curve Digital Signature Algorithm",
-                "Elliptic Curve Diffie-Hellman",
-                "Poly1305",
-                "Pure-PHP cryptography",
-                "RFC 7748",
-                "RFC 8032",
-                "Salpoly",
-                "Salsa20",
-                "X25519",
-                "XChaCha20-Poly1305",
-                "XSalsa20-Poly1305",
-                "Xchacha20",
-                "Xsalsa20",
-                "aead",
-                "cryptography",
-                "ecdh",
-                "elliptic curve",
-                "elliptic curve cryptography",
-                "encryption",
-                "libsodium",
-                "php",
-                "public-key cryptography",
-                "secret-key cryptography",
-                "side-channel resistant"
-            ],
-            "support": {
-                "issues": "https://github.com/paragonie/sodium_compat/issues",
-                "source": "https://github.com/paragonie/sodium_compat/tree/v1.14.0"
-            },
-            "time": "2020-12-03T16:26:19+00:00"
         },
         {
             "name": "psr/log",
@@ -2772,6 +2683,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "fkooman/jwt": 20,
         "fkooman/oauth2-server": 20,
         "lc/common": 20
     },
