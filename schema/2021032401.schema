@@ -53,16 +53,3 @@ CREATE TABLE user_messages(
   date_time DATETIME NOT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
-CREATE TABLE otp(
-  user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-  otp_secret VARCHAR(255) NOT NULL,
-  otp_hash_algorithm VARCHAR(255) NOT NULL,
-  otp_digits INTEGER NOT NULL,
-  totp_period INTEGER NOT NULL
-);
-CREATE TABLE otp_log(
-  user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-  otp_key VARCHAR(255) NOT NULL,
-  date_time DATETIME NOT NULL,
-  UNIQUE(user_id, otp_key)
-);
