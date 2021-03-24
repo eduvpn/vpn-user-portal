@@ -39,10 +39,6 @@
         },
         {
             "type": "vcs",
-            "url": "https://git.sr.ht/~fkooman/php-otp-verifier"
-        },
-        {
-            "type": "vcs",
             "url": "https://git.sr.ht/~fkooman/php-saml-sp"
         },
         {
@@ -62,7 +58,6 @@
         "fkooman/jwt": "2.x-dev",
         "fkooman/oauth2-server": "7.x-dev",
         "fkooman/secookie": "^5",
-        "fkooman/otp-verifier": "1.x-dev",
         "fkooman/sqlite-migrate": "^0",
         "lc/common": "3.x-dev",
         "php": ">=7.4",

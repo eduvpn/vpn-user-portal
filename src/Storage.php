@@ -14,13 +14,11 @@ namespace LC\Portal;
 use DateTime;
 use fkooman\OAuth\Server\Authorization;
 use fkooman\OAuth\Server\StorageInterface;
-use fkooman\Otp\OtpInfo;
-use fkooman\Otp\OtpStorageInterface;
 use fkooman\SqliteMigrate\Migration;
 use LC\Common\Json;
 use PDO;
 
-class Storage implements StorageInterface, OtpStorageInterface
+class Storage implements StorageInterface
 {
     const CURRENT_SCHEMA_VERSION = '2021032301';
 
@@ -361,7 +359,6 @@ class Storage implements StorageInterface, OtpStorageInterface
 <<< 'SQL'
         SELECT
             user_id,
-            (SELECT otp_secret FROM otp WHERE user_id = users.user_id) AS otp_secret,
             session_expires_at,
             permission_list,
             is_disabled
@@ -376,7 +373,6 @@ class Storage implements StorageInterface, OtpStorageInterface
             $userList[] = [
                 'user_id' => $row['user_id'],
                 'is_disabled' => (bool) $row['is_disabled'],
-                'has_totp_secret' => null !== $row['otp_secret'],
                 'session_expires_at' => $row['session_expires_at'],
                 'permission_list' => Json::decode($row['permission_list']),
             ];
@@ -964,95 +960,9 @@ class Storage implements StorageInterface, OtpStorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @return false|\fkooman\Otp\OtpInfo
-     */
-    public function getOtpSecret(string $userId)
-    {
-        $stmt = $this->db->prepare('SELECT otp_secret, otp_hash_algorithm, otp_digits, totp_period FROM otp WHERE user_id = :user_id');
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        /** @var false|array<string, string|int> */
-        $otpInfo = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (false === $otpInfo) {
-            return false;
-        }
-
-        return new OtpInfo(
-            (string) $otpInfo['otp_secret'],
-            (string) $otpInfo['otp_hash_algorithm'],
-            (int) $otpInfo['otp_digits'],
-            (int) $otpInfo['totp_period']
-        );
-    }
-
-    public function setOtpSecret(string $userId, OtpInfo $otpInfo): void
-    {
-        $stmt = $this->db->prepare('INSERT INTO otp (user_id, otp_secret, otp_hash_algorithm, otp_digits, totp_period) VALUES(:user_id, :otp_secret, :otp_hash_algorithm, :otp_digits, :totp_period)');
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':otp_secret', $otpInfo->getSecret(), PDO::PARAM_STR);
-        $stmt->bindValue(':otp_hash_algorithm', $otpInfo->getHashAlgorithm(), PDO::PARAM_STR);
-        $stmt->bindValue(':otp_digits', $otpInfo->getDigits(), PDO::PARAM_INT);
-        $stmt->bindValue(':totp_period', $otpInfo->getPeriod(), PDO::PARAM_INT);
-
-        $stmt->execute();
-    }
-
-    public function deleteOtpSecret(string $userId): void
-    {
-        $this->addUser($userId);
-        $stmt = $this->db->prepare('DELETE FROM otp WHERE user_id = :user_id');
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    public function getOtpAttemptCount(string $userId) : int
-    {
-        $this->addUser($userId);
-        $stmt = $this->db->prepare('SELECT COUNT(*) FROM otp_log WHERE user_id = :user_id');
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return (int) $stmt->fetchColumn();
-    }
-
-    public function recordOtpKey(string $userId, string $otpKey, DateTime $dateTime) : bool
-    {
-        $this->addUser($userId);
-        // check if this user used the key before
-        $stmt = $this->db->prepare('SELECT COUNT(*) FROM otp_log WHERE user_id = :user_id AND otp_key = :otp_key');
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':otp_key', $otpKey, PDO::PARAM_STR);
-        $stmt->execute();
-        if (0 !== (int) $stmt->fetchColumn()) {
-            return false;
-        }
-
-        // because the insert MUST succeed we avoid race condition where
-        // potentially two times the same key for the same user are accepted,
-        // we'd just get a PDOException because the UNIQUE(user_id, otp_key)
-        // constrained is violated
-        $stmt = $this->db->prepare('INSERT INTO otp_log (user_id, otp_key, date_time) VALUES (:user_id, :otp_key, :date_time)');
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':otp_key', $otpKey, PDO::PARAM_STR);
-        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
-        $stmt->execute();
-
-        return true;
-    }
-
     public function cleanExpiredCertificates(DateTime $dateTime): void
     {
         $stmt = $this->db->prepare('DELETE FROM certificates WHERE valid_to < :date_time');
-        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
-
-        $stmt->execute();
-    }
-
-    public function cleanOtpLog(DateTime $dateTime): void
-    {
-        $stmt = $this->db->prepare('DELETE FROM otp_log WHERE date_time < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
 
         $stmt->execute();

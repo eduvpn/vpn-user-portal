@@ -161,20 +161,6 @@ return [
     // XXX this should also not be enable by default?
     'adminUserIdList' => ['admin'],
 
-    //'enableTwoFactor' => false,
-    //'requireTwoFactor' => false,
-
-    // Require Users to use 2FA
-    // DEFAULT = false
-    //'requireTwoFactor' => false,
-
-    // XXX it seems two factor is enabled by default when not specifying anything,
-    // probably make that optional
-
-    // Available 2FA methods
-    // DEFAULT = []
-    //'twoFactorMethods' => ['totp'], // TOTP
-
     // supported languages in the UI, the first one mentioned is the default
 //    'supportedLanguages' => [
 //        'en_US' => 'English',

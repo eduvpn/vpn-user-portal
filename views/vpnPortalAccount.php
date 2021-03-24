@@ -119,15 +119,4 @@ $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Accou
         </table>
 <?php endif; ?>
     </details>
-
-<?php if ($enableTwoFactor) : ?>
-    <details>
-        <summary><?=$this->t('Two-factor Authentication'); ?></summary>
-        <?php if ($hasTotpSecret): ?>
-            <span class="plain"><?=$this->t('TOTP'); ?></span>
-        <?php else: ?>
-            <form class="frm" method="get" action="two_factor_enroll"><button type="submit"><?=$this->t('Enroll'); ?></button></form>
-        <?php endif; ?>
-    </details>
-<?php endif; ?>
 <?php $this->stop('content'); ?>

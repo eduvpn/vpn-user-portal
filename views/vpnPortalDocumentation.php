@@ -68,29 +68,6 @@ $this->layout('base', ['activeItem' => 'documentation', 'pageTitle' => $this->t(
         <li><a target="_blank" href="https://www.ubuntu.com/">Ubuntu</a> >= 20.04 LTS (<code>apt install network-manager-openvpn-gnome</code>);</li>
     </ul>
 
-    <h2 id="2fa">Two-factor Authentication</h2>
-    <p>
-        Two-factor authentication (2FA) can be used to protect your account from
-        unauthorized access. It works by asking for an additional <em>key</em>
-        that needs to be provided on every login to the portal. This function
-        needs to be enabled by the server administrator.
-    </p>
-    <p>
-        Enroll for 2FA <a href="two_factor_enroll">here</a>.
-    </p>
-
-    <h3>TOTP</h3>
-    <p>
-        The TOTP method works by registering a <em>secret</em> in an
-        application, e.g. running on your mobile phone. There are various
-        applications to choose from, but at the moment we recommend FreeOTP.
-    </p>
-
-    <ul>
-        <li>Android (<a target="_blank" href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp">Google Play Store</a>, <a target="_blank" href="https://f-droid.org/packages/org.fedorahosted.freeotp/">F-Droid</a>)</li>
-        <li>iOS (<a target="_blank" href="https://apps.apple.com/app/freeotp-authenticator/id872559395">App Store</a>)</li>
-    </ul>
-
     <h2>Recommendations for using the VPN</h2>
     <p>
         Install the latest version of

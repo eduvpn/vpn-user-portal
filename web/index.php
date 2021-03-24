@@ -53,9 +53,6 @@ use LC\Portal\ShibAuthentication;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
-use LC\Portal\TwoFactorEnrollModule;
-use LC\Portal\TwoFactorHook;
-use LC\Portal\TwoFactorModule;
 use LC\Portal\UpdateSessionInfoHook;
 use LC\Portal\VpnPortalModule;
 
@@ -247,28 +244,10 @@ try {
         );
     }
 
-    if ($config->requireBool('enableTwoFactor', false)) {
-        $service->addBeforeHook(
-            'two_factor',
-            new TwoFactorHook(
-                $storage,
-                $seSession,
-                $tpl,
-                $config->requireBool('requireTwoFactor', false)
-            )
-        );
-    }
-
     $service->addBeforeHook('disabled_user', new DisabledUserHook($storage));
     $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $storage, new DateInterval($sessionExpiry)));
 
     $service->addModule(new QrModule());
-
-    // two factor module
-    if ($config->requireBool('enableTwoFactor', false)) {
-        $twoFactorModule = new TwoFactorModule($storage, $seSession, $tpl);
-        $service->addModule($twoFactorModule);
-    }
 
     // isAdmin
     $service->addBeforeHook(
@@ -316,11 +295,6 @@ try {
         $storage
     );
     $service->addModule($adminPortalModule);
-
-    if ($config->requireBool('enableTwoFactor', false)) {
-        $twoFactorEnrollModule = new TwoFactorEnrollModule($seSession, $tpl, $storage);
-        $service->addModule($twoFactorEnrollModule);
-    }
 
     // OAuth module
     $secretKey = SecretKey::fromEncodedString(

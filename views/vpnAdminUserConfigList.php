@@ -18,9 +18,6 @@ $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')
                 <?php else: ?>
                     <button class="warning" name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
                 <?php endif; ?>
-                <?php if ($hasTotpSecret): ?>
-                    <button class="warning" name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
-                <?php endif; ?>
             <?php endif; ?>
         </fieldset>
     </form>
