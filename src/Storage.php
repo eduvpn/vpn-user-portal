@@ -965,11 +965,9 @@ class Storage implements StorageInterface, OtpStorageInterface
     }
 
     /**
-     * @param string $userId
-     *
      * @return false|\fkooman\Otp\OtpInfo
      */
-    public function getOtpSecret($userId)
+    public function getOtpSecret(string $userId)
     {
         $stmt = $this->db->prepare('SELECT otp_secret, otp_hash_algorithm, otp_digits, totp_period FROM otp WHERE user_id = :user_id');
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -989,10 +987,7 @@ class Storage implements StorageInterface, OtpStorageInterface
         );
     }
 
-    /**
-     * @param string $userId
-     */
-    public function setOtpSecret($userId, OtpInfo $otpInfo): void
+    public function setOtpSecret(string $userId, OtpInfo $otpInfo): void
     {
         $stmt = $this->db->prepare('INSERT INTO otp (user_id, otp_secret, otp_hash_algorithm, otp_digits, totp_period) VALUES(:user_id, :otp_secret, :otp_hash_algorithm, :otp_digits, :totp_period)');
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -1004,10 +999,7 @@ class Storage implements StorageInterface, OtpStorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     */
-    public function deleteOtpSecret($userId): void
+    public function deleteOtpSecret(string $userId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare('DELETE FROM otp WHERE user_id = :user_id');
@@ -1015,12 +1007,7 @@ class Storage implements StorageInterface, OtpStorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return int
-     */
-    public function getOtpAttemptCount($userId)
+    public function getOtpAttemptCount(string $userId) : int
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare('SELECT COUNT(*) FROM otp_log WHERE user_id = :user_id');
@@ -1030,19 +1017,13 @@ class Storage implements StorageInterface, OtpStorageInterface
         return (int) $stmt->fetchColumn();
     }
 
-    /**
-     * @param string $userId
-     * @param string $totpKey
-     *
-     * @return bool
-     */
-    public function recordOtpKey($userId, $totpKey, DateTime $dateTime)
+    public function recordOtpKey(string $userId, string $otpKey, DateTime $dateTime) : bool
     {
         $this->addUser($userId);
         // check if this user used the key before
         $stmt = $this->db->prepare('SELECT COUNT(*) FROM otp_log WHERE user_id = :user_id AND otp_key = :otp_key');
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':otp_key', $totpKey, PDO::PARAM_STR);
+        $stmt->bindValue(':otp_key', $otpKey, PDO::PARAM_STR);
         $stmt->execute();
         if (0 !== (int) $stmt->fetchColumn()) {
             return false;
@@ -1054,7 +1035,7 @@ class Storage implements StorageInterface, OtpStorageInterface
         // constrained is violated
         $stmt = $this->db->prepare('INSERT INTO otp_log (user_id, otp_key, date_time) VALUES (:user_id, :otp_key, :date_time)');
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':otp_key', $totpKey, PDO::PARAM_STR);
+        $stmt->bindValue(':otp_key', $otpKey, PDO::PARAM_STR);
         $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
         $stmt->execute();
 
