@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal\Tests\Http;
 
-use LC\Portal\Http\CallbackHook;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
@@ -142,18 +141,9 @@ class ServiceTest extends TestCase
             /*
              * @return string
              */
-            fn (Request $request) => '12345',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, Response $response) {
-                $response->addHeader('Foo', 'Bar');
-
-                return $response;
-            }
+            fn (Request $request) => '12345'
         );
         $service->addBeforeHook('test', $callbackHook);
-        $service->addAfterHook('test', $callbackHook);
 
         $service->get('/foo',
         /**
@@ -169,7 +159,6 @@ class ServiceTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('12345', $response->getBody());
-        $this->assertSame('Bar', $response->getHeader('Foo'));
     }
 
     public function testHookResponse(): void

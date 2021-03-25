@@ -17,34 +17,23 @@ use LC\Portal\TplInterface;
 
 class Service
 {
-    /** @var \LC\Portal\TplInterface|null */
-    private $tpl;
+    private ?TplInterface $tpl;
 
-    /** @var array */
-    private $routes;
+    private array $routes;
 
     /** @var array<string,BeforeHookInterface> */
-    private $beforeHooks;
+    private array $beforeHooks;
 
-    /** @var array<string,AfterHookInterface> */
-    private $afterHooks;
-
-    public function __construct(TplInterface $tpl = null)
+    public function __construct(?TplInterface $tpl = null)
     {
         $this->tpl = $tpl;
         $this->routes = [];
         $this->beforeHooks = [];
-        $this->afterHooks = [];
     }
 
     public function addBeforeHook(string $name, BeforeHookInterface $beforeHook): void
     {
         $this->beforeHooks[$name] = $beforeHook;
-    }
-
-    public function addAfterHook(string $name, AfterHookInterface $afterHook): void
-    {
-        $this->afterHooks[$name] = $afterHook;
     }
 
     public function addRoute(string $requestMethod, string $pathInfo, callable $callback): void
@@ -76,8 +65,7 @@ class Service
                 $hookResponse = $v->executeBefore($request, $hookData);
                 // if we get back a Response object, return it immediately
                 if ($hookResponse instanceof Response) {
-                    // run afterHooks
-                    return $this->runAfterHooks($request, $hookResponse);
+                    return $hookResponse;
                 }
 
                 $hookData[$k] = $hookResponse;
@@ -93,10 +81,7 @@ class Service
                 throw new HttpException(sprintf('method "%s" not allowed', $requestMethod), 405, ['Allow' => implode(',', array_keys($this->routes[$pathInfo]))]);
             }
 
-            $response = $this->routes[$pathInfo][$requestMethod]($request, $hookData);
-
-            // after hooks
-            return $this->runAfterHooks($request, $response);
+            return $this->routes[$pathInfo][$requestMethod]($request, $hookData);
         } catch (HttpException $e) {
             if ($request->isBrowser()) {
                 if (null === $this->tpl) {
@@ -126,8 +111,7 @@ class Service
                 $response->addHeader($key, $value);
             }
 
-            // after hooks
-            return $this->runAfterHooks($request, $response);
+            return $response;
         }
     }
 
@@ -141,14 +125,5 @@ class Service
         }
 
         return \in_array($request->getPathInfo(), $whiteList[$request->getRequestMethod()], true);
-    }
-
-    private function runAfterHooks(Request $request, Response $response): Response
-    {
-        foreach ($this->afterHooks as $v) {
-            $response = $v->executeAfter($request, $response);
-        }
-
-        return $response;
     }
 }
