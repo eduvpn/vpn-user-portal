@@ -51,7 +51,7 @@ class DaemonSocket
     }
 
     /**
-     * @return array<array-key, array{common_name: string, virtual_address: array{0: string, 1: string}}>
+     * @return array<array{common_name: string, virtual_address: array{0: string, 1: string}}>
      */
     public function connections()
     {
@@ -155,7 +155,7 @@ class DaemonSocket
     /**
      * @param array<string> $connectionList
      *
-     * @return array<array-key, array{management_port: int, common_name: string, virtual_address: array{0: string, 1: string}}>
+     * @return array<array{management_port: int, common_name: string, virtual_address: array{0: string, 1: string}}>
      */
     private static function parseConnectionList(array $connectionList)
     {
