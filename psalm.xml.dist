@@ -1,15 +1,12 @@
 <?xml version="1.0"?>
-<psalm totallyTyped="false" resolveFromConfigFile="true">
+<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://getpsalm.org/schema/config" errorLevel="2" resolveFromConfigFile="true" xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd">
   <projectFiles>
-    <directory name="bin"/>
     <directory name="src"/>
+    <directory name="bin"/>
     <directory name="web"/>
     <directory name="libexec"/>
     <ignoreFiles>
       <directory name="vendor"/>
     </ignoreFiles>
   </projectFiles>
-  <issueHandlers>
-    <LessSpecificReturnType errorLevel="info"/>
-  </issueHandlers>
 </psalm>
