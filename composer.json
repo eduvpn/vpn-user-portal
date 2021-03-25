@@ -58,6 +58,10 @@
         "phpunit/phpunit": "^9",
         "fkooman/saml-sp": "2.x-dev"
     },
+    "suggest": {
+        "ext-ldap": "Support LDAP user authentication",
+        "ext-radius": "Support RADIUS user authentication"
+    },
     "support": {
         "email": "eduvpn@surfnet.nl",
         "source": "https://git.sr.ht/~fkooman/vpn-user-portal"
