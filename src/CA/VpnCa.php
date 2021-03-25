@@ -18,21 +18,11 @@ use RuntimeException;
 
 class VpnCa implements CaInterface
 {
-    /** @var string */
-    private $caDir;
+    private string $caDir;
+    private string $caKeyType;
+    private string $vpnCaPath;
 
-    /** @var string */
-    private $caKeyType;
-
-    /** @var string */
-    private $vpnCaPath;
-
-    /**
-     * @param string $caDir
-     * @param string $caKeyType
-     * @param string $vpnCaPath
-     */
-    public function __construct($caDir, $caKeyType, $vpnCaPath)
+    public function __construct(string $caDir, string $caKeyType, string $vpnCaPath)
     {
         $this->caDir = $caDir;
         $this->caKeyType = $caKeyType;
@@ -42,10 +32,8 @@ class VpnCa implements CaInterface
 
     /**
      * Get the CA root certificate.
-     *
-     * @return string the CA certificate in PEM format
      */
-    public function caCert()
+    public function caCert(): string
     {
         $certFile = sprintf('%s/ca.crt', $this->caDir);
 
@@ -55,12 +43,9 @@ class VpnCa implements CaInterface
     /**
      * Generate a certificate for the VPN server.
      *
-     * @param string $commonName
-     *
-     * @return array the certificate, key in array with keys
-     *               'cert', 'key', 'valid_from' and 'valid_to'
+     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function serverCert($commonName)
+    public function serverCert(string $commonName): array
     {
         $this->execVpnCa(sprintf('-server -name "%s" -not-after CA', $commonName));
 
@@ -70,12 +55,9 @@ class VpnCa implements CaInterface
     /**
      * Generate a certificate for a VPN client.
      *
-     * @param string $commonName
-     *
-     * @return array the certificate and key in array with keys 'cert', 'key',
-     *               'valid_from' and 'valid_to'
+     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function clientCert($commonName, DateTimeImmutable $expiresAt)
+    public function clientCert(string $commonName, DateTimeImmutable $expiresAt)
     {
         // prevent expiresAt to be in the past
         $dateTime = new DateTimeImmutable();
@@ -88,10 +70,7 @@ class VpnCa implements CaInterface
         return $this->certInfo($commonName);
     }
 
-    /**
-     * @return bool
-     */
-    private function isInitialized()
+    private function isInitialized(): bool
     {
         $hasKey = FileIO::exists(sprintf('%s/ca.key', $this->caDir));
         $hasCert = FileIO::exists(sprintf('%s/ca.crt', $this->caDir));
@@ -115,11 +94,9 @@ class VpnCa implements CaInterface
     }
 
     /**
-     * @param string $commonName
-     *
-     * @return array<string,string>
+     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    private function certInfo($commonName)
+    private function certInfo(string $commonName): array
     {
         $certKeyInfo = $this->certKeyInfo(
             sprintf('%s/%s.crt', $this->caDir, $commonName),
@@ -134,59 +111,41 @@ class VpnCa implements CaInterface
     }
 
     /**
-     * @param string $certFile
-     * @param string $keyFile
-     *
-     * @return array<string,string>
+     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    private function certKeyInfo($certFile, $keyFile)
+    private function certKeyInfo(string $certFile, string $keyFile): array
     {
         $certData = $this->readCertificate($certFile);
         $keyData = $this->readKey($keyFile);
         $parsedCert = openssl_x509_parse($certData);
 
         return [
-            'certificate' => $certData,
-            'private_key' => $keyData,
-            'valid_from' => $parsedCert['validFrom_time_t'],
-            'valid_to' => $parsedCert['validTo_time_t'],
+            'cert' => $certData,
+            'key' => $keyData,
+            // XXX make sure the next two exist and are "int"!
+            'valid_from' => (int) $parsedCert['validFrom_time_t'],
+            'valid_to' => (int) $parsedCert['validTo_time_t'],
         ];
     }
 
-    /**
-     * @param string $certFile
-     *
-     * @return string
-     */
-    private function readCertificate($certFile)
+    private function readCertificate(string $certFile): string
     {
         // strip whitespace before and after actual certificate
         return trim(FileIO::readFile($certFile));
     }
 
-    /**
-     * @param string $keyFile
-     *
-     * @return string
-     */
-    private function readKey($keyFile)
+    private function readKey(string $keyFile): string
     {
         // strip whitespace before and after actual key
         return trim(FileIO::readFile($keyFile));
     }
 
-    /**
-     * @param string $cmdArgs
-     */
-    private function execVpnCa($cmdArgs): void
+    private function execVpnCa(string $cmdArgs): void
     {
         self::exec(sprintf('CA_DIR=%s CA_KEY_TYPE=%s %s %s', $this->caDir, $this->caKeyType, $this->vpnCaPath, $cmdArgs));
     }
 
-    /**
-     * @param string $execCmd
-     */
-    private static function exec($execCmd): void
+    private static function exec(string $execCmd): void
     {
         exec(
             sprintf('%s 2>&1', $execCmd),
@@ -199,10 +158,7 @@ class VpnCa implements CaInterface
         }
     }
 
-    /**
-     * @param string $fileName
-     */
-    private static function delete($fileName): void
+    private static function delete(string $fileName): void
     {
         if (false === @unlink($fileName)) {
             throw new RuntimeException(sprintf('unable to delete "%s"', $fileName));

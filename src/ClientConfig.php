@@ -18,11 +18,12 @@ class ClientConfig
     const STRATEGY_ALL = 2;
 
     /**
-     * @param int $remoteStrategy
+     * @param int                                                            $remoteStrategy
+     * @param null|array{cert:string,key:string,valid_from:int,valid_to:int} $clientCertificate
      *
      * @return string
      */
-    public static function get(ProfileConfig $profileConfig, array $serverInfo, array $clientCertificate, $remoteStrategy)
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, ?array $clientCertificate, $remoteStrategy)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->hostName();
@@ -76,16 +77,16 @@ class ClientConfig
 
         // if clientCertificate is provided, we add it directly to the
         // configuration file
-        if (0 !== \count($clientCertificate)) {
+        if (null !== $clientCertificate) {
             $clientConfig = array_merge(
                 $clientConfig,
                 [
                     '<cert>',
-                    $clientCertificate['certificate'],
+                    $clientCertificate['cert'],
                     '</cert>',
 
                     '<key>',
-                    $clientCertificate['private_key'],
+                    $clientCertificate['key'],
                     '</key>',
                 ]
             );

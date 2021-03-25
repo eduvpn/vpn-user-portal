@@ -266,7 +266,7 @@ class VpnApiModule implements ServiceModuleInterface
             'ca' => $this->ca->caCert(),
         ];
 
-        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, [], $remoteStrategy);
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, null, $remoteStrategy);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
 
         $response = new Response(200, 'application/x-openvpn-profile');

@@ -17,28 +17,20 @@ interface CaInterface
 {
     /**
      * Get the CA root certificate.
-     *
-     * @return string the CA certificate in PEM format
      */
-    public function caCert();
+    public function caCert(): string;
 
     /**
      * Generate a certificate for the VPN server.
      *
-     * @param string $commonName
-     *
-     * @return array the certificate, key in array with keys
-     *               'cert', 'key', 'valid_from' and 'valid_to'
+     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function serverCert($commonName);
+    public function serverCert(string $commonName): array;
 
     /**
      * Generate a certificate for a VPN client.
      *
-     * @param string $commonName
-     *
-     * @return array the certificate and key in array with keys 'cert', 'key',
-     *               'valid_from' and 'valid_to'
+     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function clientCert($commonName, DateTimeImmutable $expiresAt);
+    public function clientCert(string $commonName, DateTimeImmutable $expiresAt);
 }
