@@ -11,14 +11,16 @@ declare(strict_types=1);
 
 namespace LC\Portal\Tests;
 
-use DateInterval;
-use DateTime;
+use DateTimeImmutable;
 use LC\Portal\Config;
 use LC\Portal\Http\NullAuthenticationHook;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\OAuth\ClientDb;
+use LC\Portal\OpenVpn\DaemonSocket;
+use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\Storage;
+use LC\Portal\TlsCrypt;
 use LC\Portal\VpnPortalModule;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -31,17 +33,38 @@ class VpnPortalModuleTest extends TestCase
     protected function setUp(): void
     {
         $schemaDir = \dirname(__DIR__).'/schema';
-        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir, new DateInterval('P90D'));
+        $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir);
         $storage->init();
 
+        $tmpDir = sprintf('%s/%s', sys_get_temp_dir(), bin2hex(random_bytes(10)));
+        mkdir($tmpDir);
+
+        $config = new Config(
+            [
+                'vpnProfiles' => [
+                    'default' => [
+                        'displayName' => 'Default',
+                    ],
+                ],
+                'sessionExpiry' => 'P90D',
+            ]
+        );
+
+        $daemonSocket = new DaemonSocket($tmpDir, false);
+        $daemonWrapper = new DaemonWrapper($config, $storage, $daemonSocket);
+
         $vpnPortalModule = new VpnPortalModule(
-            new Config(['sessionExpiry' => 'P90D']),
+            $config,
             new JsonTpl(),
             new TestSession(),
+            $daemonWrapper,
             $storage,
+            new TlsCrypt($tmpDir),
+            new TestRandom(),
+            new TestCa(),
             new ClientDb()
         );
-        $vpnPortalModule->setDateTime(new DateTime('2019-01-01'));
+        $vpnPortalModule->setDateTime(new DateTimeImmutable('2019-01-01'));
         $this->service = new Service();
         $this->service->addModule($vpnPortalModule);
         $this->service->addBeforeHook('auth', new NullAuthenticationHook('foo'));
@@ -51,13 +74,7 @@ class VpnPortalModuleTest extends TestCase
     {
         $this->assertSame(
             [
-                'vpnPortalHome' => [
-                    'motdMessage' => [
-                        'id' => 1,
-                        'message_type' => 'motd',
-                        'message_body' => 'Hello World!',
-                    ],
-                ],
+                'vpnPortalHome' => [],
             ],
             $this->makeRequest('GET', '/home')
         );

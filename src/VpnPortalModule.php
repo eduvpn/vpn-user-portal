@@ -72,7 +72,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->dateTime = new DateTimeImmutable();
     }
 
-    public function setDateTimeImmutable(DateTimeImmutable $dateTime): void
+    public function setDateTime(DateTimeImmutable $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
