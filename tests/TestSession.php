@@ -15,39 +15,26 @@ use LC\Portal\Http\SessionInterface;
 
 class TestSession implements SessionInterface
 {
-    /** @var array */
-    private $sessionData = [];
+    private array $sessionData = [];
 
     public function regenerate(): void
     {
         // NOP
     }
 
-    /**
-     * @param string $sessionKey
-     * @param string $sessionValue
-     */
-    public function set($sessionKey, $sessionValue): void
+    public function set(string $sessionKey, string $sessionValue): void
     {
         $this->sessionData[$sessionKey] = $sessionValue;
     }
 
-    /**
-     * @param string $sessionKey
-     */
-    public function remove($sessionKey): void
+    public function remove(string $sessionKey): void
     {
         if (\array_key_exists($sessionKey, $this->sessionData)) {
             unset($this->sessionData[$sessionKey]);
         }
     }
 
-    /**
-     * @param string $sessionKey
-     *
-     * @return string|null
-     */
-    public function get($sessionKey)
+    public function get(string $sessionKey): ?string
     {
         if (!\array_key_exists($sessionKey, $this->sessionData)) {
             return null;
