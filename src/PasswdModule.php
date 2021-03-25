@@ -11,15 +11,14 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\Http\CredentialValidatorInterface;
-use LC\Common\Http\HtmlResponse;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\TplInterface;
+use LC\Portal\Http\CredentialValidatorInterface;
+use LC\Portal\Http\HtmlResponse;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 
 class PasswdModule implements ServiceModuleInterface
 {
@@ -41,7 +40,7 @@ class PasswdModule implements ServiceModuleInterface
         $service->get(
             '/passwd',
             function (Request $request, array $hookData): Response {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 return new HtmlResponse(
@@ -58,7 +57,7 @@ class PasswdModule implements ServiceModuleInterface
         $service->post(
             '/passwd',
             function (Request $request, array $hookData): Response {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $userPass = $request->requirePostParameter('userPass');

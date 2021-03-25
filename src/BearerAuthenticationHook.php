@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
-use LC\Common\Http\BeforeHookInterface;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
 use LC\Portal\OAuth\BearerValidator;
 
 class BearerAuthenticationHook implements BeforeHookInterface
@@ -28,7 +28,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
     }
 
     /**
-     * @return \LC\Portal\OAuth\VpnAccessTokenInfo|\LC\Common\Http\Response
+     * @return \LC\Portal\OAuth\VpnAccessTokenInfo|\LC\Portal\Http\Response
      */
     public function executeBefore(Request $request, array $hookData)
     {

@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\ProfileConfig;
-
 class ClientConfig
 {
     const STRATEGY_FIRST = 0;

@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace LC\Portal\CA;
 
 use DateTime;
-use LC\Common\FileIO;
 use LC\Portal\CA\Exception\CaException;
+use LC\Portal\FileIO;
 use RuntimeException;
 
 class VpnCa implements CaInterface

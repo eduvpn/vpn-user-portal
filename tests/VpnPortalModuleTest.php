@@ -13,12 +13,12 @@ namespace LC\Portal\Tests;
 
 use DateInterval;
 use DateTime;
-use LC\Common\Config;
-use LC\Common\Http\NullAuthenticationHook;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\HttpClient\ServerClient;
 use LC\Portal\ClientFetcher;
+use LC\Portal\Config;
+use LC\Portal\Http\NullAuthenticationHook;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
+use LC\Portal\HttpClient\ServerClient;
 use LC\Portal\Storage;
 use LC\Portal\VpnPortalModule;
 use PDO;
@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 
 class VpnPortalModuleTest extends TestCase
 {
-    /** @var \LC\Common\Http\Service */
+    /** @var \LC\Portal\Http\Service */
     private $service;
 
     protected function setUp(): void
@@ -143,7 +143,7 @@ class VpnPortalModuleTest extends TestCase
      * @param array<string,string> $postData
      * @param bool                 $returnResponseObj
      *
-     * @return \LC\Common\Http\Response|array
+     * @return \LC\Portal\Http\Response|array
      */
     private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $returnResponseObj = false)
     {

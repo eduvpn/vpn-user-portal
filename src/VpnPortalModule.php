@@ -14,31 +14,27 @@ namespace LC\Portal;
 use DateInterval;
 use DateTime;
 use fkooman\OAuth\Server\ClientDbInterface;
-use LC\Common\Config;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\HtmlResponse;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\Http\SessionInterface;
-use LC\Common\ProfileConfig;
-use LC\Common\RandomInterface;
-use LC\Common\TplInterface;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\HtmlResponse;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
+use LC\Portal\Http\SessionInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
-    /** @var \LC\Common\TplInterface */
+    /** @var \LC\Portal\TplInterface */
     private $tpl;
 
-    /** @var \LC\Common\Http\SessionInterface */
+    /** @var \LC\Portal\Http\SessionInterface */
     private $session;
 
     /** @var OpenVpn\DaemonWrapper */
@@ -50,7 +46,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var TlsCrypt */
     private $tlsCrypt;
 
-    /** @var \LC\Common\RandomInterface */
+    /** @var \LC\Portal\RandomInterface */
     private $random;
 
     /** @var CA\CaInterface */
@@ -86,7 +82,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/',
             /*
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             fn (Request $request) => new RedirectResponse($request->getRootUri().'home', 302)
         );
@@ -94,7 +90,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/home',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 return new HtmlResponse(
@@ -109,10 +105,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/configurations',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $profileList = $this->profileList();
@@ -150,10 +146,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/configurations',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 $displayName = InputValidation::displayName($request->requirePostParameter('displayName'));
@@ -179,7 +175,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/deleteCertificate',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->requirePostParameter('commonName'));
@@ -205,10 +201,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $userPermissions = $userInfo->getPermissionList();
                 $authorizationList = $this->storage->getAuthorizations($userInfo->getUserId());
@@ -252,10 +248,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/removeClientAuthorization',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
-                /** @var \LC\Common\Http\UserInfo */
+                /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
                 // no need to validate the input as we do a strict string match...
@@ -308,7 +304,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/documentation',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function () {
                 return new HtmlResponse(
@@ -342,7 +338,7 @@ class VpnPortalModule implements ServiceModuleInterface
      * @param string $userId
      * @param string $displayName
      *
-     * @return \LC\Common\Http\Response
+     * @return \LC\Portal\Http\Response
      */
     private function getConfig($serverName, $profileId, $userId, $displayName, DateTime $expiresAt)
     {
@@ -402,9 +398,9 @@ class VpnPortalModule implements ServiceModuleInterface
      * Filter the list of profiles by checking if the profile should be shown,
      * and that the user has the required permissions in case ACLs are enabled.
      *
-     * @param array<string,\LC\Common\ProfileConfig> $profileList
+     * @param array<string,\LC\Portal\ProfileConfig> $profileList
      *
-     * @return array<string,\LC\Common\ProfileConfig>
+     * @return array<string,\LC\Portal\ProfileConfig>
      */
     private static function filterProfileList(array $profileList, array $userPermissions)
     {
@@ -439,7 +435,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /**
      * XXX duplicate in AdminPortalModule|VpnApiModule.
      *
-     * @return array<string,\LC\Common\ProfileConfig>
+     * @return array<string,\LC\Portal\ProfileConfig>
      */
     private function profileList()
     {

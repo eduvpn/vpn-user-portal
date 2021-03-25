@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
-use LC\Common\HttpClient\HttpClientInterface;
-use LC\Common\Json;
+use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\Json;
 
 /**
  * Connect to the wg-daemon.
@@ -21,7 +21,7 @@ class WgDaemon
 {
     const WG_DAEMON_BASE_URL = 'http://localhost:8080';
 
-    /** @var \LC\Common\HttpClient\HttpClientInterface */
+    /** @var \LC\Portal\HttpClient\HttpClientInterface */
     private $httpClient;
 
     public function __construct(HttpClientInterface $httpClient)

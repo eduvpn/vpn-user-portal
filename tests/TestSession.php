@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Tests;
 
-use LC\Common\Http\SessionInterface;
+use LC\Portal\Http\SessionInterface;
 
 class TestSession implements SessionInterface
 {

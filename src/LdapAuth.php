@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\Http\CredentialValidatorInterface;
-use LC\Common\Http\UserInfo;
 use LC\Portal\Exception\LdapClientException;
+use LC\Portal\Http\CredentialValidatorInterface;
+use LC\Portal\Http\UserInfo;
 use Psr\Log\LoggerInterface;
 
 class LdapAuth implements CredentialValidatorInterface
@@ -76,7 +76,7 @@ class LdapAuth implements CredentialValidatorInterface
      * @param string $authUser
      * @param string $authPass
      *
-     * @return false|\LC\Common\Http\UserInfo
+     * @return false|\LC\Portal\Http\UserInfo
      */
     public function isValid($authUser, $authPass)
     {

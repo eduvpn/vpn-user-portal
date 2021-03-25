@@ -34,7 +34,7 @@ class StorageTest extends TestCase
     public function testValid(): void
     {
         $this->storage->add('foo', 'bar');
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
 
     public function testInvalidPass(): void
@@ -59,7 +59,7 @@ class StorageTest extends TestCase
     {
         $this->storage->add('foo', 'bar');
         $this->assertTrue($this->storage->updatePassword('foo', 'baz'));
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'baz'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'baz'));
     }
 
     public function testUserExists(): void
@@ -78,7 +78,7 @@ class StorageTest extends TestCase
     {
         $this->storage->add('foo', 'bar');
         $this->assertFalse($this->storage->updatePassword('bar', 'baz'));
-        $this->assertInstanceOf('\LC\Common\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
+        $this->assertInstanceOf('\LC\Portal\Http\UserInfo', $this->storage->isValid('foo', 'bar'));
     }
 
     public function testHasAuthorization(): void

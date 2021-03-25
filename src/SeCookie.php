@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use fkooman\SeCookie\Cookie;
-use LC\Common\Http\CookieInterface;
+use LC\Portal\Http\CookieInterface;
 
 class SeCookie implements CookieInterface
 {

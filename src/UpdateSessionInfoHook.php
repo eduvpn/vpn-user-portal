@@ -13,18 +13,18 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
-use LC\Common\Http\BeforeHookInterface;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\Http\SessionInterface;
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\SessionInterface;
 
 /**
  * This hook is used to update the session info.
  */
 class UpdateSessionInfoHook implements BeforeHookInterface
 {
-    /** @var \LC\Common\Http\SessionInterface */
+    /** @var \LC\Portal\Http\SessionInterface */
     private $session;
 
     /** @var Storage */
@@ -69,7 +69,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
             throw new HttpException('authentication hook did not run before', 500);
         }
 
-        /** @var \LC\Common\Http\UserInfo */
+        /** @var \LC\Portal\Http\UserInfo */
         $userInfo = $hookData['auth'];
 
         // check if the authentication backend wants to override the sessionExpiry

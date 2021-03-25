@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
-use LC\Common\Config;
-use LC\Common\ProfileConfig;
+use LC\Portal\Config;
+use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -24,7 +24,7 @@ use RuntimeException;
  */
 class DaemonWrapper
 {
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
     /** @var \LC\Portal\Storage */

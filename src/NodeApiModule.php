@@ -12,20 +12,18 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateTime;
-use LC\Common\Config;
-use LC\Common\Http\ApiErrorResponse;
-use LC\Common\Http\ApiResponse;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\ProfileConfig;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\Exception\NodeApiException;
+use LC\Portal\Http\ApiErrorResponse;
+use LC\Portal\Http\ApiResponse;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 
 class NodeApiModule implements ServiceModuleInterface
 {
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
     /** @var CA\CaInterface */
@@ -54,7 +52,7 @@ class NodeApiModule implements ServiceModuleInterface
         $service->post(
             '/add_server_certificate',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
@@ -71,7 +69,7 @@ class NodeApiModule implements ServiceModuleInterface
         $service->post(
             '/connect',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 try {
@@ -91,7 +89,7 @@ class NodeApiModule implements ServiceModuleInterface
         $service->post(
             '/disconnect',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 try {
@@ -111,7 +109,7 @@ class NodeApiModule implements ServiceModuleInterface
         $service->get(
             '/profile_list',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $profileList = [];

@@ -12,9 +12,9 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\Config;
-use LC\Common\HttpClient\CurlHttpClient;
-use LC\Common\ProfileConfig;
+use LC\Portal\Config;
+use LC\Portal\HttpClient\CurlHttpClient;
+use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\WgDaemon;
 

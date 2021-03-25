@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\Http\BeforeHookInterface;
-use LC\Common\Http\Exception\HttpException;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
 
 /**
  * This hook is used to check if a user is disabled before allowing any other
@@ -45,7 +45,7 @@ class DisabledUserHook implements BeforeHookInterface
         if (!\array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }
-        /** @var \LC\Common\Http\UserInfo */
+        /** @var \LC\Portal\Http\UserInfo */
         $userInfo = $hookData['auth'];
 
         if ($this->storage->isDisabledUser($userInfo->getUserId())) {

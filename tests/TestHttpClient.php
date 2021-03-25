@@ -13,8 +13,8 @@ namespace LC\Portal\Tests;
 
 use DateInterval;
 use DateTime;
-use LC\Common\HttpClient\HttpClientInterface;
-use LC\Common\HttpClient\HttpClientResponse;
+use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\HttpClient\HttpClientResponse;
 use RuntimeException;
 
 class TestHttpClient implements HttpClientInterface
@@ -24,7 +24,7 @@ class TestHttpClient implements HttpClientInterface
      * @param array<string,string> $queryParameters
      * @param array<string>        $requestHeaders
      *
-     * @return \LC\Common\HttpClient\HttpClientResponse
+     * @return \LC\Portal\HttpClient\HttpClientResponse
      */
     public function get($requestUrl, array $queryParameters, array $requestHeaders = [])
     {
@@ -145,7 +145,7 @@ class TestHttpClient implements HttpClientInterface
      * @param mixed  $responseData
      * @param int    $statusCode
      *
-     * @return \LC\Common\HttpClient\HttpClientResponse
+     * @return \LC\Portal\HttpClient\HttpClientResponse
      */
     private static function wrap($key, $responseData, $statusCode = 200)
     {
@@ -168,7 +168,7 @@ class TestHttpClient implements HttpClientInterface
      * @param string $errorMessage
      * @param int    $statusCode
      *
-     * @return \LC\Common\HttpClient\HttpClientResponse
+     * @return \LC\Portal\HttpClient\HttpClientResponse
      */
     private static function wrapError($key, $errorMessage, $statusCode = 200)
     {

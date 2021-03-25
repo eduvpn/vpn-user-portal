@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 
 class QrModule implements ServiceModuleInterface
 {
@@ -25,7 +25,7 @@ class QrModule implements ServiceModuleInterface
         $service->get(
             '/qr',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $qrText = $request->requireQueryParameter('qr_text');

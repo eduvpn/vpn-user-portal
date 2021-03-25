@@ -11,11 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\Config;
-use LC\Common\Http\FormAuthentication;
-use LC\Common\Http\RadiusAuth;
-use LC\Common\Http\SessionInterface;
-use LC\Common\TplInterface;
+use LC\Portal\Http\FormAuthentication;
+use LC\Portal\Http\RadiusAuth;
+use LC\Portal\Http\SessionInterface;
 use Psr\Log\LoggerInterface;
 
 class FormRadiusAuthentication extends FormAuthentication

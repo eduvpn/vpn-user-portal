@@ -11,14 +11,13 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\Config;
-use LC\Common\Http\BeforeHookInterface;
-use LC\Common\Http\Request;
-use LC\Common\Http\UserInfo;
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\UserInfo;
 
 class ShibAuthentication implements BeforeHookInterface
 {
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
     public function __construct(Config $config)

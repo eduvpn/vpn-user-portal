@@ -13,7 +13,6 @@ namespace LC\Portal;
 
 use DateTime;
 use DateTimeZone;
-use LC\Common\TplInterface;
 use LC\Portal\Exception\TplException;
 use LC\Portal\OAuth\ClientDb;
 use RangeException;

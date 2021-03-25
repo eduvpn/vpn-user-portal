@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use fkooman\SeCookie\Session;
-use LC\Common\Http\SessionInterface;
+use LC\Portal\Http\SessionInterface;
 
 class SeSession implements SessionInterface
 {

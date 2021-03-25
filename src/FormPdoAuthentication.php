@@ -11,12 +11,11 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\Http\CredentialValidatorInterface;
-use LC\Common\Http\FormAuthentication;
-use LC\Common\Http\Service;
-use LC\Common\Http\SessionInterface;
-use LC\Common\Http\UserInfo;
-use LC\Common\TplInterface;
+use LC\Portal\Http\CredentialValidatorInterface;
+use LC\Portal\Http\FormAuthentication;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\SessionInterface;
+use LC\Portal\Http\UserInfo;
 
 class FormPdoAuthentication extends FormAuthentication implements CredentialValidatorInterface
 {

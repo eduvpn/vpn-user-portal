@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Common\Tests\Http;
+namespace LC\Portal\Tests\Http;
 
-use LC\Common\Http\NullAuthenticationHook;
-use LC\Common\Http\Service;
-use LC\Common\Http\TwoFactorModule;
-use LC\Common\HttpClient\ServerClient;
-use LC\Common\Tests\TestTpl;
+use LC\Portal\Http\NullAuthenticationHook;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\TwoFactorModule;
+use LC\Portal\HttpClient\ServerClient;
+use LC\Portal\Tests\TestTpl;
 use PHPUnit\Framework\TestCase;
 
 class TwoFactorModuleTest extends TestCase

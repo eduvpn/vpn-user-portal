@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\Tests;
 
-use LC\Common\Config;
-use LC\Common\Http\Request;
+use LC\Portal\Config;
+use LC\Portal\Http\Request;
 use LC\Portal\MellonAuthentication;
 use PHPUnit\Framework\TestCase;
 

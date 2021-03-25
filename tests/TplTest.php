@@ -9,7 +9,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Common\Tests;
+namespace LC\Portal\Tests;
 
 use LC\Portal\Tpl;
 use PHPUnit\Framework\TestCase;

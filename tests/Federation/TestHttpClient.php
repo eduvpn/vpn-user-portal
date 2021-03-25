@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\Tests\Federation;
 
-use LC\Common\HttpClient\HttpClientInterface;
-use LC\Common\HttpClient\HttpClientResponse;
+use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\HttpClient\HttpClientResponse;
 use RuntimeException;
 
 class TestHttpClient implements HttpClientInterface
@@ -22,7 +22,7 @@ class TestHttpClient implements HttpClientInterface
      * @param array<string,string> $queryParameters
      * @param array<string>        $requestHeaders
      *
-     * @return \LC\Common\HttpClient\HttpClientResponse
+     * @return \LC\Portal\HttpClient\HttpClientResponse
      */
     public function get($requestUrl, array $queryParameters, array $requestHeaders = [])
     {

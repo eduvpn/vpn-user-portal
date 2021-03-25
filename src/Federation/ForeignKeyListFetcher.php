@@ -14,9 +14,9 @@ namespace LC\Portal\Federation;
 use DateTime;
 use Exception;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
-use LC\Common\FileIO;
-use LC\Common\HttpClient\HttpClientInterface;
-use LC\Common\Json;
+use LC\Portal\FileIO;
+use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\Json;
 use LC\Portal\OAuth\PublicSigner;
 
 class ForeignKeyListFetcher

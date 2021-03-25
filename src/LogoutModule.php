@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\Http\RedirectResponse;
-use LC\Common\Http\Request;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\Http\SessionInterface;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
+use LC\Portal\Http\SessionInterface;
 
 class LogoutModule implements ServiceModuleInterface
 {
-    /** @var \LC\Common\Http\SessionInterface */
+    /** @var \LC\Portal\Http\SessionInterface */
     private $session;
 
     /** @var string|null */
@@ -44,7 +44,7 @@ class LogoutModule implements ServiceModuleInterface
         $service->post(
             '/_logout',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $this->session->destroy();

@@ -1,0 +1,6 @@
+Test
+Options:
+  --foo foo		Foo (REQUIRED)
+  --bar		Bar
+  --baz		Baz (REQUIRED)
+  --xyz xyz		Xyz

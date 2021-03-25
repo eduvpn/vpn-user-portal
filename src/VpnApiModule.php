@@ -13,23 +13,20 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
-use LC\Common\Config;
-use LC\Common\Http\ApiErrorResponse;
-use LC\Common\Http\ApiResponse;
-use LC\Common\Http\Exception\InputValidationException;
-use LC\Common\Http\InputValidation;
-use LC\Common\Http\Request;
-use LC\Common\Http\Response;
-use LC\Common\Http\Service;
-use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\ProfileConfig;
-use LC\Common\RandomInterface;
 use LC\Portal\CA\CaInterface;
+use LC\Portal\Http\ApiErrorResponse;
+use LC\Portal\Http\ApiResponse;
+use LC\Portal\Http\Exception\InputValidationException;
+use LC\Portal\Http\InputValidation;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
 {
-    /** @var \LC\Common\Config */
+    /** @var \LC\Portal\Config */
     private $config;
 
     /** @var Storage */
@@ -41,7 +38,7 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var TlsCrypt */
     private $tlsCrypt;
 
-    /** @var \LC\Common\RandomInterface */
+    /** @var \LC\Portal\RandomInterface */
     private $random;
 
     /** @var CA\CaInterface */
@@ -134,7 +131,7 @@ class VpnApiModule implements ServiceModuleInterface
         $service->post(
             '/create_keypair',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
@@ -159,7 +156,7 @@ class VpnApiModule implements ServiceModuleInterface
         $service->get(
             '/check_certificate',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 $commonName = InputValidation::commonName($request->requireQueryParameter('common_name'));
@@ -177,7 +174,7 @@ class VpnApiModule implements ServiceModuleInterface
         $service->get(
             '/profile_config',
             /**
-             * @return \LC\Common\Http\Response
+             * @return \LC\Portal\Http\Response
              */
             function (Request $request, array $hookData) {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
@@ -371,7 +368,7 @@ class VpnApiModule implements ServiceModuleInterface
     /**
      * XXX duplicate in AdminPortalModule|VpnPortalModule.
      *
-     * @return array<string,\LC\Common\ProfileConfig>
+     * @return array<string,\LC\Portal\ProfileConfig>
      */
     private function profileList()
     {

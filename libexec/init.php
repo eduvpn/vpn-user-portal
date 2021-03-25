@@ -12,7 +12,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Common\FileIO;
+use LC\Portal\FileIO;
 use LC\Portal\Storage;
 
 // XXX Move this to web/index.php, web/api.php and web/node-api.php so it

@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Common\FileIO;
-
 class TlsCrypt
 {
     /** @var string */
