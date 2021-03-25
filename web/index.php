@@ -87,8 +87,8 @@ try {
     // the configured "sessionExpiry" is < PT8H, then we want to follow that
     // setting...
     $sessionOptions = SessionOptions::init();
-    $dateTime = new DateTime();
-    if (date_add(clone $dateTime, new DateInterval('PT30M')) > date_add(clone $dateTime, new DateInterval($sessionExpiry))) {
+    $dateTime = new DateTimeImmutable();
+    if ($dateTime->add(new DateInterval('PT30M')) > $dateTime->add(new DateInterval($sessionExpiry))) {
         $sessionOptions = SessionOptions::init()->withExpiresIn(new DateInterval($sessionExpiry));
     }
 

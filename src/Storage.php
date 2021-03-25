@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use DateTime;
+use DateTimeImmutable;
 use fkooman\OAuth\Server\Authorization;
 use fkooman\OAuth\Server\StorageInterface;
 use PDO;
 
 class Storage implements StorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2021032401';
+    const CURRENT_SCHEMA_VERSION = '2021032501';
 
     private PDO $db;
 
@@ -51,7 +51,7 @@ class Storage implements StorageInterface
         return \is_string($resultColumn) ? $resultColumn : null;
     }
 
-    public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTime $createdAt, ?string $clientId): void
+    public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, ?string $clientId): void
     {
         $stmt = $this->db->prepare(
             'INSERT INTO wg_peers (
@@ -82,7 +82,7 @@ class Storage implements StorageInterface
         $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
-        $stmt->bindValue(':created_at', $createdAt->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':created_at', $createdAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
     }
@@ -119,7 +119,7 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @return array<array{display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTime,client_id:string|null}>
+     * @return array<array{display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,client_id:string|null}>
      */
     public function wgGetPeers(string $userId): array
     {
@@ -148,7 +148,7 @@ class Storage implements StorageInterface
                 'public_key' => (string) $resultRow['public_key'],
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
-                'created_at' => new DateTime($resultRow['created_at']),
+                'created_at' => new DateTimeImmutable($resultRow['created_at']),
                 'client_id' => null === $resultRow['client_id'] ? null : (string) $resultRow['client_id'],
             ];
         }
@@ -157,7 +157,7 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTime,client_id:string|null}>
+     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,client_id:string|null}>
      */
     public function wgGetAllPeers(string $profileId): array
     {
@@ -185,7 +185,7 @@ class Storage implements StorageInterface
                 'public_key' => (string) $resultRow['public_key'],
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
-                'created_at' => new DateTime($resultRow['created_at']),
+                'created_at' => new DateTimeImmutable($resultRow['created_at']),
                 'client_id' => null === $resultRow['client_id'] ? null : (string) $resultRow['client_id'],
             ];
         }
@@ -193,7 +193,7 @@ class Storage implements StorageInterface
         return $wgPeers;
     }
 
-    public function addLocalUser(string $userId, string $userPass, DateTime $createdAt): void
+    public function addLocalUser(string $userId, string $userPass, DateTimeImmutable $createdAt): void
     {
         if ($this->userExists($userId)) {
             $this->updatePassword($userId, $userPass);
@@ -211,7 +211,7 @@ class Storage implements StorageInterface
         $passwordHash = password_hash($userPass, \PASSWORD_DEFAULT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
-        $stmt->bindValue(':created_at', $createdAt->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':created_at', $createdAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -502,7 +502,7 @@ class Storage implements StorageInterface
      * @param string        $userId
      * @param array<string> $permissionList
      */
-    public function updateSessionInfo($userId, DateTime $sessionExpiresAt, array $permissionList): void
+    public function updateSessionInfo($userId, DateTimeImmutable $sessionExpiresAt, array $permissionList): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -517,7 +517,7 @@ class Storage implements StorageInterface
     SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':session_expires_at', $sessionExpiresAt->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':session_expires_at', $sessionExpiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':permission_list', Json::encode($permissionList), PDO::PARAM_STR);
 
         $stmt->execute();
@@ -529,7 +529,7 @@ class Storage implements StorageInterface
      * @param string      $displayName
      * @param string|null $clientId
      */
-    public function addCertificate($userId, $commonName, $displayName, DateTime $validFrom, DateTime $validTo, $clientId): void
+    public function addCertificate($userId, $commonName, $displayName, DateTimeImmutable $validFrom, DateTimeImmutable $validTo, $clientId): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -543,8 +543,8 @@ class Storage implements StorageInterface
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':display_name', $displayName, PDO::PARAM_STR);
-        $stmt->bindValue(':valid_from', $validFrom->format(DateTime::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':valid_to', $validTo->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':valid_from', $validFrom->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':valid_to', $validTo->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
     }
@@ -687,10 +687,10 @@ class Storage implements StorageInterface
     /**
      * @param string $profileId
      * @param string $commonName
-     * @param string $ip4
-     * @param string $ip6
+     * @param string $ipFour
+     * @param string $ipSix
      */
-    public function clientConnect($profileId, $commonName, $ip4, $ip6, DateTime $connectedAt): void
+    public function clientConnect($profileId, $commonName, $ipFour, $ipSix, DateTimeImmutable $connectedAt): void
     {
         // update "lost" client entries when a new client connects that gets
         // the IP address of an existing entry that was not "closed" yet. This
@@ -707,18 +707,18 @@ class Storage implements StorageInterface
             WHERE
                 profile_id = :profile_id
             AND
-                ip4 = :ip4
+                ip_four = :ip_four
             AND
-                ip6 = :ip6
+                ip_six = :ip_six
             AND
                 disconnected_at IS NULL
     SQL
         );
 
-        $stmt->bindValue(':date_time', $connectedAt->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':ip4', $ip4, PDO::PARAM_STR);
-        $stmt->bindValue(':ip6', $ip6, PDO::PARAM_STR);
+        $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
+        $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
         $stmt->execute();
 
         // this query is so complex, because we want to store the user_id in the
@@ -731,8 +731,8 @@ class Storage implements StorageInterface
                 user_id,
                 profile_id,
                 common_name,
-                ip4,
-                ip6,
+                ip_four,
+                ip_six,
                 connected_at
             )
         VALUES
@@ -749,8 +749,8 @@ class Storage implements StorageInterface
                 ),
                 :profile_id,
                 :common_name,
-                :ip4,
-                :ip6,
+                :ip_four,
+                :ip_six,
                 :connected_at
             )
     SQL
@@ -758,20 +758,20 @@ class Storage implements StorageInterface
 
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
-        $stmt->bindValue(':ip4', $ip4, PDO::PARAM_STR);
-        $stmt->bindValue(':ip6', $ip6, PDO::PARAM_STR);
-        $stmt->bindValue(':connected_at', $connectedAt->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
+        $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
+        $stmt->bindValue(':connected_at', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
     /**
      * @param string $profileId
      * @param string $commonName
-     * @param string $ip4
-     * @param string $ip6
+     * @param string $ipFour
+     * @param string $ipSix
      * @param int    $bytesTransferred
      */
-    public function clientDisconnect($profileId, $commonName, $ip4, $ip6, DateTime $connectedAt, DateTime $disconnectedAt, $bytesTransferred): void
+    public function clientDisconnect($profileId, $commonName, $ipFour, $ipSix, DateTimeImmutable $connectedAt, DateTimeImmutable $disconnectedAt, $bytesTransferred): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -785,9 +785,9 @@ class Storage implements StorageInterface
         AND
             common_name = :common_name
         AND
-            ip4 = :ip4
+            ip_four = :ip_four
         AND
-            ip6 = :ip6
+            ip_six = :ip_six
         AND
             connected_at = :connected_at
     SQL
@@ -795,10 +795,10 @@ class Storage implements StorageInterface
 
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
-        $stmt->bindValue(':ip4', $ip4, PDO::PARAM_STR);
-        $stmt->bindValue(':ip6', $ip6, PDO::PARAM_STR);
-        $stmt->bindValue(':connected_at', $connectedAt->format(DateTime::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':disconnected_at', $disconnectedAt->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
+        $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
+        $stmt->bindValue(':connected_at', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':disconnected_at', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':bytes_transferred', $bytesTransferred, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -816,8 +816,8 @@ class Storage implements StorageInterface
             l.user_id,
             l.common_name,
             l.profile_id,
-            l.ip4,
-            l.ip6,
+            l.ip_four,
+            l.ip_six,
             l.connected_at,
             l.disconnected_at,
             l.bytes_transferred,
@@ -846,7 +846,7 @@ class Storage implements StorageInterface
      *
      * @return false|array
      */
-    public function getLogEntry(DateTime $dateTime, $ipAddress)
+    public function getLogEntry(DateTimeImmutable $dateTime, $ipAddress)
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -854,15 +854,15 @@ class Storage implements StorageInterface
             user_id,
             profile_id,
             common_name,
-            ip4,
-            ip6,
+            ip_four,
+            ip_six,
             connected_at,
             disconnected_at,
             client_lost
         FROM
             connection_log
         WHERE
-            (ip4 = :ip_address OR ip6 = :ip_address)
+            (ip_four = :ip_address OR ip_six = :ip_address)
         AND
             connected_at < :date_time
         AND
@@ -870,7 +870,7 @@ class Storage implements StorageInterface
     SQL
         );
         $stmt->bindValue(':ip_address', $ipAddress, PDO::PARAM_STR);
-        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
 
         // XXX can this also contain multiple results? I don't think so, but
@@ -878,7 +878,7 @@ class Storage implements StorageInterface
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function cleanConnectionLog(DateTime $dateTime): void
+    public function cleanConnectionLog(DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -891,12 +891,12 @@ class Storage implements StorageInterface
     SQL
         );
 
-        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
 
         $stmt->execute();
     }
 
-    public function cleanUserMessages(DateTime $dateTime): void
+    public function cleanUserMessages(DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -907,7 +907,7 @@ class Storage implements StorageInterface
     SQL
         );
 
-        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
 
         $stmt->execute();
     }
@@ -939,7 +939,7 @@ class Storage implements StorageInterface
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function addUserMessage(string $userId, string $type, string $message, DateTime $dateTime): void
+    public function addUserMessage(string $userId, string $type, string $message, DateTimeImmutable $dateTime): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
@@ -954,14 +954,14 @@ class Storage implements StorageInterface
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':type', $type, PDO::PARAM_STR);
         $stmt->bindValue(':message', $message, PDO::PARAM_STR);
-        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
-    public function cleanExpiredCertificates(DateTime $dateTime): void
+    public function cleanExpiredCertificates(DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare('DELETE FROM certificates WHERE valid_to < :date_time');
-        $stmt->bindValue(':date_time', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
 
         $stmt->execute();
     }
@@ -981,7 +981,7 @@ class Storage implements StorageInterface
     {
         // XXX do something better with session_expires_at
         // also rename it to something better!
-        $dateTime = new DateTime();
+        $dateTime = new DateTimeImmutable();
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
@@ -1015,7 +1015,7 @@ class Storage implements StorageInterface
     SQL
             );
             $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-            $stmt->bindValue(':session_expires_at', $dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
+            $stmt->bindValue(':session_expires_at', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
             $stmt->bindValue(':permission_list', '[]', PDO::PARAM_STR);
             $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
             $stmt->execute();

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateInterval;
-use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\Http\AuthUtils;
@@ -46,7 +46,7 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var Storage */
     private $storage;
 
-    /** @var \DateTime */
+    /** @var \DateTimeImmutable */
     private $dateTime;
 
     /**
@@ -60,7 +60,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->ca = $ca;
         $this->daemonWrapper = $daemonWrapper;
         $this->storage = $storage;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
     }
 
     public function init(Service $service): void
@@ -108,12 +108,12 @@ class AdminPortalModule implements ServiceModuleInterface
                 $certData = $this->ca->caCert();
                 // XXX probably wrap all this stuff in its own class...
                 $parsedCert = openssl_x509_parse($certData);
-                $validFrom = new DateTime('@'.$parsedCert['validFrom_time_t']);
-                $validTo = new DateTime('@'.$parsedCert['validTo_time_t']);
+                $validFrom = new DateTimeImmutable('@'.$parsedCert['validFrom_time_t']);
+                $validTo = new DateTimeImmutable('@'.$parsedCert['validTo_time_t']);
 
                 $caInfo = [
-                    'valid_from' => $validFrom->format(DateTime::ATOM),
-                    'valid_to' => $validTo->format(DateTime::ATOM),
+                    'valid_from' => $validFrom->format(DateTimeImmutable::ATOM),
+                    'valid_to' => $validTo->format(DateTimeImmutable::ATOM),
                 ];
 
                 return new HtmlResponse(
@@ -271,13 +271,13 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, array $hookData) {
                 AuthUtils::requireAdmin($hookData);
 
-                $now = new DateTime();
+                $now = new DateTimeImmutable();
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
-                            'now' => $now->format(DateTime::ATOM),
+                            'now' => $now->format(DateTimeImmutable::ATOM),
                             'date_time' => null,
                             'ip_address' => null,
                         ]
@@ -325,11 +325,12 @@ class AdminPortalModule implements ServiceModuleInterface
                 $dateTimeLocalStr = $dateTime->format('Y-m-d H:i:s');
 
                 // make sure it is NOT in the future
-                $now = new DateTime();
+                $now = new DateTimeImmutable();
                 if ($dateTime > $now) {
                     throw new HttpException('can not specify a time in the future', 400);
                 }
                 // convert it to UTC as our server logs are all in UTC
+                // XXX does this work when immutable?
                 $dateTime->setTimeZone(new DateTimeZone('UTC'));
 
                 $ipAddress = $request->requirePostParameter('ip_address');
@@ -339,7 +340,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
-                            'now' => $now->format(DateTime::ATOM),
+                            'now' => $now->format(DateTimeImmutable::ATOM),
                             'date_time' => $dateTimeLocalStr,
                             'ip_address' => $ipAddress,
                             'result' => $this->storage->getLogEntry($dateTime, $ipAddress),
@@ -376,7 +377,7 @@ class AdminPortalModule implements ServiceModuleInterface
         // ideally this is exactly the same the API provides, otherwise the
         // "global" profile statistics may not be right (anymore). Ah well.
         $dateList = [];
-        $currentDate = date_sub(clone $this->dateTime, new DateInterval('P1M'));
+        $currentDate = $this->dateTime->sub(new DateInterval('P1M'));
         while ($currentDate < $this->dateTime) {
             $dateList[] = $currentDate->format('Y-m-d');
             $currentDate->add(new DateInterval('P1D'));

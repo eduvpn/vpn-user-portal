@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateInterval;
-use DateTime;
+use DateTimeImmutable;
 use LC\Portal\Http\BeforeHookInterface;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Http\Request;
@@ -24,23 +24,16 @@ use LC\Portal\Http\SessionInterface;
  */
 class UpdateSessionInfoHook implements BeforeHookInterface
 {
-    /** @var \LC\Portal\Http\SessionInterface */
-    private $session;
-
-    /** @var Storage */
-    private $storage;
-
-    /** @var \DateTime */
-    private $dateTime;
-
-    /** @var \DateInterval */
-    private $sessionExpiry;
+    private SessionInterface $session;
+    private Storage $storage;
+    private DateTimeImmutable $dateTime;
+    private DateInterval $sessionExpiry;
 
     public function __construct(SessionInterface $session, Storage $storage, DateInterval $sessionExpiry)
     {
         $this->session = $session;
         $this->storage = $storage;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
         $this->sessionExpiry = $sessionExpiry;
     }
 
@@ -74,7 +67,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
 
         // check if the authentication backend wants to override the sessionExpiry
         if (null === $sessionExpiresAt = $userInfo->getSessionExpiresAt()) {
-            $sessionExpiresAt = date_add(clone $this->dateTime, $this->sessionExpiry);
+            $sessionExpiresAt = $this->dateTime->add($this->sessionExpiry);
         }
         // XXX if the authentication backend overrides the sessionExpiresAt, we
         // must validate it is not in the past... also, probably get rid of this!
@@ -86,7 +79,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
             sprintf(
                 'updated session info {permission_list: [%s], expires_at: %s}',
                 implode(' ', $userInfo->getPermissionList()),
-                $sessionExpiresAt->format(DateTime::ATOM)
+                $sessionExpiresAt->format(DateTimeImmutable::ATOM)
             ),
             $this->dateTime
         );

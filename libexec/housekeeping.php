@@ -22,9 +22,9 @@ try {
         sprintf('%s/schema', $baseDir)
     );
 
-    $storage->cleanConnectionLog(new DateTime('now -32 days'));
-    $storage->cleanExpiredCertificates(new DateTime('now -7 days'));
-    $storage->cleanUserMessages(new DateTime('now -32 days'));
+    $storage->cleanConnectionLog(new DateTimeImmutable('now -32 days'));
+    $storage->cleanExpiredCertificates(new DateTimeImmutable('now -7 days'));
+    $storage->cleanUserMessages(new DateTimeImmutable('now -32 days'));
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);

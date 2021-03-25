@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use DateTime;
+use DateTimeImmutable;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\Exception\NodeApiException;
 use LC\Portal\Http\ApiErrorResponse;
@@ -35,7 +35,7 @@ class NodeApiModule implements ServiceModuleInterface
     /** @var TlsCrypt */
     private $tlsCrypt;
 
-    /** @var \DateTime */
+    /** @var \DateTimeImmutable */
     private $dateTime;
 
     public function __construct(Config $config, CaInterface $ca, Storage $storage, TlsCrypt $tlsCrypt)
@@ -44,7 +44,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->ca = $ca;
         $this->storage = $storage;
         $this->tlsCrypt = $tlsCrypt;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
     }
 
     public function init(Service $service): void
@@ -127,26 +127,26 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
-        $ip4 = InputValidation::ip4($request->requirePostParameter('ip4'));
-        $ip6 = InputValidation::ip6($request->requirePostParameter('ip6'));
+        $ipFour = InputValidation::ipFour($request->requirePostParameter('ipFour'));
+        $ipSix = InputValidation::ipSix($request->requirePostParameter('ipSix'));
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
 
         $this->verifyConnection($profileId, $commonName);
-        $this->storage->clientConnect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)));
+        $this->storage->clientConnect($profileId, $commonName, $ipFour, $ipSix, new DateTimeImmutable(sprintf('@%d', $connectedAt)));
     }
 
     public function disconnect(Request $request): void
     {
         $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
-        $ip4 = InputValidation::ip4($request->requirePostParameter('ip4'));
-        $ip6 = InputValidation::ip6($request->requirePostParameter('ip6'));
+        $ipFour = InputValidation::ipFour($request->requirePostParameter('ipFour'));
+        $ipSix = InputValidation::ipSix($request->requirePostParameter('ipSix'));
 
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
         $disconnectedAt = InputValidation::disconnectedAt($request->requirePostParameter('disconnected_at'));
         $bytesTransferred = InputValidation::bytesTransferred($request->requirePostParameter('bytes_transferred'));
 
-        $this->storage->clientDisconnect($profileId, $commonName, $ip4, $ip6, new DateTime(sprintf('@%d', $connectedAt)), new DateTime(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+        $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, new DateTimeImmutable(sprintf('@%d', $connectedAt)), new DateTimeImmutable(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
     }
 
     /**
@@ -171,9 +171,9 @@ class NodeApiModule implements ServiceModuleInterface
             // guest user id contains '!!' for some reason...
             //
             // this is always string, but DB gives back scalar|null
-            $sessionExpiresAt = new DateTime((string) $this->storage->getSessionExpiresAt($userId));
+            $sessionExpiresAt = new DateTimeImmutable((string) $this->storage->getSessionExpiresAt($userId));
             if ($sessionExpiresAt->getTimestamp() < $this->dateTime->getTimestamp()) {
-                throw new NodeApiException($userId, sprintf('the certificate is still valid, but the session expired at %s', $sessionExpiresAt->format(DateTime::ATOM)));
+                throw new NodeApiException($userId, sprintf('the certificate is still valid, but the session expired at %s', $sessionExpiresAt->format(DateTimeImmutable::ATOM)));
             }
         }
 

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateInterval;
-use DateTime;
+use DateTimeImmutable;
 use fkooman\OAuth\Server\ClientDbInterface;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\Http\Exception\HttpException;
@@ -55,7 +55,7 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \fkooman\OAuth\Server\ClientDbInterface */
     private $clientDb;
 
-    /** @var \DateTime */
+    /** @var \DateTimeImmutable */
     private $dateTime;
 
     public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb)
@@ -69,10 +69,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->random = $random;
         $this->ca = $ca;
         $this->clientDb = $clientDb;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
     }
 
-    public function setDateTime(DateTime $dateTime): void
+    public function setDateTimeImmutable(DateTimeImmutable $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
@@ -166,7 +166,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to download a configuration for this profile', 400);
                 }
 
-                $expiresAt = new DateTime($this->storage->getSessionExpiresAt($userInfo->getUserId()));
+                $expiresAt = new DateTimeImmutable($this->storage->getSessionExpiresAt($userInfo->getUserId()));
 
                 return $this->getConfig($request->getServerName(), $profileId, $userInfo->getUserId(), $displayName, $expiresAt);
             }
@@ -340,7 +340,7 @@ class VpnPortalModule implements ServiceModuleInterface
      *
      * @return \LC\Portal\Http\Response
      */
-    private function getConfig($serverName, $profileId, $userId, $displayName, DateTime $expiresAt)
+    private function getConfig($serverName, $profileId, $userId, $displayName, DateTimeImmutable $expiresAt)
     {
         // create a certificate
         // generate a random string as the certificate's CN
@@ -350,8 +350,8 @@ class VpnPortalModule implements ServiceModuleInterface
             $userId,
             $commonName,
             $displayName,
-            new DateTime(sprintf('@%d', $certInfo['valid_from'])),
-            new DateTime(sprintf('@%d', $certInfo['valid_to'])),
+            new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
+            new DateTimeImmutable(sprintf('@%d', $certInfo['valid_to'])),
             null
         );
 
@@ -427,9 +427,7 @@ class VpnPortalModule implements ServiceModuleInterface
      */
     private function getExpiryDate(DateInterval $dateInterval)
     {
-        $expiryDate = date_add(clone $this->dateTime, $dateInterval);
-
-        return $expiryDate->format('Y-m-d');
+        return $this->dateTime->add($dateInterval)->format('Y-m-d');
     }
 
     /**

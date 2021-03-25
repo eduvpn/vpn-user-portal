@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Federation;
 
-use DateTime;
+use DateTimeImmutable;
 use Exception;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use LC\Portal\FileIO;
@@ -40,8 +40,8 @@ class ForeignKeyListFetcher
     {
         $requestHeaders = [];
         if (false !== $filemTime = @filemtime($this->dataDir.'/server_list.json')) {
-            $fileModifiedDateTime = new DateTime('@'.$filemTime);
-            $requestHeaders[] = 'If-Modified-Since: '.$fileModifiedDateTime->format('D, d M Y H:i:s \G\M\T');
+            $fileModifiedDateTimeImmutable = new DateTimeImmutable('@'.$filemTime);
+            $requestHeaders[] = 'If-Modified-Since: '.$fileModifiedDateTimeImmutable->format('D, d M Y H:i:s \G\M\T');
         }
         $serverListResponse = $httpClient->get($serverListUrl, [], $requestHeaders);
         if (200 !== $serverListResponse->getCode()) {
@@ -82,8 +82,8 @@ class ForeignKeyListFetcher
             // use Last-Modified header to set the file's modified time, if
             // available from server to be used on future requests as the
             // "If-Modified-Since" header value
-            $lastModifiedDateTime = new DateTime($lastModified);
-            touch($this->dataDir.'/server_list.json', $lastModifiedDateTime->getTimestamp());
+            $lastModifiedDateTimeImmutable = new DateTimeImmutable($lastModified);
+            touch($this->dataDir.'/server_list.json', $lastModifiedDateTimeImmutable->getTimestamp());
         }
     }
 

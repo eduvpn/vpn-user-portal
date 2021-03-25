@@ -77,7 +77,7 @@ try {
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir)
     );
-    $storage->addLocalUser($userId, $userPass, new DateTime());
+    $storage->addLocalUser($userId, $userPass, new DateTimeImmutable());
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);

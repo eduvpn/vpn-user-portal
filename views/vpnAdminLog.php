@@ -44,7 +44,7 @@ $this->layout('base', ['activeItem' => 'log', 'pageTitle' => $this->t('Log')]); 
                     </tr>
                     <tr>
                         <th><?=$this->t('IPs'); ?></th>
-                        <td><ul><li><?=$this->e($result['ip4']); ?></li><li><?=$this->e($result['ip6']); ?></li></ul></td>
+                        <td><ul><li><?=$this->e($result['ipFour']); ?></li><li><?=$this->e($result['ipSix']); ?></li></ul></td>
                     </tr>
                     <tr>
                         <th><?=$this->t('Connected'); ?> (<?=$this->e(date('T')); ?>)</th>

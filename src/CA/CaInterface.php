@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\CA;
 
-use DateTime;
+use DateTimeImmutable;
 
 interface CaInterface
 {
@@ -40,5 +40,5 @@ interface CaInterface
      * @return array the certificate and key in array with keys 'cert', 'key',
      *               'valid_from' and 'valid_to'
      */
-    public function clientCert($commonName, DateTime $expiresAt);
+    public function clientCert($commonName, DateTimeImmutable $expiresAt);
 }

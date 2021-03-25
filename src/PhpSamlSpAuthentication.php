@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use DateTime;
+use DateTimeImmutable;
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
 use LC\Portal\Http\BeforeHookInterface;
@@ -29,14 +29,14 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
     /** @var \fkooman\SAML\SP\Api\SamlAuth */
     private $samlAuth;
 
-    /** @var \DateTime */
+    /** @var \DateTimeImmutable */
     private $dateTime;
 
     public function __construct(Config $config)
     {
         $this->config = $config;
         $this->samlAuth = new SamlAuth();
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
     }
 
     /**

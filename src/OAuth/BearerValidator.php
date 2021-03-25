@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\OAuth;
 
-use DateTime;
+use DateTimeImmutable;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\Exception\InvalidTokenException;
@@ -40,7 +40,7 @@ class BearerValidator
     /** @var array<string,array<string,string>> */
     private $keyInstanceMapping;
 
-    /** @var \DateTime */
+    /** @var \DateTimeImmutable */
     private $dateTime;
 
     /**
@@ -52,10 +52,10 @@ class BearerValidator
         $this->clientDb = $clientDb;
         $this->localPublicKey = $localPublicKey;
         $this->keyInstanceMapping = $keyInstanceMapping;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
     }
 
-    public function setDateTime(DateTime $dateTime): void
+    public function setDateTimeImmutable(DateTimeImmutable $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
@@ -103,7 +103,7 @@ class BearerValidator
             }
 
             // check access_token expiry
-            if ($this->dateTime >= new DateTime($accessTokenInfo['expires_at'])) {
+            if ($this->dateTime >= new DateTimeImmutable($accessTokenInfo['expires_at'])) {
                 throw new InvalidTokenException('"access_token" expired');
             }
 

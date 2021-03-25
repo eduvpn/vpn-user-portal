@@ -86,7 +86,7 @@ $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Accou
 <?php else: ?>
                         <?=$this->e($logEntry['profile_id']); ?>
 <?php endif; ?>
-                    <td title="IPv4: <?=$this->e($logEntry['ip4']); ?>, IPv6: <?=$this->e($logEntry['ip6']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
+                    <td title="IPv4: <?=$this->e($logEntry['ipFour']); ?>, IPv6: <?=$this->e($logEntry['ipSix']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
                     <td title="<?=$this->e((string) $logEntry['bytes_transferred'], 'bytes_to_human'); ?>"><?=$this->d($logEntry['disconnected_at']); ?></td>
                 </tr>
 <?php endif; ?>

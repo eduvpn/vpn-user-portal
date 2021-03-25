@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-use DateTime;
+use DateTimeImmutable;
 use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\Json;
 
@@ -94,11 +94,11 @@ class InputValidation
     /**
      * @param string $dateTime
      *
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public static function dateTime($dateTime)
     {
-        if (false === $dateTimeObj = DateTime::createFromFormat('Y-m-d H:i:s', $dateTime)) {
+        if (false === $dateTimeObj = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateTime)) {
             throw new InputValidationException('invalid "date_time"');
         }
 
@@ -137,33 +137,23 @@ class InputValidation
         return inet_ntop(inet_pton($ipAddress));
     }
 
-    /**
-     * @param string $ip4
-     *
-     * @return string
-     */
-    public static function ip4($ip4)
+    public static function ipFour(string $ipFour): string
     {
-        if (false === filter_var($ip4, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
-            throw new InputValidationException('invalid "ip4"');
+        if (false === filter_var($ipFour, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
+            throw new InputValidationException('invalid "ipFour"');
         }
 
-        return $ip4;
+        return $ipFour;
     }
 
-    /**
-     * @param string $ip6
-     *
-     * @return string
-     */
-    public static function ip6($ip6)
+    public static function ipSix(string $ipSix): string
     {
-        if (false === filter_var($ip6, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
-            throw new InputValidationException('invalid "ip6"');
+        if (false === filter_var($ipSix, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+            throw new InputValidationException('invalid "ipSix"');
         }
 
         // normalize the IPv6 address
-        return inet_ntop(inet_pton($ip6));
+        return inet_ntop(inet_pton($ipSix));
     }
 
     /**
@@ -253,11 +243,11 @@ class InputValidation
     /**
      * @param string $expiresAt
      *
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     public static function expiresAt($expiresAt)
     {
-        if (false === $dateTime = DateTime::createFromFormat(DateTime::ATOM, $expiresAt)) {
+        if (false === $dateTime = DateTimeImmutable::createFromFormat(DateTimeImmutable::ATOM, $expiresAt)) {
             throw new InputValidationException('invalid "expires_at"');
         }
 

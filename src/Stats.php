@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use DateTime;
+use DateTimeImmutable;
 use PDO;
 
 class Stats
@@ -19,10 +19,10 @@ class Stats
     /** @var Storage */
     private $storage;
 
-    /** @var \DateTime */
+    /** @var \DateTimeImmutable */
     private $dateTime;
 
-    public function __construct(Storage $storage, DateTime $dateTime)
+    public function __construct(Storage $storage, DateTimeImmutable $dateTime)
     {
         $this->storage = $storage;
         $this->dateTime = $dateTime;
@@ -34,7 +34,7 @@ class Stats
     public function get(array $profileIdList)
     {
         $allStatsData = [
-            'generated_at' => $this->dateTime->format(DateTime::ATOM),
+            'generated_at' => $this->dateTime->format(DateTimeImmutable::ATOM),
             'profiles' => [],
         ];
 
@@ -73,8 +73,8 @@ class Stats
                 $connectedAt = $entry['connected_at'];
                 /** @var string|null */
                 $disconnectedAt = $entry['disconnected_at'];
-                $connectedAtDateTime = new DateTime($connectedAt);
-                $dateOfConnection = $connectedAtDateTime->format('Y-m-d');
+                $connectedAtDateTimeImmutable = new DateTimeImmutable($connectedAt);
+                $dateOfConnection = $connectedAtDateTimeImmutable->format('Y-m-d');
                 /** @var int|null */
                 $bytesTransferred = $entry['bytes_transferred'];
                 if (!\array_key_exists($dateOfConnection, $statsData)) {

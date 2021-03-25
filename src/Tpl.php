@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use LC\Portal\Exception\TplException;
 use LC\Portal\OAuth\ClientDb;
@@ -359,7 +359,7 @@ class Tpl implements TplInterface
      */
     private function d($dateString, $dateFormat = 'Y-m-d H:i:s')
     {
-        $dateTime = new DateTime($dateString);
+        $dateTime = new DateTimeImmutable($dateString);
         $dateTime->setTimeZone(new DateTimeZone(date_default_timezone_get()));
 
         return $this->e(date_format($dateTime, $dateFormat));

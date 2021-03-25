@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateInterval;
-use DateTime;
+use DateTimeImmutable;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\Http\ApiErrorResponse;
 use LC\Portal\Http\ApiResponse;
@@ -44,7 +44,7 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var CA\CaInterface */
     private $ca;
 
-    /** @var \DateTime */
+    /** @var \DateTimeImmutable */
     private $dateTime;
 
     public function __construct(Config $config, Storage $storage, DateInterval $sessionExpiry, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca)
@@ -55,7 +55,7 @@ class VpnApiModule implements ServiceModuleInterface
         $this->tlsCrypt = $tlsCrypt;
         $this->random = $random;
         $this->ca = $ca;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTimeImmutable();
     }
 
     public function init(Service $service): void
@@ -288,8 +288,8 @@ class VpnApiModule implements ServiceModuleInterface
             $accessTokenInfo->getUserId(),
             $commonName,
             $accessTokenInfo->getClientId(),
-            new DateTime(sprintf('@%d', $certInfo['valid_from'])),
-            new DateTime(sprintf('@%d', $certInfo['valid_to'])),
+            new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
+            new DateTimeImmutable(sprintf('@%d', $certInfo['valid_to'])),
             $accessTokenInfo->getClientId()
         );
 
@@ -318,11 +318,11 @@ class VpnApiModule implements ServiceModuleInterface
             // CA
             $isValid = false;
             $reason = 'certificate_missing';
-        } elseif (new DateTime($clientCertificateInfo['valid_from']) > $this->dateTime) {
+        } elseif (new DateTimeImmutable($clientCertificateInfo['valid_from']) > $this->dateTime) {
             // certificate not yet valid
             $isValid = false;
             $reason = 'certificate_not_yet_valid';
-        } elseif (new DateTime($clientCertificateInfo['valid_to']) < $this->dateTime) {
+        } elseif (new DateTimeImmutable($clientCertificateInfo['valid_to']) < $this->dateTime) {
             // certificate not valid anymore
             $isValid = false;
             $reason = 'certificate_expired';
@@ -354,15 +354,15 @@ class VpnApiModule implements ServiceModuleInterface
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeImmutable
      */
     private function getExpiresAt(VpnAccessTokenInfo $accessTokenInfo)
     {
         if (!$accessTokenInfo->getIsLocal()) {
-            return date_add(clone $this->dateTime, $this->sessionExpiry);
+            return $this->dateTime->add($this->sessionExpiry);
         }
 
-        return new DateTime($this->storage->getSessionExpiresAt($accessTokenInfo->getUserId()));
+        return new DateTimeImmutable($this->storage->getSessionExpiresAt($accessTokenInfo->getUserId()));
     }
 
     /**

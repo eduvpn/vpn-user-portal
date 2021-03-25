@@ -29,7 +29,7 @@ try {
     );
 
     $outFile = sprintf('%s/stats.json', $dataDir);
-    $stats = new Stats($storage, new DateTime());
+    $stats = new Stats($storage, new DateTimeImmutable());
     $statsData = $stats->get(
         array_keys($config->requireArray('vpnProfiles'))
     );
