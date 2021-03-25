@@ -25,8 +25,7 @@ try {
     $db = new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir));
     $storage = new Storage(
         $db,
-        sprintf('%s/schema', $baseDir),
-        new DateInterval('P90D')
+        sprintf('%s/schema', $baseDir)
     );
 
     $outFile = sprintf('%s/stats.json', $dataDir);

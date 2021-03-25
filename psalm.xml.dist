@@ -4,6 +4,7 @@
     <directory name="bin"/>
     <directory name="src"/>
     <directory name="web"/>
+    <directory name="libexec"/>
     <ignoreFiles>
       <directory name="vendor"/>
     </ignoreFiles>
