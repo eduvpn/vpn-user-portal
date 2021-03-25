@@ -15,9 +15,8 @@ use DateInterval;
 use DateTime;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
-use LC\Portal\ClientFetcher;
-use LC\Portal\Config;
 use LC\Portal\OAuth\BearerValidator;
+use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\Storage;
 use PDO;
@@ -43,13 +42,11 @@ class BearerValidatorTest extends TestCase
 
         $storage = new Storage(
             new PDO('sqlite::memory:'),
-            \dirname(__DIR__, 2).'/schema',
-            new DateInterval('P90D')
+            \dirname(__DIR__, 2).'/schema'
         );
-        $storage->setDateTime($this->dateTime);
         $storage->init();
         $storage->storeAuthorization('foo', 'org.letsconnect-vpn.app.windows', 'config', 'random_1');
-        $clientDb = new ClientFetcher(new Config(['Api' => ['consumerList' => []]]));
+        $clientDb = new ClientDb();
         $this->secretKey = SecretKey::generate();
         $this->remoteSecretKey = SecretKey::generate();
         $keyInstanceMapping = [

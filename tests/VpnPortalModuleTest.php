@@ -13,12 +13,11 @@ namespace LC\Portal\Tests;
 
 use DateInterval;
 use DateTime;
-use LC\Portal\ClientFetcher;
 use LC\Portal\Config;
 use LC\Portal\Http\NullAuthenticationHook;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
-use LC\Portal\HttpClient\ServerClient;
+use LC\Portal\OAuth\ClientDb;
 use LC\Portal\Storage;
 use LC\Portal\VpnPortalModule;
 use PDO;
@@ -32,17 +31,15 @@ class VpnPortalModuleTest extends TestCase
     protected function setUp(): void
     {
         $schemaDir = \dirname(__DIR__).'/schema';
-        $serverClient = new ServerClient(new TestHttpClient(), 'serverClient');
         $storage = new Storage(new PDO('sqlite::memory:'), $schemaDir, new DateInterval('P90D'));
         $storage->init();
 
         $vpnPortalModule = new VpnPortalModule(
             new Config(['sessionExpiry' => 'P90D']),
             new JsonTpl(),
-            $serverClient,
             new TestSession(),
             $storage,
-            new ClientFetcher(new Config(['Api' => []]))
+            new ClientDb()
         );
         $vpnPortalModule->setDateTime(new DateTime('2019-01-01'));
         $this->service = new Service();

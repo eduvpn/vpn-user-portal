@@ -23,12 +23,9 @@ class JsonTpl implements TplInterface
     }
 
     /**
-     * @param string              $templateName
      * @param array<string,mixed> $templateVariables
-     *
-     * @return string
      */
-    public function render($templateName, array $templateVariables = [])
+    public function render(string $templateName, array $templateVariables = []): string
     {
         return json_encode([$templateName => $templateVariables]);
     }
