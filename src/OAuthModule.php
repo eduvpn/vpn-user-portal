@@ -23,11 +23,9 @@ use LC\Portal\Http\ServiceModuleInterface;
 
 class OAuthModule implements ServiceModuleInterface
 {
-    /** @var \LC\Portal\TplInterface */
-    private $tpl;
+    private TplInterface $tpl;
 
-    /** @var \fkooman\OAuth\Server\OAuthServer */
-    private $oauthServer;
+    private OAuthServer $oauthServer;
 
     public function __construct(TplInterface $tpl, OAuthServer $oauthServer)
     {
@@ -39,10 +37,7 @@ class OAuthModule implements ServiceModuleInterface
     {
         $service->get(
             '/_oauth/authorize',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 try {
@@ -71,10 +66,7 @@ class OAuthModule implements ServiceModuleInterface
 
         $service->post(
             '/_oauth/authorize',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
@@ -93,10 +85,7 @@ class OAuthModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @return \LC\Portal\Http\Response
-     */
-    private function prepareReturnResponse(OAuthResponse $authorizeResponse)
+    private function prepareReturnResponse(OAuthResponse $authorizeResponse): Response
     {
         return Response::import(
             [

@@ -17,18 +17,14 @@ use LC\Portal\Http\UserInfo;
 
 class MellonAuthentication implements BeforeHookInterface
 {
-    /** @var \LC\Portal\Config */
-    private $config;
+    private Config $config;
 
     public function __construct(Config $config)
     {
         $this->config = $config;
     }
 
-    /**
-     * @return UserInfo
-     */
-    public function executeBefore(Request $request, array $hookData)
+    public function executeBefore(Request $request, array $hookData): UserInfo
     {
         $userIdAttribute = $this->config->requireString('userIdAttribute');
         $nameIdSerialization = $this->config->requireBool('nameIdSerialization', false);

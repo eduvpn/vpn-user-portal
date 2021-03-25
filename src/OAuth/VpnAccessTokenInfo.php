@@ -16,24 +16,15 @@ use fkooman\OAuth\Server\Scope;
 
 class VpnAccessTokenInfo extends AccessTokenInfo
 {
-    /** @var bool */
-    private $isLocal;
+    private bool $isLocal;
 
-    /**
-     * @param string $userId
-     * @param string $clientId
-     * @param bool   $isLocal
-     */
-    public function __construct($userId, $clientId, Scope $scope, $isLocal)
+    public function __construct(string $userId, string $clientId, Scope $scope, bool $isLocal)
     {
         parent::__construct($userId, $clientId, $scope);
         $this->isLocal = $isLocal;
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsLocal()
+    public function getIsLocal(): bool
     {
         return $this->isLocal;
     }

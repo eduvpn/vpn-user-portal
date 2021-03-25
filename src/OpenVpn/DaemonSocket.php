@@ -18,26 +18,17 @@ class DaemonSocket
     /** @var resource|null */
     private $daemonSocket = null;
 
-    /** @var string */
-    private $certDir;
+    private string $certDir;
 
-    /** @var bool */
-    private $useTls;
+    private bool $useTls;
 
-    /**
-     * @param string $certDir
-     * @param bool   $useTls
-     */
-    public function __construct($certDir, $useTls)
+    public function __construct(string $certDir, bool $useTls)
     {
         $this->certDir = $certDir;
         $this->useTls = $useTls;
     }
 
-    /**
-     * @param string $nodeIp
-     */
-    public function open($nodeIp): void
+    public function open(string $nodeIp): void
     {
         $this->daemonSocket = self::getSocket($nodeIp, $this->certDir, $this->useTls);
     }
@@ -53,7 +44,7 @@ class DaemonSocket
     /**
      * @return array<array{common_name: string, virtual_address: array{0: string, 1: string}}>
      */
-    public function connections()
+    public function connections(): array
     {
         $connectionList = self::parseConnectionList($this->sendCommand('LIST'));
 
@@ -77,13 +68,9 @@ class DaemonSocket
     }
 
     /**
-     * @param string $nodeIp
-     * @param string $certDir
-     * @param bool   $useTls
-     *
      * @return resource
      */
-    private static function getSocket($nodeIp, $certDir, $useTls)
+    private static function getSocket(string $nodeIp, string $certDir, bool $useTls)
     {
         // never use TLS to connect to localhost, no matter whether useTls is
         // true...
@@ -123,11 +110,9 @@ class DaemonSocket
     }
 
     /**
-     * @param string $socketCommand
-     *
      * @return array<string>
      */
-    private function sendCommand($socketCommand)
+    private function sendCommand(string $socketCommand): array
     {
         $this->writeLineToSocket(sprintf("%s\n", $socketCommand));
 
@@ -137,7 +122,7 @@ class DaemonSocket
     /**
      * @return array<string>
      */
-    private function handleResponse()
+    private function handleResponse(): array
     {
         $statusLine = $this->readLineFromSocket();
         if (0 !== strpos($statusLine, 'OK: ')) {
@@ -157,7 +142,7 @@ class DaemonSocket
      *
      * @return array<array{management_port: int, common_name: string, virtual_address: array{0: string, 1: string}}>
      */
-    private static function parseConnectionList(array $connectionList)
+    private static function parseConnectionList(array $connectionList): array
     {
         $clientInfoList = [];
         foreach ($connectionList as $connectionLine) {
@@ -172,10 +157,7 @@ class DaemonSocket
         return $clientInfoList;
     }
 
-    /**
-     * @param string $lineToWrite
-     */
-    private function writeLineToSocket($lineToWrite): void
+    private function writeLineToSocket(string $lineToWrite): void
     {
         if (null === $this->daemonSocket) {
             throw new RuntimeException('socket not open');
@@ -186,10 +168,7 @@ class DaemonSocket
         }
     }
 
-    /**
-     * @return string
-     */
-    private function readLineFromSocket()
+    private function readLineFromSocket(): string
     {
         if (null === $this->daemonSocket) {
             throw new RuntimeException('socket not open');

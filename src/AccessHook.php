@@ -22,7 +22,7 @@ use LC\Portal\Http\Service;
 class AccessHook implements BeforeHookInterface
 {
     /** @var array<string> */
-    private $accessPermissionList;
+    private array $accessPermissionList;
 
     /**
      * @param array<string> $accessPermissionList
@@ -58,10 +58,8 @@ class AccessHook implements BeforeHookInterface
 
     /**
      * @param array<string> $userPermissionList
-     *
-     * @return bool
      */
-    private function hasPermissions(array $userPermissionList)
+    private function hasPermissions(array $userPermissionList): bool
     {
         foreach ($userPermissionList as $userPermission) {
             if (\in_array($userPermission, $this->accessPermissionList, true)) {

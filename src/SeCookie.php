@@ -16,8 +16,7 @@ use LC\Portal\Http\CookieInterface;
 
 class SeCookie implements CookieInterface
 {
-    /** var \fkooman\SeCookie\Cookie */
-    private $cookie;
+    private Cookie $cookie;
 
     public function __construct(Cookie $cookie)
     {

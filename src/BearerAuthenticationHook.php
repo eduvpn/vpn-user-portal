@@ -19,8 +19,7 @@ use LC\Portal\OAuth\BearerValidator;
 
 class BearerAuthenticationHook implements BeforeHookInterface
 {
-    /** @var \LC\Portal\OAuth\BearerValidator */
-    private $bearerValidator;
+    private BearerValidator $bearerValidator;
 
     public function __construct(BearerValidator $bearerValidator)
     {

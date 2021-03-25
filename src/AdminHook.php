@@ -23,13 +23,12 @@ use LC\Portal\Http\Service;
 class AdminHook implements BeforeHookInterface
 {
     /** @var array<string> */
-    private $adminPermissionList;
+    private array $adminPermissionList;
 
     /** @var array<string> */
-    private $adminUserIdList;
+    private array $adminUserIdList;
 
-    /** @var \LC\Portal\TplInterface */
-    private $tpl;
+    private TplInterface $tpl;
 
     /**
      * @param array<string> $adminPermissionList
@@ -42,10 +41,7 @@ class AdminHook implements BeforeHookInterface
         $this->tpl = $tpl;
     }
 
-    /**
-     * @return bool
-     */
-    public function executeBefore(Request $request, array $hookData)
+    public function executeBefore(Request $request, array $hookData): bool
     {
         $whiteList = [
             'POST' => [

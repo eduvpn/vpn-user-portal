@@ -15,8 +15,7 @@ use LC\Portal\Exception\ConfigException;
 
 class Config
 {
-    /** @var array */
-    protected $configData;
+    protected array $configData;
 
     public function __construct(array $configData)
     {

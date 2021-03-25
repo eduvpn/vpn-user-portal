@@ -24,10 +24,7 @@ class QrModule implements ServiceModuleInterface
     {
         $service->get(
             '/qr',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 $qrText = $request->requireQueryParameter('qr_text');
 
                 $response = new Response(200, 'image/png');
@@ -38,12 +35,7 @@ class QrModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @param string $qrText
-     *
-     * @return string
-     */
-    private static function generate($qrText)
+    private static function generate(string $qrText): string
     {
         ob_start();
         passthru(

@@ -18,47 +18,31 @@ use Psr\Log\LoggerInterface;
 
 class LdapAuth implements CredentialValidatorInterface
 {
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var LdapClient */
-    private $ldapClient;
+    private LdapClient $ldapClient;
 
-    /** @var string|null */
-    private $bindDnTemplate;
+    private ?string $bindDnTemplate;
 
-    /** @var string|null */
-    private $baseDn;
+    private ?string $baseDn;
 
-    /** @var string|null */
-    private $userFilterTemplate;
+    private ?string $userFilterTemplate;
 
-    /** @var string|null */
-    private $userIdAttribute;
+    private ?string $userIdAttribute;
 
-    /** @var string|null */
-    private $addRealm;
+    private ?string $addRealm;
 
     /** @var array<string> */
-    private $permissionAttributeList;
+    private array $permissionAttributeList;
 
-    /** @var string|null */
-    private $searchBindDn;
+    private ?string $searchBindDn;
 
-    /** @var string|null */
-    private $searchBindPass;
+    private ?string $searchBindPass;
 
     /**
-     * @param string|null   $bindDnTemplate
-     * @param string|null   $baseDn
-     * @param string|null   $userFilterTemplate
-     * @param string|null   $userIdAttribute
-     * @param string|null   $addRealm
      * @param array<string> $permissionAttributeList
-     * @param string|null   $searchBindDn
-     * @param string|null   $searchBindPass
      */
-    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, $bindDnTemplate, $baseDn, $userFilterTemplate, $userIdAttribute, $addRealm, array $permissionAttributeList, $searchBindDn, $searchBindPass)
+    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, ?string $bindDnTemplate, ?string $baseDn, ?string $userFilterTemplate, ?string $userIdAttribute, ?string $addRealm, array $permissionAttributeList, ?string $searchBindDn, ?string $searchBindPass)
     {
         $this->logger = $logger;
         $this->ldapClient = $ldapClient;
@@ -73,12 +57,9 @@ class LdapAuth implements CredentialValidatorInterface
     }
 
     /**
-     * @param string $authUser
-     * @param string $authPass
-     *
      * @return false|\LC\Portal\Http\UserInfo
      */
-    public function isValid($authUser, $authPass)
+    public function isValid(string $authUser, string $authPass)
     {
         // add "realm" after user name if none is specified
         if (null !== $addRealm = $this->addRealm) {
@@ -132,14 +113,7 @@ class LdapAuth implements CredentialValidatorInterface
         }
     }
 
-    /**
-     * @param string $baseDn
-     * @param string $userFilter
-     * @param string $userIdAttribute
-     *
-     * @return string|null
-     */
-    private function getUserId($baseDn, $userFilter, $userIdAttribute)
+    private function getUserId(string $baseDn, string $userFilter, string $userIdAttribute): ?string
     {
         $ldapEntries = $this->ldapClient->search(
             $baseDn,
@@ -157,11 +131,9 @@ class LdapAuth implements CredentialValidatorInterface
     }
 
     /**
-     * @param string $authUser
-     *
      * @return string|false
      */
-    private function getBindDn($authUser)
+    private function getBindDn(string $authUser)
     {
         if (null !== $this->bindDnTemplate) {
             // we have a bind DN template to bind to the LDAP with the user's
@@ -193,13 +165,11 @@ class LdapAuth implements CredentialValidatorInterface
     }
 
     /**
-     * @param string        $baseDn
-     * @param string        $userFilter
      * @param array<string> $permissionAttributeList
      *
      * @return array<string>
      */
-    private function getPermissionList($baseDn, $userFilter, array $permissionAttributeList)
+    private function getPermissionList(string $baseDn, string $userFilter, array $permissionAttributeList): array
     {
         if (0 === \count($permissionAttributeList)) {
             return [];

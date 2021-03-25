@@ -18,10 +18,7 @@ use LC\Portal\Http\UserInfo;
 
 class ClientCertAuthentication implements BeforeHookInterface
 {
-    /**
-     * @return UserInfo
-     */
-    public function executeBefore(Request $request, array $hookData)
+    public function executeBefore(Request $request, array $hookData): UserInfo
     {
         if (null === $remoteUser = $request->optionalHeader('REMOTE_USER')) {
             throw new HttpException('client certificate authentication failed, no certificate provided', 400);

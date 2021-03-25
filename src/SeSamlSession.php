@@ -16,8 +16,7 @@ use fkooman\SeCookie\Session;
 
 class SeSamlSession implements SessionInterface
 {
-    /** @var \fkooman\SeCookie\Session */
-    private $session;
+    private Session $session;
 
     public function __construct(Session $session)
     {
@@ -30,22 +29,12 @@ class SeSamlSession implements SessionInterface
         $this->session->regenerate();
     }
 
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     */
-    public function get($key)
+    public function get(string $key): ?string
     {
         return $this->session->get($key);
     }
 
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     */
-    public function take($key)
+    public function take(string $key): ?string
     {
         if (null !== $sessionValue = $this->session->get($key)) {
             $this->session->remove($key);
@@ -54,19 +43,12 @@ class SeSamlSession implements SessionInterface
         return $sessionValue;
     }
 
-    /**
-     * @param string $key
-     * @param string $value
-     */
-    public function set($key, $value): void
+    public function set(string $key, string $value): void
     {
         $this->session->set($key, $value);
     }
 
-    /**
-     * @param string $key
-     */
-    public function remove($key): void
+    public function remove(string $key): void
     {
         $this->session->remove($key);
     }

@@ -23,14 +23,11 @@ use LC\Portal\Http\UserInfo;
 
 class PhpSamlSpAuthentication implements BeforeHookInterface
 {
-    /** @var \LC\Portal\Config */
-    private $config;
+    private Config $config;
 
-    /** @var \fkooman\SAML\SP\Api\SamlAuth */
-    private $samlAuth;
+    private SamlAuth $samlAuth;
 
-    /** @var \DateTimeImmutable */
-    private $dateTime;
+    private DateTimeImmutable $dateTime;
 
     public function __construct(Config $config)
     {
@@ -107,7 +104,7 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
      *
      * @return array<string>
      */
-    private function getPermissionList(array $samlAttributes)
+    private function getPermissionList(array $samlAttributes): array
     {
         $permissionList = [];
         // XXX fix documentation for type permissionAttribute, can only be array<string> now!

@@ -19,8 +19,7 @@ use LC\Portal\Http\UserInfo;
 
 class FormPdoAuthentication extends FormAuthentication implements CredentialValidatorInterface
 {
-    /** @var \LC\Portal\Storage */
-    private $storage;
+    private Storage $storage;
 
     public function __construct(SessionInterface $session, TplInterface $tpl, Storage $storage)
     {

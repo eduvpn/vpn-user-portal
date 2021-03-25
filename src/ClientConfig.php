@@ -18,12 +18,9 @@ class ClientConfig
     const STRATEGY_ALL = 2;
 
     /**
-     * @param int                                                            $remoteStrategy
      * @param null|array{cert:string,key:string,valid_from:int,valid_to:int} $clientCertificate
-     *
-     * @return string
      */
-    public static function get(ProfileConfig $profileConfig, array $serverInfo, ?array $clientCertificate, $remoteStrategy)
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, ?array $clientCertificate, int $remoteStrategy): string
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->hostName();
@@ -104,11 +101,9 @@ class ClientConfig
      * Pick a "normal" UDP and TCP port. Pick a "special" UDP and TCP
      * port.
      *
-     * @param int $remoteStrategy
-     *
      * @return array<string>
      */
-    public static function remotePortProtoList(array $vpnProtoPorts, $remoteStrategy)
+    public static function remotePortProtoList(array $vpnProtoPorts, int $remoteStrategy): array
     {
         $specialUdpPorts = [];
         $specialTcpPorts = [];
@@ -147,9 +142,8 @@ class ClientConfig
     /**
      * @param array<string> &$clientPortList
      * @param array<string> $pickFrom
-     * @param int           $remoteStrategy
      */
-    private static function getItem(array &$clientPortList, array $pickFrom, $remoteStrategy): void
+    private static function getItem(array &$clientPortList, array $pickFrom, int $remoteStrategy): void
     {
         if (0 === \count($pickFrom)) {
             return;

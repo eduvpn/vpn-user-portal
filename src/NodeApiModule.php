@@ -18,25 +18,21 @@ use LC\Portal\Http\ApiErrorResponse;
 use LC\Portal\Http\ApiResponse;
 use LC\Portal\Http\InputValidation;
 use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\ServiceModuleInterface;
 
 class NodeApiModule implements ServiceModuleInterface
 {
-    /** @var \LC\Portal\Config */
-    private $config;
+    private Config $config;
 
-    /** @var CA\CaInterface */
-    private $ca;
+    private CaInterface $ca;
 
-    /** @var Storage */
-    private $storage;
+    private Storage $storage;
 
-    /** @var TlsCrypt */
-    private $tlsCrypt;
+    private TlsCrypt $tlsCrypt;
 
-    /** @var \DateTimeImmutable */
-    private $dateTime;
+    private DateTimeImmutable $dateTime;
 
     public function __construct(Config $config, CaInterface $ca, Storage $storage, TlsCrypt $tlsCrypt)
     {
@@ -51,10 +47,7 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $service->post(
             '/add_server_certificate',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
                 $profileConfig = new ProfileConfig($this->config->s('vpnProfiles')->s($profileId));
                 $serverName = $profileConfig->hostName();
@@ -68,10 +61,7 @@ class NodeApiModule implements ServiceModuleInterface
 
         $service->post(
             '/connect',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 try {
                     $this->connect($request);
 
@@ -88,10 +78,7 @@ class NodeApiModule implements ServiceModuleInterface
 
         $service->post(
             '/disconnect',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 try {
                     $this->disconnect($request);
 
@@ -108,10 +95,7 @@ class NodeApiModule implements ServiceModuleInterface
 
         $service->get(
             '/profile_list',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 $profileList = [];
                 foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
                     $profileConfig = new ProfileConfig(new Config($profileData));
@@ -149,11 +133,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, new DateTimeImmutable(sprintf('@%d', $connectedAt)), new DateTimeImmutable(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
     }
 
-    /**
-     * @param string $profileId
-     * @param string $commonName
-     */
-    private function verifyConnection($profileId, $commonName): void
+    private function verifyConnection(string $profileId, string $commonName): void
     {
         // verify status of certificate/user
         if (false === $userCertInfo = $this->storage->getUserCertificateInfo($commonName)) {
@@ -184,11 +164,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->verifyAcl($profileId, $userId);
     }
 
-    /**
-     * @param string $profileId
-     * @param string $userId
-     */
-    private function verifyAcl($profileId, $userId): void
+    private function verifyAcl(string $profileId, string $userId): void
     {
         $profileConfig = new ProfileConfig($this->config->s('vpnProfiles')->s($profileId));
         if ($profileConfig->enableAcl()) {
@@ -201,10 +177,7 @@ class NodeApiModule implements ServiceModuleInterface
         }
     }
 
-    /**
-     * @return bool
-     */
-    private static function hasPermission(array $userPermissionList, array $aclPermissionList)
+    private static function hasPermission(array $userPermissionList, array $aclPermissionList): bool
     {
         // one of the permissions must be listed in the profile ACL list
         foreach ($userPermissionList as $userPermission) {

@@ -19,10 +19,7 @@ class LdapClient
     /** @var resource */
     private $ldapResource;
 
-    /**
-     * @param string $ldapUri
-     */
-    public function __construct($ldapUri)
+    public function __construct(string $ldapUri)
     {
         if (false === \extension_loaded('ldap')) {
             throw new RuntimeException('"ldap" PHP extension not available');
@@ -43,46 +40,31 @@ class LdapClient
     /**
      * Bind to an LDAP server.
      *
-     * @param string|null $bindUser you MUST use LdapClient::escapeDn on any user input used to contruct the DN!
-     * @param string|null $bindPass
+     * @param ?string $bindUser you MUST use LdapClient::escapeDn on any user input used to contruct the DN!
      */
-    public function bind($bindUser = null, $bindPass = null): void
+    public function bind(?string $bindUser = null, ?string $bindPass = null): void
     {
         if (false === ldap_bind($this->ldapResource, $bindUser, $bindPass)) {
             throw new LdapClientException(sprintf('LDAP error: (%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
         }
     }
 
-    /**
-     * @param string $str
-     *
-     * @return string
-     */
-    public static function escapeDn($str)
+    public static function escapeDn(string $str): string
     {
         // ldap_escape in PHP >= 5.6 (or symfony/polyfill-php56)
         return ldap_escape($str, '', \LDAP_ESCAPE_DN);
     }
 
-    /**
-     * @param string $str
-     *
-     * @return string
-     */
-    public static function escapeFilter($str)
+    public static function escapeFilter(string $str): string
     {
         // ldap_escape in PHP >= 5.6 (or symfony/polyfill-php56)
         return ldap_escape($str, '', \LDAP_ESCAPE_FILTER);
     }
 
     /**
-     * @param string        $baseDn
-     * @param string        $searchFilter
      * @param array<string> $attributeList
-     *
-     * @return array
      */
-    public function search($baseDn, $searchFilter, array $attributeList = [])
+    public function search(string $baseDn, string $searchFilter, array $attributeList = []): array
     {
         $searchResource = ldap_search(
             $this->ldapResource,    // link_identifier

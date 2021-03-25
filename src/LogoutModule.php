@@ -19,20 +19,13 @@ use LC\Portal\Http\SessionInterface;
 
 class LogoutModule implements ServiceModuleInterface
 {
-    /** @var \LC\Portal\Http\SessionInterface */
-    private $session;
+    private SessionInterface $session;
 
-    /** @var string|null */
-    private $logoutUrl;
+    private ?string $logoutUrl;
 
-    /** @var string */
-    private $returnParameter;
+    private string $returnParameter;
 
-    /**
-     * @param string|null $logoutUrl
-     * @param string      $returnParameter
-     */
-    public function __construct(SessionInterface $session, $logoutUrl, $returnParameter)
+    public function __construct(SessionInterface $session, ?string $logoutUrl, string $returnParameter)
     {
         $this->session = $session;
         $this->logoutUrl = $logoutUrl;

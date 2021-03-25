@@ -13,23 +13,14 @@ namespace LC\Portal;
 
 class TlsCrypt
 {
-    /** @var string */
-    private $keyDir;
+    private string $keyDir;
 
-    /**
-     * @param string $keyDir
-     */
-    public function __construct($keyDir)
+    public function __construct(string $keyDir)
     {
         $this->keyDir = $keyDir;
     }
 
-    /**
-     * @param string $profileId
-     *
-     * @return string
-     */
-    public function get($profileId)
+    public function get(string $profileId): string
     {
         // check whether we still have global legacy "ta.key". Use it if we
         // find it...
@@ -51,10 +42,7 @@ class TlsCrypt
         return FileIO::readFile($profileTlsCryptKey);
     }
 
-    /**
-     * @return string
-     */
-    private static function generate()
+    private static function generate(): string
     {
         // Same as $(openvpn --genkey --secret <file>)
         $randomData = wordwrap(sodium_bin2hex(random_bytes(256)), 32, "\n", true);

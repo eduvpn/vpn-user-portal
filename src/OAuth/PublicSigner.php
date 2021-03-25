@@ -24,19 +24,15 @@ use fkooman\OAuth\Server\SignerInterface;
  */
 class PublicSigner implements SignerInterface
 {
-    /** @var \fkooman\Jwt\EdDSA */
-    private $edDsa;
+    private EdDSA $edDsa;
 
-    public function __construct(PublicKey $publicKey, SecretKey $secretKey = null)
+    public function __construct(PublicKey $publicKey, ?SecretKey $secretKey = null)
     {
         $this->edDsa = new EdDSA($publicKey, $secretKey);
         $this->edDsa->setKeyId(self::calculateKeyId($publicKey));
     }
 
-    /**
-     * @return string
-     */
-    public static function calculateKeyId(PublicKey $publicKey)
+    public static function calculateKeyId(PublicKey $publicKey): string
     {
         return sodium_bin2base64(
             hash(
@@ -48,12 +44,7 @@ class PublicSigner implements SignerInterface
         );
     }
 
-    /**
-     * @param string $providedToken
-     *
-     * @return string|null
-     */
-    public static function extractKid($providedToken)
+    public static function extractKid(string $providedToken): ?string
     {
         try {
             return EdDSA::extractKeyId($providedToken);

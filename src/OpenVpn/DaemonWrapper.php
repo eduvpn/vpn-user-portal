@@ -24,19 +24,15 @@ use RuntimeException;
  */
 class DaemonWrapper
 {
-    /** @var \LC\Portal\Config */
-    private $config;
+    private Config $config;
 
-    /** @var \LC\Portal\Storage */
-    private $storage;
+    private Storage $storage;
 
-    /** @var DaemonSocket */
-    private $daemonSocket;
+    private DaemonSocket $daemonSocket;
 
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    public function __construct(Config $config, Storage $storage, DaemonSocket $daemonSocket, LoggerInterface $logger = null)
+    public function __construct(Config $config, Storage $storage, DaemonSocket $daemonSocket, ?LoggerInterface $logger = null)
     {
         $this->config = $config;
         $this->storage = $storage;
@@ -47,14 +43,9 @@ class DaemonWrapper
         $this->logger = $logger;
     }
 
-    /**
-     * @param string|null $userId
-     * @param string|null $clientId
-     *
-     * @return array
-     */
-    public function getConnectionList($userId, $clientId)
+    public function getConnectionList(?string $userId, ?string $clientId): array
     {
+        // XXX be very explicit about the array we get back
         // figure out the nodeIp + portList for each profile...
         $profileNodeIpPortList = [];
         foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
@@ -117,10 +108,7 @@ class DaemonWrapper
         return $connectionList;
     }
 
-    /**
-     * @param string $commonName
-     */
-    public function killClient($commonName): void
+    public function killClient(string $commonName): void
     {
         $nodeIpPortList = [];
         foreach ($this->config->requireArray('vpnProfiles') as $profileData) {
@@ -150,13 +138,7 @@ class DaemonWrapper
         }
     }
 
-    /**
-     * @param int $profileNumber
-     * @param int $processNumber
-     *
-     * @return int
-     */
-    public static function toPort($profileNumber, $processNumber)
+    public static function toPort(int $profileNumber, int $processNumber): int
     {
         if (1 > $profileNumber || 64 < $profileNumber) {
             throw new RangeException('1 <= profileNumber <= 64');

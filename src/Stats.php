@@ -16,11 +16,9 @@ use PDO;
 
 class Stats
 {
-    /** @var Storage */
-    private $storage;
+    private Storage $storage;
 
-    /** @var \DateTimeImmutable */
-    private $dateTime;
+    private DateTimeImmutable $dateTime;
 
     public function __construct(Storage $storage, DateTimeImmutable $dateTime)
     {
@@ -28,10 +26,7 @@ class Stats
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return array
-     */
-    public function get(array $profileIdList)
+    public function get(array $profileIdList): array
     {
         $allStatsData = [
             'generated_at' => $this->dateTime->format(DateTimeImmutable::ATOM),

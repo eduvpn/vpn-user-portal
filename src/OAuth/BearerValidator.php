@@ -28,20 +28,16 @@ use fkooman\OAuth\Server\SyntaxValidator;
  */
 class BearerValidator
 {
-    /** @var StorageInterface */
-    private $storage;
+    private StorageInterface $storage;
 
-    /** @var ClientDbInterface */
-    private $clientDb;
+    private ClientDbInterface $clientDb;
 
-    /** @var \fkooman\Jwt\Keys\EdDSA\PublicKey */
-    private $localPublicKey;
+    private PublicKey $localPublicKey;
 
     /** @var array<string,array<string,string>> */
-    private $keyInstanceMapping;
+    private array $keyInstanceMapping;
 
-    /** @var \DateTimeImmutable */
-    private $dateTime;
+    private DateTimeImmutable $dateTime;
 
     /**
      * @param array<string,array<string,string>> $keyInstanceMapping
@@ -55,17 +51,7 @@ class BearerValidator
         $this->dateTime = new DateTimeImmutable();
     }
 
-    public function setDateTimeImmutable(DateTimeImmutable $dateTime): void
-    {
-        $this->dateTime = $dateTime;
-    }
-
-    /**
-     * @param string $authorizationHeader
-     *
-     * @return VpnAccessTokenInfo
-     */
-    public function validate($authorizationHeader)
+    public function validate(string $authorizationHeader): VpnAccessTokenInfo
     {
         try {
             SyntaxValidator::validateBearerToken($authorizationHeader);

@@ -22,8 +22,7 @@ use LC\Portal\Http\Service;
  */
 class DisabledUserHook implements BeforeHookInterface
 {
-    /** @var Storage */
-    private $storage;
+    private Storage $storage;
 
     public function __construct(Storage $storage)
     {

@@ -16,8 +16,7 @@ use LC\Portal\Http\SessionInterface;
 
 class SeSession implements SessionInterface
 {
-    /** @var \fkooman\SeCookie\Session */
-    private $session;
+    private Session $session;
 
     public function __construct(Session $session)
     {
