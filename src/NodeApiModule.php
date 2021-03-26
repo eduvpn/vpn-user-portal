@@ -45,13 +45,13 @@ class NodeApiModule implements ServiceModuleInterface
             function (Request $request): Response {
                 // XXX we may want to restrict the profiles for particular nodes!
                 $serverConfigList = $this->serverConfig->writeProfiles([]);
-                $bodyStr = '';
+                $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {
-                    $bodyStr .= $configName.': '.sodium_bin2base64($configFile, \SODIUM_BASE64_VARIANT_ORIGINAL)."\r\n";
+                    $bodyLines[] = $configName.':'.sodium_bin2base64($configFile, \SODIUM_BASE64_VARIANT_ORIGINAL);
                 }
 
-                $response = new Response(201);
-                $response->setBody($bodyStr);
+                $response = new Response(200);
+                $response->setBody(implode("\r\n", $bodyLines));
 
                 return $response;
             }
