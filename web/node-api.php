@@ -22,12 +22,11 @@ use LC\Portal\Http\Service;
 use LC\Portal\Json;
 use LC\Portal\Logger;
 use LC\Portal\NodeApiModule;
+use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 
 try {
-    $request = new Request($_SERVER, $_GET, $_POST);
-
     $dataDir = sprintf('%s/data', $baseDir);
     $configDir = sprintf('%s/config', $baseDir);
     $config = Config::fromFile(
@@ -55,14 +54,14 @@ try {
     $service->addModule(
         new NodeApiModule(
             $config,
-            $ca,
             $storage,
-            new TlsCrypt($dataDir)
+            new ServerConfig($config, $ca, new TlsCrypt($dataDir))
         )
     );
+    $request = new Request($_SERVER, $_GET, $_POST);
     $service->run($request)->send();
 } catch (Exception $e) {
-    $logger = new Logger('vpn-user-portal-api');
+    $logger = new Logger('vpn-user-portal-node-api');
     $logger->error($e->getMessage());
     $response = new Response(500, 'application/json');
     $response->setBody(Json::encode(['error' => $e->getMessage()]));

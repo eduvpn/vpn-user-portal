@@ -12,9 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateTimeImmutable;
-use LC\Portal\CA\CaInterface;
 use LC\Portal\Exception\NodeApiException;
-use LC\Portal\Http\ApiErrorResponse;
 use LC\Portal\Http\ApiResponse;
 use LC\Portal\Http\InputValidation;
 use LC\Portal\Http\Request;
@@ -26,36 +24,36 @@ class NodeApiModule implements ServiceModuleInterface
 {
     private Config $config;
 
-    private CaInterface $ca;
-
     private Storage $storage;
 
-    private TlsCrypt $tlsCrypt;
+    private ServerConfig $serverConfig;
 
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, CaInterface $ca, Storage $storage, TlsCrypt $tlsCrypt)
+    public function __construct(Config $config, Storage $storage, ServerConfig $serverConfig)
     {
         $this->config = $config;
-        $this->ca = $ca;
         $this->storage = $storage;
-        $this->tlsCrypt = $tlsCrypt;
+        $this->serverConfig = $serverConfig;
         $this->dateTime = new DateTimeImmutable();
     }
 
     public function init(Service $service): void
     {
         $service->post(
-            '/add_server_certificate',
-            function (Request $request, array $hookData): Response {
-                $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
-                $profileConfig = new ProfileConfig($this->config->s('vpnProfiles')->s($profileId));
-                $serverName = $profileConfig->hostName();
-                $certInfo = $this->ca->serverCert($serverName);
-                $certInfo['tls_crypt'] = $this->tlsCrypt->get($profileId);
-                $certInfo['ca'] = $this->ca->caCert();
+            '/server_config',
+            function (Request $request): Response {
+                // XXX we may want to restrict the profiles for particular nodes!
+                $serverConfigList = $this->serverConfig->writeProfiles([]);
+                $bodyStr = '';
+                foreach ($serverConfigList as $configName => $configFile) {
+                    $bodyStr .= $configName.': '.sodium_bin2base64($configFile, \SODIUM_BASE64_VARIANT_ORIGINAL)."\r\n";
+                }
 
-                return new ApiResponse('add_server_certificate', $certInfo, 201);
+                $response = new Response(201);
+                $response->setBody($bodyStr);
+
+                return $response;
             }
         );
 
@@ -65,13 +63,19 @@ class NodeApiModule implements ServiceModuleInterface
                 try {
                     $this->connect($request);
 
-                    return new ApiResponse('connect');
+                    $response = new Response();
+                    $response->setBody('OK');
+
+                    return $response;
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
                         $this->storage->addUserMessage($userId, 'notification', '[CONNECT] ERROR: '.$e->getMessage(), $this->dateTime);
                     }
 
-                    return new ApiErrorResponse('connect', '[CONNECT] ERROR: '.$e->getMessage());
+                    $response = new Response();
+                    $response->setBody('ERR');
+
+                    return $response;
                 }
             }
         );
@@ -82,13 +86,19 @@ class NodeApiModule implements ServiceModuleInterface
                 try {
                     $this->disconnect($request);
 
-                    return new ApiResponse('disconnect');
+                    $response = new Response();
+                    $response->setBody('OK');
+
+                    return $response;
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
                         $this->storage->addUserMessage($userId, 'notification', '[DISCONNECT] ERROR: '.$e->getMessage(), $this->dateTime);
                     }
 
-                    return new ApiErrorResponse('disconnect', '[DISCONNECT] ERROR: '.$e->getMessage());
+                    $response = new Response();
+                    $response->setBody('ERR');
+
+                    return $response;
                 }
             }
         );
