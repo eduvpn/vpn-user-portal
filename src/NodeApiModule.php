@@ -121,8 +121,8 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
-        $ipFour = InputValidation::ipFour($request->requirePostParameter('ipFour'));
-        $ipSix = InputValidation::ipSix($request->requirePostParameter('ipSix'));
+        $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
+        $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
 
         $this->verifyConnection($profileId, $commonName);
@@ -133,8 +133,8 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
-        $ipFour = InputValidation::ipFour($request->requirePostParameter('ipFour'));
-        $ipSix = InputValidation::ipSix($request->requirePostParameter('ipSix'));
+        $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
+        $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
 
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
         $disconnectedAt = InputValidation::disconnectedAt($request->requirePostParameter('disconnected_at'));
