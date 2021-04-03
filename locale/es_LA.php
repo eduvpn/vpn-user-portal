@@ -123,7 +123,6 @@ return [
     'Stats' => 'Estadísticas',
     'Summary' => 'Resumen',
     'TLS >= 1.3' => 'TLS >= 1.3',
-    'TLS Protection' => 'Protección TLS',
     'TOTP' => 'TOTP',
     'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => 'El campo <em>Fecha/Hora</em> acepta fechas con el formato <code>Y-m-d H:i:s</code>, p. ej. <code>2019-01-01 08:00:00</code>.',
     'The OTP key you entered does not match the expected value for this OTP secret.' => 'La clave de OTP que ingresó no coincide con el valor esperado para este secreto de OTP.',
