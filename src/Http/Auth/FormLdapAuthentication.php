@@ -13,8 +13,6 @@ namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Config;
 use LC\Portal\Http\SessionInterface;
-use LC\Portal\LdapAuth;
-use LC\Portal\LdapClient;
 use LC\Portal\TplInterface;
 use Psr\Log\LoggerInterface;
 
