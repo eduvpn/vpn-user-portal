@@ -70,7 +70,7 @@ $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')
                     <?=$this->e($logEntry['profile_id']); ?>
 <?php endif; ?>
                 <td title="IPv4: <?=$this->e($logEntry['ip_four']); ?>, IPv6: <?=$this->e($logEntry['ip_six']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
-                <td title="<?=$this->bth($logEntry['bytes_transferred']); ?>"><?=$this->d($logEntry['disconnected_at']); ?></td>
+                <td title="<?=$this->bth((int) $logEntry['bytes_transferred']); ?>"><?=$this->d($logEntry['disconnected_at']); ?></td>
             </tr>
 <?php endif; ?>
 <?php endforeach; ?>
