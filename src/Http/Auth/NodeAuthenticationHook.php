@@ -9,9 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace LC\Portal\Http\Auth;
 
+use LC\Portal\Http\BeforeHookInterface;
 use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\Request;
 
 class NodeAuthenticationHook implements BeforeHookInterface
 {

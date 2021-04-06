@@ -13,18 +13,14 @@ namespace LC\Portal\Http;
 
 class NullAuthenticationHook implements BeforeHookInterface
 {
-    /** @var string */
-    private $authUser;
+    private string $authUser;
 
     public function __construct(string $authUser)
     {
         $this->authUser = $authUser;
     }
 
-    /**
-     * @return UserInfo
-     */
-    public function executeBefore(Request $request, array $hookData)
+    public function executeBefore(Request $request, array $hookData): UserInfo
     {
         return new UserInfo($this->authUser, []);
     }
