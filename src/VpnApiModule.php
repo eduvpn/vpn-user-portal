@@ -120,8 +120,8 @@ class VpnApiModule implements ServiceModuleInterface
                     return new ApiResponse(
                         'create_keypair',
                         [
-                            'certificate' => $clientCertificate['certificate'],
-                            'private_key' => $clientCertificate['private_key'],
+                            'certificate' => $clientCertificate['cert'],
+                            'private_key' => $clientCertificate['key'],
                         ]
                     );
                 } catch (InputValidationException $e) {
