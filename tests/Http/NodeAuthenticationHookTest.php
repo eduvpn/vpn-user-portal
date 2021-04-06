@@ -11,37 +11,37 @@ declare(strict_types=1);
 
 namespace LC\Portal\Tests\Http;
 
-use LC\Portal\Http\BearerAuthenticationHook;
 use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\NodeAuthenticationHook;
 use PHPUnit\Framework\TestCase;
 
-class BearerAuthenticationHookTest extends TestCase
+class NodeAuthenticationHookTest extends TestCase
 {
     /**
      * @doesNotPerformAssertions
      */
-    public function testBearerAuthentication(): void
+    public function testNodeAuthentication(): void
     {
-        $bearerAuthentication = new BearerAuthenticationHook('foo');
+        $nodeAuthentication = new NodeAuthenticationHook('foo');
         $request = new TestRequest(['HTTP_AUTHORIZATION' => 'Bearer foo']);
-        $bearerAuthentication->executeBefore($request, []);
+        $nodeAuthentication->executeBefore($request, []);
     }
 
-    public function testBearerAuthenticationWrongToken(): void
+    public function testNodeAuthenticationWrongToken(): void
     {
         $this->expectException(HttpException::class);
         $this->expectExceptionMessage('invalid token');
-        $bearerAuthentication = new BearerAuthenticationHook('foo');
+        $nodeAuthentication = new NodeAuthenticationHook('foo');
         $request = new TestRequest(['HTTP_AUTHORIZATION' => 'Bearer bar']);
-        $bearerAuthentication->executeBefore($request, []);
+        $nodeAuthentication->executeBefore($request, []);
     }
 
-    public function testBearerAuthenticationNoToken(): void
+    public function testNodeAuthenticationNoToken(): void
     {
         $this->expectException(HttpException::class);
         $this->expectExceptionMessage('no token');
-        $bearerAuthentication = new BearerAuthenticationHook('foo');
+        $nodeAuthentication = new NodeAuthenticationHook('foo');
         $request = new TestRequest([]);
-        $bearerAuthentication->executeBefore($request, []);
+        $nodeAuthentication->executeBefore($request, []);
     }
 }

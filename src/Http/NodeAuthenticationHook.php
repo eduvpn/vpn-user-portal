@@ -13,13 +13,10 @@ namespace LC\Portal\Http;
 
 use LC\Portal\Http\Exception\HttpException;
 
-class BearerAuthenticationHook implements BeforeHookInterface
+class NodeAuthenticationHook implements BeforeHookInterface
 {
-    /** @var string */
-    private $authToken;
-
-    /** @var string */
-    private $authRealm;
+    private string $authToken;
+    private string $authRealm;
 
     public function __construct(string $authToken, string $authRealm = 'Protected Area')
     {
@@ -30,7 +27,7 @@ class BearerAuthenticationHook implements BeforeHookInterface
     public function executeBefore(Request $request, array $hookData): void
     {
         if (null === $authHeader = $request->optionalHeader('HTTP_AUTHORIZATION')) {
-            throw new HttpException('no token', 401, ['WWW-Authenticate' => sprintf('Bearer realm="%s"', $this->authRealm)]);
+            throw new HttpException('no token', 401, ['WWW-Authenticate' => 'Bearer realm="'.$this->authRealm.'"']);
         }
         if (0 !== strpos($authHeader, 'Bearer ')) {
             throw new HttpException('invalid token type', 401, ['WWW-Authenticate' => 'Bearer realm="'.$this->authRealm.'"']);

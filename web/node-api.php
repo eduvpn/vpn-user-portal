@@ -15,7 +15,7 @@ $baseDir = dirname(__DIR__);
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
-use LC\Portal\Http\BearerAuthenticationHook;
+use LC\Portal\Http\NodeAuthenticationHook;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
@@ -34,11 +34,11 @@ try {
     );
 
     $service = new Service();
-    $bearerAuthentication = new BearerAuthenticationHook(
+    $nodeAuthentication = new NodeAuthenticationHook(
         FileIO::readFile($configDir.'/node.key'),
         'Node API'
     );
-    $service->addBeforeHook('auth', $bearerAuthentication);
+    $service->addBeforeHook('auth', $nodeAuthentication);
 
     $storage = new Storage(
         new PDO(
