@@ -11,16 +11,12 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-use DateTimeImmutable;
-
 class UserInfo
 {
     private string $userId;
 
     /** @var array<string> */
     private array $permissionList;
-
-    private ?DateTimeImmutable $sessionExpiresAt = null;
 
     /**
      * @param array<string> $permissionList
@@ -29,16 +25,6 @@ class UserInfo
     {
         $this->userId = $userId;
         $this->permissionList = $permissionList;
-    }
-
-    public function setSessionExpiresAt(DateTimeImmutable $sessionExpiresAt): void
-    {
-        $this->sessionExpiresAt = $sessionExpiresAt;
-    }
-
-    public function getSessionExpiresAt(): ?DateTimeImmutable
-    {
-        return $this->sessionExpiresAt;
     }
 
     public function getUserId(): string

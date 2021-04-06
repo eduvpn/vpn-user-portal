@@ -64,13 +64,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
 
         /** @var \LC\Portal\Http\UserInfo */
         $userInfo = $hookData['auth'];
-
-        // check if the authentication backend wants to override the sessionExpiry
-        if (null === $sessionExpiresAt = $userInfo->getSessionExpiresAt()) {
-            $sessionExpiresAt = $this->dateTime->add($this->sessionExpiry);
-        }
-        // XXX if the authentication backend overrides the sessionExpiresAt, we
-        // must validate it is not in the past... also, probably get rid of this!
+        $sessionExpiresAt = $this->dateTime->add($this->sessionExpiry);
         $this->storage->updateSessionInfo($userInfo->getUserId(), $sessionExpiresAt, $userInfo->getPermissionList());
         // XXX maybe not necessary to log this anymore...
         $this->storage->addUserMessage(
