@@ -24,6 +24,7 @@ use LC\Portal\CA\VpnCa;
 use LC\Portal\ClientCertAuthentication;
 use LC\Portal\Config;
 use LC\Portal\DisabledUserHook;
+use LC\Portal\Expiry;
 use LC\Portal\FileIO;
 use LC\Portal\FormLdapAuthentication;
 use LC\Portal\FormPdoAuthentication;
@@ -81,15 +82,11 @@ try {
         $localeDirs[] = sprintf('%s/config/locale/%s', $baseDir, $styleName);
     }
 
-    $sessionExpiry = $config->requireString('sessionExpiry', 'P90D');
+    $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
 
-    // we always want browser session to expiry after PT8H hours, *EXCEPT* when
-    // the configured "sessionExpiry" is < PT8H, then we want to follow that
-    // setting...
-    $sessionOptions = SessionOptions::init();
     $dateTime = new DateTimeImmutable();
-    if ($dateTime->add(new DateInterval('PT30M')) > $dateTime->add(new DateInterval($sessionExpiry))) {
-        $sessionOptions = SessionOptions::init()->withExpiresIn(new DateInterval($sessionExpiry));
+    if ($dateTime->add(new DateInterval('PT30M')) <= $dateTime->add($sessionExpiry)) {
+        throw new RuntimeException('sessionExpiry MUST be > PT30M');
     }
 
     $secureCookie = $config->requireBool('secureCookie', true);
@@ -103,7 +100,7 @@ try {
     );
     $seSession = new SeSession(
         new Session(
-            $sessionOptions,
+            SessionOptions::init(),
             $cookieOptions
                 ->withPath($request->getRoot())
                 ->withSameSiteLax()
@@ -245,7 +242,7 @@ try {
     }
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($storage));
-    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $storage, new DateInterval($sessionExpiry)));
+    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $storage, $sessionExpiry));
 
     $service->addModule(new QrModule());
 
@@ -282,7 +279,8 @@ try {
         new TlsCrypt($dataDir),
         new Random(),
         $ca,
-        $oauthClientDb
+        $oauthClientDb,
+        $sessionExpiry
     );
     $service->addModule($vpnPortalModule);
 
@@ -308,7 +306,7 @@ try {
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );
     $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
-    $oauthServer->setRefreshTokenExpiry(new DateInterval($sessionExpiry));
+    $oauthServer->setRefreshTokenExpiry($sessionExpiry);
 
     $oauthModule = new OAuthModule(
         $tpl,

@@ -55,10 +55,10 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \fkooman\OAuth\Server\ClientDbInterface */
     private $clientDb;
 
-    /** @var \DateTimeImmutable */
-    private $dateTime;
+    private DateInterval $sessionExpiry;
+    private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb)
+    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
@@ -69,6 +69,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->random = $random;
         $this->ca = $ca;
         $this->clientDb = $clientDb;
+        $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = new DateTimeImmutable();
     }
 
@@ -134,7 +135,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'expiryDate' => $this->getExpiryDate(new DateInterval($this->config->requireString('sessionExpiry', 'P90D'))),
+                            'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'profileList' => $visibleProfileList,
                             'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
                         ]
@@ -420,14 +421,6 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return $filteredProfileList;
-    }
-
-    /**
-     * @return string
-     */
-    private function getExpiryDate(DateInterval $dateInterval)
-    {
-        return $this->dateTime->add($dateInterval)->format('Y-m-d');
     }
 
     /**

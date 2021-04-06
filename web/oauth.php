@@ -14,6 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\Config;
+use LC\Portal\Expiry;
 use LC\Portal\FileIO;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
@@ -56,7 +57,7 @@ try {
     );
 
     $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
-    $oauthServer->setRefreshTokenExpiry(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
+    $oauthServer->setRefreshTokenExpiry(Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D'))));
 
     $oauthModule = new OAuthTokenModule(
         $oauthServer

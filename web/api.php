@@ -16,6 +16,7 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\BearerAuthenticationHook;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
+use LC\Portal\Expiry;
 use LC\Portal\FileIO;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
@@ -81,7 +82,7 @@ try {
     $vpnApiModule = new VpnApiModule(
         $config,
         $storage,
-        new DateInterval($config->requireString('sessionExpiry', 'P90D')),
+        Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D'))),
         new TlsCrypt($dataDir),
         new Random(),
         $ca
