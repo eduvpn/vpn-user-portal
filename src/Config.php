@@ -151,9 +151,4 @@ class Config
 
         return new self(require $configFile);
     }
-
-    public function toArray(): array
-    {
-        return $this->configData;
-    }
 }

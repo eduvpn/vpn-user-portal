@@ -100,19 +100,6 @@ class NodeApiModule implements ServiceModuleInterface
                 }
             }
         );
-
-        $service->get(
-            '/profile_list',
-            function (Request $request, array $hookData): Response {
-                $profileList = [];
-                foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
-                    $profileConfig = new ProfileConfig(new Config($profileData));
-                    $profileList[$profileId] = $profileConfig->toArray();
-                }
-
-                return new ApiResponse('profile_list', $profileList);
-            }
-        );
     }
 
     public function connect(Request $request): void

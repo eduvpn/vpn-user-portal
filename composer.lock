@@ -223,7 +223,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "f67e3fde543d759be7453a39dddb87bf19dc91b2"
+                "reference": "7a4f45383e20adc5dbea511e93d1eb6491eeea63"
             },
             "require": {
                 "ext-curl": "*",
@@ -268,7 +268,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2021-03-25T11:51:15+00:00"
+            "time": "2021-04-06T20:54:08+00:00"
         },
         {
             "name": "myclabs/deep-copy",

@@ -143,12 +143,4 @@ class ProfileConfig
     {
         return $this->config->requireArray('dnsDomainSearch', []);
     }
-
-    /**
-     * @deprecated
-     */
-    public function toArray(): array
-    {
-        return $this->config->toArray();
-    }
 }
