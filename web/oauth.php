@@ -24,9 +24,9 @@ use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\Storage;
-use LC\Portal\Syslog;
+use LC\Portal\SysLogger;
 
-$logger = new Syslog('vpn-user-portal');
+$logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);

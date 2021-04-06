@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use DateTimeImmutable;
 use LC\Portal\Config;
 use LC\Portal\Exception\NodeApiException;
+use LC\Portal\LoggerInterface;
 use LC\Portal\ProfileConfig;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
@@ -67,7 +68,7 @@ class NodeApiModule implements ServiceModuleInterface
                     return $response;
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
-                        $this->storage->addUserMessage($userId, 'notification', '[CONNECT] ERROR: '.$e->getMessage(), $this->dateTime);
+                        $this->storage->addUserLog($userId, LoggerInterface::ERROR, 'unable to connect: '.$e->getMessage(), $this->dateTime);
                     }
 
                     $response = new Response();
@@ -90,7 +91,7 @@ class NodeApiModule implements ServiceModuleInterface
                     return $response;
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
-                        $this->storage->addUserMessage($userId, 'notification', '[DISCONNECT] ERROR: '.$e->getMessage(), $this->dateTime);
+                        $this->storage->addUserLog($userId, LoggerInterface::ERROR, 'unable to disconnect: '.$e->getMessage(), $this->dateTime);
                     }
 
                     $response = new Response();

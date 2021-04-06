@@ -13,12 +13,12 @@ namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Config;
 use LC\Portal\Http\SessionInterface;
-use LC\Portal\LogInterface;
+use LC\Portal\LoggerInterface;
 use LC\Portal\TplInterface;
 
 class FormLdapAuthentication extends FormAuthentication
 {
-    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LogInterface $logger)
+    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
     {
         $ldapClient = new LdapClient(
             $config->requireString('ldapUri')

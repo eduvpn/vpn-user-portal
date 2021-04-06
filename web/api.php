@@ -26,10 +26,10 @@ use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\Random;
 use LC\Portal\Storage;
-use LC\Portal\Syslog;
+use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
 
-$logger = new Syslog('vpn-user-api');
+$logger = new SysLogger('vpn-user-api');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);

@@ -53,11 +53,11 @@ use LC\Portal\Random;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSession;
 use LC\Portal\Storage;
-use LC\Portal\Syslog;
+use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
 
-$logger = new Syslog('vpn-user-portal');
+$logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);

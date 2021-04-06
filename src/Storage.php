@@ -896,12 +896,15 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
-    public function cleanUserMessages(DateTimeImmutable $dateTime): void
+    /**
+     * Remove log messages older than specified time.
+     */
+    public function cleanUserLog(DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         DELETE FROM
-            user_messages
+            user_log
         WHERE
             date_time < :date_time
     SQL
@@ -913,19 +916,17 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @param string $userId
-     *
-     * @return array
+     * Get all log messages for a particular user.
      */
-    public function userMessages($userId)
+    public function getUserLog(string $userId): array
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
-            id, type, message, date_time
+            id, log_level, log_message, date_time
         FROM
-            user_messages
+            user_log
         WHERE
             user_id = :user_id
         ORDER BY
@@ -939,21 +940,21 @@ class Storage implements StorageInterface
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function addUserMessage(string $userId, string $type, string $message, DateTimeImmutable $dateTime): void
+    public function addUserLog(string $userId, int $logLevel, string $logMessage, DateTimeImmutable $dateTime): void
     {
         $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
-        INSERT INTO user_messages
-            (user_id, type, message, date_time)
+        INSERT INTO user_log
+            (user_id, log_level, log_message, date_time)
         VALUES
-            (:user_id, :type, :message, :date_time)
+            (:user_id, :log_level, :log_message, :date_time)
     SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':type', $type, PDO::PARAM_STR);
-        $stmt->bindValue(':message', $message, PDO::PARAM_STR);
+        $stmt->bindValue(':log_level', $logLevel, PDO::PARAM_INT);
+        $stmt->bindValue(':log_message', $logMessage, PDO::PARAM_STR);
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
@@ -967,9 +968,9 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @return \PDO
+     * @deprecated
      */
-    public function getPdo()
+    public function getPdo(): PDO
     {
         return $this->db;
     }

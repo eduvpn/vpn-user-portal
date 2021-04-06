@@ -14,12 +14,12 @@ namespace LC\Portal\Http\Auth;
 use LC\Portal\Config;
 use LC\Portal\Http\RadiusAuth;
 use LC\Portal\Http\SessionInterface;
-use LC\Portal\LogInterface;
+use LC\Portal\LoggerInterface;
 use LC\Portal\TplInterface;
 
 class FormRadiusAuthentication extends FormAuthentication
 {
-    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LogInterface $logger)
+    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
     {
         $serverList = $config->requireArray('serverList');
         $userAuth = new RadiusAuth($logger, $serverList);

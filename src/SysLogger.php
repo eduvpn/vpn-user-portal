@@ -13,7 +13,7 @@ namespace LC\Portal;
 
 use RuntimeException;
 
-class Syslog implements LogInterface
+class SysLogger implements LoggerInterface
 {
     public function __construct(string $appName)
     {

@@ -18,6 +18,7 @@ use LC\Portal\CA\CaInterface;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
 use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
@@ -135,7 +136,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 InputValidation::userId($userId);
 
                 $clientCertificateList = $this->storage->getCertificates($userId);
-                $userMessages = $this->storage->userMessages($userId);
+                $userMessages = $this->storage->getUserLog($userId);
                 $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
                 // get the fancy profile name
                 $profileList = $this->profileList();
@@ -189,17 +190,17 @@ class AdminPortalModule implements ServiceModuleInterface
 
                         // disable the user
                         $this->storage->disableUser($userId);
-                        $this->storage->addUserMessage($userId, 'notification', 'account disabled', $this->dateTime);
+                        $this->storage->addUserLog($userId, LoggerInterface::NOTICE, 'account disabled by admin', $this->dateTime);
 
                         // * revoke all OAuth clients of this user
                         // * delete all client certificates associated with the OAuth clients of this user
                         $clientAuthorizations = $this->storage->getAuthorizations($userId);
                         foreach ($clientAuthorizations as $clientAuthorization) {
                             $this->storage->deleteAuthorization($clientAuthorization->authKey());
-                            $this->storage->addUserMessage(
+                            $this->storage->addUserLog(
                                 $userId,
-                                'notification',
-                                sprintf('certificates for OAuth client "%s" deleted', $clientAuthorization->clientId()),
+                                LoggerInterface::NOTICE,
+                                sprintf('certificate(s) for OAuth client "%s" deleted', $clientAuthorization->clientId()),
                                 $this->dateTime
                             );
 
@@ -216,7 +217,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
                     case 'enableUser':
                         $this->storage->enableUser($userId);
-                        $this->storage->addUserMessage($userId, 'notification', 'account (re)enabled', $this->dateTime);
+                        $this->storage->addUserLog($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
 
                         break;
 

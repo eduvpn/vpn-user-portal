@@ -46,10 +46,10 @@ CREATE TABLE connection_log(
   bytes_transferred INTEGER DEFAULT NULL,
   client_lost BOOLEAN DEFAULT 0
 );
-CREATE TABLE user_messages(
-  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  type VARCHAR(255) NOT NULL DEFAULT "notification",
-  message TINYTEXT NOT NULL,
+CREATE TABLE user_log(
+  log_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  log_level INTEGER NOT NULL,
+  log_message TINYTEXT NOT NULL,
   date_time DATETIME NOT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );

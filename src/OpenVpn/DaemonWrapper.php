@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\OpenVpn;
 
 use LC\Portal\Config;
-use LC\Portal\LogInterface;
+use LC\Portal\LoggerInterface;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use RangeException;
@@ -29,9 +29,9 @@ class DaemonWrapper
 
     private DaemonSocket $daemonSocket;
 
-    private LogInterface $logger;
+    private LoggerInterface $logger;
 
-    public function __construct(Config $config, Storage $storage, DaemonSocket $daemonSocket, LogInterface $logger)
+    public function __construct(Config $config, Storage $storage, DaemonSocket $daemonSocket, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->storage = $storage;
