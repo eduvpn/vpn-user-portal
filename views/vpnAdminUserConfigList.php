@@ -69,8 +69,8 @@ $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')
 <?php else: ?>
                     <?=$this->e($logEntry['profile_id']); ?>
 <?php endif; ?>
-                <td title="IPv4: <?=$this->e($logEntry['ipFour']); ?>, IPv6: <?=$this->e($logEntry['ipSix']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
-                <td title="<?=$this->e((string) $logEntry['bytes_transferred'], 'bytes_to_human'); ?>"><?=$this->d($logEntry['disconnected_at']); ?></td>
+                <td title="IPv4: <?=$this->e($logEntry['ip_four']); ?>, IPv6: <?=$this->e($logEntry['ip_six']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
+                <td title="<?=$this->bth($logEntry['bytes_transferred']); ?>"><?=$this->d($logEntry['disconnected_at']); ?></td>
             </tr>
 <?php endif; ?>
 <?php endforeach; ?>

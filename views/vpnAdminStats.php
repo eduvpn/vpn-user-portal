@@ -16,7 +16,7 @@ $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')
         <tr>
             <td title="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></td>
             <?php if (array_key_exists($profileId, $statsData)): ?>
-                <td><?=$this->e((string) $statsData[$profileId]['total_traffic'], 'bytes_to_human'); ?></td>
+                <td><?=$this->bth($statsData[$profileId]['total_traffic']); ?></td>
                 <td><?=$this->e((string) $statsData[$profileId]['unique_user_count']); ?></td>
                 <td><span title="<?=$this->e((string) $statsData[$profileId]['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e((string) $statsData[$profileId]['max_concurrent_connections']); ?> (<?=$this->e((string) $maxConcurrentConnectionLimit[$profileId]); ?>)</span></td>
             <?php else: ?>
@@ -85,7 +85,7 @@ $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')
 <?php for ($y = 0; $y < 25; ++$y): ?>
     <tr>
 <?php if (0 === $y): ?>
-    <th class="index" rowspan="25"><span><?=$this->batch((string) $graphStats[$profileId]['max_traffic_count'], 'escape|bytes_to_human'); ?></span></th>
+    <th class="index" rowspan="25"><span><?=$this->bth($graphStats[$profileId]['max_traffic_count']); ?></span></th>
 <?php endif; ?>
 
 <?php foreach ($graphStats[$profileId]['date_list'] as $dayStr => $dayData): ?>

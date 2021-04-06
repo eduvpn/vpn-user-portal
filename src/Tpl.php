@@ -51,7 +51,6 @@ class Tpl implements TplInterface
     {
         $this->templateFolderList = $templateFolderList;
         $this->translationFolderList = $translationFolderList;
-        $this->addCallback('bytes_to_human', [__CLASS__, 'toHuman']);
         $this->assetDir = $assetDir;
     }
 
@@ -134,7 +133,7 @@ class Tpl implements TplInterface
         return $this->e($displayName);
     }
 
-    public static function toHuman(int $byteSize): string
+    private function bth(int $byteSize): string
     {
         $KiB = 1024;
         $MiB = $KiB * 1024;
