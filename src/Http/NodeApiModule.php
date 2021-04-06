@@ -9,16 +9,14 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateTimeImmutable;
+use LC\Portal\Config;
 use LC\Portal\Exception\NodeApiException;
-use LC\Portal\Http\ApiResponse;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
+use LC\Portal\ProfileConfig;
+use LC\Portal\ServerConfig;
+use LC\Portal\Storage;
 
 class NodeApiModule implements ServiceModuleInterface
 {

@@ -9,20 +9,19 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTimeImmutable;
 use LC\Portal\CA\CaInterface;
-use LC\Portal\Http\ApiErrorResponse;
-use LC\Portal\Http\ApiResponse;
+use LC\Portal\ClientConfig;
+use LC\Portal\Config;
 use LC\Portal\Http\Exception\InputValidationException;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
+use LC\Portal\ProfileConfig;
+use LC\Portal\RandomInterface;
+use LC\Portal\Storage;
+use LC\Portal\TlsCrypt;
 
 class VpnApiModule implements ServiceModuleInterface
 {

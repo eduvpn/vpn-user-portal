@@ -9,12 +9,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
-
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
+namespace LC\Portal\Http;
 
 class QrModule implements ServiceModuleInterface
 {

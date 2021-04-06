@@ -21,7 +21,7 @@ use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
 use LC\Portal\Json;
 use LC\Portal\Logger;
-use LC\Portal\NodeApiModule;
+use LC\Portal\Http\NodeApiModule;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;

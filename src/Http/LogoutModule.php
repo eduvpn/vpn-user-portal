@@ -9,13 +9,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
-
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
-use LC\Portal\Http\SessionInterface;
+namespace LC\Portal\Http;
 
 class LogoutModule implements ServiceModuleInterface
 {

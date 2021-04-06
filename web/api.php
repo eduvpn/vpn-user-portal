@@ -27,7 +27,7 @@ use LC\Portal\OAuth\ClientDb;
 use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
-use LC\Portal\VpnApiModule;
+use LC\Portal\Http\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
 

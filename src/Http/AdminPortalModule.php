@@ -9,22 +9,19 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
 use LC\Portal\CA\CaInterface;
-use LC\Portal\Http\AuthUtils;
+use LC\Portal\Config;
+use LC\Portal\FileIO;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\HtmlResponse;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
+use LC\Portal\ProfileConfig;
+use LC\Portal\Storage;
+use LC\Portal\TplInterface;
 use RuntimeException;
 
 class AdminPortalModule implements ServiceModuleInterface

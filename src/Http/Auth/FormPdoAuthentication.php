@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Http\CredentialValidatorInterface;
+use LC\Portal\Http\PasswdModule;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\SessionInterface;
 use LC\Portal\Http\SessionInterface;
