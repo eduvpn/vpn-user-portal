@@ -26,26 +26,13 @@ use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
 {
-    /** @var \LC\Portal\Config */
-    private $config;
-
-    /** @var Storage */
-    private $storage;
-
-    /** @var \DateInterval */
-    private $sessionExpiry;
-
-    /** @var TlsCrypt */
-    private $tlsCrypt;
-
-    /** @var \LC\Portal\RandomInterface */
-    private $random;
-
-    /** @var CA\CaInterface */
-    private $ca;
-
-    /** @var \DateTimeImmutable */
-    private $dateTime;
+    private Config $config;
+    private Storage $storage;
+    private DateInterval $sessionExpiry;
+    private TlsCrypt $tlsCrypt;
+    private RandomInterface $random;
+    private CaInterface $ca;
+    private DateTimeImmutable $dateTime;
 
     public function __construct(Config $config, Storage $storage, DateInterval $sessionExpiry, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca)
     {
@@ -63,10 +50,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1, 2
         $service->get(
             '/profile_list',
-            /**
-             * @return ApiResponse
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
 
@@ -103,10 +87,7 @@ class VpnApiModule implements ServiceModuleInterface
         // DEPRECATED, this whole call is useless now!
         $service->get(
             '/user_info',
-            /**
-             * @return ApiResponse
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
 
@@ -130,10 +111,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->post(
             '/create_keypair',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 try {
@@ -155,10 +133,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/check_certificate',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 $commonName = InputValidation::commonName($request->requireQueryParameter('common_name'));
                 $clientCertificateInfo = $this->storage->getUserCertificateInfo($commonName);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
@@ -173,10 +148,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/profile_config',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                 $accessTokenInfo = $hookData['auth'];
                 try {
@@ -220,10 +192,7 @@ class VpnApiModule implements ServiceModuleInterface
         // NO LONGER USED
         $service->get(
             '/user_messages',
-            /**
-             * @return ApiResponse
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 return new ApiResponse(
                     'user_messages',
                     []
@@ -234,10 +203,7 @@ class VpnApiModule implements ServiceModuleInterface
         // NO LONGER USED
         $service->get(
             '/system_messages',
-            /**
-             * @return ApiResponse
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 return new ApiResponse(
                     'system_messages',
                     []
@@ -246,13 +212,7 @@ class VpnApiModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @param string $profileId
-     * @param int    $remoteStrategy
-     *
-     * @return Response
-     */
-    private function getConfigOnly($profileId, $remoteStrategy)
+    private function getConfigOnly(string $profileId, int $remoteStrategy): Response
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
@@ -275,10 +235,7 @@ class VpnApiModule implements ServiceModuleInterface
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    private function getCertificate(VpnAccessTokenInfo $accessTokenInfo)
+    private function getCertificate(VpnAccessTokenInfo $accessTokenInfo): array
     {
         // create a certificate
         // generate a random string as the certificate's CN
@@ -309,7 +266,7 @@ class VpnApiModule implements ServiceModuleInterface
      *
      * @return array<string, bool|string>
      */
-    private function validateCertificate($clientCertificateInfo)
+    private function validateCertificate($clientCertificateInfo): array
     {
         $reason = '';
         if (false === $clientCertificateInfo) {
@@ -344,7 +301,7 @@ class VpnApiModule implements ServiceModuleInterface
     /**
      * @return array<string>
      */
-    private function getPermissionList(VpnAccessTokenInfo $accessTokenInfo)
+    private function getPermissionList(VpnAccessTokenInfo $accessTokenInfo): array
     {
         if (!$accessTokenInfo->getIsLocal()) {
             return [];
@@ -353,10 +310,7 @@ class VpnApiModule implements ServiceModuleInterface
         return $this->storage->getPermissionList($accessTokenInfo->getUserId());
     }
 
-    /**
-     * @return \DateTimeImmutable
-     */
-    private function getExpiresAt(VpnAccessTokenInfo $accessTokenInfo)
+    private function getExpiresAt(VpnAccessTokenInfo $accessTokenInfo): DateTimeImmutable
     {
         if (!$accessTokenInfo->getIsLocal()) {
             return $this->dateTime->add($this->sessionExpiry);
@@ -370,7 +324,7 @@ class VpnApiModule implements ServiceModuleInterface
      *
      * @return array<string,\LC\Portal\ProfileConfig>
      */
-    private function profileList()
+    private function profileList(): array
     {
         $profileList = [];
         foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {

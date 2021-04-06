@@ -28,33 +28,15 @@ use LC\Portal\OpenVpn\DaemonWrapper;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
-    /** @var \LC\Portal\Config */
-    private $config;
-
-    /** @var \LC\Portal\TplInterface */
-    private $tpl;
-
-    /** @var \LC\Portal\Http\SessionInterface */
-    private $session;
-
-    /** @var OpenVpn\DaemonWrapper */
-    private $daemonWrapper;
-
-    /** @var Storage */
-    private $storage;
-
-    /** @var TlsCrypt */
-    private $tlsCrypt;
-
-    /** @var \LC\Portal\RandomInterface */
-    private $random;
-
-    /** @var CA\CaInterface */
-    private $ca;
-
-    /** @var \fkooman\OAuth\Server\ClientDbInterface */
-    private $clientDb;
-
+    private Config $config;
+    private TplInterface $tpl;
+    private SessionInterface $session;
+    private DaemonWrapper $daemonWrapper;
+    private Storage $storage;
+    private TlsCrypt $tlsCrypt;
+    private RandomInterface $random;
+    private CaInterface $ca;
+    private ClientDbInterface $clientDb;
     private DateInterval $sessionExpiry;
     private DateTimeImmutable $dateTime;
 
@@ -82,18 +64,12 @@ class VpnPortalModule implements ServiceModuleInterface
     {
         $service->get(
             '/',
-            /*
-             * @return \LC\Portal\Http\Response
-             */
-            fn (Request $request) => new RedirectResponse($request->getRootUri().'home', 302)
+            fn (Request $request): Response => new RedirectResponse($request->getRootUri().'home', 302)
         );
 
         $service->get(
             '/home',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalHome',
@@ -105,10 +81,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/configurations',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
@@ -146,10 +119,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/configurations',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
@@ -175,10 +145,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/deleteCertificate',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 $commonName = InputValidation::commonName($request->requirePostParameter('commonName'));
                 // XXX make sure certificate belongs to currently logged in user
                 if (false === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
@@ -201,10 +168,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/account',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $userPermissions = $userInfo->getPermissionList();
@@ -248,10 +212,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/removeClientAuthorization',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
@@ -304,10 +265,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/documentation',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function () {
+            function (): Response {
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalDocumentation',
@@ -318,10 +276,7 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @return bool
-     */
-    public static function isMember(array $aclPermissionList, array $userPermissions)
+    public static function isMember(array $aclPermissionList, array $userPermissions): bool
     {
         // if any of the permissions is part of aclPermissionList return true
         foreach ($userPermissions as $userPermission) {
@@ -333,15 +288,7 @@ class VpnPortalModule implements ServiceModuleInterface
         return false;
     }
 
-    /**
-     * @param string $serverName
-     * @param string $profileId
-     * @param string $userId
-     * @param string $displayName
-     *
-     * @return \LC\Portal\Http\Response
-     */
-    private function getConfig($serverName, $profileId, $userId, $displayName, DateTimeImmutable $expiresAt)
+    private function getConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
     {
         // create a certificate
         // generate a random string as the certificate's CN
@@ -403,7 +350,7 @@ class VpnPortalModule implements ServiceModuleInterface
      *
      * @return array<string,\LC\Portal\ProfileConfig>
      */
-    private static function filterProfileList(array $profileList, array $userPermissions)
+    private static function filterProfileList(array $profileList, array $userPermissions): array
     {
         $filteredProfileList = [];
         foreach ($profileList as $profileId => $profileConfig) {
@@ -428,7 +375,7 @@ class VpnPortalModule implements ServiceModuleInterface
      *
      * @return array<string,\LC\Portal\ProfileConfig>
      */
-    private function profileList()
+    private function profileList(): array
     {
         $profileList = [];
         foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
