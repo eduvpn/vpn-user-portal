@@ -161,7 +161,11 @@ try {
     }
 
     $storage = new Storage(
-        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+        new PDO(
+            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$dataDir.'/db.sqlite'),
+            $config->s('Db')->optionalString('dbUser'),
+            $config->s('Db')->optionalString('dbPass')
+        ),
         sprintf('%s/schema', $baseDir)
     );
     $storage->update();

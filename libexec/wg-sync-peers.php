@@ -23,7 +23,11 @@ try {
     $config = Config::fromFile($configFile);
     $dataDir = sprintf('%s/data', $baseDir);
     $storage = new Storage(
-        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+        new PDO(
+            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$dataDir.'/db.sqlite'),
+            $config->s('Db')->optionalString('dbUser'),
+            $config->s('Db')->optionalString('dbPass')
+        ),
         sprintf('%s/schema', $baseDir)
     );
     $wgDaemon = new WgDaemon(new CurlHttpClient());

@@ -66,15 +66,17 @@ try {
         throw new RuntimeException('Password cannot be empty');
     }
 
-    $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
-
+    $config = Config::fromFile($baseDir.'/config/config.php');
     if ('FormPdoAuthentication' !== $config->requireString('authMethod', 'FormPdoAuthentication')) {
         echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->requireString('authMethod')).\PHP_EOL;
     }
 
     $storage = new Storage(
-        new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
+        new PDO(
+            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$dataDir.'/db.sqlite'),
+            $config->s('Db')->optionalString('dbUser'),
+            $config->s('Db')->optionalString('dbPass')
+        ),
         sprintf('%s/schema', $baseDir)
     );
     $storage->addLocalUser($userId, $userPass, new DateTimeImmutable());
