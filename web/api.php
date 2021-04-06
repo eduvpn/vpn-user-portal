@@ -22,6 +22,7 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\VpnApiModule;
+use LC\Portal\Json;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\Random;
@@ -54,7 +55,7 @@ try {
     if ($config->s('Api')->requireBool('remoteAccess', false)) {
         $keyInstanceMappingFile = sprintf('%s/key_instance_mapping.json', $dataDir);
         if (FileIO::exists($keyInstanceMappingFile)) {
-            $keyInstanceMapping = FileIO::readJsonFile($keyInstanceMappingFile);
+            $keyInstanceMapping = Json::decode(FileIO::readFile($keyInstanceMappingFile));
         }
     }
 

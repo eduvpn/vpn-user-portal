@@ -110,6 +110,7 @@ class FormAuthentication implements ServiceModuleInterface, BeforeHookInterface
 
                 $this->session->regenerate();
                 $this->session->set('_form_auth_user', $userInfo->getUserId());
+                // XXX use something better than serialize
                 $this->session->set('_form_auth_permission_list', serialize($permissionList));
 
                 return new RedirectResponse($redirectTo, 302);
@@ -129,6 +130,7 @@ class FormAuthentication implements ServiceModuleInterface, BeforeHookInterface
         if (null !== $authUser = $this->session->get('_form_auth_user')) {
             $permissionList = [];
             if (null !== $sessionValue = $this->session->get('_form_auth_permission_list')) {
+                // XXX use something better than unserialize
                 $permissionList = unserialize($sessionValue);
             }
 
