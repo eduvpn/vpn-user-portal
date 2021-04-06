@@ -9,10 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http\Auth;
 
-use LC\Portal\Http\FormAuthentication;
+use LC\Portal\Config;
 use LC\Portal\Http\SessionInterface;
+use LC\Portal\LdapAuth;
+use LC\Portal\LdapClient;
+use LC\Portal\TplInterface;
 use Psr\Log\LoggerInterface;
 
 class FormLdapAuthentication extends FormAuthentication

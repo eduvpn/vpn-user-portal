@@ -9,24 +9,28 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace LC\Portal\Http\Auth;
 
+use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\CredentialValidatorInterface;
 use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\RedirectResponse;
+use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\Service;
+use LC\Portal\Http\ServiceModuleInterface;
+use LC\Portal\Http\SessionInterface;
+use LC\Portal\Http\StaticPermissions;
+use LC\Portal\Http\UserInfo;
+use LC\Portal\TplInterface;
 use LC\Portal\TplInterface;
 
 class FormAuthentication implements ServiceModuleInterface, BeforeHookInterface
 {
-    /** @var \LC\Portal\TplInterface */
-    protected $tpl;
-
-    /** @var CredentialValidatorInterface */
-    private $credentialValidator;
-
-    /** @var SessionInterface */
-    private $session;
-
-    /** @var StaticPermissions|null */
-    private $staticPermissions = null;
+    protected TplInterface $tpl;
+    private CredentialValidatorInterface $credentialValidator;
+    private SessionInterface $session;
+    private ?StaticPermissions $staticPermissions = null;
 
     public function __construct(
         CredentialValidatorInterface $credentialValidator,
@@ -47,10 +51,7 @@ class FormAuthentication implements ServiceModuleInterface, BeforeHookInterface
     {
         $service->post(
             '/_form/auth/verify',
-            /**
-             * @return Response
-             */
-            function (Request $request) {
+            function (Request $request): Response {
                 $this->session->remove('_form_auth_user');
 
                 // LDAP treats user "foo" and "foo " as the same user, but the

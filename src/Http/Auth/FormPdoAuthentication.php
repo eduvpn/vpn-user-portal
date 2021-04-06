@@ -9,13 +9,16 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Http\CredentialValidatorInterface;
-use LC\Portal\Http\FormAuthentication;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\SessionInterface;
+use LC\Portal\Http\SessionInterface;
 use LC\Portal\Http\UserInfo;
+use LC\Portal\PasswdModule;
+use LC\Portal\Storage;
+use LC\Portal\TplInterface;
 
 class FormPdoAuthentication extends FormAuthentication implements CredentialValidatorInterface
 {

@@ -9,11 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http\Auth;
 
 use DateTimeImmutable;
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
+use LC\Portal\Config;
 use LC\Portal\Http\BeforeHookInterface;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Http\RedirectResponse;
