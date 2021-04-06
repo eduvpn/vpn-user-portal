@@ -21,6 +21,7 @@ use LC\Portal\Http\HtmlResponse;
 use LC\Portal\Http\InputValidation;
 use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\ServiceModuleInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
@@ -28,31 +29,15 @@ use RuntimeException;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
-    /** @var string */
-    private $dataDir;
+    private string $dataDir;
+    private Config $config;
+    private TplInterface $tpl;
+    private CaInterface $ca;
+    private DaemonWrapper $daemonWrapper;
+    private Storage $storage;
+    private DateTimeImmutable $dateTime;
 
-    /** @var \LC\Portal\Config */
-    private $config;
-
-    /** @var \LC\Portal\TplInterface */
-    private $tpl;
-
-    /** @var CA\CaInterface */
-    private $ca;
-
-    /** @var OpenVpn\DaemonWrapper */
-    private $daemonWrapper;
-
-    /** @var Storage */
-    private $storage;
-
-    /** @var \DateTimeImmutable */
-    private $dateTime;
-
-    /**
-     * @param string $dataDir
-     */
-    public function __construct($dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage)
+    public function __construct(string $dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage)
     {
         $this->dataDir = $dataDir;
         $this->config = $config;
@@ -67,10 +52,7 @@ class AdminPortalModule implements ServiceModuleInterface
     {
         $service->get(
             '/connections',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 AuthUtils::requireAdmin($hookData);
 
                 // get the fancy profile name
@@ -97,10 +79,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/info',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 AuthUtils::requireAdmin($hookData);
 
                 $profileList = $this->profileList();
@@ -131,10 +110,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/users',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 AuthUtils::requireAdmin($hookData);
 
                 $userList = $this->storage->getUsers();
@@ -152,10 +128,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/user',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 AuthUtils::requireAdmin($hookData);
 
                 /** @var \LC\Portal\Http\UserInfo */
@@ -193,10 +166,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/user',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 AuthUtils::requireAdmin($hookData);
                 /** @var \LC\Portal\Http\UserInfo */
                 $userInfo = $hookData['auth'];
@@ -265,10 +235,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/log',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 AuthUtils::requireAdmin($hookData);
 
                 $now = new DateTimeImmutable();
@@ -288,10 +255,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/stats',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 AuthUtils::requireAdmin($hookData);
 
                 $profileList = $this->profileList();
@@ -315,10 +279,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/log',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (Request $request, array $hookData): Response {
                 AuthUtils::requireAdmin($hookData);
 
                 $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
@@ -351,10 +312,7 @@ class AdminPortalModule implements ServiceModuleInterface
         );
     }
 
-    /**
-     * @return array
-     */
-    private function getStatsData()
+    private function getStatsData(): array
     {
         // XXX probably do not use dataDir here directly, but a nice class
         $statsFile = sprintf('%s/stats.json', $this->dataDir);
@@ -419,10 +377,7 @@ class AdminPortalModule implements ServiceModuleInterface
         return $statsData;
     }
 
-    /**
-     * @return array
-     */
-    private function getGraphStats()
+    private function getGraphStats(): array
     {
         $outputData = [];
         $statsData = $this->getStatsData();
@@ -458,10 +413,7 @@ class AdminPortalModule implements ServiceModuleInterface
         return $outputData;
     }
 
-    /**
-     * @return array
-     */
-    private function getMaxConcurrentConnectionLimit(array $profileList)
+    private function getMaxConcurrentConnectionLimit(array $profileList): array
     {
         $maxConcurrentConnectionLimitList = [];
         foreach ($profileList as $profileId => $profileData) {
@@ -473,10 +425,7 @@ class AdminPortalModule implements ServiceModuleInterface
         return $maxConcurrentConnectionLimitList;
     }
 
-    /**
-     * @return array
-     */
-    private static function getAppUsage(array $appUsage)
+    private static function getAppUsage(array $appUsage): array
     {
         // limit to top 8, we don't care about the small ones...
         $appUsage = \array_slice($appUsage, 0, 8);
@@ -500,13 +449,7 @@ class AdminPortalModule implements ServiceModuleInterface
         return $relAppUsage;
     }
 
-    /**
-     * @param float $cumulativeFraction
-     * @param float $sliceFraction
-     *
-     * @return string
-     */
-    private static function getPathData(&$cumulativeFraction, $sliceFraction)
+    private static function getPathData(float &$cumulativeFraction, float $sliceFraction): string
     {
         // Lots of ideas from https://medium.com/hackernoon/a-simple-pie-chart-in-svg-dbdd653b6936
         $startXy = self::getCoordinates($cumulativeFraction);
@@ -518,11 +461,9 @@ class AdminPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param float $f
-     *
-     * @return array<float,float>
+     * @return array{float,float}
      */
-    private static function getCoordinates($f)
+    private static function getCoordinates(float $f): array
     {
         return [cos(2 * \M_PI * $f), sin(2 * \M_PI * $f)];
     }
@@ -532,7 +473,7 @@ class AdminPortalModule implements ServiceModuleInterface
      *
      * @return array<string,\LC\Portal\ProfileConfig>
      */
-    private function profileList()
+    private function profileList(): array
     {
         $profileList = [];
         foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {

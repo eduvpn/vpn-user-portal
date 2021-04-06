@@ -21,8 +21,7 @@ class WgDaemon
 {
     const WG_DAEMON_BASE_URL = 'http://localhost:8080';
 
-    /** @var \LC\Portal\HttpClient\HttpClientInterface */
-    private $httpClient;
+    private HttpClientInterface $httpClient;
 
     public function __construct(HttpClientInterface $httpClient)
     {

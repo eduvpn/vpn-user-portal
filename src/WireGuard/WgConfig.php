@@ -13,29 +13,16 @@ namespace LC\Portal\WireGuard;
 
 class WgConfig
 {
-    /** @var string */
-    private $publicKey;
-
-    /** @var string */
-    private $ipFour;
-
-    /** @var string */
-    private $ipSix;
-
-    /** @var string */
-    private $serverPublicKey;
-
-    /** @var string */
-    private $hostName;
-
-    /** @var int */
-    private $listenPort;
+    private string $publicKey;
+    private string $ipFour;
+    private string $ipSix;
+    private string $serverPublicKey;
+    private string $hostName;
+    private int $listenPort;
 
     /** @var array<string> */
-    private $dnsServerList;
-
-    /** @var string|null */
-    private $privateKey;
+    private array $dnsServerList;
+    private ?string $privateKey;
 
     /**
      * @param array<string> $dnsServerList
