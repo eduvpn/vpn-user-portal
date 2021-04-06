@@ -64,19 +64,9 @@ class UpdateSessionInfoHook implements BeforeHookInterface
 
         /** @var \LC\Portal\Http\UserInfo */
         $userInfo = $hookData['auth'];
+
         $sessionExpiresAt = $this->dateTime->add($this->sessionExpiry);
         $this->storage->updateSessionInfo($userInfo->getUserId(), $sessionExpiresAt, $userInfo->getPermissionList());
-        // XXX maybe not necessary to log this anymore...
-        $this->storage->addUserMessage(
-            $userInfo->getUserId(),
-            'notification',
-            sprintf(
-                'updated session info {permission_list: [%s], expires_at: %s}',
-                implode(' ', $userInfo->getPermissionList()),
-                $sessionExpiresAt->format(DateTimeImmutable::ATOM)
-            ),
-            $this->dateTime
-        );
         $this->session->set('_update_session_info', 'yes');
     }
 }
