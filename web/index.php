@@ -85,7 +85,7 @@ try {
     $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
 
     $dateTime = new DateTimeImmutable();
-    if ($dateTime->add(new DateInterval('PT30M')) <= $dateTime->add($sessionExpiry)) {
+    if ($dateTime->add(new DateInterval('PT30M')) >= $dateTime->add($sessionExpiry)) {
         throw new RuntimeException('sessionExpiry MUST be > PT30M');
     }
 
