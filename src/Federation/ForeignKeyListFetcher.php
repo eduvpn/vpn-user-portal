@@ -89,7 +89,7 @@ class ForeignKeyListFetcher
             return [];
         }
 
-        return FileIO::readJsonFile($mappingFile);
+        return Json::decode(FileIO::readFile($mappingFile));
     }
 
     private function getCurrentVersion(): int
@@ -97,7 +97,7 @@ class ForeignKeyListFetcher
         if (!FileIO::exists($this->dataDir.'/server_list.json')) {
             return 0;
         }
-        $serverListData = FileIO::readJsonFile($this->dataDir.'/server_list.json');
+        $serverListData = Json::decode(FileIO::readFile($this->dataDir.'/server_list.json'));
 
         return $serverListData['v'];
     }

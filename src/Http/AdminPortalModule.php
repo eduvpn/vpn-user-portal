@@ -18,6 +18,7 @@ use LC\Portal\CA\CaInterface;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
 use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Json;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\ProfileConfig;
@@ -315,7 +316,7 @@ class AdminPortalModule implements ServiceModuleInterface
         // XXX probably do not use dataDir here directly, but a nice class
         $statsFile = sprintf('%s/stats.json', $this->dataDir);
         try {
-            $stats = FileIO::readJsonFile($statsFile);
+            $stats = Json::decode(FileIO::readFile($statsFile));
         } catch (RuntimeException $e) {
             // unable to read stats file
             return [];

@@ -14,6 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\FileIO;
+use LC\Portal\Json;
 use LC\Portal\Stats;
 use LC\Portal\Storage;
 
@@ -36,10 +37,7 @@ try {
         array_keys($config->requireArray('vpnProfiles'))
     );
 
-    FileIO::writeJsonFile(
-        $outFile,
-        $statsData
-    );
+    FileIO::writeFile($outFile, Json::encode($statsData));
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
