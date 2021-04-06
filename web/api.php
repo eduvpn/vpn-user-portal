@@ -21,13 +21,13 @@ use LC\Portal\Http\Auth\BearerAuthenticationHook;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
+use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Logger;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
-use LC\Portal\Http\VpnApiModule;
 
 $logger = new Logger('vpn-user-api');
 
