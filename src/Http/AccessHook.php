@@ -9,12 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http;
 
-use LC\Portal\Http\BeforeHookInterface;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
 
 /**
  * This hook is used to check if a user is allowed to access the portal/API.
