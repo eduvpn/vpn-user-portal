@@ -22,14 +22,14 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\VpnApiModule;
-use LC\Portal\Logger;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\Random;
 use LC\Portal\Storage;
+use LC\Portal\Syslog;
 use LC\Portal\TlsCrypt;
 
-$logger = new Logger('vpn-user-api');
+$logger = new Syslog('vpn-user-api');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);

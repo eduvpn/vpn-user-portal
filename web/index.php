@@ -44,7 +44,6 @@ use LC\Portal\Http\Service;
 use LC\Portal\Http\StaticPermissions;
 use LC\Portal\Http\UpdateSessionInfoHook;
 use LC\Portal\Http\VpnPortalModule;
-use LC\Portal\Logger;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuth\VpnOAuthServer;
@@ -54,10 +53,11 @@ use LC\Portal\Random;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSession;
 use LC\Portal\Storage;
+use LC\Portal\Syslog;
 use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
 
-$logger = new Logger('vpn-user-portal');
+$logger = new Syslog('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);

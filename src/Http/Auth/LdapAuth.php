@@ -14,11 +14,11 @@ namespace LC\Portal\Http\Auth;
 use LC\Portal\Http\Auth\Exception\LdapClientException;
 use LC\Portal\Http\CredentialValidatorInterface;
 use LC\Portal\Http\UserInfo;
-use Psr\Log\LoggerInterface;
+use LC\Portal\LogInterface;
 
 class LdapAuth implements CredentialValidatorInterface
 {
-    private LoggerInterface $logger;
+    private LogInterface $logger;
 
     private LdapClient $ldapClient;
 
@@ -42,7 +42,7 @@ class LdapAuth implements CredentialValidatorInterface
     /**
      * @param array<string> $permissionAttributeList
      */
-    public function __construct(LoggerInterface $logger, LdapClient $ldapClient, ?string $bindDnTemplate, ?string $baseDn, ?string $userFilterTemplate, ?string $userIdAttribute, ?string $addRealm, array $permissionAttributeList, ?string $searchBindDn, ?string $searchBindPass)
+    public function __construct(LogInterface $logger, LdapClient $ldapClient, ?string $bindDnTemplate, ?string $baseDn, ?string $userFilterTemplate, ?string $userIdAttribute, ?string $addRealm, array $permissionAttributeList, ?string $searchBindDn, ?string $searchBindPass)
     {
         $this->logger = $logger;
         $this->ldapClient = $ldapClient;

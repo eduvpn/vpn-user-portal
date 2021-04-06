@@ -21,9 +21,9 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
 use LC\Portal\Json;
-use LC\Portal\Logger;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
+use LC\Portal\Syslog;
 use LC\Portal\TlsCrypt;
 
 try {
@@ -63,7 +63,7 @@ try {
     $request = new Request($_SERVER, $_GET, $_POST);
     $service->run($request)->send();
 } catch (Exception $e) {
-    $logger = new Logger('vpn-user-portal-node-api');
+    $logger = new SysLog('vpn-user-portal-node-api');
     $logger->error($e->getMessage());
     $response = new Response(500, 'application/json');
     $response->setBody(Json::encode(['error' => $e->getMessage()]));
