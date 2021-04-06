@@ -33,15 +33,13 @@ class Minisign
     const ED_PUBLIC_KEY_LENGTH = 32;
 
     /**
-     * @param string        $messageText
-     * @param string        $messageSignature
      * @param array<string> $encodedPublicKeyList
      *
      * XXX should we throw an exception always?
      *
      * @return bool
      */
-    public static function verify($messageText, $messageSignature, array $encodedPublicKeyList)
+    public static function verify(string $messageText, string $messageSignature, array $encodedPublicKeyList)
     {
         $signatureData = self::getLine($messageSignature, 1);
         $msgSig = sodium_base642bin($signatureData, \SODIUM_BASE64_VARIANT_ORIGINAL);
@@ -68,12 +66,9 @@ class Minisign
     }
 
     /**
-     * @param string        $signatureKeyId
      * @param array<string> $encodedPublicKeyList
-     *
-     * @return string
      */
-    private static function getPublicKey($signatureKeyId, array $encodedPublicKeyList)
+    private static function getPublicKey(string $signatureKeyId, array $encodedPublicKeyList): string
     {
         // <signature_algorithm> || <key_id> || <public_key>
         //    signature_algorithm: Ed
@@ -96,13 +91,7 @@ class Minisign
         throw new Exception('unable to find public key with requested key id');
     }
 
-    /**
-     * @param string $inputFile
-     * @param int    $lineNo
-     *
-     * @return string
-     */
-    private static function getLine($inputFile, $lineNo)
+    private static function getLine(string $inputFile, int $lineNo): string
     {
         $fileLines = explode("\n", $inputFile);
         if ($lineNo > \count($fileLines)) {

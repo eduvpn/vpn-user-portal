@@ -21,22 +21,17 @@ use LC\Portal\OAuth\PublicSigner;
 
 class ForeignKeyListFetcher
 {
-    /** @var string */
-    private $dataDir;
+    private string $dataDir;
 
-    /**
-     * @param string $dataDir
-     */
-    public function __construct($dataDir)
+    public function __construct(string $dataDir)
     {
         $this->dataDir = $dataDir;
     }
 
     /**
-     * @param string        $serverListUrl
      * @param array<string> $trustedPublicKeyList
      */
-    public function update(HttpClientInterface $httpClient, $serverListUrl, array $trustedPublicKeyList): void
+    public function update(HttpClientInterface $httpClient, string $serverListUrl, array $trustedPublicKeyList): void
     {
         $requestHeaders = [];
         if (false !== $filemTime = @filemtime($this->dataDir.'/server_list.json')) {
@@ -87,10 +82,7 @@ class ForeignKeyListFetcher
         }
     }
 
-    /**
-     * @return array
-     */
-    public function extract()
+    public function extract(): array
     {
         $mappingFile = sprintf('%s/key_instance_mapping.json', $this->dataDir);
         if (false === FileIO::exists($mappingFile)) {
@@ -100,10 +92,7 @@ class ForeignKeyListFetcher
         return FileIO::readJsonFile($mappingFile);
     }
 
-    /**
-     * @return int
-     */
-    private function getCurrentVersion()
+    private function getCurrentVersion(): int
     {
         if (!FileIO::exists($this->dataDir.'/server_list.json')) {
             return 0;
@@ -113,10 +102,7 @@ class ForeignKeyListFetcher
         return $serverListData['v'];
     }
 
-    /**
-     * @return array
-     */
-    private static function generateMapping(array $serverListData)
+    private static function generateMapping(array $serverListData): array
     {
         $mappingData = [];
         foreach ($serverListData['server_list'] as $serverEntry) {
