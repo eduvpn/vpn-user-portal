@@ -10,11 +10,13 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\IP;
 use LC\Portal\ProfileConfig;
+
+$baseDir = dirname(__DIR__);
+$configFile = $baseDir.'/config/config.php';
 
 /**
  * XXX duplicate.
@@ -49,7 +51,7 @@ try {
         $domainName = $systemHostName;
     }
 
-    $config = Config::fromFile($baseDir.'/config/config.php');
+    $config = Config::fromFile($configFile);
 
     $profileList = profileList($config);
     $forwardDns = [];
@@ -122,6 +124,6 @@ try {
         }
     }
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }

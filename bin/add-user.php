@@ -10,13 +10,15 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
-use LC\Portal\Config;
 use LC\Portal\Storage;
 
+$baseDir = dirname(__DIR__);
+$configFile = $baseDir.'/config/config.php';
+$dbDsn = 'sqlite://'.$baseDir.'/data/db.sqlite';
+$schemaDir = $baseDir.'/schema';
+
 try {
-    $dataDir = sprintf('%s/data', $baseDir);
     $userId = null;
     $userPass = null;
     for ($i = 1; $i < $argc; ++$i) {
@@ -65,15 +67,9 @@ try {
     if (empty($userPass)) {
         throw new RuntimeException('Password cannot be empty');
     }
-
-    $config = Config::fromFile($baseDir.'/config/config.php');
-    if ('FormPdoAuthentication' !== $config->requireString('authMethod', 'FormPdoAuthentication')) {
-        echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->requireString('authMethod')).\PHP_EOL;
-    }
-
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
+    $storage = new Storage(new PDO($dbDsn), $schemaDir);
     $storage->addLocalUser($userId, $userPass, new DateTimeImmutable());
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }
