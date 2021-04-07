@@ -28,14 +28,11 @@ use LC\Portal\TlsCrypt;
 
 try {
     $dataDir = sprintf('%s/data', $baseDir);
-    $configDir = sprintf('%s/config', $baseDir);
-    $config = Config::fromFile(
-        sprintf('%s/config.php', $configDir)
-    );
+    $config = Config::fromFile($baseDir.'/config/config.php');
 
     $service = new Service();
     $nodeAuthentication = new NodeAuthenticationHook(
-        FileIO::readFile($configDir.'/node.key'),
+        FileIO::readFile($baseDir.'/config/node.key'),
         'Node API'
     );
     $service->addBeforeHook('auth', $nodeAuthentication);

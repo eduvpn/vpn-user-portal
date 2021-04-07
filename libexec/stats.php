@@ -19,9 +19,7 @@ use LC\Portal\Stats;
 use LC\Portal\Storage;
 
 try {
-    $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
-
+    $config = Config::fromFile($baseDir.'/config/config.php');
     $dataDir = sprintf('%s/data', $baseDir);
     $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
     $outFile = sprintf('%s/stats.json', $dataDir);

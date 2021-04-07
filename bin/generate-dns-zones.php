@@ -49,8 +49,7 @@ try {
         $domainName = $systemHostName;
     }
 
-    $configDir = sprintf('%s/config', $baseDir);
-    $config = Config::fromFile(sprintf('%s/config.php', $configDir));
+    $config = Config::fromFile($baseDir.'/config/config.php');
 
     $profileList = profileList($config);
     $forwardDns = [];

@@ -64,9 +64,8 @@ try {
 
     $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
-    $configDir = sprintf('%s/config', $baseDir);
+    $config = Config::fromFile($baseDir.'/config/config.php');
 
-    $config = Config::fromFile(sprintf('%s/config.php', $configDir));
     $templateDirs = [
         sprintf('%s/views', $baseDir),
         sprintf('%s/config/views', $baseDir),
@@ -260,7 +259,7 @@ try {
     $daemonWrapper = new DaemonWrapper(
         $config,
         $storage,
-        new DaemonSocket(sprintf('%s/vpn-daemon', $configDir), $config->requireBool('vpnDaemonTls', true)),
+        new DaemonSocket(sprintf('%s/vpn-daemon', $baseDir.'/config'), $config->requireBool('vpnDaemonTls', true)),
         $logger
     );
 

@@ -34,7 +34,7 @@ try {
     $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir, 0700);
 
-    $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
+    $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();
 
     // OAuth tokens

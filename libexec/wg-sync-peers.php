@@ -19,8 +19,7 @@ use LC\Portal\Storage;
 use LC\Portal\WireGuard\WgDaemon;
 
 try {
-    $configFile = sprintf('%s/config/config.php', $baseDir);
-    $config = Config::fromFile($configFile);
+    $config = Config::fromFile($baseDir.'/config/config.php');
     $dataDir = sprintf('%s/data', $baseDir);
     $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
     $wgDaemon = new WgDaemon(new CurlHttpClient());
