@@ -15,14 +15,14 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\FileIO;
 
 $baseDir = dirname(__DIR__);
-$keyFile = $baseDir.'/config/oauth.key';
+$apiKeyFile = $baseDir.'/config/oauth.key';
 
 try {
     // generate OAuth key
-    if (!FileIO::exists($keyFile)) {
-        throw new Exception('unable to find "'.$keyFile.'"');
+    if (!FileIO::exists($apiKeyFile)) {
+        throw new Exception('unable to find "'.$apiKeyFile.'"');
     }
-    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($keyFile));
+    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($apiKeyFile));
     echo 'Public Key: '.$secretKey->getPublicKey()->encode().\PHP_EOL;
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
