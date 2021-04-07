@@ -10,17 +10,19 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
 use LC\Portal\Storage;
 
+$baseDir = dirname(__DIR__);
+$dbDsn = 'sqlite://'.$baseDir.'/data/db.sqlite';
+$schemaDir = $baseDir.'/schema';
+
 try {
-    $dataDir = $baseDir.'/data';
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
+    $storage = new Storage(new PDO($dbDsn), $schemaDir);
     $storage->cleanConnectionLog(new DateTimeImmutable('now -32 days'));
     $storage->cleanExpiredCertificates(new DateTimeImmutable('now -7 days'));
     $storage->cleanUserLog(new DateTimeImmutable('now -32 days'));
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }

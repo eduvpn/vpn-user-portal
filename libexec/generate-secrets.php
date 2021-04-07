@@ -10,28 +10,27 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\FileIO;
 
-try {
-    $configDir = sprintf('%s/config', $baseDir);
+$baseDir = dirname(__DIR__);
+$apiKeyFile = $baseDir.'/config/oauth.key';
+$nodeKeyFile = $baseDir.'/config/node.key';
 
-    // OAuth Key
-    $keyFile = sprintf('%s/oauth.key', $configDir);
-    if (!FileIO::exists($keyFile)) {
+try {
+    // OAuth key
+    if (!FileIO::exists($apiKeyFile)) {
         $secretKey = SecretKey::generate();
-        FileIO::writeFile($keyFile, $secretKey->encode(), 0644);
+        FileIO::writeFile($apiKeyFile, $secretKey->encode(), 0644);
     }
 
     // Node Key
-    $keyFile = sprintf('%s/node.key', $configDir);
-    if (!FileIO::exists($keyFile)) {
+    if (!FileIO::exists($nodeKeyFile)) {
         $secretKey = random_bytes(32);
-        FileIO::writeFile($keyFile, sodium_bin2hex($secretKey), 0644);
+        FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey), 0644);
     }
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }

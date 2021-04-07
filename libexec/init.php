@@ -10,20 +10,22 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
 use LC\Portal\FileIO;
 use LC\Portal\Storage;
 
+$baseDir = dirname(__DIR__);
+$dataDir = $baseDir.'/data';
+$dbDsn = 'sqlite://'.$baseDir.'/data/db.sqlite';
+$schemaDir = $baseDir.'/schema';
+
 // XXX Move this to web/index.php, web/api.php and web/node-api.php so it
 // only does this on first run
 try {
-    // initialize database
-    $dataDir = sprintf('%s/data', $baseDir);
     FileIO::createDir($dataDir);
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
+    $storage = new Storage(new PDO($dbDsn), $schemaDir);
     $storage->init();
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }

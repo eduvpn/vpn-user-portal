@@ -10,16 +10,19 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\Federation\ForeignKeyListFetcher;
 use LC\Portal\HttpClient\CurlHttpClient;
 
+$baseDir = dirname(__DIR__);
+$configFile = $baseDir.'/config/config.php';
+$dataDir = $baseDir.'/data';
+
 try {
-    $config = Config::fromFile($baseDir.'/config/config.php');
+    $config = Config::fromFile($configFile);
     if ($config->s('Api')->requireBool('remoteAccess', false)) {
-        $foreignKeyListFetcher = new ForeignKeyListFetcher($baseDir.'/data');
+        $foreignKeyListFetcher = new ForeignKeyListFetcher($dataDir);
         $foreignKeyListFetcher->update(
             new CurlHttpClient(),
             'https://disco.eduvpn.org/v2/server_list.json',
@@ -31,6 +34,6 @@ try {
         );
     }
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }

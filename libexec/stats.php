@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\FileIO;
@@ -18,18 +17,19 @@ use LC\Portal\Json;
 use LC\Portal\Stats;
 use LC\Portal\Storage;
 
-try {
-    $config = Config::fromFile($baseDir.'/config/config.php');
-    $dataDir = sprintf('%s/data', $baseDir);
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
-    $outFile = sprintf('%s/stats.json', $dataDir);
-    $stats = new Stats($storage, new DateTimeImmutable());
-    $statsData = $stats->get(
-        array_keys($config->requireArray('vpnProfiles'))
-    );
+$baseDir = dirname(__DIR__);
+$configFile = $baseDir.'/config/config.php';
+$statsFile = $baseDir.'/data/stats.json';
+$dbDsn = 'sqlite://'.$baseDir.'/data/db.sqlite';
+$schemaDir = $baseDir.'/schema';
 
-    FileIO::writeFile($outFile, Json::encode($statsData));
+try {
+    $config = Config::fromFile($configFile);
+    $storage = new Storage(new PDO($dbDsn), $schemaDir);
+    $stats = new Stats($storage, new DateTimeImmutable());
+    $statsData = $stats->get(array_keys($config->requireArray('vpnProfiles')));
+    FileIO::writeFile($statsFile, Json::encode($statsData));
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }

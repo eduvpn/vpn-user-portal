@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
-$baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\HttpClient\CurlHttpClient;
@@ -18,10 +17,14 @@ use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\WgDaemon;
 
+$baseDir = dirname(__DIR__);
+$configFile = $baseDir.'/config/config.php';
+$dbDsn = 'sqlite://'.$baseDir.'/data/db.sqlite';
+$schemaDir = $baseDir.'/schema';
+
 try {
-    $config = Config::fromFile($baseDir.'/config/config.php');
-    $dataDir = sprintf('%s/data', $baseDir);
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
+    $config = Config::fromFile($configFile);
+    $storage = new Storage(new PDO($dbDsn), $schemaDir);
     $wgDaemon = new WgDaemon(new CurlHttpClient());
     foreach ($config->requireArray('vpnProfiles') as $profileId => $profileData) {
         $profileConfig = new ProfileConfig(new Config($profileData));
@@ -32,6 +35,6 @@ try {
         }
     }
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+    echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);
 }
