@@ -23,14 +23,7 @@ try {
     $config = Config::fromFile($configFile);
 
     $dataDir = sprintf('%s/data', $baseDir);
-    $storage = new Storage(
-        new PDO(
-            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$dataDir.'/db.sqlite'),
-            $config->s('Db')->optionalString('dbUser'),
-            $config->s('Db')->optionalString('dbPass')
-        ),
-        sprintf('%s/schema', $baseDir)
-    );
+    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
     $outFile = sprintf('%s/stats.json', $dataDir);
     $stats = new Stats($storage, new DateTimeImmutable());
     $statsData = $stats->get(

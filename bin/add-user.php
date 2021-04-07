@@ -71,14 +71,7 @@ try {
         echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->requireString('authMethod')).\PHP_EOL;
     }
 
-    $storage = new Storage(
-        new PDO(
-            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$dataDir.'/db.sqlite'),
-            $config->s('Db')->optionalString('dbUser'),
-            $config->s('Db')->optionalString('dbPass')
-        ),
-        sprintf('%s/schema', $baseDir)
-    );
+    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
     $storage->addLocalUser($userId, $userPass, new DateTimeImmutable());
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;

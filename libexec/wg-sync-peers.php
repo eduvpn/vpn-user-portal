@@ -22,14 +22,7 @@ try {
     $configFile = sprintf('%s/config/config.php', $baseDir);
     $config = Config::fromFile($configFile);
     $dataDir = sprintf('%s/data', $baseDir);
-    $storage = new Storage(
-        new PDO(
-            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$dataDir.'/db.sqlite'),
-            $config->s('Db')->optionalString('dbUser'),
-            $config->s('Db')->optionalString('dbPass')
-        ),
-        sprintf('%s/schema', $baseDir)
-    );
+    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
     $wgDaemon = new WgDaemon(new CurlHttpClient());
     foreach ($config->requireArray('vpnProfiles') as $profileId => $profileData) {
         $profileConfig = new ProfileConfig(new Config($profileData));
