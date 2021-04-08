@@ -7,7 +7,7 @@ $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Accou
             <th><?=$this->t('User ID'); ?></th>
             <td><code><?=$this->e($userInfo->getUserId()); ?></code></td>
         </tr>
-        <?php if ($allowPasswordChange): ?>
+        <?php if ('DbAuthModule' === $authModule) :?>
             <tr>
                 <th></th>
                 <td><form class="frm" method="get" action="passwd"><button><?=$this->t('Change Password'); ?></button></form></td>
