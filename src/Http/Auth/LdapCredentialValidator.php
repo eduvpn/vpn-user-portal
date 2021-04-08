@@ -9,31 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Exception\LdapClientException;
-use LC\Portal\Http\Auth\CredentialValidatorInterface;
 use LC\Portal\Http\UserInfo;
-
-//        $ldapClient = new LdapClient(
-//            $config->requireString('ldapUri')
-//        );
-
-//        // XXX fix documentation for type permissionAttribute, can only be array<string> now!
-//        $permissionAttribute = $config->requireArray('permissionAttribute', []);
-
-//        $userAuth = new LdapAuth(
-//            $logger,
-//            $ldapClient,
-//            $config->optionalString('bindDnTemplate'),
-//            $config->optionalString('baseDn'),
-//            $config->optionalString('userFilterTemplate'),
-//            $config->optionalString('userIdAttribute'),
-//            $config->optionalString('addRealm'),
-//            $permissionAttribute,
-//            $config->optionalString('searchBindDn'),
-//            $config->optionalString('searchBindPass')
-//        );
+use LC\Portal\LdapClient;
+use LC\Portal\LoggerInterface;
 
 class LdapCredentialValidator implements CredentialValidatorInterface
 {

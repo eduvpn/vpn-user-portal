@@ -26,6 +26,7 @@ use LC\Portal\Http\AdminHook;
 use LC\Portal\Http\AdminPortalModule;
 use LC\Portal\Http\Auth\ClientCertAuthModule;
 use LC\Portal\Http\Auth\DbCredentialValidator;
+use LC\Portal\Http\Auth\LdapCredentialValidator;
 use LC\Portal\Http\Auth\MellonAuthModule;
 use LC\Portal\Http\Auth\PhpSamlSpAuthModule;
 use LC\Portal\Http\Auth\RadiusCredentialValidator;
@@ -44,6 +45,7 @@ use LC\Portal\Http\Service;
 use LC\Portal\Http\UpdateSessionInfoHook;
 use LC\Portal\Http\UserPassModule;
 use LC\Portal\Http\VpnPortalModule;
+use LC\Portal\LdapClient;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuth\VpnOAuthServer;
@@ -194,6 +196,29 @@ try {
             );
             break;
         case 'LdapAuthModule':
+            $ldapClient = new LdapClient(
+                $config->s('LdapAuthModule')->requireString('ldapUri')
+            );
+            $authModule = new UserPassAuthModule($seSession, $tpl);
+            $service->addModule(
+                new UserPassModule(
+                    new LdapCredentialValidator(
+                        $logger,
+                        $ldapClient,
+                        $config->s('LdapAuthModule')->optionalString('bindDnTemplate'),
+                        $config->s('LdapAuthModule')->optionalString('baseDn'),
+                        $config->s('LdapAuthModule')->optionalString('userFilterTemplate'),
+                        $config->s('LdapAuthModule')->optionalString('userIdAttribute'),
+                        $config->s('LdapAuthModule')->optionalString('addRealm'),
+                        $config->s('LdapAuthModule')->requireArray('permissionAttribute', []),
+                        $config->s('LdapAuthModule')->optionalString('searchBindDn'),
+                        $config->s('LdapAuthModule')->optionalString('searchBindPass')
+                    ),
+                    $seSession,
+                    $tpl
+                )
+            );
+            break;
         default:
             throw new RuntimeException('unsupported authentication mechanism');
     }
