@@ -112,7 +112,7 @@ $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Accou
 <?php foreach ($userMessages as $message): ?>
                 <tr>
                     <td><?=$this->d($message['date_time']); ?></td>
-                    <td><?=$this->e($message['message']); ?></td>
+                    <td><?=$this->e($message['log_message']); ?></td>
                 </tr>
 <?php endforeach; ?>
             </tbody>
