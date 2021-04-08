@@ -9,12 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace LC\Portal\Http\Auth;
 
 interface CredentialValidatorInterface
 {
     /**
-     * @return false|UserInfo
+     * @return false|\LC\Portal\Http\UserInfo
      */
     public function isValid(string $authUser, string $authPass);
 }

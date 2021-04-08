@@ -924,7 +924,7 @@ class Storage implements StorageInterface
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
-            id, log_level, log_message, date_time
+            log_id, log_level, log_message, date_time
         FROM
             user_log
         WHERE

@@ -11,9 +11,12 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-interface BeforeHookInterface
+interface UserInfoInterface
 {
-    public function beforeAuth(Request $request): ?Response;
+    public function getUserId(): string;
 
-    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response;
+    /**
+     * @return array<string>
+     */
+    public function getPermissionList(): array;
 }

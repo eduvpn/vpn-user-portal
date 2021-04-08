@@ -9,13 +9,25 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Http\Exception\RadiusException;
 use LC\Portal\LoggerInterface;
 use RuntimeException;
 
-class RadiusAuth implements CredentialValidatorInterface
+//    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
+//    {
+//        $serverList = $config->requireArray('serverList');
+//        $userAuth = new RadiusAuth($logger, $serverList);
+//        if (null !== $addRealm = $config->optionalString('addRealm')) {
+//            $userAuth->setRealm($addRealm);
+//        }
+//        if (null !== $nasIdentifier = $config->optionalString('nasIdentifier')) {
+//            $userAuth->setNasIdentifier($nasIdentifier);
+//        }
+//    }
+//
+class RadiusCredentialValidator implements CredentialValidatorInterface
 {
     private LoggerInterface $logger;
     private array $serverList;

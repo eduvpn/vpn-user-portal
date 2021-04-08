@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-interface BeforeHookInterface
+interface AuthModuleInterface
 {
-    public function beforeAuth(Request $request): ?Response;
+    public function userInfo(Request $request): ?UserInfoInterface;
 
-    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response;
+    public function startAuth(Request $request): ?Response;
 }

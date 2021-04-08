@@ -16,7 +16,7 @@ use LC\Portal\Http\Exception\HttpException;
 /**
  * This hook is used to check if a user is allowed to access the portal/API.
  */
-class AccessHook implements BeforeHookInterface
+class AccessHook extends AbstractHook implements BeforeHookInterface
 {
     /** @var array<string> */
     private array $accessPermissionList;
@@ -29,23 +29,8 @@ class AccessHook implements BeforeHookInterface
         $this->accessPermissionList = $accessPermissionList;
     }
 
-    public function executeBefore(Request $request, array $hookData)
+    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response
     {
-        $whiteList = [
-            'POST' => [
-                '/_form/auth/verify',
-                '/_logout',
-            ],
-        ];
-        if (Service::isWhitelisted($request, $whiteList)) {
-            return null;
-        }
-
-        if (!\array_key_exists('auth', $hookData)) {
-            throw new HttpException('authentication hook did not run before', 500);
-        }
-        /** @var \LC\Portal\Http\UserInfo */
-        $userInfo = $hookData['auth'];
         if (!$this->hasPermissions($userInfo->getPermissionList())) {
             throw new HttpException('account is not allowed to access this service', 403);
         }

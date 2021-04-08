@@ -15,7 +15,7 @@ $baseDir = dirname(__DIR__);
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
-use LC\Portal\Http\Auth\NodeAuthenticationHook;
+use LC\Portal\Http\Auth\NodeAuthModule;
 use LC\Portal\Http\NodeApiModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
@@ -31,11 +31,12 @@ try {
     $config = Config::fromFile($baseDir.'/config/config.php');
 
     $service = new Service();
-    $nodeAuthentication = new NodeAuthenticationHook(
-        FileIO::readFile($baseDir.'/config/node.key'),
-        'Node API'
+    $service->setAuthModule(
+        new NodeAuthModule(
+            FileIO::readFile($baseDir.'/config/node.key'),
+            'Node API'
+        )
     );
-    $service->addBeforeHook('auth', $nodeAuthentication);
 
     $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
     $storage->update();

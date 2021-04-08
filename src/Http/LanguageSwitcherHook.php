@@ -19,10 +19,9 @@ use LC\Portal\Http\Exception\HttpException;
  * a cookie this is not a problem. This way, even the authentication page can
  * use the language switcher.
  */
-class LanguageSwitcherHook implements BeforeHookInterface
+class LanguageSwitcherHook extends AbstractHook implements BeforeHookInterface
 {
-    /** @var CookieInterface */
-    private $cookie;
+    private CookieInterface $cookie;
 
     /** @var array */
     private $supportedLanguages;
@@ -33,14 +32,14 @@ class LanguageSwitcherHook implements BeforeHookInterface
         $this->cookie = $cookie;
     }
 
-    public function executeBefore(Request $request, array $hookData)
+    public function beforeAuth(Request $request): ?Response
     {
         if ('POST' !== $request->getRequestMethod()) {
-            return false;
+            return null;
         }
 
         if ('/setLanguage' !== $request->getPathInfo()) {
-            return false;
+            return null;
         }
 
         if (null === $language = $request->optionalPostParameter('setLanguage')) {

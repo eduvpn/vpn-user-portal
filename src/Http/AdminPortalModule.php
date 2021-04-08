@@ -51,8 +51,8 @@ class AdminPortalModule implements ServiceModuleInterface
     {
         $service->get(
             '/connections',
-            function (Request $request, array $hookData): Response {
-                AuthUtils::requireAdmin($hookData);
+            function (UserInfo $userInfo, Request $request): Response {
+                // XXX fix this AuthUtils::requireAdmin($hookData);
 
                 // get the fancy profile name
                 $profileList = $this->profileList();
@@ -78,8 +78,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/info',
-            function (Request $request, array $hookData): Response {
-                AuthUtils::requireAdmin($hookData);
+            function (UserInfo $userInfo, Request $request): Response {
+                // XXX fix this AuthUtils::requireAdmin($hookData);
 
                 $profileList = $this->profileList();
 
@@ -109,8 +109,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/users',
-            function (Request $request, array $hookData): Response {
-                AuthUtils::requireAdmin($hookData);
+            function (UserInfo $userInfo, Request $request): Response {
+                // XXX fix this AuthUtils::requireAdmin($hookData);
 
                 $userList = $this->storage->getUsers();
 
@@ -127,11 +127,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/user',
-            function (Request $request, array $hookData): Response {
-                AuthUtils::requireAdmin($hookData);
-
-                /** @var \LC\Portal\Http\UserInfo */
-                $userInfo = $hookData['auth'];
+            function (UserInfo $userInfo, Request $request): Response {
+                // XXX fix this AuthUtils::requireAdmin($hookData);
                 $adminUserId = $userInfo->getUserId();
                 $userId = $request->requireQueryParameter('user_id');
                 InputValidation::userId($userId);
@@ -165,10 +162,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/user',
-            function (Request $request, array $hookData): Response {
-                AuthUtils::requireAdmin($hookData);
-                /** @var \LC\Portal\Http\UserInfo */
-                $userInfo = $hookData['auth'];
+            function (UserInfo $userInfo, Request $request): Response {
+                // XXX fix this AuthUtils::requireAdmin($hookData);
                 $adminUserId = $userInfo->getUserId();
                 $userId = $request->requirePostParameter('user_id');
                 InputValidation::userId($userId);
@@ -234,8 +229,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/log',
-            function (Request $request, array $hookData): Response {
-                AuthUtils::requireAdmin($hookData);
+            function (UserInfo $userInfo, Request $request): Response {
+                // XXX fix this AuthUtils::requireAdmin($hookData);
 
                 $now = new DateTimeImmutable();
 
@@ -254,8 +249,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/stats',
-            function (Request $request, array $hookData): Response {
-                AuthUtils::requireAdmin($hookData);
+            function (UserInfo $userInfo, Request $request): Response {
+                // XXX fix this AuthUtils::requireAdmin($hookData);
 
                 $profileList = $this->profileList();
                 $appUsage = self::getAppUsage($this->storage->getAppUsage());
@@ -278,8 +273,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/log',
-            function (Request $request, array $hookData): Response {
-                AuthUtils::requireAdmin($hookData);
+            function (UserInfo $userInfo, Request $request): Response {
+                // XXX fix this AuthUtils::requireAdmin($hookData);
 
                 $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
                 $dateTimeLocalStr = $dateTime->format('Y-m-d H:i:s');

@@ -11,11 +11,13 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
-use LC\Portal\Http\BeforeHookInterface;
-use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Http\AuthModuleInterface;
 use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
+use LC\Portal\Http\UserInfo;
+use LC\Portal\Http\UserInfoInterface;
 
-class NodeAuthenticationHook implements BeforeHookInterface
+class NodeAuthModule implements AuthModuleInterface
 {
     private string $authToken;
     private string $authRealm;
@@ -26,21 +28,31 @@ class NodeAuthenticationHook implements BeforeHookInterface
         $this->authRealm = $authRealm;
     }
 
-    public function executeBefore(Request $request, array $hookData): void
+    public function userInfo(Request $request): ?UserInfoInterface
     {
         if (null === $authHeader = $request->optionalHeader('HTTP_AUTHORIZATION')) {
-            throw new HttpException('no token', 401, ['WWW-Authenticate' => 'Bearer realm="'.$this->authRealm.'"']);
+            return null;
         }
         if (0 !== strpos($authHeader, 'Bearer ')) {
-            throw new HttpException('invalid token type', 401, ['WWW-Authenticate' => 'Bearer realm="'.$this->authRealm.'"']);
+            return null;
         }
         $userAuthToken = substr($authHeader, 7);
         if (!\is_string($userAuthToken)) {
-            throw new HttpException('malformed token', 401, ['WWW-Authenticate' => 'Bearer realm="'.$this->authRealm.'"']);
+            return null;
         }
 
         if (!hash_equals($this->authToken, $userAuthToken)) {
-            throw new HttpException('invalid token', 401, ['WWW-Authenticate' => 'Bearer realm="'.$this->authRealm.'"']);
+            return null;
         }
+
+        return new UserInfo('vpn-server-node', []);
+    }
+
+    public function startAuth(Request $request): ?Response
+    {
+        $authResponse = new Response(401);
+        $authResponse->addHeader('WWW-Authenticate', 'Bearer realm="'.$this->authRealm.'"');
+
+        return $authResponse;
     }
 }

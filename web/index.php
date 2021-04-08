@@ -24,25 +24,24 @@ use LC\Portal\FileIO;
 use LC\Portal\Http\AccessHook;
 use LC\Portal\Http\AdminHook;
 use LC\Portal\Http\AdminPortalModule;
-use LC\Portal\Http\Auth\ClientCertAuthentication;
-use LC\Portal\Http\Auth\FormLdapAuthentication;
-use LC\Portal\Http\Auth\FormPdoAuthentication;
-use LC\Portal\Http\Auth\FormRadiusAuthentication;
-use LC\Portal\Http\Auth\MellonAuthentication;
-use LC\Portal\Http\Auth\PhpSamlSpAuthentication;
-use LC\Portal\Http\Auth\ShibAuthentication;
+use LC\Portal\Http\Auth\ClientCertAuthModule;
+use LC\Portal\Http\Auth\DbCredentialValidator;
+use LC\Portal\Http\Auth\MellonAuthModule;
+use LC\Portal\Http\Auth\PhpSamlSpAuthModule;
+use LC\Portal\Http\Auth\ShibAuthModule;
+use LC\Portal\Http\Auth\UserPassAuthModule;
 use LC\Portal\Http\CsrfProtectionHook;
 use LC\Portal\Http\DisabledUserHook;
 use LC\Portal\Http\HtmlResponse;
 use LC\Portal\Http\InputValidation;
 use LC\Portal\Http\LanguageSwitcherHook;
-use LC\Portal\Http\LogoutModule;
 use LC\Portal\Http\OAuthModule;
+use LC\Portal\Http\PasswdModule;
 use LC\Portal\Http\QrModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
-use LC\Portal\Http\StaticPermissions;
 use LC\Portal\Http\UpdateSessionInfoHook;
+use LC\Portal\Http\UserPassModule;
 use LC\Portal\Http\VpnPortalModule;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
@@ -114,7 +113,7 @@ try {
     }
 
     // Authentication
-    $authMethod = $config->requireString('authMethod', 'FormPdoAuthentication');
+    $authModuleCfg = $config->requireString('authModule', 'DbAuthModule');
 
     $tpl = new Tpl($templateDirs, $localeDirs, sprintf('%s/web', $baseDir));
     $tpl->setLanguage($uiLang);
@@ -129,122 +128,75 @@ try {
         'isAdmin' => false,
         'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
     ];
-    if ('ClientCertAuthentication' === $authMethod) {
-        $templateDefaults['_show_logout_button'] = false;
-    }
+
     $tpl->addDefault($templateDefaults);
-
-    $service = new Service($tpl);
-    $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());
-    $service->addBeforeHook('language_switcher', new LanguageSwitcherHook(array_keys($supportedLanguages), $seCookie));
-
-    $logoutUrl = null;
-    $returnParameter = 'ReturnTo';
-    if ('PhpSamlSpAuthentication' === $authMethod) {
-        $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/php-saml-sp/logout';
-    }
-    if ('MellonAuthentication' === $authMethod) {
-        $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/saml/logout';
-    }
-    if ('ShibAuthentication' === $authMethod) {
-        $logoutUrl = $request->getScheme().'://'.$request->getAuthority().'/Shibboleth.sso/Logout';
-        $returnParameter = 'return';
-    }
-
-    // StaticPermissions for the local authentiction mechanisms
-    // (PDO, LDAP, RADIUS)
-    $staticPermissions = null;
-    $staticPermissionsFile = sprintf('%s/config/static_permissions.json', $baseDir);
-    if (FileIO::exists($staticPermissionsFile)) {
-        $staticPermissions = new StaticPermissions($staticPermissionsFile);
-    }
 
     $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
     $storage->update();
 
-    $service->addModule(new LogoutModule($seSession, $logoutUrl, $returnParameter));
-    switch ($authMethod) {
-        case 'PhpSamlSpAuthentication':
-            $phpSamlSpAuthentication = new PhpSamlSpAuthentication(
-                $config->s('PhpSamlSpAuthentication')
+    $service = new Service();
+    $service->addBeforeHook(new CsrfProtectionHook());
+    $service->addBeforeHook(new LanguageSwitcherHook(array_keys($supportedLanguages), $seCookie));
+
+    switch ($authModuleCfg) {
+        case 'BasicAuthModule':
+            $authModule = new LC\Portal\Http\Auth\BasicAuthModule(
+                [
+                    'foo' => 'bar',
+                ]
             );
-            $service->addBeforeHook('auth', $phpSamlSpAuthentication);
             break;
-        case 'MellonAuthentication':
-            $service->addBeforeHook('auth', new MellonAuthentication($config->s('MellonAuthentication')));
+        case 'PhpSamlSpAuthModule':
+            $authModule = new PhpSamlSpAuthModule($config);
             break;
-        case 'ClientCertAuthentication':
-            $service->addBeforeHook('auth', new ClientCertAuthentication());
-            break;
-        case 'ShibAuthentication':
-            $service->addBeforeHook('auth', new ShibAuthentication($config->s('ShibAuthentication')));
-            break;
-        case 'FormLdapAuthentication':
-            $formLdapAuthentication = new FormLdapAuthentication(
-                $config->s('FormLdapAuthentication'),
-                $seSession,
-                $tpl,
-                $logger
+        case 'DbAuthModule':
+            $authModule = new UserPassAuthModule($seSession, $tpl);
+            $service->addModule(
+                new UserPassModule(
+                    new DbCredentialValidator($storage),
+                    $seSession,
+                    $tpl
+                )
             );
-            if (null !== $staticPermissions) {
-                $formLdapAuthentication->setStaticPermissions($staticPermissions);
-            }
-            $service->addBeforeHook('auth', $formLdapAuthentication);
-            $service->addModule($formLdapAuthentication);
-            break;
-        case 'FormRadiusAuthentication':
-            $formRadiusAuthentication = new FormRadiusAuthentication(
-                $config->s('FormRadiusAuthentication'),
-                $seSession,
-                $tpl,
-                $logger
+            // when using local database, users are allowed to change their own
+            // password
+            $service->addModule(
+                new PasswdModule(
+                    new DbCredentialValidator($storage),
+                    $tpl,
+                    $storage
+                )
             );
-            if (null !== $staticPermissions) {
-                $formRadiusAuthentication->setStaticPermissions($staticPermissions);
-            }
-            $service->addBeforeHook('auth', $formRadiusAuthentication);
-            $service->addModule($formRadiusAuthentication);
             break;
-        case 'FormPdoAuthentication':
-            $formPdoAuthentication = new FormPdoAuthentication(
-                $seSession,
-                $tpl,
-                $storage
-            );
-            if (null !== $staticPermissions) {
-                $formPdoAuthentication->setStaticPermissions($staticPermissions);
-            }
-            $service->addBeforeHook('auth', $formPdoAuthentication);
-            $service->addModule($formPdoAuthentication);
+        case 'MellonAuthModule':
+            $authModule = new MellonAuthModule($config);
             break;
-         default:
+        case 'ShibAuthModule':
+            $authModule = new ShibAuthModule($config);
+            break;
+        case 'ClientCertAuthModule':
+            $authModule = new ClientCertAuthModule();
+            break;
+        case 'LdapAuthModule':
+        case 'RadiusAuthModule':
+        default:
             throw new RuntimeException('unsupported authentication mechanism');
     }
 
-    $tpl->addDefault(
-        [
-            'allowPasswordChange' => 'FormPdoAuthentication' === $authMethod,
-        ]
-    );
+    $service->setAuthModule($authModule);
+    $tpl->addDefault(['authModule' => $authModuleCfg]);
 
     if (null !== $accessPermissionList = $config->optionalArray('accessPermissionList')) {
         // hasAccess
-        $service->addBeforeHook(
-            'has_access',
-            new AccessHook(
-                $accessPermissionList
-            )
-        );
+        $service->addBeforeHook(new AccessHook($accessPermissionList));
     }
 
-    $service->addBeforeHook('disabled_user', new DisabledUserHook($storage));
-    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $storage, $sessionExpiry));
-
+    $service->addBeforeHook(new DisabledUserHook($storage));
+    $service->addBeforeHook(new UpdateSessionInfoHook($seSession, $storage, $sessionExpiry));
     $service->addModule(new QrModule());
 
     // isAdmin
     $service->addBeforeHook(
-        'is_admin',
         new AdminHook(
             $config->requireArray('adminPermissionList', []),
             $config->requireArray('adminUserIdList', []),

@@ -11,20 +11,21 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
+use LC\Portal\Http\Auth\DbCredentialValidator;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 
 class PasswdModule implements ServiceModuleInterface
 {
-    private CredentialValidatorInterface $credentialValidator;
+    private DbCredentialValidator $dbCredentialValidator;
 
     private TplInterface $tpl;
 
     private Storage $storage;
 
-    public function __construct(CredentialValidatorInterface $credentialValidator, TplInterface $tpl, Storage $storage)
+    public function __construct(DbCredentialValidator $dbCredentialValidator, TplInterface $tpl, Storage $storage)
     {
-        $this->credentialValidator = $credentialValidator;
+        $this->dbCredentialValidator = $dbCredentialValidator;
         $this->tpl = $tpl;
         $this->storage = $storage;
     }
@@ -33,10 +34,7 @@ class PasswdModule implements ServiceModuleInterface
     {
         $service->get(
             '/passwd',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-
+            function (UserInfo $userInfo, Request $request): Response {
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalPasswd',
@@ -50,15 +48,12 @@ class PasswdModule implements ServiceModuleInterface
 
         $service->post(
             '/passwd',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-
+            function (UserInfo $userInfo, Request $request): Response {
                 $userPass = $request->requirePostParameter('userPass');
                 $newUserPass = InputValidation::userPass($request->requirePostParameter('newUserPass'));
                 $newUserPassConfirm = InputValidation::userPass($request->requirePostParameter('newUserPassConfirm'));
 
-                if (!$this->credentialValidator->isValid($userInfo->getUserId(), $userPass)) {
+                if (!$this->dbCredentialValidator->isValid($userInfo->getUserId(), $userPass)) {
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalPasswd',

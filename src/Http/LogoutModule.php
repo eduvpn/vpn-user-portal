@@ -30,10 +30,7 @@ class LogoutModule implements ServiceModuleInterface
     {
         $service->post(
             '/_logout',
-            /**
-             * @return \LC\Portal\Http\Response
-             */
-            function (Request $request, array $hookData) {
+            function (UserInfo $userInfo, Request $request): Response {
                 $this->session->destroy();
 
                 // figure out where to return after logout

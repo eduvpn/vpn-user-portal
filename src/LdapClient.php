@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http\Auth;
+namespace LC\Portal;
 
-use LC\Portal\Http\Auth\Exception\LdapClientException;
+use LC\Portal\Exception\LdapClientException;
 use RuntimeException;
 
 class LdapClient

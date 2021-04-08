@@ -17,7 +17,7 @@ use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
 use LC\Portal\FileIO;
-use LC\Portal\Http\Auth\BearerAuthenticationHook;
+use LC\Portal\Http\Auth\BearerAuthModule;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
@@ -40,7 +40,6 @@ try {
 
     $config = Config::fromFile($baseDir.'/config/config.php');
 
-    $service = new Service();
     $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
     $storage->update();
 
@@ -65,9 +64,9 @@ try {
         $keyInstanceMapping
     );
 
-    $service->addBeforeHook(
-        'auth',
-        new BearerAuthenticationHook(
+    $service = new Service();
+    $service->setAuthModule(
+        new BearerAuthModule(
             $bearerValidator
         )
     );

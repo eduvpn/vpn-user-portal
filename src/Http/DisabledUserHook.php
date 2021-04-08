@@ -18,7 +18,7 @@ use LC\Portal\Storage;
  * This hook is used to check if a user is disabled before allowing any other
  * actions except login.
  */
-class DisabledUserHook implements BeforeHookInterface
+class DisabledUserHook extends AbstractHook implements BeforeHookInterface
 {
     private Storage $storage;
 
@@ -27,26 +27,12 @@ class DisabledUserHook implements BeforeHookInterface
         $this->storage = $storage;
     }
 
-    public function executeBefore(Request $request, array $hookData): void
+    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response
     {
-        $whiteList = [
-            'POST' => [
-                '/_form/auth/verify',
-                '/_logout',
-            ],
-        ];
-        if (Service::isWhitelisted($request, $whiteList)) {
-            return;
-        }
-
-        if (!\array_key_exists('auth', $hookData)) {
-            throw new HttpException('authentication hook did not run before', 500);
-        }
-        /** @var \LC\Portal\Http\UserInfo */
-        $userInfo = $hookData['auth'];
-
         if ($this->storage->isDisabledUser($userInfo->getUserId())) {
             throw new HttpException('account disabled', 403);
         }
+
+        return null;
     }
 }

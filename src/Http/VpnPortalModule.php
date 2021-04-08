@@ -64,12 +64,12 @@ class VpnPortalModule implements ServiceModuleInterface
     {
         $service->get(
             '/',
-            fn (Request $request): Response => new RedirectResponse($request->getRootUri().'home', 302)
+            fn (UserInfo $userInfo, Request $request): Response => new RedirectResponse($request->getRootUri().'home', 302)
         );
 
         $service->get(
             '/home',
-            function (Request $request, array $hookData): Response {
+            function (UserInfo $userInfo, Request $request): Response {
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalHome',
@@ -81,10 +81,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/configurations',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-
+            function (UserInfo $userInfo, Request $request): Response {
                 $profileList = $this->profileList();
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::filterProfileList($profileList, $userPermissions);
@@ -119,10 +116,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/configurations',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-
+            function (UserInfo $userInfo, Request $request): Response {
                 $displayName = InputValidation::displayName($request->requirePostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
 
@@ -145,7 +139,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/deleteCertificate',
-            function (Request $request, array $hookData): Response {
+            function (UserInfo $userInfo, Request $request): Response {
                 $commonName = InputValidation::commonName($request->requirePostParameter('commonName'));
                 // XXX make sure certificate belongs to currently logged in user
                 if (false === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
@@ -168,9 +162,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/account',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\Http\UserInfo */
-                $userInfo = $hookData['auth'];
+            function (UserInfo $userInfo, Request $request): Response {
                 $userPermissions = $userInfo->getPermissionList();
                 $authorizationList = $this->storage->getAuthorizations($userInfo->getUserId());
                 $authorizedClientInfoList = [];
@@ -212,10 +204,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/removeClientAuthorization',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\Http\UserInfo */
-                $userInfo = $hookData['auth'];
-
+            function (UserInfo $userInfo, Request $request): Response {
                 // no need to validate the input as we do a strict string match...
                 $authKey = $request->requirePostParameter('auth_key');
                 $clientId = InputValidation::clientId($request->requirePostParameter('client_id'));

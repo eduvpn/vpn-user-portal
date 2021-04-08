@@ -19,7 +19,7 @@ class QrModule implements ServiceModuleInterface
     {
         $service->get(
             '/qr',
-            function (Request $request, array $hookData): Response {
+            function (UserInfo $userInfo, Request $request): Response {
                 $qrText = $request->requireQueryParameter('qr_text');
 
                 $response = new Response(200, 'image/png');

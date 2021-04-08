@@ -25,9 +25,9 @@ class OAuthTokenModule implements ServiceModuleInterface
 
     public function init(Service $service): void
     {
-        $service->post(
+        $service->postBeforeAuth(
             '/token',
-            function (Request $request, array $hookData): Response {
+            function (Request $request): Response {
                 try {
                     $tokenResponse = $this->oauthServer->postToken(
                         $request->getPostParameters(),

@@ -13,8 +13,9 @@ namespace LC\Portal\OAuth;
 
 use fkooman\OAuth\Server\AccessTokenInfo;
 use fkooman\OAuth\Server\Scope;
+use LC\Portal\Http\UserInfoInterface;
 
-class VpnAccessTokenInfo extends AccessTokenInfo
+class VpnAccessTokenInfo extends AccessTokenInfo implements UserInfoInterface
 {
     private bool $isLocal;
 
@@ -27,5 +28,10 @@ class VpnAccessTokenInfo extends AccessTokenInfo
     public function getIsLocal(): bool
     {
         return $this->isLocal;
+    }
+
+    public function getPermissionList(): array
+    {
+        return [];
     }
 }

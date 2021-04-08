@@ -9,28 +9,17 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http\Auth;
+namespace LC\Portal\Http;
 
-use LC\Portal\Http\BeforeHookInterface;
-use LC\Portal\Http\CredentialValidatorInterface;
+use LC\Portal\Http\Auth\CredentialValidatorInterface;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\ServiceModuleInterface;
-use LC\Portal\Http\SessionInterface;
-use LC\Portal\Http\StaticPermissions;
-use LC\Portal\Http\UserInfo;
-use LC\Portal\TplInterface;
 use LC\Portal\TplInterface;
 
-class FormAuthentication implements ServiceModuleInterface, BeforeHookInterface
+class UserPassModule implements ServiceModuleInterface
 {
     protected TplInterface $tpl;
     private CredentialValidatorInterface $credentialValidator;
     private SessionInterface $session;
-    private ?StaticPermissions $staticPermissions = null;
 
     public function __construct(
         CredentialValidatorInterface $credentialValidator,
@@ -42,14 +31,9 @@ class FormAuthentication implements ServiceModuleInterface, BeforeHookInterface
         $this->tpl = $tpl;
     }
 
-    public function setStaticPermissions(StaticPermissions $staticPermissions): void
-    {
-        $this->staticPermissions = $staticPermissions;
-    }
-
     public function init(Service $service): void
     {
-        $service->post(
+        $service->postBeforeAuth(
             '/_form/auth/verify',
             function (Request $request): Response {
                 $this->session->remove('_form_auth_user');
@@ -93,20 +77,21 @@ class FormAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 }
 
                 $permissionList = $userInfo->getPermissionList();
-                if (null !== $this->staticPermissions) {
-                    // merge the StaticPermissions in the list obtained from the
-                    // authentication backend (if any)
-                    $permissionList = array_values(
-                        array_unique(
-                            array_merge(
-                                $permissionList,
-                                $this->staticPermissions->get(
-                                    $userInfo->getUserId()
-                                )
-                            )
-                        )
-                    );
-                }
+                // XXX move this code elsewhere
+//                if (null !== $this->staticPermissions) {
+//                    // merge the StaticPermissions in the list obtained from the
+//                    // authentication backend (if any)
+//                    $permissionList = array_values(
+//                        array_unique(
+//                            array_merge(
+//                                $permissionList,
+//                                $this->staticPermissions->get(
+//                                    $userInfo->getUserId()
+//                                )
+//                            )
+//                        )
+//                    );
+//                }
 
                 $this->session->regenerate();
                 $this->session->set('_form_auth_user', $userInfo->getUserId());
@@ -116,43 +101,5 @@ class FormAuthentication implements ServiceModuleInterface, BeforeHookInterface
                 return new RedirectResponse($redirectTo, 302);
             }
         );
-    }
-
-    /**
-     * @return mixed
-     */
-    public function executeBefore(Request $request, array $hookData)
-    {
-        if (Service::isWhitelisted($request, ['POST' => ['/_form/auth/verify']])) {
-            return;
-        }
-
-        if (null !== $authUser = $this->session->get('_form_auth_user')) {
-            $permissionList = [];
-            if (null !== $sessionValue = $this->session->get('_form_auth_permission_list')) {
-                // XXX use something better than unserialize
-                $permissionList = unserialize($sessionValue);
-            }
-
-            return new UserInfo(
-                $authUser,
-                $permissionList
-            );
-        }
-
-        // any other URL, enforce authentication
-        $response = new Response(200, 'text/html');
-        $response->setBody(
-            $this->tpl->render(
-                'formAuthentication',
-                [
-                    '_form_auth_invalid_credentials' => false,
-                    '_form_auth_redirect_to' => $request->getUri(),
-                    '_show_logout_button' => false,
-                ]
-            )
-        );
-
-        return $response;
     }
 }

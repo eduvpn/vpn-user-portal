@@ -41,7 +41,7 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $service->post(
             '/server_config',
-            function (Request $request): Response {
+            function (UserInfo $userInfo, Request $request): Response {
                 // XXX we may want to restrict the profiles for particular nodes!
                 $serverConfigList = $this->serverConfig->writeProfiles([]);
                 $bodyLines = [];
@@ -58,7 +58,7 @@ class NodeApiModule implements ServiceModuleInterface
 
         $service->post(
             '/connect',
-            function (Request $request, array $hookData): Response {
+            function (UserInfo $userInfo, Request $request): Response {
                 try {
                     $this->connect($request);
 
@@ -81,7 +81,7 @@ class NodeApiModule implements ServiceModuleInterface
 
         $service->post(
             '/disconnect',
-            function (Request $request, array $hookData): Response {
+            function (UserInfo $userInfo, Request $request): Response {
                 try {
                     $this->disconnect($request);
 

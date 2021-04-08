@@ -1,22 +1,21 @@
 <?php
 
 return [
-
-
-
     // override default branding style (templates/CSS) with custom style.
     // NOTE: the styling/branding MUST be installed for this to work!
     // DEFAULT = null
     //'styleName' => 'eduVPN',
     //'styleName' => 'LC',
 
-    // DEFAULT = FormPdoAuthentication
-    //'authMethod' => 'FormPdoAuthentication',      // PDO (database)
-    //'authMethod' => 'FormLdapAuthentication',     // LDAP
-    //'authMethod' => 'FormRadiusAuthentication',   // RADIUS
-    //'authMethod' => 'PhpSamlSpAuthentication',    // SAML (php-saml-sp)
-    //'authMethod' => 'MellonAuthentication',       // SAML (mod_auth_mellon)
-    //'authMethod' => 'ShibAuthentication',         // SAML (Shibboleth)
+    // DEFAULT = DbAuthModule
+    //'authModule' => 'DbAuthModule',         // PDO (database)
+    //'authModule' => 'BasicAuthModule',      // HTTP Basic Auth
+    //'authModule' => 'LdapAuthModule',       // LDAP
+    //'authModule' => 'ClientCertAuthModule', // TLS Client Cert
+    //'authModule' => 'RadiusAuthModule',     // RADIUS
+    //'authModule' => 'PhpSamlSpAuthModule',  // SAML (php-saml-sp)
+    //'authModule' => 'MellonAuthModule',     // SAML (mod_auth_mellon)
+    //'authModule' => 'ShibAuthModule',       // SAML (Shibboleth)
 
     // Default Session Expiry
     // The session expiry will be used to determine the "Not After" of the
@@ -29,7 +28,7 @@ return [
 
     // XXX where is permissionAttribute? Make sure it is an array!
 //    // LDAP
-//    'FormLdapAuthentication' => [
+//    'LdapAuthModule' => [
 //        // *** FreeIPA ***
 //        // -H ldap://ipa.tuxed.example
 //        'ldapUri' => 'ldap://ipa.tuxed.example',
@@ -91,7 +90,7 @@ return [
 //    ],
 
 //    // RADIUS
-//    'FormRadiusAuthentication' => [
+//    'RadiusAuthModule' => [
 //        'serverList' => [
 //            [
 //                'host' => 'radius.example.org',
@@ -104,7 +103,7 @@ return [
 //    ],
 
 //    // SAML (php-saml-sp)
-//    'PhpSamlSpAuthentication' => [
+//    'PhpSamlSpAuthModule' => [
 //        'userIdAttribute' => 'eduPersonTargetedID',
 //        //'userIdAttribute' => 'eduPersonPrincipalName',
 
@@ -128,7 +127,7 @@ return [
 
 //// XXX make sure permissionAttribute is array
 //    // SAML (mod_auth_mellon)
-//    'MellonAuthentication' => [
+//    'MellonAuthModule' => [
 //        // OID for eduPersonTargetedId
 //        'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
 //        // OID for eduPersonPrincipalName
@@ -143,7 +142,7 @@ return [
 
 //        // XXX make sure permissionAttribute is array
 //    // SAML (Shibboleth)
-//    'ShibAuthentication' => [
+//    'ShibAuthModule' => [
 //        'userIdAttribute' => 'persistent-id',
 //        //'userIdAttribute' => 'eppn',
 

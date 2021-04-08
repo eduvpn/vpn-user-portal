@@ -13,13 +13,12 @@ namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTimeImmutable;
-use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Storage;
 
 /**
  * This hook is used to update the session info.
  */
-class UpdateSessionInfoHook implements BeforeHookInterface
+class UpdateSessionInfoHook extends AbstractHook implements BeforeHookInterface
 {
     private SessionInterface $session;
     private Storage $storage;
@@ -34,36 +33,18 @@ class UpdateSessionInfoHook implements BeforeHookInterface
         $this->sessionExpiry = $sessionExpiry;
     }
 
-    /**
-     * @return false|void
-     */
-    public function executeBefore(Request $request, array $hookData)
+    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response
     {
-        $whiteList = [
-            'POST' => [
-                '/_form/auth/verify',
-                '/_logout',
-            ],
-        ];
-        if (Service::isWhitelisted($request, $whiteList)) {
-            return false;
-        }
-
         if ('yes' === $this->session->get('_update_session_info')) {
             // only update the session info once per browser session, not on
             // every request
-            return false;
+            return null;
         }
-
-        if (!\array_key_exists('auth', $hookData)) {
-            throw new HttpException('authentication hook did not run before', 500);
-        }
-
-        /** @var \LC\Portal\Http\UserInfo */
-        $userInfo = $hookData['auth'];
 
         $sessionExpiresAt = $this->dateTime->add($this->sessionExpiry);
         $this->storage->updateSessionInfo($userInfo->getUserId(), $sessionExpiresAt, $userInfo->getPermissionList());
         $this->session->set('_update_session_info', 'yes');
+
+        return null;
     }
 }

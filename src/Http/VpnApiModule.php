@@ -50,10 +50,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1, 2
         $service->get(
             '/profile_list',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
-                $accessTokenInfo = $hookData['auth'];
-
+            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
                 $profileList = $this->profileList();
                 $userPermissions = $this->getPermissionList($accessTokenInfo);
                 $userProfileList = [];
@@ -71,7 +68,7 @@ class VpnApiModule implements ServiceModuleInterface
                     $userProfileList[] = [
                         'profile_id' => $profileId,
                         'display_name' => $profileConfig->displayName(),
-                        'vpn_type' => $profileConfig->vpnType(),
+                        //'vpn_type' => $profileConfig->vpnType(),      // breaks Linux client
                         // 2FA is now decided by vpn-user-portal setting, so
                         // we "lie" here to the client
                         'two_factor' => false,
@@ -87,10 +84,7 @@ class VpnApiModule implements ServiceModuleInterface
         // DEPRECATED, this whole call is useless now!
         $service->get(
             '/user_info',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
-                $accessTokenInfo = $hookData['auth'];
-
+            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
                 return new ApiResponse(
                     'user_info',
                     [
@@ -111,9 +105,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->post(
             '/create_keypair',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
-                $accessTokenInfo = $hookData['auth'];
+            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
                 try {
                     $clientCertificate = $this->getCertificate($accessTokenInfo);
 
@@ -133,7 +125,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/check_certificate',
-            function (Request $request, array $hookData): Response {
+            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
                 $commonName = InputValidation::commonName($request->requireQueryParameter('common_name'));
                 $clientCertificateInfo = $this->storage->getUserCertificateInfo($commonName);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
@@ -148,9 +140,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/profile_config',
-            function (Request $request, array $hookData): Response {
-                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
-                $accessTokenInfo = $hookData['auth'];
+            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
                 try {
                     $requestedProfileId = InputValidation::profileId($request->requireQueryParameter('profile_id'));
 
@@ -192,7 +182,7 @@ class VpnApiModule implements ServiceModuleInterface
         // NO LONGER USED
         $service->get(
             '/user_messages',
-            function (Request $request, array $hookData): Response {
+            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
                 return new ApiResponse(
                     'user_messages',
                     []
@@ -203,7 +193,7 @@ class VpnApiModule implements ServiceModuleInterface
         // NO LONGER USED
         $service->get(
             '/system_messages',
-            function (Request $request, array $hookData): Response {
+            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
                 return new ApiResponse(
                     'system_messages',
                     []
