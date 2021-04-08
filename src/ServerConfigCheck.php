@@ -35,6 +35,11 @@ class ServerConfigCheck
             }
             $profileNumberList[] = $profileNumber;
 
+            // make sure DNS is set when defaultGateway is true
+            if ($profileConfig->defaultGateway() && 0 === \count($profileConfig->dns())) {
+                throw new RuntimeException(sprintf('no DNS set for profile "%s", but defaultGateway is true', $profileId));
+            }
+
             // make sure the listen/port/proto is unique
             $listenAddress = $profileConfig->listenIp();
             $vpnProtoPorts = $profileConfig->vpnProtoPorts();
