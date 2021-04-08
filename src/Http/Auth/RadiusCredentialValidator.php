@@ -11,56 +11,37 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
-use LC\Portal\Http\Exception\RadiusException;
+use LC\Portal\Http\Auth\Exception\RadiusException;
+use LC\Portal\Http\UserInfo;
 use LC\Portal\LoggerInterface;
 use RuntimeException;
 
-//    public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
-//    {
-//        $serverList = $config->requireArray('serverList');
-//        $userAuth = new RadiusAuth($logger, $serverList);
-//        if (null !== $addRealm = $config->optionalString('addRealm')) {
-//            $userAuth->setRealm($addRealm);
-//        }
-//        if (null !== $nasIdentifier = $config->optionalString('nasIdentifier')) {
-//            $userAuth->setNasIdentifier($nasIdentifier);
-//        }
-//    }
-//
 class RadiusCredentialValidator implements CredentialValidatorInterface
 {
     private LoggerInterface $logger;
     private array $serverList;
-    private ?string $realm = null;
-    private ?string $nasIdentifier = null;
+    private ?string $radiusRealm;
+    private ?string $nasIdentifier;
 
-    public function __construct(LoggerInterface $logger, array $serverList)
+    public function __construct(LoggerInterface $logger, array $serverList, ?string $radiusRealm, ?string $nasIdentifier = null)
     {
         if (false === \extension_loaded('radius')) {
             throw new RuntimeException('"radius" PHP extension not available');
         }
         $this->logger = $logger;
         $this->serverList = $serverList;
-    }
-
-    public function setRealm(string $realm): void
-    {
-        $this->realm = $realm;
-    }
-
-    public function setNasIdentifier(string $nasIdentifier): void
-    {
+        $this->radiusRealm = $radiusRealm;
         $this->nasIdentifier = $nasIdentifier;
     }
 
     /**
-     * @return false|UserInfo
+     * @return false|\LC\Portal\Http\UserInfo
      */
     public function isValid(string $authUser, string $authPass)
     {
-        // add realm if requested
-        if (null !== $this->realm) {
-            $authUser = sprintf('%s@%s', $authUser, $this->realm);
+        // add realm when requested
+        if (null !== $this->radiusRealm) {
+            $authUser = sprintf('%s@%s', $authUser, $this->radiusRealm);
         }
 
         $radiusAuth = radius_auth_open();

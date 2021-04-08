@@ -28,6 +28,7 @@ use LC\Portal\Http\Auth\ClientCertAuthModule;
 use LC\Portal\Http\Auth\DbCredentialValidator;
 use LC\Portal\Http\Auth\MellonAuthModule;
 use LC\Portal\Http\Auth\PhpSamlSpAuthModule;
+use LC\Portal\Http\Auth\RadiusCredentialValidator;
 use LC\Portal\Http\Auth\ShibAuthModule;
 use LC\Portal\Http\Auth\UserPassAuthModule;
 use LC\Portal\Http\CsrfProtectionHook;
@@ -177,8 +178,22 @@ try {
         case 'ClientCertAuthModule':
             $authModule = new ClientCertAuthModule();
             break;
-        case 'LdapAuthModule':
         case 'RadiusAuthModule':
+            $authModule = new UserPassAuthModule($seSession, $tpl);
+            $service->addModule(
+                new UserPassModule(
+                    new RadiusCredentialValidator(
+                        $logger,
+                        $config->requireArray('serverList'),
+                        $config->optionalString('addRealm'),
+                        $config->optionalString('nasIdentifier')
+                    ),
+                    $seSession,
+                    $tpl
+                )
+            );
+            break;
+        case 'LdapAuthModule':
         default:
             throw new RuntimeException('unsupported authentication mechanism');
     }
