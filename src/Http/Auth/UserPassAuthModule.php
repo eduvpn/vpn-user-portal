@@ -11,14 +11,13 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
-use LC\Portal\Http\AuthModuleInterface;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\SessionInterface;
 use LC\Portal\Http\UserInfo;
 use LC\Portal\TplInterface;
 
-class UserPassAuthModule implements AuthModuleInterface
+class UserPassAuthModule extends AbstractAuthModule
 {
     protected TplInterface $tpl;
     private SessionInterface $session;

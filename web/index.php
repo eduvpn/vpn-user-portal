@@ -175,7 +175,10 @@ try {
             $authModule = new MellonAuthModule($config->s('MellonAuthModule'));
             break;
         case 'ShibAuthModule':
-            $authModule = new ShibAuthModule($config->s('ShibAuthModule'));
+            $authModule = new ShibAuthModule(
+                $config->s('ShibAuthModule')->requireString('userIdAttribute'),
+                $config->s('ShibAuthModule')->requireArray('permissionAttributeList', [])
+            );
             break;
         case 'ClientCertAuthModule':
             $authModule = new ClientCertAuthModule();
@@ -210,7 +213,7 @@ try {
                         $config->s('LdapAuthModule')->optionalString('userFilterTemplate'),
                         $config->s('LdapAuthModule')->optionalString('userIdAttribute'),
                         $config->s('LdapAuthModule')->optionalString('addRealm'),
-                        $config->s('LdapAuthModule')->requireArray('permissionAttribute', []),
+                        $config->s('LdapAuthModule')->requireArray('permissionAttributeList', []),
                         $config->s('LdapAuthModule')->optionalString('searchBindDn'),
                         $config->s('LdapAuthModule')->optionalString('searchBindPass')
                     ),

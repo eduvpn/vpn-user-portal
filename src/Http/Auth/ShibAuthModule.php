@@ -11,43 +11,35 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
-use LC\Portal\Config;
-use LC\Portal\Http\AuthModuleInterface;
 use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
 use LC\Portal\Http\UserInfoInterface;
 
-class ShibAuthModule implements AuthModuleInterface
+class ShibAuthModule extends AbstractAuthModule
 {
-    private Config $config;
+    private string $userIdAttribute;
 
-    public function __construct(Config $config)
+    /** @var array<string> */
+    private array $permissionAttributeList;
+
+    public function __construct(string $userIdAttribute, array $permissionAttributeList)
     {
-        $this->config = $config;
+        $this->userIdAttribute = $userIdAttribute;
+        $this->permissionAttributeList = $permissionAttributeList;
     }
 
     public function userInfo(Request $request): ?UserInfoInterface
     {
-        $userIdAttribute = $this->config->requireString('userIdAttribute');
-        $permissionAttribute = $this->config->optionalString('permissionAttribute');
-
-        $userPermissions = [];
-        if (null !== $permissionAttribute) {
-            $permissionHeaderValue = $request->optionalHeader($permissionAttribute);
-            if (null !== $permissionHeaderValue) {
-                $userPermissions = explode(';', $permissionHeaderValue);
+        $permissionList = [];
+        foreach ($this->permissionAttributeList as $permissionAttribute) {
+            if (null !== $permissionAttributeValue = $request->optionalHeader($permissionAttribute)) {
+                $permissionList = array_merge($permissionList, explode(';', $permissionAttributeValue));
             }
         }
 
         return new UserInfo(
-            $request->requireHeader($userIdAttribute),
-            $userPermissions
+            $request->requireHeader($this->userIdAttribute),
+            $permissionList
         );
-    }
-
-    public function startAuth(Request $request): ?Response
-    {
-        return null;
     }
 }

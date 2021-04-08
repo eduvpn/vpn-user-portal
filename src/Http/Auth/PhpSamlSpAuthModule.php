@@ -15,7 +15,6 @@ use DateTimeImmutable;
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
 use LC\Portal\Config;
-use LC\Portal\Http\AuthModuleInterface;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
@@ -23,7 +22,7 @@ use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
 use LC\Portal\Http\UserInfoInterface;
 
-class PhpSamlSpAuthModule implements AuthModuleInterface
+class PhpSamlSpAuthModule extends AbstractAuthModule
 {
     private Config $config;
 
@@ -84,8 +83,7 @@ class PhpSamlSpAuthModule implements AuthModuleInterface
     private function getPermissionList(array $samlAttributes): array
     {
         $permissionList = [];
-        // XXX fix documentation for type permissionAttribute, can only be array<string> now!
-        foreach ($this->config->requireArray('permissionAttribute', []) as $permissionAttribute) {
+        foreach ($this->config->requireArray('permissionAttributeList', []) as $permissionAttribute) {
             if (\array_key_exists($permissionAttribute, $samlAttributes)) {
                 $permissionList = array_merge($permissionList, $samlAttributes[$permissionAttribute]);
             }

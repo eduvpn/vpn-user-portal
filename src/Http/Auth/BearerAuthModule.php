@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace LC\Portal\Http\Auth;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
-use LC\Portal\Http\AuthModuleInterface;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
@@ -22,7 +21,7 @@ use LC\Portal\OAuth\BearerValidator;
 /**
  * Validate API credentials used by the VPN apps.
  */
-class BearerAuthModule implements AuthModuleInterface
+class BearerAuthModule extends AbstractAuthModule
 {
     private BearerValidator $bearerValidator;
 

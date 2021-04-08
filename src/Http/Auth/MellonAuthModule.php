@@ -12,13 +12,11 @@ declare(strict_types=1);
 namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Config;
-use LC\Portal\Http\AuthModuleInterface;
 use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
 use LC\Portal\Http\UserInfoInterface;
 
-class MellonAuthModule implements AuthModuleInterface
+class MellonAuthModule extends AbstractAuthModule
 {
     private Config $config;
 
@@ -31,7 +29,7 @@ class MellonAuthModule implements AuthModuleInterface
     {
         $userIdAttribute = $this->config->requireString('userIdAttribute');
         $nameIdSerialization = $this->config->requireBool('nameIdSerialization', false);
-        $permissionAttribute = $this->config->optionalString('permissionAttribute');
+        $permissionAttributeList = $this->config->requireArray('permissionAttributeList', []);
 
         $userId = trim(strip_tags($request->requireHeader($userIdAttribute)));
 
@@ -45,22 +43,16 @@ class MellonAuthModule implements AuthModuleInterface
             }
         }
 
-        $userPermissions = [];
-        if (null !== $permissionAttribute) {
-            $permissionHeaderValue = $request->optionalHeader($permissionAttribute);
-            if (null !== $permissionHeaderValue) {
-                $userPermissions = explode(';', $permissionHeaderValue);
+        $permissionList = [];
+        foreach ($this->config->requireArray('permissionAttributeList', []) as $permissionAttribute) {
+            if (null !== $permissionAttributeValue = $request->optionalHeader($permissionAttribute)) {
+                $permissionList = array_merge($permissionList, explode(';', $permissionAttributeValue));
             }
         }
 
         return new UserInfo(
             $userId,
-            $userPermissions
+            $permissionList
         );
-    }
-
-    public function startAuth(Request $request): ?Response
-    {
-        return null;
     }
 }
