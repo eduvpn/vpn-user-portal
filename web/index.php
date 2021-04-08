@@ -147,7 +147,7 @@ try {
             );
             break;
         case 'PhpSamlSpAuthModule':
-            $authModule = new PhpSamlSpAuthModule($config);
+            $authModule = new PhpSamlSpAuthModule($config->s('PhpSamlSpAuthModule'));
             break;
         case 'DbAuthModule':
             $authModule = new UserPassAuthModule($seSession, $tpl);
@@ -169,10 +169,10 @@ try {
             );
             break;
         case 'MellonAuthModule':
-            $authModule = new MellonAuthModule($config);
+            $authModule = new MellonAuthModule($config->s('MellonAuthModule'));
             break;
         case 'ShibAuthModule':
-            $authModule = new ShibAuthModule($config);
+            $authModule = new ShibAuthModule($config->s('ShibAuthModule'));
             break;
         case 'ClientCertAuthModule':
             $authModule = new ClientCertAuthModule();
