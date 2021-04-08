@@ -14,7 +14,6 @@ namespace LC\Portal\Http\Auth;
 use fkooman\OAuth\Server\Exception\OAuthException;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
-use LC\Portal\Http\UserInfo;
 use LC\Portal\Http\UserInfoInterface;
 use LC\Portal\OAuth\BearerValidator;
 

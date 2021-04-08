@@ -344,7 +344,6 @@ return [
         'vendor/fkooman/saml-sp/src',
         'vendor/fkooman/secookie/src',
         'vendor/phpunit/phpunit/src',
-        'vendor/psr/log/Psr/Log',
     ],
 
     // A list of individual files to include in analysis
