@@ -102,7 +102,7 @@ class BearerValidator
 
                 // the authorization MUST exist in the DB as well *and* not
                 // expired...
-                if (!$this->storage->hasAuthorization($accessTokenInfo['auth_key'])) {
+                if (null === $this->storage->getAuthorization($accessTokenInfo['auth_key'])) {
                     throw new InvalidTokenException(sprintf('authorization for client "%s" no longer exists', $accessTokenInfo['client_id']));
                 }
             }

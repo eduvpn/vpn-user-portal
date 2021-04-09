@@ -18,7 +18,7 @@ use PDO;
 
 class Storage implements StorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2021040901';
+    const CURRENT_SCHEMA_VERSION = '2021040902';
 
     private PDO $db;
 
@@ -261,11 +261,15 @@ class Storage implements StorageInterface
         return 1 === $stmt->rowCount();
     }
 
-    public function hasAuthorization(string $authKey): bool
+    public function getAuthorization(string $authKey): ?Authorization
     {
         $stmt = $this->db->prepare(
             'SELECT
-                COUNT(*)
+                auth_key,
+                user_id,
+                client_id,
+                scope,
+                expires_at
              FROM authorizations
              WHERE
                 auth_key = :auth_key'
@@ -274,10 +278,15 @@ class Storage implements StorageInterface
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
 
-        return 1 === (int) $stmt->fetchColumn(0);
+        $queryResult = $stmt->fetchObject(Authorization::class);
+        if ($queryResult instanceof Authorization) {
+            return $queryResult;
+        }
+
+        return null;
     }
 
-    public function storeAuthorization(string $userId, string $clientId, string $scope, string $authKey): void
+    public function storeAuthorization(string $userId, string $clientId, string $scope, string $authKey, DateTimeImmutable $expiresAt): void
     {
         // the "authorizations" table has the UNIQUE constraint on the
         // "auth_key" column, thus preventing multiple entries with the same
@@ -287,13 +296,15 @@ class Storage implements StorageInterface
                 auth_key,
                 user_id,
                 client_id,
-                scope
+                scope,
+                expires_at
              )
              VALUES(
                 :auth_key,
                 :user_id,
                 :client_id,
-                :scope
+                :scope,
+                :expires_at
              )'
         );
 
@@ -301,6 +312,7 @@ class Storage implements StorageInterface
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
         $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
+        $stmt->bindValue(':expires_at', $expiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -312,8 +324,10 @@ class Storage implements StorageInterface
         $stmt = $this->db->prepare(
             'SELECT
                 auth_key,
+                user_id,
                 client_id,
-                scope
+                scope,
+                expires_at
              FROM authorizations
              WHERE
                 user_id = :user_id'
@@ -327,6 +341,8 @@ class Storage implements StorageInterface
 
     public function deleteAuthorization(string $authKey): void
     {
+        // this will also cascade into the refresh_token_log table in case
+        // there were any stored refresh_token_id entries for this "auth_key"
         $stmt = $this->db->prepare(
             'DELETE FROM
                 authorizations
@@ -336,23 +352,13 @@ class Storage implements StorageInterface
 
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
-
-        $stmt = $this->db->prepare(
-            'DELETE FROM
-                refresh_token_log
-             WHERE
-                auth_key = :auth_key'
-        );
-
-        $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
-        $stmt->execute();
     }
 
-    public function hasRefreshToken(string $refreshTokenId): bool
+    public function isRefreshTokenReplay(string $refreshTokenId): bool
     {
         $stmt = $this->db->prepare(
             'SELECT
-                COUNT(*)
+                COUNT(refresh_token_id)
              FROM refresh_token_log
              WHERE
                 refresh_token_id = :refresh_token_id'
@@ -364,11 +370,8 @@ class Storage implements StorageInterface
         return 1 === (int) $stmt->fetchColumn(0);
     }
 
-    public function recordRefreshToken(string $authKey, string $refreshTokenId): void
+    public function logRefreshToken(string $authKey, string $refreshTokenId): void
     {
-        // the "authorizations" table has the UNIQUE constraint on the
-        // "auth_key" column, thus preventing multiple entries with the same
-        // "auth_key" to make absolutely sure "auth_keys" cannot be replayed
         $stmt = $this->db->prepare(
             'INSERT INTO refresh_token_log (
                 auth_key,

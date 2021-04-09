@@ -8,11 +8,12 @@ CREATE TABLE authorizations (
     auth_key VARCHAR(255) NOT NULL,
     client_id VARCHAR(255) NOT NULL,
     scope VARCHAR(255) NOT NULL,
+    expires_at VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     UNIQUE(auth_key)
 );
 CREATE TABLE IF NOT EXISTS refresh_token_log (
-    auth_key VARCHAR(255) NOT NULL,
+    auth_key VARCHAR(255) NOT NULL REFERENCES authorizations(auth_key) ON DELETE CASCADE,
     refresh_token_id VARCHAR(255) NOT NULL,
     UNIQUE(auth_key,refresh_token_id)
 );
