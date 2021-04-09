@@ -388,6 +388,23 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
+    public function deleteExpiredAuthorizations(string $userId, DateTimeImmutable $dateTime): void
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM
+                authorizations
+             WHERE
+                user_id = :user_id
+             AND
+                expires_at < :expires_at'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':expires_at', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+
+        $stmt->execute();
+    }
+
     public function init(): void
     {
         $this->migration->init();
