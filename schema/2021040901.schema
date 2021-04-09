@@ -11,6 +11,11 @@ CREATE TABLE authorizations (
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     UNIQUE(auth_key)
 );
+CREATE TABLE IF NOT EXISTS refresh_token_log (
+    auth_key VARCHAR(255) NOT NULL,
+    refresh_token_id VARCHAR(255) NOT NULL,
+    UNIQUE(auth_key,refresh_token_id)
+);
 CREATE TABLE IF NOT EXISTS local_users (
     user_id VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,

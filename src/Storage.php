@@ -18,7 +18,7 @@ use PDO;
 
 class Storage implements StorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2021032501';
+    const CURRENT_SCHEMA_VERSION = '2021040901';
 
     private PDO $db;
 
@@ -335,6 +335,53 @@ class Storage implements StorageInterface
         );
 
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $stmt = $this->db->prepare(
+            'DELETE FROM
+                refresh_token_log
+             WHERE
+                auth_key = :auth_key'
+        );
+
+        $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    public function hasRefreshToken(string $refreshTokenId): bool
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                COUNT(*)
+             FROM refresh_token_log
+             WHERE
+                refresh_token_id = :refresh_token_id'
+        );
+
+        $stmt->bindValue(':refresh_token_id', $refreshTokenId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return 1 === (int) $stmt->fetchColumn(0);
+    }
+
+    public function recordRefreshToken(string $authKey, string $refreshTokenId): void
+    {
+        // the "authorizations" table has the UNIQUE constraint on the
+        // "auth_key" column, thus preventing multiple entries with the same
+        // "auth_key" to make absolutely sure "auth_keys" cannot be replayed
+        $stmt = $this->db->prepare(
+            'INSERT INTO refresh_token_log (
+                auth_key,
+                refresh_token_id
+             )
+             VALUES(
+                :auth_key,
+                :refresh_token_id
+             )'
+        );
+
+        $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
+        $stmt->bindValue(':refresh_token_id', $refreshTokenId, PDO::PARAM_STR);
         $stmt->execute();
     }
 
