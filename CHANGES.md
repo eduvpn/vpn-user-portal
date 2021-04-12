@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.9 (2021-04-12)
+- add Spanish (Latin America) translation
+
 ## 2.3.8 (2021-03-15)
 - show portal version on "Info" page
 - implement support for optional LDAP bind with credentials for initial search
