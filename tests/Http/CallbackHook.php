@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace LC\Portal\Tests\Http;
 
-use LC\Portal\Http\BeforeHookInterface;
+use LC\Portal\Http\AbstractHook;
 use LC\Portal\Http\Request;
 
-class CallbackHook implements BeforeHookInterface
+class CallbackHook extends AbstractHook
 {
     /** @var callable */
     private $before;
