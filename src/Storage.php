@@ -13,6 +13,7 @@ namespace LC\Portal;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\Authorization;
+use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use PDO;
 
@@ -278,15 +279,22 @@ class Storage implements StorageInterface
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
 
-        $queryResult = $stmt->fetchObject(Authorization::class);
-        if ($queryResult instanceof Authorization) {
-            return $queryResult;
+        /** @var array{auth_key:string,user_id:string,client_id:string,scope:string,expires_at:string}|false */
+        $queryResult = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (false === $queryResult) {
+            return null;
         }
 
-        return null;
+        return new Authorization(
+            $queryResult['auth_key'],
+            $queryResult['user_id'],
+            $queryResult['client_id'],
+            new Scope($queryResult['scope']),
+            new DateTimeImmutable($queryResult['expires_at'])
+        );
     }
 
-    public function storeAuthorization(string $userId, string $clientId, string $scope, string $authKey, DateTimeImmutable $expiresAt): void
+    public function storeAuthorization(string $userId, string $clientId, Scope $scope, string $authKey, DateTimeImmutable $expiresAt): void
     {
         // the "authorizations" table has the UNIQUE constraint on the
         // "auth_key" column, thus preventing multiple entries with the same
@@ -311,7 +319,7 @@ class Storage implements StorageInterface
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
-        $stmt->bindValue(':scope', $scope, PDO::PARAM_STR);
+        $stmt->bindValue(':scope', (string) $scope, PDO::PARAM_STR);
         $stmt->bindValue(':expires_at', $expiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
@@ -321,6 +329,7 @@ class Storage implements StorageInterface
      */
     public function getAuthorizations(string $userId): array
     {
+        $authorizationList = [];
         $stmt = $this->db->prepare(
             'SELECT
                 auth_key,
@@ -336,7 +345,19 @@ class Storage implements StorageInterface
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_CLASS, Authorization::class);
+        $queryResultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        /** @var array{auth_key:string,user_id:string,client_id:string,scope:string,expires_at:string} $queryResult */
+        foreach ($queryResultSet as $queryResult) {
+            $authorizationList[] = new Authorization(
+                $queryResult['auth_key'],
+                $queryResult['user_id'],
+                $queryResult['client_id'],
+                new Scope($queryResult['scope']),
+                new DateTimeImmutable($queryResult['expires_at'])
+            );
+        }
+
+        return $authorizationList;
     }
 
     public function deleteAuthorization(string $authKey): void
