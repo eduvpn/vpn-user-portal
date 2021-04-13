@@ -18,7 +18,7 @@ use LC\Portal\ClientConfig;
 use LC\Portal\Config;
 use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\LoggerInterface;
-use LC\Portal\OAuth\VpnAccessTokenInfo;
+use LC\Portal\OAuth\VpnAccessToken;
 use LC\Portal\ProfileConfig;
 use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
@@ -50,9 +50,9 @@ class VpnApiModule implements ServiceModuleInterface
         // API 1, 2
         $service->get(
             '/profile_list',
-            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
+            function (VpnAccessToken $accessToken, Request $request): Response {
                 $profileList = $this->profileList();
-                $userPermissions = $this->getPermissionList($accessTokenInfo);
+                $userPermissions = $this->getPermissionList($accessToken);
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileConfig) {
                     if ($profileConfig->hideProfile()) {
@@ -84,11 +84,11 @@ class VpnApiModule implements ServiceModuleInterface
         // DEPRECATED, this whole call is useless now!
         $service->get(
             '/user_info',
-            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
+            function (VpnAccessToken $accessToken, Request $request): Response {
                 return new ApiResponse(
                     'user_info',
                     [
-                        'user_id' => $accessTokenInfo->getUserId(),
+                        'user_id' => $accessToken->getUserId(),
                         // as 2FA works through the portal now, lie here to the
                         // clients so they won't try to enroll the user
                         'two_factor_enrolled' => false,
@@ -105,9 +105,9 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->post(
             '/create_keypair',
-            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
+            function (VpnAccessToken $accessToken, Request $request): Response {
                 try {
-                    $clientCertificate = $this->getCertificate($accessTokenInfo);
+                    $clientCertificate = $this->getCertificate($accessToken);
 
                     return new ApiResponse(
                         'create_keypair',
@@ -125,7 +125,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/check_certificate',
-            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
+            function (VpnAccessToken $accessToken, Request $request): Response {
                 $commonName = InputValidation::commonName($request->requireQueryParameter('common_name'));
                 $clientCertificateInfo = $this->storage->getUserCertificateInfo($commonName);
                 $responseData = $this->validateCertificate($clientCertificateInfo);
@@ -140,7 +140,7 @@ class VpnApiModule implements ServiceModuleInterface
         // API 2
         $service->get(
             '/profile_config',
-            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
+            function (VpnAccessToken $accessToken, Request $request): Response {
                 try {
                     $requestedProfileId = InputValidation::profileId($request->requireQueryParameter('profile_id'));
 
@@ -151,7 +151,7 @@ class VpnApiModule implements ServiceModuleInterface
                     $remoteStrategy = (int) $remoteStrategy;
 
                     $profileList = $this->profileList();
-                    $userPermissions = $this->getPermissionList($accessTokenInfo);
+                    $userPermissions = $this->getPermissionList($accessToken);
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileConfig) {
@@ -182,7 +182,7 @@ class VpnApiModule implements ServiceModuleInterface
         // NO LONGER USED
         $service->get(
             '/user_messages',
-            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
+            function (VpnAccessToken $accessToken, Request $request): Response {
                 return new ApiResponse(
                     'user_messages',
                     []
@@ -193,7 +193,7 @@ class VpnApiModule implements ServiceModuleInterface
         // NO LONGER USED
         $service->get(
             '/system_messages',
-            function (VpnAccessTokenInfo $accessTokenInfo, Request $request): Response {
+            function (VpnAccessToken $accessToken, Request $request): Response {
                 return new ApiResponse(
                     'system_messages',
                     []
@@ -225,25 +225,25 @@ class VpnApiModule implements ServiceModuleInterface
         return $response;
     }
 
-    private function getCertificate(VpnAccessTokenInfo $accessTokenInfo): array
+    private function getCertificate(VpnAccessToken $accessToken): array
     {
         // create a certificate
         // generate a random string as the certificate's CN
         $commonName = $this->random->get(16);
-        $certInfo = $this->ca->clientCert($commonName, $this->getExpiresAt($accessTokenInfo));
+        $certInfo = $this->ca->clientCert($commonName, $this->getExpiresAt($accessToken));
         $this->storage->addCertificate(
-            $accessTokenInfo->getUserId(),
+            $accessToken->getUserId(),
             $commonName,
-            $accessTokenInfo->getClientId(),
+            $accessToken->clientId(),
             new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
             new DateTimeImmutable(sprintf('@%d', $certInfo['valid_to'])),
-            $accessTokenInfo->getClientId()
+            $accessToken->clientId()
         );
 
         $this->storage->addUserLog(
-            $accessTokenInfo->getUserId(),
+            $accessToken->getUserId(),
             LoggerInterface::NOTICE,
-            sprintf('new certificate generated for "%s"', $accessTokenInfo->getClientId()),
+            sprintf('new certificate generated for "%s"', $accessToken->clientId()),
             $this->dateTime
         );
 
@@ -291,22 +291,22 @@ class VpnApiModule implements ServiceModuleInterface
     /**
      * @return array<string>
      */
-    private function getPermissionList(VpnAccessTokenInfo $accessTokenInfo): array
+    private function getPermissionList(VpnAccessToken $accessToken): array
     {
-        if (!$accessTokenInfo->getIsLocal()) {
+        if (!$accessToken->isLocal()) {
             return [];
         }
 
-        return $this->storage->getPermissionList($accessTokenInfo->getUserId());
+        return $this->storage->getPermissionList($accessToken->getUserId());
     }
 
-    private function getExpiresAt(VpnAccessTokenInfo $accessTokenInfo): DateTimeImmutable
+    private function getExpiresAt(VpnAccessToken $accessToken): DateTimeImmutable
     {
-        if (!$accessTokenInfo->getIsLocal()) {
+        if (!$accessToken->isLocal()) {
             return $this->dateTime->add($this->sessionExpiry);
         }
 
-        return new DateTimeImmutable($this->storage->getSessionExpiresAt($accessTokenInfo->getUserId()));
+        return new DateTimeImmutable($this->storage->getSessionExpiresAt($accessToken->getUserId()));
     }
 
     /**

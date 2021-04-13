@@ -13,12 +13,10 @@ namespace LC\Portal\OAuth;
 
 use DateTimeImmutable;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
+use fkooman\OAuth\Server\AccessToken;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\Exception\SignerException;
-use fkooman\OAuth\Server\Json;
-use fkooman\OAuth\Server\OAuthServer;
-use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
 
@@ -51,7 +49,7 @@ class BearerValidator
         $this->dateTime = new DateTimeImmutable();
     }
 
-    public function validate(string $authorizationHeader): VpnAccessTokenInfo
+    public function validate(string $authorizationHeader): VpnAccessToken
     {
         try {
             SyntaxValidator::validateBearerToken($authorizationHeader);
@@ -76,48 +74,36 @@ class BearerValidator
             }
 
             $publicSigner = new PublicSigner($publicKey);
-            $accessTokenInfo = Json::decode($publicSigner->verify($providedToken));
-
-            // check version
-            if (false === OAuthServer::checkTokenVersion($accessTokenInfo)) {
-                throw new InvalidTokenException('"access_token" has wrong version');
-            }
-
-            // make sure we got an access_token
-            if ('access_token' !== $accessTokenInfo['type']) {
-                throw new InvalidTokenException(sprintf('expected "access_token", got "%s"', $accessTokenInfo['type']));
-            }
+            $accessToken = AccessToken::fromJson($publicSigner->verify($providedToken));
 
             // check access_token expiry
-            if ($this->dateTime >= new DateTimeImmutable($accessTokenInfo['expires_at'])) {
+            if ($this->dateTime >= $accessToken->expiresAt()) {
                 throw new InvalidTokenException('"access_token" expired');
             }
 
             if (null === $baseUri) {
                 // the token was signed by _US_...
                 // the client MUST still be there
-                if (null === $this->clientDb->get($accessTokenInfo['client_id'])) {
-                    throw new InvalidTokenException(sprintf('client "%s" no longer registered', $accessTokenInfo['client_id']));
+                if (null === $this->clientDb->get($accessToken->clientId())) {
+                    throw new InvalidTokenException(sprintf('client "%s" no longer registered', $accessToken->clientId()));
                 }
 
                 // the authorization MUST exist in the DB as well *and* not
                 // expired...
-                if (null === $this->storage->getAuthorization($accessTokenInfo['auth_key'])) {
-                    throw new InvalidTokenException(sprintf('authorization for client "%s" no longer exists', $accessTokenInfo['client_id']));
+                if (null === $this->storage->getAuthorization($accessToken->authKey())) {
+                    throw new InvalidTokenException(sprintf('authorization for client "%s" no longer exists', $accessToken->clientId()));
                 }
             }
 
-            $userId = $accessTokenInfo['user_id'];
+            $userId = $accessToken->userId();
             if (null !== $baseUri) {
                 // append the base_uri in front of the user_id to indicate this is
                 // a "remote" user
                 $userId = $baseUri.'!!'.$userId;
             }
 
-            return new VpnAccessTokenInfo(
-                $userId,
-                $accessTokenInfo['client_id'],
-                new Scope($accessTokenInfo['scope']),
+            return new VpnAccessToken(
+                $accessToken,
                 // isLocal
                 null === $baseUri
             );

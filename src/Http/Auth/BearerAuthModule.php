@@ -36,10 +36,10 @@ class BearerAuthModule extends AbstractAuthModule
         }
 
         try {
-            $accessTokenInfo = $this->bearerValidator->validate($authorizationHeader);
-            $accessTokenInfo->getScope()->requireAll(['config']);
+            $accessToken = $this->bearerValidator->validate($authorizationHeader);
+            $accessToken->scope()->requireAll(['config']);
 
-            return $accessTokenInfo;
+            return $accessToken;
 
 //            return new UserInfo(
 //                // XXX extend this with other stuff, e.g. client_id, ...
