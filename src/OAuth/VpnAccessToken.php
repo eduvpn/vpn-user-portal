@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\OAuth;
 
 use fkooman\OAuth\Server\AccessToken;
+use fkooman\OAuth\Server\Scope;
 use LC\Portal\Http\UserInfoInterface;
 
 class VpnAccessToken implements UserInfoInterface
@@ -33,6 +34,11 @@ class VpnAccessToken implements UserInfoInterface
     public function getUserId(): string
     {
         return $this->accessToken->userId();
+    }
+
+    public function scope(): Scope
+    {
+        return $this->accessToken->scope();
     }
 
     public function isLocal(): bool
