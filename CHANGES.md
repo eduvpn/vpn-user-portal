@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.10 (...)
+- implement nightly session expiry @ 02:00 according to server timezone when
+  session expiry is > 7 days
+
 ## 2.3.9 (2021-04-12)
 - add Spanish (Latin America) translation
 
