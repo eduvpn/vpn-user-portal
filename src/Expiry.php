@@ -19,7 +19,7 @@ class Expiry
     /**
      * Calculate when a session will expire.
      *
-     * The goal is to expire "sessions" at 02:00 in the current timezone, iff
+     * The goal is to expire "sessions" at 04:00 in the current timezone, iff
      * the expiry is set 1 week or longer. The current timezone is considered
      * as per date.timezone PHP ini value.
      */
@@ -36,13 +36,13 @@ class Expiry
             return $sessionExpiry;
         }
 
-        // expire at 02:00 in the night on the day of the expiry
-        $nightExpiresAt = $expiresAt->modify('02:00');
+        // expire at 04:00 in the night on the day of the expiry
+        $nightExpiresAt = $expiresAt->modify('04:00');
 
         // if we end up longer than sessionExpiry, because it is between 00:00
-        // and 02:00, subtract a day
+        // and 04:00, subtract a day
         if ($nightExpiresAt > $expiresAt) {
-            return $dateTime->diff($nightExpiresAt->modify('yesterday 02:00'));
+            return $dateTime->diff($nightExpiresAt->modify('yesterday 04:00'));
         }
 
         return $dateTime->diff($nightExpiresAt);
