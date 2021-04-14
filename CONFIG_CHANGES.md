@@ -12,7 +12,7 @@ working!
 
 A new configuration boolean has been added to make sessions expire at night 
 instead of exactly after `sessionExpiry`. It will make the session expire at 
-02:00 for the timezone set in your PHP configuration. You can enable it by 
+04:00 for the timezone set in your PHP configuration. You can enable it by 
 setting `sessionExpireAtNight` to `true` in the configuration file 
 `/etc/vpn-user-portal/config.php`, e.g.:
 
