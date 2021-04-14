@@ -19,9 +19,9 @@ class Expiry
     /**
      * Calculate when a session will expire.
      *
-     * The goal is to expire at 04:00 in the current timezone. in case the
-     * expiry is set 1 week or longer. The current timezone is considerd as
-     * per date.timezone PHP ini value.
+     * The goal is to expire "sessions" at 02:00 in the current timezone, iff
+     * the expiry is set 1 week or longer. The current timezone is considered
+     * as per date.timezone PHP ini value.
      */
     public static function calculate(DateInterval $sessionExpiry, ?DateTimeImmutable $dateTime = null): DateInterval
     {
