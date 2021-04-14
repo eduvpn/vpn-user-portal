@@ -19,6 +19,7 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\Logger;
 use LC\Portal\ClientFetcher;
+use LC\Portal\Expiry;
 use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuthTokenModule;
 use LC\Portal\Storage;
@@ -34,11 +35,13 @@ try {
     $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
 
+    $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
+
     // OAuth tokens
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        new DateInterval($config->requireString('sessionExpiry', 'P90D'))
+        $sessionExpiry
     );
     $storage->update();
 

@@ -36,6 +36,7 @@ use LC\Portal\AdminPortalModule;
 use LC\Portal\ClientCertAuthentication;
 use LC\Portal\ClientFetcher;
 use LC\Portal\DisabledUserHook;
+use LC\Portal\Expiry;
 use LC\Portal\FormLdapAuthentication;
 use LC\Portal\FormPdoAuthentication;
 use LC\Portal\FormRadiusAuthentication;
@@ -78,15 +79,15 @@ try {
         $localeDirs[] = sprintf('%s/config/locale/%s', $baseDir, $styleName);
     }
 
-    $sessionExpiry = $config->requireString('sessionExpiry', 'P90D');
+    $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
 
-    // we always want browser session to expiry after PT8H hours, *EXCEPT* when
-    // the configured "sessionExpiry" is < PT8H, then we want to follow that
+    // we always want browser session to expiry after 30 minutes, *EXCEPT* when
+    // the configured "sessionExpiry" is < PT30M, then we want to follow that
     // setting...
     $sessionOptions = SessionOptions::init();
     $dateTime = new DateTime();
-    if (date_add(clone $dateTime, new DateInterval('PT30M')) > date_add(clone $dateTime, new DateInterval($sessionExpiry))) {
-        $sessionOptions = SessionOptions::init()->withExpiresIn(new DateInterval($sessionExpiry));
+    if (date_add(clone $dateTime, new DateInterval('PT30M')) > date_add(clone $dateTime, $sessionExpiry)) {
+        $sessionOptions = SessionOptions::init()->withExpiresIn($sessionExpiry);
     }
 
     $secureCookie = $config->requireBool('secureCookie', true);
@@ -168,7 +169,7 @@ try {
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        new DateInterval($sessionExpiry)
+        $sessionExpiry
     );
     $storage->update();
 
@@ -285,7 +286,7 @@ try {
     }
 
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
-    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $serverClient, new DateInterval($sessionExpiry)));
+    $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $serverClient, $sessionExpiry));
 
     $service->addModule(new QrModule());
 
@@ -314,7 +315,8 @@ try {
         $serverClient,
         $seSession,
         $storage,
-        $clientFetcher
+        $clientFetcher,
+        $sessionExpiry
     );
     $service->addModule($vpnPortalModule);
 
