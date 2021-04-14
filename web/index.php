@@ -79,7 +79,10 @@ try {
         $localeDirs[] = sprintf('%s/config/locale/%s', $baseDir, $styleName);
     }
 
-    $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
+    $sessionExpiry = new DateInterval($config->requireString('sessionExpiry', 'P90D'));
+    if ($config->requireBool('sessionExpireAtNight', false)) {
+        $sessionExpiry = Expiry::calculate($sessionExpiry);
+    }
 
     // we always want browser session to expiry after 30 minutes, *EXCEPT* when
     // the configured "sessionExpiry" is < PT30M, then we want to follow that

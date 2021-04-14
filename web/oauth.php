@@ -35,7 +35,10 @@ try {
     $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
 
-    $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
+    $sessionExpiry = new DateInterval($config->requireString('sessionExpiry', 'P90D'));
+    if ($config->requireBool('sessionExpireAtNight', false)) {
+        $sessionExpiry = Expiry::calculate($sessionExpiry);
+    }
 
     // OAuth tokens
     $storage = new Storage(

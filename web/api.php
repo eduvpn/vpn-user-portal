@@ -43,7 +43,10 @@ try {
         $config->requireString('apiUri')
     );
 
-    $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
+    $sessionExpiry = new DateInterval($config->requireString('sessionExpiry', 'P90D'));
+    if ($config->requireBool('sessionExpireAtNight', false)) {
+        $sessionExpiry = Expiry::calculate($sessionExpiry);
+    }
 
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
