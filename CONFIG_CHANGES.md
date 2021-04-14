@@ -13,7 +13,7 @@ working!
 We added the translation for Spanish (Latin America). You can add it to 
 `config.php` under `supportedLanguages` to enable it in your portal:
 
-    'es_LA' => 'Spanish',
+    'es_LA' => 'español',
 
 ## 2.3.8
 
