@@ -24,7 +24,7 @@ The default is `false` and will keep behavior as before, i.e. expire exactly
 after `sessionExpiry`.
 
 **NOTE**: for now this will only modify the expiry when your session expiry is 
-longer than 7 days (`P7D`).
+>= 7 days (`P7D`), but this may change in the (near) future.
 
 ## 2.3.9
 
