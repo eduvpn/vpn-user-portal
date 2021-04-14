@@ -10,21 +10,9 @@ working!
 
 ## 2.3.10
 
-A new configuration boolean has been added to make sessions expire at night 
-instead of exactly after `sessionExpiry`. It will make the session expire at 
-04:00 for the timezone set in your PHP configuration. You can enable it by 
-setting `sessionExpireAtNight` to `true` in the configuration file 
-`/etc/vpn-user-portal/config.php`, e.g.:
-
-```
-'sessionExpireAtNight' => true,
-```
-
-The default is `false` and will keep behavior as before, i.e. expire exactly 
-after `sessionExpiry`.
-
-**NOTE**: for now this will only modify the expiry when your session expiry 
-is >= 7 days (`P7D`), but this may change in the (near) future.
+The `sessionExpireAtNight` option (taking a boolean) has been added. Read the
+[docs](https://github.com/eduvpn/documentation/blob/v2/EXPIRE_AT_NIGHT.md) 
+on how to use it.
 
 ## 2.3.9
 
