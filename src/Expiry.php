@@ -40,11 +40,11 @@ class Expiry
 
         // expire in the middle of the night on the day of the expiry
         $nightExpiresAt = clone $expiresAt;
-        $nightExpiresAt->modify('02:00');
+        $nightExpiresAt->modify('04:00');
 
         // if we are longer than sessionExpiry, subtract a day
         if ($nightExpiresAt > $expiresAt) {
-            $nightExpiresAt->modify('yesterday 02:00');
+            $nightExpiresAt->modify('yesterday 04:00');
 
             return $dateTime->diff($nightExpiresAt);
         }
