@@ -281,9 +281,9 @@ class Tpl implements TplInterface
     private function d(string $dateString, string $dateFormat = 'Y-m-d H:i:s'): string
     {
         $dateTime = new DateTimeImmutable($dateString);
-        $dateTime->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+        $dateTime = $dateTime->setTimeZone(new DateTimeZone(date_default_timezone_get()));
 
-        return $this->e(date_format($dateTime, $dateFormat));
+        return $this->e($dateTime->format($dateFormat));
     }
 
     private function t(string $v): string
