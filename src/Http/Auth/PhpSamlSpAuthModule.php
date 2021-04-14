@@ -65,6 +65,16 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
         return new RedirectResponse($this->samlAuth->getLoginURL($this->getAuthOptions()));
     }
 
+    public function triggerLogout(Request $request): Response
+    {
+        return new RedirectResponse($request->getScheme().'://'.$request->getAuthority().'/php-saml-sp/logout');
+    }
+
+    public function supportsLogout(): bool
+    {
+        return true;
+    }
+
     private function getAuthOptions(): AuthOptions
     {
         $authOptions = new AuthOptions();

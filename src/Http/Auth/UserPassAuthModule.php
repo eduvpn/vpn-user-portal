@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
+use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\SessionInterface;
@@ -63,5 +64,15 @@ class UserPassAuthModule extends AbstractAuthModule
         );
 
         return $response;
+    }
+
+    public function triggerLogout(Request $request): Response
+    {
+        return new RedirectResponse($request->getRootUri().'_form/auth/logout');
+    }
+
+    public function supportsLogout(): bool
+    {
+        return true;
     }
 }

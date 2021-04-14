@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
+use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
 use LC\Portal\Http\UserInfoInterface;
 
@@ -41,5 +43,15 @@ class ShibAuthModule extends AbstractAuthModule
             $request->requireHeader($this->userIdAttribute),
             $permissionList
         );
+    }
+
+    public function triggerLogout(Request $request): Response
+    {
+        return new RedirectResponse($request->getScheme().'://'.$request->getAuthority().'/Shibboleth.sso/Logout');
+    }
+
+    public function supportsLogout(): bool
+    {
+        return true;
     }
 }

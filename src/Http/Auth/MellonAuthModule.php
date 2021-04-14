@@ -12,7 +12,9 @@ declare(strict_types=1);
 namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Config;
+use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
+use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
 use LC\Portal\Http\UserInfoInterface;
 
@@ -54,5 +56,15 @@ class MellonAuthModule extends AbstractAuthModule
             $userId,
             $permissionList
         );
+    }
+
+    public function triggerLogout(Request $request): Response
+    {
+        return new RedirectResponse($request->getScheme().'://'.$request->getAuthority().'/saml/logout');
+    }
+
+    public function supportsLogout(): bool
+    {
+        return true;
     }
 }

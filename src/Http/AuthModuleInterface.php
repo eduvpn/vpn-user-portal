@@ -16,4 +16,8 @@ interface AuthModuleInterface
     public function userInfo(Request $request): ?UserInfoInterface;
 
     public function startAuth(Request $request): ?Response;
+
+    public function triggerLogout(Request $request): Response;
+
+    public function supportsLogout(): bool;
 }

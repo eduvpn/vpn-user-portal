@@ -15,9 +15,6 @@ use DateInterval;
 use DateTimeImmutable;
 use LC\Portal\Storage;
 
-/**
- * This hook is used to update the session info.
- */
 class UpdateSessionInfoHook extends AbstractHook implements BeforeHookInterface
 {
     private SessionInterface $session;
