@@ -22,7 +22,7 @@ class ExpiryTest extends TestCase
     public function testLong()
     {
         $dataSet = [
-            // sessionExpiry, currentDate, expiresAt
+            // sessionExpiry, expiresAt, currentDate
             ['P90D',  '2021-07-05T04:00:00+02:00', '2021-04-06T09:00:00+02:00'],
             ['P7D',   '2021-04-13T04:00:00+02:00', '2021-04-06T09:00:00+02:00'],
             ['PT12H', '2021-04-06T21:00:00+02:00', '2021-04-06T09:00:00+02:00'],
