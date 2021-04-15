@@ -59,7 +59,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "c2918aab446bd36b14b59a43e1841e7f7a7b4bed"
+                "reference": "423ab5d22176fa77cf6c8a262413a5c2c049a23f"
             },
             "require": {
                 "ext-date": "*",
@@ -100,7 +100,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2021-04-15T10:34:12+00:00"
+            "time": "2021-04-15T13:17:15+00:00"
         },
         {
             "name": "fkooman/secookie",

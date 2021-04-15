@@ -15,6 +15,7 @@ interface AuthModuleInterface
 {
     public function userInfo(Request $request): ?UserInfoInterface;
 
+    // XXX why ever return null?!
     public function startAuth(Request $request): ?Response;
 
     public function triggerLogout(Request $request): Response;

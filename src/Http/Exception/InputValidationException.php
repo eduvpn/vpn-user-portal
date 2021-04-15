@@ -11,16 +11,10 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Exception;
 
-use Exception;
-
 class InputValidationException extends HttpException
 {
-    /**
-     * @param string $message
-     * @param int    $code
-     */
-    public function __construct($message, $code = 400, Exception $previous = null)
+    public function __construct(string $message, int $statusCode = 400)
     {
-        parent::__construct($message, $code, [], $previous);
+        parent::__construct($message, $statusCode);
     }
 }

@@ -15,16 +15,30 @@ use Exception;
 
 class HttpException extends Exception
 {
-    /** @var array */
-    private $responseHeaders;
+    private int $statusCode;
 
-    public function __construct(string $message, int $code, array $responseHeaders = [], Exception $previous = null)
+    /** @var array<string,string> */
+    private array $responseHeaders;
+
+    /**
+     * @param array<string,string> $responseHeaders
+     */
+    public function __construct(string $message, int $statusCode, array $responseHeaders = [])
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message);
+        $this->statusCode = $statusCode;
         $this->responseHeaders = $responseHeaders;
     }
 
-    public function getResponseHeaders(): array
+    public function statusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    public function responseHeaders(): array
     {
         return $this->responseHeaders;
     }
