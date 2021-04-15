@@ -35,23 +35,11 @@ class OAuthTokenModule implements ServiceModuleInterface
                         $request->optionalHeader('PHP_AUTH_PW')
                     );
 
-                    return Response::import(
-                        [
-                            'statusCode' => $tokenResponse->getStatusCode(),
-                            'responseHeaders' => $tokenResponse->getHeaders(),
-                            'responseBody' => $tokenResponse->getBody(),
-                        ]
-                    );
+                    return new Response($tokenResponse->getBody(), $tokenResponse->getHeaders(), $tokenResponse->getStatusCode());
                 } catch (OAuthException $e) {
                     $jsonResponse = $e->getJsonResponse();
 
-                    return Response::import(
-                        [
-                            'statusCode' => $jsonResponse->getStatusCode(),
-                            'responseHeaders' => $jsonResponse->getHeaders(),
-                            'responseBody' => $jsonResponse->getBody(),
-                        ]
-                    );
+                    return new Response($jsonResponse->getBody(), $jsonResponse->getHeaders(), $jsonResponse->getStatusCode());
                 }
             }
         );

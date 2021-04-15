@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-use LC\Portal\Json;
-
-class ApiResponse extends Response
+class ApiResponse extends JsonResponse
 {
     /**
-     * @param bool|string|array|int|null $responseData
+     * @param mixed $responseData
      */
-    public function __construct(string $wrapperKey, $responseData = null, int $responseCode = 200)
+    public function __construct(string $wrapperKey, $responseData = null, int $statusCode = 200)
     {
         $responseBody = [
             $wrapperKey => [
@@ -30,7 +28,6 @@ class ApiResponse extends Response
             $responseBody[$wrapperKey]['data'] = $responseData;
         }
 
-        parent::__construct($responseCode, 'application/json');
-        $this->setBody(Json::encode($responseBody));
+        parent::__construct($responseBody, [], $statusCode);
     }
 }

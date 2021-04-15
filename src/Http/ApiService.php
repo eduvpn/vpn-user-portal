@@ -50,23 +50,17 @@ class ApiService
             $requestMethod = $request->getRequestMethod();
 
             if (!\array_key_exists($pathInfo, $this->routeList)) {
-                return new JsonResponse(sprintf('"%s" not found', $pathInfo), 404);
+                return new JsonResponse(['error' => sprintf('"%s" not found', $pathInfo)], [], 404);
             }
             if (!\array_key_exists($requestMethod, $this->routeList[$pathInfo])) {
-                return new JsonResponse(sprintf('method "%s" not allowed', $requestMethod), 405, ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))]);
+                return new JsonResponse(['error' => sprintf('method "%s" not allowed', $requestMethod)], ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))], 405);
             }
 
             return $this->routeList[$pathInfo][$requestMethod]($vpnAccessToken, $request);
         } catch (OAuthException $e) {
             $jsonResponse = $e->getJsonResponse();
 
-            return Response::import(
-                [
-                    'statusCode' => $jsonResponse->getStatusCode(),
-                    'responseHeaders' => $jsonResponse->getHeaders(),
-                    'responseBody' => $jsonResponse->getBody(),
-                ]
-            );
+            return new Response($jsonResponse->getBody(), $jsonResponse->getHeaders(), $jsonResponse->getStatusCode());
         }
     }
 }

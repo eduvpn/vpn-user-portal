@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
+use LC\Portal\Http\HtmlResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
@@ -50,10 +51,10 @@ class BasicAuthModule extends AbstractAuthModule
 
     public function startAuth(Request $request): ?Response
     {
-        $httpResponse = new Response(401, 'text/html');
-        $httpResponse->setBody('authentication required');
-        $httpResponse->addHeader('WWW-Authenticate', 'Basic realm="VPN Portal"');
-
-        return $httpResponse;
+        return new HtmlResponse(
+            'authentication required',
+            ['WWW-Authenticate' => 'Basic realm="VPN Portal"'],
+            401
+        );
     }
 }

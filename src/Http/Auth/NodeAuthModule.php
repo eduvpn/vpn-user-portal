@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
+use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
@@ -48,9 +49,6 @@ class NodeAuthModule extends AbstractAuthModule
 
     public function startAuth(Request $request): ?Response
     {
-        $authResponse = new Response(401);
-        $authResponse->addHeader('WWW-Authenticate', 'Bearer realm="'.$this->authRealm.'"');
-
-        return $authResponse;
+        return new JsonResponse(['error' => 'authentication required'], ['WWW-Authenticate' => 'Bearer realm="'.$this->authRealm.'"'], 401);
     }
 }

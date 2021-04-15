@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
+use LC\Portal\Http\HtmlResponse;
 use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
@@ -50,19 +51,16 @@ class UserPassAuthModule extends AbstractAuthModule
     public function startAuth(Request $request): ?Response
     {
         // any other URL, enforce authentication
-        $response = new Response(200, 'text/html');
-        $response->setBody(
-            $this->tpl->render(
-                'formAuthentication',
-                [
-                    '_form_auth_invalid_credentials' => false,
-                    '_form_auth_redirect_to' => $request->getUri(),
-                    '_show_logout_button' => false,
-                ]
-            )
+        $responseBody = $this->tpl->render(
+            'formAuthentication',
+            [
+                '_form_auth_invalid_credentials' => false,
+                '_form_auth_redirect_to' => $request->getUri(),
+                '_show_logout_button' => false,
+            ]
         );
 
-        return $response;
+        return new HtmlResponse($responseBody, [], 200);
     }
 
     public function triggerLogout(Request $request): Response

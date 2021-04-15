@@ -49,10 +49,8 @@ class NodeApiModule implements ServiceModuleInterface
                     $bodyLines[] = $configName.':'.sodium_bin2base64($configFile, \SODIUM_BASE64_VARIANT_ORIGINAL);
                 }
 
-                $response = new Response(200);
-                $response->setBody(implode("\r\n", $bodyLines));
-
-                return $response;
+                /// XXX content type?
+                return new Response(implode("\r\n", $bodyLines));
             }
         );
 
@@ -62,19 +60,13 @@ class NodeApiModule implements ServiceModuleInterface
                 try {
                     $this->connect($request);
 
-                    $response = new Response();
-                    $response->setBody('OK');
-
-                    return $response;
+                    return new Response('OK');
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
                         $this->storage->addUserLog($userId, LoggerInterface::ERROR, 'unable to connect: '.$e->getMessage(), $this->dateTime);
                     }
 
-                    $response = new Response();
-                    $response->setBody('ERR');
-
-                    return $response;
+                    return new Response('ERR');
                 }
             }
         );
@@ -85,19 +77,13 @@ class NodeApiModule implements ServiceModuleInterface
                 try {
                     $this->disconnect($request);
 
-                    $response = new Response();
-                    $response->setBody('OK');
-
-                    return $response;
+                    return new Response('OK');
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
                         $this->storage->addUserLog($userId, LoggerInterface::ERROR, 'unable to disconnect: '.$e->getMessage(), $this->dateTime);
                     }
 
-                    $response = new Response();
-                    $response->setBody('ERR');
-
-                    return $response;
+                    return new Response('ERR');
                 }
             }
         );

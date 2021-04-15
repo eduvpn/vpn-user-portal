@@ -60,20 +60,17 @@ class UserPassModule implements ServiceModuleInterface
 
                 if (false === $userInfo = $this->credentialValidator->isValid($authUser, $authPass)) {
                     // invalid authentication
-                    $response = new Response(200, 'text/html');
-                    $response->setBody(
-                        $this->tpl->render(
-                            'formAuthentication',
-                            [
-                                '_form_auth_invalid_credentials' => true,
-                                '_form_auth_invalid_credentials_user' => $authUser,
-                                '_form_auth_redirect_to' => $redirectTo,
-                                '_show_logout_button' => false,
-                            ]
-                        )
+                    $responseBody = $this->tpl->render(
+                        'formAuthentication',
+                        [
+                            '_form_auth_invalid_credentials' => true,
+                            '_form_auth_invalid_credentials_user' => $authUser,
+                            '_form_auth_redirect_to' => $redirectTo,
+                            '_show_logout_button' => false,
+                        ]
                     );
 
-                    return $response;
+                    return new HtmlResponse($responseBody);
                 }
 
                 $permissionList = $userInfo->getPermissionList();

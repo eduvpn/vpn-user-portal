@@ -324,11 +324,13 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
 
-        $response = new Response(200, 'application/x-openvpn-profile');
-        $response->addHeader('Content-Disposition', sprintf('attachment; filename="%s.ovpn"', $clientConfigFile));
-        $response->setBody($clientConfig);
-
-        return $response;
+        return new Response(
+            $clientConfig,
+            [
+                'Content-Type' => 'application/x-openvpn-profile',
+                'Content-Disposition' => sprintf('attachment; filename="%s.ovpn"', $clientConfigFile),
+            ]
+        );
     }
 
     /**

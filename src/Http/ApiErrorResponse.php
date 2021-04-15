@@ -11,21 +11,19 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-use LC\Portal\Json;
-
-class ApiErrorResponse extends Response
+class ApiErrorResponse extends JsonResponse
 {
-    public function __construct(string $wrapperKey, string $errorMessage, int $responseCode = 200)
+    public function __construct(string $wrapperKey, string $errorMessage, int $statusCode = 200)
     {
-        parent::__construct($responseCode, 'application/json');
-
-        $responseBody = [
-            $wrapperKey => [
-                'ok' => false,
-                'error' => $errorMessage,
+        parent::__construct(
+            [
+                $wrapperKey => [
+                    'ok' => false,
+                    'error' => $errorMessage,
+                ],
             ],
-        ];
-
-        $this->setBody(Json::encode($responseBody));
+            [],
+            $statusCode
+        );
     }
 }

@@ -22,10 +22,7 @@ class QrModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $qrText = $request->requireQueryParameter('qr_text');
 
-                $response = new Response(200, 'image/png');
-                $response->setBody(self::generate($qrText));
-
-                return $response;
+                return new Response(self::generate($qrText), ['Content-Type' => 'image/png']);
             }
         );
     }

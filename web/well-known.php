@@ -36,10 +36,9 @@ try {
         'v' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
     ];
 
-    $response = new JsonResponse($jsonData);
-    $response->addHeader('Cache-Control', 'no-store');
+    $response = new JsonResponse($jsonData, ['Cache-Control' => 'no-store']);
     $response->send();
 } catch (Exception $e) {
-    $response = new JsonResponse(['error' => $e->getMessage()], 500);
+    $response = new JsonResponse(['error' => $e->getMessage()], [], 500);
     $response->send();
 }

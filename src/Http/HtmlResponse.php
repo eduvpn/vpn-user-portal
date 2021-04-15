@@ -13,9 +13,12 @@ namespace LC\Portal\Http;
 
 class HtmlResponse extends Response
 {
-    public function __construct(string $responsePage, int $responseCode = 200)
+    /**
+     * @param array<string,string> $responseHeaders
+     */
+    public function __construct(string $responseBody, array $responseHeaders = [], int $statusCode = 200)
     {
-        parent::__construct($responseCode, 'text/html');
-        $this->setBody($responsePage);
+        $responseHeaders['Content-Type'] = 'text/html';
+        parent::__construct($responseBody, $responseHeaders, $statusCode);
     }
 }

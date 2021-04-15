@@ -13,84 +13,47 @@ namespace LC\Portal\Http;
 
 class Response
 {
-    /** @var int */
-    private $statusCode;
+    private string $responseBody;
 
     /** @var array<string,string> */
-    private $headers = [];
+    private array $responseHeaders = [];
 
-    /** @var string */
-    private $body = '';
+    private int $statusCode;
 
-    public function __construct(int $statusCode = 200, string $contentType = 'text/plain')
+    /**
+     * @param array<string,string> $responseHeaders
+     */
+    public function __construct(string $responseBody, array $responseHeaders = [], int $statusCode = 200)
     {
+        $this->responseBody = $responseBody;
+        $this->responseHeaders = $responseHeaders;
         $this->statusCode = $statusCode;
-        $this->headers = [
-            'Content-Type' => $contentType,
-        ];
-    }
-
-    public function addHeader(string $key, string $value): void
-    {
-        $this->headers[$key] = $value;
-    }
-
-    public function getHeader(string $key): ?string
-    {
-        if (\array_key_exists($key, $this->headers)) {
-            return $this->headers[$key];
-        }
-
-        return null;
     }
 
     /**
      * @return array<string,string>
      */
-    public function getHeaders(): array
+    public function responseHeaders(): array
     {
-        return $this->headers;
+        return $this->responseHeaders;
     }
 
-    public function setBody(string $body): void
-    {
-        $this->body = $body;
-    }
-
-    public function getStatusCode(): int
+    public function statusCode(): int
     {
         return $this->statusCode;
     }
 
-    public function getBody(): string
+    public function responseBody(): string
     {
-        return $this->body;
-    }
-
-    public static function import(array $responseData): self
-    {
-        $response = new self(
-            $responseData['statusCode'],
-            $responseData['responseHeaders']['Content-Type']
-        );
-        unset($responseData['responseHeaders']['Content-Type']);
-        foreach ($responseData['responseHeaders'] as $key => $value) {
-            $response->addHeader($key, $value);
-        }
-        $response->setBody($responseData['responseBody']);
-
-        return $response;
+        return $this->responseBody;
     }
 
     public function send(): void
     {
         http_response_code($this->statusCode);
-        if ('' === $this->body) {
-            unset($this->headers['Content-Type']);
+        foreach ($this->responseHeaders as $k => $v) {
+            header($k.': '.$v);
         }
-        foreach ($this->headers as $key => $value) {
-            header(sprintf('%s: %s', $key, $value));
-        }
-        echo $this->body;
+        echo $this->responseBody;
     }
 }

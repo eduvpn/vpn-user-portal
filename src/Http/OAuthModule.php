@@ -78,12 +78,6 @@ class OAuthModule implements ServiceModuleInterface
 
     private function prepareReturnResponse(OAuthResponse $authorizeResponse): Response
     {
-        return Response::import(
-            [
-                'statusCode' => $authorizeResponse->getStatusCode(),
-                'responseHeaders' => $authorizeResponse->getHeaders(),
-                'responseBody' => $authorizeResponse->getBody(),
-            ]
-        );
+        return new Response($authorizeResponse->getBody(), $authorizeResponse->getHeaders(), $authorizeResponse->getStatusCode());
     }
 }

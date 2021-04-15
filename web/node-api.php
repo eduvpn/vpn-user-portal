@@ -16,11 +16,10 @@ use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
 use LC\Portal\Http\Auth\NodeAuthModule;
+use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\NodeApiModule;
 use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
-use LC\Portal\Json;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
@@ -56,7 +55,6 @@ try {
 } catch (Exception $e) {
     $logger = new SysLogger('vpn-user-portal-node-api');
     $logger->error($e->getMessage());
-    $response = new Response(500, 'application/json');
-    $response->setBody(Json::encode(['error' => $e->getMessage()]));
+    $response = new JsonResponse(['error' => $e->getMessage()], [], 500);
     $response->send();
 }
