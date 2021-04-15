@@ -1,6 +1,5 @@
 CREATE TABLE users(
   user_id VARCHAR(255) NOT NULL PRIMARY KEY UNIQUE,
-  session_expires_at DATETIME NOT NULL,
   permission_list TEXT NOT NULL,
   is_disabled BOOLEAN NOT NULL
 );

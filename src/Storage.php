@@ -19,7 +19,7 @@ use PDO;
 
 class Storage implements StorageInterface
 {
-    const CURRENT_SCHEMA_VERSION = '2021040902';
+    const CURRENT_SCHEMA_VERSION = '2021041501';
 
     private PDO $db;
 
