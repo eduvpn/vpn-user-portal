@@ -13,7 +13,7 @@ namespace LC\Portal\Http;
 
 interface AuthModuleInterface
 {
-    public function userInfo(Request $request): ?UserInfoInterface;
+    public function userInfo(Request $request): ?UserInfo;
 
     // XXX why ever return null?!
     public function startAuth(Request $request): ?Response;

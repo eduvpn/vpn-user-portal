@@ -104,7 +104,7 @@ class UserPassModule implements ServiceModuleInterface
 
         $service->post(
             '/_form/auth/logout',
-            function (UserInfoInterface $userInfo, Request $request): Response {
+            function (UserInfo $userInfo, Request $request): Response {
                 $this->session->destroy();
 
                 return new RedirectResponse($request->requireHeader('HTTP_REFERER'));

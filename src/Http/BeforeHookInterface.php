@@ -15,5 +15,5 @@ interface BeforeHookInterface
 {
     public function beforeAuth(Request $request): ?Response;
 
-    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response;
+    public function afterAuth(UserInfo $userInfo, Request $request): ?Response;
 }

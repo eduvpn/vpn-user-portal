@@ -12,12 +12,11 @@ declare(strict_types=1);
 namespace LC\Portal\OAuth;
 
 use fkooman\OAuth\Server\AccessToken;
-use LC\Portal\Http\UserInfoInterface;
 
 /**
  * XXX can we somehow only use AccessToken? Do we need "isLocal" still?
  */
-class VpnAccessToken implements UserInfoInterface
+class VpnAccessToken
 {
     private AccessToken $accessToken;
     private bool $isLocal;

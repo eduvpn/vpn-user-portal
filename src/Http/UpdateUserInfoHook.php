@@ -29,7 +29,7 @@ class UpdateUserInfoHook extends AbstractHook implements BeforeHookInterface
         $this->storage = $storage;
     }
 
-    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response
+    public function afterAuth(UserInfo $userInfo, Request $request): ?Response
     {
         // only update the user info once per browser session, not on every
         // request

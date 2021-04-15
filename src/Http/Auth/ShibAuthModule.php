@@ -15,7 +15,6 @@ use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
-use LC\Portal\Http\UserInfoInterface;
 
 class ShibAuthModule extends AbstractAuthModule
 {
@@ -30,7 +29,7 @@ class ShibAuthModule extends AbstractAuthModule
         $this->permissionAttributeList = $permissionAttributeList;
     }
 
-    public function userInfo(Request $request): ?UserInfoInterface
+    public function userInfo(Request $request): ?UserInfo
     {
         $permissionList = [];
         foreach ($this->permissionAttributeList as $permissionAttribute) {

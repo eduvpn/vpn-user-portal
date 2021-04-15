@@ -11,12 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-interface UserInfoInterface
+interface ApiServiceModuleInterface
 {
-    public function getUserId(): string;
-
-    /**
-     * @return array<string>
-     */
-    public function getPermissionList(): array;
+    public function init(ApiService $service): void;
 }

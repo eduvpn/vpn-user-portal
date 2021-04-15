@@ -17,10 +17,9 @@ use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
 use LC\Portal\FileIO;
-use LC\Portal\Http\Auth\BearerAuthModule;
+use LC\Portal\Http\ApiService;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
 use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Json;
 use LC\Portal\OAuth\BearerValidator;
@@ -57,23 +56,17 @@ try {
         )
     );
 
+    $vpnCaDir = sprintf('%s/ca', $dataDir);
+    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
+    $ca = new VpnCa($vpnCaDir, 'EdDSA', $vpnCaPath);
+
     $bearerValidator = new BearerValidator(
         $storage,
         new ClientDb(),
         $secretKey->getPublicKey(),
         $keyInstanceMapping
     );
-
-    $service = new Service();
-    $service->setAuthModule(
-        new BearerAuthModule(
-            $bearerValidator
-        )
-    );
-
-    $vpnCaDir = sprintf('%s/ca', $dataDir);
-    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
-    $ca = new VpnCa($vpnCaDir, 'EdDSA', $vpnCaPath);
+    $service = new ApiService($bearerValidator);
 
     // api module
     $vpnApiModule = new VpnApiModule(

@@ -14,7 +14,6 @@ namespace LC\Portal\Http\Auth;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
-use LC\Portal\Http\UserInfoInterface;
 
 class BasicAuthModule extends AbstractAuthModule
 {
@@ -29,7 +28,7 @@ class BasicAuthModule extends AbstractAuthModule
         $this->authUserList = $authUserList;
     }
 
-    public function userInfo(Request $request): ?UserInfoInterface
+    public function userInfo(Request $request): ?UserInfo
     {
         if (null === $authUser = $request->optionalHeader('PHP_AUTH_USER')) {
             return null;

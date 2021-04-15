@@ -16,7 +16,6 @@ use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
-use LC\Portal\Http\UserInfoInterface;
 
 class MellonAuthModule extends AbstractAuthModule
 {
@@ -27,7 +26,7 @@ class MellonAuthModule extends AbstractAuthModule
         $this->config = $config;
     }
 
-    public function userInfo(Request $request): ?UserInfoInterface
+    public function userInfo(Request $request): ?UserInfo
     {
         $userIdAttribute = $this->config->requireString('userIdAttribute');
         $nameIdSerialization = $this->config->requireBool('nameIdSerialization', false);

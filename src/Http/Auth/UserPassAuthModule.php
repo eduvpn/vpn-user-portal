@@ -16,7 +16,6 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\SessionInterface;
 use LC\Portal\Http\UserInfo;
-use LC\Portal\Http\UserInfoInterface;
 use LC\Portal\TplInterface;
 
 class UserPassAuthModule extends AbstractAuthModule
@@ -30,7 +29,7 @@ class UserPassAuthModule extends AbstractAuthModule
         $this->tpl = $tpl;
     }
 
-    public function userInfo(Request $request): ?UserInfoInterface
+    public function userInfo(Request $request): ?UserInfo
     {
         if (null === $authUser = $this->session->get('_form_auth_user')) {
             return null;

@@ -15,11 +15,11 @@ use LC\Portal\Http\AuthModuleInterface;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
-use LC\Portal\Http\UserInfoInterface;
+use LC\Portal\Http\UserInfo;
 
 class AbstractAuthModule implements AuthModuleInterface
 {
-    public function userInfo(Request $request): ?UserInfoInterface
+    public function userInfo(Request $request): ?UserInfo
     {
         return null;
     }

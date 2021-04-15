@@ -23,7 +23,7 @@ class AbstractHook implements BeforeHookInterface
         return null;
     }
 
-    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response
+    public function afterAuth(UserInfo $userInfo, Request $request): ?Response
     {
         return null;
     }

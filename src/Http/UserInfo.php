@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-class UserInfo implements UserInfoInterface
+class UserInfo
 {
     private string $userId;
 

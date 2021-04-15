@@ -84,16 +84,6 @@ class PasswdModule implements ServiceModuleInterface
                 }
                 $this->storage->localUserUpdatePassword($userInfo->getUserId(), $passwordHash);
 
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalPasswd',
-                        [
-                            'userId' => $userInfo->getUserId(),
-                            'errorCode' => 'updateFailPassword',
-                        ]
-                    )
-                );
-
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }
         );

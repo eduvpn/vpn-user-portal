@@ -24,7 +24,7 @@ use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 
-class VpnApiModule implements ServiceModuleInterface
+class VpnApiModule implements ApiServiceModuleInterface
 {
     private Config $config;
     private Storage $storage;
@@ -45,7 +45,7 @@ class VpnApiModule implements ServiceModuleInterface
         $this->dateTime = new DateTimeImmutable();
     }
 
-    public function init(Service $service): void
+    public function init(ApiService $service): void
     {
         // API 1, 2
         $service->get(

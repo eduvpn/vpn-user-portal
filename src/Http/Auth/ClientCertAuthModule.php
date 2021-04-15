@@ -14,11 +14,10 @@ namespace LC\Portal\Http\Auth;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\UserInfo;
-use LC\Portal\Http\UserInfoInterface;
 
 class ClientCertAuthModule extends AbstractAuthModule
 {
-    public function userInfo(Request $request): ?UserInfoInterface
+    public function userInfo(Request $request): ?UserInfo
     {
         if (null === $remoteUser = $request->optionalHeader('REMOTE_USER')) {
             throw new HttpException('client certificate authentication failed, no certificate provided', 400);

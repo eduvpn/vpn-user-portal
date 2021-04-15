@@ -38,7 +38,7 @@ class AdminHook extends AbstractHook implements BeforeHookInterface
         $this->tpl = $tpl;
     }
 
-    public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response
+    public function afterAuth(UserInfo $userInfo, Request $request): ?Response
     {
         // is the userId listed in the adminUserIdList?
         if (\in_array($userInfo->getUserId(), $this->adminUserIdList, true)) {

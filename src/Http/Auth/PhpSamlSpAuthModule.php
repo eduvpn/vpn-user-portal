@@ -20,7 +20,6 @@ use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
-use LC\Portal\Http\UserInfoInterface;
 
 class PhpSamlSpAuthModule extends AbstractAuthModule
 {
@@ -37,7 +36,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
         $this->dateTime = new DateTimeImmutable();
     }
 
-    public function userInfo(Request $request): ?UserInfoInterface
+    public function userInfo(Request $request): ?UserInfo
     {
         $authOptions = $this->getAuthOptions();
         if (!$this->samlAuth->isAuthenticated($authOptions)) {
