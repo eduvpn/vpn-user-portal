@@ -31,9 +31,18 @@ class UpdateUserInfoHook extends AbstractHook implements BeforeHookInterface
 
     public function afterAuth(UserInfoInterface $userInfo, Request $request): ?Response
     {
+        // only update the user info once per browser session, not on every
+        // request
         if ('yes' === $this->session->get('_user_info_already_updated')) {
-            // only update the user info once per browser session, not on
-            // every request
+            if (false === $this->storage->userExists($userInfo->getUserId())) {
+                // but if the user account was removed in the meantime,
+                // destroy the session...
+                // XXX is this acceptable? it doesn't work for SAML logins, should we trigger logout using AuthMethod here to share code path?
+                $this->session->destroy();
+
+                return new RedirectResponse($request->getUri());
+            }
+
             return null;
         }
 

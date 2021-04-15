@@ -214,6 +214,20 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
+    public function localUserDelete(string $userId): void
+    {
+        $stmt = $this->db->prepare(
+<<< 'SQL'
+        DELETE FROM
+            local_users
+        WHERE
+            user_id = :user_id
+    SQL
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
     public function localUserUpdatePassword(string $userId, string $passwordHash): void
     {
         $stmt = $this->db->prepare(

@@ -18,6 +18,7 @@ $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')
                 <?php else: ?>
                     <button class="warning" name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
                 <?php endif; ?>
+                    <button class="error" name="user_action" value="deleteUser"><?=$this->t('Delete User'); ?></button>
             <?php endif; ?>
         </fieldset>
     </form>

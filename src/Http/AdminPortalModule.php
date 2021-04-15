@@ -217,6 +217,13 @@ class AdminPortalModule implements ServiceModuleInterface
 
                         break;
 
+                    case 'deleteUser':
+                        $this->storage->userDelete($userId);
+                        if ('DbAuthModule' === $this->config->requireString('authModule', 'DbAuthModule')) {
+                            $this->storage->localUserDelete($userId);
+                        }
+                        break;
+
                     default:
                         throw new HttpException('unsupported "user_action"', 400);
                 }
