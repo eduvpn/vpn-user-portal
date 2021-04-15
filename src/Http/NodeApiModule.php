@@ -138,21 +138,6 @@ class NodeApiModule implements ServiceModuleInterface
         }
 
         $userId = $userCertInfo['user_id'];
-
-        if (false === strpos($userId, '!!')) {
-            // FIXME "!!" indicates it is a remote guest user coming in with a
-            // foreign OAuth token, for those we do NOT check expiry.. this is
-            // really ugly hack, we need to get rid of sessionExpiresAt
-            // completely instead! This check is skipped when a non remote
-            // guest user id contains '!!' for some reason...
-            //
-            // this is always string, but DB gives back scalar|null
-            $sessionExpiresAt = new DateTimeImmutable((string) $this->storage->getSessionExpiresAt($userId));
-            if ($sessionExpiresAt->getTimestamp() < $this->dateTime->getTimestamp()) {
-                throw new NodeApiException($userId, sprintf('the certificate is still valid, but the session expired at %s', $sessionExpiresAt->format(DateTimeImmutable::ATOM)));
-            }
-        }
-
         if ($userCertInfo['user_is_disabled']) {
             throw new NodeApiException($userId, 'unable to connect, account is disabled');
         }

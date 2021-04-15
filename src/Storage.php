@@ -35,23 +35,6 @@ class Storage implements StorageInterface
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
     }
 
-    public function getPasswordHash(string $authUser): ?string
-    {
-        $stmt = $this->db->prepare(
-            'SELECT
-                password_hash
-             FROM local_users
-             WHERE
-                user_id = :user_id'
-        );
-
-        $stmt->bindValue(':user_id', $authUser, PDO::PARAM_STR);
-        $stmt->execute();
-        $resultColumn = $stmt->fetchColumn(0);
-
-        return \is_string($resultColumn) ? $resultColumn : null;
-    }
-
     public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, ?string $clientId): void
     {
         $stmt = $this->db->prepare(
@@ -194,38 +177,11 @@ class Storage implements StorageInterface
         return $wgPeers;
     }
 
-    public function addLocalUser(string $userId, string $userPass, DateTimeImmutable $createdAt): void
-    {
-        if ($this->userExists($userId)) {
-            $this->updatePassword($userId, $userPass);
-
-            return;
-        }
-
-        $stmt = $this->db->prepare(
-            'INSERT INTO
-                local_users (user_id, password_hash, created_at)
-            VALUES
-                (:user_id, :password_hash, :created_at)'
-        );
-
-        $passwordHash = password_hash($userPass, \PASSWORD_DEFAULT);
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
-        $stmt->bindValue(':created_at', $createdAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    /**
-     * @param string $authUser
-     *
-     * @return bool
-     */
-    public function userExists($authUser)
+    public function localUserExists(string $authUser): bool
     {
         $stmt = $this->db->prepare(
             'SELECT
-                COUNT(*)
+                COUNT(user_id)
              FROM local_users
              WHERE
                 user_id = :user_id'
@@ -237,13 +193,28 @@ class Storage implements StorageInterface
         return 1 === (int) $stmt->fetchColumn();
     }
 
-    /**
-     * @param string $userId
-     * @param string $newUserPass
-     *
-     * @return bool
-     */
-    public function updatePassword($userId, $newUserPass)
+    public function localUserAdd(string $userId, string $passwordHash, DateTimeImmutable $createdAt): void
+    {
+        if ($this->localUserExists($userId)) {
+            $this->localUserUpdatePassword($userId, $passwordHash);
+
+            return;
+        }
+
+        $stmt = $this->db->prepare(
+            'INSERT INTO
+                local_users (user_id, password_hash, created_at)
+            VALUES
+                (:user_id, :password_hash, :created_at)'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
+        $stmt->bindValue(':created_at', $createdAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    public function localUserUpdatePassword(string $userId, string $passwordHash): void
     {
         $stmt = $this->db->prepare(
             'UPDATE
@@ -254,12 +225,26 @@ class Storage implements StorageInterface
                 user_id = :user_id'
         );
 
-        $passwordHash = password_hash($newUserPass, \PASSWORD_DEFAULT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
         $stmt->execute();
+    }
 
-        return 1 === $stmt->rowCount();
+    public function localUserPasswordHash(string $authUser): ?string
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                password_hash
+             FROM local_users
+             WHERE
+                user_id = :user_id'
+        );
+
+        $stmt->bindValue(':user_id', $authUser, PDO::PARAM_STR);
+        $stmt->execute();
+        $resultColumn = $stmt->fetchColumn(0);
+
+        return \is_string($resultColumn) ? $resultColumn : null;
     }
 
     public function getAuthorization(string $authKey): ?Authorization
@@ -445,7 +430,6 @@ class Storage implements StorageInterface
 <<< 'SQL'
         SELECT
             user_id,
-            session_expires_at,
             permission_list,
             is_disabled
         FROM
@@ -458,9 +442,8 @@ class Storage implements StorageInterface
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $userList[] = [
                 'user_id' => $row['user_id'],
-                'is_disabled' => (bool) $row['is_disabled'],
-                'session_expires_at' => $row['session_expires_at'],
                 'permission_list' => Json::decode($row['permission_list']),
+                'is_disabled' => (bool) $row['is_disabled'],
             ];
         }
 
@@ -468,37 +451,10 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @param string $userId
-     *
-     * @return scalar|null
-     */
-    public function getSessionExpiresAt($userId)
-    {
-        $this->addUser($userId);
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            session_expires_at
-        FROM
-            users
-        WHERE
-            user_id = :user_id
-    SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return $stmt->fetchColumn();
-    }
-
-    /**
-     * @param string $userId
-     *
      * @return array<string>
      */
-    public function getPermissionList($userId)
+    public function getPermissionList(string $userId)
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
@@ -539,11 +495,11 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @param string $commonName
+     * XXX remove is_disabled from here? we have a separate call for that.
      *
      * @return false|array
      */
-    public function getUserCertificateInfo($commonName)
+    public function getUserCertificateInfo(string $commonName)
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -568,12 +524,8 @@ class Storage implements StorageInterface
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param string $userId
-     */
-    public function deleteUser($userId): void
+    public function userDelete(string $userId): void
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         DELETE FROM
@@ -587,39 +539,28 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @param string        $userId
      * @param array<string> $permissionList
      */
-    public function updateSessionInfo($userId, DateTimeImmutable $sessionExpiresAt, array $permissionList): void
+    public function userUpdate(string $userId, array $permissionList): void
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         UPDATE
             users
         SET
-            session_expires_at = :session_expires_at,
             permission_list = :permission_list
         WHERE
             user_id = :user_id
     SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':session_expires_at', $sessionExpiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':permission_list', Json::encode($permissionList), PDO::PARAM_STR);
 
         $stmt->execute();
     }
 
-    /**
-     * @param string      $userId
-     * @param string      $commonName
-     * @param string      $displayName
-     * @param string|null $clientId
-     */
-    public function addCertificate($userId, $commonName, $displayName, DateTimeImmutable $validFrom, DateTimeImmutable $validTo, $clientId): void
+    public function addCertificate(string $userId, string $commonName, string $displayName, DateTimeImmutable $validFrom, DateTimeImmutable $validTo, ?string $clientId): void
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         INSERT INTO certificates
@@ -637,14 +578,8 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return array
-     */
-    public function getCertificates($userId)
+    public function getCertificates(string $userId): array
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
@@ -667,10 +602,7 @@ class Storage implements StorageInterface
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param string $commonName
-     */
-    public function deleteCertificate($commonName): void
+    public function deleteCertificate(string $commonName): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -684,11 +616,7 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     * @param string $clientId
-     */
-    public function deleteCertificatesOfClientId($userId, $clientId): void
+    public function deleteCertificatesOfClientId(string $userId, string $clientId): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -705,12 +633,8 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     */
-    public function disableUser($userId): void
+    public function disableUser(string $userId): void
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         UPDATE
@@ -726,11 +650,10 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @param string $userId
+     * XXX merge with disableUser.
      */
-    public function enableUser($userId): void
+    public function userEnable(string $userId): void
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         UPDATE
@@ -745,14 +668,26 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return bool
-     */
-    public function isDisabledUser($userId)
+    public function userExists(string $userId): bool
     {
-        $this->addUser($userId);
+        $stmt = $this->db->prepare(
+<<< 'SQL'
+        SELECT
+            COUNT(user_id)
+        FROM
+            users
+        WHERE
+            user_id = :user_id
+    SQL
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return 1 === (int) $stmt->fetchColumn(0);
+    }
+
+    public function userIsDisabled(string $userId): bool
+    {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
@@ -769,16 +704,10 @@ class Storage implements StorageInterface
         // because the user always exists, this will always return something,
         // this is why we don't need to distinguish between a successful fetch
         // or not, a bit ugly!
-        return (bool) $stmt->fetchColumn();
+        return (bool) $stmt->fetchColumn(0);
     }
 
-    /**
-     * @param string $profileId
-     * @param string $commonName
-     * @param string $ipFour
-     * @param string $ipSix
-     */
-    public function clientConnect($profileId, $commonName, $ipFour, $ipSix, DateTimeImmutable $connectedAt): void
+    public function clientConnect(string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
     {
         // update "lost" client entries when a new client connects that gets
         // the IP address of an existing entry that was not "closed" yet. This
@@ -852,14 +781,7 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @param string $profileId
-     * @param string $commonName
-     * @param string $ipFour
-     * @param string $ipSix
-     * @param int    $bytesTransferred
-     */
-    public function clientDisconnect($profileId, $commonName, $ipFour, $ipSix, DateTimeImmutable $connectedAt, DateTimeImmutable $disconnectedAt, $bytesTransferred): void
+    public function clientDisconnect(string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt, DateTimeImmutable $disconnectedAt, int $bytesTransferred): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -891,12 +813,7 @@ class Storage implements StorageInterface
         $stmt->execute();
     }
 
-    /**
-     * @param string $userId
-     *
-     * @return array
-     */
-    public function getConnectionLogForUser($userId)
+    public function getConnectionLogForUser(string $userId): array
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -930,11 +847,9 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @param string $ipAddress
-     *
      * @return false|array
      */
-    public function getLogEntry(DateTimeImmutable $dateTime, $ipAddress)
+    public function getLogEntry(DateTimeImmutable $dateTime, string $ipAddress)
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -1008,7 +923,6 @@ class Storage implements StorageInterface
      */
     public function getUserLog(string $userId): array
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
@@ -1030,7 +944,6 @@ class Storage implements StorageInterface
 
     public function addUserLog(string $userId, int $logLevel, string $logMessage, DateTimeImmutable $dateTime): void
     {
-        $this->addUser($userId);
         $stmt = $this->db->prepare(
 <<< 'SQL'
         INSERT INTO user_log
@@ -1064,50 +977,28 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @param string $userId
+     * @param array<string> $permissionList
      */
-    private function addUser($userId): void
+    public function userAdd(string $userId, array $permissionList): void
     {
-        // XXX do something better with session_expires_at
-        // also rename it to something better!
-        $dateTime = new DateTimeImmutable();
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            COUNT(*)
-        FROM
-            users
-        WHERE user_id = :user_id
-    SQL
-        );
-
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        if (1 !== (int) $stmt->fetchColumn()) {
-            // user does not exist yet
-            $stmt = $this->db->prepare(
 <<< 'SQL'
         INSERT INTO
             users (
                 user_id,
-                session_expires_at,
                 permission_list,
                 is_disabled
             )
         VALUES (
             :user_id,
-            :session_expires_at,
             :permission_list,
             :is_disabled
         )
     SQL
-            );
-            $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-            $stmt->bindValue(':session_expires_at', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-            $stmt->bindValue(':permission_list', '[]', PDO::PARAM_STR);
-            $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
-            $stmt->execute();
-        }
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':permission_list', Json::encode($permissionList), PDO::PARAM_STR);
+        $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
+        $stmt->execute();
     }
 }

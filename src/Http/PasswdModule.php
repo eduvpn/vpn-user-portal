@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use LC\Portal\Http\Auth\DbCredentialValidator;
+use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 
@@ -77,17 +78,21 @@ class PasswdModule implements ServiceModuleInterface
                     );
                 }
 
-                if (!$this->storage->updatePassword($userInfo->getUserId(), $newUserPass)) {
-                    return new HtmlResponse(
-                        $this->tpl->render(
-                            'vpnPortalPasswd',
-                            [
-                                'userId' => $userInfo->getUserId(),
-                                'errorCode' => 'updateFailPassword',
-                            ]
-                        )
-                    );
+                $passwordHash = password_hash($newUserPass, \PASSWORD_DEFAULT);
+                if (!\is_string($passwordHash)) {
+                    throw new HttpException('unable to generate password hash', 500);
                 }
+                $this->storage->localUserUpdatePassword($userInfo->getUserId(), $passwordHash);
+
+                return new HtmlResponse(
+                    $this->tpl->render(
+                        'vpnPortalPasswd',
+                        [
+                            'userId' => $userInfo->getUserId(),
+                            'errorCode' => 'updateFailPassword',
+                        ]
+                    )
+                );
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }

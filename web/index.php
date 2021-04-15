@@ -42,7 +42,7 @@ use LC\Portal\Http\PasswdModule;
 use LC\Portal\Http\QrModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
-use LC\Portal\Http\UpdateSessionInfoHook;
+use LC\Portal\Http\UpdateUserInfoHook;
 use LC\Portal\Http\UserPassModule;
 use LC\Portal\Http\VpnPortalModule;
 use LC\Portal\LdapClient;
@@ -235,7 +235,7 @@ try {
     }
 
     $service->addBeforeHook(new DisabledUserHook($storage));
-    $service->addBeforeHook(new UpdateSessionInfoHook($seSession, $storage, $sessionExpiry));
+    $service->addBeforeHook(new UpdateUserInfoHook($seSession, $storage));
     $service->addModule(new QrModule());
 
     // isAdmin

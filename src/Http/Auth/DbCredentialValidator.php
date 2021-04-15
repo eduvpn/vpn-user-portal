@@ -28,7 +28,7 @@ class DbCredentialValidator implements CredentialValidatorInterface
      */
     public function isValid(string $authUser, string $authPass)
     {
-        if (null === $passwordHash = $this->storage->getPasswordHash($authUser)) {
+        if (null === $passwordHash = $this->storage->localUserPasswordHash($authUser)) {
             // no such user
             return false;
         }

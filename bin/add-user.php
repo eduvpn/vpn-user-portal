@@ -67,8 +67,13 @@ try {
     if (empty($userPass)) {
         throw new RuntimeException('Password cannot be empty');
     }
+
+    $passwordHash = password_hash($userPass, \PASSWORD_DEFAULT);
+    if (!is_string($passwordHash)) {
+        throw new RuntimeException('unable to calculate password hash');
+    }
     $storage = new Storage(new PDO($dbDsn), $schemaDir);
-    $storage->addLocalUser($userId, $userPass, new DateTimeImmutable());
+    $storage->localUserAdd($userId, $passwordHash, new DateTimeImmutable());
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);

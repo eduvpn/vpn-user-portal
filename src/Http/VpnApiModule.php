@@ -84,11 +84,11 @@ class VpnApiModule implements ServiceModuleInterface
         // DEPRECATED, this whole call is useless now!
         $service->get(
             '/user_info',
-            function (VpnAccessToken $accessToken, Request $request): Response {
+            function (VpnAccessToken $vpnAccessToken, Request $request): Response {
                 return new ApiResponse(
                     'user_info',
                     [
-                        'user_id' => $accessToken->getUserId(),
+                        'user_id' => $vpnAccessToken->getUserId(),
                         // as 2FA works through the portal now, lie here to the
                         // clients so they won't try to enroll the user
                         'two_factor_enrolled' => false,
@@ -225,25 +225,25 @@ class VpnApiModule implements ServiceModuleInterface
         return $response;
     }
 
-    private function getCertificate(VpnAccessToken $accessToken): array
+    private function getCertificate(VpnAccessToken $vpnAccessToken): array
     {
         // create a certificate
         // generate a random string as the certificate's CN
         $commonName = $this->random->get(16);
-        $certInfo = $this->ca->clientCert($commonName, $this->getExpiresAt($accessToken));
+        $certInfo = $this->ca->clientCert($commonName, $vpnAccessToken->accessToken()->authorizationExpiresAt());
         $this->storage->addCertificate(
-            $accessToken->getUserId(),
+            $vpnAccessToken->getUserId(),
             $commonName,
-            $accessToken->clientId(),
+            $vpnAccessToken->accessToken()->clientId(),
             new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
             new DateTimeImmutable(sprintf('@%d', $certInfo['valid_to'])),
-            $accessToken->clientId()
+            $vpnAccessToken->accessToken()->clientId()
         );
 
         $this->storage->addUserLog(
-            $accessToken->getUserId(),
+            $vpnAccessToken->getUserId(),
             LoggerInterface::NOTICE,
-            sprintf('new certificate generated for "%s"', $accessToken->clientId()),
+            sprintf('new certificate generated for "%s"', $vpnAccessToken->accessToken()->clientId()),
             $this->dateTime
         );
 
@@ -291,22 +291,13 @@ class VpnApiModule implements ServiceModuleInterface
     /**
      * @return array<string>
      */
-    private function getPermissionList(VpnAccessToken $accessToken): array
+    private function getPermissionList(VpnAccessToken $vpnAccessToken): array
     {
-        if (!$accessToken->isLocal()) {
+        if (!$vpnAccessToken->isLocal()) {
             return [];
         }
 
-        return $this->storage->getPermissionList($accessToken->getUserId());
-    }
-
-    private function getExpiresAt(VpnAccessToken $accessToken): DateTimeImmutable
-    {
-        if (!$accessToken->isLocal()) {
-            return $this->dateTime->add($this->sessionExpiry);
-        }
-
-        return new DateTimeImmutable($this->storage->getSessionExpiresAt($accessToken->getUserId()));
+        return $this->storage->getPermissionList($vpnAccessToken->getUserId());
     }
 
     /**

@@ -131,7 +131,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to download a configuration for this profile', 400);
                 }
 
-                $expiresAt = new DateTimeImmutable($this->storage->getSessionExpiresAt($userInfo->getUserId()));
+                $expiresAt = $this->dateTime->add($this->sessionExpiry);
 
                 return $this->getConfig($request->getServerName(), $profileId, $userInfo->getUserId(), $displayName, $expiresAt);
             }

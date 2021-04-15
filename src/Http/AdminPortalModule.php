@@ -150,7 +150,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'userId' => $userId,
                             'userMessages' => $userMessages,
                             'clientCertificateList' => $clientCertificateList,
-                            'isDisabled' => $this->storage->isDisabledUser($userId),
+                            'isDisabled' => $this->storage->userIsDisabled($userId),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
                             'userConnectionLogEntries' => $userConnectionLogEntries,
                             'idNameMapping' => $idNameMapping,
@@ -212,7 +212,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         break;
 
                     case 'enableUser':
-                        $this->storage->enableUser($userId);
+                        $this->storage->userEnable($userId);
                         $this->storage->addUserLog($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
 
                         break;

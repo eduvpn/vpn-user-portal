@@ -36,10 +36,10 @@ class BearerAuthModule extends AbstractAuthModule
         }
 
         try {
-            $accessToken = $this->bearerValidator->validate($authorizationHeader);
-            $accessToken->scope()->requireAll(['config']);
+            $vpnAccessToken = $this->bearerValidator->validate($authorizationHeader);
+            $vpnAccessToken->accessToken()->scope()->requireAll(['config']);
 
-            return $accessToken;
+            return $vpnAccessToken;
 
 //            return new UserInfo(
 //                // XXX extend this with other stuff, e.g. client_id, ...

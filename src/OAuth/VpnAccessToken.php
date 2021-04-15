@@ -12,9 +12,11 @@ declare(strict_types=1);
 namespace LC\Portal\OAuth;
 
 use fkooman\OAuth\Server\AccessToken;
-use fkooman\OAuth\Server\Scope;
 use LC\Portal\Http\UserInfoInterface;
 
+/**
+ * XXX can we somehow only use AccessToken? Do we need "isLocal" still?
+ */
 class VpnAccessToken implements UserInfoInterface
 {
     private AccessToken $accessToken;
@@ -26,19 +28,9 @@ class VpnAccessToken implements UserInfoInterface
         $this->isLocal = $isLocal;
     }
 
-    public function clientId(): string
+    public function accessToken(): AccessToken
     {
-        return $this->accessToken->clientId();
-    }
-
-    public function getUserId(): string
-    {
-        return $this->accessToken->userId();
-    }
-
-    public function scope(): Scope
-    {
-        return $this->accessToken->scope();
+        return $this->accessToken;
     }
 
     public function isLocal(): bool
@@ -46,6 +38,14 @@ class VpnAccessToken implements UserInfoInterface
         return $this->isLocal;
     }
 
+    public function getUserId(): string
+    {
+        return $this->accessToken()->userId();
+    }
+
+    /**
+     * XXX rename this one to permissionList().
+     */
     public function getPermissionList(): array
     {
         return [];
