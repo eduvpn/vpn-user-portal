@@ -27,12 +27,12 @@ class StaticPermissions
     /**
      * @return array<string>
      */
-    public function get(string $authUser): array
+    public function get(string $userId): array
     {
         $groupData = Json::decode(FileIO::readFile($this->permissionFile));
         $permissionList = [];
         foreach ($groupData as $permissionId => $memberList) {
-            if (!\in_array($authUser, $memberList, true)) {
+            if (!\in_array($userId, $memberList, true)) {
                 continue;
             }
             $permissionList[] = $permissionId;
