@@ -74,22 +74,6 @@ class UserPassModule implements ServiceModuleInterface
                 }
 
                 $permissionList = $userInfo->getPermissionList();
-                // XXX move this code elsewhere
-//                if (null !== $this->staticPermissions) {
-//                    // merge the StaticPermissions in the list obtained from the
-//                    // authentication backend (if any)
-//                    $permissionList = array_values(
-//                        array_unique(
-//                            array_merge(
-//                                $permissionList,
-//                                $this->staticPermissions->get(
-//                                    $userInfo->getUserId()
-//                                )
-//                            )
-//                        )
-//                    );
-//                }
-
                 $this->session->regenerate();
                 $this->session->set('_form_auth_user', $userInfo->getUserId());
                 // XXX use something better than serialize
@@ -99,12 +83,12 @@ class UserPassModule implements ServiceModuleInterface
             }
         );
 
-        $service->post(
+        $service->get(
             '/_form/auth/logout',
             function (UserInfo $userInfo, Request $request): Response {
                 $this->session->destroy();
 
-                return new RedirectResponse($request->requireHeader('HTTP_REFERER'));
+                return new RedirectResponse($request->requireQueryParameter('ReturnTo'));
             }
         );
     }

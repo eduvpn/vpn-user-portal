@@ -66,7 +66,9 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
 
     public function triggerLogout(Request $request): Response
     {
-        return new RedirectResponse($request->getScheme().'://'.$request->getAuthority().'/php-saml-sp/logout');
+        return new RedirectResponse(
+            $request->getScheme().'://'.$request->getAuthority().'/php-saml-sp/logout?'.http_build_query(['ReturnTo' => $request->requireHeader('HTTP_REFERER')])
+        );
     }
 
     public function supportsLogout(): bool

@@ -37,6 +37,7 @@ use LC\Portal\Http\DisabledUserHook;
 use LC\Portal\Http\HtmlResponse;
 use LC\Portal\Http\InputValidation;
 use LC\Portal\Http\LanguageSwitcherHook;
+use LC\Portal\Http\LogoutModule;
 use LC\Portal\Http\OAuthModule;
 use LC\Portal\Http\PasswdModule;
 use LC\Portal\Http\QrModule;
@@ -304,6 +305,8 @@ try {
         $oauthServer
     );
     $service->addModule($oauthModule);
+    $service->addModule(new LogoutModule($authModule, $seSession));
+
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());

@@ -13,17 +13,13 @@ namespace LC\Portal\Http;
 
 class LogoutModule implements ServiceModuleInterface
 {
+    private AuthModuleInterface $authModule;
     private SessionInterface $session;
 
-    private ?string $logoutUrl;
-
-    private string $returnParameter;
-
-    public function __construct(SessionInterface $session, ?string $logoutUrl, string $returnParameter)
+    public function __construct(AuthModuleInterface $authModule, SessionInterface $session)
     {
+        $this->authModule = $authModule;
         $this->session = $session;
-        $this->logoutUrl = $logoutUrl;
-        $this->returnParameter = $returnParameter;
     }
 
     public function init(Service $service): void
@@ -31,32 +27,9 @@ class LogoutModule implements ServiceModuleInterface
         $service->post(
             '/_logout',
             function (UserInfo $userInfo, Request $request): Response {
-                $this->session->destroy();
-
-                // figure out where to return after logout
-                $httpReferrer = $request->requireHeader('HTTP_REFERER');
-
-                if (null === $logoutUrl = $this->logoutUrl) {
-                    // no external authentication source we need to go to to
-                    // complete the logout
-                    return new RedirectResponse($httpReferrer);
-                }
-
-                // we have an external authentication module that wants to
-                // be triggered on logout before returning to the place we came
-                // from
-                return new RedirectResponse(
-                    sprintf(
-                        '%s%s%s',
-                        $logoutUrl,
-                        false === strpos($logoutUrl, '?') ? '?' : '&',
-                        http_build_query(
-                            [
-                                $this->returnParameter => $httpReferrer,
-                            ]
-                        )
-                    )
-                );
+                // XXX for authModules that do support logout, but do not clear the local session we need to do something...
+                // maybe we can set a special variable to destroys session on next request in UpdateUserInfoHook?
+                return $this->authModule->triggerLogout($request);
             }
         );
     }
