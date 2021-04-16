@@ -20,9 +20,9 @@ try {
     $request = new Request($_SERVER, $_GET, $_POST);
 
     if (false === $appRoot = getenv('VPN_APP_ROOT')) {
-        $appRootUri = sprintf('%s://%s', $request->getScheme(), $request->getAuthority());
+        $appRootUri = $request->getScheme().'://'.$request->getAuthority();
     } else {
-        $appRootUri = sprintf('%s://%s%s', $request->getScheme(), $request->getAuthority(), $appRoot);
+        $appRootUri = $request->getScheme().'://'.$request->getAuthority().$appRoot;
     }
 
     $jsonData = [
@@ -33,7 +33,7 @@ try {
                 'token_endpoint' => $appRootUri.'/oauth.php/token',
             ],
         ],
-        'v' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
+        'v' => trim(FileIO::readFile($baseDir.'/VERSION')),
     ];
 
     $response = new JsonResponse($jsonData, ['Cache-Control' => 'no-store']);

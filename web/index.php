@@ -64,24 +64,22 @@ $logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
-
-    $dataDir = sprintf('%s/data', $baseDir);
-    FileIO::createDir($dataDir, 0700);
+    FileIO::createDir($baseDir.'/data', 0700);
     $config = Config::fromFile($baseDir.'/config/config.php');
 
     $templateDirs = [
-        sprintf('%s/views', $baseDir),
-        sprintf('%s/config/views', $baseDir),
+        $baseDir.'/views',
+        $baseDir.'/config/views',
     ];
     $localeDirs = [
-        sprintf('%s/locale', $baseDir),
-        sprintf('%s/config/locale', $baseDir),
+        $baseDir.'/locale',
+        $baseDir.'/config/locale',
     ];
     if (null !== $styleName = $config->optionalString('styleName')) {
-        $templateDirs[] = sprintf('%s/views/%s', $baseDir, $styleName);
-        $templateDirs[] = sprintf('%s/config/views/%s', $baseDir, $styleName);
-        $localeDirs[] = sprintf('%s/locale/%s', $baseDir, $styleName);
-        $localeDirs[] = sprintf('%s/config/locale/%s', $baseDir, $styleName);
+        $templateDirs[] = $baseDir.'/views/'.$styleName;
+        $templateDirs[] = $baseDir.'/config/views/'.$styleName;
+        $localeDirs[] = $baseDir.'/locale/'.$styleName;
+        $localeDirs[] = $baseDir.'/config/locale/'.$styleName;
     }
 
     $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
@@ -119,7 +117,7 @@ try {
     // Authentication
     $authModuleCfg = $config->requireString('authModule', 'DbAuthModule');
 
-    $tpl = new Tpl($templateDirs, $localeDirs, sprintf('%s/web', $baseDir));
+    $tpl = new Tpl($templateDirs, $localeDirs, $baseDir.'/web');
     $tpl->setLanguage($uiLang);
     $templateDefaults = [
         'requestUri' => $request->getUri(),
@@ -127,14 +125,21 @@ try {
         'requestRootUri' => $request->getRootUri(),
         'supportedLanguages' => $supportedLanguages,
         'uiLang' => $uiLang,
-        'portalVersion' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
+        'portalVersion' => trim(FileIO::readFile($baseDir.'/VERSION')),
         'isAdmin' => false,
         'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
     ];
 
     $tpl->addDefault($templateDefaults);
 
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
+    $storage = new Storage(
+        new PDO(
+            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+            $config->s('Db')->optionalString('dbUser'),
+            $config->s('Db')->optionalString('dbPass')
+        ),
+        $baseDir.'/schema'
+    );
     $storage->update();
 
     $service = new Service();
@@ -248,14 +253,13 @@ try {
         )
     );
 
-    $vpnCaDir = sprintf('%s/ca', $dataDir);
     $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
-    $ca = new VpnCa($vpnCaDir, 'EdDSA', $vpnCaPath);
+    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $vpnCaPath);
 
     $daemonWrapper = new DaemonWrapper(
         $config,
         $storage,
-        new DaemonSocket(sprintf('%s/vpn-daemon', $baseDir.'/config'), $config->requireBool('vpnDaemonTls', true)),
+        new DaemonSocket($baseDir.'/config/vpn-daemon', $config->requireBool('vpnDaemonTls', true)),
         $logger
     );
 
@@ -268,7 +272,7 @@ try {
         $seSession,
         $daemonWrapper,
         $storage,
-        new TlsCrypt($dataDir),
+        new TlsCrypt($baseDir.'/data'),
         new Random(),
         $ca,
         $oauthClientDb,
@@ -277,7 +281,7 @@ try {
     $service->addModule($vpnPortalModule);
 
     $adminPortalModule = new AdminPortalModule(
-        $dataDir,
+        $baseDir.'/data',
         $config,
         $tpl,
         $ca,
@@ -287,11 +291,7 @@ try {
     $service->addModule($adminPortalModule);
 
     // OAuth module
-    $secretKey = SecretKey::fromEncodedString(
-        FileIO::readFile(
-            sprintf('%s/config/oauth.key', $baseDir)
-        )
-    );
+    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     $oauthServer = new VpnOAuthServer(
         $storage,
         $oauthClientDb,

@@ -10,19 +10,16 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
+$baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\Federation\ForeignKeyListFetcher;
 use LC\Portal\HttpClient\CurlHttpClient;
 
-$baseDir = dirname(__DIR__);
-$configFile = $baseDir.'/config/config.php';
-$dataDir = $baseDir.'/data';
-
 try {
-    $config = Config::fromFile($configFile);
+    $config = Config::fromFile($baseDir.'/config/config.php');
     if ($config->s('Api')->requireBool('remoteAccess', false)) {
-        $foreignKeyListFetcher = new ForeignKeyListFetcher($dataDir);
+        $foreignKeyListFetcher = new ForeignKeyListFetcher($baseDir.'/data');
         $foreignKeyListFetcher->update(
             new CurlHttpClient(),
             'https://disco.eduvpn.org/v2/server_list.json',

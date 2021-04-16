@@ -30,23 +30,23 @@ $logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
-
-    $dataDir = sprintf('%s/data', $baseDir);
-    FileIO::createDir($dataDir, 0700);
+    FileIO::createDir($baseDir.'/data', 0700);
 
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();
 
-    // OAuth tokens
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
+    $storage = new Storage(
+        new PDO(
+            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+            $config->s('Db')->optionalString('dbUser'),
+            $config->s('Db')->optionalString('dbPass')
+        ),
+        $baseDir.'/schema'
+    );
     $storage->update();
 
     // OAuth module
-    $secretKey = SecretKey::fromEncodedString(
-        FileIO::readFile(
-            sprintf('%s/config/oauth.key', $baseDir)
-        )
-    );
+    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     $oauthServer = new VpnOAuthServer(
         $storage,
         new ClientDb(),

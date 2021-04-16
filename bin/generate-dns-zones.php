@@ -10,13 +10,11 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
+$baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\IP;
 use LC\Portal\ProfileConfig;
-
-$baseDir = dirname(__DIR__);
-$configFile = $baseDir.'/config/config.php';
 
 /**
  * XXX duplicate.
@@ -51,7 +49,7 @@ try {
         $domainName = $systemHostName;
     }
 
-    $config = Config::fromFile($configFile);
+    $config = Config::fromFile($baseDir.'/config/config.php');
 
     $profileList = profileList($config);
     $forwardDns = [];

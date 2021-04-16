@@ -26,9 +26,7 @@ use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
 
 try {
-    $dataDir = sprintf('%s/data', $baseDir);
     $config = Config::fromFile($baseDir.'/config/config.php');
-
     $service = new Service();
     $service->setAuthModule(
         new NodeAuthModule(
@@ -37,17 +35,23 @@ try {
         )
     );
 
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
+    $storage = new Storage(
+        new PDO(
+            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+            $config->s('Db')->optionalString('dbUser'),
+            $config->s('Db')->optionalString('dbPass')
+        ),
+        $baseDir.'/schema'
+    );
     $storage->update();
-    $vpnCaDir = sprintf('%s/ca', $dataDir);
     $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
-    $ca = new VpnCa($vpnCaDir, 'EdDSA', $vpnCaPath);
+    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $vpnCaPath);
 
     $service->addModule(
         new NodeApiModule(
             $config,
             $storage,
-            new ServerConfig($config, $ca, new TlsCrypt($dataDir))
+            new ServerConfig($config, $ca, new TlsCrypt($baseDir.'/data'))
         )
     );
     $request = new Request($_SERVER, $_GET, $_POST);

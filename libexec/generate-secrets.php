@@ -10,22 +10,21 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
+$baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\FileIO;
 
-$baseDir = dirname(__DIR__);
-$apiKeyFile = $baseDir.'/config/oauth.key';
-$nodeKeyFile = $baseDir.'/config/node.key';
-
 try {
     // OAuth key
+    $apiKeyFile = $baseDir.'/config/oauth.key';
     if (!FileIO::exists($apiKeyFile)) {
         $secretKey = SecretKey::generate();
         FileIO::writeFile($apiKeyFile, $secretKey->encode(), 0644);
     }
 
     // Node Key
+    $nodeKeyFile = $baseDir.'/config/node.key';
     if (!FileIO::exists($nodeKeyFile)) {
         $secretKey = random_bytes(32);
         FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey), 0644);

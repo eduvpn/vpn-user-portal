@@ -10,6 +10,7 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
+$baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\HttpClient\CurlHttpClient;
@@ -17,14 +18,16 @@ use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\WgDaemon;
 
-$baseDir = dirname(__DIR__);
-$configFile = $baseDir.'/config/config.php';
-$dbDsn = 'sqlite://'.$baseDir.'/data/db.sqlite';
-$schemaDir = $baseDir.'/schema';
-
 try {
-    $config = Config::fromFile($configFile);
-    $storage = new Storage(new PDO($dbDsn), $schemaDir);
+    $config = Config::fromFile($baseDir.'/config/config.php');
+    $storage = new Storage(
+        new PDO(
+            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+            $config->s('Db')->optionalString('dbUser'),
+            $config->s('Db')->optionalString('dbPass')
+        ),
+        $baseDir.'/schema'
+    );
     $wgDaemon = new WgDaemon(new CurlHttpClient());
     foreach ($config->requireArray('vpnProfiles') as $profileId => $profileData) {
         $profileConfig = new ProfileConfig(new Config($profileData));

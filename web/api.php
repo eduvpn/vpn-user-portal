@@ -29,36 +29,32 @@ use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
 
-$logger = new SysLogger('vpn-user-api');
+$logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
-
-    $dataDir = sprintf('%s/data', $baseDir);
-    FileIO::createDir($dataDir, 0700);
-
+    FileIO::createDir($baseDir.'/data', 0700);
     $config = Config::fromFile($baseDir.'/config/config.php');
-
-    $storage = new Storage(new PDO('sqlite://'.$dataDir.'/db.sqlite'), $baseDir.'/schema');
+    $storage = new Storage(
+        new PDO(
+            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+            $config->s('Db')->optionalString('dbUser'),
+            $config->s('Db')->optionalString('dbPass')
+        ),
+        $baseDir.'/schema'
+    );
     $storage->update();
 
     $keyInstanceMapping = [];
     if ($config->s('Api')->requireBool('remoteAccess', false)) {
-        $keyInstanceMappingFile = sprintf('%s/key_instance_mapping.json', $dataDir);
+        $keyInstanceMappingFile = $baseDir.'/data/key_instance_mapping.json';
         if (FileIO::exists($keyInstanceMappingFile)) {
             $keyInstanceMapping = Json::decode(FileIO::readFile($keyInstanceMappingFile));
         }
     }
 
-    $secretKey = SecretKey::fromEncodedString(
-        FileIO::readFile(
-            sprintf('%s/config/oauth.key', $baseDir)
-        )
-    );
-
-    $vpnCaDir = sprintf('%s/ca', $dataDir);
-    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
-    $ca = new VpnCa($vpnCaDir, 'EdDSA', $vpnCaPath);
+    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
+    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->requireString('vpnCaPath', '/usr/bin/vpn-ca'));
 
     $bearerValidator = new BearerValidator(
         $storage,
@@ -73,7 +69,7 @@ try {
         $config,
         $storage,
         Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D'))),
-        new TlsCrypt($dataDir),
+        new TlsCrypt($baseDir.'/data'),
         new Random(),
         $ca
     );

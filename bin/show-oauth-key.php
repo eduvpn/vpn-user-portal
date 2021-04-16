@@ -10,19 +10,13 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
+$baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\FileIO;
 
-$baseDir = dirname(__DIR__);
-$apiKeyFile = $baseDir.'/config/oauth.key';
-
 try {
-    // generate OAuth key
-    if (!FileIO::exists($apiKeyFile)) {
-        throw new Exception('unable to find "'.$apiKeyFile.'"');
-    }
-    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($apiKeyFile));
+    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     echo 'Public Key: '.$secretKey->getPublicKey()->encode().\PHP_EOL;
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
