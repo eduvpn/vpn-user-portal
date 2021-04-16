@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS local_users (
 CREATE TABLE certificates(
   common_name VARCHAR(255) UNIQUE NOT NULL,
   display_name VARCHAR(255) NOT NULL,
-  valid_from DATETIME NOT NULL,
-  valid_to DATETIME NOT NULL,
+  valid_from VARCHAR(255) NOT NULL,
+  valid_to VARCHAR(255) NOT NULL,
   client_id VARCHAR(255) DEFAULT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
@@ -46,15 +46,15 @@ CREATE TABLE connection_log(
   profile_id VARCHAR(255) NOT NULL,
   ip_four VARCHAR(255) NOT NULL,
   ip_six VARCHAR(255) NOT NULL,
-  connected_at DATETIME NOT NULL,
-  disconnected_at DATETIME DEFAULT NULL,
+  connected_at VARCHAR(255) NOT NULL,
+  disconnected_at VARCHAR(255) DEFAULT NULL,
   bytes_transferred INTEGER DEFAULT NULL,
   client_lost BOOLEAN DEFAULT 0
 );
 CREATE TABLE user_log(
-  log_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  log_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
   log_level INTEGER NOT NULL,
-  log_message TINYTEXT NOT NULL,
-  date_time DATETIME NOT NULL,
+  log_message TEXT NOT NULL,
+  date_time VARCHAR(255) NOT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );

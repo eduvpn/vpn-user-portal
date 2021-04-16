@@ -26,6 +26,15 @@ return [
     //'sessionExpiry' => 'PT12H',   // 12 hours
     //'sessionExpiry' => 'P1D',     // 1 day
 
+
+    // Database
+//    'Db' => [
+//        'dbDsn' => 'mysql:host=localhost;port=3307;dbname=testdb',
+//        'dbUser' => 'user',
+//        'dbPass' => 'pass',
+//    ],
+    
+
 //    // LDAP
 //    'LdapAuthModule' => [
 //        // *** FreeIPA ***
@@ -156,8 +165,7 @@ return [
     //'adminPermissionList' => ['http://eduvpn.org/role/admin'],
 
     // list of userIds that have access to the admin
-    // XXX this should also not be enable by default?
-    'adminUserIdList' => ['admin'],
+//    'adminUserIdList' => ['admin'],
 
     // supported languages in the UI, the first one mentioned is the default
 //    'supportedLanguages' => [

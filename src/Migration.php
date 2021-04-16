@@ -28,9 +28,6 @@ class Migration
 
     public function __construct(PDO $dbh, string $schemaDir, string $schemaVersion)
     {
-        if ('sqlite' !== $dbh->getAttribute(PDO::ATTR_DRIVER_NAME)) {
-            throw new RuntimeException('driver "sqlite" expected');
-        }
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->dbh = $dbh;
         $this->schemaDir = $schemaDir;
@@ -43,8 +40,9 @@ class Migration
      */
     public function init(): void
     {
+        $driverName = $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
         $this->runQueries(
-            self::getQueriesFromFile(sprintf('%s/%s.schema', $this->schemaDir, $this->schemaVersion))
+            self::getQueriesFromFile(sprintf('%s/%s.schema.'.$driverName, $this->schemaDir, $this->schemaVersion))
         );
         $this->createVersionTable($this->schemaVersion);
     }
@@ -54,6 +52,7 @@ class Migration
      */
     public function run(): bool
     {
+        $driverName = $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
         $currentVersion = $this->getCurrentVersion();
         if ($currentVersion === $this->schemaVersion) {
             // database schema is up to date, no update required
@@ -61,7 +60,7 @@ class Migration
         }
 
         /** @var array<string>|false $migrationList */
-        $migrationList = glob(sprintf('%s/*_*.migration', $this->schemaDir));
+        $migrationList = glob(sprintf('%s/*_*.migration.'.$driverName, $this->schemaDir));
         if (false === $migrationList) {
             throw new RuntimeException(sprintf('unable to read schema directory "%s"', $this->schemaDir));
         }
@@ -70,13 +69,13 @@ class Migration
 
         try {
             foreach ($migrationList as $migrationFile) {
-                $migrationVersion = basename($migrationFile, '.migration');
+                $migrationVersion = basename($migrationFile, '.migration.'.$driverName);
                 [$fromVersion, $toVersion] = self::validateMigrationVersion($migrationVersion);
                 if ($fromVersion === $currentVersion && $fromVersion !== $this->schemaVersion) {
                     // get the queries before we start the transaction as we
                     // ONLY want to deal with "PDOExceptions" once the
                     // transacation started...
-                    $queryList = self::getQueriesFromFile(sprintf('%s/%s.migration', $this->schemaDir, $migrationVersion));
+                    $queryList = self::getQueriesFromFile(sprintf('%s/%s.migration.'.$driverName, $this->schemaDir, $migrationVersion));
 
                     try {
                         $this->dbh->beginTransaction();
