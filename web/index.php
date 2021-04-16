@@ -126,7 +126,6 @@ try {
         'requestRoot' => $request->getRoot(),
         'requestRootUri' => $request->getRootUri(),
         'supportedLanguages' => $supportedLanguages,
-        '_show_logout_button' => true,
         'uiLang' => $uiLang,
         'portalVersion' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
         'isAdmin' => false,
@@ -229,6 +228,7 @@ try {
 
     $service->setAuthModule($authModule);
     $tpl->addDefault(['authModule' => $authModuleCfg]);
+    $tpl->addDefault(['_show_logout_button' => $authModule->supportsLogout()]);
 
     if (null !== $accessPermissionList = $config->optionalArray('accessPermissionList')) {
         // hasAccess
