@@ -40,10 +40,7 @@ class Migration
      */
     public function init(): void
     {
-        $driverName = $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
-        $this->runQueries(
-            self::getQueriesFromFile(sprintf('%s/%s.schema.'.$driverName, $this->schemaDir, $this->schemaVersion))
-        );
+        $this->runQueries(self::getQueriesFromFile($this->getNameForDriver(sprintf('%s/%s.schema', $this->schemaDir, $this->schemaVersion))));
         $this->createVersionTable($this->schemaVersion);
     }
 
@@ -60,7 +57,7 @@ class Migration
         }
 
         /** @var array<string>|false $migrationList */
-        $migrationList = glob(sprintf('%s/*_*.migration.'.$driverName, $this->schemaDir));
+        $migrationList = glob($this->getNameForDriver(sprintf('%s/*_*.migration', $this->schemaDir)));
         if (false === $migrationList) {
             throw new RuntimeException(sprintf('unable to read schema directory "%s"', $this->schemaDir));
         }
@@ -69,13 +66,13 @@ class Migration
 
         try {
             foreach ($migrationList as $migrationFile) {
-                $migrationVersion = basename($migrationFile, '.migration.'.$driverName);
+                $migrationVersion = $this->getNameForDriver(basename($migrationFile, '.migration'));
                 [$fromVersion, $toVersion] = self::validateMigrationVersion($migrationVersion);
                 if ($fromVersion === $currentVersion && $fromVersion !== $this->schemaVersion) {
                     // get the queries before we start the transaction as we
                     // ONLY want to deal with "PDOExceptions" once the
                     // transacation started...
-                    $queryList = self::getQueriesFromFile(sprintf('%s/%s.migration.'.$driverName, $this->schemaDir, $migrationVersion));
+                    $queryList = self::getQueriesFromFile($this->getNameForDriver(sprintf('%s/%s.migration', $this->schemaDir, $migrationVersion)));
 
                     try {
                         $this->dbh->beginTransaction();
@@ -128,6 +125,20 @@ class Migration
 
             return self::NO_VERSION;
         }
+    }
+
+    /**
+     * See if there is a file available specifically for this DB driver. If
+     * so, use it, if not fallback to the "default".
+     */
+    private function getNameForDriver(string $fileName): string
+    {
+        $driverName = $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if (file_exists($fileName.'.'.$driverName)) {
+            return $fileName.'.'.$driverName;
+        }
+
+        return $fileName;
     }
 
     private function disableForeignKeys(): void
