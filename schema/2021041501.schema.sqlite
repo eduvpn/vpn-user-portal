@@ -52,9 +52,8 @@ CREATE TABLE connection_log(
   client_lost BOOLEAN DEFAULT 0
 );
 CREATE TABLE user_log(
-  log_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  date_time VARCHAR(255) NOT NULL,
   log_level INTEGER NOT NULL,
   log_message TEXT NOT NULL,
-  date_time VARCHAR(255) NOT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
