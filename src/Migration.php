@@ -153,6 +153,14 @@ class Migration
 
     private function hasForeignKeys(): bool
     {
+        // XXX refactor code and at the very least rename it as MySQL et al do
+        // have foreign keys and can't simply be disabled as far as I know...
+        // they will have *different* migration files as they support proper
+        // ALTER TABLE stuff...
+        if ('sqlite' !== $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            return false;
+        }
+
         $sth = $this->dbh->query('PRAGMA foreign_keys');
         $hasForeignKeys = '1' === $sth->fetchColumn(0);
         $sth->closeCursor();
