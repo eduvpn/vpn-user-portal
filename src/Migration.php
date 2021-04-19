@@ -100,7 +100,7 @@ class Migration
 
         $currentVersion = $this->getCurrentVersion();
         if ($currentVersion !== $this->schemaVersion) {
-            throw new MigrationException(sprintf('unable to upgrade to "%s", not all required migrations are available', $this->schemaVersion));
+            throw new MigrationException(sprintf('unable to migrate to database schema version "%s", not all required migrations are available', $this->schemaVersion));
         }
 
         return true;
