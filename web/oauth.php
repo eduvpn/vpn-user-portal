@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
+use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
 use LC\Portal\FileIO;
@@ -53,8 +54,16 @@ try {
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );
 
+    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
+    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $vpnCaPath);
+
     $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
-    $oauthServer->setRefreshTokenExpiry(Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D'))));
+    $oauthServer->setRefreshTokenExpiry(
+        Expiry::calculate(
+            new DateInterval($config->requireString('sessionExpiry', 'P90D')),
+            $ca->caExpiresAt()
+        )
+    );
 
     $oauthModule = new OAuthTokenModule(
         $oauthServer

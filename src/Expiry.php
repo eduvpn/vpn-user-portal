@@ -22,8 +22,10 @@ class Expiry
      * The goal is to expire "sessions" at 04:00 in the current timezone, iff
      * the expiry is set 1 week or longer. The current timezone is considered
      * as per date.timezone PHP ini value.
+     *
+     * The expiry is always bound by the time the CA expires.
      */
-    public static function calculate(DateInterval $sessionExpiry, ?DateTimeImmutable $dateTime = null): DateInterval
+    public static function calculate(DateInterval $sessionExpiry, DateTimeImmutable $caExpiresAt, ?DateTimeImmutable $dateTime = null): DateInterval
     {
         if (null === $dateTime) {
             $dateTime = new DateTimeImmutable();
@@ -33,6 +35,11 @@ class Expiry
 
         // if we expire less than 7 days from now, keep as is
         if ($expiresAt < $dateTime->add(new DateInterval('P7D'))) {
+            // but upperbound is still CA expiry
+            if ($expiresAt > $caExpiresAt) {
+                return $dateTime->diff($caExpiresAt);
+            }
+
             return $sessionExpiry;
         }
 
@@ -43,6 +50,11 @@ class Expiry
         // and 04:00, subtract a day
         if ($nightExpiresAt > $expiresAt) {
             return $dateTime->diff($nightExpiresAt->modify('yesterday 04:00'));
+        }
+
+        // CA expiry is upper bound in all cases
+        if ($nightExpiresAt > $caExpiresAt) {
+            $nightExpiresAt = $caExpiresAt;
         }
 
         return $dateTime->diff($nightExpiresAt);

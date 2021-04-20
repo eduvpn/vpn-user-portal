@@ -82,7 +82,13 @@ try {
         $localeDirs[] = $baseDir.'/config/locale/'.$styleName;
     }
 
-    $sessionExpiry = Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D')));
+    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
+    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $vpnCaPath);
+
+    $sessionExpiry = Expiry::calculate(
+        new DateInterval($config->requireString('sessionExpiry', 'P90D')),
+        $ca->caExpiresAt()
+    );
 
     $dateTime = new DateTimeImmutable();
     if ($dateTime->add(new DateInterval('PT30M')) >= $dateTime->add($sessionExpiry)) {
@@ -252,9 +258,6 @@ try {
             $tpl
         )
     );
-
-    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
-    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $vpnCaPath);
 
     $daemonWrapper = new DaemonWrapper(
         $config,
