@@ -15,7 +15,6 @@ $baseDir = dirname(__DIR__);
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
-use LC\Portal\Expiry;
 use LC\Portal\FileIO;
 use LC\Portal\Http\ApiService;
 use LC\Portal\Http\JsonResponse;
@@ -68,7 +67,6 @@ try {
     $vpnApiModule = new VpnApiModule(
         $config,
         $storage,
-        Expiry::calculate(new DateInterval($config->requireString('sessionExpiry', 'P90D'))),
         new TlsCrypt($baseDir.'/data'),
         new Random(),
         $ca

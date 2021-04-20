@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-use DateInterval;
 use DateTimeImmutable;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
@@ -28,17 +27,15 @@ class VpnApiModule implements ApiServiceModuleInterface
 {
     private Config $config;
     private Storage $storage;
-    private DateInterval $sessionExpiry;
     private TlsCrypt $tlsCrypt;
     private RandomInterface $random;
     private CaInterface $ca;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, Storage $storage, DateInterval $sessionExpiry, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca)
+    public function __construct(Config $config, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca)
     {
         $this->config = $config;
         $this->storage = $storage;
-        $this->sessionExpiry = $sessionExpiry;
         $this->tlsCrypt = $tlsCrypt;
         $this->random = $random;
         $this->ca = $ca;
