@@ -38,26 +38,29 @@ class AdminHook extends AbstractHook implements BeforeHookInterface
         $this->tpl = $tpl;
     }
 
-    public function afterAuth(UserInfo $userInfo, Request $request): ?Response
+    public function isAdmin(UserInfo $userInfo): bool
     {
-        // is the userId listed in the adminUserIdList?
         if (\in_array($userInfo->getUserId(), $this->adminUserIdList, true)) {
-            $this->tpl->addDefault(['isAdmin' => true]);
-
-            return null;
+            return true;
         }
 
-        // is any of the user's permissions listed in adminPermissionList?
         $userPermissionList = $userInfo->getPermissionList();
         foreach ($userPermissionList as $userPermission) {
             if (\in_array($userPermission, $this->adminPermissionList, true)) {
-                $this->tpl->addDefault(['isAdmin' => true]);
-
-                return null;
+                return true;
             }
         }
 
-        $this->tpl->addDefault(['isAdmin' => false]);
+        return false;
+    }
+
+    public function afterAuth(UserInfo $userInfo, Request $request): ?Response
+    {
+        $this->tpl->addDefault(
+            [
+                'isAdmin' => $this->isAdmin($userInfo),
+            ]
+        );
 
         return null;
     }

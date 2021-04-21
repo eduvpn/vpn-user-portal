@@ -251,13 +251,13 @@ try {
     $service->addModule(new QrModule());
 
     // isAdmin
-    $service->addBeforeHook(
-        new AdminHook(
-            $config->requireArray('adminPermissionList', []),
-            $config->requireArray('adminUserIdList', []),
-            $tpl
-        )
+    $adminHook = new AdminHook(
+        $config->requireArray('adminPermissionList', []),
+        $config->requireArray('adminUserIdList', []),
+        $tpl
     );
+
+    $service->addBeforeHook($adminHook);
 
     $daemonWrapper = new DaemonWrapper(
         $config,
@@ -289,7 +289,8 @@ try {
         $tpl,
         $ca,
         $daemonWrapper,
-        $storage
+        $storage,
+        $adminHook
     );
     $service->addModule($adminPortalModule);
 

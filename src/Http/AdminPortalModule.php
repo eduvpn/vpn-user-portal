@@ -34,9 +34,10 @@ class AdminPortalModule implements ServiceModuleInterface
     private CaInterface $ca;
     private DaemonWrapper $daemonWrapper;
     private Storage $storage;
+    private AdminHook $adminHook;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage)
+    public function __construct(string $dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage, AdminHook $adminHook)
     {
         $this->dataDir = $dataDir;
         $this->config = $config;
@@ -44,6 +45,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->ca = $ca;
         $this->daemonWrapper = $daemonWrapper;
         $this->storage = $storage;
+        $this->adminHook = $adminHook;
         $this->dateTime = new DateTimeImmutable();
     }
 
@@ -52,7 +54,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/connections',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX fix this AuthUtils::requireAdmin($hookData);
+                $this->requireAdmin($userInfo);
 
                 // get the fancy profile name
                 $profileList = $this->profileList();
@@ -79,7 +81,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/info',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX fix this AuthUtils::requireAdmin($hookData);
+                $this->requireAdmin($userInfo);
 
                 $profileList = $this->profileList();
 
@@ -110,7 +112,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/users',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX fix this AuthUtils::requireAdmin($hookData);
+                $this->requireAdmin($userInfo);
 
                 $userList = $this->storage->getUsers();
 
@@ -128,7 +130,8 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/user',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX fix this AuthUtils::requireAdmin($hookData);
+                $this->requireAdmin($userInfo);
+
                 $adminUserId = $userInfo->getUserId();
                 $userId = $request->requireQueryParameter('user_id');
                 InputValidation::userId($userId);
@@ -163,7 +166,8 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/user',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX fix this AuthUtils::requireAdmin($hookData);
+                $this->requireAdmin($userInfo);
+
                 $adminUserId = $userInfo->getUserId();
                 $userId = $request->requirePostParameter('user_id');
                 InputValidation::userId($userId);
@@ -237,7 +241,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/log',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX fix this AuthUtils::requireAdmin($hookData);
+                $this->requireAdmin($userInfo);
 
                 $now = new DateTimeImmutable();
 
@@ -257,7 +261,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->get(
             '/stats',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX fix this AuthUtils::requireAdmin($hookData);
+                $this->requireAdmin($userInfo);
 
                 $profileList = $this->profileList();
                 $appUsage = self::getAppUsage($this->storage->getAppUsage());
@@ -281,7 +285,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $service->post(
             '/log',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX fix this AuthUtils::requireAdmin($hookData);
+                $this->requireAdmin($userInfo);
 
                 $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
                 $dateTimeLocalStr = $dateTime->format('Y-m-d H:i:s');
@@ -311,6 +315,13 @@ class AdminPortalModule implements ServiceModuleInterface
                 );
             }
         );
+    }
+
+    private function requireAdmin(UserInfo $userInfo): void
+    {
+        if (!$this->adminHook->isAdmin($userInfo)) {
+            throw new HttpException('user is not an administrator', 403);
+        }
     }
 
     private function getStatsData(): array
