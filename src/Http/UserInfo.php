@@ -27,12 +27,17 @@ class UserInfo
         $this->permissionList = $permissionList;
     }
 
+    /**
+     * XXX rename to userId().
+     */
     public function getUserId(): string
     {
         return $this->userId;
     }
 
     /**
+     * XXX rename to permissionList().
+     *
      * @return array<string>
      */
     public function getPermissionList(): array

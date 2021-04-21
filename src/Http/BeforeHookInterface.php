@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
+/** XXX rename to HookInterface? */
 interface BeforeHookInterface
 {
     public function beforeAuth(Request $request): ?Response;
