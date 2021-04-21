@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\CA;
 
+use DateInterval;
 use DateTimeImmutable;
 use LC\Portal\CA\Exception\CaException;
 use LC\Portal\FileIO;
@@ -18,6 +19,7 @@ use RuntimeException;
 
 class VpnCa implements CaInterface
 {
+    protected DateTimeImmutable $dateTime;
     private string $caDir;
     private string $caKeyType;
     private string $vpnCaPath;
@@ -27,6 +29,7 @@ class VpnCa implements CaInterface
         $this->caDir = $caDir;
         $this->caKeyType = $caKeyType;
         $this->vpnCaPath = $vpnCaPath;
+        $this->dateTime = new DateTimeImmutable();
         $this->init();
     }
 
@@ -108,7 +111,12 @@ class VpnCa implements CaInterface
         }
 
         // intitialize new CA
-        $this->execVpnCa('-init-ca -name "VPN CA"');
+        $this->execVpnCa(
+            sprintf(
+                '-init-ca -not-after %s -name "VPN CA"',
+                $this->dateTime->add(new DateInterval('P10Y'))->format(DateTimeImmutable::ATOM)
+            )
+        );
     }
 
     /**
