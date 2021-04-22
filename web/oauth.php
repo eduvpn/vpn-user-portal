@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
+use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
@@ -36,20 +37,18 @@ try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();
 
-    $storage = new Storage(
-        new PDO(
-            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
-            $config->s('Db')->optionalString('dbUser'),
-            $config->s('Db')->optionalString('dbPass')
-        ),
-        $baseDir.'/schema'
+    $db = new PDO(
+        $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+        $config->s('Db')->optionalString('dbUser'),
+        $config->s('Db')->optionalString('dbPass')
     );
+    $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
     // OAuth module
     $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     $oauthServer = new VpnOAuthServer(
-        $storage,
+        new OAuthStorage($db),
         new ClientDb(),
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );

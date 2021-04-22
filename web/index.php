@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
+use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\CookieOptions;
 use fkooman\SeCookie\Session;
@@ -138,14 +139,13 @@ try {
 
     $tpl->addDefault($templateDefaults);
 
-    $storage = new Storage(
-        new PDO(
-            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
-            $config->s('Db')->optionalString('dbUser'),
-            $config->s('Db')->optionalString('dbPass')
-        ),
-        $baseDir.'/schema'
+    $db = new PDO(
+        $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+        $config->s('Db')->optionalString('dbUser'),
+        $config->s('Db')->optionalString('dbPass')
     );
+
+    $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
     $service = new Service();
@@ -267,6 +267,7 @@ try {
     );
 
     $oauthClientDb = new ClientDb();
+    $oauthStorage = new OAuthStorage($db);
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
@@ -275,6 +276,7 @@ try {
         $seSession,
         $daemonWrapper,
         $storage,
+        $oauthStorage,
         new TlsCrypt($baseDir.'/data'),
         new Random(),
         $ca,
@@ -290,6 +292,7 @@ try {
         $ca,
         $daemonWrapper,
         $storage,
+        $oauthStorage,
         $adminHook
     );
     $service->addModule($adminPortalModule);
@@ -297,7 +300,7 @@ try {
     // OAuth module
     $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     $oauthServer = new VpnOAuthServer(
-        $storage,
+        $oauthStorage,
         $oauthClientDb,
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );

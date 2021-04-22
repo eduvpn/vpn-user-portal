@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\ClientDbInterface;
+use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
 use LC\Portal\Config;
@@ -33,6 +34,7 @@ class VpnPortalModule implements ServiceModuleInterface
     private SessionInterface $session;
     private DaemonWrapper $daemonWrapper;
     private Storage $storage;
+    private OAuthStorage $oauthStorage;
     private TlsCrypt $tlsCrypt;
     private RandomInterface $random;
     private CaInterface $ca;
@@ -40,12 +42,13 @@ class VpnPortalModule implements ServiceModuleInterface
     private DateInterval $sessionExpiry;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
+    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
         $this->session = $session;
         $this->storage = $storage;
+        $this->oauthStorage = $oauthStorage;
         $this->daemonWrapper = $daemonWrapper;
         $this->tlsCrypt = $tlsCrypt;
         $this->random = $random;
@@ -164,7 +167,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/account',
             function (UserInfo $userInfo, Request $request): Response {
                 $userPermissions = $userInfo->getPermissionList();
-                $authorizationList = $this->storage->getAuthorizations($userInfo->getUserId());
+                $authorizationList = $this->oauthStorage->getAuthorizations($userInfo->getUserId());
                 $authorizedClientInfoList = [];
                 foreach ($authorizationList as $authorization) {
                     if (null !== $clientInfo = $this->clientDb->get($authorization->clientId())) {
@@ -210,13 +213,13 @@ class VpnPortalModule implements ServiceModuleInterface
                 $clientId = InputValidation::clientId($request->requirePostParameter('client_id'));
 
                 // verify whether the user_id owns the specified auth_key
-                $authorizations = $this->storage->getAuthorizations($userInfo->getUserId());
+                $authorizations = $this->oauthStorage->getAuthorizations($userInfo->getUserId());
 
                 $authKeyFound = false;
                 foreach ($authorizations as $authorization) {
                     if ($authorization->authKey() === $authKey && $authorization->clientId() === $clientId) {
                         $authKeyFound = true;
-                        $this->storage->deleteAuthorization($authKey);
+                        $this->oauthStorage->deleteAuthorization($authKey);
                     }
                 }
 

@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
+use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
@@ -34,15 +35,16 @@ try {
     $request = new Request($_SERVER, $_GET, $_POST);
     FileIO::createDir($baseDir.'/data', 0700);
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $storage = new Storage(
-        new PDO(
-            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
-            $config->s('Db')->optionalString('dbUser'),
-            $config->s('Db')->optionalString('dbPass')
-        ),
-        $baseDir.'/schema'
+    $db = new PDO(
+        $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+        $config->s('Db')->optionalString('dbUser'),
+        $config->s('Db')->optionalString('dbPass')
     );
+
+    $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
+
+    $oauthStorage = new OAuthStorage($db);
 
     $keyInstanceMapping = [];
     if ($config->s('Api')->requireBool('remoteAccess', false)) {
@@ -56,7 +58,7 @@ try {
     $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->requireString('vpnCaPath', '/usr/bin/vpn-ca'));
 
     $bearerValidator = new BearerValidator(
-        $storage,
+        $oauthStorage,
         new ClientDb(),
         $secretKey->getPublicKey(),
         $keyInstanceMapping

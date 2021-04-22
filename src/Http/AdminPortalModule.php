@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
+use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
@@ -34,10 +35,11 @@ class AdminPortalModule implements ServiceModuleInterface
     private CaInterface $ca;
     private DaemonWrapper $daemonWrapper;
     private Storage $storage;
+    private OAuthStorage $oauthStorage;
     private AdminHook $adminHook;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage, AdminHook $adminHook)
+    public function __construct(string $dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook)
     {
         $this->dataDir = $dataDir;
         $this->config = $config;
@@ -45,6 +47,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->ca = $ca;
         $this->daemonWrapper = $daemonWrapper;
         $this->storage = $storage;
+        $this->oauthStorage = $oauthStorage;
         $this->adminHook = $adminHook;
         $this->dateTime = new DateTimeImmutable();
     }
@@ -194,9 +197,9 @@ class AdminPortalModule implements ServiceModuleInterface
 
                         // * revoke all OAuth clients of this user
                         // * delete all client certificates associated with the OAuth clients of this user
-                        $clientAuthorizations = $this->storage->getAuthorizations($userId);
+                        $clientAuthorizations = $this->oauthStorage->getAuthorizations($userId);
                         foreach ($clientAuthorizations as $clientAuthorization) {
-                            $this->storage->deleteAuthorization($clientAuthorization->authKey());
+                            $this->oauthStorage->deleteAuthorization($clientAuthorization->authKey());
                             $this->storage->addUserLog(
                                 $userId,
                                 LoggerInterface::NOTICE,
