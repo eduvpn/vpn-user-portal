@@ -53,6 +53,7 @@ use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
+use LC\Portal\PhpSession;
 use LC\Portal\Random;
 use LC\Portal\SeCookie;
 use LC\Portal\SeSession;
@@ -101,18 +102,37 @@ try {
     $seCookie = new SeCookie(
         new Cookie(
             $cookieOptions
-                ->withSameSiteLax()
+                ->withSameSiteStrict()
                 ->withMaxAge(60 * 60 * 24 * 90)  // 90 days
         )
     );
-    $seSession = new SeSession(
-        new Session(
-            SessionOptions::init(),
-            $cookieOptions
-                ->withPath($request->getRoot())
-                ->withSameSiteLax()
-        )
+
+    $db = new PDO(
+        $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
+        $config->s('Db')->optionalString('dbUser'),
+        $config->s('Db')->optionalString('dbPass')
     );
+    $storage = new Storage($db, $baseDir.'/schema');
+    $storage->update();
+
+    // XXX we really do NOT want to support multiple session types...
+    switch ($config->requireString('sessionStorage', 'php-secookie:file')) {
+        case 'php-secookie:file':
+            $session = new SeSession(
+                new Session(
+                    SessionOptions::init(),
+                    $cookieOptions
+                        ->withPath($request->getRoot())
+                        ->withSameSiteStrict()
+                )
+            );
+            break;
+        case 'php':
+            $session = new PhpSession($secureCookie);
+            break;
+        default:
+            throw new RuntimeException('unsupported "sessionStorage"');
+    }
 
     $supportedLanguages = $config->requireArray('supportedLanguages', ['en_US' => 'English']);
     // the first listed language is the default language
@@ -164,11 +184,11 @@ try {
             $authModule = new PhpSamlSpAuthModule($config->s('PhpSamlSpAuthModule'));
             break;
         case 'DbAuthModule':
-            $authModule = new UserPassAuthModule($seSession, $tpl);
+            $authModule = new UserPassAuthModule($session, $tpl);
             $service->addModule(
                 new UserPassModule(
                     new DbCredentialValidator($storage),
-                    $seSession,
+                    $session,
                     $tpl
                 )
             );
@@ -195,7 +215,7 @@ try {
             $authModule = new ClientCertAuthModule();
             break;
         case 'RadiusAuthModule':
-            $authModule = new UserPassAuthModule($seSession, $tpl);
+            $authModule = new UserPassAuthModule($session, $tpl);
             $service->addModule(
                 new UserPassModule(
                     new RadiusCredentialValidator(
@@ -204,7 +224,7 @@ try {
                         $config->optionalString('addRealm'),
                         $config->optionalString('nasIdentifier')
                     ),
-                    $seSession,
+                    $session,
                     $tpl
                 )
             );
@@ -213,7 +233,7 @@ try {
             $ldapClient = new LdapClient(
                 $config->s('LdapAuthModule')->requireString('ldapUri')
             );
-            $authModule = new UserPassAuthModule($seSession, $tpl);
+            $authModule = new UserPassAuthModule($session, $tpl);
             $service->addModule(
                 new UserPassModule(
                     new LdapCredentialValidator(
@@ -228,7 +248,7 @@ try {
                         $config->s('LdapAuthModule')->optionalString('searchBindDn'),
                         $config->s('LdapAuthModule')->optionalString('searchBindPass')
                     ),
-                    $seSession,
+                    $session,
                     $tpl
                 )
             );
@@ -247,7 +267,7 @@ try {
     }
 
     $service->addBeforeHook(new DisabledUserHook($storage));
-    $service->addBeforeHook(new UpdateUserInfoHook($seSession, $storage));
+    $service->addBeforeHook(new UpdateUserInfoHook($session, $storage));
     $service->addModule(new QrModule());
 
     // isAdmin
@@ -273,7 +293,7 @@ try {
     $vpnPortalModule = new VpnPortalModule(
         $config,
         $tpl,
-        $seSession,
+        $session,
         $daemonWrapper,
         $storage,
         $oauthStorage,
@@ -312,7 +332,7 @@ try {
         $oauthServer
     );
     $service->addModule($oauthModule);
-    $service->addModule(new LogoutModule($authModule, $seSession));
+    $service->addModule(new LogoutModule($authModule, $session));
 
     $service->run($request)->send();
 } catch (Exception $e) {

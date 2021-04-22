@@ -26,6 +26,15 @@ return [
     //'sessionExpiry' => 'PT12H',   // 12 hours
     //'sessionExpiry' => 'P1D',     // 1 day
 
+    // where to store session data
+    // DEFAULT: php-secookie:file
+    // Filesystem (php-secookie)
+    //'sessionStorage' => 'php-secookie:file',
+    // native PHP
+    //'sessionStorage' => 'php',
+    // MySQL (php-secookie)
+    // NOT YET IMPLEMENTED
+    //'sessionStorage' => 'php-secookie:mysql',
 
     // Database
 //    'Db' => [
