@@ -16,12 +16,13 @@ use RuntimeException;
 
 class PhpSession implements SessionInterface
 {
-    public function __construct(bool $secureCookie)
+    public function __construct(bool $secureCookie, string $cookiePath)
     {
         $sessionOptions = [
             'cookie_samesite' => 'Strict',
             'cookie_secure' => $secureCookie,
             'cookie_httponly' => true,
+            'cookie_path' => $cookiePath,
         ];
 
         if (false === session_start($sessionOptions)) {

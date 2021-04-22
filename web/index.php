@@ -128,7 +128,7 @@ try {
             );
             break;
         case 'php':
-            $session = new PhpSession($secureCookie);
+            $session = new PhpSession($secureCookie, $request->getRoot());
             break;
         default:
             throw new RuntimeException('unsupported "sessionStorage"');
