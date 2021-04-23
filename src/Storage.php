@@ -16,7 +16,7 @@ use PDO;
 
 class Storage
 {
-    const CURRENT_SCHEMA_VERSION = '2021041501';
+    const CURRENT_SCHEMA_VERSION = '2021042301';
 
     private PDO $db;
 

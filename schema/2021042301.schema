@@ -57,3 +57,7 @@ CREATE TABLE user_log(
   log_message TEXT NOT NULL,
   user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS sessions(
+  session_id VARCHAR(255) PRIMARY KEY,
+  session_data TEXT
+);
