@@ -108,7 +108,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-secookie",
-                "reference": "c5ab26127d74f2b3bce566dd43f2cb4f92962029"
+                "reference": "547faf1b4aa243489bea08774b3e7e9f8ccceac5"
             },
             "require": {
                 "ext-date": "*",
@@ -144,7 +144,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-secookie"
             },
-            "time": "2021-04-22T14:29:57+00:00"
+            "time": "2021-04-23T07:29:54+00:00"
         }
     ],
     "packages-dev": [

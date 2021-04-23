@@ -16,6 +16,7 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\CookieOptions;
+use fkooman\SeCookie\MysqlSessionStorage;
 use fkooman\SeCookie\Session;
 use fkooman\SeCookie\SessionOptions;
 use LC\Portal\CA\VpnCa;
@@ -115,7 +116,7 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    // XXX we really do NOT want to support multiple session types...
+    // XXX we really do NOT want to support so many session types...
     switch ($config->requireString('sessionStorage', 'php-secookie:file')) {
         case 'php-secookie:file':
             $session = new SeSession(
@@ -124,6 +125,17 @@ try {
                     $cookieOptions
                         ->withPath($request->getRoot())
                         ->withSameSiteStrict()
+                )
+            );
+            break;
+        case 'php-secookie:mysql':
+            $session = new SeSession(
+                new Session(
+                    SessionOptions::init(),
+                    $cookieOptions
+                        ->withPath($request->getRoot())
+                        ->withSameSiteStrict(),
+                    new MysqlSessionStorage($db)
                 )
             );
             break;

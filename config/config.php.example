@@ -33,7 +33,6 @@ return [
     // native PHP
     //'sessionStorage' => 'php',
     // MySQL (php-secookie)
-    // NOT YET IMPLEMENTED
     //'sessionStorage' => 'php-secookie:mysql',
 
     // Database
