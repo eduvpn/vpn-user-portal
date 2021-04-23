@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3ac70eda9d73fc4c8c9a518bc2cf5f9",
+    "content-hash": "e648f1124f91808e4ecc59618ddb03d3",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -371,16 +371,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.19",
+            "version": "v2.0.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "446fc9faa5c2a9ddf65eb7121c0af7e857295241"
+                "reference": "0f1f60250fccffeaf5dda91eea1c018aed1adc2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/446fc9faa5c2a9ddf65eb7121c0af7e857295241",
-                "reference": "446fc9faa5c2a9ddf65eb7121c0af7e857295241",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/0f1f60250fccffeaf5dda91eea1c018aed1adc2a",
+                "reference": "0f1f60250fccffeaf5dda91eea1c018aed1adc2a",
                 "shasum": ""
             },
             "require": {
@@ -421,20 +421,20 @@
                 "issues": "https://github.com/paragonie/random_compat/issues",
                 "source": "https://github.com/paragonie/random_compat"
             },
-            "time": "2020-10-15T10:06:57+00:00"
+            "time": "2021-04-17T09:33:01+00:00"
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.15.2",
+            "version": "v1.15.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "efcecfbceac1bf014b1ede38f4588931fef92586"
+                "reference": "8a93bfe047c7f699f819459de8ddda144cd636a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/efcecfbceac1bf014b1ede38f4588931fef92586",
-                "reference": "efcecfbceac1bf014b1ede38f4588931fef92586",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/8a93bfe047c7f699f819459de8ddda144cd636a4",
+                "reference": "8a93bfe047c7f699f819459de8ddda144cd636a4",
                 "shasum": ""
             },
             "require": {
@@ -505,9 +505,9 @@
             ],
             "support": {
                 "issues": "https://github.com/paragonie/sodium_compat/issues",
-                "source": "https://github.com/paragonie/sodium_compat/tree/v1.15.2"
+                "source": "https://github.com/paragonie/sodium_compat/tree/v1.15.4"
             },
-            "time": "2021-04-14T06:07:47+00:00"
+            "time": "2021-04-17T09:00:05+00:00"
         },
         {
             "name": "psr/log",
@@ -700,11 +700,11 @@
         },
         {
             "name": "fkooman/saml-sp",
-            "version": "0.5.9",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "83693ae0a631ba04440c13b1b8bc22007e3f81e3"
+                "reference": "31c7c0b9d4a96e5870a1399a9a3e99ac8aa452d8"
             },
             "require": {
                 "ext-curl": "*",
@@ -749,9 +749,9 @@
             "description": "Secure SAML Service Provider",
             "support": {
                 "email": "fkooman@tuxed.net",
-                "source": "https://git.tuxed.net/fkooman/php-saml-sp"
+                "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2020-10-12T08:24:51+00:00"
+            "time": "2021-04-23T11:46:22+00:00"
         },
         {
             "name": "myclabs/deep-copy",
