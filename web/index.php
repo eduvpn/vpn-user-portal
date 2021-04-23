@@ -14,11 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\SeCookie\Cookie;
-use fkooman\SeCookie\CookieOptions;
 use fkooman\SeCookie\MysqlSessionStorage;
-use fkooman\SeCookie\Session;
-use fkooman\SeCookie\SessionOptions;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
@@ -42,6 +38,7 @@ use LC\Portal\Http\LanguageSwitcherHook;
 use LC\Portal\Http\LogoutModule;
 use LC\Portal\Http\OAuthModule;
 use LC\Portal\Http\PasswdModule;
+use LC\Portal\Http\PhpCookie;
 use LC\Portal\Http\QrModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
@@ -98,16 +95,6 @@ try {
         throw new RuntimeException('sessionExpiry MUST be > PT30M');
     }
 
-    $secureCookie = $config->requireBool('secureCookie', true);
-    $cookieOptions = $secureCookie ? CookieOptions::init() : CookieOptions::init()->withoutSecure();
-    $seCookie = new SeCookie(
-        new Cookie(
-            $cookieOptions
-                ->withSameSiteStrict()
-                ->withMaxAge(60 * 60 * 24 * 90)  // 90 days
-        )
-    );
-
     $db = new PDO(
         $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
         $config->s('Db')->optionalString('dbUser'),
@@ -116,40 +103,28 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    // XXX we really do NOT want to support so many session types...
-    switch ($config->requireString('sessionStorage', 'php-secookie:file')) {
+    $secureCookie = $config->requireBool('secureCookie', true);
+    switch ($config->requireString('sessionBackend', 'php-secookie:file')) {
         case 'php-secookie:file':
-            $session = new SeSession(
-                new Session(
-                    SessionOptions::init(),
-                    $cookieOptions
-                        ->withPath($request->getRoot())
-                        ->withSameSiteStrict()
-                )
-            );
+            $cookieBackend = new SeCookie($secureCookie, $request->getRoot());
+            $sessionBackend = new SeSession($secureCookie, $request->getRoot());
+
             break;
         case 'php-secookie:mysql':
-            $session = new SeSession(
-                new Session(
-                    SessionOptions::init(),
-                    $cookieOptions
-                        ->withPath($request->getRoot())
-                        ->withSameSiteStrict(),
-                    new MysqlSessionStorage($db)
-                )
-            );
+            $cookieBackend = new SeCookie($secureCookie, $request->getRoot());
+            $sessionBackend = new SeSession($secureCookie, $request->getRoot(), new MysqlSessionStorage($db));
+
             break;
         case 'php':
-            $session = new PhpSession($secureCookie, $request->getRoot());
-            break;
         default:
-            throw new RuntimeException('unsupported "sessionStorage"');
+            $cookieBackend = new PhpCookie($secureCookie, $request->getRoot());
+            $sessionBackend = new PhpSession($secureCookie, $request->getRoot());
     }
 
     $supportedLanguages = $config->requireArray('supportedLanguages', ['en_US' => 'English']);
     // the first listed language is the default language
     $uiLang = array_keys($supportedLanguages)[0];
-    if (null !== $cookieUiLang = $seCookie->get('ui_lang')) {
+    if (null !== $cookieUiLang = $cookieBackend->get('ui_lang')) {
         $uiLang = InputValidation::uiLang($cookieUiLang);
     }
 
@@ -182,7 +157,7 @@ try {
 
     $service = new Service();
     $service->addBeforeHook(new CsrfProtectionHook());
-    $service->addBeforeHook(new LanguageSwitcherHook(array_keys($supportedLanguages), $seCookie));
+    $service->addBeforeHook(new LanguageSwitcherHook(array_keys($supportedLanguages), $cookieBackend));
 
     switch ($authModuleCfg) {
         case 'BasicAuthModule':
@@ -196,11 +171,11 @@ try {
             $authModule = new PhpSamlSpAuthModule($config->s('PhpSamlSpAuthModule'));
             break;
         case 'DbAuthModule':
-            $authModule = new UserPassAuthModule($session, $tpl);
+            $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
                 new UserPassModule(
                     new DbCredentialValidator($storage),
-                    $session,
+                    $sessionBackend,
                     $tpl
                 )
             );
@@ -227,7 +202,7 @@ try {
             $authModule = new ClientCertAuthModule();
             break;
         case 'RadiusAuthModule':
-            $authModule = new UserPassAuthModule($session, $tpl);
+            $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
                 new UserPassModule(
                     new RadiusCredentialValidator(
@@ -236,7 +211,7 @@ try {
                         $config->optionalString('addRealm'),
                         $config->optionalString('nasIdentifier')
                     ),
-                    $session,
+                    $sessionBackend,
                     $tpl
                 )
             );
@@ -245,7 +220,7 @@ try {
             $ldapClient = new LdapClient(
                 $config->s('LdapAuthModule')->requireString('ldapUri')
             );
-            $authModule = new UserPassAuthModule($session, $tpl);
+            $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
                 new UserPassModule(
                     new LdapCredentialValidator(
@@ -260,7 +235,7 @@ try {
                         $config->s('LdapAuthModule')->optionalString('searchBindDn'),
                         $config->s('LdapAuthModule')->optionalString('searchBindPass')
                     ),
-                    $session,
+                    $sessionBackend,
                     $tpl
                 )
             );
@@ -279,7 +254,7 @@ try {
     }
 
     $service->addBeforeHook(new DisabledUserHook($storage));
-    $service->addBeforeHook(new UpdateUserInfoHook($session, $storage));
+    $service->addBeforeHook(new UpdateUserInfoHook($sessionBackend, $storage));
     $service->addModule(new QrModule());
 
     // isAdmin
@@ -305,7 +280,7 @@ try {
     $vpnPortalModule = new VpnPortalModule(
         $config,
         $tpl,
-        $session,
+        $sessionBackend,
         $daemonWrapper,
         $storage,
         $oauthStorage,
@@ -344,7 +319,7 @@ try {
         $oauthServer
     );
     $service->addModule($oauthModule);
-    $service->addModule(new LogoutModule($authModule, $session));
+    $service->addModule(new LogoutModule($authModule, $sessionBackend));
 
     $service->run($request)->send();
 } catch (Exception $e) {

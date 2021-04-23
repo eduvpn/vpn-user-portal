@@ -12,15 +12,19 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use fkooman\SeCookie\Cookie;
+use fkooman\SeCookie\CookieOptions;
 use LC\Portal\Http\CookieInterface;
 
 class SeCookie implements CookieInterface
 {
     private Cookie $cookie;
 
-    public function __construct(Cookie $cookie)
+    public function __construct(bool $secureCookie, string $cookiePath)
     {
-        $this->cookie = $cookie;
+        $cookieOptions = $secureCookie ? CookieOptions::init() : CookieOptions::init()->withoutSecure();
+        $this->cookie = new Cookie(
+            $cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteStrict()->withPath($cookiePath)
+        );
     }
 
     public function set(string $cookieName, string $cookieValue): void

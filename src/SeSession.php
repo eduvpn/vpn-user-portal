@@ -11,17 +11,27 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use fkooman\SeCookie\CookieOptions;
+use fkooman\SeCookie\FileSessionStorage;
 use fkooman\SeCookie\Session;
+use fkooman\SeCookie\SessionOptions;
+use fkooman\SeCookie\SessionStorageInterface;
 use LC\Portal\Http\SessionInterface;
 
 class SeSession implements SessionInterface
 {
     private Session $session;
 
-    public function __construct(Session $session)
+    public function __construct(bool $secureCookie, string $cookiePath, ?SessionStorageInterface $sessionStorage = null)
     {
-        $session->start();
-        $this->session = $session;
+        $sessionStorage ??= new FileSessionStorage();
+        $cookieOptions = $secureCookie ? CookieOptions::init() : CookieOptions::init()->withoutSecure();
+        $this->session = new Session(
+            SessionOptions::init(),
+            $cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteStrict()->withPath($cookiePath),
+            $sessionStorage
+        );
+        $this->session->start();
     }
 
     public function regenerate(): void

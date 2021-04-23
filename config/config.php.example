@@ -29,11 +29,11 @@ return [
     // where to store session data
     // DEFAULT: php-secookie:file
     // Filesystem (php-secookie)
-    //'sessionStorage' => 'php-secookie:file',
+    //'sessionBackend' => 'php-secookie:file',
     // native PHP
-    //'sessionStorage' => 'php',
+    //'sessionBackend' => 'php',
     // MySQL (php-secookie)
-    //'sessionStorage' => 'php-secookie:mysql',
+    //'sessionBackend' => 'php-secookie:mysql',
 
     // Database
 //    'Db' => [
