@@ -2,8 +2,8 @@
 
 ## 2.3.10 (...)
 - implement support for nightly session expiry @ 04:00 according to server 
-  timezone when session expiry is >= 7 days, see 
-  [docs](https://github.com/eduvpn/documentation/blob/v2/EXPIRE_AT_NIGHT.md)
+  timezone when session expiry is >= 7 days 
+  ([documentation](https://github.com/eduvpn/documentation/blob/v2/EXPIRE_AT_NIGHT.md))
 
 ## 2.3.9 (2021-04-12)
 - add Spanish (Latin America) translation
