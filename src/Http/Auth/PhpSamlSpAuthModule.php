@@ -38,6 +38,8 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
 
     public function userInfo(Request $request): ?UserInfo
     {
+        // XXX we should probably cache the successful authentication so the
+        // php-saml-sp code doens't need to be called every time, or?
         $authOptions = $this->getAuthOptions();
         if (!$this->samlAuth->isAuthenticated($authOptions)) {
             return null;

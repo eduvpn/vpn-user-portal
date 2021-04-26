@@ -12,10 +12,11 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use LC\Portal\Http\SessionInterface;
-use RuntimeException;
 
 class PhpSession implements SessionInterface
 {
+    const SESSION_NAME = 'SID';
+
     public function __construct(bool $secureCookie, string $cookiePath)
     {
         $sessionOptions = [
@@ -25,10 +26,8 @@ class PhpSession implements SessionInterface
             'cookie_path' => $cookiePath,
         ];
 
-        if (false === session_start($sessionOptions)) {
-            // XXX better exception type
-            throw new RuntimeException('unable to start session');
-        }
+        session_name(self::SESSION_NAME);
+        session_start($sessionOptions);
     }
 
     public function regenerate(): void
