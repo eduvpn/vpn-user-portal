@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a524356ef1ddf7010fd041699f82c84",
+    "content-hash": "73687a199ebe009340aa7204728ea2c0",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -101,50 +101,6 @@
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
             "time": "2021-04-15T13:17:15+00:00"
-        },
-        {
-            "name": "fkooman/secookie",
-            "version": "v6.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://git.sr.ht/~fkooman/php-secookie",
-                "reference": "202dc25f78e1f49416e34b816e3427592bb5cb2b"
-            },
-            "require": {
-                "ext-date": "*",
-                "ext-pcre": "*",
-                "ext-sodium": "*",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "fkooman\\SeCookie\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "fkooman\\SeCookie\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "email": "fkooman@tuxed.net",
-                    "name": "François Kooman"
-                }
-            ],
-            "description": "Modern HTTP cookie and session library",
-            "support": {
-                "email": "fkooman@tuxed.net",
-                "source": "https://git.sr.ht/~fkooman/php-secookie"
-            },
-            "time": "2021-04-23T08:00:06+00:00"
         }
     ],
     "packages-dev": [
@@ -223,7 +179,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "93bb1181aec61c26a373c16d87254ae3eecb0f70"
+                "reference": "5b68f38849ad8ffd9491027b89d543fe342f05dc"
             },
             "require": {
                 "ext-curl": "*",
@@ -234,13 +190,13 @@
                 "ext-libxml": "*",
                 "ext-openssl": "*",
                 "ext-pcre": "*",
+                "ext-session": "*",
                 "ext-sodium": "*",
                 "ext-spl": "*",
                 "ext-zlib": "*",
                 "php": ">=7.4"
             },
             "require-dev": {
-                "fkooman/secookie": "6.x-dev",
                 "phpunit/phpunit": "^9"
             },
             "type": "project",
@@ -268,7 +224,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2021-04-23T20:46:57+00:00"
+            "time": "2021-04-26T20:46:37+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2298,7 +2254,6 @@
     "stability-flags": {
         "fkooman/jwt": 20,
         "fkooman/oauth2-server": 20,
-        "fkooman/secookie": 20,
         "fkooman/saml-sp": 20
     },
     "prefer-stable": true,
@@ -2310,8 +2265,8 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-sodium": "*",
-        "ext-sqlite3": "*",
         "ext-spl": "*",
+        "ext-sqlite3": "*",
         "php": ">=7.4"
     },
     "platform-dev": {

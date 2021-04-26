@@ -14,7 +14,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\SeCookie\MysqlSessionStorage;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
@@ -53,8 +52,6 @@ use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\PhpSession;
 use LC\Portal\Random;
-use LC\Portal\SeCookie;
-use LC\Portal\SeSession;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
@@ -104,22 +101,8 @@ try {
     $storage->update();
 
     $secureCookie = $config->requireBool('secureCookie', true);
-    switch ($config->requireString('sessionBackend', 'php-secookie:file')) {
-        case 'php-secookie:file':
-            $cookieBackend = new SeCookie($secureCookie, $request->getRoot());
-            $sessionBackend = new SeSession($secureCookie, $request->getRoot());
-
-            break;
-        case 'php-secookie:mysql':
-            $cookieBackend = new SeCookie($secureCookie, $request->getRoot());
-            $sessionBackend = new SeSession($secureCookie, $request->getRoot(), new MysqlSessionStorage($db));
-
-            break;
-        case 'php':
-        default:
-            $cookieBackend = new PhpCookie($secureCookie, $request->getRoot());
-            $sessionBackend = new PhpSession($secureCookie, $request->getRoot());
-    }
+    $cookieBackend = new PhpCookie($secureCookie, $request->getRoot());
+    $sessionBackend = new PhpSession($secureCookie, $request->getRoot());
 
     $supportedLanguages = $config->requireArray('supportedLanguages', ['en_US' => 'English']);
     // the first listed language is the default language
