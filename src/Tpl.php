@@ -46,39 +46,13 @@ class Tpl implements TplInterface
     /**
      * @param array<string> $templateFolderList
      * @param array<string> $translationFolderList
+     *                                             XXX add langaugeCode to constructor parameter, making it no longer optional
      */
     public function __construct(array $templateFolderList, array $translationFolderList, string $assetDir)
     {
         $this->templateFolderList = $templateFolderList;
         $this->translationFolderList = $translationFolderList;
         $this->assetDir = $assetDir;
-    }
-
-    public function setLanguage(?string $uiLanguage): void
-    {
-        if (null === $uiLanguage) {
-            $this->uiLanguage = null;
-
-            return;
-        }
-
-        // verify whether we have this translation file available
-        // NOTE: we first fetch a list of supported languages and *then* only
-        // check if the requested language is available to avoid needing to
-        // use crazy regexp to match language codes
-        $availableLanguages = [];
-        foreach ($this->translationFolderList as $translationFolder) {
-            foreach (glob($translationFolder.'/*.php') as $translationFile) {
-                $supportedLanguage = basename($translationFile, '.php');
-                if (!\in_array($supportedLanguage, $availableLanguages, true)) {
-                    $availableLanguages[] = $supportedLanguage;
-                }
-            }
-        }
-
-        if (\in_array($uiLanguage, $availableLanguages, true)) {
-            $this->uiLanguage = $uiLanguage;
-        }
     }
 
     /**
@@ -131,6 +105,24 @@ class Tpl implements TplInterface
         }
 
         return $this->e($displayName);
+    }
+
+    public function setLanguageCode(string $languageCode): void
+    {
+        $implementedLocales = self::getImplementedLocales();
+        if (\in_array($languageCode, array_keys($implementedLocales), true)) {
+            $this->uiLanguage = $languageCode;
+        }
+    }
+
+    private static function languageCodeToHuman(string $languageCode): string
+    {
+        $implementedLocales = self::getImplementedLocales();
+        if (!\array_key_exists($languageCode, $implementedLocales)) {
+            return $languageCode;
+        }
+
+        return $implementedLocales[$languageCode];
     }
 
     private function bth(int $byteSize): string
@@ -341,5 +333,36 @@ class Tpl implements TplInterface
         }
 
         throw new TplException(sprintf('template "%s" does not exist', $templateName));
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private static function getImplementedLocales(): array
+    {
+        return [
+            'en-US' => 'English',
+            'ar-MA' => 'العربية',
+            'da-DK' => 'Dansk',
+            'de-DE' => 'Deutsch',
+            'es-LA' => 'español',
+            'et-EE' => 'Eesti',
+            'fr-FR' => 'Français',
+            'nb-NO' => 'norsk bokmål',
+            'nl-NL' => 'Nederlands',
+            'pl-PL' => 'polski',
+            'pt-PT' => 'Português',
+            'uk-UA' => 'Українська',
+        ];
+    }
+
+    // XXX take this from ->uiLanguage variable or similar
+    private static function textDir(string $languageCode): string
+    {
+        if (\in_array($languageCode, ['ar-MA'], true)) {
+            return 'rtl';
+        }
+
+        return 'ltr';
     }
 }

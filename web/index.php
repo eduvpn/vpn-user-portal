@@ -32,8 +32,6 @@ use LC\Portal\Http\Auth\UserPassAuthModule;
 use LC\Portal\Http\CsrfProtectionHook;
 use LC\Portal\Http\DisabledUserHook;
 use LC\Portal\Http\HtmlResponse;
-use LC\Portal\Http\InputValidation;
-use LC\Portal\Http\LanguageSwitcherHook;
 use LC\Portal\Http\LogoutModule;
 use LC\Portal\Http\OAuthModule;
 use LC\Portal\Http\PasswdModule;
@@ -68,15 +66,15 @@ try {
         $baseDir.'/views',
         $baseDir.'/config/views',
     ];
-    $localeDirs = [
+    $translationDirs = [
         $baseDir.'/locale',
         $baseDir.'/config/locale',
     ];
     if (null !== $styleName = $config->optionalString('styleName')) {
         $templateDirs[] = $baseDir.'/views/'.$styleName;
         $templateDirs[] = $baseDir.'/config/views/'.$styleName;
-        $localeDirs[] = $baseDir.'/locale/'.$styleName;
-        $localeDirs[] = $baseDir.'/config/locale/'.$styleName;
+        $translationDirs[] = $baseDir.'/locale/'.$styleName;
+        $translationDirs[] = $baseDir.'/config/locale/'.$styleName;
     }
 
     $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
@@ -104,28 +102,25 @@ try {
     $cookieBackend = new PhpCookie($secureCookie, $request->getRoot());
     $sessionBackend = new PhpSession($secureCookie, $request->getRoot());
 
-    $supportedLanguages = $config->requireArray('supportedLanguages', ['en_US' => 'English']);
-    // the first listed language is the default language
-    $uiLang = array_keys($supportedLanguages)[0];
-    if (null !== $cookieUiLang = $cookieBackend->get('ui_lang')) {
-        $uiLang = InputValidation::uiLang($cookieUiLang);
+    // determine whether or not we want to use another language for the UI
+    if (null === $languageCode = $cookieBackend->get('L')) {
+        $languageCode = $config->requireString('defaultLanguage', 'en-US');
     }
+    $tpl = new Tpl($templateDirs, $translationDirs, $baseDir.'/web');
+    $tpl->setLanguageCode($languageCode);
 
     // Authentication
     $authModuleCfg = $config->requireString('authModule', 'DbAuthModule');
 
-    $tpl = new Tpl($templateDirs, $localeDirs, $baseDir.'/web');
-    $tpl->setLanguage($uiLang);
     $templateDefaults = [
         'enableConfigDownload' => $config->requireBool('enableConfigDownload', true),
         'requestUri' => $request->getUri(),
         'requestRoot' => $request->getRoot(),
         'requestRootUri' => $request->getRootUri(),
-        'supportedLanguages' => $supportedLanguages,
-        'uiLang' => $uiLang,
+        'enabledLanguages' => $config->requireArray('enabledLanguages', ['en-US']),
         'portalVersion' => trim(FileIO::readFile($baseDir.'/VERSION')),
         'isAdmin' => false,
-        'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
+        'languageCode' => $languageCode,
     ];
 
     $tpl->addDefault($templateDefaults);
@@ -141,7 +136,6 @@ try {
 
     $service = new Service();
     $service->addBeforeHook(new CsrfProtectionHook());
-    $service->addBeforeHook(new LanguageSwitcherHook(array_keys($supportedLanguages), $cookieBackend));
 
     switch ($authModuleCfg) {
         case 'BasicAuthModule':
@@ -264,6 +258,7 @@ try {
     $vpnPortalModule = new VpnPortalModule(
         $config,
         $tpl,
+        $cookieBackend,
         $sessionBackend,
         $daemonWrapper,
         $storage,

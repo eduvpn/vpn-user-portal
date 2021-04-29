@@ -31,6 +31,7 @@ class VpnPortalModule implements ServiceModuleInterface
 {
     private Config $config;
     private TplInterface $tpl;
+    private CookieInterface $cookie;
     private SessionInterface $session;
     private DaemonWrapper $daemonWrapper;
     private Storage $storage;
@@ -42,10 +43,11 @@ class VpnPortalModule implements ServiceModuleInterface
     private DateInterval $sessionExpiry;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
+    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
+        $this->cookie = $cookie;
         $this->session = $session;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
@@ -273,6 +275,15 @@ class VpnPortalModule implements ServiceModuleInterface
                         []
                     )
                 );
+            }
+        );
+
+        $service->postBeforeAuth(
+            '/setLanguage',
+            function (Request $request): Response {
+                $this->cookie->set('L', $request->requirePostParameter('uiLanguage'));
+
+                return new RedirectResponse($request->requireHeader('HTTP_REFERER'), 302);
             }
         );
     }

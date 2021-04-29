@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="<?=$this->e(str_replace('_', '-', $uiLang)); ?>" dir="<?=$useRtl ? 'rtl' : 'ltr'; ?>">
+<html lang="<?=$this->e($languageCode); ?>" dir="<?=$this->textDir($languageCode); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

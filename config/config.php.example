@@ -165,14 +165,13 @@ return [
     // list of userIds that have access to the admin
 //    'adminUserIdList' => ['admin'],
 
-    // supported languages in the UI, the first one mentioned is the default
-//    'supportedLanguages' => [
-//        'en_US' => 'English',
-//        //'nl_NL' => 'Nederlands',
-//        //'nb_NO' => 'norsk bokmål',
-//        //'da_DK' => 'Dansk',
-//        //'fr_FR' => 'Français',
-//    ],
+    // the default language of the UI
+    // DEFAULT: 'en-US'
+    //'defaultLanguage' => 'en-US',
+
+    // the supported UI languages
+    // DEFAULT: ['en-US']
+    //'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'uk-UA'],
 
 //    'Api' => [
 //        // expire tokens after 1 hour (default)
