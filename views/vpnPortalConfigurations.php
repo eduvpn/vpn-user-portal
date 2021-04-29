@@ -1,5 +1,5 @@
-<?php declare(strict_types=1);
-$this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
+<?php declare(strict_types=1); ?>
+<?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Create'); ?></h2>
     <?php if (0 === count($profileList)): ?>

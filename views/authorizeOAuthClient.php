@@ -1,5 +1,5 @@
-<?php declare(strict_types=1);
-$this->layout('base', ['pageTitle' => $this->t('Approve Application')]); ?>
+<?php declare(strict_types=1); ?>
+<?php $this->layout('base', ['pageTitle' => $this->t('Approve Application')]); ?>
 <?php $this->start('content'); ?>
     <div class="appAuth">
     <p>

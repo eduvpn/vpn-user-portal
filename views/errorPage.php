@@ -1,5 +1,5 @@
-<?php declare(strict_types=1);
-$this->layout('base', ['pageTitle' => $this->t('Error')]); ?>
+<?php declare(strict_types=1); ?>
+<?php $this->layout('base', ['pageTitle' => $this->t('Error')]); ?>
 <?php $this->start('content'); ?>
     <h2><?= $this->e((string) $code); ?></h2>
 
