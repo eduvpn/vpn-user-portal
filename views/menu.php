@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 $menuItems = [];
 $menuItems['home'] = $this->t('Home');
-$menuItems['configurations'] = $this->t('Configurations');
+if ($enableConfigDownload) {
+    $menuItems['configurations'] = $this->t('Configurations');
+}
 $menuItems['account'] = $this->t('Account');
 $menuItems['documentation'] = $this->t('Documentation');
 if ($isAdmin) {

@@ -117,6 +117,7 @@ try {
     $tpl = new Tpl($templateDirs, $localeDirs, $baseDir.'/web');
     $tpl->setLanguage($uiLang);
     $templateDefaults = [
+        'enableConfigDownload' => $config->requireBool('enableConfigDownload', true),
         'requestUri' => $request->getUri(),
         'requestRoot' => $request->getRoot(),
         'requestRootUri' => $request->getRootUri(),

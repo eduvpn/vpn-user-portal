@@ -85,6 +85,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/configurations',
             function (UserInfo $userInfo, Request $request): Response {
+                if (!$this->config->requireBool('enableConfigDownload', true)) {
+                    throw new HttpException('downloading configuration files has been disabled by the admin', 403);
+                }
+
                 $profileList = $this->profileList();
                 $userPermissions = $userInfo->getPermissionList();
                 $visibleProfileList = self::filterProfileList($profileList, $userPermissions);
@@ -108,6 +112,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
+                            'disableConfigDownload' => $this->config->requireBool('disableConfigDownload', false),
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'profileList' => $visibleProfileList,
                             'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
@@ -120,6 +125,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/configurations',
             function (UserInfo $userInfo, Request $request): Response {
+                if (!$this->config->requireBool('enableConfigDownload', true)) {
+                    throw new HttpException('downloading configuration files has been disabled by the admin', 403);
+                }
+
                 $displayName = InputValidation::displayName($request->requirePostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
 
@@ -131,7 +140,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 // user, it would not result in the ability to use the VPN, but
                 // better prevent it early
                 if (!\array_key_exists($profileId, $visibleProfileList)) {
-                    throw new HttpException('no permission to download a configuration for this profile', 400);
+                    throw new HttpException('no permission to download a configuration for this profile', 403);
                 }
 
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);

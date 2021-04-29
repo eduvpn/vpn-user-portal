@@ -32,7 +32,6 @@ return [
 //        'dbUser' => 'user',
 //        'dbPass' => 'pass',
 //    ],
-    
 
 //    // LDAP
 //    'LdapAuthModule' => [
@@ -95,7 +94,7 @@ return [
 //        //'searchBindDn' => 'cn=Anonymous Search User,dc=example,dc=org',
 //        //'searchBindPass' => 's3r3t',
 //
-//        //'permissionAttributeList' => [],          
+//        //'permissionAttributeList' => [],
 //    ],
 
 //    // RADIUS
@@ -184,6 +183,11 @@ return [
 //        // DEFAULT = false
 //        //'remoteAccess' => false,
 //    ],
+
+    // Allow disabling manual configuration downloads from the portal.
+    // DEFAULT: true
+//    'enableConfigDownload' => true,
+//    'enableConfigDownload' => false,
 
     // DEFAULT = true (for remote connections)
     // XXX make sure of this!
