@@ -25,9 +25,12 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $storage->cleanConnectionLog(new DateTimeImmutable('now -32 days'));
-    $storage->cleanExpiredCertificates(new DateTimeImmutable('now -7 days'));
-    $storage->cleanUserLog(new DateTimeImmutable('now -32 days'));
+
+    $cleanBefore = new DateTimeImmutable('now -32 days');
+    $storage->cleanConnectionLog($cleanBefore);
+    $storage->cleanExpiredCertificates($cleanBefore);
+    $storage->cleanExpiredOAuthAuthorizations($cleanBefore);
+    $storage->cleanUserLog($cleanBefore);
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);

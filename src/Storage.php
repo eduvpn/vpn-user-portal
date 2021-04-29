@@ -815,6 +815,14 @@ class Storage
         $stmt->execute();
     }
 
+    public function cleanExpiredOAuthAuthorizations(DateTimeImmutable $dateTime): void
+    {
+        $stmt = $this->db->prepare('DELETE FROM authorizations WHERE expires_at < :date_time');
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+
+        $stmt->execute();
+    }
+
     /**
      * @deprecated
      */
