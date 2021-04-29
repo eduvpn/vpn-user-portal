@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="<?=$this->e($languageCode); ?>" dir="<?=$this->textDir($languageCode); ?>">
+<html lang="<?=$this->e($uiLanguage); ?>" dir="<?=$this->textDir(); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

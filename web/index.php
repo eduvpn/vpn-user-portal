@@ -103,11 +103,10 @@ try {
     $sessionBackend = new PhpSession($secureCookie, $request->getRoot());
 
     // determine whether or not we want to use another language for the UI
-    if (null === $languageCode = $cookieBackend->get('L')) {
-        $languageCode = $config->requireString('defaultLanguage', 'en-US');
+    if (null === $uiLanguage = $cookieBackend->get('L')) {
+        $uiLanguage = $config->requireString('defaultLanguage', 'en-US');
     }
-    $tpl = new Tpl($templateDirs, $translationDirs, $baseDir.'/web');
-    $tpl->setLanguageCode($languageCode);
+    $tpl = new Tpl($templateDirs, $translationDirs, $baseDir.'/web', $uiLanguage);
 
     // Authentication
     $authModuleCfg = $config->requireString('authModule', 'DbAuthModule');
@@ -120,7 +119,7 @@ try {
         'enabledLanguages' => $config->requireArray('enabledLanguages', ['en-US']),
         'portalVersion' => trim(FileIO::readFile($baseDir.'/VERSION')),
         'isAdmin' => false,
-        'languageCode' => $languageCode,
+        'uiLanguage' => $uiLanguage,
     ];
 
     $tpl->addDefault($templateDefaults);

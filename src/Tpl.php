@@ -25,6 +25,10 @@ class Tpl implements TplInterface
     /** @var array<string> */
     private array $translationFolderList;
 
+    private string $uiLanguage;
+
+    private string $assetDir;
+
     private ?string $activeSectionName = null;
 
     /** @var array<string,string> */
@@ -39,20 +43,19 @@ class Tpl implements TplInterface
     /** @var array<string,callable> */
     private array $callbackList = [];
 
-    private ?string $uiLanguage = null;
-
-    private string $assetDir;
-
     /**
      * @param array<string> $templateFolderList
      * @param array<string> $translationFolderList
-     *                                             XXX add langaugeCode to constructor parameter, making it no longer optional
      */
-    public function __construct(array $templateFolderList, array $translationFolderList, string $assetDir)
+    public function __construct(array $templateFolderList, array $translationFolderList, string $assetDir, string $uiLanguage)
     {
         $this->templateFolderList = $templateFolderList;
         $this->translationFolderList = $translationFolderList;
         $this->assetDir = $assetDir;
+        if (!\array_key_exists($uiLanguage, self::supportedLanguages())) {
+            throw new TplException(sprintf('unsupported UI language "%s"', $uiLanguage));
+        }
+        $this->uiLanguage = $uiLanguage;
     }
 
     /**
@@ -107,22 +110,14 @@ class Tpl implements TplInterface
         return $this->e($displayName);
     }
 
-    public function setLanguageCode(string $languageCode): void
+    private static function languageCodeToHuman(string $uiLanguage): string
     {
-        $implementedLocales = self::getImplementedLocales();
-        if (\in_array($languageCode, array_keys($implementedLocales), true)) {
-            $this->uiLanguage = $languageCode;
-        }
-    }
-
-    private static function languageCodeToHuman(string $languageCode): string
-    {
-        $implementedLocales = self::getImplementedLocales();
-        if (!\array_key_exists($languageCode, $implementedLocales)) {
-            return $languageCode;
+        $supportedLanguages = self::supportedLanguages();
+        if (!\array_key_exists($uiLanguage, $supportedLanguages)) {
+            throw new TplException(sprintf('unsupported UI language "%s"', $uiLanguage));
         }
 
-        return $implementedLocales[$languageCode];
+        return $supportedLanguages[$uiLanguage];
     }
 
     private function bth(int $byteSize): string
@@ -282,9 +277,9 @@ class Tpl implements TplInterface
     {
         // use original, unless it is found in any of the translation files...
         $translatedText = $v;
-        if (null !== $uiLanguage = $this->uiLanguage) {
+        if ('en-US' !== $this->uiLanguage) {
             foreach ($this->translationFolderList as $translationFolder) {
-                $translationFile = $translationFolder.'/'.$uiLanguage.'.php';
+                $translationFile = $translationFolder.'/'.$this->uiLanguage.'.php';
                 if (!file_exists($translationFile)) {
                     continue;
                 }
@@ -338,7 +333,7 @@ class Tpl implements TplInterface
     /**
      * @return array<string,string>
      */
-    private static function getImplementedLocales(): array
+    private static function supportedLanguages(): array
     {
         return [
             'en-US' => 'English',
@@ -356,10 +351,9 @@ class Tpl implements TplInterface
         ];
     }
 
-    // XXX take this from ->uiLanguage variable or similar
-    private static function textDir(string $languageCode): string
+    private function textDir(): string
     {
-        if (\in_array($languageCode, ['ar-MA'], true)) {
+        if (\in_array($this->uiLanguage, ['ar-MA'], true)) {
             return 'rtl';
         }
 
