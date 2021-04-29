@@ -29,7 +29,7 @@ class DisabledUserHook extends AbstractHook implements BeforeHookInterface
 
     public function afterAuth(UserInfo $userInfo, Request $request): ?Response
     {
-        if ($this->storage->userIsDisabled($userInfo->getUserId())) {
+        if ($this->storage->userIsDisabled($userInfo->userId())) {
             throw new HttpException('account disabled', 403);
         }
 

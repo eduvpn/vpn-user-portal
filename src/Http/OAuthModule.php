@@ -35,7 +35,7 @@ class OAuthModule implements ServiceModuleInterface
             '/_oauth/authorize',
             function (UserInfo $userInfo, Request $request): Response {
                 try {
-                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userInfo->getUserId())) {
+                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userInfo->userId())) {
                         // optimization where we do not ask for approval
                         return $this->prepareReturnResponse($authorizeResponse);
                     }
@@ -65,7 +65,7 @@ class OAuthModule implements ServiceModuleInterface
                     $authorizeResponse = $this->oauthServer->postAuthorize(
                         $request->getQueryParameters(),
                         $request->getPostParameters(),
-                        $userInfo->getUserId()
+                        $userInfo->userId()
                     );
 
                     return $this->prepareReturnResponse($authorizeResponse);

@@ -31,7 +31,7 @@ class AccessHook extends AbstractHook implements BeforeHookInterface
 
     public function afterAuth(UserInfo $userInfo, Request $request): ?Response
     {
-        if (!$this->hasPermissions($userInfo->getPermissionList())) {
+        if (!$this->hasPermissions($userInfo->permissionList())) {
             throw new HttpException('account is not allowed to access this service', 403);
         }
 

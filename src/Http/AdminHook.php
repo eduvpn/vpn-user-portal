@@ -40,11 +40,11 @@ class AdminHook extends AbstractHook implements BeforeHookInterface
 
     public function isAdmin(UserInfo $userInfo): bool
     {
-        if (\in_array($userInfo->getUserId(), $this->adminUserIdList, true)) {
+        if (\in_array($userInfo->userId(), $this->adminUserIdList, true)) {
             return true;
         }
 
-        $userPermissionList = $userInfo->getPermissionList();
+        $userPermissionList = $userInfo->permissionList();
         foreach ($userPermissionList as $userPermission) {
             if (\in_array($userPermission, $this->adminPermissionList, true)) {
                 return true;

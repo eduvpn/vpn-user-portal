@@ -135,7 +135,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $adminUserId = $userInfo->getUserId();
+                $adminUserId = $userInfo->userId();
                 $userId = $request->requireQueryParameter('user_id');
                 InputValidation::userId($userId);
 
@@ -171,7 +171,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $adminUserId = $userInfo->getUserId();
+                $adminUserId = $userInfo->userId();
                 $userId = $request->requirePostParameter('user_id');
                 InputValidation::userId($userId);
 

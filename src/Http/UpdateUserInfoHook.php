@@ -34,7 +34,7 @@ class UpdateUserInfoHook extends AbstractHook implements BeforeHookInterface
         // only update the user info once per browser session, not on every
         // request
         if ('yes' === $this->session->get('_user_info_already_updated')) {
-            if (false === $this->storage->userExists($userInfo->getUserId())) {
+            if (false === $this->storage->userExists($userInfo->userId())) {
                 // but if the user account was removed in the meantime,
                 // destroy the session...
                 // XXX is this acceptable? it doesn't work for SAML logins, should we trigger logout using AuthMethod here to share code path?
@@ -46,15 +46,15 @@ class UpdateUserInfoHook extends AbstractHook implements BeforeHookInterface
             return null;
         }
 
-        if (false === $this->storage->userExists($userInfo->getUserId())) {
-            $this->storage->userAdd($userInfo->getUserId(), $userInfo->getPermissionList());
+        if (false === $this->storage->userExists($userInfo->userId())) {
+            $this->storage->userAdd($userInfo->userId(), $userInfo->permissionList());
             $this->session->set('_user_info_already_updated', 'yes');
 
             return null;
         }
 
         // update permissionList
-        $this->storage->userUpdate($userInfo->getUserId(), $userInfo->getPermissionList());
+        $this->storage->userUpdate($userInfo->userId(), $userInfo->permissionList());
         $this->session->set('_user_info_already_updated', 'yes');
 
         return null;

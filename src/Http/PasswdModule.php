@@ -40,7 +40,7 @@ class PasswdModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalPasswd',
                         [
-                            'userId' => $userInfo->getUserId(),
+                            'userId' => $userInfo->userId(),
                         ]
                     )
                 );
@@ -54,12 +54,12 @@ class PasswdModule implements ServiceModuleInterface
                 $newUserPass = InputValidation::userPass($request->requirePostParameter('newUserPass'));
                 $newUserPassConfirm = InputValidation::userPass($request->requirePostParameter('newUserPassConfirm'));
 
-                if (!$this->dbCredentialValidator->isValid($userInfo->getUserId(), $userPass)) {
+                if (!$this->dbCredentialValidator->isValid($userInfo->userId(), $userPass)) {
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalPasswd',
                             [
-                                'userId' => $userInfo->getUserId(),
+                                'userId' => $userInfo->userId(),
                                 'errorCode' => 'wrongPassword',
                             ]
                         )
@@ -71,7 +71,7 @@ class PasswdModule implements ServiceModuleInterface
                         $this->tpl->render(
                             'vpnPortalPasswd',
                             [
-                                'userId' => $userInfo->getUserId(),
+                                'userId' => $userInfo->userId(),
                                 'errorCode' => 'noMatchingPassword',
                             ]
                         )
@@ -82,7 +82,7 @@ class PasswdModule implements ServiceModuleInterface
                 if (!\is_string($passwordHash)) {
                     throw new HttpException('unable to generate password hash', 500);
                 }
-                $this->storage->localUserUpdatePassword($userInfo->getUserId(), $passwordHash);
+                $this->storage->localUserUpdatePassword($userInfo->userId(), $passwordHash);
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }

@@ -73,9 +73,9 @@ class UserPassModule implements ServiceModuleInterface
                     return new HtmlResponse($responseBody);
                 }
 
-                $permissionList = $userInfo->getPermissionList();
+                $permissionList = $userInfo->permissionList();
                 $this->session->regenerate();
-                $this->session->set('_form_auth_user', $userInfo->getUserId());
+                $this->session->set('_form_auth_user', $userInfo->userId());
                 // XXX use something better than serialize
                 $this->session->set('_form_auth_permission_list', serialize($permissionList));
 

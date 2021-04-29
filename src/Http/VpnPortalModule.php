@@ -92,10 +92,10 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $profileList = $this->profileList();
-                $userPermissions = $userInfo->getPermissionList();
+                $userPermissions = $userInfo->permissionList();
                 $visibleProfileList = self::filterProfileList($profileList, $userPermissions);
 
-                $userCertificateList = $this->storage->getCertificates($userInfo->getUserId());
+                $userCertificateList = $this->storage->getCertificates($userInfo->userId());
 
                 // if query parameter "all" is set, show all certificates, also
                 // those issued to OAuth clients
@@ -135,7 +135,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
 
                 $profileList = $this->profileList();
-                $userPermissions = $userInfo->getPermissionList();
+                $userPermissions = $userInfo->permissionList();
                 $visibleProfileList = self::filterProfileList($profileList, $userPermissions);
 
                 // make sure the profileId is in the list of allowed profiles for this
@@ -147,7 +147,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
 
-                return $this->getConfig($request->getServerName(), $profileId, $userInfo->getUserId(), $displayName, $expiresAt);
+                return $this->getConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
             }
         );
 
@@ -177,8 +177,8 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             function (UserInfo $userInfo, Request $request): Response {
-                $userPermissions = $userInfo->getPermissionList();
-                $authorizationList = $this->oauthStorage->getAuthorizations($userInfo->getUserId());
+                $userPermissions = $userInfo->permissionList();
+                $authorizationList = $this->oauthStorage->getAuthorizations($userInfo->userId());
                 $authorizedClientInfoList = [];
                 foreach ($authorizationList as $authorization) {
                     if (null !== $clientInfo = $this->clientDb->get($authorization->clientId())) {
@@ -189,8 +189,8 @@ class VpnPortalModule implements ServiceModuleInterface
                         ];
                     }
                 }
-                $userMessages = $this->storage->getUserLog($userInfo->getUserId());
-                $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userInfo->getUserId());
+                $userMessages = $this->storage->getUserLog($userInfo->userId());
+                $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userInfo->userId());
 
                 // get the fancy profile name
                 $profileList = $this->profileList();
@@ -224,7 +224,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $clientId = InputValidation::clientId($request->requirePostParameter('client_id'));
 
                 // verify whether the user_id owns the specified auth_key
-                $authorizations = $this->oauthStorage->getAuthorizations($userInfo->getUserId());
+                $authorizations = $this->oauthStorage->getAuthorizations($userInfo->userId());
 
                 $authKeyFound = false;
                 foreach ($authorizations as $authorization) {
@@ -243,17 +243,17 @@ class VpnPortalModule implements ServiceModuleInterface
                 // NOTE: we have to get the list first before deleting the
                 // certificates, otherwise the clients no longer show up the
                 // list... this is NOT good, possible race condition...
-                $connectionList = $this->daemonWrapper->getConnectionList($clientId, $userInfo->getUserId());
+                $connectionList = $this->daemonWrapper->getConnectionList($clientId, $userInfo->userId());
 
                 // delete the certificates from the server
                 $this->storage->addUserLog(
-                    $userInfo->getUserId(),
+                    $userInfo->userId(),
                     LoggerInterface::NOTICE,
                     sprintf('certificate(s) for OAuth client "%s" deleted', $clientId),
                     $this->dateTime
                 );
 
-                $this->storage->deleteCertificatesOfClientId($userInfo->getUserId(), $clientId);
+                $this->storage->deleteCertificatesOfClientId($userInfo->userId(), $clientId);
 
                 // kill all active connections for this user/client_id
                 foreach ($connectionList as $profileId => $clientConnectionList) {
