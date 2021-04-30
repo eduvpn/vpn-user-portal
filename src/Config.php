@@ -13,6 +13,9 @@ namespace LC\Portal;
 
 use LC\Portal\Exception\ConfigException;
 
+/**
+ * XXX use specific methods for config fields, no generic stuff.
+ */
 class Config
 {
     protected array $configData;

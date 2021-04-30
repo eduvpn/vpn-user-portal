@@ -28,9 +28,14 @@ try {
     $jsonData = [
         'api' => [
             'http://eduvpn.org/api#2' => [
-                'api_base_uri' => $appRootUri.'/api.php',
-                'authorization_endpoint' => $appRootUri.'/_oauth/authorize',
-                'token_endpoint' => $appRootUri.'/oauth.php/token',
+                'api_base_uri' => $appRootUri.'/api/v2',
+                'authorization_endpoint' => $appRootUri.'/oauth/authorize',
+                'token_endpoint' => $appRootUri.'/oauth/token',
+            ],
+            'http://eduvpn.org/api#3' => [
+                'api_endpoint' => $appRootUri.'/api/v3',
+                'authorization_endpoint' => $appRootUri.'/oauth/authorize',
+                'token_endpoint' => $appRootUri.'/oauth/token',
             ],
         ],
         'v' => trim(FileIO::readFile($baseDir.'/VERSION')),
