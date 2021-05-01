@@ -5,7 +5,7 @@
     <table class="tbl">
         <tr>
             <th><?=$this->t('User ID'); ?></th>
-            <td><code><?=$this->e($userInfo->getUserId()); ?></code></td>
+            <td><code><?=$this->e($userInfo->userId()); ?></code></td>
         </tr>
         <?php if ('DbAuthModule' === $authModule) :?>
             <tr>
