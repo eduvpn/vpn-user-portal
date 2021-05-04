@@ -70,7 +70,9 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
                 return new JsonResponse(
                     [
-                        'info' => $userProfileList,
+                        'info' => [
+                            'profile_list' => $userProfileList,
+                        ],
                     ]
                 );
             }
