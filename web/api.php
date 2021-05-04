@@ -21,6 +21,7 @@ use LC\Portal\Http\ApiService;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\VpnApiModule;
+use LC\Portal\Http\VpnApiThreeModule;
 use LC\Portal\Json;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
@@ -65,15 +66,28 @@ try {
     );
     $service = new ApiService($bearerValidator);
 
-    // api module
-    $vpnApiModule = new VpnApiModule(
-        $config,
-        $storage,
-        new TlsCrypt($baseDir.'/data'),
-        new Random(),
-        $ca
+    // API v2
+    $service->addModule(
+        new VpnApiModule(
+            $config,
+            $storage,
+            new TlsCrypt($baseDir.'/data'),
+            new Random(),
+            $ca
+        )
     );
-    $service->addModule($vpnApiModule);
+
+    // API v3
+    $service->addModule(
+        new VpnApiThreeModule(
+            $config,
+            $storage,
+            new TlsCrypt($baseDir.'/data'),
+            new Random(),
+            $ca
+        )
+    );
+
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
