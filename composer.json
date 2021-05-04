@@ -57,7 +57,7 @@
         "ext-radius": "Support RADIUS user authentication"
     },
     "support": {
-        "email": "eduvpn@surfnet.nl",
+        "email": "eduvpn-support@lists.geant.org",
         "source": "https://git.sr.ht/~fkooman/vpn-user-portal"
     },
     "type": "project"

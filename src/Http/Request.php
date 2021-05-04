@@ -86,12 +86,11 @@ class Request
 
     public function getRoot(): string
     {
-        $rootDir = \dirname($this->requireHeader('SCRIPT_NAME'));
-        if ('/' !== $rootDir) {
-            return sprintf('%s/', $rootDir);
+        if (null === $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
+            return '/';
         }
 
-        return $rootDir;
+        return $appRoot.'/';
     }
 
     public function getRootUri(): string
@@ -120,6 +119,9 @@ class Request
 
     public function getPathInfo(): string
     {
+        // XXX can we not make this much simpler?
+        // for example return always the stuff after VPN_APP_ROOT?
+
         // remove the query string
         $requestUri = $this->requireHeader('REQUEST_URI');
         if (false !== $pos = mb_strpos($requestUri, '?')) {
@@ -129,7 +131,12 @@ class Request
         // if requestUri === scriptName
         $scriptName = $this->requireHeader('SCRIPT_NAME');
         if ($requestUri === $scriptName) {
-            return '/';
+            if (null === $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
+                return '/';
+            }
+
+            // remove VPN_APP_ROOT from the REQUEST_URI
+            return substr($requestUri, \strlen($appRoot));
         }
 
         // remove script_name (if it is part of request_uri

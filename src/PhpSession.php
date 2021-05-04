@@ -13,6 +13,9 @@ namespace LC\Portal;
 
 use LC\Portal\Http\SessionInterface;
 
+/**
+ * XXX implement server side session expiry, e.g. after 30 minutes.
+ */
 class PhpSession implements SessionInterface
 {
     const SESSION_NAME = 'SID';
