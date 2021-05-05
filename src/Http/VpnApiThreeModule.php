@@ -134,8 +134,12 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     'ca' => $this->ca->caCert(),
                 ];
 
-                $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $certInfo, ClientConfig::STRATEGY_RANDOM);
-//                $clientConfig = str_replace("\n", "\r\n", $clientConfig);
+                $clientConfig = ClientConfig::get(
+                    $profileConfig,
+                    $serverInfo,
+                    $certInfo,
+                    ClientConfig::STRATEGY_RANDOM
+                );
 
                 return new Response($clientConfig, ['Content-Type' => 'application/x-openvpn-profile']);
             }
