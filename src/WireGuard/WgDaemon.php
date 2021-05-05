@@ -87,7 +87,7 @@ class WgDaemon
     /**
      * @return array{PublicKey:string,ListenPort:int,Peers:array}
      */
-    private function getInfo(string $wgDevice): array
+    public function getInfo(string $wgDevice): array
     {
         // XXX catch errors
         // XXX make sure WG "backend" is in sync with local DB (somehow)

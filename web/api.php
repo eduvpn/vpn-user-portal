@@ -22,6 +22,7 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Http\VpnApiThreeModule;
+use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
 use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
@@ -29,6 +30,7 @@ use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
+use LC\Portal\WireGuard\WgDaemon;
 
 $logger = new SysLogger('vpn-user-portal');
 
@@ -84,7 +86,8 @@ try {
             $storage,
             new TlsCrypt($baseDir.'/data'),
             new Random(),
-            $ca
+            $ca,
+            new WgDaemon(new CurlHttpClient())
         )
     );
 

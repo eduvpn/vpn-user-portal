@@ -22,6 +22,8 @@ use LC\Portal\ProfileConfig;
 use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
+use LC\Portal\WireGuard\WgConfig;
+use LC\Portal\WireGuard\WgDaemon;
 
 class VpnApiThreeModule implements ApiServiceModuleInterface
 {
@@ -30,15 +32,17 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
     private TlsCrypt $tlsCrypt;
     private RandomInterface $random;
     private CaInterface $ca;
+    private WgDaemon $wgDaemon;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca)
+    public function __construct(Config $config, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, WgDaemon $wgDaemon)
     {
         $this->config = $config;
         $this->storage = $storage;
         $this->tlsCrypt = $tlsCrypt;
         $this->random = $random;
         $this->ca = $ca;
+        $this->wgDaemon = $wgDaemon;
         $this->dateTime = new DateTimeImmutable();
     }
 
@@ -63,7 +67,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     }
                     $userProfileList[] = [
                         'profile_id' => $profileId,
-                        'display_name' => $profileConfig->displayName()
+                        'display_name' => $profileConfig->displayName(),
                     ];
                 }
 
@@ -104,43 +108,15 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 }
 
                 $profileConfig = $profileList[$requestedProfileId];
-                if ('openvpn' !== $profileConfig->vpnType()) {
-                    return new JsonResponse(['error' => 'only OpenVPN supported for now by new API'], [], 400);
+
+                switch ($profileConfig->vpnType()) {
+                    case 'openvpn':
+                        return $this->getOpenVpnConfigResponse($profileConfig, $accessToken, $requestedProfileId);
+                    case 'wireguard':
+                        return $this->getWireGuardConfigResponse($profileConfig, $accessToken, $requestedProfileId);
+                    default:
+                        return new JsonResponse(['error' => 'invalid vpn_type'], [], 500);
                 }
-
-                $commonName = $this->random->get(16);
-                $certInfo = $this->ca->clientCert($commonName, $accessToken->accessToken()->authorizationExpiresAt());
-                // XXX also store profile_id in DB
-                $this->storage->addCertificate(
-                    $accessToken->getUserId(),
-                    $commonName,
-                    $accessToken->accessToken()->clientId(),
-                    new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
-                    new DateTimeImmutable(sprintf('@%d', $certInfo['valid_to'])),
-                    $accessToken->accessToken()->clientId()
-                );
-
-                $this->storage->addUserLog(
-                    $accessToken->getUserId(),
-                    LoggerInterface::NOTICE,
-                    sprintf('new certificate generated for "%s"', $accessToken->accessToken()->clientId()),
-                    $this->dateTime
-                );
-
-                // get the CA & tls-crypt
-                $serverInfo = [
-                    'tls_crypt' => $this->tlsCrypt->get($requestedProfileId),
-                    'ca' => $this->ca->caCert(),
-                ];
-
-                $clientConfig = ClientConfig::get(
-                    $profileConfig,
-                    $serverInfo,
-                    $certInfo,
-                    ClientConfig::STRATEGY_RANDOM
-                );
-
-                return new Response($clientConfig, ['Content-Type' => 'application/x-openvpn-profile']);
             }
         );
 
@@ -151,6 +127,144 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 return new Response('', [], 204);
             }
         );
+    }
+
+    private function getWireGuardConfigResponse(ProfileConfig $profileConfig, VpnAccessToken $accessToken, string $profileId): Response
+    {
+        $privateKey = self::generatePrivateKey();
+        $publicKey = self::generatePublicKey($privateKey);
+        if (null === $ipInfo = $this->getIpAddress($profileConfig)) {
+            // unable to get new IP address to assign to peer
+            return new JsonResponse(['unable to get a an IP address'], [], 500);
+        }
+        [$ipFour, $ipSix] = $ipInfo;
+
+        // store peer in the DB
+        $this->storage->wgAddPeer($accessToken->getUserId(), $profileId, $accessToken->accessToken()->clientId(), $publicKey, $ipFour, $ipSix, $this->dateTime, null);
+
+        $wgDevice = 'wg'.($profileConfig->profileNumber() - 1);
+
+        // add peer to WG
+        $this->wgDaemon->addPeer($wgDevice, $publicKey, $ipFour, $ipSix);
+
+        $wgInfo = $this->wgDaemon->getInfo($wgDevice);
+
+        $wgConfig = new WgConfig(
+            $publicKey,
+            $ipFour,
+            $ipSix,
+            $wgInfo['PublicKey'],
+            $profileConfig->hostName(),
+            $wgInfo['ListenPort'],
+            $profileConfig->dns(),
+            $privateKey
+        );
+
+        return new Response((string) $wgConfig, ['Content-Type' => 'application/x-wireguard-profile']);
+    }
+
+    private static function generatePrivateKey(): string
+    {
+        ob_start();
+        passthru('/usr/bin/wg genkey');
+
+        return trim(ob_get_clean());
+    }
+
+    private static function generatePublicKey(string $privateKey): string
+    {
+        ob_start();
+        passthru("echo $privateKey | /usr/bin/wg pubkey");
+
+        return trim(ob_get_clean());
+    }
+
+    /**
+     * @param string $ipAddressPrefix
+     *
+     * @return array<string>
+     */
+    private static function getIpInRangeList($ipAddressPrefix)
+    {
+        [$ipAddress, $ipPrefix] = explode('/', $ipAddressPrefix);
+        $ipPrefix = (int) $ipPrefix;
+        $ipNetmask = long2ip(-1 << (32 - $ipPrefix));
+        $ipNetwork = long2ip(ip2long($ipAddress) & ip2long($ipNetmask));
+        $numberOfHosts = (int) 2 ** (32 - $ipPrefix) - 2;
+        if ($ipPrefix > 30) {
+            return [];
+        }
+        $hostList = [];
+        for ($i = 2; $i <= $numberOfHosts; ++$i) {
+            $hostList[] = long2ip(ip2long($ipNetwork) + $i);
+        }
+
+        return $hostList;
+    }
+
+    /**
+     * @return array{0:string,1:string}|null
+     */
+    private function getIpAddress(ProfileConfig $profileConfig)
+    {
+        // make a list of all allocated IPv4 addresses (the IPv6 address is
+        // based on the IPv4 address)
+        $allocatedIpFourList = $this->storage->wgGetAllocatedIpFourAddresses();
+        $ipInRangeList = self::getIpInRangeList($profileConfig->range());
+        foreach ($ipInRangeList as $ipInRange) {
+            if (!\in_array($ipInRange, $allocatedIpFourList, true)) {
+                // include this IPv4 address in IPv6 address
+                [$ipSixAddress, $ipSixPrefix] = explode('/', $profileConfig->range6());
+                $ipSixPrefix = (int) $ipSixPrefix;
+                $ipFourHex = bin2hex(inet_pton($ipInRange));
+                $ipSixHex = bin2hex(inet_pton($ipSixAddress));
+                // clear the last $ipSixPrefix/4 elements
+                $ipSixHex = substr_replace($ipSixHex, str_repeat('0', (int) ($ipSixPrefix / 4)), -((int) ($ipSixPrefix / 4)));
+                $ipSixHex = substr_replace($ipSixHex, $ipFourHex, -8);
+                $ipSix = inet_ntop(hex2bin($ipSixHex));
+
+                return [$ipInRange, $ipSix];
+            }
+        }
+
+        return null;
+    }
+
+    private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, VpnAccessToken $accessToken, string $profileId): Response
+    {
+        $commonName = $this->random->get(16);
+        $certInfo = $this->ca->clientCert($commonName, $accessToken->accessToken()->authorizationExpiresAt());
+        // XXX also store profile_id in DB
+        $this->storage->addCertificate(
+            $accessToken->getUserId(),
+            $commonName,
+            $accessToken->accessToken()->clientId(),
+            new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
+            new DateTimeImmutable(sprintf('@%d', $certInfo['valid_to'])),
+            $accessToken->accessToken()->clientId()
+        );
+
+        $this->storage->addUserLog(
+            $accessToken->getUserId(),
+            LoggerInterface::NOTICE,
+            sprintf('new certificate generated for "%s"', $accessToken->accessToken()->clientId()),
+            $this->dateTime
+        );
+
+        // get the CA & tls-crypt
+        $serverInfo = [
+            'tls_crypt' => $this->tlsCrypt->get($profileId),
+            'ca' => $this->ca->caCert(),
+        ];
+
+        $clientConfig = ClientConfig::get(
+            $profileConfig,
+            $serverInfo,
+            $certInfo,
+            ClientConfig::STRATEGY_RANDOM
+        );
+
+        return new Response($clientConfig, ['Content-Type' => 'application/x-openvpn-profile']);
     }
 
     /**
