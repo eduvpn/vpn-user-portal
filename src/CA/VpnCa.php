@@ -78,7 +78,7 @@ class VpnCa implements CaInterface
      *
      * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function clientCert(string $commonName, DateTimeImmutable $expiresAt)
+    public function clientCert(string $commonName, DateTimeImmutable $expiresAt): array
     {
         // prevent expiresAt to be in the past
         $dateTime = new DateTimeImmutable();
