@@ -38,12 +38,12 @@ class Request
 
     public function getScheme(): string
     {
-        if (null === $requestScheme = $this->optionalHeader('REQUEST_SCHEME')) {
-            $requestScheme = 'http';
+        $requestScheme = 'http';
+        if ('on' === $this->optionalHeader('HTTPS')) {
+            $requestScheme = 'https';
         }
-
-        if (!\in_array($requestScheme, ['http', 'https'], true)) {
-            throw new HttpException('unsupported "REQUEST_SCHEME"', 400);
+        if ('https' === $this->optionalHeader('REQUEST_SCHEME')) {
+            $requestScheme = 'https';
         }
 
         return $requestScheme;
