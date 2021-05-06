@@ -120,11 +120,15 @@ class Request
         }
 
         // remove the VPN_APP_ROOT (if any)
-        if (null === $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
-            return $requestUri;
+        if (null !== $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
+            $requestUri = substr($requestUri, \strlen($appRoot));
         }
 
-        return substr($requestUri, \strlen($appRoot));
+        if (0 === strpos($requestUri, $this->requireHeader('SCRIPT_NAME'))) {
+            $requestUri = substr($requestUri, \strlen($this->requireHeader('SCRIPT_NAME')));
+        }
+
+        return $requestUri;
     }
 
     /**
