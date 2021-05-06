@@ -57,24 +57,19 @@ class Request
      */
     public function getAuthority(): string
     {
-        // we do not care about "userinfo"...
+        // we do NOT care about "userinfo"
         $requestScheme = $this->getScheme();
         $serverName = $this->requireHeader('SERVER_NAME');
         $serverPort = (int) $this->requireHeader('SERVER_PORT');
 
-        $usePort = false;
-        if ('https' === $requestScheme && 443 !== $serverPort) {
-            $usePort = true;
+        if ('https' === $requestScheme && 443 === $serverPort) {
+            return $serverName;
         }
-        if ('http' === $requestScheme && 80 !== $serverPort) {
-            $usePort = true;
-        }
-
-        if ($usePort) {
-            return sprintf('%s:%d', $serverName, $serverPort);
+        if ('http' === $requestScheme && 80 === $serverPort) {
+            return $serverName;
         }
 
-        return $serverName;
+        return $serverName.':'.$serverPort;
     }
 
     public function getUri(): string
