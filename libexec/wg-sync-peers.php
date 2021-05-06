@@ -32,7 +32,7 @@ try {
     foreach ($config->requireArray('vpnProfiles') as $profileId => $profileData) {
         $profileConfig = new ProfileConfig(new Config($profileData));
         if ('wireguard' === $profileConfig->vpnType()) {
-            $wgDevice = 'wg'.(string) $profileConfig->profileNumber();
+            $wgDevice = 'wg'.(string) ($profileConfig->profileNumber() - 1);
             // extract the peers from the DB per profile
             $wgDaemon->syncPeers($wgDevice, $storage->wgGetAllPeers($profileId));
         }
