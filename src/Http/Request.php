@@ -112,6 +112,12 @@ class Request
 
     public function getPathInfo(): string
     {
+        // if we have PATH_INFO available, use it
+        if (null !== $pathInfo = $this->optionalHeader('PATH_INFO')) {
+            return $pathInfo;
+        }
+
+        // if not, we have to reconstruct it
         $requestUri = $this->requireHeader('REQUEST_URI');
 
         // trim the query string (if any)
@@ -122,10 +128,6 @@ class Request
         // remove the VPN_APP_ROOT (if any)
         if (null !== $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
             $requestUri = substr($requestUri, \strlen($appRoot));
-        }
-
-        if (0 === strpos($requestUri, $this->requireHeader('SCRIPT_NAME'))) {
-            $requestUri = substr($requestUri, \strlen($this->requireHeader('SCRIPT_NAME')));
         }
 
         return $requestUri;
