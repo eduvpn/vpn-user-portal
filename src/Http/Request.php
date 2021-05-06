@@ -88,7 +88,7 @@ class Request
 
     public function getRootUri(): string
     {
-        return sprintf('%s://%s%s', $this->getScheme(), $this->getAuthority(), $this->getRoot());
+        return $this->getScheme().'://'.$this->getAuthority().$this->getRoot();
     }
 
     public function getRequestMethod(): string
@@ -107,42 +107,24 @@ class Request
             return false;
         }
 
-        return false !== mb_strpos($httpAccept, 'text/html');
+        return false !== strpos($httpAccept, 'text/html');
     }
 
     public function getPathInfo(): string
     {
-        // XXX can we not make this much simpler?
-        // for example return always the stuff after VPN_APP_ROOT?
-
-        // remove the query string
         $requestUri = $this->requireHeader('REQUEST_URI');
-        if (false !== $pos = mb_strpos($requestUri, '?')) {
-            $requestUri = mb_substr($requestUri, 0, $pos);
+
+        // trim the query string (if any)
+        if (false !== $queryStart = strpos($requestUri, '?')) {
+            $requestUri = substr($requestUri, 0, $queryStart);
         }
 
-        // if requestUri === scriptName
-        $scriptName = $this->requireHeader('SCRIPT_NAME');
-        if ($requestUri === $scriptName) {
-            if (null === $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
-                return '/';
-            }
-
-            // remove VPN_APP_ROOT from the REQUEST_URI
-            return substr($requestUri, \strlen($appRoot));
+        // remove the VPN_APP_ROOT (if any)
+        if (null === $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
+            return $requestUri;
         }
 
-        // remove script_name (if it is part of request_uri
-        if (0 === mb_strpos($requestUri, $scriptName)) {
-            return substr($requestUri, mb_strlen($scriptName));
-        }
-
-        // remove the root
-        if ('/' !== $this->getRoot()) {
-            return mb_substr($requestUri, mb_strlen($this->getRoot()) - 1);
-        }
-
-        return $requestUri;
+        return substr($requestUri, \strlen($appRoot));
     }
 
     /**
