@@ -123,7 +123,50 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         $service->post(
             '/v3/disconnect',
             function (VpnAccessToken $accessToken, Request $request): Response {
-                // we do nothing for now
+//                // XXX catch InputValidationException
+//                $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
+//                $profileList = $this->profileList();
+//                $userPermissions = $this->getPermissionList($accessToken);
+//                $availableProfiles = [];
+//                foreach ($profileList as $profileId => $profileConfig) {
+//                    if ($profileConfig->hideProfile()) {
+//                        continue;
+//                    }
+//                    if ($profileConfig->enableAcl()) {
+//                        // is the user member of the userPermissions?
+//                        if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
+//                            continue;
+//                        }
+//                    }
+
+//                    $availableProfiles[] = $profileId;
+//                }
+
+//                if (!\in_array($requestedProfileId, $availableProfiles, true)) {
+//                    return new JsonResponse(['error' => 'profile not available or no permission'], [], 400);
+//                }
+
+//                $profileConfig = $profileList[$requestedProfileId];
+
+//                if('wireguard' !== $profileConfig->vpnType()) {
+//                    return new Response('', [], 204);
+//                }
+//
+//                // remove peer and remove from DB?
+//                $wgDevice = 'wg'.($profileConfig->profileNumber() - 1);
+//
+//                // we have to find the public key of this user for this
+//                // profile...what if there are multiple wg connections for 1
+//                // user to 1 profile? Meh!
+//                // XXX hwo to do this? require passing public key?
+//                // we'd only have to check it belongs to the user... this is
+//                // neat in the case of providing a public key on connect, can
+//                // provide the same on disconnect...
+//
+//                // XXX also remove from DB
+//
+//                $this->wgDaemon->removePeer($wgDevice, string $publicKey): void
+
                 return new Response('', [], 204);
             }
         );
