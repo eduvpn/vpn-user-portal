@@ -74,9 +74,7 @@ class Request
 
     public function getUri(): string
     {
-        $requestUri = $this->requireHeader('REQUEST_URI');
-
-        return sprintf('%s://%s%s', $this->getScheme(), $this->getAuthority(), $requestUri);
+        return $this->getScheme().'://'.$this->getAuthority().$this->requireHeader('REQUEST_URI');
     }
 
     public function getRoot(): string
