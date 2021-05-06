@@ -52,6 +52,10 @@ class VpnApiModule implements ApiServiceModuleInterface
                 $userPermissions = $this->getPermissionList($accessToken);
                 $userProfileList = [];
                 foreach ($profileList as $profileId => $profileConfig) {
+                    // do not include WireGuard profiles in APIv2
+                    if ('wireguard' === $profileConfig->vpnType()) {
+                        continue;
+                    }
                     if ($profileConfig->hideProfile()) {
                         continue;
                     }
@@ -152,6 +156,10 @@ class VpnApiModule implements ApiServiceModuleInterface
 
                     $availableProfiles = [];
                     foreach ($profileList as $profileId => $profileConfig) {
+                        // do not include WireGuard profiles in APIv2
+                        if ('wireguard' === $profileConfig->vpnType()) {
+                            continue;
+                        }
                         if ($profileConfig->hideProfile()) {
                             continue;
                         }
