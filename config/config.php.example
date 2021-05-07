@@ -194,7 +194,7 @@ return [
 
     // List of VPN profiles
     'vpnProfiles' => [
-        'default' => [
+        'default-ovpn' => [
             // The type of the VPN
             // REQUIRED
             'vpnType' => 'openvpn',
@@ -207,7 +207,7 @@ return [
 
             // The name of the profile as shown in the user and admin portals
             // REQUIRED
-            'displayName' => 'Default',
+            'displayName' => 'Default (OpenVPN)',
 
             // The IPv4 range of the network that will be assigned to clients
             // REQUIRED
@@ -290,6 +290,100 @@ return [
             // DEFAULT = null
             //'dnsDomain' => 'example.org',
 
+            // DEFAULT = []
+            //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
+
+            // Hide the profile from the user portal, i.e. do not allow the
+            // user to choose it
+            // DEFAULT = false
+            //'hideProfile' => false,
+        ],
+        
+        'default-wg' => [
+            // The type of the VPN
+            // REQUIRED
+            'vpnType' => 'wireguard',
+            //'vpnType' => 'openvpn',
+
+            // The number of this profile, every profile per instance has a
+            // unique number
+            // REQUIRED
+            'profileNumber' => 2,
+
+            // The name of the profile as shown in the user and admin portals
+            // REQUIRED
+            'displayName' => 'Default (WireGuard)',
+
+            // The IPv4 range of the network that will be assigned to clients
+            // REQUIRED
+            'range' => '10.43.43.0/24',
+
+            // The IPv6 range of the network that will be assigned to clients
+            // REQUIRED
+            'range6' => 'fd43::/64',
+
+            // The hostname the VPN client(s) will connect to
+            // REQUIRED
+            'hostName' => 'vpn.example',
+
+            // Whether or not to route all traffic from the client over the VPN
+            // DEFAULT = true
+            //'defaultGateway' => false,
+
+            // IPv4 and IPv6 routes to push to the client, only used when
+            // defaultGateway is false
+            // DEFAULT = []
+            //'routes' => [
+            //    '192.168.1.0/24',
+            //    'fd01:1:1:1::/64',
+            //],
+
+            // XXX think about DNS in default scenario, what about "split tunnel"?
+            // IPv4 and IPv6 address of DNS server(s) to push to the client
+            // default could be Quad9 when defaultGateway = true (default) and
+            // default could be [] when defaultGateway = true, might be confusing?!
+            // DEFAULT  = []
+            // Quad9 (https://www.quad9.net)
+            'dns' => ['9.9.9.9', '2620:fe::fe'],
+
+            // The address the OpenVPN processes will listen on
+            // XXX WG?
+            // DEFAULT = '::'
+            //'listenIp' => '::',
+
+            // The IP address to use for connecting to VPN node
+            // DEFAULT = '127.0.0.1'
+            //'nodeIp' => '127.0.0.1',
+
+            // Block access to local LAN when VPN is active
+            // XXX WG?!
+            // DEFAULT = false
+            //'blockLan' => false,
+
+            // Whether or not to allow client-to-client traffic
+            // XXX WG?!
+            // DEFAULT = false
+            //'clientToClient' => false,
+
+            // Whether or not to enable OpenVPN logging
+            // XXX WG?
+            // DEFAULT = false
+            //'enableLog' => false,
+
+            // Whether or not to enable ACLs for controlling who can connect
+            // DEFAULT = false
+            //'enableAcl' => false,
+
+            // The list of permissions to allow access, requires enableAcl to
+            // be true
+            // DEFAULT  = []
+            //'aclPermissionList' => [],
+
+            // XXX WG?
+            // DEFAULT = null
+            //'dnsDomain' => 'example.org',
+
+            // XXX WG?
             // DEFAULT = []
             //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
 
