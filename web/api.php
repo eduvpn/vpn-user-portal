@@ -49,7 +49,7 @@ try {
     $oauthStorage = new OAuthStorage($db);
 
     $keyInstanceMapping = [];
-    if ($config->s('Api')->requireBool('remoteAccess', false)) {
+    if ($config->apiConfig()->remoteAccess()) {
         $keyInstanceMappingFile = $baseDir.'/data/key_instance_mapping.json';
         if (FileIO::exists($keyInstanceMappingFile)) {
             $keyInstanceMapping = Json::decode(FileIO::readFile($keyInstanceMappingFile));

@@ -36,6 +36,11 @@ class Config
         return $this->requireBool('secureCookie', true);
     }
 
+    public function apiConfig(): ApiConfig
+    {
+        return new ApiConfig($this->s('Api'));
+    }
+
     public function s(string $k): self
     {
         if (!\array_key_exists($k, $this->configData)) {

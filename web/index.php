@@ -288,7 +288,7 @@ try {
         $oauthClientDb,
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );
-    $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
+    $oauthServer->setAccessTokenExpiry($config->apiConfig()->tokenExpiry());
     $oauthServer->setRefreshTokenExpiry($sessionExpiry);
 
     $oauthModule = new OAuthModule(

@@ -18,7 +18,7 @@ use LC\Portal\HttpClient\CurlHttpClient;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
-    if ($config->s('Api')->requireBool('remoteAccess', false)) {
+    if ($config->apiConfig()->remoteAccess()) {
         $foreignKeyListFetcher = new ForeignKeyListFetcher($baseDir.'/data');
         $foreignKeyListFetcher->update(
             new CurlHttpClient(),

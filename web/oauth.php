@@ -56,7 +56,7 @@ try {
     $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
     $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $vpnCaPath);
 
-    $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
+    $oauthServer->setAccessTokenExpiry($config->apiConfig()->tokenExpiry());
     $oauthServer->setRefreshTokenExpiry(
         Expiry::calculate(
             $config->sessionExpiry(),
