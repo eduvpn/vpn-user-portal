@@ -13,12 +13,16 @@ namespace LC\Portal;
 
 class ProfileConfig
 {
-    /** @var Config */
-    private $config;
+    private Config $config;
 
     public function __construct(Config $config)
     {
         $this->config = $config;
+    }
+
+    public function profileId(): string
+    {
+        return $this->config->requireString('profileId');
     }
 
     public function vpnType(): string

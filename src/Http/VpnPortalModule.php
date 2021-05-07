@@ -21,7 +21,6 @@ use LC\Portal\Config;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
-use LC\Portal\ProfileConfig;
 use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
@@ -91,9 +90,9 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('downloading configuration files has been disabled by the admin', 403);
                 }
 
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
-                $visibleProfileList = self::filterProfileList($profileList, $userPermissions);
+                $visibleProfileList = self::filterProfileList($profileConfigList, $userPermissions);
 
                 $userCertificateList = $this->storage->getCertificates($userInfo->userId());
 
@@ -134,9 +133,9 @@ class VpnPortalModule implements ServiceModuleInterface
                 $displayName = InputValidation::displayName($request->requirePostParameter('displayName'));
                 $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
 
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
-                $visibleProfileList = self::filterProfileList($profileList, $userPermissions);
+                $visibleProfileList = self::filterProfileList($profileConfigList, $userPermissions);
 
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
@@ -193,11 +192,11 @@ class VpnPortalModule implements ServiceModuleInterface
                 $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userInfo->userId());
 
                 // get the fancy profile name
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
 
                 $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileConfig) {
-                    $idNameMapping[$profileId] = $profileConfig->displayName();
+                foreach ($profileConfigList as $profileConfig) {
+                    $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
                 }
 
                 return new HtmlResponse(
@@ -322,8 +321,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $this->dateTime
         );
 
-        $profileList = $this->profileList();
-        $profileConfig = $profileList[$profileId];
+        $profileConfig = $this->config->profileConfig($profileId);
 
         // get the CA & tls-crypt
         $serverInfo = [
@@ -360,9 +358,9 @@ class VpnPortalModule implements ServiceModuleInterface
      * Filter the list of profiles by checking if the profile should be shown,
      * and that the user has the required permissions in case ACLs are enabled.
      *
-     * @param array<string,\LC\Portal\ProfileConfig> $profileList
+     * @param array<\LC\Portal\ProfileConfig> $profileList
      *
-     * @return array<string,\LC\Portal\ProfileConfig>
+     * @return array<\LC\Portal\ProfileConfig>
      */
     private static function filterProfileList(array $profileList, array $userPermissions): array
     {
@@ -382,21 +380,5 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return $filteredProfileList;
-    }
-
-    /**
-     * XXX duplicate in AdminPortalModule|VpnApiModule.
-     *
-     * @return array<string,\LC\Portal\ProfileConfig>
-     */
-    private function profileList(): array
-    {
-        $profileList = [];
-        foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
-            $profileConfig = new ProfileConfig(new Config($profileData));
-            $profileList[$profileId] = $profileConfig;
-        }
-
-        return $profileList;
     }
 }

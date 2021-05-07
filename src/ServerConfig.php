@@ -43,31 +43,31 @@ class ServerConfig
      */
     public function writeProfiles(array $profileIdDeployList): array
     {
-        $profileList = $this->profileList();
-        // filter out the profiles we do not want on this node
-        if (0 !== \count($profileIdDeployList)) {
-            foreach (array_keys($profileList) as $profileId) {
-                if (!\in_array($profileId, $profileIdDeployList, true)) {
-                    unset($profileList[$profileId]);
+        $profileConfigList = $this->config->profileConfigList();
+        foreach ($profileConfigList as $k => $profileConfig) {
+            // filter out the profiles we do not want on this node, if any
+            if (0 !== \count($profileIdDeployList)) {
+                if (!\in_array($profileConfig->profileId(), $profileIdDeployList, true)) {
+                    unset($profileConfigList[$k]);
+
+                    continue;
                 }
             }
-        }
 
-        // we only take OpenVPN configs here
-        foreach ($profileList as $profileId => $profileConfig) {
+            // only OpenVPN
             if ('openvpn' !== $profileConfig->vpnType()) {
-                unset($profileList[$profileId]);
+                unset($profileConfigList[$k]);
+
+                continue;
             }
         }
 
-        // profileList now contains only the profiles we want to deploy on this
-        // node...
-        ServerConfigCheck::verify($profileList);
+        ServerConfigCheck::verify($profileConfigList);
 
         $serverConfig = [];
-        foreach ($profileList as $profileId => $profileConfig) {
-            $certData = $this->ca->serverCert($profileConfig->hostName(), $profileId);
-            $serverConfig = array_merge($serverConfig, $this->writeProfile($profileId, $profileConfig, $certData));
+        foreach ($profileConfigList as $profileConfig) {
+            $certData = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
+            $serverConfig = array_merge($serverConfig, $this->writeProfile($profileConfig->profileId(), $profileConfig, $certData));
         }
 
         return $serverConfig;
@@ -368,21 +368,5 @@ class ServerConfig
         // processes, let's take 12 bits, so we have 64 profiles with each 64
         // processes...
         return ($profileNumber - 1 << 6) | $processNumber;
-    }
-
-    /**
-     * XXX duplicate in AdminPortalModule|VpnApiModule.
-     *
-     * @return array<string,\LC\Portal\ProfileConfig>
-     */
-    private function profileList(): array
-    {
-        $profileList = [];
-        foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
-            $profileConfig = new ProfileConfig(new Config($profileData));
-            $profileList[$profileId] = $profileConfig;
-        }
-
-        return $profileList;
     }
 }

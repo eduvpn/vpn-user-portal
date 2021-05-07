@@ -22,7 +22,6 @@ use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Json;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
-use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 use RuntimeException;
@@ -60,11 +59,11 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 // get the fancy profile name
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
 
                 $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileConfig) {
-                    $idNameMapping[$profileId] = $profileConfig->displayName();
+                foreach ($profileConfigList as $profileConfig) {
+                    $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
                 }
 
                 $connectionList = $this->daemonWrapper->getConnectionList(null, null);
@@ -86,7 +85,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
 
                 $certData = $this->ca->caCert();
                 // XXX probably wrap all this stuff in its own class...
@@ -103,8 +102,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
-                            // XXX rename template var to profileList
-                            'profileConfigList' => $profileList,
+                            'profileConfigList' => $profileConfigList,
                             'caInfo' => $caInfo,
                         ]
                     )
@@ -143,10 +141,10 @@ class AdminPortalModule implements ServiceModuleInterface
                 $userMessages = $this->storage->getUserLog($userId);
                 $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
                 // get the fancy profile name
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
                 $idNameMapping = [];
-                foreach ($profileList as $profileId => $profileConfig) {
-                    $idNameMapping[$profileId] = $profileConfig->displayName();
+                foreach ($profileConfigList as $profileConfig) {
+                    $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
                 }
 
                 return new HtmlResponse(
@@ -270,7 +268,8 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
+
                 $appUsage = self::getAppUsage($this->storage->getAppUsage());
 
                 return new HtmlResponse(
@@ -280,9 +279,8 @@ class AdminPortalModule implements ServiceModuleInterface
                             'appUsage' => $appUsage,
                             'statsData' => $this->getStatsData(),
                             'graphStats' => $this->getGraphStats(),
-                            'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit($profileList),
-                            // XXX rename to profileList
-                            'profileConfigList' => $profileList,
+                            'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit($profileConfigList),
+                            'profileConfigList' => $profileConfigList,
                         ]
                     )
                 );
@@ -432,13 +430,16 @@ class AdminPortalModule implements ServiceModuleInterface
         return $outputData;
     }
 
-    private function getMaxConcurrentConnectionLimit(array $profileList): array
+    /**
+     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
+     */
+    private function getMaxConcurrentConnectionLimit(array $profileConfigList): array
     {
         $maxConcurrentConnectionLimitList = [];
-        foreach ($profileList as $profileId => $profileData) {
-            [$ipFour, $ipFourPrefix] = explode('/', $profileData->range());
-            $vpnProtoPortsCount = \count($profileData->vpnProtoPorts());
-            $maxConcurrentConnectionLimitList[$profileId] = 2 ** (32 - (int) $ipFourPrefix) - 4 * $vpnProtoPortsCount;
+        foreach ($profileConfigList as $profileConfig) {
+            [$ipFour, $ipFourPrefix] = explode('/', $profileConfig->range());
+            $vpnProtoPortsCount = \count($profileConfig->vpnProtoPorts());
+            $maxConcurrentConnectionLimitList[$profileConfig->profileId()] = 2 ** (32 - (int) $ipFourPrefix) - 4 * $vpnProtoPortsCount;
         }
 
         return $maxConcurrentConnectionLimitList;
@@ -485,21 +486,5 @@ class AdminPortalModule implements ServiceModuleInterface
     private static function getCoordinates(float $f): array
     {
         return [cos(2 * \M_PI * $f), sin(2 * \M_PI * $f)];
-    }
-
-    /**
-     * XXX duplicate in VpnPortalModule|VpnApiModule.
-     *
-     * @return array<string,\LC\Portal\ProfileConfig>
-     */
-    private function profileList(): array
-    {
-        $profileList = [];
-        foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
-            $profileConfig = new ProfileConfig(new Config($profileData));
-            $profileList[$profileId] = $profileConfig;
-        }
-
-        return $profileList;
     }
 }

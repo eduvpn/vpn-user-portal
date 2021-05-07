@@ -15,11 +15,11 @@ use DateInterval;
 use LC\Portal\Exception\ConfigException;
 
 /**
- * XXX use specific methods for config fields, no generic stuff.
+ * XXX finish getting rid of generic methods.
  */
 class Config
 {
-    protected array $configData;
+    private array $configData;
 
     public function __construct(array $configData)
     {
@@ -44,6 +44,38 @@ class Config
     public function vpnCaPath(): string
     {
         return $this->requireString('vpnCaPath', '/usr/bin/vpn-ca');
+    }
+
+    public function profileConfig(string $profileId): ProfileConfig
+    {
+        return new ProfileConfig(
+            new self(
+                array_merge(
+                    ['profileId' => $profileId],
+                    $this->s('vpnProfiles')->requireArray($profileId)
+                )
+            )
+        );
+    }
+
+    /**
+     * @return array<ProfileConfig>
+     */
+    public function profileConfigList(): array
+    {
+        $profileConfigList = [];
+        foreach ($this->s('vpnProfiles')->toArray() as $profileId => $profileData) {
+            $profileConfigList[] = new ProfileConfig(
+                new self(
+                    array_merge(
+                        ['profileId' => $profileId],
+                        $profileData
+                    )
+                )
+            );
+        }
+
+        return $profileConfigList;
     }
 
     public function s(string $k): self
@@ -168,5 +200,10 @@ class Config
         }
 
         return new self(require $configFile);
+    }
+
+    private function toArray(): array
+    {
+        return $this->configData;
     }
 }

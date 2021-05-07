@@ -13,7 +13,6 @@ namespace LC\Portal\OpenVpn;
 
 use LC\Portal\Config;
 use LC\Portal\LoggerInterface;
-use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use RangeException;
 use RuntimeException;
@@ -44,14 +43,13 @@ class DaemonWrapper
         // XXX be very explicit about the array we get back
         // figure out the nodeIp + portList for each profile...
         $profileNodeIpPortList = [];
-        foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
-            $profileNodeIpPortList[$profileId] = [];
-            $profileConfig = new ProfileConfig(new Config($profileData));
-            $profileNodeIpPortList[$profileId]['nodeIp'] = $profileConfig->nodeIp();
+        foreach ($this->config->profileConfigList() as $profileConfig) {
+            $profileNodeIpPortList[$profileConfig->profileId()] = [];
+            $profileNodeIpPortList[$profileConfig->profileId()]['nodeIp'] = $profileConfig->nodeIp();
             $profileNumber = $profileConfig->profileNumber();
-            $profileNodeIpPortList[$profileId]['portList'] = [];
+            $profileNodeIpPortList[$profileConfig->profileId()]['portList'] = [];
             for ($i = 0; $i < \count($profileConfig->vpnProtoPorts()); ++$i) {
-                $profileNodeIpPortList[$profileId]['portList'][] = 11940 + self::toPort($profileNumber, $i);
+                $profileNodeIpPortList[$profileConfig->profileId()]['portList'][] = 11940 + self::toPort($profileNumber, $i);
             }
         }
 
@@ -107,8 +105,7 @@ class DaemonWrapper
     public function killClient(string $commonName): void
     {
         $nodeIpPortList = [];
-        foreach ($this->config->requireArray('vpnProfiles') as $profileData) {
-            $profileConfig = new ProfileConfig(new Config($profileData));
+        foreach ($this->config->profileConfigList() as $profileConfig) {
             $nodeIp = $profileConfig->nodeIp();
             if (!\array_key_exists($nodeIp, $nodeIpPortList)) {
                 // multiple profiles can have the same nodeIp

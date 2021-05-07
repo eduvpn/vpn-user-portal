@@ -51,11 +51,11 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         $service->get(
             '/v3/info',
             function (VpnAccessToken $accessToken, Request $request): Response {
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
                 // XXX really think about storing permissions in OAuth token!
                 $userPermissions = $this->getPermissionList($accessToken);
                 $userProfileList = [];
-                foreach ($profileList as $profileId => $profileConfig) {
+                foreach ($profileConfigList as $profileConfig) {
                     if ($profileConfig->hideProfile()) {
                         continue;
                     }
@@ -66,7 +66,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         }
                     }
                     $userProfileList[] = [
-                        'profile_id' => $profileId,
+                        'profile_id' => $profileConfig->profileId(),
                         'display_name' => $profileConfig->displayName(),
                     ];
                 }
@@ -86,10 +86,10 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             function (VpnAccessToken $accessToken, Request $request): Response {
                 // XXX catch InputValidationException
                 $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
-                $profileList = $this->profileList();
+                $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->getPermissionList($accessToken);
                 $availableProfiles = [];
-                foreach ($profileList as $profileId => $profileConfig) {
+                foreach ($profileConfigList as $profileConfig) {
                     if ($profileConfig->hideProfile()) {
                         continue;
                     }
@@ -100,19 +100,21 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         }
                     }
 
-                    $availableProfiles[] = $profileId;
+                    $availableProfiles[] = $profileConfig->profileId();
                 }
 
                 if (!\in_array($requestedProfileId, $availableProfiles, true)) {
                     return new JsonResponse(['error' => 'profile not available or no permission'], [], 400);
                 }
 
-                $profileConfig = $profileList[$requestedProfileId];
+                $profileConfig = $this->config->profileConfig($requestedProfileId);
 
                 switch ($profileConfig->vpnType()) {
                     case 'openvpn':
+                        // XXX profileId is now part of profileConfig
                         return $this->getOpenVpnConfigResponse($profileConfig, $accessToken, $requestedProfileId);
                     case 'wireguard':
+                        // XXX profileId is now part of profileConfig
                         return $this->getWireGuardConfigResponse($profileConfig, $accessToken, $requestedProfileId);
                     default:
                         return new JsonResponse(['error' => 'invalid vpn_type'], [], 500);
@@ -320,21 +322,5 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         }
 
         return $this->storage->getPermissionList($vpnAccessToken->getUserId());
-    }
-
-    /**
-     * XXX duplicate in AdminPortalModule|VpnPortalModule.
-     *
-     * @return array<string,\LC\Portal\ProfileConfig>
-     */
-    private function profileList(): array
-    {
-        $profileList = [];
-        foreach ($this->config->requireArray('vpnProfiles') as $profileId => $profileData) {
-            $profileConfig = new ProfileConfig(new Config($profileData));
-            $profileList[$profileId] = $profileConfig;
-        }
-
-        return $profileList;
     }
 }

@@ -15,7 +15,6 @@ use DateTimeImmutable;
 use LC\Portal\Config;
 use LC\Portal\Exception\NodeApiException;
 use LC\Portal\LoggerInterface;
-use LC\Portal\ProfileConfig;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 
@@ -133,7 +132,7 @@ class NodeApiModule implements ServiceModuleInterface
 
     private function verifyAcl(string $profileId, string $userId): void
     {
-        $profileConfig = new ProfileConfig($this->config->s('vpnProfiles')->s($profileId));
+        $profileConfig = $this->config->profileConfig($profileId);
         if ($profileConfig->enableAcl()) {
             // ACL is enabled for this profile
             $userPermissionList = $this->storage->getPermissionList($userId);
