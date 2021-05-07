@@ -114,7 +114,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         'vpnPortalConfigurations',
                         [
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
-                            'profileList' => $visibleProfileList,
+                            'profileConfigList' => $visibleProfileList,
                             'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
                         ]
                     )

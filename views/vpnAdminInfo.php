@@ -21,13 +21,13 @@
     </table>
     <h2><?=$this->t('Profiles'); ?></h2>
     <ul class="toc">
-<?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
-        <li><a href="#<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
+<?php foreach ($profileConfigList as $profileConfig): ?>
+        <li><a href="#<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
 <?php endforeach; ?>
     </ul>
 
-    <?php foreach ($profileConfigList as $profileId => $profileConfig): ?>
-    <h3 id="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></h3>
+    <?php foreach ($profileConfigList as $profileConfig): ?>
+    <h3 id="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></h3>
     <table class="tbl">
         <tbody>
             <tr>

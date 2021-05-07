@@ -2,7 +2,7 @@
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Create'); ?></h2>
-    <?php if (0 === count($profileList)): ?>
+    <?php if (0 === count($profileConfigList)): ?>
         <p class="warning">
             <?=$this->t('No VPN profiles are available for your account.'); ?>
         </p>
@@ -19,9 +19,9 @@
         <form method="post" class="frm">
             <fieldset>
                 <label for="profileId"><?=$this->t('Profile'); ?></label>
-                <select name="profileId" id="profileId" size="<?=count($profileList); ?>" required>
-<?php foreach ($profileList as $profileId => $profileConfig): ?>
-                    <option value="<?=$this->e($profileId); ?>"><?=$this->e($profileConfig->displayName()); ?></option>
+                <select name="profileId" id="profileId" size="<?=count($profileConfigList); ?>" required>
+<?php foreach ($profileConfigList as $profileConfig): ?>
+                    <option value="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></option>
 <?php endforeach; ?>
                 </select>
                 <label for="displayName"><?=$this->t('Name'); ?></label>
