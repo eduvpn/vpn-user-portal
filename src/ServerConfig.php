@@ -67,7 +67,7 @@ class ServerConfig
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
             $certData = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
-            $serverConfig = array_merge($serverConfig, $this->writeProfile($profileConfig->profileId(), $profileConfig, $certData));
+            $serverConfig = array_merge($serverConfig, $this->writeProfile($profileConfig, $certData));
         }
 
         return $serverConfig;
@@ -76,7 +76,7 @@ class ServerConfig
     /**
      * @return array<string,string>
      */
-    public function writeProfile(string $profileId, ProfileConfig $profileConfig, array $certData): array
+    public function writeProfile(ProfileConfig $profileConfig, array $certData): array
     {
         $range = new IP($profileConfig->range());
         $range6 = new IP($profileConfig->range6());
@@ -100,8 +100,8 @@ class ServerConfig
             $processConfig['local'] = $profileConfig->listenIp();
             $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
 
-            $configName = sprintf('%s-%d.conf', $profileId, $i);
-            $profileServerConfig[$configName] = $this->writeProcess($profileId, $profileConfig, $processConfig, $certData);
+            $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $i);
+            $profileServerConfig[$configName] = $this->writeProcess($profileConfig, $processConfig, $certData);
         }
 
         return $profileServerConfig;
@@ -132,7 +132,7 @@ class ServerConfig
         return $convertedPortProto;
     }
 
-    private function writeProcess(string $profileId, ProfileConfig $profileConfig, array $processConfig, array $certData): string
+    private function writeProcess(ProfileConfig $profileConfig, array $processConfig, array $certData): string
     {
         $rangeIp = $processConfig['range'];
         $range6Ip = $processConfig['range6'];
@@ -199,7 +199,7 @@ class ServerConfig
             sprintf('dev %s', $processConfig['dev']),
             sprintf('port %d', $processConfig['port']),
             sprintf('management 127.0.0.1 %d', $processConfig['managementPort']),
-            sprintf('setenv PROFILE_ID %s', $profileId),
+            sprintf('setenv PROFILE_ID %s', $profileConfig->profileId()),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
         ];
@@ -234,7 +234,7 @@ class ServerConfig
         $serverConfig[] = '<ca>'.\PHP_EOL.$this->ca->caCert().\PHP_EOL.'</ca>';
         $serverConfig[] = '<cert>'.\PHP_EOL.$certData['cert'].\PHP_EOL.'</cert>';
         $serverConfig[] = '<key>'.\PHP_EOL.$certData['key'].\PHP_EOL.'</key>';
-        $serverConfig[] = '<tls-crypt>'.\PHP_EOL.$this->tlsCrypt->get($profileId).\PHP_EOL.'</tls-crypt>';
+        $serverConfig[] = '<tls-crypt>'.\PHP_EOL.$this->tlsCrypt->get($profileConfig->profileId()).\PHP_EOL.'</tls-crypt>';
 
         $serverConfig = array_merge(
             [
