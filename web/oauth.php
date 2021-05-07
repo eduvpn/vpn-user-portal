@@ -53,8 +53,7 @@ try {
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );
 
-    $vpnCaPath = $config->requireString('vpnCaPath', '/usr/bin/vpn-ca');
-    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $vpnCaPath);
+    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->vpnCaPath());
 
     $oauthServer->setAccessTokenExpiry($config->apiConfig()->tokenExpiry());
     $oauthServer->setRefreshTokenExpiry(

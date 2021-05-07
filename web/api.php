@@ -57,7 +57,7 @@ try {
     }
 
     $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
-    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->requireString('vpnCaPath', '/usr/bin/vpn-ca'));
+    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->vpnCaPath());
 
     $bearerValidator = new BearerValidator(
         $oauthStorage,

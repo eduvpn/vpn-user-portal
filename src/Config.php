@@ -41,6 +41,11 @@ class Config
         return new ApiConfig($this->s('Api'));
     }
 
+    public function vpnCaPath(): string
+    {
+        return $this->requireString('vpnCaPath', '/usr/bin/vpn-ca');
+    }
+
     public function s(string $k): self
     {
         if (!\array_key_exists($k, $this->configData)) {
