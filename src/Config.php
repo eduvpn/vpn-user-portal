@@ -51,6 +51,11 @@ class Config
         return $this->requireString('authModule', 'DbAuthModule');
     }
 
+    public function enableConfigDownload(): bool
+    {
+        return $this->requireBool('enableConfigDownload', true);
+    }
+
     public function profileConfig(string $profileId): ProfileConfig
     {
         return new ProfileConfig(

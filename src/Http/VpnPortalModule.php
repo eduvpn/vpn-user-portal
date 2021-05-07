@@ -86,7 +86,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/configurations',
             function (UserInfo $userInfo, Request $request): Response {
-                if (!$this->config->requireBool('enableConfigDownload', true)) {
+                if (!$this->config->enableConfigDownload()) {
                     throw new HttpException('downloading configuration files has been disabled by the admin', 403);
                 }
 
@@ -113,7 +113,6 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'disableConfigDownload' => $this->config->requireBool('disableConfigDownload', false),
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'profileList' => $visibleProfileList,
                             'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
@@ -126,7 +125,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/configurations',
             function (UserInfo $userInfo, Request $request): Response {
-                if (!$this->config->requireBool('enableConfigDownload', true)) {
+                if (!$this->config->enableConfigDownload()) {
                     throw new HttpException('downloading configuration files has been disabled by the admin', 403);
                 }
 
