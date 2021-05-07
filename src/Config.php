@@ -31,6 +31,11 @@ class Config
         return new DateInterval($this->requireString('sessionExpiry', 'P90D'));
     }
 
+    public function secureCookie(): bool
+    {
+        return $this->requireBool('secureCookie', true);
+    }
+
     public function s(string $k): self
     {
         if (!\array_key_exists($k, $this->configData)) {

@@ -98,9 +98,8 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    $secureCookie = $config->requireBool('secureCookie', true);
-    $cookieBackend = new PhpCookie($secureCookie, $request->getRoot());
-    $sessionBackend = new PhpSession($secureCookie, $request->getRoot());
+    $cookieBackend = new PhpCookie($config->secureCookie(), $request->getRoot());
+    $sessionBackend = new PhpSession($config->secureCookie(), $request->getRoot());
 
     // determine whether or not we want to use another language for the UI
     if (null === $uiLanguage = $cookieBackend->get('L')) {
