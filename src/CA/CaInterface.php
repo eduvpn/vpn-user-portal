@@ -25,7 +25,7 @@ interface CaInterface
      *
      * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function serverCert(string $commonName): array;
+    public function serverCert(string $commonName, string $profileId): array;
 
     /**
      * Generate a certificate for a VPN client.

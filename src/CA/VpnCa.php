@@ -66,9 +66,9 @@ class VpnCa implements CaInterface
      *
      * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function serverCert(string $commonName): array
+    public function serverCert(string $commonName, string $profileId): array
     {
-        $this->execVpnCa(sprintf('-server -name "%s" -not-after CA', $commonName));
+        $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA', $commonName, $profileId));
 
         return $this->certInfo($commonName);
     }

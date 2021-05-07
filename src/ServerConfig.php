@@ -66,7 +66,7 @@ class ServerConfig
 
         $serverConfig = [];
         foreach ($profileList as $profileId => $profileConfig) {
-            $certData = $this->ca->serverCert($profileId);
+            $certData = $this->ca->serverCert($profileConfig->hostName(), $profileId);
             $serverConfig = array_merge($serverConfig, $this->writeProfile($profileId, $profileConfig, $certData));
         }
 
