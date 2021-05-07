@@ -142,9 +142,18 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to download a configuration for this profile', 403);
                 }
 
+                $profileConfig = $this->config->profileConfig($profileId);
+
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
 
-                return $this->getConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
+                switch ($profileConfig->vpnType()) {
+                    case 'openvpn':
+                        return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
+                    case 'wireguard':
+                        return $this->getWireGuardConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
+                    default:
+                        throw new HttpException('unsupported VPN type', 500);
+                }
             }
         );
 
@@ -297,7 +306,52 @@ class VpnPortalModule implements ServiceModuleInterface
         return false;
     }
 
-    private function getConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
+    private function getWireGuardConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
+    {
+        // XXX move all the stuff from VpnApiThreeModule in a Wireguard
+        // wrapper class so we don't have to deal with it twice
+
+//        $privateKey = self::generatePrivateKey();
+//        $publicKey = self::generatePublicKey($privateKey);
+//        if (null === $ipInfo = $this->getIpAddress($profileConfig)) {
+//            // unable to get new IP address to assign to peer
+//            return new JsonResponse(['unable to get a an IP address'], [], 500);
+//        }
+//        [$ipFour, $ipSix] = $ipInfo;
+
+//        // store peer in the DB
+//        $this->storage->wgAddPeer($accessToken->getUserId(), $profileConfig->profileId(), $accessToken->accessToken()->clientId(), $publicKey, $ipFour, $ipSix, $this->dateTime, null);
+
+//        $wgDevice = 'wg'.($profileConfig->profileNumber() - 1);
+
+//        // add peer to WG
+//        $this->wgDaemon->addPeer($wgDevice, $publicKey, $ipFour, $ipSix);
+
+//        $wgInfo = $this->wgDaemon->getInfo($wgDevice);
+
+//        $wgConfig = new WgConfig(
+//            $publicKey,
+//            $ipFour,
+//            $ipSix,
+//            $wgInfo['PublicKey'],
+//            $profileConfig->hostName(),
+//            $wgInfo['ListenPort'],
+//            $profileConfig->dns(),
+//            $privateKey
+//        );
+
+        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
+
+        return new Response(
+            '',
+            [
+                'Content-Type' => 'application/x-wireguard-profile',
+                'Content-Disposition' => sprintf('attachment; filename="%s.conf"', $clientConfigFile),
+            ]
+        );
+    }
+
+    private function getOpenVpnConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
     {
         // create a certificate
         // generate a random string as the certificate's CN
