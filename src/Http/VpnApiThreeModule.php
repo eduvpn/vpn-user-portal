@@ -111,11 +111,9 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
                 switch ($profileConfig->vpnType()) {
                     case 'openvpn':
-                        // XXX profileId is now part of profileConfig
-                        return $this->getOpenVpnConfigResponse($profileConfig, $accessToken, $requestedProfileId);
+                        return $this->getOpenVpnConfigResponse($profileConfig, $accessToken);
                     case 'wireguard':
-                        // XXX profileId is now part of profileConfig
-                        return $this->getWireGuardConfigResponse($profileConfig, $accessToken, $requestedProfileId);
+                        return $this->getWireGuardConfigResponse($profileConfig, $accessToken);
                     default:
                         return new JsonResponse(['error' => 'invalid vpn_type'], [], 500);
                 }
@@ -174,7 +172,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         );
     }
 
-    private function getWireGuardConfigResponse(ProfileConfig $profileConfig, VpnAccessToken $accessToken, string $profileId): Response
+    private function getWireGuardConfigResponse(ProfileConfig $profileConfig, VpnAccessToken $accessToken): Response
     {
         $privateKey = self::generatePrivateKey();
         $publicKey = self::generatePublicKey($privateKey);
@@ -185,7 +183,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         [$ipFour, $ipSix] = $ipInfo;
 
         // store peer in the DB
-        $this->storage->wgAddPeer($accessToken->getUserId(), $profileId, $accessToken->accessToken()->clientId(), $publicKey, $ipFour, $ipSix, $this->dateTime, null);
+        $this->storage->wgAddPeer($accessToken->getUserId(), $profileConfig->profileId(), $accessToken->accessToken()->clientId(), $publicKey, $ipFour, $ipSix, $this->dateTime, null);
 
         $wgDevice = 'wg'.($profileConfig->profileNumber() - 1);
 
@@ -275,10 +273,10 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         return null;
     }
 
-    private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, VpnAccessToken $accessToken, string $profileId): Response
+    private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, VpnAccessToken $accessToken): Response
     {
         $commonName = $this->random->get(16);
-        $certInfo = $this->ca->clientCert($commonName, $profileId, $accessToken->accessToken()->authorizationExpiresAt());
+        $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->accessToken()->authorizationExpiresAt());
         // XXX also store profile_id in DB
         $this->storage->addCertificate(
             $accessToken->getUserId(),
@@ -298,7 +296,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         // get the CA & tls-crypt
         $serverInfo = [
-            'tls_crypt' => $this->tlsCrypt->get($profileId),
+            'tls_crypt' => $this->tlsCrypt->get($profileConfig->profileId()),
             'ca' => $this->ca->caCert(),
         ];
 
