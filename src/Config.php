@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use DateInterval;
 use LC\Portal\Exception\ConfigException;
 
 /**
@@ -23,6 +24,11 @@ class Config
     public function __construct(array $configData)
     {
         $this->configData = $configData;
+    }
+
+    public function sessionExpiry(): DateInterval
+    {
+        return new DateInterval($this->requireString('sessionExpiry', 'P90D'));
     }
 
     public function s(string $k): self

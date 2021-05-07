@@ -81,7 +81,7 @@ try {
     $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $vpnCaPath);
 
     $sessionExpiry = Expiry::calculate(
-        new DateInterval($config->requireString('sessionExpiry', 'P90D')),
+        $config->sessionExpiry(),
         $ca->caExpiresAt()
     );
 

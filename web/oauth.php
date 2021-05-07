@@ -59,7 +59,7 @@ try {
     $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
     $oauthServer->setRefreshTokenExpiry(
         Expiry::calculate(
-            new DateInterval($config->requireString('sessionExpiry', 'P90D')),
+            $config->sessionExpiry(),
             $ca->caExpiresAt()
         )
     );
