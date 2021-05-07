@@ -42,6 +42,7 @@ use LC\Portal\Http\Service;
 use LC\Portal\Http\UpdateUserInfoHook;
 use LC\Portal\Http\UserPassModule;
 use LC\Portal\Http\VpnPortalModule;
+use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\LdapClient;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\PublicSigner;
@@ -54,6 +55,8 @@ use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
+use LC\Portal\WireGuard\Wg;
+use LC\Portal\WireGuard\WgDaemon;
 
 $logger = new SysLogger('vpn-user-portal');
 
@@ -258,6 +261,7 @@ try {
         $cookieBackend,
         $sessionBackend,
         $daemonWrapper,
+        new Wg(new WgDaemon(new CurlHttpClient()), $storage),
         $storage,
         $oauthStorage,
         new TlsCrypt($baseDir.'/data'),

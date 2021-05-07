@@ -25,6 +25,7 @@ use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
 use LC\Portal\TplInterface;
+use LC\Portal\WireGuard\Wg;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -33,6 +34,7 @@ class VpnPortalModule implements ServiceModuleInterface
     private CookieInterface $cookie;
     private SessionInterface $session;
     private DaemonWrapper $daemonWrapper;
+    private Wg $wg;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
     private TlsCrypt $tlsCrypt;
@@ -42,7 +44,7 @@ class VpnPortalModule implements ServiceModuleInterface
     private DateInterval $sessionExpiry;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, SessionInterface $session, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
+    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, SessionInterface $session, DaemonWrapper $daemonWrapper, Wg $wg, Storage $storage, OAuthStorage $oauthStorage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
@@ -51,6 +53,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
         $this->daemonWrapper = $daemonWrapper;
+        $this->wg = $wg;
         $this->tlsCrypt = $tlsCrypt;
         $this->random = $random;
         $this->ca = $ca;
@@ -308,42 +311,19 @@ class VpnPortalModule implements ServiceModuleInterface
 
     private function getWireGuardConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
     {
-        // XXX move all the stuff from VpnApiThreeModule in a Wireguard
-        // wrapper class so we don't have to deal with it twice
-
-//        $privateKey = self::generatePrivateKey();
-//        $publicKey = self::generatePublicKey($privateKey);
-//        if (null === $ipInfo = $this->getIpAddress($profileConfig)) {
-//            // unable to get new IP address to assign to peer
-//            return new JsonResponse(['unable to get a an IP address'], [], 500);
-//        }
-//        [$ipFour, $ipSix] = $ipInfo;
-
-//        // store peer in the DB
-//        $this->storage->wgAddPeer($accessToken->getUserId(), $profileConfig->profileId(), $accessToken->accessToken()->clientId(), $publicKey, $ipFour, $ipSix, $this->dateTime, null);
-
-//        $wgDevice = 'wg'.($profileConfig->profileNumber() - 1);
-
-//        // add peer to WG
-//        $this->wgDaemon->addPeer($wgDevice, $publicKey, $ipFour, $ipSix);
-
-//        $wgInfo = $this->wgDaemon->getInfo($wgDevice);
-
-//        $wgConfig = new WgConfig(
-//            $publicKey,
-//            $ipFour,
-//            $ipSix,
-//            $wgInfo['PublicKey'],
-//            $profileConfig->hostName(),
-//            $wgInfo['ListenPort'],
-//            $profileConfig->dns(),
-//            $privateKey
-//        );
+        // XXX take ProfileConfig as a parameter...
+        $profileConfig = $this->config->profileConfig($profileId);
+        $wgConfig = $this->wg->getConfig(
+            $profileConfig,
+            $userId,
+            $displayName,
+            null
+        );
 
         $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
 
         return new Response(
-            '',
+            (string) $wgConfig,
             [
                 'Content-Type' => 'application/x-wireguard-profile',
                 'Content-Disposition' => sprintf('attachment; filename="%s.conf"', $clientConfigFile),
@@ -353,6 +333,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
     private function getOpenVpnConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
     {
+        // XXX take ProfileConfig as a parameter...
         // create a certificate
         // generate a random string as the certificate's CN
         $commonName = $this->random->get(16);

@@ -29,6 +29,7 @@ use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
+use LC\Portal\WireGuard\Wg;
 use LC\Portal\WireGuard\WgDaemon;
 
 $logger = new SysLogger('vpn-user-portal');
@@ -75,7 +76,7 @@ try {
             new TlsCrypt($baseDir.'/data'),
             new Random(),
             $ca,
-            new WgDaemon(new CurlHttpClient())
+            new Wg(new WgDaemon(new CurlHttpClient()), $storage)
         )
     );
 
