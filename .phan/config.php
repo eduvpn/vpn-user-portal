@@ -41,7 +41,8 @@ return [
     // (Phan relies on Reflection for some types, param counts,
     // and checks for undefined classes/methods/functions)
     //
-    // Supported values: `'5.6'`, `'7.0'`, `'7.1'`, `'7.2'`, `'7.3'`, `'7.4'`, `null`.
+    // Supported values: `'5.6'`, `'7.0'`, `'7.1'`, `'7.2'`, `'7.3'`, `'7.4'`,
+    // `'8.0'`, `'8.1'`, `null`.
     // If this is set to `null`,
     // then Phan assumes the PHP version which is closest to the minor version
     // of the php executable used to execute Phan.
@@ -342,7 +343,6 @@ return [
         'vendor/fkooman/jwt/src',
         'vendor/fkooman/oauth2-server/src',
         'vendor/fkooman/saml-sp/src',
-        'vendor/fkooman/secookie/src',
         'vendor/phpunit/phpunit/src',
     ],
 
