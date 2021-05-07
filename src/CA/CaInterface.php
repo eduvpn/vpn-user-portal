@@ -32,5 +32,5 @@ interface CaInterface
      *
      * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function clientCert(string $commonName, DateTimeImmutable $expiresAt): array;
+    public function clientCert(string $commonName, string $profileId, DateTimeImmutable $expiresAt): array;
 }

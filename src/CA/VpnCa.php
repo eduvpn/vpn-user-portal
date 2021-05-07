@@ -78,7 +78,7 @@ class VpnCa implements CaInterface
      *
      * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function clientCert(string $commonName, DateTimeImmutable $expiresAt): array
+    public function clientCert(string $commonName, string $profileId, DateTimeImmutable $expiresAt): array
     {
         // prevent expiresAt to be in the past
         $dateTime = new DateTimeImmutable();
@@ -86,7 +86,7 @@ class VpnCa implements CaInterface
             throw new CaException(sprintf('can not issue certificates that expire in the past (%s)', $expiresAt->format(DateTimeImmutable::ATOM)));
         }
 
-        $this->execVpnCa(sprintf('-client -name "%s" -not-after %s', $commonName, $expiresAt->format(DateTimeImmutable::ATOM)));
+        $this->execVpnCa(sprintf('-client -name "%s" -ou "%s" -not-after %s', $commonName, $profileId, $expiresAt->format(DateTimeImmutable::ATOM)));
 
         return $this->certInfo($commonName);
     }
