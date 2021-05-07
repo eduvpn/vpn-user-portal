@@ -93,7 +93,6 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userPermissions);
-
                 $userCertificateList = $this->storage->getCertificates($userInfo->userId());
 
                 // if query parameter "all" is set, show all certificates, also
@@ -357,14 +356,14 @@ class VpnPortalModule implements ServiceModuleInterface
      * Filter the list of profiles by checking if the profile should be shown,
      * and that the user has the required permissions in case ACLs are enabled.
      *
-     * @param array<\LC\Portal\ProfileConfig> $profileList
+     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
      *
-     * @return array<\LC\Portal\ProfileConfig>
+     * @return array<string,\LC\Portal\ProfileConfig>
      */
-    private static function filterProfileList(array $profileList, array $userPermissions): array
+    private static function filterProfileList(array $profileConfigList, array $userPermissions): array
     {
-        $filteredProfileList = [];
-        foreach ($profileList as $profileId => $profileConfig) {
+        $filteredProfileConfigList = [];
+        foreach ($profileConfigList as $profileConfig) {
             if ($profileConfig->hideProfile()) {
                 continue;
             }
@@ -375,9 +374,9 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
             }
 
-            $filteredProfileList[$profileId] = $profileConfig;
+            $filteredProfileConfigList[$profileConfig->profileId()] = $profileConfig;
         }
 
-        return $filteredProfileList;
+        return $filteredProfileConfigList;
     }
 }
