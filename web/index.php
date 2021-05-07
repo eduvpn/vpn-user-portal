@@ -107,7 +107,7 @@ try {
     $tpl = new Tpl($templateDirs, $translationDirs, $baseDir.'/web', $uiLanguage);
 
     // Authentication
-    $authModuleCfg = $config->requireString('authModule', 'DbAuthModule');
+    $authModuleCfg = $config->authModule();
 
     $templateDefaults = [
         'enableConfigDownload' => $config->requireBool('enableConfigDownload', true),

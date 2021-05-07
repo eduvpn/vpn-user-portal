@@ -46,6 +46,11 @@ class Config
         return $this->requireString('vpnCaPath', '/usr/bin/vpn-ca');
     }
 
+    public function authModule(): string
+    {
+        return $this->requireString('authModule', 'DbAuthModule');
+    }
+
     public function profileConfig(string $profileId): ProfileConfig
     {
         return new ProfileConfig(

@@ -224,7 +224,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
                     case 'deleteAccount':
                         $this->storage->userDelete($userId);
-                        if ('DbAuthModule' === $this->config->requireString('authModule', 'DbAuthModule')) {
+                        if ('DbAuthModule' === $this->config->authModule()) {
                             $this->storage->localUserDelete($userId);
                         }
                         break;
