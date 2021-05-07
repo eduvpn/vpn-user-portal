@@ -14,7 +14,6 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\HttpClient\CurlHttpClient;
-use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\WgDaemon;
 
@@ -29,12 +28,11 @@ try {
         $baseDir.'/schema'
     );
     $wgDaemon = new WgDaemon(new CurlHttpClient());
-    foreach ($config->requireArray('vpnProfiles') as $profileId => $profileData) {
-        $profileConfig = new ProfileConfig(new Config($profileData));
+    foreach ($config->profileConfigList() as $profileConfig) {
         if ('wireguard' === $profileConfig->vpnType()) {
             $wgDevice = 'wg'.(string) ($profileConfig->profileNumber() - 1);
             // extract the peers from the DB per profile
-            $wgDaemon->syncPeers($wgDevice, $storage->wgGetAllPeers($profileId));
+            $wgDaemon->syncPeers($wgDevice, $storage->wgGetAllPeers($profileConfig->profileId()));
         }
     }
 } catch (Exception $e) {

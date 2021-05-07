@@ -29,7 +29,7 @@ try {
         $baseDir.'/schema'
     );
     $stats = new Stats($storage, new DateTimeImmutable());
-    $statsData = $stats->get(array_keys($config->requireArray('vpnProfiles')));
+    $statsData = $stats->get($config->profileConfigList());
     FileIO::writeFile($baseDir.'/data/stats.json', Json::encode($statsData));
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

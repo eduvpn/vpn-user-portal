@@ -70,7 +70,7 @@ try {
         $baseDir.'/locale',
         $baseDir.'/config/locale',
     ];
-    if (null !== $styleName = $config->optionalString('styleName')) {
+    if (null !== $styleName = $config->styleName()) {
         $templateDirs[] = $baseDir.'/views/'.$styleName;
         $templateDirs[] = $baseDir.'/config/views/'.$styleName;
         $translationDirs[] = $baseDir.'/locale/'.$styleName;
@@ -102,7 +102,7 @@ try {
 
     // determine whether or not we want to use another language for the UI
     if (null === $uiLanguage = $cookieBackend->get('L')) {
-        $uiLanguage = $config->requireString('defaultLanguage', 'en-US');
+        $uiLanguage = $config->defaultLanguage();
     }
     $tpl = new Tpl($templateDirs, $translationDirs, $baseDir.'/web', $uiLanguage);
 
@@ -110,7 +110,7 @@ try {
     $authModuleCfg = $config->authModule();
 
     $templateDefaults = [
-        'enableConfigDownload' => $config->requireBool('enableConfigDownload', true),
+        'enableConfigDownload' => $config->enableConfigDownload(),
         'requestUri' => $request->getUri(),
         'requestRoot' => $request->getRoot(),
         'requestRootUri' => $request->getRootUri(),
@@ -244,7 +244,7 @@ try {
     $daemonWrapper = new DaemonWrapper(
         $config,
         $storage,
-        new DaemonSocket($baseDir.'/config/vpn-daemon', $config->requireBool('vpnDaemonTls', true)),
+        new DaemonSocket($baseDir.'/config/vpn-daemon', $config->vpnDaemonTls()),
         $logger
     );
 

@@ -26,14 +26,17 @@ class Stats
         $this->dateTime = $dateTime;
     }
 
-    public function get(array $profileIdList): array
+    /**
+     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
+     */
+    public function get(array $profileConfigList): array
     {
         $allStatsData = [
             'generated_at' => $this->dateTime->format(DateTimeImmutable::ATOM),
             'profiles' => [],
         ];
 
-        foreach ($profileIdList as $profileId) {
+        foreach ($profileConfigList as $profileConfig) {
             $statsData = [];
             $timeConnection = [];
             $uniqueUsers = [];
@@ -58,7 +61,7 @@ class Stats
     SQL
             );
 
-            $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+            $stmt->bindValue(':profile_id', $profileConfig->profileId(), PDO::PARAM_STR);
             $stmt->execute();
 
             while ($entry = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -136,7 +139,7 @@ class Stats
                 $totalTraffic += $entry['bytes_transferred'];
             }
 
-            $allStatsData['profiles'][$profileId] = [
+            $allStatsData['profiles'][$profileConfig->profileId()] = [
                 'days' => array_values($statsData),
                 'total_traffic' => $totalTraffic,
                 'max_concurrent_connections' => $maxConcurrentConnections,

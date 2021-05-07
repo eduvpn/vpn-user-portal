@@ -14,23 +14,6 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\IP;
-use LC\Portal\ProfileConfig;
-
-/**
- * XXX duplicate.
- *
- * @return array<string,\LC\Portal\ProfileConfig>
- */
-function profileList(Config $config)
-{
-    $profileList = [];
-    foreach ($config->requireArray('vpnProfiles') as $profileId => $profileData) {
-        $profileConfig = new ProfileConfig(new Config($profileData));
-        $profileList[$profileId] = $profileConfig;
-    }
-
-    return $profileList;
-}
 
 /*
  * We want to generate forward and reverse DNS zones for all VPN profiles. But
@@ -51,11 +34,10 @@ try {
 
     $config = Config::fromFile($baseDir.'/config/config.php');
 
-    $profileList = profileList($config);
     $forwardDns = [];
     $reverseFour = [];
     $reverseSix = [];
-    foreach ($profileList as $profileId => $profileConfig) {
+    foreach ($config->profileConfigList() as $profileConfig) {
         $rangeFour = $profileConfig->range();
         $rangeSix = $profileConfig->range6();
         $splitCount = count($profileConfig->vpnProtoPorts());
