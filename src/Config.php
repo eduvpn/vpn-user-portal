@@ -23,12 +23,6 @@ class Config
     public function __construct(array $configData)
     {
         $this->configData = $configData;
-        $this->configData = array_merge(static::defaultConfig(), $configData);
-    }
-
-    public static function defaultConfig(): array
-    {
-        return [];
     }
 
     public function s(string $k): self
