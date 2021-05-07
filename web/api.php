@@ -20,7 +20,6 @@ use LC\Portal\FileIO;
 use LC\Portal\Http\ApiService;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
-use LC\Portal\Http\VpnApiModule;
 use LC\Portal\Http\VpnApiThreeModule;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
@@ -67,17 +66,6 @@ try {
         $keyInstanceMapping
     );
     $service = new ApiService($bearerValidator);
-
-    // API v2
-    $service->addModule(
-        new VpnApiModule(
-            $config,
-            $storage,
-            new TlsCrypt($baseDir.'/data'),
-            new Random(),
-            $ca
-        )
-    );
 
     // API v3
     $service->addModule(
