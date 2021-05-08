@@ -64,6 +64,11 @@ class WgConfig
         return implode(\PHP_EOL, $output);
     }
 
+    public function publicKey(): string
+    {
+        return $this->publicKey;
+    }
+
     public function setPrivateKey(string $privateKey): void
     {
         $this->privateKey = $privateKey;

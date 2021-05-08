@@ -119,7 +119,14 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                             $accessToken->accessToken()->clientId()
                         );
 
-                        return new Response((string) $wgConfig, ['Content-Type' => 'application/x-wireguard-profile']);
+                        return new Response(
+                            (string) $wgConfig,
+                            [
+                                'X-Vpn-Connection-Id' => $wgConfig->publicKey(),
+                                'Expires' => $accessToken->accessToken()->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                                'Content-Type' => 'application/x-wireguard-profile',
+                            ]
+                        );
                     default:
                         return new JsonResponse(['error' => 'invalid vpn_type'], [], 500);
                 }
@@ -215,7 +222,14 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             ClientConfig::STRATEGY_RANDOM
         );
 
-        return new Response($clientConfig, ['Content-Type' => 'application/x-openvpn-profile']);
+        return new Response(
+            $clientConfig,
+            [
+                'X-Vpn-Connection-Id' => $commonName,
+                'Expires' => $accessToken->accessToken()->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                'Content-Type' => 'application/x-openvpn-profile',
+            ]
+        );
     }
 
     /**
