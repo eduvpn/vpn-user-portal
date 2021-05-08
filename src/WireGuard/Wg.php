@@ -17,6 +17,9 @@ use LC\Portal\Storage;
 // XXX introduce WgException?
 use RuntimeException;
 
+/**
+ * Obtain and register a WireGuard configuration file.
+ */
 class Wg
 {
     private WgDaemon $wgDaemon;
@@ -52,9 +55,9 @@ class Wg
         $wgDevice = 'wg'.($profileConfig->profileNumber() - 1);
 
         // add peer to WG
-        $this->wgDaemon->addPeer($wgDevice, $publicKey, $ipFour, $ipSix);
+        $this->wgDaemon->addPeer('http://'.$profileConfig->nodeIp().':8080', $wgDevice, $publicKey, $ipFour, $ipSix);
 
-        $wgInfo = $this->wgDaemon->getInfo($wgDevice);
+        $wgInfo = $this->wgDaemon->getInfo('http://'.$profileConfig->nodeIp().':8080', $wgDevice);
 
         return new WgConfig(
             $publicKey,

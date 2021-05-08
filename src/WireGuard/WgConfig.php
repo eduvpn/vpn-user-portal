@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
+/**
+ * Represent a WireGuard client configuration file.
+ */
 class WgConfig
 {
     private string $publicKey;

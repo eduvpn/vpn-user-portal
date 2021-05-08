@@ -15,12 +15,10 @@ use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\Json;
 
 /**
- * Connect to the wg-daemon.
+ * Interface to the WireGuard Daemon (wg-daemon).
  */
 class WgDaemon
 {
-    const WG_DAEMON_BASE_URL = 'http://localhost:8080';
-
     private HttpClientInterface $httpClient;
 
     public function __construct(HttpClientInterface $httpClient)
@@ -28,16 +26,16 @@ class WgDaemon
         $this->httpClient = $httpClient;
     }
 
-    public function getPeers(string $wgDevice): array
+    public function getPeers(string $wgDaemonEndpoint, string $wgDevice): array
     {
-        $wgInfo = $this->getInfo($wgDevice);
+        $wgInfo = $this->getInfo($wgDaemonEndpoint, $wgDevice);
 
         return \array_key_exists('Peers', $wgInfo) ? $wgInfo['Peers'] : [];
     }
 
-    public function addPeer(string $wgDevice, string $publicKey, string $ipFour, string $ipSix): void
+    public function addPeer(string $wgDaemonEndpoint, string $wgDevice, string $publicKey, string $ipFour, string $ipSix): void
     {
-        $wgInfo = $this->getInfo($wgDevice);
+        $wgInfo = $this->getInfo($wgDaemonEndpoint, $wgDevice);
         $rawPostData = implode(
             '&',
             [
@@ -50,19 +48,19 @@ class WgDaemon
 
         // XXX catch errors
         $httpResponse = $this->httpClient->postRaw(
-            self::WG_DAEMON_BASE_URL.'/add_peer',
+            $wgDaemonEndpoint.'/add_peer',
             [],
             $rawPostData
         );
     }
 
-    public function removePeer(string $wgDevice, string $publicKey): void
+    public function removePeer(string $wgDaemonEndpoint, string $wgDevice, string $publicKey): void
     {
         $rawPostData = implode('&', ['Device='.$wgDevice, 'PublicKey='.urlencode($publicKey)]);
 
         // XXX catch errors
         $httpResponse = $this->httpClient->postRaw(
-            self::WG_DAEMON_BASE_URL.'/remove_peer',
+            $wgDaemonEndpoint.'/remove_peer',
             [],
             $rawPostData
         );
@@ -73,13 +71,13 @@ class WgDaemon
      * done for peers that are not using the API as we assume that API users
      * we perform the right API calls to add/remove their config.
      */
-    public function syncPeers(string $wgDevice, array $peerInfoList): void
+    public function syncPeers(string $wgDaemonEndpoint, string $wgDevice, array $peerInfoList): void
     {
         // XXX it does not remove anything, not really good!
         foreach ($peerInfoList as $peerInfo) {
             if (null === $peerInfo['client_id']) {
                 // do not add peers that are registered through the API
-                $this->addPeer($wgDevice, $peerInfo['public_key'], $peerInfo['ip_four'], $peerInfo['ip_six']);
+                $this->addPeer($wgDaemonEndpoint, $wgDevice, $peerInfo['public_key'], $peerInfo['ip_four'], $peerInfo['ip_six']);
             }
         }
     }
@@ -87,11 +85,11 @@ class WgDaemon
     /**
      * @return array{PublicKey:string,ListenPort:int,Peers:array}
      */
-    public function getInfo(string $wgDevice): array
+    public function getInfo(string $wgDaemonEndpoint, string $wgDevice): array
     {
         // XXX catch errors
         // XXX make sure WG "backend" is in sync with local DB (somehow)
-        $httpResponse = $this->httpClient->get(self::WG_DAEMON_BASE_URL.'/info', ['Device' => $wgDevice], []);
+        $httpResponse = $this->httpClient->get($wgDaemonEndpoint.'/info', ['Device' => $wgDevice], []);
 
         return Json::decode($httpResponse->getBody());
     }
