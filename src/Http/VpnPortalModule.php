@@ -340,6 +340,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $certInfo = $this->ca->clientCert($commonName, $profileId, $expiresAt);
         $this->storage->addCertificate(
             $userId,
+            $profileId,
             $commonName,
             $displayName,
             new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),

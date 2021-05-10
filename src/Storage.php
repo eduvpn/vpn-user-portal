@@ -16,7 +16,7 @@ use PDO;
 
 class Storage
 {
-    const CURRENT_SCHEMA_VERSION = '2021042901';
+    const CURRENT_SCHEMA_VERSION = '2021051001';
 
     private PDO $db;
 
@@ -406,16 +406,17 @@ class Storage
         $stmt->execute();
     }
 
-    public function addCertificate(string $userId, string $commonName, string $displayName, DateTimeImmutable $validFrom, DateTimeImmutable $validTo, ?string $clientId): void
+    public function addCertificate(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $validFrom, DateTimeImmutable $validTo, ?string $clientId): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         INSERT INTO certificates
-            (common_name, user_id, display_name, valid_from, valid_to, client_id)
+            (profile_id, common_name, user_id, display_name, valid_from, valid_to, client_id)
         VALUES
-            (:common_name, :user_id, :display_name, :valid_from, :valid_to, :client_id)
+            (:profile_id, :common_name, :user_id, :display_name, :valid_from, :valid_to, :client_id)
     SQL
         );
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':display_name', $displayName, PDO::PARAM_STR);

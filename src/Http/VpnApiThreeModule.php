@@ -195,6 +195,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         // XXX also store profile_id in DB?
         $this->storage->addCertificate(
             $accessToken->getUserId(),
+            $profileConfig->profileId(),
             $commonName,
             $accessToken->accessToken()->clientId(),
             new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
