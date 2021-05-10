@@ -320,14 +320,13 @@ class VpnPortalModule implements ServiceModuleInterface
             null
         );
 
-        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
-
-        return new Response(
-            (string) $wgConfig,
-            [
-                'Content-Type' => 'application/x-wireguard-profile',
-                'Content-Disposition' => sprintf('attachment; filename="%s.conf"', $clientConfigFile),
-            ]
+        return new HtmlResponse(
+            $this->tpl->render(
+                'vpnPortalWgConfig',
+                [
+                    'wgConfig' => (string) $wgConfig,
+                ]
+            )
         );
     }
 
