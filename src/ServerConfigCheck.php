@@ -19,25 +19,25 @@ use RuntimeException;
 class ServerConfigCheck
 {
     /**
-     * @param array<string,\LC\Portal\ProfileConfig> $profileList
+     * @param array<ProfileConfig> $profileConfigList
      */
-    public static function verify(array $profileList): void
+    public static function verify(array $profileConfigList): void
     {
         // make sure profileNumber is unique for all profiles
         $profileNumberList = [];
         $listenProtoPortList = [];
         $rangeList = [];
-        foreach ($profileList as $profileId => $profileConfig) {
+        foreach ($profileConfigList as $profileConfig) {
             // make sure profileNumber is not reused in multiple profiles
             $profileNumber = $profileConfig->profileNumber();
             if (\in_array($profileNumber, $profileNumberList, true)) {
-                throw new RuntimeException(sprintf('"profileNumber" (%d) in profile "%s" already used', $profileNumber, $profileId));
+                throw new RuntimeException(sprintf('"profileNumber" (%d) in profile "%s" already used', $profileNumber, $profileConfig->profileId()));
             }
             $profileNumberList[] = $profileNumber;
 
             // make sure DNS is set when defaultGateway is true
             if ($profileConfig->defaultGateway() && 0 === \count($profileConfig->dns())) {
-                throw new RuntimeException(sprintf('no DNS set for profile "%s", but defaultGateway is true', $profileId));
+                throw new RuntimeException(sprintf('no DNS set for profile "%s", but defaultGateway is true', $profileConfig->profileId()));
             }
 
             // make sure the listen/port/proto is unique
@@ -46,7 +46,7 @@ class ServerConfigCheck
             foreach ($vpnProtoPorts as $vpnProtoPort) {
                 $listenProtoPort = $listenAddress.' -> '.$vpnProtoPort;
                 if (\in_array($listenProtoPort, $listenProtoPortList, true)) {
-                    throw new RuntimeException(sprintf('"listen/vpnProtoPorts combination "%s" in profile "%s" already used before', $listenProtoPort, $profileId));
+                    throw new RuntimeException(sprintf('"listen/vpnProtoPorts combination "%s" in profile "%s" already used before', $listenProtoPort, $profileConfig->profileId()));
                 }
                 $listenProtoPortList[] = $listenProtoPort;
             }
@@ -59,7 +59,7 @@ class ServerConfigCheck
             $rangeFour = $profileConfig->range();
             [$ipRange, $ipPrefix] = explode('/', $rangeFour);
             if ((int) $ipPrefix > (29 - $prefixSpace)) {
-                throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 29 - $prefixSpace, \count($vpnProtoPorts)));
+                throw new RuntimeException(sprintf('"range" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileConfig->profileId(), 29 - $prefixSpace, \count($vpnProtoPorts)));
             }
             $rangeList[] = $rangeFour;
 
@@ -70,10 +70,10 @@ class ServerConfigCheck
             // we ALSO want the prefix to be divisible by 4 (restriction in
             // IP.php)
             if (0 !== ((int) $ipPrefix) % 4) {
-                throw new RuntimeException(sprintf('prefix length of "range6" in profile "%s" MUST be divisible by 4', $profileId, $ipPrefix));
+                throw new RuntimeException(sprintf('prefix length of "range6" in profile "%s" MUST be divisible by 4', $profileConfig->profileId(), $ipPrefix));
             }
             if ((int) $ipPrefix > (112 - $prefixSpace)) {
-                throw new RuntimeException(sprintf('"range6" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileId, 112 - $prefixSpace, \count($vpnProtoPorts)));
+                throw new RuntimeException(sprintf('"range6" in profile "%s" MUST be at least "/%d" to accommodate %d OpenVPN server process(es)', $profileConfig->profileId(), 112 - $prefixSpace, \count($vpnProtoPorts)));
             }
             $rangeList[] = $rangeSix;
         }

@@ -50,7 +50,7 @@ try {
         new NodeApiModule(
             $config,
             $storage,
-            new ServerConfig($config, $ca, new TlsCrypt($baseDir.'/data'))
+            new ServerConfig($config->profileConfigList(), $ca, new TlsCrypt($baseDir.'/data'))
         )
     );
     $request = new Request($_SERVER, $_GET, $_POST);

@@ -21,39 +21,27 @@ class ServerConfig
     const VPN_GROUP = 'openvpn';
     const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
 
-    private Config $config;
+    /** @var array<ProfileConfig> */
+    private array $profileConfigList;
 
     private CaInterface $ca;
 
     private TlsCrypt $tlsCrypt;
 
-    public function __construct(Config $config, CaInterface $ca, TlsCrypt $tlsCrypt)
+    public function __construct(array $profileConfigList, CaInterface $ca, TlsCrypt $tlsCrypt)
     {
-        $this->config = $config;
+        $this->profileConfigList = $profileConfigList;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
     }
 
     /**
-     * XXX rename method.
-     *
-     * @param array<string> $profileIdDeployList
-     *
      * @return array<string,string>
      */
-    public function writeProfiles(array $profileIdDeployList): array
+    public function getProfiles(): array
     {
-        $profileConfigList = $this->config->profileConfigList();
+        $profileConfigList = $this->profileConfigList;
         foreach ($profileConfigList as $k => $profileConfig) {
-            // filter out the profiles we do not want on this node, if any
-            if (0 !== \count($profileIdDeployList)) {
-                if (!\in_array($profileConfig->profileId(), $profileIdDeployList, true)) {
-                    unset($profileConfigList[$k]);
-
-                    continue;
-                }
-            }
-
             // only OpenVPN
             if ('openvpn' !== $profileConfig->vpnType()) {
                 unset($profileConfigList[$k]);
@@ -67,7 +55,7 @@ class ServerConfig
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
             $certData = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
-            $serverConfig = array_merge($serverConfig, $this->writeProfile($profileConfig, $certData));
+            $serverConfig = array_merge($serverConfig, $this->getProfile($profileConfig, $certData));
         }
 
         return $serverConfig;
@@ -76,7 +64,7 @@ class ServerConfig
     /**
      * @return array<string,string>
      */
-    public function writeProfile(ProfileConfig $profileConfig, array $certData): array
+    public function getProfile(ProfileConfig $profileConfig, array $certData): array
     {
         $range = new IP($profileConfig->range());
         $range6 = new IP($profileConfig->range6());
@@ -101,7 +89,7 @@ class ServerConfig
             $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
 
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $i);
-            $profileServerConfig[$configName] = $this->writeProcess($profileConfig, $processConfig, $certData);
+            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certData);
         }
 
         return $profileServerConfig;
@@ -132,7 +120,7 @@ class ServerConfig
         return $convertedPortProto;
     }
 
-    private function writeProcess(ProfileConfig $profileConfig, array $processConfig, array $certData): string
+    private function getProcess(ProfileConfig $profileConfig, array $processConfig, array $certData): string
     {
         $rangeIp = $processConfig['range'];
         $range6Ip = $processConfig['range6'];
