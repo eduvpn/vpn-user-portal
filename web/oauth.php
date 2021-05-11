@@ -46,7 +46,9 @@ try {
     if ($config->requireBool('sessionExpireAtNight', false)) {
         $sessionExpiry = Expiry::calculate($sessionExpiry);
     }
-    $sessionExpiry = Expiry::doNotOutliveCa(new DateTime($serverClient->getRequireString('ca_expires_at')), $sessionExpiry);
+    $caInfo = $serverClient->getRequireArray('ca_info');
+    $caExpiresAt = new DateTime($caInfo['valid_to']);
+    $sessionExpiry = Expiry::doNotOutliveCa($caExpiresAt, $sessionExpiry);
 
     // OAuth tokens
     $storage = new Storage(

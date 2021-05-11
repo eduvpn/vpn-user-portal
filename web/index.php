@@ -88,7 +88,9 @@ try {
     if ($config->requireBool('sessionExpireAtNight', false)) {
         $sessionExpiry = Expiry::calculate($sessionExpiry);
     }
-    $sessionExpiry = Expiry::doNotOutliveCa(new DateTime($serverClient->getRequireString('ca_expires_at')), $sessionExpiry);
+    $caInfo = $serverClient->getRequireArray('ca_info');
+    $caExpiresAt = new DateTime($caInfo['valid_to']);
+    $sessionExpiry = Expiry::doNotOutliveCa($caExpiresAt, $sessionExpiry);
 
     // we always want browser session to expiry after 30 minutes, *EXCEPT* when
     // the configured "sessionExpiry" is < PT30M, then we want to follow that
