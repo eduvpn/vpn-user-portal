@@ -19,7 +19,7 @@ class ExpiryTest extends TestCase
     /**
      * @return void
      */
-    public function testLong()
+    public function testExpiryAtNight()
     {
         $dataSet = [
             // sessionExpiry, expiresAt, currentDate
@@ -39,6 +39,24 @@ class ExpiryTest extends TestCase
             $dateTime = new DateTime($dataPoint[2]);
             $expiryInterval = Expiry::calculate(new DateInterval($dataPoint[0]), $dateTime);
             $this->assertSame($dataPoint[1], $dateTime->add($expiryInterval)->format(DateTime::ATOM));
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testDoNotOutliveCa()
+    {
+        $dataSet = [
+            // sessionExpiresAt, caExpiresAt, sessionExpiry, currentDate
+            ['2025-01-01T09:00:00+02:00', '2025-01-01T09:00:00+02:00', 'P7Y', '2021-05-11T10:50:00+02:00'],  // sessionExpiry outlives CA
+            ['2021-08-09T10:50:00+02:00', '2025-01-01T09:00:00+02:00', 'P90D', '2021-05-11T10:50:00+02:00'], // sessionExpiry does not outlive CA
+        ];
+
+        foreach ($dataSet as $dataPoint) {
+            $dateTime = new DateTime($dataPoint[3]);
+            $expiryInterval = Expiry::doNotOutliveCa(new DateTime($dataPoint[1]), new DateInterval($dataPoint[2]), $dateTime);
+            $this->assertSame($dataPoint[0], $dateTime->add($expiryInterval)->format(DateTime::ATOM));
         }
     }
 }

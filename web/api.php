@@ -47,6 +47,7 @@ try {
     if ($config->requireBool('sessionExpireAtNight', false)) {
         $sessionExpiry = Expiry::calculate($sessionExpiry);
     }
+    $sessionExpiry = Expiry::doNotOutliveCa(new DateTime($serverClient->getRequireString('ca_expires_at')), $sessionExpiry);
 
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),

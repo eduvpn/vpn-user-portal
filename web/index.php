@@ -79,10 +79,16 @@ try {
         $localeDirs[] = sprintf('%s/config/locale/%s', $baseDir, $styleName);
     }
 
+    $serverClient = new ServerClient(
+        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
+        $config->requireString('apiUri')
+    );
+
     $sessionExpiry = new DateInterval($config->requireString('sessionExpiry', 'P90D'));
     if ($config->requireBool('sessionExpireAtNight', false)) {
         $sessionExpiry = Expiry::calculate($sessionExpiry);
     }
+    $sessionExpiry = Expiry::doNotOutliveCa(new DateTime($serverClient->getRequireString('ca_expires_at')), $sessionExpiry);
 
     // we always want browser session to expiry after 30 minutes, *EXCEPT* when
     // the configured "sessionExpiry" is < PT30M, then we want to follow that
@@ -138,11 +144,6 @@ try {
         $templateDefaults['_show_logout_button'] = false;
     }
     $tpl->addDefault($templateDefaults);
-
-    $serverClient = new ServerClient(
-        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
-        $config->requireString('apiUri')
-    );
 
     $service = new Service($tpl);
     $service->addBeforeHook('csrf_protection', new CsrfProtectionHook());

@@ -17,6 +17,8 @@ use LC\Common\FileIO;
 use LC\Common\Http\JsonResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Service;
+use LC\Common\HttpClient\CurlHttpClient;
+use LC\Common\HttpClient\ServerClient;
 use LC\Common\Logger;
 use LC\Portal\ClientFetcher;
 use LC\Portal\Expiry;
@@ -35,10 +37,16 @@ try {
     $config = Config::fromFile(sprintf('%s/config/config.php', $baseDir));
     $service = new Service();
 
+    $serverClient = new ServerClient(
+        new CurlHttpClient($config->requireString('apiUser'), $config->requireString('apiPass')),
+        $config->requireString('apiUri')
+    );
+
     $sessionExpiry = new DateInterval($config->requireString('sessionExpiry', 'P90D'));
     if ($config->requireBool('sessionExpireAtNight', false)) {
         $sessionExpiry = Expiry::calculate($sessionExpiry);
     }
+    $sessionExpiry = Expiry::doNotOutliveCa(new DateTime($serverClient->getRequireString('ca_expires_at')), $sessionExpiry);
 
     // OAuth tokens
     $storage = new Storage(
