@@ -149,7 +149,6 @@ class ServerConfig
             sprintf('reneg-sec %d', 10 * 60 * 60),
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
-            sprintf('tls-verify %s/tls-verify', self::LIBEXEC_DIR),
             sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
             sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
             // OpenVPN's pool management does NOT include the last usable IP in
