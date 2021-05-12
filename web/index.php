@@ -87,7 +87,7 @@ try {
         $ca->caExpiresAt()
     );
 
-    $dateTime = new DateTimeImmutable();
+    $dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     if ($dateTime->add(new DateInterval('PT30M')) >= $dateTime->add($sessionExpiry)) {
         throw new RuntimeException('sessionExpiry MUST be > PT30M');
     }

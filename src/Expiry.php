@@ -13,6 +13,7 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTimeImmutable;
+use DateTimeZone;
 
 class Expiry
 {
@@ -28,7 +29,7 @@ class Expiry
     public static function calculate(DateInterval $sessionExpiry, DateTimeImmutable $caExpiresAt, ?DateTimeImmutable $dateTime = null): DateInterval
     {
         if (null === $dateTime) {
-            $dateTime = new DateTimeImmutable();
+            $dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         }
 
         $expiresAt = $dateTime->add($sessionExpiry);

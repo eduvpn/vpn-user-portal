@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
 use LC\Portal\Config;
@@ -42,7 +43,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         $this->random = $random;
         $this->ca = $ca;
         $this->wg = $wg;
-        $this->dateTime = new DateTimeImmutable();
+        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
     public function init(ApiService $service): void
@@ -192,7 +193,6 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
     {
         $commonName = $this->random->get(16);
         $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->accessToken()->authorizationExpiresAt());
-        // XXX also store profile_id in DB?
         $this->storage->addCertificate(
             $accessToken->getUserId(),
             $profileConfig->profileId(),

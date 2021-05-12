@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Http\Auth;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
 use LC\Portal\Config;
@@ -33,7 +34,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
     {
         $this->config = $config;
         $this->samlAuth = new SamlAuth();
-        $this->dateTime = new DateTimeImmutable();
+        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
     public function userInfo(Request $request): ?UserInfo

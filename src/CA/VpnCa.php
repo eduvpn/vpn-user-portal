@@ -13,6 +13,7 @@ namespace LC\Portal\CA;
 
 use DateInterval;
 use DateTimeImmutable;
+use DateTimeZone;
 use LC\Portal\CA\Exception\CaException;
 use LC\Portal\FileIO;
 use RuntimeException;
@@ -31,7 +32,7 @@ class VpnCa implements CaInterface
         $this->caKeyType = $caKeyType;
         $this->vpnCaPath = $vpnCaPath;
         $this->caExpiry = $caExpiry;
-        $this->dateTime = new DateTimeImmutable();
+        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
         $this->init();
     }
 
@@ -83,8 +84,7 @@ class VpnCa implements CaInterface
     public function clientCert(string $commonName, string $profileId, DateTimeImmutable $expiresAt): array
     {
         // prevent expiresAt to be in the past
-        $dateTime = new DateTimeImmutable();
-        if ($dateTime->getTimestamp() >= $expiresAt->getTimestamp()) {
+        if ($this->dateTime->getTimestamp() >= $expiresAt->getTimestamp()) {
             throw new CaException(sprintf('can not issue certificates that expire in the past (%s)', $expiresAt->format(DateTimeImmutable::ATOM)));
         }
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\OAuth;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\OAuth\Server\AccessToken;
 use fkooman\OAuth\Server\ClientDbInterface;
@@ -46,7 +47,7 @@ class BearerValidator
         $this->clientDb = $clientDb;
         $this->localPublicKey = $localPublicKey;
         $this->keyInstanceMapping = $keyInstanceMapping;
-        $this->dateTime = new DateTimeImmutable();
+        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
     public function validate(string $authorizationHeader): VpnAccessToken

@@ -48,7 +48,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
         $this->adminHook = $adminHook;
-        $this->dateTime = new DateTimeImmutable();
+        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
     public function init(Service $service): void
@@ -248,13 +248,11 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $now = new DateTimeImmutable();
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
-                            'now' => $now->format(DateTimeImmutable::ATOM),
+                            'now' => $this->dateTime->format(DateTimeImmutable::ATOM),
                             'date_time' => null,
                             'ip_address' => null,
                         ]
@@ -293,16 +291,12 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
-                $dateTimeLocalStr = $dateTime->format('Y-m-d H:i:s');
+                // XXX make sure it works correctly regarding timezone!
 
                 // make sure it is NOT in the future
-                $now = new DateTimeImmutable();
-                if ($dateTime > $now) {
+                if ($dateTime > $this->dateTime) {
                     throw new HttpException('can not specify a time in the future', 400);
                 }
-                // convert it to UTC as our server logs are all in UTC
-                // XXX does this work when immutable?
-                $dateTime->setTimeZone(new DateTimeZone('UTC'));
 
                 $ipAddress = $request->requirePostParameter('ip_address');
                 InputValidation::ipAddress($ipAddress);
@@ -311,8 +305,8 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
-                            'now' => $now->format(DateTimeImmutable::ATOM),
-                            'date_time' => $dateTimeLocalStr,
+                            'now' => $this->dateTime->format(DateTimeImmutable::ATOM),
+                            'date_time' => $dateTime,
                             'ip_address' => $ipAddress,
                             'result' => $this->storage->getLogEntry($dateTime, $ipAddress),
                         ]

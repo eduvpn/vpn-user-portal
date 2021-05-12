@@ -79,7 +79,7 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $storage->localUserAdd($userId, $passwordHash, new DateTimeImmutable());
+    $storage->localUserAdd($userId, $passwordHash, new DateTimeImmutable('now', new DateTimeZone('UTC')));
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use LC\Portal\Config;
 use LC\Portal\Exception\NodeApiException;
 use LC\Portal\LoggerInterface;
@@ -33,7 +34,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->config = $config;
         $this->storage = $storage;
         $this->serverConfig = $serverConfig;
-        $this->dateTime = new DateTimeImmutable();
+        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
     public function init(Service $service): void

@@ -28,7 +28,7 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $stats = new Stats($storage, new DateTimeImmutable());
+    $stats = new Stats($storage, new DateTimeImmutable('now', new DateTimeZone('UTC')));
     $statsData = $stats->get($config->profileConfigList());
     FileIO::writeFile($baseDir.'/data/stats.json', Json::encode($statsData));
 } catch (Exception $e) {
