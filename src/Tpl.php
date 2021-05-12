@@ -265,7 +265,7 @@ class Tpl implements TplInterface
     /**
      * Format a date.
      */
-    private function d(string $dateString, string $dateFormat = 'Y-m-d H:i:s'): string
+    private function d(string $dateString, string $dateFormat = 'Y-m-d H:i:s T'): string
     {
         $dateTime = new DateTimeImmutable($dateString);
         $dateTime = $dateTime->setTimeZone(new DateTimeZone(date_default_timezone_get()));

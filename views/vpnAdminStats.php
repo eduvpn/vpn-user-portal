@@ -18,7 +18,7 @@
             <?php if (array_key_exists($profileConfig->profileId(), $statsData)): ?>
                 <td><?=$this->bth((int) $statsData[$profileConfig->profileId()]['total_traffic']); ?></td>
                 <td><?=$this->e((string) $statsData[$profileConfig->profileId()]['unique_user_count']); ?></td>
-                <td><span title="<?=$this->e((string) $statsData[$profileConfig->profileId()]['max_concurrent_connections_time']); ?> (<?=$this->e(date('T')); ?>)"><?=$this->e((string) $statsData[$profileConfig->profileId()]['max_concurrent_connections']); ?> (<?=$this->e((string) $maxConcurrentConnectionLimit[$profileConfig->profileId()]); ?>)</span></td>
+                <td><span title="<?=$this->e((string) $statsData[$profileConfig->profileId()]['max_concurrent_connections_time']); ?>"><?=$this->e((string) $statsData[$profileConfig->profileId()]['max_concurrent_connections']); ?> (<?=$this->e((string) $maxConcurrentConnectionLimit[$profileConfig->profileId()]); ?>)</span></td>
             <?php else: ?>
                 <td><em><?=$this->t('N/A'); ?></em></td>
                 <td><em><?=$this->t('N/A'); ?></em></td>

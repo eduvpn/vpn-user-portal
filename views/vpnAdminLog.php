@@ -11,7 +11,7 @@
 
     <form class="frm" method="post">
         <fieldset>
-            <label for="dateTime"><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</label>
+            <label for="dateTime"><?=$this->t('Date/Time'); ?></label>
             <input id="dateTime" name="date_time" type="text" size="30" value="<?php if ($date_time): ?><?=$this->d($date_time); ?><?php else: ?><?=$this->d($now); ?><?php endif; ?>" required>
             <label for="ipAddress"><?=$this->t('IP Address'); ?></label>
             <input id="ipAddress" name="ip_address" type="text" size="30" value="<?php if ($ip_address): ?><?=$this->e($ip_address); ?><?php endif; ?>" placeholder="fdc6:6794:d2bf:1::1000" required>
@@ -47,11 +47,11 @@
                         <td><ul><li><?=$this->e($result['ip_four']); ?></li><li><?=$this->e($result['ip_six']); ?></li></ul></td>
                     </tr>
                     <tr>
-                        <th><?=$this->t('Connected'); ?> (<?=$this->e(date('T')); ?>)</th>
+                        <th><?=$this->t('Connected'); ?></th>
                         <td><?=$this->d($result['connected_at']); ?></td>
                     </tr>
                     <tr>
-                        <th><?=$this->t('Disconnected'); ?> (<?=$this->e(date('T')); ?>)</th>
+                        <th><?=$this->t('Disconnected'); ?></th>
                         <td>
                             <?php if ($result['disconnected_at']): ?>
                                 <?=$this->d($result['disconnected_at']); ?>

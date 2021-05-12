@@ -12,8 +12,8 @@
                 <th><?=$this->t('CA'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Created'); ?> (<?=$this->e(date('T')); ?>)</dt><dd><?=$this->d($caInfo['valid_from']); ?></dd>
-                        <dt><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</dt><dd><?=$this->d($caInfo['valid_to']); ?></dd>
+                        <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($caInfo['valid_from']); ?></dd>
+                        <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($caInfo['valid_to']); ?></dd>
                     </dl>
                 </td>
             </tr>

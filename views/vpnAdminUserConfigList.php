@@ -35,7 +35,7 @@
     <?php else: ?>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?> (<?=$this->e(date('T')); ?>)</th></tr>
+                <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?></th></tr>
             </thead>
             <tbody>
             <?php foreach ($clientCertificateList as $clientCertificate): ?>
@@ -59,8 +59,8 @@
         <thead>
             <tr>
                 <th><?=$this->t('Profile'); ?></th>
-                <th><?=$this->t('Connected'); ?> (<?=$this->e(date('T')); ?>)</th>
-                <th><?=$this->t('Disconnected'); ?> (<?=$this->e(date('T')); ?>)</th>
+                <th><?=$this->t('Connected'); ?></th>
+                <th><?=$this->t('Disconnected'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -91,7 +91,7 @@
     <?php else: ?>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Date/Time'); ?> (<?=$this->e(date('T')); ?>)</th><th><?=$this->t('Message'); ?></th></tr>
+                <tr><th><?=$this->t('Date/Time'); ?></th><th><?=$this->t('Message'); ?></th></tr>
             </thead>
             <tbody>
                 <?php foreach ($userMessages as $message): ?>
