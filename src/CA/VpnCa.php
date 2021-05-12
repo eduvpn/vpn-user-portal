@@ -23,12 +23,14 @@ class VpnCa implements CaInterface
     private string $caDir;
     private string $caKeyType;
     private string $vpnCaPath;
+    private DateInterval $caExpiry;
 
-    public function __construct(string $caDir, string $caKeyType, string $vpnCaPath)
+    public function __construct(string $caDir, string $caKeyType, string $vpnCaPath, DateInterval $caExpiry)
     {
         $this->caDir = $caDir;
         $this->caKeyType = $caKeyType;
         $this->vpnCaPath = $vpnCaPath;
+        $this->caExpiry = $caExpiry;
         $this->dateTime = new DateTimeImmutable();
         $this->init();
     }
@@ -114,7 +116,7 @@ class VpnCa implements CaInterface
         $this->execVpnCa(
             sprintf(
                 '-init-ca -not-after %s -name "VPN CA"',
-                $this->dateTime->add(new DateInterval('P10Y'))->format(DateTimeImmutable::ATOM)
+                $this->dateTime->add($this->caExpiry)->format(DateTimeImmutable::ATOM)
             )
         );
     }

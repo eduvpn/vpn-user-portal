@@ -80,7 +80,7 @@ try {
         $translationDirs[] = $baseDir.'/config/locale/'.$styleName;
     }
 
-    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->vpnCaPath());
+    $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->vpnCaPath(), $config->caExpiry());
 
     $sessionExpiry = Expiry::calculate(
         $config->sessionExpiry(),

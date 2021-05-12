@@ -31,6 +31,11 @@ class Config
         return new DateInterval($this->requireString('sessionExpiry', 'P90D'));
     }
 
+    public function caExpiry(): DateInterval
+    {
+        return new DateInterval($this->requireString('caExpiry', 'P10Y'));
+    }
+
     public function secureCookie(): bool
     {
         return $this->requireBool('secureCookie', true);
