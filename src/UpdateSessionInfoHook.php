@@ -11,6 +11,7 @@ namespace LC\Portal;
 
 use DateInterval;
 use DateTime;
+use DateTimeZone;
 use LC\Common\Http\BeforeHookInterface;
 use LC\Common\Http\Exception\HttpException;
 use LC\Common\Http\Request;
@@ -40,7 +41,7 @@ class UpdateSessionInfoHook implements BeforeHookInterface
     {
         $this->session = $session;
         $this->serverClient = $serverClient;
-        $this->dateTime = new DateTime();
+        $this->dateTime = new DateTime('now', new DateTimeZone('UTC'));
         $this->sessionExpiry = $sessionExpiry;
     }
 
