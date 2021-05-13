@@ -43,6 +43,10 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
         // php-saml-sp code doens't need to be called every time, or?
         $authOptions = $this->getAuthOptions();
         if (!$this->samlAuth->isAuthenticated($authOptions)) {
+            // XXX trigger destructor we should really do this elsewhere and for all
+            // code paths... if only PHP had defer...
+            unset($this->samlAuth);
+
             return null;
         }
 
@@ -55,6 +59,10 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
         }
 
         $userId = $samlAttributes[$userIdAttribute][0];
+
+        // XXX trigger destructor we should really do this elsewhere and for all
+        // code paths... ugh!
+        unset($this->samlAuth);
 
         return new UserInfo(
             $userId,
