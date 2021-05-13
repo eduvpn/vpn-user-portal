@@ -39,14 +39,8 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
 
     public function userInfo(Request $request): ?UserInfo
     {
-        // XXX we should probably cache the successful authentication so the
-        // php-saml-sp code doens't need to be called every time, or?
         $authOptions = $this->getAuthOptions();
         if (!$this->samlAuth->isAuthenticated($authOptions)) {
-            // XXX trigger destructor we should really do this elsewhere and for all
-            // code paths... if only PHP had defer...
-            unset($this->samlAuth);
-
             return null;
         }
 
@@ -58,11 +52,11 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
             throw new HttpException(sprintf('missing SAML user_id attribute "%s"', $userIdAttribute), 500);
         }
 
-        $userId = $samlAttributes[$userIdAttribute][0];
-
-        // XXX trigger destructor we should really do this elsewhere and for all
-        // code paths... ugh!
+        // we no longer need "samlAuth" afterwards, call its destructor to
+        // clean up the SamlAuth session and get back our own...
         unset($this->samlAuth);
+
+        $userId = $samlAttributes[$userIdAttribute][0];
 
         return new UserInfo(
             $userId,
