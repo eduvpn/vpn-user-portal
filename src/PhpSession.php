@@ -13,12 +13,11 @@ namespace LC\Portal;
 
 use LC\Portal\Http\SessionInterface;
 
-/**
- * XXX implement server side session expiry, e.g. after 30 minutes.
- */
 class PhpSession implements SessionInterface
 {
     const SESSION_NAME = 'SID';
+
+    const SESSION_EXPIRY = 1800; // 30 minutes
 
     public function __construct(bool $secureCookie, string $cookiePath)
     {
@@ -31,11 +30,26 @@ class PhpSession implements SessionInterface
 
         session_name(self::SESSION_NAME);
         session_start($sessionOptions);
+
+        if (!\array_key_exists('__expires_at', $_SESSION)) {
+            // new session
+            $_SESSION['__expires_at'] = time() + self::SESSION_EXPIRY;
+
+            return;
+        }
+        if ($_SESSION['__expires_at'] > time()) {
+            // existing non-expired session
+            return;
+        }
+        // expired session
+        $this->destroy();
+        $this->regenerate();
     }
 
     public function regenerate(): void
     {
         session_regenerate_id();
+        $_SESSION['__expires_at'] = time() + self::SESSION_EXPIRY;
     }
 
     public function get(string $sessionKey): ?string
@@ -62,6 +76,6 @@ class PhpSession implements SessionInterface
 
     public function destroy(): void
     {
-        session_destroy();
+        $_SESSION = [];
     }
 }
