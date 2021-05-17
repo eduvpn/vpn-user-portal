@@ -35,7 +35,7 @@ use LC\Portal\WireGuard\WgDaemon;
 $logger = new SysLogger('vpn-user-portal');
 
 try {
-    $request = new Request($_SERVER, $_GET, $_POST);
+    $request = Request::createFromGlobals();
     FileIO::createDir($baseDir.'/data', 0700);
     $config = Config::fromFile($baseDir.'/config/config.php');
     $db = new PDO(

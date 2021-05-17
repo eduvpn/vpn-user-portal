@@ -17,7 +17,7 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 
 try {
-    $request = new Request($_SERVER, $_GET, $_POST);
+    $request = Request::createFromGlobals();
 
     if (false === $appRoot = getenv('VPN_APP_ROOT')) {
         $appRootUri = $request->getScheme().'://'.$request->getAuthority();

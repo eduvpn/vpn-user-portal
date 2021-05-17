@@ -53,7 +53,7 @@ try {
             new ServerConfig($config->profileConfigList(), $ca, new TlsCrypt($baseDir.'/data'))
         )
     );
-    $request = new Request($_SERVER, $_GET, $_POST);
+    $request = Request::createFromGlobals();
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger = new SysLogger('vpn-user-portal-node-api');

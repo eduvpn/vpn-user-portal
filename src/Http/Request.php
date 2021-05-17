@@ -24,16 +24,31 @@ class Request
     /** @var array<string,string|string[]> */
     private $postData;
 
+    /** @var array<string,string> */
+    private $cookieData;
+
     /**
      * @param array<string,mixed>           $serverData
      * @param array<string,string|string[]> $getData
      * @param array<string,string|string[]> $postData
+     * @param array<string,string>          $cookieData
      */
-    public function __construct(array $serverData, array $getData = [], array $postData = [])
+    public function __construct(array $serverData, array $getData, array $postData, array $cookieData)
     {
         $this->serverData = $serverData;
         $this->getData = $getData;
         $this->postData = $postData;
+        $this->cookieData = $cookieData;
+    }
+
+    public static function createFromGlobals(): self
+    {
+        return new self(
+            $_SERVER,
+            $_GET,
+            $_POST,
+            $_COOKIE
+        );
     }
 
     public function getScheme(): string
@@ -217,6 +232,15 @@ class Request
         }
 
         return $postData;
+    }
+
+    public function getCookie(string $cookieKey): ?string
+    {
+        if (!\array_key_exists($cookieKey, $this->cookieData)) {
+            return null;
+        }
+
+        return $this->cookieData[$cookieKey];
     }
 
     public function requireHeader(string $headerKey): string

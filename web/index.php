@@ -61,7 +61,7 @@ use LC\Portal\WireGuard\WgDaemon;
 $logger = new SysLogger('vpn-user-portal');
 
 try {
-    $request = new Request($_SERVER, $_GET, $_POST);
+    $request = Request::createFromGlobals();
     FileIO::createDir($baseDir.'/data', 0700);
     $config = Config::fromFile($baseDir.'/config/config.php');
 
@@ -104,7 +104,7 @@ try {
     $sessionBackend = new PhpSession($config->secureCookie(), $request->getRoot());
 
     // determine whether or not we want to use another language for the UI
-    if (null === $uiLanguage = $cookieBackend->get('L')) {
+    if (null === $uiLanguage = $request->getCookie('L')) {
         $uiLanguage = $config->defaultLanguage();
     }
     $tpl = new Tpl($templateDirs, $translationDirs, $baseDir.'/web', $uiLanguage);

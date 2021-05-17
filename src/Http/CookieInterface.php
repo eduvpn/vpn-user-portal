@@ -14,6 +14,4 @@ namespace LC\Portal\Http;
 interface CookieInterface
 {
     public function set(string $cookieName, string $cookieValue): void;
-
-    public function get(string $cookieName): ?string;
 }

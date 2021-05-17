@@ -26,18 +26,6 @@ class PhpCookie implements CookieInterface
         ];
     }
 
-    public function get(string $cookieName): ?string
-    {
-        if (!\array_key_exists($cookieName, $_COOKIE)) {
-            return null;
-        }
-        if (!\is_string($_COOKIE[$cookieName])) {
-            return null;
-        }
-
-        return $_COOKIE[$cookieName];
-    }
-
     public function set(string $cookieName, string $cookieValue): void
     {
         setcookie($cookieName, $cookieValue, $this->cookieOptions);
