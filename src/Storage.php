@@ -324,14 +324,13 @@ class Storage
      */
     public function getAppUsage()
     {
-        // XXX we no longer have client_id avaialble like this, we need a join of some kind
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
             client_id,
-            COUNT(DISTINCT user_id) AS client_count
+            COUNT(DISTINCT client_id) AS client_count
         FROM
-            certificates
+            authorizations
         GROUP BY
             client_id
         ORDER BY
