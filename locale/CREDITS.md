@@ -11,3 +11,4 @@
 * `de_DE`: Fred-Oliver Jury (University of applied Sciences Osnabrück), René-Maximilian Malsky (Universität Osnabrück)
 * `pt_PT`: Raul Ferreira, Marco Teixeira (Universidade do Minho)
 * `es_LA`: Carlos Pedreros (Universidad de La Serena, Chile)
+* `ro_RO`: Vlăduț Butnaru (Gheorghe Asachi Technical University of Iaşi)
