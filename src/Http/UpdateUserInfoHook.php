@@ -54,6 +54,8 @@ class UpdateUserInfoHook extends AbstractHook implements BeforeHookInterface
         }
 
         // update permissionList
+        // XXX we should implement "last seen" here also so we can delete old user accounts
+        // (that are not disabled. Or does all user data gets deleted anyway?)
         $this->storage->userUpdate($userInfo->userId(), $userInfo->permissionList());
         $this->session->set('_user_info_already_updated', 'yes');
 

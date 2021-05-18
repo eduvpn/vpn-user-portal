@@ -41,6 +41,7 @@ class PhpSession implements SessionInterface
             // existing non-expired session
             return;
         }
+
         // expired session
         $this->destroy();
         $this->regenerate();
@@ -76,6 +77,7 @@ class PhpSession implements SessionInterface
 
     public function destroy(): void
     {
+        // XXX is this enough to remove all session keys?
         $_SESSION = [];
     }
 }
