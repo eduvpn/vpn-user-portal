@@ -259,7 +259,18 @@ table.tbl td, table.tbl th {
 }
 
 table.tbl ul {
-  padding: 0 0 0 1em;
+    margin: 0;
+    padding: 0 0 0 0;
+    list-style: none;
+}
+
+table.tbl li {
+    padding: 0;
+    margin-left: 0;
+}
+
+table.tbl li:first-child {
+    margin-top: 0;
 }
 
 table.tbl dl, table.tbl dt {

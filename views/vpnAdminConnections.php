@@ -11,15 +11,13 @@
         <tbody>
     <?php foreach ($vpnConnections as $profileId => $connectionList): ?>
         <tr>
-            <td><span title="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></span></td>
+            <td><a title="<?=$this->e($profileId); ?>" href="#<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></a></td>
             <td><?=count($connectionList); ?></td>
         </tr>
     <?php endforeach; ?>
         </tbody>
     </table>
-    <details>
-        <summary><?=$this->t('Details...'); ?></summary>
-    <?php foreach ($vpnConnections as $profileId => $connectionList): ?>
+<?php foreach ($vpnConnections as $profileId => $connectionList): ?>
         <h2 id="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></h2>
         <?php if (0 === count($connectionList)): ?>
             <p class="plain"><?=$this->t('No clients connected.'); ?></p>
@@ -53,6 +51,5 @@
             </tbody>
             </table>
         <?php endif; ?>
-    <?php endforeach; ?>
-    </details>
+<?php endforeach; ?>
 <?php $this->stop('content'); ?>

@@ -1,14 +1,14 @@
 <?php declare(strict_types=1); ?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
-    <h2><?=$this->t('Create'); ?></h2>
+    <h2><?=$this->t('New'); ?></h2>
     <?php if (0 === count($profileConfigList)): ?>
         <p class="warning">
             <?=$this->t('No VPN profiles are available for your account.'); ?>
         </p>
     <?php else: ?>
 		<p>
-        <?=$this->t('Manually create and download an OpenVPN configuration file for use in your OpenVPN client.'); ?>
+        <?=$this->t('Obtain a new VPN configuration file for use in your VPN client.'); ?>
 		<?=$this->t('Select a profile and choose a name, e.g. "Phone".'); ?>
 		</p>
 
@@ -28,7 +28,7 @@
                 <input type="text" name="displayName" id="displayName" size="32" maxlength="64" placeholder="<?=$this->t('Name'); ?>" autofocus required>
             </fieldset>
             <fieldset>
-                <button type="submit"><?=$this->t('Create and Download'); ?></button>
+                <button type="submit"><?=$this->t('Download'); ?></button>
             </fieldset>
         </form>
     <?php endif; ?>

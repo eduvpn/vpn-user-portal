@@ -17,17 +17,20 @@
                     </dl>
                 </td>
             </tr>
+            <tr>
+                <th><?=$this->t('Profiles'); ?></th>
+                <td>
+                    <ul>
+<?php foreach ($profileConfigList as $profileConfig): ?>
+                        <li><a href="#<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
+<?php endforeach; ?>
+                    </ul>
+                </td>
+            </tr>
         </tbody>
     </table>
-    <h2><?=$this->t('Profiles'); ?></h2>
-    <ul class="toc">
-<?php foreach ($profileConfigList as $profileConfig): ?>
-        <li><a href="#<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
-<?php endforeach; ?>
-    </ul>
-
     <?php foreach ($profileConfigList as $profileConfig): ?>
-    <h3 id="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></h3>
+    <h2 id="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></h2>
     <table class="tbl">
         <tbody>
             <tr>
