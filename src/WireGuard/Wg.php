@@ -13,8 +13,9 @@ namespace LC\Portal\WireGuard;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use LC\Portal\ProfileConfig;
+use fkooman\OAuth\Server\AccessToken;
 // XXX introduce WgException?
+use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use RuntimeException;
 
@@ -39,7 +40,7 @@ class Wg
     /**
      * XXX want only 1 code path both for portal and for API.
      */
-    public function getConfig(ProfileConfig $profileConfig, string $userId, string $displayName, ?string $clientId): WgConfig
+    public function getConfig(ProfileConfig $profileConfig, string $userId, string $displayName, ?AccessToken $accessToken): WgConfig
     {
         $privateKey = self::generatePrivateKey();
         $publicKey = self::generatePublicKey($privateKey);
@@ -51,7 +52,7 @@ class Wg
 
         // store peer in the DB
         // XXX needs expiresat!
-        $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $clientId);
+        $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $accessToken);
 
         $wgDevice = 'wg'.($profileConfig->profileNumber() - 1);
 

@@ -229,47 +229,42 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/removeClientAuthorization',
             function (UserInfo $userInfo, Request $request): Response {
-                // no need to validate the input as we do a strict string match...
+                // XXX input validation auth_auth
                 $authKey = $request->requirePostParameter('auth_key');
-                $clientId = InputValidation::clientId($request->requirePostParameter('client_id'));
 
-                // verify whether the user_id owns the specified auth_key
-                $authorizations = $this->oauthStorage->getAuthorizations($userInfo->userId());
+                if (null === $authorization = $this->oauthStorage->getAuthorization($authKey)) {
+                    throw new HttpException('no such authorization', 400);
+                }
 
-                $authKeyFound = false;
-                foreach ($authorizations as $authorization) {
-                    if ($authorization->authKey() === $authKey && $authorization->clientId() === $clientId) {
-                        $authKeyFound = true;
-                        $this->oauthStorage->deleteAuthorization($authKey);
+                $displayName = $authorization->clientId();
+                // try to get a friendly name for the OAuth client
+                if (null !== $clientInfo = $this->clientDb->get($authorization->clientId())) {
+                    if (null !== $clientDisplayName = $clientInfo->displayName()) {
+                        $displayName = $clientDisplayName;
                     }
                 }
 
-                if (!$authKeyFound) {
-                    throw new HttpException('specified "auth_key" is either invalid or does not belong to this user', 400);
+                // delete OAuth authorization
+                $this->oauthStorage->deleteAuthorization($authKey);
+
+                // XXX maybe introduce a method to retrieve them by auth_key?
+                $certificateList = $this->storage->getCertificates($userInfo->userId());
+                $disconnectList = [];
+                foreach ($certificateList as $certInfo) {
+                    if ($certInfo['auth_key'] === $authKey) {
+                        $disconnectList[] = $certInfo['common_name'];
+                    }
                 }
 
-                // get a list of connections for this user_id with the
-                // particular client_id
-                // NOTE: we have to get the list first before deleting the
-                // certificates, otherwise the clients no longer show up the
-                // list... this is NOT good, possible race condition...
-                $connectionList = $this->daemonWrapper->getConnectionList($clientId, $userInfo->userId());
-
-                // delete the certificates from the server
+                $this->storage->deleteCertificatesWithAuthKey($authKey);
                 $this->storage->addUserLog(
                     $userInfo->userId(),
                     LoggerInterface::NOTICE,
-                    sprintf('certificate(s) for OAuth client "%s" deleted', $clientId),
+                    sprintf('API authorization for client "%s" revoked', $displayName),
                     $this->dateTime
                 );
-
-                $this->storage->deleteCertificatesOfClientId($userInfo->userId(), $clientId);
-
-                // kill all active connections for this user/client_id
-                foreach ($connectionList as $profileId => $clientConnectionList) {
-                    foreach ($clientConnectionList as $clientInfo) {
-                        $this->daemonWrapper->killClient($clientInfo['common_name']);
-                    }
+                foreach ($disconnectList as $commonName) {
+                    $this->daemonWrapper->killClient($commonName);
                 }
 
                 return new RedirectResponse($request->getRootUri().'account', 302);

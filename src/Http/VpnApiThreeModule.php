@@ -117,7 +117,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                             $profileConfig,
                             $accessToken->getUserId(),
                             $accessToken->accessToken()->clientId(),
-                            $accessToken->accessToken()->clientId()
+                            $accessToken->accessToken()
                         );
 
                         return new Response(
@@ -200,7 +200,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             $accessToken->accessToken()->clientId(),
             new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
             new DateTimeImmutable(sprintf('@%d', $certInfo['valid_to'])),
-            $accessToken->accessToken()->clientId()
+            $accessToken->accessToken()
         );
 
         $this->storage->addUserLog(

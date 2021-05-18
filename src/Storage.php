@@ -12,11 +12,12 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateTimeImmutable;
+use fkooman\OAuth\Server\AccessToken;
 use PDO;
 
 class Storage
 {
-    const CURRENT_SCHEMA_VERSION = '2021051001';
+    const CURRENT_SCHEMA_VERSION = '2021051801';
 
     private PDO $db;
 
@@ -32,7 +33,7 @@ class Storage
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
     }
 
-    public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, ?string $clientId): void
+    public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, ?AccessToken $accessToken): void
     {
         $stmt = $this->db->prepare(
             'INSERT INTO wg_peers (
@@ -43,7 +44,7 @@ class Storage
                 ip_four,
                 ip_six,
                 created_at,
-                client_id
+                auth_key
              )
              VALUES(
                 :user_id,
@@ -53,7 +54,7 @@ class Storage
                 :ip_four,
                 :ip_six,
                 :created_at,
-                :client_id
+                :auth_key
              )'
         );
 
@@ -64,7 +65,7 @@ class Storage
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
         $stmt->bindValue(':created_at', $createdAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR | PDO::PARAM_NULL);
+        $stmt->bindValue(':auth_key', null !== $accessToken ? $accessToken->authKey() : null, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
     }
 
@@ -100,7 +101,7 @@ class Storage
     }
 
     /**
-     * @return array<array{display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,client_id:string|null}>
+     * @return array<array{display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,auth_key:string|null}>
      */
     public function wgGetPeers(string $userId): array
     {
@@ -112,7 +113,7 @@ class Storage
                 ip_four,
                 ip_six,
                 created_at,
-                client_id
+                auth_key
              FROM wg_peers
              WHERE
                 user_id = :user_id'
@@ -130,7 +131,7 @@ class Storage
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
                 'created_at' => new DateTimeImmutable($resultRow['created_at']),
-                'client_id' => null === $resultRow['client_id'] ? null : (string) $resultRow['client_id'],
+                'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }
 
@@ -138,7 +139,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,client_id:string|null}>
+     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,auth_key:string|null}>
      */
     public function wgGetAllPeers(string $profileId): array
     {
@@ -150,7 +151,7 @@ class Storage
                 ip_four,
                 ip_six,
                 created_at,
-                client_id
+                auth_key
              FROM
                 wg_peers
              WHERE
@@ -167,7 +168,7 @@ class Storage
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
                 'created_at' => new DateTimeImmutable($resultRow['created_at']),
-                'client_id' => null === $resultRow['client_id'] ? null : (string) $resultRow['client_id'],
+                'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }
 
@@ -323,6 +324,7 @@ class Storage
      */
     public function getAppUsage()
     {
+        // XXX we no longer have client_id avaialble like this, we need a join of some kind
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
@@ -356,7 +358,7 @@ class Storage
             c.display_name AS display_name,
             c.valid_from,
             c.valid_to,
-            c.client_id
+            c.auth_key
         FROM
             users u, certificates c
         WHERE
@@ -406,14 +408,14 @@ class Storage
         $stmt->execute();
     }
 
-    public function addCertificate(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $validFrom, DateTimeImmutable $validTo, ?string $clientId): void
+    public function addCertificate(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $validFrom, DateTimeImmutable $validTo, ?AccessToken $accessToken): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         INSERT INTO certificates
-            (profile_id, common_name, user_id, display_name, valid_from, valid_to, client_id)
+            (profile_id, common_name, user_id, display_name, valid_from, valid_to, auth_key)
         VALUES
-            (:profile_id, :common_name, :user_id, :display_name, :valid_from, :valid_to, :client_id)
+            (:profile_id, :common_name, :user_id, :display_name, :valid_from, :valid_to, :auth_key)
     SQL
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
@@ -422,7 +424,7 @@ class Storage
         $stmt->bindValue(':display_name', $displayName, PDO::PARAM_STR);
         $stmt->bindValue(':valid_from', $validFrom->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':valid_to', $validTo->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR | PDO::PARAM_NULL);
+        $stmt->bindValue(':auth_key', null !== $accessToken ? $accessToken->authKey() : null, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
     }
 
@@ -435,7 +437,7 @@ class Storage
             display_name,
             valid_from,
             valid_to,
-            client_id
+            auth_key
         FROM
             certificates
         WHERE
@@ -464,20 +466,17 @@ class Storage
         $stmt->execute();
     }
 
-    public function deleteCertificatesOfClientId(string $userId, string $clientId): void
+    public function deleteCertificatesWithAuthKey(string $authKey): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         DELETE FROM
             certificates
         WHERE
-            user_id = :user_id
-        AND
-            client_id = :client_id
+            auth_key = :auth_key
     SQL
         );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':client_id', $clientId, PDO::PARAM_STR);
+        $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -675,7 +674,7 @@ class Storage
             l.disconnected_at,
             l.bytes_transferred,
             l.client_lost,
-            c.client_id AS client_id
+            c.auth_key AS auth_key
         FROM
             connection_log l,
             certificates c

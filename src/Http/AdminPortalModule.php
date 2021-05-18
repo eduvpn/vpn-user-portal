@@ -205,7 +205,7 @@ class AdminPortalModule implements ServiceModuleInterface
                                 $this->dateTime
                             );
 
-                            $this->storage->deleteCertificatesOfClientId($userId, $clientAuthorization->clientId());
+                            $this->storage->deleteCertificatesWithAuthKey($clientAuthorization->authKey());
                         }
 
                         // kill all active connections for this user

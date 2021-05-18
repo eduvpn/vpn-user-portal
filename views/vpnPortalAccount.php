@@ -48,7 +48,6 @@
                     <td><span title="<?=$this->e($authorizedClientInfo['client_id']); ?>"><?=$this->e($authorizedClientInfo['display_name']); ?></span></td>
                     <td class="text-right">
                         <form class="frm" method="post" action="removeClientAuthorization">
-                            <input type="hidden" name="client_id" value="<?=$this->e($authorizedClientInfo['client_id']); ?>">
                             <input type="hidden" name="auth_key" value="<?=$this->e($authorizedClientInfo['auth_key']); ?>">
                             <button class="warning"><?=$this->t('Revoke'); ?></button>
                         </form>
