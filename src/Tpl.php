@@ -347,6 +347,7 @@ class Tpl implements TplInterface
             'nl-NL' => 'Nederlands',
             'pl-PL' => 'polski',
             'pt-PT' => 'Português',
+            'ro-RO' => 'română',
             'uk-UA' => 'Українська',
         ];
     }

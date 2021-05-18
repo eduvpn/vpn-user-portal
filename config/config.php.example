@@ -171,7 +171,7 @@ return [
 
     // the supported UI languages
     // DEFAULT: ['en-US']
-    //'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'uk-UA'],
+    //'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'ro-RO', 'uk-UA'],
 
 //    'Api' => [
 //        // expire tokens after 1 hour (default)
