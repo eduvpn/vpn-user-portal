@@ -20,10 +20,13 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\NodeApiModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
+use LC\Portal\OpenVpnServerConfig;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
+use LC\Portal\WgServerConfig;
+use LC\Portal\WireGuard\WgKeyPool;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
@@ -50,7 +53,11 @@ try {
         new NodeApiModule(
             $config,
             $storage,
-            new ServerConfig($config->profileConfigList(), $ca, new TlsCrypt($baseDir.'/data'))
+            new ServerConfig(
+                $config->profileConfigList(),
+                new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data')),
+                new WgServerConfig(new WgKeyPool($baseDir.'/data'))
+            )
         )
     );
     $request = Request::createFromGlobals();
