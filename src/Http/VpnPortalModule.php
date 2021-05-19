@@ -338,8 +338,8 @@ class VpnPortalModule implements ServiceModuleInterface
             $profileId,
             $commonName,
             $displayName,
-            new DateTimeImmutable(sprintf('@%d', $certInfo['valid_from'])),
-            new DateTimeImmutable(sprintf('@%d', $certInfo['valid_to'])),
+            $certInfo->validFrom(),
+            $certInfo->validTo(),
             null
         );
 

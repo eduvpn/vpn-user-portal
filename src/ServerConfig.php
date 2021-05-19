@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use LC\Portal\CA\CaInterface;
+use LC\Portal\CA\CertInfo;
 use RangeException;
 use RuntimeException;
 
@@ -54,8 +55,7 @@ class ServerConfig
 
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
-            $certData = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
-            $serverConfig = array_merge($serverConfig, $this->getProfile($profileConfig, $certData));
+            $serverConfig = array_merge($serverConfig, $this->getProfile($profileConfig));
         }
 
         return $serverConfig;
@@ -64,8 +64,9 @@ class ServerConfig
     /**
      * @return array<string,string>
      */
-    public function getProfile(ProfileConfig $profileConfig, array $certData): array
+    public function getProfile(ProfileConfig $profileConfig): array
     {
+        $certInfo = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
         $range = new IP($profileConfig->range());
         $range6 = new IP($profileConfig->range6());
         $processCount = \count($profileConfig->vpnProtoPorts());
@@ -89,7 +90,7 @@ class ServerConfig
             $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
 
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $i);
-            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certData);
+            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo);
         }
 
         return $profileServerConfig;
@@ -120,7 +121,7 @@ class ServerConfig
         return $convertedPortProto;
     }
 
-    private function getProcess(ProfileConfig $profileConfig, array $processConfig, array $certData): string
+    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo): string
     {
         $rangeIp = $processConfig['range'];
         $range6Ip = $processConfig['range6'];
@@ -191,6 +192,19 @@ class ServerConfig
             sprintf('setenv PROFILE_ID %s', $profileConfig->profileId()),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
+
+            '<ca>',
+            $this->ca->caCert(),
+            '</ca>',
+            '<cert>',
+            $certInfo->pemCert(),
+            '</cert>',
+            '<key>',
+            $certInfo->pemKey(),
+            '</key>',
+            '<tls-crypt>',
+            $this->tlsCrypt->get($profileConfig->profileId()),
+            '</tls-crypt>',
         ];
 
         if (!$profileConfig->enableLog()) {
@@ -219,24 +233,7 @@ class ServerConfig
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
 
-        // add Certificates / keys
-        $serverConfig[] = '<ca>'.\PHP_EOL.$this->ca->caCert().\PHP_EOL.'</ca>';
-        $serverConfig[] = '<cert>'.\PHP_EOL.$certData['cert'].\PHP_EOL.'</cert>';
-        $serverConfig[] = '<key>'.\PHP_EOL.$certData['key'].\PHP_EOL.'</key>';
-        $serverConfig[] = '<tls-crypt>'.\PHP_EOL.$this->tlsCrypt->get($profileConfig->profileId()).\PHP_EOL.'</tls-crypt>';
-
-        $serverConfig = array_merge(
-            [
-                '#',
-                '# OpenVPN Server Configuration',
-                '#',
-                '# ******************************************',
-                '# * THIS FILE IS GENERATED, DO NOT MODIFY! *',
-                '# ******************************************',
-                '#',
-            ],
-            $serverConfig
-        );
+        array_unshift($serverConfig, '# OpenVPN Server Config | Automatically Generated | Do NOT modify!');
 
         return implode(\PHP_EOL, $serverConfig);
     }

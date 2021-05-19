@@ -22,15 +22,11 @@ interface CaInterface
 
     /**
      * Generate a certificate for the VPN server.
-     *
-     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function serverCert(string $commonName, string $profileId): array;
+    public function serverCert(string $commonName, string $profileId): CertInfo;
 
     /**
      * Generate a certificate for a VPN client.
-     *
-     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function clientCert(string $commonName, string $profileId, DateTimeImmutable $expiresAt): array;
+    public function clientCert(string $commonName, string $profileId, DateTimeImmutable $expiresAt): CertInfo;
 }

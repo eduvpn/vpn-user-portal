@@ -11,16 +11,15 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use LC\Portal\CA\CertInfo;
+
 class ClientConfig
 {
     const STRATEGY_FIRST = 0;
     const STRATEGY_RANDOM = 1;
     const STRATEGY_ALL = 2;
 
-    /**
-     * @param null|array{cert:string,key:string,valid_from:int,valid_to:int} $clientCertificate
-     */
-    public static function get(ProfileConfig $profileConfig, array $serverInfo, ?array $clientCertificate, int $remoteStrategy): string
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, CertInfo $certInfo, int $remoteStrategy): string
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->hostName();
@@ -60,34 +59,21 @@ class ClientConfig
             'reneg-sec 0',
 
             '<ca>',
-            // in legacy situation some trimming may be required, for clean
-            // installs this is no longer needed though
-            trim($serverInfo['ca']),
+            $serverInfo['ca'],
             '</ca>',
 
+            '<cert>',
+            $certInfo->pemCert(),
+            '</cert>',
+
+            '<key>',
+            $certInfo->pemKey(),
+            '</key>',
+
             '<tls-crypt>',
-            // in legacy situation some trimming may be required, for
-            // clean installs this is no longer needed
-            trim($serverInfo['tls_crypt']),
+            $serverInfo['tls_crypt'],
             '</tls-crypt>',
         ];
-
-        // if clientCertificate is provided, we add it directly to the
-        // configuration file
-        if (null !== $clientCertificate) {
-            $clientConfig = array_merge(
-                $clientConfig,
-                [
-                    '<cert>',
-                    $clientCertificate['cert'],
-                    '</cert>',
-
-                    '<key>',
-                    $clientCertificate['key'],
-                    '</key>',
-                ]
-            );
-        }
 
         // remote entries
         foreach ($remoteProtoPortList as $remoteProtoPort) {

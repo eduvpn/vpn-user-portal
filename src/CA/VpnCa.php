@@ -66,10 +66,8 @@ class VpnCa implements CaInterface
 
     /**
      * Generate a certificate for the VPN server.
-     *
-     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function serverCert(string $commonName, string $profileId): array
+    public function serverCert(string $commonName, string $profileId): CertInfo
     {
         $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA', $commonName, $profileId));
 
@@ -78,10 +76,8 @@ class VpnCa implements CaInterface
 
     /**
      * Generate a certificate for a VPN client.
-     *
-     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
      */
-    public function clientCert(string $commonName, string $profileId, DateTimeImmutable $expiresAt): array
+    public function clientCert(string $commonName, string $profileId, DateTimeImmutable $expiresAt): CertInfo
     {
         // prevent expiresAt to be in the past
         if ($this->dateTime->getTimestamp() >= $expiresAt->getTimestamp()) {
@@ -121,10 +117,7 @@ class VpnCa implements CaInterface
         );
     }
 
-    /**
-     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
-     */
-    private function certInfo(string $commonName): array
+    private function certInfo(string $commonName): CertInfo
     {
         $certKeyInfo = $this->certKeyInfo(
             sprintf('%s/%s.crt', $this->caDir, $commonName),
@@ -138,22 +131,19 @@ class VpnCa implements CaInterface
         return $certKeyInfo;
     }
 
-    /**
-     * @return array{cert:string,key:string,valid_from:int,valid_to:int}
-     */
-    private function certKeyInfo(string $certFile, string $keyFile): array
+    private function certKeyInfo(string $certFile, string $keyFile): CertInfo
     {
         $certData = $this->readCertificate($certFile);
         $keyData = $this->readKey($keyFile);
         $parsedCert = openssl_x509_parse($certData);
 
-        return [
-            'cert' => $certData,
-            'key' => $keyData,
+        return new CertInfo(
+            $certData,
+            $keyData,
             // XXX make sure the next two exist and are "int"!
-            'valid_from' => (int) $parsedCert['validFrom_time_t'],
-            'valid_to' => (int) $parsedCert['validTo_time_t'],
-        ];
+            (int) $parsedCert['validFrom_time_t'],
+            (int) $parsedCert['validTo_time_t'],
+        );
     }
 
     private function readCertificate(string $certFile): string
