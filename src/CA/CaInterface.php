@@ -18,7 +18,7 @@ interface CaInterface
     /**
      * Get the CA root certificate.
      */
-    public function caCert(): string;
+    public function caCert(): CaInfo;
 
     /**
      * Generate a certificate for the VPN server.

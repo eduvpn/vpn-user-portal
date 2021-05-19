@@ -59,7 +59,7 @@ try {
     $oauthServer->setRefreshTokenExpiry(
         Expiry::calculate(
             $config->sessionExpiry(),
-            $ca->caExpiresAt()
+            $ca->caCert()->validTo()
         )
     );
 

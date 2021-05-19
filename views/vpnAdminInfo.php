@@ -12,8 +12,8 @@
                 <th><?=$this->t('CA'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($caInfo['valid_from']); ?></dd>
-                        <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($caInfo['valid_to']); ?></dd>
+                        <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($caInfo->validFrom()->format(DateTimeImmutable::ATOM)); ?></dd>
+                        <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($caInfo->validTo()->format(DateTimeImmutable::ATOM)); ?></dd>
                     </dl>
                 </td>
             </tr>

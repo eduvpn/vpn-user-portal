@@ -85,25 +85,12 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $profileConfigList = $this->config->profileConfigList();
-
-                $certData = $this->ca->caCert();
-                // XXX probably wrap all this stuff in its own class...
-                $parsedCert = openssl_x509_parse($certData);
-                $validFrom = new DateTimeImmutable('@'.$parsedCert['validFrom_time_t']);
-                $validTo = new DateTimeImmutable('@'.$parsedCert['validTo_time_t']);
-
-                $caInfo = [
-                    'valid_from' => $validFrom->format(DateTimeImmutable::ATOM),
-                    'valid_to' => $validTo->format(DateTimeImmutable::ATOM),
-                ];
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
-                            'profileConfigList' => $profileConfigList,
-                            'caInfo' => $caInfo,
+                            'profileConfigList' => $this->config->profileConfigList(),
+                            'caInfo' => $this->ca->caCert(),
                         ]
                     )
                 );

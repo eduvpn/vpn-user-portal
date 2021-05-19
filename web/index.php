@@ -84,7 +84,7 @@ try {
 
     $sessionExpiry = Expiry::calculate(
         $config->sessionExpiry(),
-        $ca->caExpiresAt()
+        $ca->caCert()->validTo()
     );
 
     $dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));

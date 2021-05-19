@@ -36,32 +36,16 @@ class VpnCa implements CaInterface
         $this->init();
     }
 
-    /**
-     * Get the CA root certificate.
-     */
-    public function caCert(): string
+    public function caCert(): CaInfo
     {
-        $certFile = sprintf('%s/ca.crt', $this->caDir);
+        $certData = $this->readCertificate(sprintf('%s/ca.crt', $this->caDir));
+        $parsedCert = openssl_x509_parse($certData);
 
-        return $this->readCertificate($certFile);
-    }
-
-    public function caExpiresAt(): DateTimeImmutable
-    {
-        $certData = $this->readCertificate($this->caDir.'/ca.crt');
-        $certInfo = openssl_x509_parse($certData);
-        if (!\is_array($certInfo)) {
-            throw new CaException('unable to parse CA certificate');
-        }
-        if (!\array_key_exists('validTo_time_t', $certInfo)) {
-            throw new CaException('unable to extract "valid_to" from CA certificate');
-        }
-        $validTo = $certInfo['validTo_time_t'];
-        if (!\is_int($validTo)) {
-            throw new CaException('"validTo_time_t" not of type int');
-        }
-
-        return new DateTimeImmutable('@'.$validTo);
+        return new CaInfo(
+            $certData,
+            (int) $parsedCert['validFrom_time_t'],
+            (int) $parsedCert['validTo_time_t'],
+        );
     }
 
     /**
