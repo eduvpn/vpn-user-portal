@@ -2,7 +2,7 @@
     "authors": [
         {
             "email": "fkooman@tuxed.net",
-            "name": "François Kooman",
+            "name": "Fran\u00e7ois Kooman",
             "role": "Developer"
         }
     ],
@@ -38,6 +38,7 @@
         "ext-curl": "*",
         "ext-date": "*",
         "ext-hash": "*",
+        "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-sodium": "*",

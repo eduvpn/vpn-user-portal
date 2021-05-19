@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73687a199ebe009340aa7204728ea2c0",
+    "content-hash": "ab5aa52c17da38f857d3de68dead97f4",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -2262,6 +2262,7 @@
         "ext-curl": "*",
         "ext-date": "*",
         "ext-hash": "*",
+        "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-sodium": "*",
