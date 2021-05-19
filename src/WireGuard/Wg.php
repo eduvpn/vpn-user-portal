@@ -62,14 +62,12 @@ class Wg
         $wgInfo = $this->wgDaemon->getInfo('http://'.$profileConfig->nodeIp().':8080', $wgDevice);
 
         return new WgConfig(
+            $profileConfig,
             $publicKey,
+            $privateKey,
             $ipFour,
             $ipSix,
-            $wgInfo['PublicKey'],
-            $profileConfig->hostName(),
-            $wgInfo['ListenPort'],
-            $profileConfig->dns(),
-            $privateKey
+            $wgInfo['PublicKey']
         );
     }
 

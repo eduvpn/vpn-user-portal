@@ -11,53 +11,51 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
+use LC\Portal\ProfileConfig;
+
 /**
  * Represent a WireGuard client configuration file.
  */
 class WgConfig
 {
+    private ProfileConfig $profileConfig;
     private string $publicKey;
+    private string $privateKey;
     private string $ipFour;
     private string $ipSix;
     private string $serverPublicKey;
-    private string $hostName;
-    private int $listenPort;
 
-    /** @var array<string> */
-    private array $dnsServerList;
-    private ?string $privateKey;
-
-    /**
-     * @param array<string> $dnsServerList
-     */
-    public function __construct(string $publicKey, string $ipFour, string $ipSix, string $serverPublicKey, string $hostName, int $listenPort, array $dnsServerList, ?string $privateKey)
+    public function __construct(ProfileConfig $profileConfig, string $publicKey, string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey)
     {
+        $this->profileConfig = $profileConfig;
         $this->publicKey = $publicKey;
+        $this->privateKey = $privateKey;
         $this->ipFour = $ipFour;
         $this->ipSix = $ipSix;
         $this->serverPublicKey = $serverPublicKey;
-        $this->hostName = $hostName;
-        $this->listenPort = $listenPort;
-        $this->dnsServerList = $dnsServerList;
-        $this->privateKey = $privateKey;
     }
 
     public function __toString(): string
     {
+        $routeList = [];
+        if ($this->profileConfig->defaultGateway()) {
+            $routeList[] = '0.0.0.0/0';
+            $routeList[] = '::/0';
+        }
+        $routeList = array_merge($routeList, $this->profileConfig->routes());
+
         $output = [];
         $output[] = '[Interface]';
-        if (null !== $this->privateKey) {
-            $output[] = 'PrivateKey = '.$this->privateKey;
-        }
+        $output[] = 'PrivateKey = '.$this->privateKey;
         $output[] = 'Address = '.$this->ipFour.'/24, '.$this->ipSix.'/64';
-        if (0 !== \count($this->dnsServerList)) {
-            $output[] = 'DNS = '.implode(', ', $this->dnsServerList);
+        if (0 !== \count($this->profileConfig->dns())) {
+            $output[] = 'DNS = '.implode(', ', $this->profileConfig->dns());
         }
         $output[] = '';
         $output[] = '[Peer]';
         $output[] = 'PublicKey = '.$this->serverPublicKey;
-        $output[] = 'AllowedIPs = 0.0.0.0/0, ::/0';
-        $output[] = 'Endpoint = '.$this->hostName.':'.(string) $this->listenPort;
+        $output[] = 'AllowedIPs = '.implode(', ', $routeList);
+        $output[] = 'Endpoint = '.$this->profileConfig->hostName().':'.(string) (51820 + $this->profileConfig->profileNumber() - 1);
         // client is probably behind NAT, so try to keep the connection alive
         $output[] = 'PersistentKeepalive = 25';
 
