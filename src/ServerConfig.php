@@ -194,7 +194,7 @@ class ServerConfig
             sprintf('local %s', $processConfig['local']),
 
             '<ca>',
-            $this->ca->caCert(),
+            $this->ca->caCert()->pemCert(),
             '</ca>',
             '<cert>',
             $certInfo->pemCert(),
