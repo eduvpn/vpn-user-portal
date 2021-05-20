@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use LC\Portal\CA\CaInfo;
 use LC\Portal\CA\CertInfo;
 
 class ClientConfig
@@ -19,7 +20,7 @@ class ClientConfig
     const STRATEGY_RANDOM = 1;
     const STRATEGY_ALL = 2;
 
-    public static function get(ProfileConfig $profileConfig, array $serverInfo, CertInfo $certInfo, int $remoteStrategy): string
+    public static function get(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, int $remoteStrategy): string
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->hostName();
@@ -59,7 +60,7 @@ class ClientConfig
             'reneg-sec 0',
 
             '<ca>',
-            $serverInfo['ca'],
+            $caInfo->pemCert(),
             '</ca>',
 
             '<cert>',
@@ -71,7 +72,7 @@ class ClientConfig
             '</key>',
 
             '<tls-crypt>',
-            $serverInfo['tls_crypt'],
+            $tlsCrypt->get($profileConfig->profileId()),
             '</tls-crypt>',
         ];
 
