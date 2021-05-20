@@ -66,7 +66,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
                 }
 
-                $connectionList = $this->daemonWrapper->getConnectionList(null, null);
+                $connectionList = $this->daemonWrapper->getConnectionList(null);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -174,7 +174,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 switch ($userAction) {
                     case 'disableUser':
                         // get active connections for this user
-                        $connectionList = $this->daemonWrapper->getConnectionList($userId, null);
+                        $connectionList = $this->daemonWrapper->getConnectionList($userId);
 
                         // disable the user
                         $this->storage->disableUser($userId);

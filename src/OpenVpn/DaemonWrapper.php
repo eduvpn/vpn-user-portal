@@ -38,7 +38,7 @@ class DaemonWrapper
         $this->logger = $logger;
     }
 
-    public function getConnectionList(?string $userId, ?string $clientId): array
+    public function getConnectionList(?string $userId): array
     {
         // XXX be very explicit about the array we get back
         // figure out the nodeIp + portList for each profile...
@@ -79,12 +79,6 @@ class DaemonWrapper
                     if (null !== $userId) {
                         // filter by userId
                         if ($userId !== $certInfo['user_id']) {
-                            continue;
-                        }
-                    }
-                    if (null !== $clientId) {
-                        // filter by clientId
-                        if ($clientId !== $certInfo['client_id']) {
                             continue;
                         }
                     }

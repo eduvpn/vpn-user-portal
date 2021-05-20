@@ -106,7 +106,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $manualCertificateList = [];
                 if (false === $showAll) {
                     foreach ($userCertificateList as $userCertificate) {
-                        if (null === $userCertificate['client_id']) {
+                        if (null === $userCertificate['auth_key']) {
                             $manualCertificateList[] = $userCertificate;
                         }
                     }
