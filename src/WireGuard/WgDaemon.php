@@ -67,18 +67,15 @@ class WgDaemon
     }
 
     /**
-     * Very inefficient way to register all peers (again) with WG. This is only
-     * done for peers that are not using the API as we assume that API users
-     * we perform the right API calls to add/remove their config.
+     * Very inefficient way to register all peers (again) with WG.
      */
     public function syncPeers(string $wgDaemonEndpoint, string $wgDevice, array $peerInfoList): void
     {
-        // XXX it does not remove anything, not really good!
+        // XXX this only adds peers, it may also needs to remove the ones that
+        // shouldn't be there anymore. We need to implement a proper sync
+        // together with wg-daemon...
         foreach ($peerInfoList as $peerInfo) {
-            if (null === $peerInfo['client_id']) {
-                // do not add peers that are registered through the API
-                $this->addPeer($wgDaemonEndpoint, $wgDevice, $peerInfo['public_key'], $peerInfo['ip_four'], $peerInfo['ip_six']);
-            }
+            $this->addPeer($wgDaemonEndpoint, $wgDevice, $peerInfo['public_key'], $peerInfo['ip_four'], $peerInfo['ip_six']);
         }
     }
 
