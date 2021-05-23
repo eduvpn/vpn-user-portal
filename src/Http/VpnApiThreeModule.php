@@ -132,6 +132,11 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 }
             }
         );
+
+        $service->post(
+            '/v3/disconnect',
+            fn (VpnAccessToken $accessToken, Request $request): Response => new Response(null, [], 204)
+        );
     }
 
     /**

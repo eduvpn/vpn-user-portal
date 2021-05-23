@@ -13,7 +13,7 @@ namespace LC\Portal\Http;
 
 class Response
 {
-    private string $responseBody;
+    private ?string $responseBody;
 
     /** @var array<string,string> */
     private array $responseHeaders = [];
@@ -23,7 +23,7 @@ class Response
     /**
      * @param array<string,string> $responseHeaders
      */
-    public function __construct(string $responseBody, array $responseHeaders = [], int $statusCode = 200)
+    public function __construct(?string $responseBody, array $responseHeaders = [], int $statusCode = 200)
     {
         $this->responseBody = $responseBody;
         $this->responseHeaders = $responseHeaders;
@@ -54,6 +54,8 @@ class Response
         foreach ($this->responseHeaders as $k => $v) {
             header($k.': '.$v);
         }
-        echo $this->responseBody;
+        if (null !== $this->responseBody) {
+            echo $this->responseBody;
+        }
     }
 }
