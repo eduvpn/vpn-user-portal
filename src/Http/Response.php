@@ -30,24 +30,6 @@ class Response
         $this->statusCode = $statusCode;
     }
 
-    /**
-     * @return array<string,string>
-     */
-    public function responseHeaders(): array
-    {
-        return $this->responseHeaders;
-    }
-
-    public function statusCode(): int
-    {
-        return $this->statusCode;
-    }
-
-    public function responseBody(): string
-    {
-        return $this->responseBody;
-    }
-
     public function send(): void
     {
         http_response_code($this->statusCode);
