@@ -14,8 +14,11 @@ namespace LC\Portal\Http;
 use LC\Portal\TplInterface;
 
 /**
- * Augments the "template" with information about whether or not the user is
- * an "admin", i.e. should see the admin menu items.
+ * Determines whether the current user is an "Admin", i.e. has extra
+ * capabilities in the portal.
+ *
+ * It also augments the template engine with a boolean indicating whether the
+ * user is "Admin", to show the admin portal options.
  */
 class AdminHook extends AbstractHook implements BeforeHookInterface
 {
@@ -25,17 +28,17 @@ class AdminHook extends AbstractHook implements BeforeHookInterface
     /** @var array<string> */
     private array $adminUserIdList;
 
-    private TplInterface $tpl;
+    private TplInterface $templateEngine;
 
     /**
      * @param array<string> $adminPermissionList
      * @param array<string> $adminUserIdList
      */
-    public function __construct(array $adminPermissionList, array $adminUserIdList, TplInterface &$tpl)
+    public function __construct(array $adminPermissionList, array $adminUserIdList, TplInterface &$templateEngine)
     {
         $this->adminPermissionList = $adminPermissionList;
         $this->adminUserIdList = $adminUserIdList;
-        $this->tpl = $tpl;
+        $this->templateEngine = $templateEngine;
     }
 
     public function isAdmin(UserInfo $userInfo): bool
@@ -44,8 +47,7 @@ class AdminHook extends AbstractHook implements BeforeHookInterface
             return true;
         }
 
-        $userPermissionList = $userInfo->permissionList();
-        foreach ($userPermissionList as $userPermission) {
+        foreach ($userInfo->permissionList() as $userPermission) {
             if (\in_array($userPermission, $this->adminPermissionList, true)) {
                 return true;
             }
@@ -56,7 +58,7 @@ class AdminHook extends AbstractHook implements BeforeHookInterface
 
     public function afterAuth(UserInfo $userInfo, Request $request): ?Response
     {
-        $this->tpl->addDefault(
+        $this->templateEngine->addDefault(
             [
                 'isAdmin' => $this->isAdmin($userInfo),
             ]

@@ -59,6 +59,8 @@ class Tpl implements TplInterface
     }
 
     /**
+     * XXX rename to something better.
+     *
      * @param array<string,mixed> $templateVariables
      */
     public function addDefault(array $templateVariables): void
