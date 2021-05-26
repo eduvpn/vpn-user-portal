@@ -38,13 +38,13 @@ class VpnCa implements CaInterface
 
     public function caCert(): CaInfo
     {
-        $certData = $this->readCertificate(sprintf('%s/ca.crt', $this->caDir));
-        $parsedCert = openssl_x509_parse($certData);
+        $pemCert = $this->readFile('ca.crt');
+        $parsedPem = openssl_x509_parse($pemCert);
 
         return new CaInfo(
-            $certData,
-            (int) $parsedCert['validFrom_time_t'],
-            (int) $parsedCert['validTo_time_t'],
+            $pemCert,
+            (int) $parsedPem['validFrom_time_t'],
+            (int) $parsedPem['validTo_time_t'],
         );
     }
 
@@ -75,10 +75,7 @@ class VpnCa implements CaInterface
 
     private function isInitialized(): bool
     {
-        $hasKey = FileIO::exists(sprintf('%s/ca.key', $this->caDir));
-        $hasCert = FileIO::exists(sprintf('%s/ca.crt', $this->caDir));
-
-        return $hasKey && $hasCert;
+        return $this->hasFile('ca.key') && $this->hasFile('ca.crt');
     }
 
     private function init(): void
@@ -103,43 +100,43 @@ class VpnCa implements CaInterface
 
     private function certInfo(string $commonName): CertInfo
     {
-        $certKeyInfo = $this->certKeyInfo(
-            sprintf('%s/%s.crt', $this->caDir, $commonName),
-            sprintf('%s/%s.key', $this->caDir, $commonName)
-        );
+        $certKeyInfo = $this->certKeyInfo($commonName.'.crt', $commonName.'.key');
 
         // delete the crt and key from disk as we no longer need them
-        self::delete(sprintf('%s/%s.crt', $this->caDir, $commonName));
-        self::delete(sprintf('%s/%s.key', $this->caDir, $commonName));
+        $this->deleteFile($commonName.'.crt');
+        $this->deleteFile($commonName.'.key');
 
         return $certKeyInfo;
     }
 
     private function certKeyInfo(string $certFile, string $keyFile): CertInfo
     {
-        $certData = $this->readCertificate($certFile);
-        $keyData = $this->readKey($keyFile);
-        $parsedCert = openssl_x509_parse($certData);
+        $pemCert = $this->readFile($certFile);
+        $parsedPem = openssl_x509_parse($pemCert);
 
         return new CertInfo(
-            $certData,
-            $keyData,
-            // XXX make sure the next two exist and are "int"!
-            (int) $parsedCert['validFrom_time_t'],
-            (int) $parsedCert['validTo_time_t'],
+            $pemCert,
+            $this->readFile($keyFile),
+            (int) $parsedPem['validFrom_time_t'],
+            (int) $parsedPem['validTo_time_t'],
         );
     }
 
-    private function readCertificate(string $certFile): string
+    private function readFile(string $fileName): string
     {
-        // strip whitespace before and after actual certificate
-        return trim(FileIO::readFile($certFile));
+        return trim(FileIO::readFile($this->caDir.'/'.$fileName));
     }
 
-    private function readKey(string $keyFile): string
+    private function hasFile(string $fileName): bool
     {
-        // strip whitespace before and after actual key
-        return trim(FileIO::readFile($keyFile));
+        return FileIO::exists($this->caDir.'/'.$fileName);
+    }
+
+    private function deleteFile(string $fileName): void
+    {
+        if (false === @unlink($this->caDir.'/'.$fileName)) {
+            throw new RuntimeException(sprintf('unable to delete "%s"', $this->caDir.'/'.$fileName));
+        }
     }
 
     private function execVpnCa(string $cmdArgs): void
@@ -157,13 +154,6 @@ class VpnCa implements CaInterface
 
         if (0 !== $returnValue) {
             throw new RuntimeException(sprintf('command "%s" did not complete successfully: "%s"', $execCmd, implode(\PHP_EOL, $commandOutput)));
-        }
-    }
-
-    private static function delete(string $fileName): void
-    {
-        if (false === @unlink($fileName)) {
-            throw new RuntimeException(sprintf('unable to delete "%s"', $fileName));
         }
     }
 }
