@@ -28,7 +28,7 @@ class LogoutModule implements ServiceModuleInterface
             '/_logout',
             function (UserInfo $userInfo, Request $request): Response {
                 // XXX for authModules that do support logout, but do not clear the local session we need to do something...
-                // maybe we can set a special variable to destroys session on next request in UpdateUserInfoHook?
+                // XXX can we store response, after getting it, delete local session data?
                 return $this->authModule->triggerLogout($request);
             }
         );

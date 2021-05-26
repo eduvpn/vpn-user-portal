@@ -18,7 +18,7 @@ class HtmlResponse extends Response
      */
     public function __construct(string $responseBody, array $responseHeaders = [], int $statusCode = 200)
     {
-        $responseHeaders['Content-Type'] = 'text/html';
+        $responseHeaders['Content-Type'] = 'text/html;charset=utf-8';
         parent::__construct($responseBody, $responseHeaders, $statusCode);
     }
 }

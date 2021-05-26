@@ -14,6 +14,9 @@ namespace LC\Portal\Http;
 use LC\Portal\FileIO;
 use LC\Portal\Json;
 
+/**
+ * XXX not used at the moment!
+ */
 class StaticPermissions
 {
     /** @var string */

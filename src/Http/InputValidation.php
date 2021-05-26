@@ -15,6 +15,9 @@ use DateTimeImmutable;
 use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\Json;
 
+/**
+ * XXX this can probably be done much better by moving it to relevant places.
+ */
 class InputValidation
 {
     /**
