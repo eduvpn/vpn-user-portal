@@ -104,6 +104,7 @@ function outputConversion(array $outputData, bool $asJson): void
 
 try {
     // XXX implement WireGuard status
+    // XXX use argv[0] for SysLogger param?
     $logger = new SysLogger('vpn-user-portal');
     $configDir = sprintf('%s/config', $baseDir);
     $configFile = sprintf('%s/config.php', $configDir);
