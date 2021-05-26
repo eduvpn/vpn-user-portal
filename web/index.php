@@ -125,15 +125,6 @@ try {
 
     $tpl->addDefault($templateDefaults);
 
-    $db = new PDO(
-        $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
-        $config->s('Db')->optionalString('dbUser'),
-        $config->s('Db')->optionalString('dbPass')
-    );
-
-    $storage = new Storage($db, $baseDir.'/schema');
-    $storage->update();
-
     $service = new Service();
     $service->addBeforeHook(new CsrfProtectionHook());
 
