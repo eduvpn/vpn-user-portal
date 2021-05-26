@@ -44,6 +44,9 @@ class DaemonWrapper
         // figure out the nodeIp + portList for each profile...
         $profileNodeIpPortList = [];
         foreach ($this->config->profileConfigList() as $profileConfig) {
+            if ('openvpn' !== $profileConfig->vpnType()) {
+                continue;
+            }
             $profileNodeIpPortList[$profileConfig->profileId()] = [];
             $profileNodeIpPortList[$profileConfig->profileId()]['nodeIp'] = $profileConfig->nodeIp();
             $profileNumber = $profileConfig->profileNumber();
@@ -100,6 +103,9 @@ class DaemonWrapper
     {
         $nodeIpPortList = [];
         foreach ($this->config->profileConfigList() as $profileConfig) {
+            if ('openvpn' !== $profileConfig->vpnType()) {
+                continue;
+            }
             $nodeIp = $profileConfig->nodeIp();
             if (!\array_key_exists($nodeIp, $nodeIpPortList)) {
                 // multiple profiles can have the same nodeIp
