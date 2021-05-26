@@ -13,6 +13,7 @@ namespace LC\Portal\Http;
 
 use LC\Portal\Http\Auth\CredentialValidatorInterface;
 use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Json;
 use LC\Portal\TplInterface;
 
 class UserPassModule implements ServiceModuleInterface
@@ -38,25 +39,11 @@ class UserPassModule implements ServiceModuleInterface
             function (Request $request): Response {
                 $this->session->remove('_form_auth_user');
 
-                // LDAP treats user "foo" and "foo " as the same user, but the
-                // VPN portal does not, creating "ghost" users, so trim the
-                // userName (ISSUE vpn-user-portal#151)
-                $authUser = trim($request->requirePostParameter('userName'));
+                $authUser = $request->requirePostParameter('userName');
                 $authPass = $request->requirePostParameter('userPass');
                 $redirectTo = $request->requirePostParameter('_form_auth_redirect_to');
 
-                // validate the URL
-                if (false === filter_var($redirectTo, \FILTER_VALIDATE_URL, \FILTER_FLAG_PATH_REQUIRED)) {
-                    throw new HttpException('invalid redirect_to URL', 400);
-                }
-                // extract the "host" part of the URL
-                $redirectToHost = parse_url($redirectTo, \PHP_URL_HOST);
-                if (!\is_string($redirectToHost)) {
-                    throw new HttpException('invalid redirect_to URL, unable to extract host', 400);
-                }
-                if ($request->getServerName() !== $redirectToHost) {
-                    throw new HttpException('redirect_to does not match expected host', 400);
-                }
+                self::validateRedirectTo($request, $redirectTo);
 
                 if (false === $userInfo = $this->credentialValidator->isValid($authUser, $authPass)) {
                     // invalid authentication
@@ -76,8 +63,7 @@ class UserPassModule implements ServiceModuleInterface
                 $permissionList = $userInfo->permissionList();
                 $this->session->regenerate();
                 $this->session->set('_form_auth_user', $userInfo->userId());
-                // XXX use something better than serialize
-                $this->session->set('_form_auth_permission_list', serialize($permissionList));
+                $this->session->set('_form_auth_permission_list', Json::encode($userInfo->permissionList()));
 
                 return new RedirectResponse($redirectTo, 302);
             }
@@ -91,5 +77,23 @@ class UserPassModule implements ServiceModuleInterface
                 return new RedirectResponse($request->requireQueryParameter('ReturnTo'));
             }
         );
+    }
+
+    private static function validateRedirectTo(Request $request, string $redirectTo): void
+    {
+        // XXX improve this!
+        // XXX probably needed in other locations as well!
+        // validate the URL
+        if (false === filter_var($redirectTo, \FILTER_VALIDATE_URL, \FILTER_FLAG_PATH_REQUIRED)) {
+            throw new HttpException('invalid redirect_to URL', 400);
+        }
+        // extract the "host" part of the URL
+        $redirectToHost = parse_url($redirectTo, \PHP_URL_HOST);
+        if (!\is_string($redirectToHost)) {
+            throw new HttpException('invalid redirect_to URL, unable to extract host', 400);
+        }
+        if ($request->getServerName() !== $redirectToHost) {
+            throw new HttpException('redirect_to does not match expected host', 400);
+        }
     }
 }

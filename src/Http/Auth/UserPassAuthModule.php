@@ -38,8 +38,7 @@ class UserPassAuthModule extends AbstractAuthModule
 
         $permissionList = [];
         if (null !== $sessionValue = $this->session->get('_form_auth_permission_list')) {
-            // XXX use something better than unserialize
-            $permissionList = unserialize($sessionValue);
+            $permissionList = Json::decode($sessionValue);
         }
 
         return new UserInfo(
