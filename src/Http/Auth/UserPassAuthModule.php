@@ -17,6 +17,7 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\SessionInterface;
 use LC\Portal\Http\UserInfo;
+use LC\Portal\Json;
 use LC\Portal\TplInterface;
 
 class UserPassAuthModule extends AbstractAuthModule
