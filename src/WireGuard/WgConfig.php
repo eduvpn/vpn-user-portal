@@ -56,8 +56,6 @@ class WgConfig
         $output[] = 'PublicKey = '.$this->serverPublicKey;
         $output[] = 'AllowedIPs = '.implode(', ', $routeList);
         $output[] = 'Endpoint = '.$this->profileConfig->hostName().':'.(string) (51820 + $this->profileConfig->profileNumber() - 1);
-        // client is probably behind NAT, so try to keep the connection alive
-        $output[] = 'PersistentKeepalive = 25';
 
         return implode(\PHP_EOL, $output);
     }
