@@ -55,7 +55,8 @@
     },
     "suggest": {
         "ext-ldap": "Support LDAP user authentication",
-        "ext-radius": "Support RADIUS user authentication"
+        "ext-radius": "Support RADIUS user authentication",
+        "ext-mysqlnd": "Support MySQL/MariaDB for backend storage"
     },
     "support": {
         "email": "eduvpn-support@lists.geant.org",
