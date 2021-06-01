@@ -223,6 +223,10 @@ class AdminPortalModule implements ServiceModuleInterface
                         $this->serverClient->post('enable_user', ['user_id' => $userId]);
                         break;
 
+                    case 'deleteCertificates':
+                        $this->serverClient->post('delete_client_certificates_of_user_id', ['user_id' => $userId]);
+                        break;
+
                     case 'deleteTotpSecret':
                         $this->serverClient->post('delete_totp_secret', ['user_id' => $userId]);
                         break;
@@ -231,9 +235,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         throw new HttpException('unsupported "user_action"', 400);
                 }
 
-                $returnUrl = sprintf('%susers', $request->getRootUri());
-
-                return new RedirectResponse($returnUrl);
+                return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }
         );
 
@@ -556,6 +558,6 @@ class AdminPortalModule implements ServiceModuleInterface
      */
     private static function getCoordinates($f)
     {
-        return [cos(2 * M_PI * $f), sin(2 * M_PI * $f)];
+        return [cos(2 * \M_PI * $f), sin(2 * \M_PI * $f)];
     }
 }

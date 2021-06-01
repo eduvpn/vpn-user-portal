@@ -17,6 +17,9 @@
                 <?php else: ?>
                     <button class="warning" name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
                 <?php endif; ?>
+                <?php if (0 !== count($clientCertificateList)): ?>
+                    <button class="warning" name="user_action" value="deleteCertificates"><?=$this->t('Delete Certificates'); ?></button>
+                <?php endif; ?>
                 <?php if ($hasTotpSecret): ?>
                     <button class="warning" name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
                 <?php endif; ?>
