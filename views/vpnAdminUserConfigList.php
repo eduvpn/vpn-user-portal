@@ -15,11 +15,11 @@
                 <?php if ($isDisabled): ?>
                     <button name="user_action" value="enableUser"><?=$this->t('Enable User'); ?></button>
                 <?php else: ?>
-                    <button title="<?=$this->t('Prevent account from using this VPN server and revoke all authorized applications.'); ?>" class="warning" name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
+                    <button class="warning" name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
                 <?php endif; ?>
-                <?php if (0 !== count($clientCertificateList)): ?>
-                    <button title="<?=$this->t('Revoke all certificates obtained by the user through "Configurations".'); ?>" class="warning" name="user_action" value="deleteCertificates"><?=$this->t('Revoke Certificates'); ?></button>
-                <?php endif; ?>
+                <button class="error" name="user_action" value="deleteUser">
+                    <?=$this->t('Delete User Data'); ?>
+                </button>
                 <?php if ($hasTotpSecret): ?>
                     <button class="warning" name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
                 <?php endif; ?>

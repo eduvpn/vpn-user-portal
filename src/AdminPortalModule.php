@@ -223,10 +223,20 @@ class AdminPortalModule implements ServiceModuleInterface
                         $this->serverClient->post('enable_user', ['user_id' => $userId]);
                         break;
 
-                    case 'deleteCertificates':
-                        $this->serverClient->post('delete_client_certificates_of_user_id', ['user_id' => $userId]);
-                        break;
+                    case 'deleteUser':
+                        $isDisabled = $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]);
 
+                        // delete OAuth authorizations
+                        $this->storage->deleteAuthorizationsOfUserId($userId);
+                        // delete all certificates of user and associated data
+                        $this->serverClient->post('delete_user', ['user_id' => $userId]);
+
+                        // if user was disabled before, disable them again
+                        if ($isDisabled) {
+                            $this->serverClient->post('disable_user', ['user_id' => $userId]);
+                        }
+
+                        return new RedirectResponse($request->getRootUri().'users');
                     case 'deleteTotpSecret':
                         $this->serverClient->post('delete_totp_secret', ['user_id' => $userId]);
                         break;

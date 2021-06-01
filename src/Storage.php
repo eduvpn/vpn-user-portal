@@ -104,7 +104,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
                 (:user_id, :password_hash, :created_at)'
         );
 
-        $passwordHash = password_hash($userPass, PASSWORD_DEFAULT);
+        $passwordHash = password_hash($userPass, \PASSWORD_DEFAULT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
         $stmt->bindValue(':created_at', $this->dateTime->format(DateTime::ATOM), PDO::PARAM_STR);
@@ -149,7 +149,7 @@ class Storage implements CredentialValidatorInterface, StorageInterface
                 user_id = :user_id'
         );
 
-        $passwordHash = password_hash($newUserPass, PASSWORD_DEFAULT);
+        $passwordHash = password_hash($newUserPass, \PASSWORD_DEFAULT);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':password_hash', $passwordHash, PDO::PARAM_STR);
         $stmt->execute();
@@ -263,6 +263,24 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         );
 
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    /**
+     * @param string $userId
+     *
+     * @return void
+     */
+    public function deleteAuthorizationsOfUserId($userId)
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM
+                authorizations
+             WHERE
+                user_id = :user_id'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
     }
 
