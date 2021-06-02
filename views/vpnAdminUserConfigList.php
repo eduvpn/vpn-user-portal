@@ -14,14 +14,21 @@
             <input type="hidden" name="user_id" value="<?=$this->e($userId); ?>">
             <?php if (!$isSelf): ?>
                 <?php if ($isDisabled): ?>
-                    <button name="user_action" value="enableUser"><?=$this->t('Enable User'); ?></button>
+                    <button name="user_action" value="enableAccount"><?=$this->t('Enable Account'); ?></button>
                 <?php else: ?>
-                    <button class="warning" name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
+                    <button class="warning" name="user_action" value="disableAccount"><?=$this->t('Disable Account'); ?></button>
                 <?php endif; ?>
+
                 <?php if ('DbAuthModule' === $authModule): ?>
                     <button class="error" name="user_action" value="deleteAccount"><?=$this->t('Delete Account'); ?></button>
+                <?php else: ?>
+                    <button class="error" name="user_action" value="deleteAccount"><?=$this->t('Delete Account Data'); ?></button>
                 <?php endif; ?>
-                    <button class="warning" name="user_action" value="deleteAccountData"><?=$this->t('Delete Account Data'); ?></button>
+                <?php if ('DbAuthModule' !== $authModule): ?>
+                <p class="warning">
+                    <?=$this->t('This server uses an external authentication source. Deleting the account data will not prevent the user from authenticating (again)!'); ?>
+                </p>
+                <?php endif; ?>
             <?php endif; ?>
         </fieldset>
     </form>

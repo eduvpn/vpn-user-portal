@@ -178,7 +178,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 // switch below with whitelisted acceptable values
 
                 switch ($userAction) {
-                    case 'disableUser':
+                    case 'disableAccount':
                         // get active connections for this user
                         $connectionList = $this->daemonWrapper->getConnectionList($userId);
 
@@ -209,30 +209,36 @@ class AdminPortalModule implements ServiceModuleInterface
                         }
                         break;
 
-                    case 'enableUser':
+                    case 'enableAccount':
                         $this->storage->userEnable($userId);
                         $this->storage->addUserLog($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
 
                         break;
 
                     case 'deleteAccount':
+                        // XXX maybe we should introduce some kind of admin log
+                        // where events that can't be associated to accounts are logged...
                         $this->storage->userDelete($userId);
                         if ('DbAuthModule' === $this->config->authModule()) {
                             $this->storage->localUserDelete($userId);
                         }
-                        break;
 
-                    case 'deleteAccountData':
-                        $this->storage->userDelete($userId);
-                        break;
+                        // get active connections for this user
+                        $connectionList = $this->daemonWrapper->getConnectionList($userId);
+                        // kill all active connections for this user
+                        foreach ($connectionList as $profileId => $clientConnectionList) {
+                            foreach ($clientConnectionList as $clientInfo) {
+                                $this->daemonWrapper->killClient($clientInfo['common_name']);
+                            }
+                        }
+
+                        return new RedirectResponse($request->getRootUri().'users');
 
                     default:
                         throw new HttpException('unsupported "user_action"', 400);
                 }
 
-                $returnUrl = sprintf('%susers', $request->getRootUri());
-
-                return new RedirectResponse($returnUrl);
+                return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }
         );
 
