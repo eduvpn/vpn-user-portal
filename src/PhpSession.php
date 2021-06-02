@@ -77,7 +77,7 @@ class PhpSession implements SessionInterface
 
     public function destroy(): void
     {
-        // XXX is this enough to remove all session keys?
         $_SESSION = [];
+        $this->regenerate();
     }
 }
