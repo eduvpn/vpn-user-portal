@@ -76,11 +76,6 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
         );
     }
 
-    public function supportsLogout(): bool
-    {
-        return true;
-    }
-
     private function getAuthOptions(): AuthOptions
     {
         $authOptions = new AuthOptions();

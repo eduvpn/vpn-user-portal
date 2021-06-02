@@ -63,9 +63,4 @@ class MellonAuthModule extends AbstractAuthModule
             $request->getScheme().'://'.$request->getAuthority().'/saml/logout?'.http_build_query(['ReturnTo' => $request->requireHeader('HTTP_REFERER')])
         );
     }
-
-    public function supportsLogout(): bool
-    {
-        return true;
-    }
 }

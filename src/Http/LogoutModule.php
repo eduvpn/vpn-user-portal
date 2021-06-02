@@ -27,8 +27,11 @@ class LogoutModule implements ServiceModuleInterface
         $service->post(
             '/_logout',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX for authModules that do support logout, but do not clear the local session we need to do something...
-                // XXX can we store response, after getting it, delete local session data?
+                // destroy our local session before triggering any (external)
+                // mechanism to facilitate logout
+                $this->session->destroy();
+                $this->session->regenerate();
+
                 return $this->authModule->triggerLogout($request);
             }
         );

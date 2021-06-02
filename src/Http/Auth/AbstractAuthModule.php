@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace LC\Portal\Http\Auth;
 
 use LC\Portal\Http\AuthModuleInterface;
-use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
@@ -31,11 +30,9 @@ class AbstractAuthModule implements AuthModuleInterface
 
     public function triggerLogout(Request $request): Response
     {
-        throw new HttpException('logout not available for this authentication module', 400);
-    }
-
-    public function supportsLogout(): bool
-    {
-        return false;
+        // by default we return to the place the users came from, it is up to
+        // authentication mechanisms that implement their own logout, e.g.
+        // SAML authentication to override this method
+        return new RedirectResponse($request->requireHeader('HTTP_REFERER'));
     }
 }

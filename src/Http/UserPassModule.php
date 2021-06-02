@@ -68,15 +68,6 @@ class UserPassModule implements ServiceModuleInterface
                 return new RedirectResponse($redirectTo, 302);
             }
         );
-
-        $service->get(
-            '/_form/auth/logout',
-            function (UserInfo $userInfo, Request $request): Response {
-                $this->session->destroy();
-
-                return new RedirectResponse($request->requireQueryParameter('ReturnTo'));
-            }
-        );
     }
 
     private static function validateRedirectTo(Request $request, string $redirectTo): void
