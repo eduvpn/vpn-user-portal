@@ -123,6 +123,9 @@ class AdminPortalModule implements ServiceModuleInterface
                 $adminUserId = $userInfo->userId();
                 $userId = $request->requireQueryParameter('user_id');
                 InputValidation::userId($userId);
+                if (!$this->storage->userExists($userId)) {
+                    throw new HttpException('account does not exist', 404);
+                }
 
                 $clientCertificateList = $this->storage->getCertificates($userId);
                 $userMessages = $this->storage->getUserLog($userId);
@@ -159,6 +162,9 @@ class AdminPortalModule implements ServiceModuleInterface
                 $adminUserId = $userInfo->userId();
                 $userId = $request->requirePostParameter('user_id');
                 InputValidation::userId($userId);
+                if (!$this->storage->userExists($userId)) {
+                    throw new HttpException('account does not exist', 404);
+                }
 
                 // if the current user being managed is the account itself,
                 // do not allow this. We don't want admins allow to disable
