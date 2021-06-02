@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Storage;
 
 /**
@@ -34,30 +33,24 @@ class UpdateUserInfoHook extends AbstractHook implements BeforeHookInterface
 
     public function afterAuth(UserInfo $userInfo, Request $request): ?Response
     {
-        // XXX somehow when logout is called this results in a loop where
-        // the logout keeps getting called...
-        // XXX maybe set a "_user_info_performing_logout" session variable,
-        // that if set just deletes this session variable and returns null?
-
         // only update the user info once per browser session, not on every
         // request
         if ('yes' === $this->session->get('_user_info_already_updated')) {
             if (false === $this->storage->userExists($userInfo->userId())) {
-                // but if the user account was removed in the meantime,
-                // i.e. "Delete Account Data" trigger logout (if supported)
-                if ($this->authModule->supportsLogout()) {
-                    return $this->authModule->triggerLogout($request);
-                }
+                // user was deleted (by admin) during the active session, so
+                // we force a logout
+                $this->session->destroy();
 
-                // user was deleted, but we don't know how to logout the user,
-                // give up
-                throw new HttpException('user account has been deleted', 403);
+                // XXX the referrer is not necessarily set, so we have to return to the current URL
+                // I do not know why this works...
+                return $this->authModule->triggerLogout($request);
             }
 
             return null;
         }
 
         if (false === $this->storage->userExists($userInfo->userId())) {
+            // user does not yet exist in the database, create it
             $this->storage->userAdd($userInfo->userId(), $userInfo->permissionList());
             $this->session->set('_user_info_already_updated', 'yes');
 

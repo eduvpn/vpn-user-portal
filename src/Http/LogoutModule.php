@@ -30,7 +30,6 @@ class LogoutModule implements ServiceModuleInterface
                 // destroy our local session before triggering any (external)
                 // mechanism to facilitate logout
                 $this->session->destroy();
-                $this->session->regenerate();
 
                 return $this->authModule->triggerLogout($request);
             }
