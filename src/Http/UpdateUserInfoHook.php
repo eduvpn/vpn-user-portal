@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
+use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Storage;
 
 /**
@@ -22,25 +23,35 @@ class UpdateUserInfoHook extends AbstractHook implements BeforeHookInterface
 {
     private SessionInterface $session;
     private Storage $storage;
+    private AuthModuleInterface $authModule;
 
-    public function __construct(SessionInterface $session, Storage $storage)
+    public function __construct(SessionInterface $session, Storage $storage, AuthModuleInterface $authModule)
     {
         $this->session = $session;
         $this->storage = $storage;
+        $this->authModule = $authModule;
     }
 
     public function afterAuth(UserInfo $userInfo, Request $request): ?Response
     {
+        // XXX somehow when logout is called this results in a loop where
+        // the logout keeps getting called...
+        // XXX maybe set a "_user_info_performing_logout" session variable,
+        // that if set just deletes this session variable and returns null?
+
         // only update the user info once per browser session, not on every
         // request
         if ('yes' === $this->session->get('_user_info_already_updated')) {
             if (false === $this->storage->userExists($userInfo->userId())) {
                 // but if the user account was removed in the meantime,
-                // destroy the session...
-                // XXX is this acceptable? it doesn't work for SAML logins, should we trigger logout using AuthMethod here to share code path?
-                $this->session->destroy();
+                // i.e. "Delete Account Data" trigger logout (if supported)
+                if ($this->authModule->supportsLogout()) {
+                    return $this->authModule->triggerLogout($request);
+                }
 
-                return new RedirectResponse($request->getUri());
+                // user was deleted, but we don't know how to logout the user,
+                // give up
+                throw new HttpException('user account has been deleted', 403);
             }
 
             return null;

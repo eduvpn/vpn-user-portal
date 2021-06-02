@@ -223,7 +223,7 @@ try {
     }
 
     $service->addBeforeHook(new DisabledUserHook($storage));
-    $service->addBeforeHook(new UpdateUserInfoHook($sessionBackend, $storage));
+    $service->addBeforeHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule));
     $service->addModule(new QrModule());
 
     // isAdmin
