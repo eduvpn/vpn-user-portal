@@ -11,6 +11,16 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
+/**
+ * Registers an endpoint that the portal "POSTs" to in order to trigger
+ * the logout action. It will _also_ allow for authentication mechanisms to
+ * "do something extra" in case logout is triggered, for example stop the SAML
+ * session when using a SAML authentication backend.
+ *
+ * NOTE: not all authentication mechanisms support logout, e.g. BasicAuth or
+ * ClientCertAuth, they will require the user to close the browser or restart
+ * the device.
+ */
 class LogoutModule implements ServiceModuleInterface
 {
     private AuthModuleInterface $authModule;
