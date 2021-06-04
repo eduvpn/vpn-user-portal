@@ -40,4 +40,11 @@ class CaInfo
     {
         return new DateTimeImmutable('@'.$this->validTo);
     }
+
+    public function fingerprint(bool $forHuman = false): string
+    {
+        $caFingerprint = openssl_x509_fingerprint($this->pemCert, 'sha256');
+
+        return $forHuman ? implode(' ', str_split($caFingerprint, 4)) : $caFingerprint;
+    }
 }

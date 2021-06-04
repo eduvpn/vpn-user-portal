@@ -14,6 +14,7 @@
                     <dl>
                         <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($caInfo->validFrom()->format(DateTimeImmutable::ATOM)); ?></dd>
                         <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($caInfo->validTo()->format(DateTimeImmutable::ATOM)); ?></dd>
+                        <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e($caInfo->fingerprint(true)); ?></code></dd>
                     </dl>
                 </td>
             </tr>
