@@ -9,6 +9,22 @@
                 <td>v<?=$this->e($portalVersion); ?></td>
             </tr>
             <tr>
+                <th><?=$this->t('Profiles'); ?></th>
+                <td>
+                    <ul>
+<?php foreach ($profileConfigList as $profileConfig): ?>
+                        <li><a href="#<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
+<?php endforeach; ?>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <details><summary><?=$this->t('Advanced'); ?></summary>
+    <table class="tbl">
+        <tbody>
+            <tr>
                 <th><?=$this->t('CA'); ?></th>
                 <td>
                     <dl>
@@ -26,18 +42,10 @@
                     </dl>
                 </td>
             </tr>
-            <tr>
-                <th><?=$this->t('Profiles'); ?></th>
-                <td>
-                    <ul>
-<?php foreach ($profileConfigList as $profileConfig): ?>
-                        <li><a href="#<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></a></li>
-<?php endforeach; ?>
-                    </ul>
-                </td>
-            </tr>
         </tbody>
     </table>
+    </details>
+
     <?php foreach ($profileConfigList as $profileConfig): ?>
     <h2 id="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></h2>
     <table class="tbl">
