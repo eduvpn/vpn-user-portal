@@ -263,6 +263,8 @@ try {
     );
     $service->addModule($vpnPortalModule);
 
+    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
+
     $adminPortalModule = new AdminPortalModule(
         $baseDir.'/data',
         $config,
@@ -271,12 +273,12 @@ try {
         $daemonWrapper,
         $storage,
         $oauthStorage,
-        $adminHook
+        $adminHook,
+        $secretKey->getPublicKey()
     );
     $service->addModule($adminPortalModule);
 
     // OAuth module
-    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     $oauthServer = new VpnOAuthServer(
         $oauthStorage,
         $oauthClientDb,

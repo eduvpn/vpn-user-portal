@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
+use fkooman\Jwt\Keys\EdDSA\PublicKey as OAuthPublicKey;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\Config;
@@ -36,9 +37,10 @@ class AdminPortalModule implements ServiceModuleInterface
     private Storage $storage;
     private OAuthStorage $oauthStorage;
     private AdminHook $adminHook;
+    private OAuthPublicKey $oauthPublicKey;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook)
+    public function __construct(string $dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, OAuthPublicKey $oauthPublicKey)
     {
         $this->dataDir = $dataDir;
         $this->config = $config;
@@ -48,6 +50,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
         $this->adminHook = $adminHook;
+        $this->oauthPublicKey = $oauthPublicKey;
         $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
@@ -91,6 +94,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         [
                             'profileConfigList' => $this->config->profileConfigList(),
                             'caInfo' => $this->ca->caCert(),
+                            'oauthPublicKey' => $this->oauthPublicKey,
                         ]
                     )
                 );
