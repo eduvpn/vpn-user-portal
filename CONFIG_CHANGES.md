@@ -8,6 +8,15 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.3.11
+
+We added the translation for Romanian (Romania). You can add it to 
+`config.php` under `supportedLanguages` to enable it in your portal:
+
+```
+'ro-RO' => 'română'
+```
+
 ## 2.3.10
 
 The `sessionExpireAtNight` option (taking a boolean) has been added. Read the
