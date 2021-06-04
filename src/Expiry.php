@@ -34,8 +34,8 @@ class Expiry
 
         $expiresAt = $dateTime->add($sessionExpiry);
 
-        // if we expire less than 7 days from now, keep as is
-        if ($expiresAt < $dateTime->add(new DateInterval('P7D'))) {
+        // if we expire less than 1 day from now, keep as is
+        if ($expiresAt < $dateTime->add(new DateInterval('P1D'))) {
             // but upperbound is still CA expiry
             if ($expiresAt > $caExpiresAt) {
                 return $dateTime->diff($caExpiresAt);
