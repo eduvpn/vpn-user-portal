@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.3.11 (...)
+- support expiring VPN session at night now for all scenarios where 
+  `sessionExpiry` >= 1 day
+- 
+
 ## 2.3.10 (2021-05-03)
 - implement support for 
   [nightly session expiry](https://github.com/eduvpn/documentation/blob/v2/EXPIRE_AT_NIGHT.md) 

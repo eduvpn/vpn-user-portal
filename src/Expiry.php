@@ -30,11 +30,11 @@ class Expiry
         }
         $expiresAt = clone $dateTime;
         $expiresAt->add($sessionExpiry);
-        $sevenDaysFromNow = clone $dateTime;
-        $sevenDaysFromNow->add(new DateInterval('P7D'));
+        $oneDayFromNow = clone $dateTime;
+        $oneDayFromNow->add(new DateInterval('P1D'));
 
         // if we expire less than 7 days from now, keep as is
-        if ($expiresAt < $sevenDaysFromNow) {
+        if ($expiresAt < $oneDayFromNow) {
             return $sessionExpiry;
         }
 
