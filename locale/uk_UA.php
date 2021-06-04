@@ -8,6 +8,8 @@
  */
 
 return [
+    //'"Delete User Data" will only delete the account data of the user, but NOT log them out if they are currently logged in, nor prevent the user from logging in again!' => '',
+    //'"Delete User" will only delete the account and associated data of the user, but NOT log the user out if they are currently logged in!' => '',
     '#Active Connections' => 'Активні з’єднання.',
     //'ACL Permission List' => '',
     'Account' => 'Акаунт',
@@ -39,11 +41,13 @@ return [
     //'DNS Search Domain(s)' => '',
     //'DNS Server(s)' => '',
     //'DNS Suffix' => '',
+    //'Danger Zone' => '',
     'Date' => 'Дата',
     'Date/Time' => 'Дата/Час',
     //'Default Gateway' => '',
     'Delete' => 'Видалити',
     'Delete TOTP Secret' => 'Видалити секретний TOTP',
+    //'Delete User' => '',
     //'Delete User Data' => '',
     'Details...' => 'Деталі...',
     'Disable User' => 'Деактивувати користувача',

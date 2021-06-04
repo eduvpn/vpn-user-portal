@@ -8,6 +8,8 @@
  */
 
 return [
+    //'"Delete User Data" will only delete the account data of the user, but NOT log them out if they are currently logged in, nor prevent the user from logging in again!' => '',
+    //'"Delete User" will only delete the account and associated data of the user, but NOT log the user out if they are currently logged in!' => '',
     '#Active Connections' => 'Aktive Verbindungen',
     //'ACL Permission List' => '',
     'Account' => 'Benutzerkonto',
@@ -39,11 +41,13 @@ return [
     //'DNS Search Domain(s)' => '',
     //'DNS Server(s)' => '',
     //'DNS Suffix' => '',
+    //'Danger Zone' => '',
     'Date' => 'Datum',
     'Date/Time' => 'Datum/Zeit',
     //'Default Gateway' => '',
     'Delete' => 'Löschen',
     'Delete TOTP Secret' => 'Lösche TOTP-Geheimnis',
+    //'Delete User' => '',
     //'Delete User Data' => '',
     'Details...' => 'Details...',
     'Disable User' => 'Deaktiviere Benutzer',

@@ -36,14 +36,21 @@ class AdminPortalModule implements ServiceModuleInterface
     /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
+    /** @var string */
+    private $authMethod;
+
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient)
+    /**
+     * @param string $authMethod
+     */
+    public function __construct(TplInterface $tpl, Storage $storage, ServerClient $serverClient, $authMethod)
     {
         $this->tpl = $tpl;
         $this->storage = $storage;
         $this->serverClient = $serverClient;
+        $this->authMethod = $authMethod;
         $this->dateTime = new DateTime();
     }
 
@@ -224,16 +231,23 @@ class AdminPortalModule implements ServiceModuleInterface
                         break;
 
                     case 'deleteUser':
-                        $isDisabled = $this->serverClient->getRequireBool('is_disabled_user', ['user_id' => $userId]);
-
                         // delete OAuth authorizations
                         $this->storage->deleteAuthorizationsOfUserId($userId);
                         // delete all certificates of user and associated data
                         $this->serverClient->post('delete_user', ['user_id' => $userId]);
 
-                        // if user was disabled before, disable them again
-                        if ($isDisabled) {
-                            $this->serverClient->post('disable_user', ['user_id' => $userId]);
+                        if ('FormPdoAuthentication' === $this->authMethod) {
+                            // also delete the user account when the user is local
+                            $this->storage->deleteUser($userId);
+                        }
+
+                        // get active connections for this user
+                        $connectionList = $this->serverClient->getRequireArray('client_connections', ['user_id' => $userId]);
+                        // kill all active connections for this user
+                        foreach ($connectionList as $profileId => $clientConnectionList) {
+                            foreach ($clientConnectionList as $clientInfo) {
+                                $this->serverClient->post('kill_client', ['common_name' => $clientInfo['common_name']]);
+                            }
                         }
 
                         return new RedirectResponse($request->getRootUri().'users');

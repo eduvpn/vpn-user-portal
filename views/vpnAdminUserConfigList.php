@@ -17,13 +17,28 @@
                 <?php else: ?>
                     <button class="warning" name="user_action" value="disableUser"><?=$this->t('Disable User'); ?></button>
                 <?php endif; ?>
-                <button class="error" name="user_action" value="deleteUser">
-                    <?=$this->t('Delete User Data'); ?>
-                </button>
                 <?php if ($hasTotpSecret): ?>
                     <button class="warning" name="user_action" value="deleteTotpSecret"><?=$this->t('Delete TOTP Secret'); ?></button>
                 <?php endif; ?>
             <?php endif; ?>
+            <details>
+                <summary><?=$this->t('Danger Zone'); ?></summary>
+<?php if ('FormPdoAuthentication' === $authMethod): ?>
+                    <button class="error" name="user_action" value="deleteUser"><?=$this->t('Delete User'); ?></button>
+                    <p>
+                        <small>⚠️
+<?=$this->t('"Delete User" will only delete the account and associated data of the user, but NOT log the user out if they are currently logged in!'); ?>
+                        </small>
+                    </p>
+<?php else: ?>
+                    <button class="error" name="user_action" value="deleteUser"><?=$this->t('Delete User Data'); ?></button>
+                    <p>
+                        <small>⚠️
+<?=$this->t('"Delete User Data" will only delete the account data of the user, but NOT log them out if they are currently logged in, nor prevent the user from logging in again!'); ?>
+                        </small>
+                    </p>
+<?php endif; ?>
+            </details>
         </fieldset>
     </form>
 

@@ -3,7 +3,8 @@
 ## 2.3.11 (...)
 - support expiring VPN session at night now for all scenarios where 
   `sessionExpiry` >= 1 day
-- 
+- implement a "Delete User" (for local accounts) and "Delete User Data" (for 
+  accounts in external IdM) option in the portal
 
 ## 2.3.10 (2021-05-03)
 - implement support for 

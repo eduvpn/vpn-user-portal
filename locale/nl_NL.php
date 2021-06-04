@@ -8,6 +8,8 @@
  */
 
 return [
+    '"Delete User Data" will only delete the account data of the user, but NOT log them out if they are currently logged in, nor prevent the user from logging in again!' => '"Verwijder gebruikersdata" verwijdert enkel de data van het gebruikersaccount, maar logt de gebruiker NIET uit als ze momenteel zijn ingelogd, en voorkomt ook niet dat de gebruiker opnieuw kan inloggen!',
+    '"Delete User" will only delete the account and associated data of the user, but NOT log the user out if they are currently logged in!' => '"Verwijder gebruiker" verwijdert enkel het account en bijhorende data, maar logt de gebruiker NIET uit als deze momenteel is ingelogd!',
     '#Active Connections' => '#Actieve verbindingen',
     'ACL Permission List' => 'ACL-lijst',
     'Account' => 'Account',
@@ -39,11 +41,13 @@ return [
     'DNS Search Domain(s)' => 'DNS-zoekdomein(en)',
     'DNS Server(s)' => 'DNS-server(s)',
     'DNS Suffix' => 'DNS-suffix',
+    'Danger Zone' => 'Gevarenzone',
     'Date' => 'Datum',
     'Date/Time' => 'Datum/Tijd',
     'Default Gateway' => 'Default Gateway',
     'Delete' => 'Verwijderen',
     'Delete TOTP Secret' => 'Verwijder TOTP-geheim',
+    'Delete User' => 'Verwijder gebruiker',
     'Delete User Data' => 'Verwijder gebruikersdata',
     'Details...' => 'Details...',
     'Disable User' => 'Blokkeer account',

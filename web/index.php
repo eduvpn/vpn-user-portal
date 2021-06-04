@@ -141,6 +141,7 @@ try {
         'portalVersion' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
         'isAdmin' => false,
         'useRtl' => 0 === strpos($uiLang, 'ar_') || 0 === strpos($uiLang, 'fa_') || 0 === strpos($uiLang, 'he_'),
+        'authMethod' => $authMethod,
     ];
     if ('ClientCertAuthentication' === $authMethod) {
         $templateDefaults['_show_logout_button'] = false;
@@ -329,7 +330,8 @@ try {
     $adminPortalModule = new AdminPortalModule(
         $tpl,
         $storage,
-        $serverClient
+        $serverClient,
+        $authMethod
     );
     $service->addModule($adminPortalModule);
 

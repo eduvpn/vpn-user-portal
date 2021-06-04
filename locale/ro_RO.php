@@ -8,6 +8,8 @@
  */
 
 return [
+    //'"Delete User Data" will only delete the account data of the user, but NOT log them out if they are currently logged in, nor prevent the user from logging in again!' => '',
+    //'"Delete User" will only delete the account and associated data of the user, but NOT log the user out if they are currently logged in!' => '',
     '#Active Connections' => 'Numărul de conexiuni active',
     'ACL Permission List' => 'Lista de permisiuni (ACL)',
     'Account' => 'Cont',
@@ -39,11 +41,13 @@ return [
     'DNS Search Domain(s)' => 'Domeniu de cautare DNS',
     'DNS Server(s)' => 'Server DNS',
     'DNS Suffix' => 'Sufix DNS',
+    //'Danger Zone' => '',
     'Date' => 'Dată',
     'Date/Time' => 'Dată/Oră',
     'Default Gateway' => 'Gateway implicit',
     'Delete' => 'Șterge',
     'Delete TOTP Secret' => 'Șterge codul TOTP.',
+    //'Delete User' => '',
     //'Delete User Data' => '',
     'Details...' => 'Detalii...',
     'Disable User' => 'Dezactivează utilizator',

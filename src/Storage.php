@@ -112,6 +112,24 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     }
 
     /**
+     * @param string $userId
+     *
+     * @return void
+     */
+    public function deleteUser($userId)
+    {
+        $stmt = $this->db->prepare(
+            'DELETE FROM
+                users
+             WHERE
+                user_id = :user_id'
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    /**
      * @param string $authUser
      *
      * @return bool
