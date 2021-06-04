@@ -5,7 +5,7 @@
   `sessionExpiry` >= 1 day
 - implement a "Delete User" (for local accounts) and "Delete User Data" (for 
   accounts in external IdM)
-- add Romanian translation (Romania)
+- add Romanian (Romania) translation
 - session expiry is now always (upper)bound to CA expiry
 
 ## 2.3.10 (2021-05-03)
