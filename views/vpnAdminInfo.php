@@ -21,7 +21,7 @@
         </tbody>
     </table>
 
-    <details><summary><?=$this->t('Advanced'); ?></summary>
+    <details><summary><?=$this->t('More'); ?></summary>
     <table class="tbl">
         <tbody>
             <tr>
