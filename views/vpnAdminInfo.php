@@ -35,6 +35,14 @@
                 </td>
             </tr>
             <tr>
+                <th><?=$this->t('WireGuard'); ?></th>
+                <td>
+                    <dl>
+                        <dt><?=$this->t('Public Key'); ?></dt><dd><code>${WireGuard Public Key}</code></dd>
+                    </dl>
+                </td>
+            </tr>
+            <tr>
                 <th><?=$this->t('OAuth'); ?></th>
                 <td>
                     <dl>

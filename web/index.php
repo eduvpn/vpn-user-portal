@@ -51,6 +51,7 @@ use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\PhpSession;
 use LC\Portal\Random;
+use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
@@ -269,12 +270,14 @@ try {
         $baseDir.'/data',
         $config,
         $tpl,
-        $ca,
         $daemonWrapper,
         $storage,
         $oauthStorage,
         $adminHook,
-        $secretKey->getPublicKey()
+        new ServerInfo(
+            $ca,
+            $secretKey->getPublicKey()
+        )
     );
     $service->addModule($adminPortalModule);
 

@@ -14,15 +14,14 @@ namespace LC\Portal\Http;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
-use fkooman\Jwt\Keys\EdDSA\PublicKey as OAuthPublicKey;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use LC\Portal\CA\CaInterface;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Json;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
+use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 use RuntimeException;
@@ -32,25 +31,23 @@ class AdminPortalModule implements ServiceModuleInterface
     private string $dataDir;
     private Config $config;
     private TplInterface $tpl;
-    private CaInterface $ca;
     private DaemonWrapper $daemonWrapper;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
     private AdminHook $adminHook;
-    private OAuthPublicKey $oauthPublicKey;
+    private ServerInfo $serverInfo;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $dataDir, Config $config, TplInterface $tpl, CaInterface $ca, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, OAuthPublicKey $oauthPublicKey)
+    public function __construct(string $dataDir, Config $config, TplInterface $tpl, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
     {
         $this->dataDir = $dataDir;
         $this->config = $config;
         $this->tpl = $tpl;
-        $this->ca = $ca;
         $this->daemonWrapper = $daemonWrapper;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
         $this->adminHook = $adminHook;
-        $this->oauthPublicKey = $oauthPublicKey;
+        $this->serverInfo = $serverInfo;
         $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 
@@ -93,8 +90,8 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminInfo',
                         [
                             'profileConfigList' => $this->config->profileConfigList(),
-                            'caInfo' => $this->ca->caCert(),
-                            'oauthPublicKey' => $this->oauthPublicKey,
+                            'caInfo' => $this->serverInfo->ca()->caCert(),
+                            'oauthPublicKey' => $this->serverInfo->oauthPublicKey(),
                         ]
                     )
                 );
