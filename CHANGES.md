@@ -1,12 +1,12 @@
 # Changelog
 
-## 2.3.11 (...)
+## 2.3.11 (2021-06-08)
 - support expiring VPN session at night now for all scenarios where 
   `sessionExpiry` >= 1 day
+- session expiry is now always (upper)bound to CA expiry
 - implement a "Delete User" (for local accounts) and "Delete User Data" (for 
   accounts in external IdM)
 - add Romanian (Romania) translation
-- session expiry is now always (upper)bound to CA expiry
 
 ## 2.3.10 (2021-05-03)
 - implement support for 
