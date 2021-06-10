@@ -30,9 +30,8 @@ try {
     $wgDaemon = new WgDaemon(new CurlHttpClient());
     foreach ($config->profileConfigList() as $profileConfig) {
         if ('wireguard' === $profileConfig->vpnType()) {
-            $wgDevice = 'wg'.(string) ($profileConfig->profileNumber() - 1);
             // extract the peers from the DB per profile
-            $wgDaemon->syncPeers('http://'.$profileConfig->nodeIp().':8080', $wgDevice, $storage->wgGetAllPeers($profileConfig->profileId()));
+            $wgDaemon->syncPeers('http://'.$profileConfig->nodeIp().':8080', 'wg0', $storage->wgGetAllPeers($profileConfig->profileId()));
         }
     }
 } catch (Exception $e) {
