@@ -54,7 +54,7 @@ class WgConfig
         $ipFour = new IP($this->profileConfig->range());
         $ipSix = new IP($this->profileConfig->range6());
 
-        $output[] = 'Address = '.$this->ipFour.$ipFour->getPrefix().', '.$this->ipSix.$ipSix->getPrefix();
+        $output[] = 'Address = '.$this->ipFour.'/'.$ipFour->getPrefix().', '.$this->ipSix.'/'.$ipSix->getPrefix();
         if (0 !== \count($this->profileConfig->dns())) {
             $output[] = 'DNS = '.implode(', ', $this->profileConfig->dns());
         }
