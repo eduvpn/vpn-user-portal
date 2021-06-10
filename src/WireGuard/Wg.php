@@ -40,10 +40,14 @@ class Wg
     /**
      * XXX want only 1 code path both for portal and for API.
      */
-    public function getConfig(ProfileConfig $profileConfig, string $userId, string $displayName, ?AccessToken $accessToken): WgConfig
+    public function getConfig(ProfileConfig $profileConfig, string $userId, string $displayName, ?AccessToken $accessToken, ?string $publicKey): WgConfig
     {
-        $privateKey = self::generatePrivateKey();
-        $publicKey = self::generatePublicKey($privateKey);
+        $privateKey = null;
+        if (null === $publicKey) {
+            $privateKey = self::generatePrivateKey();
+            $publicKey = self::generatePublicKey($privateKey);
+        }
+
         if (null === $ipInfo = $this->getIpAddress($profileConfig)) {
             // unable to get new IP address to assign to peer
             throw new RuntimeException('unable to get a an IP address');

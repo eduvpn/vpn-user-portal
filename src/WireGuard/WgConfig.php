@@ -20,12 +20,12 @@ class WgConfig
 {
     private ProfileConfig $profileConfig;
     private string $publicKey;
-    private string $privateKey;
+    private ?string $privateKey;
     private string $ipFour;
     private string $ipSix;
     private string $serverPublicKey;
 
-    public function __construct(ProfileConfig $profileConfig, string $publicKey, string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey)
+    public function __construct(ProfileConfig $profileConfig, string $publicKey, ?string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey)
     {
         $this->profileConfig = $profileConfig;
         $this->publicKey = $publicKey;
@@ -46,7 +46,9 @@ class WgConfig
 
         $output = [];
         $output[] = '[Interface]';
-        $output[] = 'PrivateKey = '.$this->privateKey;
+        if (null !== $this->privateKey) {
+            $output[] = 'PrivateKey = '.$this->privateKey;
+        }
         $output[] = 'Address = '.$this->ipFour.'/24, '.$this->ipSix.'/64';
         if (0 !== \count($this->profileConfig->dns())) {
             $output[] = 'DNS = '.implode(', ', $this->profileConfig->dns());
@@ -63,11 +65,6 @@ class WgConfig
     public function publicKey(): string
     {
         return $this->publicKey;
-    }
-
-    public function setPrivateKey(string $privateKey): void
-    {
-        $this->privateKey = $privateKey;
     }
 
     public function getIpFour(): string

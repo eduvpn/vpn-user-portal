@@ -313,6 +313,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $profileConfig,
             $userId,
             $displayName,
+            null,
             null
         );
 

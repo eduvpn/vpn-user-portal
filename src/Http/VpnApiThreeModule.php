@@ -117,7 +117,8 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                             $profileConfig,
                             $accessToken->getUserId(),
                             $accessToken->accessToken()->clientId(),
-                            $accessToken->accessToken()
+                            $accessToken->accessToken(),
+                            self::validatePublicKey($request->requirePostParameter('public_key'))
                         );
 
                         return new Response(
@@ -190,5 +191,11 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         }
 
         return $this->storage->getPermissionList($vpnAccessToken->getUserId());
+    }
+
+    private function validatePublicKey(string $publicKey): string
+    {
+        // XXX implement validation
+        return $publicKey;
     }
 }
