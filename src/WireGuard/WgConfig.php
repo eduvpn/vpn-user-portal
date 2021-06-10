@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
+use LC\Portal\IP;
 use LC\Portal\ProfileConfig;
 
 /**
@@ -50,7 +51,10 @@ class WgConfig
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
         // XXX what is up with /24 and /64? this needs to come from range/range6
-        $output[] = 'Address = '.$this->ipFour.'/24, '.$this->ipSix.'/64';
+        $ipFour = new IP($this->profileConfig->range());
+        $ipSix = new IP($this->profileConfig->range6());
+
+        $output[] = 'Address = '.$this->ipFour.$ipFour->getPrefix().', '.$this->ipSix.$ipSix->getPrefix();
         if (0 !== \count($this->profileConfig->dns())) {
             $output[] = 'DNS = '.implode(', ', $this->profileConfig->dns());
         }
