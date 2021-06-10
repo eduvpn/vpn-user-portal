@@ -43,7 +43,7 @@ class NodeApiModule implements ServiceModuleInterface
             '/server_config',
             function (UserInfo $userInfo, Request $request): Response {
                 // XXX we may want to restrict the profiles for particular nodes!
-                $serverConfigList = $this->serverConfig->getProfiles();
+                $serverConfigList = $this->serverConfig->get($this->config->profileConfigList());
                 $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {
                     $bodyLines[] = $configName.':'.sodium_bin2base64($configFile, \SODIUM_BASE64_VARIANT_ORIGINAL);

@@ -11,39 +11,64 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Portal\WireGuard\WgKeyPool;
-
 class WgServerConfig
 {
-    private WgKeyPool $wgKeyPool;
+    private string $dataDir;
 
-    public function __construct(WgKeyPool $wgKeyPool)
+    public function __construct(string $dataDir)
     {
-        $this->wgKeyPool = $wgKeyPool;
+        $this->dataDir = $dataDir;
     }
 
     /**
+     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
+     *
      * @return array<string,string>
      */
-    public function getProfile(ProfileConfig $profileConfig): array
+    public function get(array $profileConfigList): array
     {
-        $wgDevice = 'wg'.(string) ($profileConfig->profileNumber() - 1);
-        $listenPort = 51820 + $profileConfig->profileNumber() - 1;
-        $ipFour = new IP($profileConfig->range());  // XXX use getNetwork
-        $ipSix = new IP($profileConfig->range6());  // XXX use getNetwork otherwise if the range6 is not .0 or :: it will just increment
-        $firstHostFour = $ipFour->getFirstHost().'/'.$ipFour->getPrefix();
-        $firstHostSix = $ipSix->getFirstHost().'/'.$ipSix->getPrefix();
-        $privateKey = $this->wgKeyPool->get($profileConfig->profileId());
-
-        // XXX make sure the prefix is there on Address
+        $privateKey = $this->privateKey();
+        $ipFourList = [];
+        $ipSixList = [];
+        foreach ($profileConfigList as $profileConfig) {
+            $ipFour = new IP($profileConfig->range());  // XXX use getNetwork
+            $ipSix = new IP($profileConfig->range6());  // XXX use getNetwork otherwise if the range6 is not .0 or :: it will just increment
+            $ipFourList[] = $ipFour->getFirstHost().'/'.$ipFour->getPrefix();
+            $ipSixList[] = $ipSix->getFirstHost().'/'.$ipSix->getPrefix();
+        }
+        $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 
         $wgConfig = <<< EOF
             [Interface]
-            Address = $firstHostFour,$firstHostSix
-            ListenPort = $listenPort
+            Address = $ipList
+            ListenPort = 51820
             PrivateKey = $privateKey
             EOF;
 
-        return [$wgDevice.'.conf' => $wgConfig];
+        return ['wg0.conf' => $wgConfig];
+    }
+
+    private function privateKey(): string
+    {
+        $keyFile = $this->dataDir.'/wireguard.key';
+        if (FileIO::exists($keyFile)) {
+            return FileIO::readFile($keyFile);
+        }
+
+        $privateKey = self::generatePrivateKey();
+        FileIO::writeFile($keyFile, $privateKey);
+
+        return $privateKey;
+    }
+
+    /**
+     * XXX duplicate in Wg.php.
+     */
+    private static function generatePrivateKey(): string
+    {
+        ob_start();
+        passthru('/usr/bin/wg genkey');
+
+        return trim(ob_get_clean());
     }
 }

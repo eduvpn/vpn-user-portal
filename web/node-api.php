@@ -26,7 +26,6 @@ use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
 use LC\Portal\WgServerConfig;
-use LC\Portal\WireGuard\WgKeyPool;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
@@ -54,9 +53,8 @@ try {
             $config,
             $storage,
             new ServerConfig(
-                $config->profileConfigList(),
                 new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data')),
-                new WgServerConfig(new WgKeyPool($baseDir.'/data'))
+                new WgServerConfig($baseDir.'/data')
             )
         )
     );
