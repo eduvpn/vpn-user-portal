@@ -78,7 +78,8 @@ try {
         $storage,
         $clientFetcher,
         $secretKey->getPublicKey(),
-        $keyInstanceMapping
+        $keyInstanceMapping,
+        $serverClient
     );
 
     $service->addBeforeHook(
