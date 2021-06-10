@@ -49,6 +49,7 @@ class WgConfig
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
+        // XXX what is up with /24 and /64? this needs to come from range/range6
         $output[] = 'Address = '.$this->ipFour.'/24, '.$this->ipSix.'/64';
         if (0 !== \count($this->profileConfig->dns())) {
             $output[] = 'DNS = '.implode(', ', $this->profileConfig->dns());
@@ -57,7 +58,7 @@ class WgConfig
         $output[] = '[Peer]';
         $output[] = 'PublicKey = '.$this->serverPublicKey;
         $output[] = 'AllowedIPs = '.implode(', ', $routeList);
-        $output[] = 'Endpoint = '.$this->profileConfig->hostName().':'.(string) (51820 + $this->profileConfig->profileNumber() - 1);
+        $output[] = 'Endpoint = '.$this->profileConfig->hostName().':51820';
 
         return implode(\PHP_EOL, $output);
     }
