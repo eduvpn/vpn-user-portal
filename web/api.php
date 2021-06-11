@@ -44,9 +44,6 @@ try {
     );
 
     $sessionExpiry = new DateInterval($config->requireString('sessionExpiry', 'P90D'));
-    if ($config->requireBool('sessionExpireAtNight', false)) {
-        $sessionExpiry = Expiry::calculate($sessionExpiry);
-    }
     $caInfo = $serverClient->getRequireArray('ca_info');
     $caExpiresAt = new DateTime($caInfo['valid_to']);
     $sessionExpiry = Expiry::doNotOutliveCa($caExpiresAt, $sessionExpiry);

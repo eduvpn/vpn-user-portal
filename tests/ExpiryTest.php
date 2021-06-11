@@ -19,34 +19,6 @@ class ExpiryTest extends TestCase
     /**
      * @return void
      */
-    public function testExpiryAtNight()
-    {
-        $dataSet = [
-            // sessionExpiry, expiresAt, currentDate
-            ['P90D',  '2021-07-05T04:00:00+02:00', '2021-04-06T09:00:00+02:00'],
-            ['P7D',   '2021-04-13T04:00:00+02:00', '2021-04-06T09:00:00+02:00'],
-            ['PT12H', '2021-04-06T21:00:00+02:00', '2021-04-06T09:00:00+02:00'],
-            ['P1D',   '2021-04-07T04:00:00+02:00', '2021-04-06T09:00:00+02:00'],
-            ['PT24H', '2021-04-07T04:00:00+02:00', '2021-04-06T09:00:00+02:00'],
-            ['P3D',   '2021-04-09T04:00:00+02:00', '2021-04-06T09:00:00+02:00'],
-            ['P7D',   '2021-04-12T04:00:00+02:00', '2021-04-06T00:00:00+02:00'],
-            ['P7D',   '2021-04-12T04:00:00+02:00', '2021-04-06T01:00:00+02:00'],
-            ['P7D',   '2021-04-12T04:00:00+02:00', '2021-04-06T02:00:00+02:00'],
-            ['P7D',   '2021-04-12T04:00:00+02:00', '2021-04-06T03:00:00+02:00'],
-            ['P7D',   '2021-04-13T04:00:00+02:00', '2021-04-06T04:00:00+02:00'],
-            ['P7D',   '2021-04-13T04:00:00+02:00', '2021-04-06T05:00:00+02:00'],
-        ];
-
-        foreach ($dataSet as $dataPoint) {
-            $dateTime = new DateTime($dataPoint[2]);
-            $expiryInterval = Expiry::calculate(new DateInterval($dataPoint[0]), $dateTime);
-            $this->assertSame($dataPoint[1], $dateTime->add($expiryInterval)->format(DateTime::ATOM));
-        }
-    }
-
-    /**
-     * @return void
-     */
     public function testDoNotOutliveCa()
     {
         $dataSet = [
