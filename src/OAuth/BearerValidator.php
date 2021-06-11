@@ -17,7 +17,6 @@ use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
-use LC\Common\HttpClient\ServerClient;
 use ParagonIE\ConstantTime\Binary;
 
 /**
@@ -38,22 +37,18 @@ class BearerValidator
     /** @var array<string,array<string,string>> */
     private $keyInstanceMapping;
 
-    /** @var \LC\Common\HttpClient\ServerClient */
-    private $serverClient;
-
     /** @var \DateTime */
     private $dateTime;
 
     /**
      * @param array<string,array<string,string>> $keyInstanceMapping
      */
-    public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping, ServerClient $serverClient)
+    public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, PublicKey $localPublicKey, array $keyInstanceMapping)
     {
         $this->storage = $storage;
         $this->clientDb = $clientDb;
         $this->localPublicKey = $localPublicKey;
         $this->keyInstanceMapping = $keyInstanceMapping;
-        $this->serverClient = $serverClient;
         $this->dateTime = new DateTime();
     }
 
@@ -113,8 +108,6 @@ class BearerValidator
             throw new InvalidTokenException('"access_token" expired');
         }
 
-        $userId = $accessTokenInfo['user_id'];
-
         if (null === $baseUri) {
             // the token was signed by _US_...
             // the client MUST still be there
@@ -127,16 +120,9 @@ class BearerValidator
             if (!$this->storage->hasAuthorization($accessTokenInfo['auth_key'])) {
                 throw new InvalidTokenException(sprintf('authorization for client "%s" no longer exists', $accessTokenInfo['client_id']));
             }
-
-            // we have to make sure it does not outlive "sessionExpiry", this
-            // is quite ugly, but it forces the client to re-authorize when
-            // the session is supposed to be expired...
-            $expiresAt = new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $userId]));
-            if ($this->dateTime >= $expiresAt) {
-                throw new InvalidTokenException('"access_token" expired');
-            }
         }
 
+        $userId = $accessTokenInfo['user_id'];
         if (null !== $baseUri) {
             // append the base_uri in front of the user_id to indicate this is
             // a "remote" user
