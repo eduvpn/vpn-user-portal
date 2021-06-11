@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace LC\Portal\OAuth;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\OAuth\Server\AccessToken;
 use fkooman\OAuth\Server\ClientDbInterface;
@@ -20,6 +19,7 @@ use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\Exception\SignerException;
 use fkooman\OAuth\Server\StorageInterface;
 use fkooman\OAuth\Server\SyntaxValidator;
+use LC\Portal\Dt;
 
 /**
  * Copy of fkooman/oauth2-server src/BearerValidator.php to support public
@@ -47,7 +47,7 @@ class BearerValidator
         $this->clientDb = $clientDb;
         $this->localPublicKey = $localPublicKey;
         $this->keyInstanceMapping = $keyInstanceMapping;
-        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $this->dateTime = Dt::get();
     }
 
     public function validate(string $authorizationHeader): VpnAccessToken

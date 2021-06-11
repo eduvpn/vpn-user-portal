@@ -29,13 +29,14 @@ class Expiry
     public static function calculate(DateInterval $sessionExpiry, DateTimeImmutable $caExpiresAt, ?DateTimeImmutable $dateTime = null): DateInterval
     {
         if (null === $dateTime) {
-            $dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            // initialize with current PHP set timezone
+            $dateTime = new DateTimeImmutable();
         }
 
         $expiresAt = $dateTime->add($sessionExpiry);
 
         // if we expire less than 1 day from now, keep as is
-        if ($expiresAt < $dateTime->add(new DateInterval('P1D'))) {
+        if ($expiresAt < $dateTime->add(new DateInterval('P7D'))) {
             // but upperbound is still CA expiry
             if ($expiresAt > $caExpiresAt) {
                 return $dateTime->diff($caExpiresAt);
@@ -45,12 +46,12 @@ class Expiry
         }
 
         // expire at 04:00 in the night on the day of the expiry
-        $nightExpiresAt = $expiresAt->modify('04:00');
+        $nightExpiresAt = $expiresAt->modify('04:00')->setTimeZone(new DateTimeZone('UTC'));
 
         // if we end up longer than sessionExpiry, because it is between 00:00
         // and 04:00, subtract a day
         if ($nightExpiresAt > $expiresAt) {
-            return $dateTime->diff($nightExpiresAt->modify('yesterday 04:00'));
+            return $dateTime->diff($nightExpiresAt->modify('yesterday 04:00')->setTimeZone(new DateTimeZone('UTC')));
         }
 
         // CA expiry is upper bound in all cases

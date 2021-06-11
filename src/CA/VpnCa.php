@@ -13,8 +13,8 @@ namespace LC\Portal\CA;
 
 use DateInterval;
 use DateTimeImmutable;
-use DateTimeZone;
 use LC\Portal\CA\Exception\CaException;
+use LC\Portal\Dt;
 use LC\Portal\FileIO;
 use RuntimeException;
 
@@ -32,7 +32,7 @@ class VpnCa implements CaInterface
         $this->caKeyType = $caKeyType;
         $this->vpnCaPath = $vpnCaPath;
         $this->caExpiry = $caExpiry;
-        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $this->dateTime = Dt::get();
         $this->init();
     }
 

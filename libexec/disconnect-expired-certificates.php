@@ -13,13 +13,14 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 
 try {
-    $dateTime = new DateTimeImmutable();
+    $dateTime = Dt::get();
 
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage(
@@ -44,7 +45,7 @@ try {
     foreach ($daemonWrapper->getConnectionList(null) as $profileId => $connectionInfoList) {
         foreach ($connectionInfoList as $connectionInfo) {
             // check expiry of certificate
-            $expiresAt = new DateTimeImmutable($connectionInfo['valid_to']);
+            $expiresAt = Dt::get($connectionInfo['valid_to']);
             if ($dateTime > $expiresAt) {
                 // certificate expired, disconnect!
                 $daemonWrapper->killClient($connectionInfo['common_name']);

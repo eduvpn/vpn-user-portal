@@ -130,7 +130,7 @@ class Storage
                 'public_key' => (string) $resultRow['public_key'],
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
-                'created_at' => new DateTimeImmutable($resultRow['created_at']),
+                'created_at' => Dt::get($resultRow['created_at']),
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }
@@ -167,7 +167,7 @@ class Storage
                 'public_key' => (string) $resultRow['public_key'],
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
-                'created_at' => new DateTimeImmutable($resultRow['created_at']),
+                'created_at' => Dt::get($resultRow['created_at']),
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }

@@ -16,6 +16,7 @@ use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\Expiry;
 use LC\Portal\FileIO;
 use LC\Portal\Http\AccessHook;
@@ -88,7 +89,7 @@ try {
         $ca->caCert()->validTo()
     );
 
-    $dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $dateTime = Dt::get();
     if ($dateTime->add(new DateInterval('PT30M')) >= $dateTime->add($sessionExpiry)) {
         throw new RuntimeException('sessionExpiry MUST be > PT30M');
     }

@@ -71,7 +71,7 @@ class Stats
                 $connectedAt = $entry['connected_at'];
                 /** @var string|null */
                 $disconnectedAt = $entry['disconnected_at'];
-                $connectedAtDateTimeImmutable = new DateTimeImmutable($connectedAt);
+                $connectedAtDateTimeImmutable = Dt::get($connectedAt);
                 $dateOfConnection = $connectedAtDateTimeImmutable->format('Y-m-d');
                 /** @var int|null */
                 $bytesTransferred = $entry['bytes_transferred'];

@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\Storage;
 
 try {
@@ -79,7 +80,7 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $storage->localUserAdd($userId, $passwordHash, new DateTimeImmutable('now', new DateTimeZone('UTC')));
+    $storage->localUserAdd($userId, $passwordHash, Dt::get());
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
     exit(1);

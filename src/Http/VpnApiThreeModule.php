@@ -12,10 +12,10 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OAuth\VpnAccessToken;
@@ -43,7 +43,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         $this->random = $random;
         $this->ca = $ca;
         $this->wg = $wg;
-        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $this->dateTime = Dt::get();
     }
 
     public function init(ApiService $service): void

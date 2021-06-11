@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\CA;
 
 use DateTimeImmutable;
+use LC\Portal\Dt;
 
 class CaInfo
 {
@@ -33,12 +34,12 @@ class CaInfo
 
     public function validFrom(): DateTimeImmutable
     {
-        return new DateTimeImmutable('@'.$this->validFrom);
+        return Dt::get('@'.$this->validFrom);
     }
 
     public function validTo(): DateTimeImmutable
     {
-        return new DateTimeImmutable('@'.$this->validTo);
+        return Dt::get('@'.$this->validTo);
     }
 
     public function fingerprint(bool $forHuman = false): string

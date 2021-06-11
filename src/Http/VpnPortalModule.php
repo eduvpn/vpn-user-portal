@@ -13,12 +13,12 @@ namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTimeImmutable;
-use DateTimeZone;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
@@ -60,7 +60,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->ca = $ca;
         $this->clientDb = $clientDb;
         $this->sessionExpiry = $sessionExpiry;
-        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $this->dateTime = Dt::get();
     }
 
     public function setDateTime(DateTimeImmutable $dateTime): void

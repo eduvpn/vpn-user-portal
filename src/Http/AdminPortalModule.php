@@ -13,9 +13,9 @@ namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTimeImmutable;
-use DateTimeZone;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\FileIO;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Json;
@@ -48,7 +48,7 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->oauthStorage = $oauthStorage;
         $this->adminHook = $adminHook;
         $this->serverInfo = $serverInfo;
-        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $this->dateTime = Dt::get();
     }
 
     public function init(Service $service): void

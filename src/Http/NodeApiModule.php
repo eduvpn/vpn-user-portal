@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\Exception\NodeApiException;
 use LC\Portal\LoggerInterface;
 use LC\Portal\ServerConfig;
@@ -34,7 +34,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->config = $config;
         $this->storage = $storage;
         $this->serverConfig = $serverConfig;
-        $this->dateTime = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $this->dateTime = Dt::get();
     }
 
     public function init(Service $service): void
@@ -98,7 +98,7 @@ class NodeApiModule implements ServiceModuleInterface
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
 
         $this->verifyConnection($profileId, $commonName);
-        $this->storage->clientConnect($profileId, $commonName, $ipFour, $ipSix, new DateTimeImmutable(sprintf('@%d', $connectedAt)));
+        $this->storage->clientConnect($profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
     }
 
     public function disconnect(Request $request): void
@@ -112,7 +112,7 @@ class NodeApiModule implements ServiceModuleInterface
         $disconnectedAt = InputValidation::disconnectedAt($request->requirePostParameter('disconnected_at'));
         $bytesTransferred = InputValidation::bytesTransferred($request->requirePostParameter('bytes_transferred'));
 
-        $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, new DateTimeImmutable(sprintf('@%d', $connectedAt)), new DateTimeImmutable(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+        $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)), Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
     }
 
     private function verifyConnection(string $profileId, string $commonName): void

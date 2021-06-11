@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\FileIO;
 use LC\Portal\Json;
 use LC\Portal\Stats;
@@ -28,7 +29,7 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $stats = new Stats($storage, new DateTimeImmutable('now', new DateTimeZone('UTC')));
+    $stats = new Stats($storage, Dt::get());
     $statsData = $stats->get($config->profileConfigList());
     FileIO::writeFile($baseDir.'/data/stats.json', Json::encode($statsData));
 } catch (Exception $e) {
