@@ -47,7 +47,7 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    $oauthStorage = new OAuthStorage($db);
+    $oauthStorage = new OAuthStorage($db, 'oauth_');
 
     $keyInstanceMapping = [];
     if ($config->apiConfig()->remoteAccess()) {

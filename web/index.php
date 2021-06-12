@@ -245,7 +245,7 @@ try {
     );
 
     $oauthClientDb = new ClientDb();
-    $oauthStorage = new OAuthStorage($db);
+    $oauthStorage = new OAuthStorage($db, 'oauth_');
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(

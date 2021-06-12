@@ -48,7 +48,7 @@ try {
     // OAuth module
     $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     $oauthServer = new VpnOAuthServer(
-        new OAuthStorage($db),
+        new OAuthStorage($db, 'oauth_'),
         new ClientDb(),
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );
