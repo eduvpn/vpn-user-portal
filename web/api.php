@@ -54,7 +54,8 @@ try {
     $storage = new Storage(
         new PDO(sprintf('sqlite://%s/db.sqlite', $dataDir)),
         sprintf('%s/schema', $baseDir),
-        $sessionExpiry
+        $sessionExpiry,
+        $config->requireBool('sessionExpireAtNight', false)
     );
     $storage->update();
 
