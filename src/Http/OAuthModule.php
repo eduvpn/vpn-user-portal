@@ -35,7 +35,7 @@ class OAuthModule implements ServiceModuleInterface
             '/_oauth/authorize',
             function (UserInfo $userInfo, Request $request): Response {
                 try {
-                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($request->getQueryParameters(), $userInfo->userId())) {
+                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($userInfo->userId())) {
                         // optimization where we do not ask for approval
                         return $this->prepareReturnResponse($authorizeResponse);
                     }
@@ -48,12 +48,12 @@ class OAuthModule implements ServiceModuleInterface
                                 [
                                     '_show_logout_button' => false,
                                 ],
-                                $this->oauthServer->getAuthorize($request->getQueryParameters())
+                                $this->oauthServer->getAuthorize()
                             )
                         )
                     );
                 } catch (OAuthException $e) {
-                    throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()), $e->getStatusCode());
+                    throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription() ?? ''), $e->getStatusCode());
                 }
             }
         );
@@ -63,14 +63,12 @@ class OAuthModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 try {
                     $authorizeResponse = $this->oauthServer->postAuthorize(
-                        $request->getQueryParameters(),
-                        $request->getPostParameters(),
                         $userInfo->userId()
                     );
 
                     return $this->prepareReturnResponse($authorizeResponse);
                 } catch (OAuthException $e) {
-                    throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription()), $e->getStatusCode());
+                    throw new HttpException(sprintf('ERROR: %s (%s)', $e->getMessage(), $e->getDescription() ?? ''), $e->getStatusCode());
                 }
             }
         );

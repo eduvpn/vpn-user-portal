@@ -17,8 +17,8 @@ use fkooman\OAuth\Server\AccessToken;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\Exception\SignerException;
+use fkooman\OAuth\Server\Http\Request;
 use fkooman\OAuth\Server\StorageInterface;
-use fkooman\OAuth\Server\SyntaxValidator;
 use LC\Portal\Dt;
 
 /**
@@ -50,11 +50,11 @@ class BearerValidator
         $this->dateTime = Dt::get();
     }
 
-    public function validate(string $authorizationHeader): VpnAccessToken
+    public function validate(?Request $request = null): VpnAccessToken
     {
+        $request ??= Request::fromServerVariables();
         try {
-            SyntaxValidator::validateBearerToken($authorizationHeader);
-            $providedToken = substr($authorizationHeader, 7);
+            $providedToken = $request->bearerToken();
 
             // extract the key ID from the received Bearer token
             if (null === $keyId = PublicSigner::extractKid($providedToken)) {

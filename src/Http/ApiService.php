@@ -42,8 +42,7 @@ class ApiService
     public function run(Request $request): Response
     {
         try {
-            $authorizationHeader = $request->optionalHeader('HTTP_AUTHORIZATION') ?? '';
-            $vpnAccessToken = $this->bearerValidator->validate($authorizationHeader);
+            $vpnAccessToken = $this->bearerValidator->validate();
             $vpnAccessToken->accessToken()->scope()->requireAll(['config']);
 
             $pathInfo = $request->getPathInfo();

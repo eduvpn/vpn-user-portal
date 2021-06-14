@@ -29,11 +29,7 @@ class OAuthTokenModule implements ServiceModuleInterface
             '/token',
             function (Request $request): Response {
                 try {
-                    $tokenResponse = $this->oauthServer->postToken(
-                        $request->getPostParameters(),
-                        $request->optionalHeader('PHP_AUTH_USER'),
-                        $request->optionalHeader('PHP_AUTH_PW')
-                    );
+                    $tokenResponse = $this->oauthServer->postToken();
 
                     return new Response($tokenResponse->getBody(), $tokenResponse->getHeaders(), $tokenResponse->getStatusCode());
                 } catch (OAuthException $e) {
