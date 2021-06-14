@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "79378bcf521a1147cf41fcb8397a2071",
+    "content-hash": "ab5aa52c17da38f857d3de68dead97f4",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -55,7 +55,7 @@
         },
         {
             "name": "fkooman/oauth2-server",
-            "version": "dev-request-class",
+            "version": "v7.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
