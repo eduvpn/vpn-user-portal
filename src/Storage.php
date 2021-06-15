@@ -33,14 +33,10 @@ class Storage implements CredentialValidatorInterface, StorageInterface
     /** @var \DateInterval */
     private $sessionExpiry;
 
-    /** @var bool */
-    private $expiryAtNight;
-
     /**
      * @param string $schemaDir
-     * @param bool   $expiryAtNight
      */
-    public function __construct(PDO $db, $schemaDir, DateInterval $sessionExpiry, $expiryAtNight = false)
+    public function __construct(PDO $db, $schemaDir, DateInterval $sessionExpiry)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
@@ -49,7 +45,6 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         $this->db = $db;
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
         $this->sessionExpiry = $sessionExpiry;
-        $this->expiryAtNight = $expiryAtNight;
         $this->dateTime = new DateTime();
     }
 
@@ -205,10 +200,8 @@ class Storage implements CredentialValidatorInterface, StorageInterface
 
         $authTimeDateTime = new DateTime($authTime);
         $expiresAt = date_add($authTimeDateTime, $this->sessionExpiry);
-        if ($this->expiryAtNight) {
-            $expiresAt = date_add($expiresAt, date_diff($authTimeDateTime, $this->dateTime));
-        }
-
+        $expiresAt = date_add($expiresAt, date_diff($authTimeDateTime, $this->dateTime));
+        
         return $expiresAt > $this->dateTime;
     }
 
