@@ -8,6 +8,12 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+
+## 2.3.12
+
+remove `sessionExpireAtNight` as it is too complicated to implement correctly 
+in eduVPN/Let's Connect! 2.x.
+
 ## 2.3.11
 
 We added the translation for Romanian (Romania). You can add it to 
