@@ -36,6 +36,7 @@ return [
     //'DNS Domain' => '',
     //'DNS Search Domain(s)' => '',
     //'DNS Server(s)' => '',
+    //'Danger Zone' => '',
     'Date' => 'Kuupäev',
     'Date/Time' => 'Kuupäev/kellaaeg',
     //'Default Gateway' => '',

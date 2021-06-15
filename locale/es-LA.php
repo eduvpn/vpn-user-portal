@@ -36,6 +36,7 @@ return [
     'DNS Domain' => 'Dominio DNS',
     'DNS Search Domain(s)' => 'Dominio(s) de Búsqueda DNS',
     'DNS Server(s)' => 'Servidor(es) DNS',
+    //'Danger Zone' => '',
     'Date' => 'Fecha',
     'Date/Time' => 'Fecha/Hora',
     'Default Gateway' => 'Gateway por Defecto',

@@ -5,33 +5,31 @@
         <?=$this->t('Managing user <code>%userId%</code>.'); ?>
     </p>
 
-    <?php if ($isSelf): ?>
+<?php if ($isSelf): ?>
         <p class="warning"><?=$this->t('You cannot manage your own user account.'); ?></p>
-    <?php endif; ?>
-
+<?php else: ?>
     <form class="frm" method="post" action="<?=$this->e($requestRoot); ?>user">
         <fieldset>
             <input type="hidden" name="user_id" value="<?=$this->e($userId); ?>">
-            <?php if (!$isSelf): ?>
-                <?php if ($isDisabled): ?>
-                    <button name="user_action" value="enableAccount"><?=$this->t('Enable Account'); ?></button>
-                <?php else: ?>
-                    <button class="warning" name="user_action" value="disableAccount"><?=$this->t('Disable Account'); ?></button>
-                <?php endif; ?>
-
-                <?php if ('DbAuthModule' === $authModule): ?>
-                    <button class="error" name="user_action" value="deleteAccount"><?=$this->t('Delete Account'); ?></button>
-                <?php else: ?>
-                    <button class="error" name="user_action" value="deleteAccount"><?=$this->t('Delete Account Data'); ?></button>
-                <?php endif; ?>
-                <?php if ('DbAuthModule' !== $authModule): ?>
+<?php if ($isDisabled): ?>
+            <button name="user_action" value="enableAccount"><?=$this->t('Enable Account'); ?></button>
+<?php else: ?>
+            <button class="warning" name="user_action" value="disableAccount"><?=$this->t('Disable Account'); ?></button>
+<?php endif; ?>
+            <details>
+                <summary><?=$this->t('Danger Zone'); ?></summary>
+<?php if ('DbAuthModule' === $authModule): ?>
+                <button class="error" name="user_action" value="deleteAccount"><?=$this->t('Delete Account'); ?></button>
+<?php else: ?>
+                <button class="error" name="user_action" value="deleteAccount"><?=$this->t('Delete Account Data'); ?></button>
                 <p class="warning">
-                    <?=$this->t('This server uses an external authentication source. Deleting the account data will not prevent the user from authenticating (again)!'); ?>
+                    <?=$this->t('This server uses an external authentication source. Deleting the account data will not prevent the user from authenticating (again)!'); ?></small>
                 </p>
-                <?php endif; ?>
-            <?php endif; ?>
+<?php endif; ?>
+            </details>
         </fieldset>
     </form>
+<?php endif; ?>
 
     <h2><?=$this->t('Certificates'); ?></h2>
 

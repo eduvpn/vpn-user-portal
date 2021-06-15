@@ -36,6 +36,7 @@ return [
     'DNS Domain' => 'DNS-domein',
     'DNS Search Domain(s)' => 'DNS-zoekdomein(en)',
     'DNS Server(s)' => 'DNS-server(s)',
+    'Danger Zone' => 'Gevarenzone',
     'Date' => 'Datum',
     'Date/Time' => 'Datum/Tijd',
     'Default Gateway' => 'Default Gateway',

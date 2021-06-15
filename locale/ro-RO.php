@@ -36,6 +36,7 @@ return [
     'DNS Domain' => 'Domeniu DNS',
     'DNS Search Domain(s)' => 'Domeniu de cautare DNS',
     'DNS Server(s)' => 'Server DNS',
+    //'Danger Zone' => '',
     'Date' => 'Dată',
     'Date/Time' => 'Dată/Oră',
     'Default Gateway' => 'Gateway implicit',
