@@ -4,6 +4,7 @@
 - remove 
   [nightly session expiry](https://github.com/eduvpn/documentation/blob/v2/EXPIRE_AT_NIGHT.md)
   again as it was very broken
+- no longer show "Danger Zone" when managing your own account
 
 ## 2.3.11 (2021-06-08)
 - support expiring VPN session at night now for all scenarios where 
