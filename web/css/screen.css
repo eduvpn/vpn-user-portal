@@ -80,6 +80,7 @@ button, input, textarea, select {
 
 pre, code {
   font-size: inherit;
+  word-break: break-word;
 }
 
 button, summary {
@@ -259,28 +260,28 @@ table.tbl td, table.tbl th {
 }
 
 table.tbl ul {
-    margin: 0;
-    padding: 0 0 0 0;
-    list-style: none;
+  margin: 0;
+  padding: 0 0 0 0;
+  list-style: none;
 }
 
 table.tbl li {
-    padding: 0;
-    margin-left: 0;
+  padding: 0;
+  margin-left: 0;
 }
 
 table.tbl li:first-child {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 table.tbl dl, table.tbl dt {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 table.tbl dd {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 table.tbl form.frm {

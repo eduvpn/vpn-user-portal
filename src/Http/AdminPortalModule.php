@@ -92,6 +92,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'profileConfigList' => $this->config->profileConfigList(),
                             'caInfo' => $this->serverInfo->ca()->caCert(),
                             'oauthPublicKey' => $this->serverInfo->publicKey(),
+                            'oauthKeyId' => $this->serverInfo->keyId(),
                         ]
                     )
                 );

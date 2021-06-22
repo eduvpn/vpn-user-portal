@@ -17,11 +17,13 @@ class ServerInfo
 {
     private CaInterface $ca;
     private string $publicKey;
+    private string $keyId;
 
-    public function __construct(CaInterface $ca, string $publicKey)
+    public function __construct(CaInterface $ca, string $publicKey, string $keyId)
     {
         $this->ca = $ca;
         $this->publicKey = $publicKey;
+        $this->keyId = $keyId;
     }
 
     public function ca(): CaInterface
@@ -32,5 +34,10 @@ class ServerInfo
     public function publicKey(): string
     {
         return $this->publicKey;
+    }
+
+    public function keyId(): string
+    {
+        return $this->keyId;
     }
 }

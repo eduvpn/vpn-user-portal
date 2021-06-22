@@ -21,7 +21,7 @@
         </tbody>
     </table>
 
-    <details><summary><?=$this->t('More'); ?></summary>
+<!--    <details><summary><?=$this->t('More'); ?></summary> -->
     <table class="tbl">
         <tbody>
             <tr>
@@ -47,12 +47,14 @@
                 <td>
                     <dl>
                         <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($oauthPublicKey); ?></code></dd>
+                        <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e($oauthKeyId); ?></code></dd>
+
                     </dl>
                 </td>
             </tr>
         </tbody>
     </table>
-    </details>
+<!--    </details> -->
 
     <?php foreach ($profileConfigList as $profileConfig): ?>
     <h2 id="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></h2>

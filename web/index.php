@@ -276,7 +276,8 @@ try {
         $adminHook,
         new ServerInfo(
             $ca,
-            $oauthSigner->exportPublicKey()
+            $oauthSigner->exportPublicKey(),
+            $oauthSigner->thumbPrint()
         )
     );
     $service->addModule($adminPortalModule);
