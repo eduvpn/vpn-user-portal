@@ -4,62 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab5aa52c17da38f857d3de68dead97f4",
+    "content-hash": "b2ce032981dd4dbbb58688a413ccb064",
     "packages": [
-        {
-            "name": "fkooman/jwt",
-            "version": "v2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://git.sr.ht/~fkooman/php-jwt",
-                "reference": "a8e5ff7c8fec38371d4beffeab0383b64adae157"
-            },
-            "require": {
-                "ext-date": "*",
-                "ext-hash": "*",
-                "ext-json": "*",
-                "ext-openssl": "*",
-                "ext-sodium": "*",
-                "ext-spl": "*",
-                "php": ">= 7.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "fkooman\\Jwt\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "fkooman\\Jwt\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "email": "fkooman@tuxed.net",
-                    "name": "François Kooman"
-                }
-            ],
-            "description": "Small JSON Web Signature implementation",
-            "support": {
-                "email": "fkooman@tuxed.net",
-                "source": "https://git.sr.ht/~fkooman/php-jwt"
-            },
-            "time": "2021-03-24T11:54:39+00:00"
-        },
         {
             "name": "fkooman/oauth2-server",
             "version": "v7.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "2c56d6b3837aaa06e92bd3711d5051b9ae7aee0d"
+                "reference": "d25636520fa004e1e6e7c58025f1a8993e413bb4"
             },
             "require": {
                 "ext-date": "*",
@@ -100,7 +53,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2021-06-14T12:30:20+00:00"
+            "time": "2021-06-22T13:52:54+00:00"
         }
     ],
     "packages-dev": [
@@ -1954,16 +1907,16 @@
         },
         {
             "name": "sebastian/type",
-            "version": "2.3.2",
+            "version": "2.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/type.git",
-                "reference": "0d1c587401514d17e8f9258a27e23527cb1b06c1"
+                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/0d1c587401514d17e8f9258a27e23527cb1b06c1",
-                "reference": "0d1c587401514d17e8f9258a27e23527cb1b06c1",
+                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/b8cd8a1c753c90bc1a0f5372170e3e489136f914",
+                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914",
                 "shasum": ""
             },
             "require": {
@@ -1998,7 +1951,7 @@
             "homepage": "https://github.com/sebastianbergmann/type",
             "support": {
                 "issues": "https://github.com/sebastianbergmann/type/issues",
-                "source": "https://github.com/sebastianbergmann/type/tree/2.3.2"
+                "source": "https://github.com/sebastianbergmann/type/tree/2.3.4"
             },
             "funding": [
                 {
@@ -2006,7 +1959,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-04T13:02:07+00:00"
+            "time": "2021-06-15T12:49:02+00:00"
         },
         {
             "name": "sebastian/version",
@@ -2252,7 +2205,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fkooman/jwt": 20,
         "fkooman/oauth2-server": 20,
         "fkooman/saml-sp": 20
     },
@@ -2273,5 +2225,5 @@
     "platform-dev": {
         "ext-json": "*"
     },
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }

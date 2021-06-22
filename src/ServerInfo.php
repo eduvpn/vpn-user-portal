@@ -11,18 +11,17 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use fkooman\Jwt\Keys\EdDSA\PublicKey as OAuthPublicKey;
 use LC\Portal\CA\CaInterface;
 
 class ServerInfo
 {
     private CaInterface $ca;
-    private OAuthPublicKey $oauthPublicKey;
+    private string $publicKey;
 
-    public function __construct(CaInterface $ca, OAuthPublicKey $oauthPublicKey)
+    public function __construct(CaInterface $ca, string $publicKey)
     {
         $this->ca = $ca;
-        $this->oauthPublicKey = $oauthPublicKey;
+        $this->publicKey = $publicKey;
     }
 
     public function ca(): CaInterface
@@ -30,8 +29,8 @@ class ServerInfo
         return $this->ca;
     }
 
-    public function oauthPublicKey(): OAuthPublicKey
+    public function publicKey(): string
     {
-        return $this->oauthPublicKey;
+        return $this->publicKey;
     }
 }

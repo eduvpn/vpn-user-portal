@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
+use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\OAuthException;
-use LC\Portal\OAuth\BearerValidator;
 
 class ApiService
 {
@@ -42,8 +42,8 @@ class ApiService
     public function run(Request $request): Response
     {
         try {
-            $vpnAccessToken = $this->bearerValidator->validate();
-            $vpnAccessToken->accessToken()->scope()->requireAll(['config']);
+            $accessToken = $this->bearerValidator->validate();
+            $accessToken->scope()->requireAll(['config']);
 
             $pathInfo = $request->getPathInfo();
             $requestMethod = $request->getRequestMethod();
@@ -55,7 +55,7 @@ class ApiService
                 return new JsonResponse(['error' => sprintf('method "%s" not allowed', $requestMethod)], ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))], 405);
             }
 
-            return $this->routeList[$pathInfo][$requestMethod]($vpnAccessToken, $request);
+            return $this->routeList[$pathInfo][$requestMethod]($accessToken, $request);
         } catch (OAuthException $e) {
             $jsonResponse = $e->getJsonResponse();
 

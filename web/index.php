@@ -12,8 +12,8 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
+use fkooman\OAuth\Server\Signer;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Dt;
@@ -46,7 +46,6 @@ use LC\Portal\Http\VpnPortalModule;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\LdapClient;
 use LC\Portal\OAuth\ClientDb;
-use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
@@ -265,7 +264,7 @@ try {
     );
     $service->addModule($vpnPortalModule);
 
-    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
+    $oauthSigner = new Signer(FileIO::readFile($baseDir.'/config/oauth.key'));
 
     $adminPortalModule = new AdminPortalModule(
         $baseDir.'/data',
@@ -277,7 +276,7 @@ try {
         $adminHook,
         new ServerInfo(
             $ca,
-            $secretKey->getPublicKey()
+            $oauthSigner->exportPublicKey()
         )
     );
     $service->addModule($adminPortalModule);
@@ -286,7 +285,7 @@ try {
     $oauthServer = new VpnOAuthServer(
         $oauthStorage,
         $oauthClientDb,
-        new PublicSigner($secretKey->getPublicKey(), $secretKey)
+        $oauthSigner
     );
     $oauthServer->setAccessTokenExpiry($config->apiConfig()->tokenExpiry());
     $oauthServer->setRefreshTokenExpiry($sessionExpiry);

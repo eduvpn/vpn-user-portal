@@ -12,8 +12,8 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
+use fkooman\OAuth\Server\Signer;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
@@ -23,7 +23,6 @@ use LC\Portal\Http\OAuthTokenModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\OAuth\ClientDb;
-use LC\Portal\OAuth\PublicSigner;
 use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
@@ -46,11 +45,10 @@ try {
     $storage->update();
 
     // OAuth module
-    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     $oauthServer = new VpnOAuthServer(
         new OAuthStorage($db, 'oauth_'),
         new ClientDb(),
-        new PublicSigner($secretKey->getPublicKey(), $secretKey)
+        new Signer(FileIO::readFile($baseDir.'/config/oauth.key'))
     );
 
     $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->vpnCaPath(), $config->caExpiry());

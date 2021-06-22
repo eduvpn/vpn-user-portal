@@ -46,7 +46,7 @@
                 <th><?=$this->t('OAuth'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($oauthPublicKey->encode()); ?></code></dd>
+                        <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($oauthPublicKey); ?></code></dd>
                     </dl>
                 </td>
             </tr>

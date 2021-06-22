@@ -12,12 +12,10 @@ declare(strict_types=1);
 namespace LC\Portal\Federation;
 
 use Exception;
-use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use LC\Portal\Dt;
 use LC\Portal\FileIO;
 use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\Json;
-use LC\Portal\OAuth\PublicSigner;
 
 class ForeignKeyListFetcher
 {
@@ -66,30 +64,13 @@ class ForeignKeyListFetcher
         }
 
         FileIO::writeFile($this->dataDir.'/server_list.json', $serverListResponse->getBody());
-        FileIO::writeFile(
-            $this->dataDir.'/key_instance_mapping.json',
-            Json::encode(
-                self::generateMapping($serverListData)
-            )
-        );
-
         if (null !== $lastModified = $serverListResponse->getHeader('Last-Modified')) {
             // use Last-Modified header to set the file's modified time, if
             // available from server to be used on future requests as the
             // "If-Modified-Since" header value
-            $lastModifiedDateTimeImmutable = Dt::get($lastModified);
-            touch($this->dataDir.'/server_list.json', $lastModifiedDateTimeImmutable->getTimestamp());
+            $lastModifiedDt = Dt::get($lastModified);
+            touch($this->dataDir.'/server_list.json', $lastModifiedDt->getTimestamp());
         }
-    }
-
-    public function extract(): array
-    {
-        $mappingFile = sprintf('%s/key_instance_mapping.json', $this->dataDir);
-        if (false === FileIO::exists($mappingFile)) {
-            return [];
-        }
-
-        return Json::decode(FileIO::readFile($mappingFile));
     }
 
     private function getCurrentVersion(): int
@@ -100,27 +81,5 @@ class ForeignKeyListFetcher
         $serverListData = Json::decode(FileIO::readFile($this->dataDir.'/server_list.json'));
 
         return $serverListData['v'];
-    }
-
-    private static function generateMapping(array $serverListData): array
-    {
-        $mappingData = [];
-        foreach ($serverListData['server_list'] as $serverEntry) {
-            if ('secure_internet' !== $serverEntry['server_type']) {
-                continue;
-            }
-            foreach ($serverEntry['public_key_list'] as $publicKeyStr) {
-                // XXX why first decode and then encode?
-                $publicKey = new PublicKey(
-                    sodium_base642bin($publicKeyStr, \SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING)
-                );
-                $mappingData[PublicSigner::calculateKeyId($publicKey)] = [
-                    'public_key' => $publicKey->encode(),
-                    'base_uri' => $serverEntry['base_url'],
-                ];
-            }
-        }
-
-        return $mappingData;
     }
 }

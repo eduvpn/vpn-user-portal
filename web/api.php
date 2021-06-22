@@ -12,8 +12,9 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\Jwt\Keys\EdDSA\SecretKey;
+use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
+use fkooman\OAuth\Server\Signer;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
@@ -23,8 +24,8 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\VpnApiThreeModule;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
-use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\OAuth\ClientDb;
+use LC\Portal\OAuth\PublicKeyLoader;
 use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
@@ -57,14 +58,12 @@ try {
         }
     }
 
-    $secretKey = SecretKey::fromEncodedString(FileIO::readFile($baseDir.'/config/oauth.key'));
     $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->vpnCaPath(), $config->caExpiry());
 
     $bearerValidator = new BearerValidator(
         $oauthStorage,
         new ClientDb(),
-        $secretKey->getPublicKey(),
-        $keyInstanceMapping
+        new Signer(FileIO::readFile($baseDir.'/config/oauth.key'), new PublicKeyLoader()),
     );
     $service = new ApiService($bearerValidator);
 
