@@ -12,13 +12,13 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use DateTimeImmutable;
+use fkooman\OAuth\Server\AccessToken;
 use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
 use LC\Portal\Config;
 use LC\Portal\Dt;
 use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\LoggerInterface;
-use LC\Portal\OAuth\VpnAccessToken;
 use LC\Portal\ProfileConfig;
 use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
@@ -50,7 +50,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
     {
         $service->get(
             '/v3/info',
-            function (VpnAccessToken $accessToken, Request $request): Response {
+            function (AccessToken $accessToken, Request $request): Response {
                 $profileConfigList = $this->config->profileConfigList();
                 // XXX really think about storing permissions in OAuth token!
                 $userPermissions = $this->getPermissionList($accessToken);
@@ -83,7 +83,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         $service->post(
             '/v3/connect',
-            function (VpnAccessToken $accessToken, Request $request): Response {
+            function (AccessToken $accessToken, Request $request): Response {
                 // XXX catch InputValidationException
                 $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
                 $profileConfigList = $this->config->profileConfigList();
@@ -115,16 +115,16 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     case 'wireguard':
                         $wgConfig = $this->wg->getConfig(
                             $profileConfig,
-                            $accessToken->getUserId(),
-                            $accessToken->accessToken()->clientId(),
-                            $accessToken->accessToken(),
+                            $accessToken->userId(),
+                            $accessToken->clientId(),
+                            $accessToken,
                             self::validatePublicKey($request->requirePostParameter('public_key'))
                         );
 
                         return new Response(
                             (string) $wgConfig,
                             [
-                                'Expires' => $accessToken->accessToken()->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                                'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
                                 'Content-Type' => 'application/x-wireguard-profile',
                             ]
                         );
@@ -136,31 +136,31 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         $service->post(
             '/v3/disconnect',
-            fn (VpnAccessToken $accessToken, Request $request): Response => new Response(null, [], 204)
+            fn (AccessToken $accessToken, Request $request): Response => new Response(null, [], 204)
         );
     }
 
     /**
      * XXX want only 1 code path both for portal and for API.
      */
-    private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, VpnAccessToken $accessToken): Response
+    private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, AccessToken $accessToken): Response
     {
         $commonName = $this->random->get(16);
-        $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->accessToken()->authorizationExpiresAt());
+        $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->authorizationExpiresAt());
         $this->storage->addCertificate(
-            $accessToken->getUserId(),
+            $accessToken->userId(),
             $profileConfig->profileId(),
             $commonName,
-            $accessToken->accessToken()->clientId(),
+            $accessToken->clientId(),
             $certInfo->validFrom(),
             $certInfo->validTo(),
-            $accessToken->accessToken()
+            $accessToken
         );
 
         $this->storage->addUserLog(
-            $accessToken->getUserId(),
+            $accessToken->userId(),
             LoggerInterface::NOTICE,
-            sprintf('new certificate generated for "%s"', $accessToken->accessToken()->clientId()),
+            sprintf('new certificate generated for "%s"', $accessToken->clientId()),
             $this->dateTime
         );
 
@@ -175,7 +175,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         return new Response(
             $clientConfig,
             [
-                'Expires' => $accessToken->accessToken()->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
                 'Content-Type' => 'application/x-openvpn-profile',
             ]
         );
@@ -184,13 +184,11 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
     /**
      * @return array<string>
      */
-    private function getPermissionList(VpnAccessToken $vpnAccessToken): array
+    private function getPermissionList(AccessToken $accessToken): array
     {
-        if (!$vpnAccessToken->isLocal()) {
-            return [];
-        }
-
-        return $this->storage->getPermissionList($vpnAccessToken->getUserId());
+        // XXX this MUST only be done for *local* tokens, not for remote
+        // tokens! But *how*? now that we got rid of VpnAccessToken wrapper?
+        return $this->storage->getPermissionList($accessToken->userId());
     }
 
     private function validatePublicKey(string $publicKey): string
