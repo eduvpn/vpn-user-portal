@@ -26,20 +26,19 @@ class WgDaemon
         $this->httpClient = $httpClient;
     }
 
-    public function getPeers(string $wgDaemonEndpoint, string $wgDevice): array
+    public function getPeers(string $wgDaemonEndpoint): array
     {
-        $wgInfo = $this->getInfo($wgDaemonEndpoint, $wgDevice);
+        $wgInfo = $this->getInfo($wgDaemonEndpoint);
 
         return \array_key_exists('Peers', $wgInfo) ? $wgInfo['Peers'] : [];
     }
 
-    public function addPeer(string $wgDaemonEndpoint, string $wgDevice, string $publicKey, string $ipFour, string $ipSix): void
+    public function addPeer(string $wgDaemonEndpoint, string $publicKey, string $ipFour, string $ipSix): void
     {
-        $wgInfo = $this->getInfo($wgDaemonEndpoint, $wgDevice);
+        $wgInfo = $this->getInfo($wgDaemonEndpoint);
         $rawPostData = implode(
             '&',
             [
-                'Device='.$wgDevice,
                 'PublicKey='.urlencode($publicKey),
                 'AllowedIPs='.urlencode($ipFour.'/32'),
                 'AllowedIPs='.urlencode($ipSix.'/128'),
@@ -54,9 +53,9 @@ class WgDaemon
         );
     }
 
-    public function removePeer(string $wgDaemonEndpoint, string $wgDevice, string $publicKey): void
+    public function removePeer(string $wgDaemonEndpoint, string $publicKey): void
     {
-        $rawPostData = implode('&', ['Device='.$wgDevice, 'PublicKey='.urlencode($publicKey)]);
+        $rawPostData = implode('&', ['PublicKey='.urlencode($publicKey)]);
 
         // XXX catch errors
         $httpResponse = $this->httpClient->postRaw(
@@ -69,24 +68,24 @@ class WgDaemon
     /**
      * Very inefficient way to register all peers (again) with WG.
      */
-    public function syncPeers(string $wgDaemonEndpoint, string $wgDevice, array $peerInfoList): void
+    public function syncPeers(string $wgDaemonEndpoint, array $peerInfoList): void
     {
         // XXX this only adds peers, it may also needs to remove the ones that
         // shouldn't be there anymore. We need to implement a proper sync
         // together with wg-daemon...
         foreach ($peerInfoList as $peerInfo) {
-            $this->addPeer($wgDaemonEndpoint, $wgDevice, $peerInfo['public_key'], $peerInfo['ip_four'], $peerInfo['ip_six']);
+            $this->addPeer($wgDaemonEndpoint, $peerInfo['public_key'], $peerInfo['ip_four'], $peerInfo['ip_six']);
         }
     }
 
     /**
      * @return array{PublicKey:string,ListenPort:int,Peers:array}
      */
-    public function getInfo(string $wgDaemonEndpoint, string $wgDevice): array
+    public function getInfo(string $wgDaemonEndpoint): array
     {
         // XXX catch errors
         // XXX make sure WG "backend" is in sync with local DB (somehow)
-        $httpResponse = $this->httpClient->get($wgDaemonEndpoint.'/info', ['Device' => $wgDevice], []);
+        $httpResponse = $this->httpClient->get($wgDaemonEndpoint.'/info', [], []);
 
         return Json::decode($httpResponse->getBody());
     }

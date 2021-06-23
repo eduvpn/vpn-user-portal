@@ -59,9 +59,9 @@ class Wg
         $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $accessToken);
 
         // add peer to WG
-        $this->wgDaemon->addPeer('http://'.$profileConfig->nodeIp().':8080', 'wg0', $publicKey, $ipFour, $ipSix);
+        $this->wgDaemon->addPeer('http://'.$profileConfig->nodeIp().':8080', $publicKey, $ipFour, $ipSix);
 
-        $wgInfo = $this->wgDaemon->getInfo('http://'.$profileConfig->nodeIp().':8080', 'wg0');
+        $wgInfo = $this->wgDaemon->getInfo('http://'.$profileConfig->nodeIp().':8080');
 
         return new WgConfig(
             $profileConfig,
