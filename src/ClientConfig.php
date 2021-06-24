@@ -33,7 +33,6 @@ class ClientConfig
         $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy);
 
         $clientConfig = [
-            '# OpenVPN Client Configuration',
             'dev tun',
             'client',
             'nobind',
