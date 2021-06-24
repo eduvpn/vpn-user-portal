@@ -14,7 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\OAuth\Server\PublicSigner;
+use fkooman\OAuth\Server\SimpleSigner;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
@@ -23,9 +23,7 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\VpnApiThreeModule;
 use LC\Portal\HttpClient\CurlHttpClient;
-use LC\Portal\Json;
 use LC\Portal\OAuth\ClientDb;
-use LC\Portal\OAuth\PublicKeyLoader;
 use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
@@ -49,21 +47,12 @@ try {
     $storage->update();
 
     $oauthStorage = new OAuthStorage($db, 'oauth_');
-
-    $keyInstanceMapping = [];
-    if ($config->apiConfig()->remoteAccess()) {
-        $keyInstanceMappingFile = $baseDir.'/data/key_instance_mapping.json';
-        if (FileIO::exists($keyInstanceMappingFile)) {
-            $keyInstanceMapping = Json::decode(FileIO::readFile($keyInstanceMappingFile));
-        }
-    }
-
     $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->vpnCaPath(), $config->caExpiry());
 
     $bearerValidator = new BearerValidator(
         $oauthStorage,
         new ClientDb(),
-        new PublicSigner(FileIO::readFile($baseDir.'/config/oauth.key'), new PublicKeyLoader()),
+        new SimpleSigner(FileIO::readFile($baseDir.'/config/oauth.simple.key')),
     );
     $service = new ApiService($bearerValidator);
 

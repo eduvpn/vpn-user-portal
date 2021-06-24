@@ -13,7 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\OAuth\Server\PublicSigner;
+use fkooman\OAuth\Server\SimpleSigner;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Dt;
@@ -264,7 +264,7 @@ try {
     );
     $service->addModule($vpnPortalModule);
 
-    $oauthSigner = new PublicSigner(FileIO::readFile($baseDir.'/config/oauth.key'));
+    $oauthSigner = new SimpleSigner(FileIO::readFile($baseDir.'/config/oauth.simple.key'));
 
     $adminPortalModule = new AdminPortalModule(
         $baseDir.'/data',
@@ -275,9 +275,7 @@ try {
         $oauthStorage,
         $adminHook,
         new ServerInfo(
-            $ca,
-            $oauthSigner->exportPublicKey(),
-            $oauthSigner->thumbPrint()
+            $ca
         )
     );
     $service->addModule($adminPortalModule);

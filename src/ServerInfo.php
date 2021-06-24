@@ -16,28 +16,14 @@ use LC\Portal\CA\CaInterface;
 class ServerInfo
 {
     private CaInterface $ca;
-    private string $publicKey;
-    private string $keyId;
 
-    public function __construct(CaInterface $ca, string $publicKey, string $keyId)
+    public function __construct(CaInterface $ca)
     {
         $this->ca = $ca;
-        $this->publicKey = $publicKey;
-        $this->keyId = $keyId;
     }
 
     public function ca(): CaInterface
     {
         return $this->ca;
-    }
-
-    public function publicKey(): string
-    {
-        return $this->publicKey;
-    }
-
-    public function keyId(): string
-    {
-        return $this->keyId;
     }
 }
