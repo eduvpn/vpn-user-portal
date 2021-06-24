@@ -42,15 +42,6 @@
                     </dl>
                 </td>
             </tr>
-            <tr>
-                <th><?=$this->t('OAuth'); ?></th>
-                <td>
-                    <dl>
-                        <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($oauthPublicKey); ?></code></dd>
-                        <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e($oauthKeyId); ?></code></dd>
-                    </dl>
-                </td>
-            </tr>
         </tbody>
     </table>
     </details>
