@@ -28,7 +28,7 @@ CREATE TABLE certificates(
     display_name VARCHAR(255) NOT NULL,
     valid_from VARCHAR(255) NOT NULL,
     valid_to VARCHAR(255) NOT NULL,
-    auth_key VARCHAR(255) DEFAULT NULL,
+    auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS wg_peers (
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS wg_peers (
     ip_four VARCHAR(255) NOT NULL UNIQUE,
     ip_six VARCHAR(255) NOT NULL UNIQUE,
     created_at VARCHAR(255) NOT NULL,
-    auth_key VARCHAR(255) DEFAULT NULL,
+    auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
 CREATE TABLE connection_log(
@@ -48,8 +48,8 @@ CREATE TABLE connection_log(
     ip_four VARCHAR(255) NOT NULL,
     ip_six VARCHAR(255) NOT NULL,
     connected_at VARCHAR(255) NOT NULL,
-    disconnected_at VARCHAR(255) DEFAULT NULL,
-    bytes_transferred INTEGER DEFAULT NULL,
+    disconnected_at VARCHAR(255),
+    bytes_transferred INTEGER,
     client_lost BOOLEAN DEFAULT 0
 );
 CREATE TABLE user_log(
