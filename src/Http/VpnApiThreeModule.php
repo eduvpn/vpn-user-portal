@@ -53,7 +53,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             function (AccessToken $accessToken, Request $request): Response {
                 $profileConfigList = $this->config->profileConfigList();
                 // XXX really think about storing permissions in OAuth token!
-                $userPermissions = $this->getPermissionList($accessToken);
+                $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $userProfileList = [];
                 foreach ($profileConfigList as $profileConfig) {
                     if ($profileConfig->hideProfile()) {
@@ -87,7 +87,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 // XXX catch InputValidationException
                 $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
                 $profileConfigList = $this->config->profileConfigList();
-                $userPermissions = $this->getPermissionList($accessToken);
+                $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $availableProfiles = [];
                 foreach ($profileConfigList as $profileConfig) {
                     if ($profileConfig->hideProfile()) {
@@ -179,16 +179,6 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 'Content-Type' => 'application/x-openvpn-profile',
             ]
         );
-    }
-
-    /**
-     * @return array<string>
-     */
-    private function getPermissionList(AccessToken $accessToken): array
-    {
-        // XXX this MUST only be done for *local* tokens, not for remote
-        // tokens! But *how*? now that we got rid of VpnAccessToken wrapper?
-        return $this->storage->getPermissionList($accessToken->userId());
     }
 
     private function validatePublicKey(string $publicKey): string
