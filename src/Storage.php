@@ -101,7 +101,7 @@ class Storage
     }
 
     /**
-     * @return array<array{display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,auth_key:string|null}>
+     * @return array<array{profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,auth_key:string|null}>
      */
     public function wgGetPeers(string $userId): array
     {

@@ -39,6 +39,7 @@ class Wg
 
     /**
      * XXX want only 1 code path both for portal and for API.
+     * XXX why can accesstoken be null? from portal?
      */
     public function getConfig(ProfileConfig $profileConfig, string $userId, string $displayName, ?AccessToken $accessToken, ?string $publicKey): WgConfig
     {
@@ -56,6 +57,7 @@ class Wg
 
         // store peer in the DB
         // XXX needs expiresat!
+        // XXX  should we do this (db) outside the Wg class?
         $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $accessToken);
 
         // add peer to WG
@@ -71,6 +73,14 @@ class Wg
             $ipSix,
             $wgInfo['PublicKey']
         );
+    }
+
+    public function disconnectPeer(ProfileConfig $profileConfig, string $userId, string $publicKey): void
+    {
+        $this->storage->wgRemovePeer($userId, $publicKey);
+        // XXX we have to make sure the user owns the public key, otherwise it can be used to disconnect other users!
+        // XXX what if multiple users use the same wireguard public key?
+        $this->wgDaemon->removePeer('http://'.$profileConfig->nodeIp().':8080', $publicKey);
     }
 
     /**

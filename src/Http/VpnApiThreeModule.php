@@ -136,7 +136,62 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         $service->post(
             '/v3/disconnect',
-            fn (AccessToken $accessToken, Request $request): Response => new Response(null, [], 204)
+            function (AccessToken $accessToken, Request $request): Response {
+                // XXX duplicate from connect
+                // XXX catch InputValidationException
+                $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
+                $profileConfigList = $this->config->profileConfigList();
+                $userPermissions = $this->storage->getPermissionList($accessToken->userId());
+                $availableProfiles = [];
+                foreach ($profileConfigList as $profileConfig) {
+                    if ($profileConfig->hideProfile()) {
+                        continue;
+                    }
+                    if ($profileConfig->enableAcl()) {
+                        // is the user member of the userPermissions?
+                        if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
+                            continue;
+                        }
+                    }
+
+                    $availableProfiles[] = $profileConfig->profileId();
+                }
+
+                if (!\in_array($requestedProfileId, $availableProfiles, true)) {
+                    return new JsonResponse(['error' => 'profile not available or no permission'], [], 400);
+                }
+
+                $profileConfig = $this->config->profileConfig($requestedProfileId);
+
+                if ('openvpn' === $profileConfig->vpnType()) {
+                    // OpenVPN
+                    $this->storage->deleteCertificatesWithAuthKey($accessToken->authKey());
+                    // XXX do we also need to disconnect the client? probably not
+
+                    return new Response(null, [], 204);
+                }
+
+                // WireGuard
+                $userId = $accessToken->userId();
+                $authKey = $accessToken->authKey();
+
+                foreach ($this->storage->wgGetPeers($userId) as $wgPeer) {
+                    if ($requestedProfileId !== $wgPeer['profile_id']) {
+                        continue;
+                    }
+                    if ($authKey !== $wgPeer['auth_key']) {
+                        continue;
+                    }
+
+                    $this->wg->disconnectPeer(
+                        $profileConfig,
+                        $userId,
+                        $wgPeer['public_key']
+                    );
+                }
+
+                return new Response(null, [], 204);
+            }
         );
     }
 
