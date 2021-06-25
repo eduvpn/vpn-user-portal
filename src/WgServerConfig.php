@@ -52,6 +52,11 @@ class WgServerConfig
         return ['wg0.conf' => $wgConfig];
     }
 
+    public function publicKey(): string
+    {
+        return self::extractPublicKey($this->privateKey());
+    }
+
     private function privateKey(): string
     {
         $keyFile = $this->dataDir.'/wireguard.key';
@@ -72,6 +77,14 @@ class WgServerConfig
     {
         ob_start();
         passthru('/usr/bin/wg genkey');
+
+        return trim(ob_get_clean());
+    }
+
+    private static function extractPublicKey(string $privateKey): string
+    {
+        ob_start();
+        passthru("echo $privateKey | /usr/bin/wg pubkey");
 
         return trim(ob_get_clean());
     }

@@ -16,14 +16,21 @@ use LC\Portal\CA\CaInterface;
 class ServerInfo
 {
     private CaInterface $ca;
+    private string $wgPublicKey;
 
-    public function __construct(CaInterface $ca)
+    public function __construct(CaInterface $ca, string $wgPublicKey)
     {
         $this->ca = $ca;
+        $this->wgPublicKey = $wgPublicKey;
     }
 
     public function ca(): CaInterface
     {
         return $this->ca;
+    }
+
+    public function wgPublicKey(): string
+    {
+        return $this->wgPublicKey;
     }
 }

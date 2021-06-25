@@ -38,7 +38,7 @@
                 <th><?=$this->t('WireGuard'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Public Key'); ?></dt><dd><code>${WireGuard Public Key}</code></dd>
+                        <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($wgPublicKey); ?></code></dd>
                     </dl>
                 </td>
             </tr>

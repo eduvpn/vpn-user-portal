@@ -56,6 +56,7 @@ use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
+use LC\Portal\WgServerConfig;
 use LC\Portal\WireGuard\Wg;
 use LC\Portal\WireGuard\WgDaemon;
 
@@ -265,7 +266,7 @@ try {
     $service->addModule($vpnPortalModule);
 
     $oauthSigner = new SimpleSigner(FileIO::readFile($baseDir.'/config/oauth.simple.key'));
-
+    $wgServerConfig = new WgServerConfig($baseDir.'/data');
     $adminPortalModule = new AdminPortalModule(
         $baseDir.'/data',
         $config,
@@ -275,7 +276,8 @@ try {
         $oauthStorage,
         $adminHook,
         new ServerInfo(
-            $ca
+            $ca,
+            $wgServerConfig->publicKey()
         )
     );
     $service->addModule($adminPortalModule);
