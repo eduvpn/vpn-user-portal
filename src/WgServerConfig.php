@@ -31,6 +31,10 @@ class WgServerConfig
         $ipFourList = [];
         $ipSixList = [];
         foreach ($profileConfigList as $profileConfig) {
+            if ('wireguard' !== $profileConfig->vpnType()) {
+                // we only want WireGuard profiles
+                continue;
+            }
             $ipFour = new IP($profileConfig->range());  // XXX use getNetwork
             $ipSix = new IP($profileConfig->range6());  // XXX use getNetwork otherwise if the range6 is not .0 or :: it will just increment
             $ipFourList[] = $ipFour->getFirstHost().'/'.$ipFour->getPrefix();
