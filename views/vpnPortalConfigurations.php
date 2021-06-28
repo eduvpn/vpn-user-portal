@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('New'); ?></h2>
@@ -44,7 +45,7 @@
                 <tr>
                     <td><?=$this->e($userCertificate['profile_id']); ?></td>
                     <td><span title="<?=$this->e($userCertificate['display_name']); ?>"><?=$this->etr($userCertificate['display_name'], 25); ?></span></td>
-                    <td><?=$this->d($userCertificate['expires_at']->format(DateTimeImmutable::ATOM)); ?></td>
+                    <td><?=$this->d($userCertificate['expires_at']); ?></td>
                     <td class="text-right">
 <?php if (array_key_exists('common_name', $userCertificate)): ?>
                         <form class="frm" method="post" action="deleteOpenVpnConfig">

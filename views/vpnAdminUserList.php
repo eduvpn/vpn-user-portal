@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
 <?php $this->start('content'); ?>
     <?php if (empty($userList)): ?>

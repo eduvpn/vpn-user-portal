@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
 <?php
 $menuItems = [];
 $menuItems['home'] = $this->t('Home');

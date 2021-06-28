@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */ ?>
 <?php $this->layout('base', ['activeItem' => 'documentation', 'pageTitle' => $this->t('Documentation')]); ?>
 <?php $this->start('content'); ?>
     <h2>Getting Started</h2>

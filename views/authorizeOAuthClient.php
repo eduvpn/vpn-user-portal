@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
 <?php $this->layout('base', ['pageTitle' => $this->t('Approve Application')]); ?>
 <?php $this->start('content'); ?>
     <div class="appAuth">

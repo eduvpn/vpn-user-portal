@@ -781,6 +781,8 @@ class Storage
 
     /**
      * Get all log messages for a particular user.
+     *
+     * @return array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}>
      */
     public function getUserLog(string $userId): array
     {
@@ -800,7 +802,16 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $logMessages = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $logMessages[] = [
+                'log_level' => (int) $resultRow['log_level'],
+                'log_message' => (string) $resultRow['log_message'],
+                'date_time' => Dt::get($resultRow['date_time']),
+            ];
+        }
+
+        return $logMessages;
     }
 
     public function addUserLog(string $userId, int $logLevel, string $logMessage, DateTimeImmutable $dateTime): void

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use LC\Portal\Exception\TplException;
 use LC\Portal\OAuth\ClientDb;
@@ -111,7 +112,7 @@ class Tpl implements TplInterface
         return $this->e($displayName);
     }
 
-    private static function languageCodeToHuman(string $uiLanguage): string
+    public static function languageCodeToHuman(string $uiLanguage): string
     {
         $supportedLanguages = self::supportedLanguages();
         if (!\array_key_exists($uiLanguage, $supportedLanguages)) {
@@ -121,7 +122,7 @@ class Tpl implements TplInterface
         return $supportedLanguages[$uiLanguage];
     }
 
-    private function bth(int $byteSize): string
+    public function bth(int $byteSize): string
     {
         $KiB = 1024;
         $MiB = $KiB * 1024;
@@ -151,7 +152,7 @@ class Tpl implements TplInterface
     /**
      * @param array<string,mixed> $templateVariables
      */
-    private function insert(string $templateName, array $templateVariables = []): string
+    public function insert(string $templateName, array $templateVariables = []): string
     {
         return $this->render($templateName, $templateVariables);
     }
@@ -159,7 +160,7 @@ class Tpl implements TplInterface
     /**
      * Get a URL with cache busting query parameter.
      */
-    private function getAssetUrl(string $requestRoot, string $assetPath): string
+    public function getAssetUrl(string $requestRoot, string $assetPath): string
     {
         if (false === $mTime = @filemtime($this->assetDir.'/'.$assetPath)) {
             // can't find file or determine last modified time, do not include
@@ -170,7 +171,7 @@ class Tpl implements TplInterface
         return $this->e($requestRoot.$assetPath.'?mTime='.$mTime);
     }
 
-    private function start(string $sectionName): void
+    public function start(string $sectionName): void
     {
         if (null !== $this->activeSectionName) {
             throw new TplException(sprintf('section "%s" already started', $this->activeSectionName));
@@ -180,7 +181,7 @@ class Tpl implements TplInterface
         ob_start();
     }
 
-    private function stop(string $sectionName): void
+    public function stop(string $sectionName): void
     {
         if (null === $this->activeSectionName) {
             throw new TplException('no section started');
@@ -197,12 +198,12 @@ class Tpl implements TplInterface
     /**
      * @param array<string,mixed> $templateVariables
      */
-    private function layout(string $layoutName, array $templateVariables = []): void
+    public function layout(string $layoutName, array $templateVariables = []): void
     {
         $this->layoutList[$layoutName] = $templateVariables;
     }
 
-    private function section(string $sectionName): string
+    public function section(string $sectionName): string
     {
         if (!\array_key_exists($sectionName, $this->sectionList)) {
             throw new TplException(sprintf('section "%s" does not exist', $sectionName));
@@ -211,7 +212,7 @@ class Tpl implements TplInterface
         return $this->sectionList[$sectionName];
     }
 
-    private function e(string $v, ?string $cb = null): string
+    public function e(string $v, ?string $cb = null): string
     {
         if (null !== $cb) {
             $v = $this->batch($v, $cb);
@@ -225,7 +226,7 @@ class Tpl implements TplInterface
      *
      * @throws \RangeException
      */
-    private function etr(string $inputString, int $maxLen, ?string $cb = null): string
+    public function etr(string $inputString, int $maxLen, ?string $cb = null): string
     {
         if ($maxLen < 3) {
             throw new RangeException('"maxLen" must be >= 3');
@@ -242,7 +243,7 @@ class Tpl implements TplInterface
         return $this->e($partOne.'…'.$partTwo, $cb);
     }
 
-    private function batch(string $v, string $cb): string
+    public function batch(string $v, string $cb): string
     {
         $functionList = explode('|', $cb);
         foreach ($functionList as $f) {
@@ -266,15 +267,14 @@ class Tpl implements TplInterface
     /**
      * Format a date.
      */
-    private function d(string $dateString, string $dateFormat = 'Y-m-d H:i:s T'): string
+    public function d(DateTimeImmutable $dateTime, string $dateFormat = 'Y-m-d H:i:s T'): string
     {
-        $dateTime = Dt::get($dateString);
         $dateTime = $dateTime->setTimeZone(new DateTimeZone(date_default_timezone_get()));
 
         return $this->e($dateTime->format($dateFormat));
     }
 
-    private function t(string $v): string
+    public function t(string $v): string
     {
         // use original, unless it is found in any of the translation files...
         $translatedText = $v;
@@ -307,7 +307,7 @@ class Tpl implements TplInterface
         return str_replace(array_keys($escapedVars), array_values($escapedVars), $translatedText);
     }
 
-    private function exists(string $templateName): bool
+    public function exists(string $templateName): bool
     {
         foreach ($this->templateFolderList as $templateFolder) {
             $templatePath = sprintf('%s/%s.php', $templateFolder, $templateName);
@@ -319,7 +319,7 @@ class Tpl implements TplInterface
         return false;
     }
 
-    private function templatePath(string $templateName): string
+    public function templatePath(string $templateName): string
     {
         foreach (array_reverse($this->templateFolderList) as $templateFolder) {
             $templatePath = sprintf('%s/%s.php', $templateFolder, $templateName);
@@ -334,7 +334,7 @@ class Tpl implements TplInterface
     /**
      * @return array<string,string>
      */
-    private static function supportedLanguages(): array
+    public static function supportedLanguages(): array
     {
         return [
             'en-US' => 'English',
@@ -353,7 +353,7 @@ class Tpl implements TplInterface
         ];
     }
 
-    private function textDir(): string
+    public function textDir(): string
     {
         if (\in_array($this->uiLanguage, ['ar-MA'], true)) {
             return 'rtl';

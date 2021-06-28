@@ -1,3 +1,8 @@
+<?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var string $uiLanguage */ ?>
+<?php /** @var string $pageTitle */ ?>
+<?php /** @var string $requestRoot */ ?>
 <!DOCTYPE html>
 
 <html lang="<?=$this->e($uiLanguage); ?>" dir="<?=$this->textDir(); ?>">

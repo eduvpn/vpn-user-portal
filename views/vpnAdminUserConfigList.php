@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
 <?php $this->start('content'); ?>
     <p>
@@ -46,7 +47,7 @@
             <?php foreach ($clientCertificateList as $clientCertificate): ?>
                 <tr>
                     <td><span title="<?=$this->e($clientCertificate['display_name']); ?>"><?=$this->etr($clientCertificate['display_name'], 25); ?></span></td>
-                    <td><?=$this->d($clientCertificate['expires_at']->format(DateTimeImmutable::ATOM)); ?></td>
+                    <td><?=$this->d($clientCertificate['expires_at']); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

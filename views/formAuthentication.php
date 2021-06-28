@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
 <?php $this->layout('base', ['pageTitle' => $this->t('Sign In')]); ?>
 <?php $this->start('content'); ?>
     <div class="auth">

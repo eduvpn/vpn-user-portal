@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Server'); ?></h2>
@@ -28,8 +29,8 @@
                 <th><?=$this->t('CA'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($caInfo->validFrom()->format(DateTimeImmutable::ATOM)); ?></dd>
-                        <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($caInfo->validTo()->format(DateTimeImmutable::ATOM)); ?></dd>
+                        <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($caInfo->validFrom()); ?></dd>
+                        <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($caInfo->validTo()); ?></dd>
                         <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e($caInfo->fingerprint(true)); ?></code></dd>
                     </dl>
                 </td>

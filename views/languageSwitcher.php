@@ -1,4 +1,5 @@
 <?php declare(strict_types=1); ?>
+<?php /** @var \LC\Portal\Tpl $this */?>
 <?php if (1 < count($enabledLanguages)): ?>
     <ul class="languageSwitcher">
         <form class="languageSwitcher" method="post" action="<?=$this->e($requestRoot); ?>setLanguage">
