@@ -17,7 +17,7 @@ use PDO;
 
 class Storage
 {
-    const CURRENT_SCHEMA_VERSION = '2021062401';
+    const CURRENT_SCHEMA_VERSION = '2021062801';
 
     private PDO $db;
 
@@ -33,7 +33,7 @@ class Storage
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
     }
 
-    public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, ?AccessToken $accessToken): void
+    public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
     {
         $stmt = $this->db->prepare(
             'INSERT INTO wg_peers (
@@ -43,7 +43,7 @@ class Storage
                 public_key,
                 ip_four,
                 ip_six,
-                created_at,
+                expires_at,
                 auth_key
              )
              VALUES(
@@ -53,7 +53,7 @@ class Storage
                 :public_key,
                 :ip_four,
                 :ip_six,
-                :created_at,
+                :expires_at,
                 :auth_key
              )'
         );
@@ -64,7 +64,7 @@ class Storage
         $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
-        $stmt->bindValue(':created_at', $createdAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':expires_at', $expiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':auth_key', null !== $accessToken ? $accessToken->authKey() : null, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
     }
@@ -101,7 +101,7 @@ class Storage
     }
 
     /**
-     * @return array<array{profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,auth_key:string|null}>
+     * @return array<array{profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:string|null}>
      */
     public function wgGetPeers(string $userId): array
     {
@@ -112,7 +112,7 @@ class Storage
                 public_key,
                 ip_four,
                 ip_six,
-                created_at,
+                expires_at,
                 auth_key
              FROM wg_peers
              WHERE
@@ -130,7 +130,7 @@ class Storage
                 'public_key' => (string) $resultRow['public_key'],
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
-                'created_at' => Dt::get($resultRow['created_at']),
+                'expires_at' => Dt::get($resultRow['expires_at']),
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }
@@ -139,7 +139,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,auth_key:string|null}>
+     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:string|null}>
      */
     public function wgGetAllPeers(string $profileId): array
     {
@@ -150,7 +150,7 @@ class Storage
                 public_key,
                 ip_four,
                 ip_six,
-                created_at,
+                expires_at,
                 auth_key
              FROM
                 wg_peers
@@ -167,7 +167,7 @@ class Storage
                 'public_key' => (string) $resultRow['public_key'],
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
-                'created_at' => Dt::get($resultRow['created_at']),
+                'expires_at' => Dt::get($resultRow['expires_at']),
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }
@@ -342,36 +342,6 @@ class Storage
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * XXX remove is_disabled from here? we have a separate call for that.
-     *
-     * @return false|array
-     */
-    public function getUserCertificateInfo(string $commonName)
-    {
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            u.user_id AS user_id,
-            u.is_disabled AS user_is_disabled,
-            c.display_name AS display_name,
-            c.valid_from,
-            c.valid_to,
-            c.auth_key
-        FROM
-            users u, certificates c
-        WHERE
-            u.user_id = c.user_id AND
-            c.common_name = :common_name
-    SQL
-        );
-
-        $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
     public function userDelete(string $userId): void
     {
         $stmt = $this->db->prepare(
@@ -407,60 +377,105 @@ class Storage
         $stmt->execute();
     }
 
-    public function addCertificate(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $validFrom, DateTimeImmutable $validTo, ?AccessToken $accessToken): void
+    public function addCertificate(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         INSERT INTO certificates
-            (profile_id, common_name, user_id, display_name, valid_from, valid_to, auth_key)
+            (profile_id, common_name, user_id, display_name, expires_at, auth_key)
         VALUES
-            (:profile_id, :common_name, :user_id, :display_name, :valid_from, :valid_to, :auth_key)
+            (:profile_id, :common_name, :user_id, :display_name, :expires_at, :auth_key)
     SQL
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':display_name', $displayName, PDO::PARAM_STR);
-        $stmt->bindValue(':valid_from', $validFrom->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':valid_to', $validTo->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':expires_at', $expiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':auth_key', null !== $accessToken ? $accessToken->authKey() : null, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
     }
 
+    /**
+     * @return array<array{profile_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:string|null}>
+     */
     public function getCertificates(string $userId): array
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
+            profile_id,
             common_name,
             display_name,
-            valid_from,
-            valid_to,
+            expires_at,
             auth_key
         FROM
             certificates
         WHERE
             user_id = :user_id
         ORDER BY
-            valid_from DESC
+            expires_at DESC
     SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $certList = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $certList[] = [
+                'profile_id' => (string) $resultRow['profile_id'],
+                'common_name' => (string) $resultRow['common_name'],
+                'display_name' => (string) $resultRow['display_name'],
+                'expires_at' => Dt::get($resultRow['expires_at']),
+                'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
+            ];
+        }
+
+        return $certList;
     }
 
-    public function deleteCertificate(string $commonName): void
+    /**
+     * XXX remove is_disabled from here? we have a separate call for that.
+     *
+     * @return false|array
+     */
+    public function getUserCertificateInfo(string $commonName)
+    {
+        $stmt = $this->db->prepare(
+<<< 'SQL'
+        SELECT
+            u.user_id AS user_id,
+            u.is_disabled AS user_is_disabled,
+            c.display_name AS display_name,
+            c.expires_at,
+            c.auth_key
+        FROM
+            users u, certificates c
+        WHERE
+            u.user_id = c.user_id AND
+            c.common_name = :common_name
+    SQL
+        );
+
+        $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteCertificate(string $userId, string $commonName): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         DELETE FROM
             certificates
         WHERE
+            user_id = :user_id
+        AND
             common_name = :common_name
     SQL
         );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->execute();
     }
@@ -808,9 +823,9 @@ class Storage
 
     public function cleanExpiredCertificates(DateTimeImmutable $dateTime): void
     {
-        $stmt = $this->db->prepare('DELETE FROM certificates WHERE valid_to < :date_time');
+        $stmt = $this->db->prepare('DELETE FROM certificates WHERE expires_at < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-
+        // XXX also clean wireguard
         $stmt->execute();
     }
 

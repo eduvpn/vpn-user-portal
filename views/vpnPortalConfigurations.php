@@ -37,18 +37,27 @@
         <h2><?=$this->t('Existing'); ?></h2>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?></th><th></th></tr>
+                <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?></th><th></th></tr>
             </thead>
             <tbody>
             <?php foreach ($userCertificateList as $userCertificate): ?>
                 <tr>
+                    <td><?=$this->e($userCertificate['profile_id']); ?></td>
                     <td><span title="<?=$this->e($userCertificate['display_name']); ?>"><?=$this->etr($userCertificate['display_name'], 25); ?></span></td>
-                    <td><?=$this->d($userCertificate['valid_to']); ?></td>
+                    <td><?=$this->d($userCertificate['expires_at']->format(DateTimeImmutable::ATOM)); ?></td>
                     <td class="text-right">
-                        <form class="frm" method="post" action="deleteCertificate">
+<?php if (array_key_exists('common_name', $userCertificate)): ?>
+                        <form class="frm" method="post" action="deleteOpenVpnConfig">
                             <input type="hidden" name="commonName" value="<?=$this->e($userCertificate['common_name']); ?>">
                             <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>
                         </form>
+<?php else: ?>
+                        <form class="frm" method="post" action="deleteWireGuardConfig">
+                            <input type="hidden" name="profileId" value="<?=$this->e($userCertificate['profile_id']); ?>">
+                            <input type="hidden" name="publicKey" value="<?=$this->e($userCertificate['public_key']); ?>">
+                            <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>
+                        </form>
+<?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

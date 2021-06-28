@@ -117,6 +117,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                             $profileConfig,
                             $accessToken->userId(),
                             $accessToken->clientId(),
+                            $accessToken->authorizationExpiresAt(),
                             $accessToken,
                             self::validatePublicKey($request->requirePostParameter('public_key'))
                         );
@@ -207,8 +208,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             $profileConfig->profileId(),
             $commonName,
             $accessToken->clientId(),
-            $certInfo->validFrom(),
-            $certInfo->validTo(),
+            $accessToken->authorizationExpiresAt(),
             $accessToken
         );
 

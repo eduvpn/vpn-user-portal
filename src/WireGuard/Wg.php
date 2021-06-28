@@ -11,10 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
-use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
 // XXX introduce WgException?
-use LC\Portal\Dt;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use RuntimeException;
@@ -27,21 +25,17 @@ class Wg
     private WgDaemon $wgDaemon;
     private Storage $storage;
 
-    // XXX move DateTime to getConfig caller
-    private DateTimeImmutable $dateTime;
-
     public function __construct(WgDaemon $wgDaemon, Storage $storage)
     {
         $this->wgDaemon = $wgDaemon;
         $this->storage = $storage;
-        $this->dateTime = Dt::get();
     }
 
     /**
      * XXX want only 1 code path both for portal and for API.
      * XXX why can accesstoken be null? from portal?
      */
-    public function getConfig(ProfileConfig $profileConfig, string $userId, string $displayName, ?AccessToken $accessToken, ?string $publicKey): WgConfig
+    public function getConfig(ProfileConfig $profileConfig, string $userId, string $displayName, \DateTimeImmutable $expiresAt, ?AccessToken $accessToken, ?string $publicKey): WgConfig
     {
         $privateKey = null;
         if (null === $publicKey) {
@@ -58,7 +52,7 @@ class Wg
         // store peer in the DB
         // XXX needs expiresat!
         // XXX  should we do this (db) outside the Wg class?
-        $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $accessToken);
+        $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $accessToken);
 
         // add peer to WG
         $this->wgDaemon->addPeer('http://'.$profileConfig->nodeIp().':8080', $publicKey, $ipFour, $ipSix);

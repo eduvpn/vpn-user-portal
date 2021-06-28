@@ -97,17 +97,19 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userPermissions);
-                $userCertificateList = $this->storage->getCertificates($userInfo->userId());
+
+                $configList = $this->storage->getCertificates($userInfo->userId());
+                $configList = array_merge($configList, $this->storage->wgGetPeers($userInfo->userId()));
 
                 // if query parameter "all" is set, show all certificates, also
                 // those issued to OAuth clients
                 $showAll = null !== $request->optionalQueryParameter('all');
 
-                $manualCertificateList = [];
+                $manualConfigList = [];
                 if (false === $showAll) {
-                    foreach ($userCertificateList as $userCertificate) {
-                        if (null === $userCertificate['auth_key']) {
-                            $manualCertificateList[] = $userCertificate;
+                    foreach ($configList as $configInfo) {
+                        if (null === $configInfo['auth_key']) {
+                            $manualConfigList[] = $configInfo;
                         }
                     }
                 }
@@ -116,9 +118,10 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
+                            // XXX sessionExpiry is wrong here??
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'profileConfigList' => $visibleProfileList,
-                            'userCertificateList' => $showAll ? $userCertificateList : $manualCertificateList,
+                            'userCertificateList' => $showAll ? $configList : $manualConfigList,
                         ]
                     )
                 );
@@ -162,12 +165,14 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/deleteCertificate',
+            '/deleteOpenVpnConfig',
             function (UserInfo $userInfo, Request $request): Response {
                 $commonName = InputValidation::commonName($request->requirePostParameter('commonName'));
-                // XXX make sure certificate belongs to currently logged in user
                 if (false === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
                     throw new HttpException('certificate does not exist', 400);
+                }
+                if ($userInfo->userId() !== $certInfo['user_id']) {
+                    throw new HttpException('certificate does not belong to this user', 400);
                 }
 
                 $this->storage->addUserLog(
@@ -177,8 +182,21 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->dateTime
                 );
 
-                $this->storage->deleteCertificate($commonName);
+                $this->storage->deleteCertificate($userInfo->userId(), $commonName);
                 $this->daemonWrapper->killClient($commonName);
+
+                return new RedirectResponse($request->getRootUri().'configurations', 302);
+            }
+        );
+
+        $service->post(
+            '/deleteWireGuardConfig',
+            function (UserInfo $userInfo, Request $request): Response {
+                $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
+                // XXX verify publicKey input!
+                $publicKey = $request->requirePostParameter('publicKey');
+                $profileConfig = $this->config->profileConfig($profileId);
+                $this->wg->disconnectPeer($profileConfig, $userInfo->userId(), $publicKey);
 
                 return new RedirectResponse($request->getRootUri().'configurations', 302);
             }
@@ -313,6 +331,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $profileConfig,
             $userId,
             $displayName,
+            $expiresAt,
             null,
             null
         );
@@ -339,8 +358,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $profileId,
             $commonName,
             $displayName,
-            $certInfo->validFrom(),
-            $certInfo->validTo(),
+            $expiresAt,
             null
         );
 
