@@ -46,7 +46,7 @@
             <?php foreach ($clientCertificateList as $clientCertificate): ?>
                 <tr>
                     <td><span title="<?=$this->e($clientCertificate['display_name']); ?>"><?=$this->etr($clientCertificate['display_name'], 25); ?></span></td>
-                    <td><?=$this->d($clientCertificate['valid_to']); ?></td>
+                    <td><?=$this->d($clientCertificate['expires_at']->format(DateTimeImmutable::ATOM)); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
