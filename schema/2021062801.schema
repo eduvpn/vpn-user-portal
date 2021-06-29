@@ -1,9 +1,9 @@
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS users(
     user_id VARCHAR(255) NOT NULL PRIMARY KEY,
     permission_list TEXT NOT NULL,
     is_disabled BOOLEAN NOT NULL
 );
-CREATE TABLE oauth_authorizations (
+CREATE TABLE IF NOT EXISTS oauth_authorizations (
     auth_key VARCHAR(255) NOT NULL,
     client_id VARCHAR(255) NOT NULL,
     scope VARCHAR(255) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS local_users (
     created_at VARCHAR(255) NOT NULL,
     UNIQUE(user_id)
 );
-CREATE TABLE certificates(
+CREATE TABLE IF NOT EXISTS certificates(
     profile_id VARCHAR(255) NOT NULL,
     display_name VARCHAR(255) NOT NULL,
     common_name VARCHAR(255) UNIQUE NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS wg_peers (
     auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
-CREATE TABLE connection_log(
+CREATE TABLE IF NOT EXISTS connection_log(
     user_id VARCHAR(255) NOT NULL,
     common_name VARCHAR(255) NOT NULL,
     profile_id VARCHAR(255) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE connection_log(
     bytes_transferred INTEGER,
     client_lost BOOLEAN DEFAULT 0
 );
-CREATE TABLE user_log(
+CREATE TABLE IF NOT EXISTS user_log(
     date_time VARCHAR(255) NOT NULL,
     log_level INTEGER NOT NULL,
     log_message TEXT NOT NULL,
