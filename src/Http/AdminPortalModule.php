@@ -269,13 +269,11 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 $profileConfigList = $this->config->profileConfigList();
 
-                $appUsage = self::getAppUsage($this->storage->getAppUsage());
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
-                            'appUsage' => $appUsage,
+                            'appUsage' => self::getAppUsage($this->storage->getAppUsage()),
                             'statsData' => $this->getStatsData(),
                             'graphStats' => $this->getGraphStats(),
                             'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit($profileConfigList),
@@ -428,6 +426,8 @@ class AdminPortalModule implements ServiceModuleInterface
 
     /**
      * @param array<\LC\Portal\ProfileConfig> $profileConfigList
+     *
+     * @return array<string,int>
      */
     private function getMaxConcurrentConnectionLimit(array $profileConfigList): array
     {
@@ -441,6 +441,9 @@ class AdminPortalModule implements ServiceModuleInterface
         return $maxConcurrentConnectionLimitList;
     }
 
+    /**
+     * @return array<array{client_id:?string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}>
+     */
     private static function getAppUsage(array $appUsage): array
     {
         // limit to top 8, we don't care about the small ones...

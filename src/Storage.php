@@ -287,11 +287,11 @@ class Storage
         $stmt->execute();
 
         $userList = [];
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $userList[] = [
-                'user_id' => (string) $row['user_id'],
-                'permission_list' => Json::decode($row['permission_list']),
-                'is_disabled' => (bool) $row['is_disabled'],
+                'user_id' => (string) $resultRow['user_id'],
+                'permission_list' => explode('|', $resultRow['permissionList']),
+                'is_disabled' => (bool) $resultRow['is_disabled'],
             ];
         }
 
@@ -316,7 +316,7 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        return Json::decode((string) $stmt->fetchColumn());
+        return explode('|', (string) $stmt->fetchColumn());
     }
 
     public function userDelete(string $userId): void
@@ -349,7 +349,8 @@ class Storage
     SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':permission_list', Json::encode($permissionList), PDO::PARAM_STR);
+        // XXX we MUST make sure the "|" is not a valid char in the individual permissions
+        $stmt->bindValue(':permission_list', implode('|', $permissionList), PDO::PARAM_STR);
 
         $stmt->execute();
     }
@@ -852,7 +853,8 @@ class Storage
 
     public function cleanExpiredOAuthAuthorizations(DateTimeImmutable $dateTime): void
     {
-        $stmt = $this->db->prepare('DELETE FROM authorizations WHERE expires_at < :date_time');
+        // XXX is this still needed or already done by the OAuth library?!
+        $stmt = $this->db->prepare('DELETE FROM oauth_authorizations WHERE expires_at < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
 
         $stmt->execute();
@@ -887,13 +889,14 @@ class Storage
     SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':permission_list', Json::encode($permissionList), PDO::PARAM_STR);
+        // XXX we MUST make sure the "|" can't be part of permissionList
+        $stmt->bindValue(':permission_list', implode('|', $permissionList), PDO::PARAM_STR);
         $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
         $stmt->execute();
     }
 
     /**
-     * @return array<array{client_id:string,client_count:int}>
+     * @return array<array{client_id:?string,client_count:int}>
      */
     public function getAppUsage()
     {
@@ -903,7 +906,7 @@ class Storage
             client_id,
             COUNT(DISTINCT client_id) AS client_count
         FROM
-            authorizations
+            oauth_authorizations
         GROUP BY
             client_id
         ORDER BY
