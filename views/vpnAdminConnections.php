@@ -1,5 +1,9 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var array<array{a:string}> $vpnConnections */?>
+<?php /** @var array<string,string> $idNameMapping */?>
+<?php /** @var string $requestRoot */?>
+
 <?php $this->layout('base', ['activeItem' => 'connections', 'pageTitle' => $this->t('Connections')]); ?>
 <?php $this->start('content'); ?>
     <table class="tbl">

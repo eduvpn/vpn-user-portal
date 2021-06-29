@@ -101,7 +101,7 @@ class Storage
     }
 
     /**
-     * @return array<array{profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:string|null}>
+     * @return array<array{profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
     public function wgGetPeers(string $userId): array
     {
@@ -139,7 +139,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:string|null}>
+     * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
     public function wgGetAllPeers(string $profileId): array
     {
@@ -270,9 +270,9 @@ class Storage
     }
 
     /**
-     * @return array
+     * @return array<array{user_id:string,permission_list:array<string>,is_disabled:bool}>
      */
-    public function getUsers()
+    public function getUsers(): array
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -289,7 +289,7 @@ class Storage
         $userList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $userList[] = [
-                'user_id' => $row['user_id'],
+                'user_id' => (string) $row['user_id'],
                 'permission_list' => Json::decode($row['permission_list']),
                 'is_disabled' => (bool) $row['is_disabled'],
             ];
@@ -316,30 +316,7 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        return Json::decode($stmt->fetchColumn());
-    }
-
-    /**
-     * @return array
-     */
-    public function getAppUsage()
-    {
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            client_id,
-            COUNT(DISTINCT client_id) AS client_count
-        FROM
-            authorizations
-        GROUP BY
-            client_id
-        ORDER BY
-            client_count DESC
-    SQL
-        );
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return Json::decode((string) $stmt->fetchColumn());
     }
 
     public function userDelete(string $userId): void
@@ -397,7 +374,7 @@ class Storage
     }
 
     /**
-     * @return array<array{profile_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:string|null}>
+     * @return array<array{profile_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
     public function getCertificates(string $userId): array
     {
@@ -435,24 +412,22 @@ class Storage
     }
 
     /**
-     * XXX remove is_disabled from here? we have a separate call for that.
-     *
-     * @return false|array
+     * @return ?array{user_id:string,user_is_disabled:bool,display_name:string,expires_at:\DateTimeImmutable}
      */
-    public function getUserCertificateInfo(string $commonName)
+    public function getUserCertificateInfo(string $commonName): ?array
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
             u.user_id AS user_id,
             u.is_disabled AS user_is_disabled,
-            c.display_name AS display_name,
-            c.expires_at,
-            c.auth_key
+            c.display_name AS display_name
+            c.expires_at AS expires_at
         FROM
             users u, certificates c
         WHERE
-            u.user_id = c.user_id AND
+            u.user_id = c.user_id
+        AND
             c.common_name = :common_name
     SQL
         );
@@ -460,7 +435,16 @@ class Storage
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            return null;
+        }
+
+        return [
+            'user_id' => (string) $resultRow['user_id'],
+            'user_is_disabled' => (bool) $resultRow['user_is_disabled'],
+            'display_name' => (string) $resultRow['display_name'],
+            'expires_at' => Dt::get((string) $resultRow['expires_at']),
+        ];
     }
 
     public function deleteCertificate(string $userId, string $commonName): void
@@ -511,7 +495,7 @@ class Storage
     }
 
     /**
-     * XXX merge with disableUser.
+     * XXX merge with disableUser/rename?
      */
     public function userEnable(string $userId): void
     {
@@ -674,6 +658,9 @@ class Storage
         $stmt->execute();
     }
 
+    /**
+     * @return array<array{profile_id:string,ip_four:string,ip_six:string,disconnected_at:?\DateTimeImmutable,connected_at:\DateTimeImmutable,bytes_transferred:int}>
+     */
     public function getConnectionLogForUser(string $userId): array
     {
         $stmt = $this->db->prepare(
@@ -704,7 +691,19 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $connectionLog = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $connectionLog[] = [
+                'profile_id' => (string) $resultRow['profile_id'],
+                'ip_four' => (string) $resultRow['ip_four'],
+                'ip_six' => (string) $resultRow['ip_six'],
+                'disconnected_at' => null === $resultRow['disconnected_at'] ? null : Dt::get((string) $resultRow['disconnected_at']),
+                'connected_at' => Dt::get((string) $resultRow['connected_at']),
+                'bytes_transferred' => (int) $resultRow['disconnected_at'],
+            ];
+        }
+
+        return $connectionLog;
     }
 
     /**
@@ -880,5 +879,28 @@ class Storage
         $stmt->bindValue(':permission_list', Json::encode($permissionList), PDO::PARAM_STR);
         $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
         $stmt->execute();
+    }
+
+    /**
+     * @return array<array{client_id:string,client_count:int}>
+     */
+    public function getAppUsage()
+    {
+        $stmt = $this->db->prepare(
+<<< 'SQL'
+        SELECT
+            client_id,
+            COUNT(DISTINCT client_id) AS client_count
+        FROM
+            authorizations
+        GROUP BY
+            client_id
+        ORDER BY
+            client_count DESC
+    SQL
+        );
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

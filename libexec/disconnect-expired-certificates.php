@@ -45,8 +45,7 @@ try {
     foreach ($daemonWrapper->getConnectionList(null) as $profileId => $connectionInfoList) {
         foreach ($connectionInfoList as $connectionInfo) {
             // check expiry of certificate
-            $expiresAt = Dt::get($connectionInfo['valid_to']);
-            if ($dateTime > $expiresAt) {
+            if ($dateTime > $connectionInfo['expires_at']) {
                 // certificate expired, disconnect!
                 $daemonWrapper->killClient($connectionInfo['common_name']);
             }

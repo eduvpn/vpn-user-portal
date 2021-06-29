@@ -38,9 +38,11 @@ class DaemonWrapper
         $this->logger = $logger;
     }
 
+    /**
+     * @return array<string, array<array{common_name:string,display_name:string,expires_at:\DateTimeImmutable,management_port:int,user_id:string,user_is_disabled:bool, virtual_address:array{0:string,1:string}}>>
+     */
     public function getConnectionList(?string $userId): array
     {
-        // XXX be very explicit about the array we get back
         // figure out the nodeIp + portList for each profile...
         $profileNodeIpPortList = [];
         foreach ($this->config->profileConfigList() as $profileConfig) {
@@ -71,10 +73,9 @@ class DaemonWrapper
                 $this->daemonSocket->open($nodeIp);
                 $this->daemonSocket->setPorts($portList);
                 $daemonConnectionList = $this->daemonSocket->connections();
-
                 foreach ($daemonConnectionList as $connectionInfo) {
                     $commonName = $connectionInfo['common_name'];
-                    if (false === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
+                    if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
                         // we do not have information on this CN, what is going on?!
                         $this->logger->warning(sprintf('"common_name "%s" not found', $commonName));
                         continue;
@@ -86,8 +87,15 @@ class DaemonWrapper
                         }
                     }
 
-                    // add this connection to the list
-                    $connectionList[$profileId][] = array_merge($connectionInfo, $certInfo);
+                    $connectionList[$profileId][] = [
+                        'management_port' => $connectionInfo['management_port'],
+                        'common_name' => $connectionInfo['common_name'],
+                        'virtual_address' => $connectionInfo['virtual_address'],
+                        'user_id' => $certInfo['user_id'],
+                        'user_is_disabled' => $certInfo['user_is_disabled'],
+                        'display_name' => $certInfo['display_name'],
+                        'expires_at' => $certInfo['expires_at'],
+                    ];
                 }
             } catch (RuntimeException $e) {
                 // can't do much here...

@@ -118,7 +118,7 @@ class NodeApiModule implements ServiceModuleInterface
     private function verifyConnection(string $profileId, string $commonName): void
     {
         // verify status of certificate/user
-        if (false === $userCertInfo = $this->storage->getUserCertificateInfo($commonName)) {
+        if (null === $userCertInfo = $this->storage->getUserCertificateInfo($commonName)) {
             // we do not (yet) know the user as only an existing *//* certificate can be linked back to a user...
             throw new NodeApiException(null, sprintf('user or certificate does not exist [profile_id: %s, common_name: %s]', $profileId, $commonName));
         }

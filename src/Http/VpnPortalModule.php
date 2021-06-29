@@ -168,7 +168,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/deleteOpenVpnConfig',
             function (UserInfo $userInfo, Request $request): Response {
                 $commonName = InputValidation::commonName($request->requirePostParameter('commonName'));
-                if (false === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
+                if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
                     throw new HttpException('certificate does not exist', 400);
                 }
                 if ($userInfo->userId() !== $certInfo['user_id']) {
@@ -218,7 +218,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     }
                 }
                 $userMessages = $this->storage->getUserLog($userInfo->userId());
-                $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userInfo->userId());
+//                $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userInfo->userId());
 
                 // get the fancy profile name
                 $profileConfigList = $this->config->profileConfigList();
@@ -236,7 +236,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'userPermissions' => $userPermissions,
                             'authorizedClientInfoList' => $authorizedClientInfoList,
                             'userMessages' => $userMessages,
-                            'userConnectionLogEntries' => $userConnectionLogEntries,
+//                            'userConnectionLogEntries' => $userConnectionLogEntries,
                             'idNameMapping' => $idNameMapping,
                         ]
                     )
