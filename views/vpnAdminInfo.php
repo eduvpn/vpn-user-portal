@@ -1,5 +1,8 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \LC\Portal\ServerInfo $serverInfo */?>
+<?php /** @var array<\LC\Portal\ProfileConfig> $profileConfigList */?>
+<?php /** @var string $portalVersion */?>
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Server'); ?></h2>
@@ -29,9 +32,9 @@
                 <th><?=$this->t('CA'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($caInfo->validFrom()); ?></dd>
-                        <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($caInfo->validTo()); ?></dd>
-                        <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e($caInfo->fingerprint(true)); ?></code></dd>
+                        <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($serverInfo->ca()->caCert()->validFrom()); ?></dd>
+                        <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($serverInfo->ca()->caCert()->validTo()); ?></dd>
+                        <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e(implode(' ', str_split($serverInfo->ca()->caCert()->fingerprint(), 4))); ?></code></dd>
                     </dl>
                 </td>
             </tr>
@@ -39,7 +42,7 @@
                 <th><?=$this->t('WireGuard'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($wgPublicKey); ?></code></dd>
+                        <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($serverInfo->wgPublicKey()); ?></code></dd>
                     </dl>
                 </td>
             </tr>

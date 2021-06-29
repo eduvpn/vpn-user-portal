@@ -90,8 +90,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminInfo',
                         [
                             'profileConfigList' => $this->config->profileConfigList(),
-                            'caInfo' => $this->serverInfo->ca()->caCert(),
-                            'wgPublicKey' => $this->serverInfo->wgPublicKey(),
+                            'serverInfo' => $this->serverInfo,
                         ]
                     )
                 );

@@ -42,10 +42,8 @@ class CaInfo
         return Dt::get('@'.$this->validTo);
     }
 
-    public function fingerprint(bool $forHuman = false): string
+    public function fingerprint(): string
     {
-        $caFingerprint = openssl_x509_fingerprint($this->pemCert, 'sha256');
-
-        return $forHuman ? implode(' ', str_split($caFingerprint, 4)) : $caFingerprint;
+        return openssl_x509_fingerprint($this->pemCert, 'sha256');
     }
 }
