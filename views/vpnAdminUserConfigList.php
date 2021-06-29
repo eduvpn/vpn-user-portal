@@ -1,6 +1,14 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
 <?php /** @var array<array{profile_id:string,ip_four:string,ip_six:string,disconnected_at:?\DateTimeImmutable,connected_at:\DateTimeImmutable,bytes_transferred:int}> $userConnectionLogEntries */ ?>
+<?php /** @var string $userId */?>
+<?php /** @var bool $isDisabled */?>
+<?php /** @var bool $isSelf */?>
+<?php /** @var array<string,string> $idNameMapping */?>
+<?php /** @var array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}> $userMessages */?>
+<?php /** @var array<array{profile_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}> $clientCertificateList */?>
+<?php /** @var string $requestRoot */?>
+<?php /** @var string $authModule */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
 <?php $this->start('content'); ?>
     <p>

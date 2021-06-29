@@ -1,5 +1,11 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \LC\Portal\Http\UserInfo $userInfo */?>
+<?php /** @var array<string> $userPermissions */?>
+<?php /** @var array<string,string> $idNameMapping */?>
+<?php /** @var array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}> $userMessages */?>
+<?php /** @var array<array{auth_key:string,client_id:string,display_name:string}> $authorizedClientInfoList */?>
+<?php /** @var string $authModule */?>
 <?php $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Account')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Info'); ?></h2>

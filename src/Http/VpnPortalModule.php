@@ -118,7 +118,6 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            // XXX sessionExpiry is wrong here??
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'profileConfigList' => $visibleProfileList,
                             'userCertificateList' => $showAll ? $configList : $manualConfigList,
@@ -218,7 +217,6 @@ class VpnPortalModule implements ServiceModuleInterface
                     }
                 }
                 $userMessages = $this->storage->getUserLog($userInfo->userId());
-//                $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userInfo->userId());
 
                 // get the fancy profile name
                 $profileConfigList = $this->config->profileConfigList();
@@ -236,7 +234,6 @@ class VpnPortalModule implements ServiceModuleInterface
                             'userPermissions' => $userPermissions,
                             'authorizedClientInfoList' => $authorizedClientInfoList,
                             'userMessages' => $userMessages,
-//                            'userConnectionLogEntries' => $userConnectionLogEntries,
                             'idNameMapping' => $idNameMapping,
                         ]
                     )
