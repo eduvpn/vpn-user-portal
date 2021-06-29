@@ -251,9 +251,11 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
-                            'now' => $this->dateTime->format(DateTimeImmutable::ATOM),
+                            'now' => $this->dateTime,
                             'date_time' => null,
                             'ip_address' => null,
+                            'logEntries' => [],
+                            'showResults' => false,
                         ]
                     )
                 );
@@ -304,10 +306,11 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
-                            'now' => $this->dateTime->format(DateTimeImmutable::ATOM),
+                            'now' => $this->dateTime,
                             'date_time' => $dateTime,
                             'ip_address' => $ipAddress,
-                            'result' => $this->storage->getLogEntry($dateTime, $ipAddress),
+                            'logEntries' => $this->storage->getLogEntries($dateTime, $ipAddress),
+                            'showResults' => true,
                         ]
                     )
                 );

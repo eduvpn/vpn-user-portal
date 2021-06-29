@@ -707,9 +707,9 @@ class Storage
     }
 
     /**
-     * @return false|array
+     * @return array<array{user_id:string,profile_id:string,common_name:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable,client_lost:bool}>
      */
-    public function getLogEntry(DateTimeImmutable $dateTime, string $ipAddress)
+    public function getLogEntries(DateTimeImmutable $dateTime, string $ipAddress)
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -735,10 +735,21 @@ class Storage
         $stmt->bindValue(':ip_address', $ipAddress, PDO::PARAM_STR);
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
+        $logEntries = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $logEntries[] = [
+                'user_id' => (string) $resultRow['user_id'],
+                'profile_id' => (string) $resultRow['profile_id'],
+                'common_name' => (string) $resultRow['common_name'],
+                'ip_four' => (string) $resultRow['ip_four'],
+                'ip_six' => (string) $resultRow['ip_six'],
+                'connected_at' => Dt::get((string) $resultRow['connected_at']),
+                'disconnected_at' => null === $resultRow['disconnected_at'] ? null : Dt::get((string) $resultRow['disconnected_at']),
+                'client_lost' => (bool) $resultRow['client_log'],
+            ];
+        }
 
-        // XXX can this also contain multiple results? I don't think so, but
-        // make sure!
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $logEntries;
     }
 
     public function cleanConnectionLog(DateTimeImmutable $dateTime): void
