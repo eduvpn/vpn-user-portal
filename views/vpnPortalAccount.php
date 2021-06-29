@@ -1,10 +1,8 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
 <?php /** @var \LC\Portal\Http\UserInfo $userInfo */?>
-<?php /** @var array<string> $userPermissions */?>
-<?php /** @var array<string,string> $idNameMapping */?>
 <?php /** @var array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}> $userMessages */?>
-<?php /** @var array<array{auth_key:string,client_id:string,display_name:string}> $authorizedClientInfoList */?>
+<?php /** @var array<\fkooman\OAuth\Server\Authorization> $authorizationList */?>
 <?php /** @var string $authModule */?>
 <?php $this->layout('base', ['activeItem' => 'account', 'pageTitle' => $this->t('Account')]); ?>
 <?php $this->start('content'); ?>
@@ -21,12 +19,12 @@
             </tr>
         <?php endif; ?>
 
-        <?php if (0 !== count($userPermissions)): ?>
+        <?php if (0 !== count($userInfo->permissionList())): ?>
         <tr>
             <th><?=$this->t('Permission(s)'); ?></th>
             <td>
                 <ul>
-                    <?php foreach ($userPermissions as $userPermission): ?>
+                    <?php foreach ($userInfo->permissionList() as $userPermission): ?>
                         <li><code><?=$this->e($userPermission); ?></code></li>
                     <?php endforeach; ?>
                 </ul>
@@ -39,7 +37,7 @@
     <p>
         <?=$this->t('The list of applications you authorized to create a VPN connection.'); ?>
     </p>
-<?php if (0 === count($authorizedClientInfoList)): ?>
+<?php if (0 === count($authorizationList)): ?>
     <p class="plain">
         <?=$this->t('No authorized applications yet.'); ?>
     </p>
@@ -49,12 +47,12 @@
             <tr><th><?=$this->t('Name'); ?></th><th></th></tr>
         </thead>
         <tbody>
-<?php foreach ($authorizedClientInfoList as $authorizedClientInfo): ?>
+<?php foreach ($authorizationList as $authorizationInfo): ?>
             <tr>
-                <td><span title="<?=$this->e($authorizedClientInfo['client_id']); ?>"><?=$this->e($authorizedClientInfo['display_name']); ?></span></td>
+                <td><span title="<?=$this->e($authorizationInfo->clientId()); ?>"><?=$this->clientIdToDisplayName($authorizationInfo->clientId()); ?></span></td>
                 <td class="text-right">
                     <form class="frm" method="post" action="removeClientAuthorization">
-                        <input type="hidden" name="auth_key" value="<?=$this->e($authorizedClientInfo['auth_key']); ?>">
+                        <input type="hidden" name="auth_key" value="<?=$this->e($authorizationInfo->authKey()); ?>">
                         <button class="warning"><?=$this->t('Revoke'); ?></button>
                     </form>
                 </td>

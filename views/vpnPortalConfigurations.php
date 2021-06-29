@@ -2,7 +2,7 @@
 <?php /** @var \LC\Portal\Tpl $this */?>
 <?php /** @var \DateTimeImmutable $expiryDate */?>
 <?php /** @var array<string,\LC\Portal\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<array{profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>|array<array{profile_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}> $userCertificateList */?>
+<?php /** @var array<array{profile_id:string,display_name:string,profile_display_name:string,expires_at:\DateTimeImmutable,public_key:?string,common_name:?string}> $configList */?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('New'); ?></h2>
@@ -37,43 +37,31 @@
         </form>
     <?php endif; ?>
 
-    <?php if (0 !== count($userCertificateList)): ?>
-        <h2><?=$this->t('Existing'); ?></h2>
+<?php if (0 !== count($configList)): ?>
+        <h2><?=$this->t('Active'); ?></h2>
         <table class="tbl">
             <thead>
                 <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?></th><th></th></tr>
             </thead>
             <tbody>
-<?php foreach ($userCertificateList as $userCertificate): ?>
-<?php if (array_key_exists('common_name', $userCertificate)): ?>
-                <!-- OpenVPN -->
+<?php foreach ($configList as $configItem): ?>
                 <tr>
-                    <td><?=$this->e($userCertificate['profile_id']); ?></td>
-                    <td><span title="<?=$this->e($userCertificate['display_name']); ?>"><?=$this->etr($userCertificate['display_name'], 25); ?></span></td>
-                    <td><?=$this->d($userCertificate['expires_at']); ?></td>
+                    <td><span title="<?=$this->e($configItem['profile_id']); ?>"><?=$this->e($configItem['profile_display_name']); ?></span></td>
+                    <td><span title="<?=$this->e($configItem['display_name']); ?>"><?=$this->etr($configItem['display_name'], 25); ?></span></td>
+                    <td><?=$this->d($configItem['expires_at']); ?></td>
                     <td class="text-right">
-                        <form class="frm" method="post" action="deleteOpenVpnConfig">
-                            <input type="hidden" name="commonName" value="<?=$this->e($userCertificate['common_name']); ?>">
+                        <form class="frm" method="post" action="deleteConfig">
+                            <input type="hidden" name="profileId" value="<?=$this->e($configItem['profile_id']); ?>">
+<?php if (null !== $configItem['common_name']): ?>
+                            <input type="hidden" name="commonName" value="<?=$this->e($configItem['common_name']); ?>">
+<?php endif; ?>
+<?php if (null !== $configItem['public_key']): ?>
+                            <input type="hidden" name="publicKey" value="<?=$this->e($configItem['public_key']); ?>">
+<?php endif; ?>
                             <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>
                         </form>
                     </td>
                 </tr>
-<?php endif; ?>
-<?php if (array_key_exists('public_key', $userCertificate)): ?>
-                <!-- WireGuard -->
-                <tr>
-                    <td><?=$this->e($userCertificate['profile_id']); ?></td>
-                    <td><span title="<?=$this->e($userCertificate['display_name']); ?>"><?=$this->etr($userCertificate['display_name'], 25); ?></span></td>
-                    <td><?=$this->d($userCertificate['expires_at']); ?></td>
-                    <td class="text-right">
-                        <form class="frm" method="post" action="deleteWireGuardConfig">
-                            <input type="hidden" name="profileId" value="<?=$this->e($userCertificate['profile_id']); ?>">
-                            <input type="hidden" name="publicKey" value="<?=$this->e($userCertificate['public_key']); ?>">
-                            <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>
-                        </form>
-                    </td>
-                </tr>
-<?php endif; ?>
 <?php endforeach; ?>
             </tbody>
         </table>

@@ -301,6 +301,6 @@ try {
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
-    $response = new HtmlResponse($e->getMessage(), [], 500);
+    $response = new HtmlResponse($e->getMessage().$e->getTraceAsString(), [], 500);
     $response->send();
 }

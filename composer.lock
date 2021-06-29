@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "5abeaeafc5f7cb2244769e7c9af86401ec0f49eb"
+                "reference": "e04f044d9d2d84eef56d4c7e25e5c33003a4d1ea"
             },
             "require": {
                 "ext-date": "*",
@@ -53,7 +53,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2021-06-24T14:44:50+00:00"
+            "time": "2021-06-29T19:16:39+00:00"
         }
     ],
     "packages-dev": [

@@ -290,7 +290,7 @@ class Storage
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $userList[] = [
                 'user_id' => (string) $resultRow['user_id'],
-                'permission_list' => explode('|', $resultRow['permissionList']),
+                'permission_list' => self::stringToPermissionList((string) $resultRow['permission_list']),
                 'is_disabled' => (bool) $resultRow['is_disabled'],
             ];
         }
@@ -316,7 +316,7 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        return explode('|', (string) $stmt->fetchColumn());
+        return self::stringToPermissionList((string) $stmt->fetchColumn());
     }
 
     public function userDelete(string $userId): void
@@ -349,8 +349,7 @@ class Storage
     SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        // XXX we MUST make sure the "|" is not a valid char in the individual permissions
-        $stmt->bindValue(':permission_list', implode('|', $permissionList), PDO::PARAM_STR);
+        $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
 
         $stmt->execute();
     }
@@ -422,7 +421,7 @@ class Storage
         SELECT
             u.user_id AS user_id,
             u.is_disabled AS user_is_disabled,
-            c.display_name AS display_name
+            c.display_name AS display_name,
             c.expires_at AS expires_at
         FROM
             users u, certificates c
@@ -467,6 +466,7 @@ class Storage
 
     public function deleteCertificatesWithAuthKey(string $authKey): void
     {
+        // XXX this is taken care of by foreign keys?
         $stmt = $this->db->prepare(
 <<< 'SQL'
         DELETE FROM
@@ -479,7 +479,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function disableUser(string $userId): void
+    public function userDisable(string $userId): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -495,9 +495,6 @@ class Storage
         $stmt->execute();
     }
 
-    /**
-     * XXX merge with disableUser/rename?
-     */
     public function userEnable(string $userId): void
     {
         $stmt = $this->db->prepare(
@@ -767,7 +764,6 @@ class Storage
         );
 
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-
         $stmt->execute();
     }
 
@@ -786,7 +782,6 @@ class Storage
         );
 
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-
         $stmt->execute();
     }
 
@@ -861,14 +856,6 @@ class Storage
     }
 
     /**
-     * @deprecated
-     */
-    public function getPdo(): PDO
-    {
-        return $this->db;
-    }
-
-    /**
      * @param array<string> $permissionList
      */
     public function userAdd(string $userId, array $permissionList): void
@@ -889,14 +876,13 @@ class Storage
     SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        // XXX we MUST make sure the "|" can't be part of permissionList
-        $stmt->bindValue(':permission_list', implode('|', $permissionList), PDO::PARAM_STR);
+        $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
         $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
         $stmt->execute();
     }
 
     /**
-     * @return array<array{client_id:?string,client_count:int}>
+     * @return array<array{client_id:string,client_count:int}>
      */
     public function getAppUsage()
     {
@@ -916,5 +902,26 @@ class Storage
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param array<string> $permissionList
+     */
+    private static function permissionListToString(array $permissionList): string
+    {
+        // XXX we MUST make sure permissionList does not ever contain a "|"
+        return implode('|', $permissionList);
+    }
+
+    /**
+     * @return array<string>
+     */
+    private static function stringToPermissionList(string $string): array
+    {
+        if ('' === $string) {
+            return [];
+        }
+
+        return explode('|', $string);
     }
 }

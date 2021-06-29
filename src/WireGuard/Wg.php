@@ -35,12 +35,12 @@ class Wg
      * XXX want only 1 code path both for portal and for API.
      * XXX why can accesstoken be null? from portal?
      */
-    public function getConfig(ProfileConfig $profileConfig, string $userId, string $displayName, \DateTimeImmutable $expiresAt, ?AccessToken $accessToken, ?string $publicKey): WgConfig
+    public function addPeer(ProfileConfig $profileConfig, string $userId, string $displayName, \DateTimeImmutable $expiresAt, ?AccessToken $accessToken, ?string $publicKey): WgConfig
     {
         $privateKey = null;
         if (null === $publicKey) {
             $privateKey = self::generatePrivateKey();
-            $publicKey = self::generatePublicKey($privateKey);
+            $publicKey = self::extractPublicKey($privateKey);
         }
 
         if (null === $ipInfo = $this->getIpAddress($profileConfig)) {
@@ -69,7 +69,7 @@ class Wg
         );
     }
 
-    public function disconnectPeer(ProfileConfig $profileConfig, string $userId, string $publicKey): void
+    public function removePeer(ProfileConfig $profileConfig, string $userId, string $publicKey): void
     {
         $this->storage->wgRemovePeer($userId, $publicKey);
         // XXX we have to make sure the user owns the public key, otherwise it can be used to disconnect other users!
@@ -134,7 +134,7 @@ class Wg
         return trim(ob_get_clean());
     }
 
-    private static function generatePublicKey(string $privateKey): string
+    private static function extractPublicKey(string $privateKey): string
     {
         ob_start();
         passthru("echo $privateKey | /usr/bin/wg pubkey");

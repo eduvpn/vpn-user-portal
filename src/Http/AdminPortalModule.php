@@ -11,20 +11,16 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
-use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\Config;
 use LC\Portal\Dt;
-use LC\Portal\FileIO;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Json;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
-use RuntimeException;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
@@ -183,7 +179,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         $connectionList = $this->daemonWrapper->getConnectionList($userId);
 
                         // disable the user
-                        $this->storage->disableUser($userId);
+                        $this->storage->userDisable($userId);
                         $this->storage->addUserLog($userId, LoggerInterface::NOTICE, 'account disabled by admin', $this->dateTime);
 
                         // * revoke all OAuth clients of this user
@@ -198,6 +194,7 @@ class AdminPortalModule implements ServiceModuleInterface
                                 $this->dateTime
                             );
 
+                            // XXX this is done by foreign keys?
                             $this->storage->deleteCertificatesWithAuthKey($clientAuthorization->authKey());
                         }
 
@@ -274,10 +271,6 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminStats',
                         [
                             'appUsage' => self::getAppUsage($this->storage->getAppUsage()),
-                            'statsData' => $this->getStatsData(),
-                            'graphStats' => $this->getGraphStats(),
-                            'maxConcurrentConnectionLimit' => $this->getMaxConcurrentConnectionLimit($profileConfigList),
-                            'profileConfigList' => $profileConfigList,
                         ]
                     )
                 );
@@ -323,126 +316,8 @@ class AdminPortalModule implements ServiceModuleInterface
         }
     }
 
-    private function getStatsData(): array
-    {
-        // XXX probably do not use dataDir here directly, but a nice class
-        $statsFile = sprintf('%s/stats.json', $this->dataDir);
-        try {
-            $stats = Json::decode(FileIO::readFile($statsFile));
-        } catch (RuntimeException $e) {
-            // unable to read stats file
-            return [];
-        }
-
-        if (!\array_key_exists('profiles', $stats)) {
-            // broken stats file
-            return [];
-        }
-
-        // here we clean up the data obtained from the API, not sure WHAT I was
-        // thinking back then...what a shitty format!
-
-        // get a list of all the data for which we want to have the statistics,
-        // ideally this is exactly the same the API provides, otherwise the
-        // "global" profile statistics may not be right (anymore). Ah well.
-        $dateList = [];
-        $currentDate = $this->dateTime->sub(new DateInterval('P1M'));
-        while ($currentDate < $this->dateTime) {
-            $dateList[] = $currentDate->format('Y-m-d');
-            $currentDate->add(new DateInterval('P1D'));
-        }
-
-        $statsData = [];
-        foreach ($stats['profiles'] as $profileId => $profileStats) {
-            // the "per profile" (aggregate) stats as determined by the API
-            // server, we cannot influence the exact period over which this
-            // data was computed, let's hope it was correctly provided!
-            $statsData[$profileId] = [
-                'unique_user_count' => $profileStats['unique_user_count'],
-                'total_traffic' => $profileStats['total_traffic'],
-                'max_concurrent_connections_time' => $profileStats['max_concurrent_connections_time'],
-                'max_concurrent_connections' => $profileStats['max_concurrent_connections'],
-            ];
-            // we only want to have the data for the days in dateList
-            $dayStats = [];
-            foreach ($dateList as $dateStr) {
-                $dayStats[$dateStr] = [
-                    'bytes_transferred' => 0,
-                    'unique_user_count' => 0,
-                ];
-            }
-
-            foreach ($profileStats['days'] as $dayData) {
-                if (\array_key_exists($dayData['date'], $dayStats)) {
-                    // we have this day, so replace the data!
-                    $dayStats[$dayData['date']] = [
-                        'bytes_transferred' => $dayData['bytes_transferred'],
-                        'unique_user_count' => $dayData['unique_user_count'],
-                    ];
-                }
-            }
-
-            $statsData[$profileId]['date_list'] = $dayStats;
-        }
-
-        return $statsData;
-    }
-
-    private function getGraphStats(): array
-    {
-        $outputData = [];
-        $statsData = $this->getStatsData();
-        foreach ($statsData as $profileId => $profileStats) {
-            $outputData[$profileId] = [];
-            // find max number of unique users/traffic per day
-            $maxUniqueUserCount = 0;
-            $maxTrafficCount = 0;
-            foreach ($profileStats['date_list'] as $dayData) {
-                if ($dayData['unique_user_count'] > $maxUniqueUserCount) {
-                    $maxUniqueUserCount = $dayData['unique_user_count'];
-                }
-                if ($dayData['bytes_transferred'] > $maxTrafficCount) {
-                    $maxTrafficCount = $dayData['bytes_transferred'];
-                }
-            }
-
-            $outputData[$profileId]['max_traffic_count'] = $maxTrafficCount;
-            $outputData[$profileId]['max_unique_user_count'] = $maxUniqueUserCount;
-            $outputData[$profileId]['date_list'] = [];
-
-            // convert users/traffic to a number between 0 and 25
-            $maxUserDivider = $maxUniqueUserCount / 25;
-            $maxTrafficDivider = $maxTrafficCount / 25;
-            foreach ($profileStats['date_list'] as $dayDate => $dayData) {
-                $outputData[$profileId]['date_list'][$dayDate] = [
-                    'user_fraction' => 0 === $maxUserDivider ? 0 : (int) floor($dayData['unique_user_count'] / $maxUserDivider),
-                    'traffic_fraction' => 0 === $maxTrafficDivider ? 0 : (int) floor($dayData['bytes_transferred'] / $maxTrafficDivider),
-                ];
-            }
-        }
-
-        return $outputData;
-    }
-
     /**
-     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
-     *
-     * @return array<string,int>
-     */
-    private function getMaxConcurrentConnectionLimit(array $profileConfigList): array
-    {
-        $maxConcurrentConnectionLimitList = [];
-        foreach ($profileConfigList as $profileConfig) {
-            [$ipFour, $ipFourPrefix] = explode('/', $profileConfig->range());
-            $vpnProtoPortsCount = \count($profileConfig->vpnProtoPorts());
-            $maxConcurrentConnectionLimitList[$profileConfig->profileId()] = 2 ** (32 - (int) $ipFourPrefix) - 4 * $vpnProtoPortsCount;
-        }
-
-        return $maxConcurrentConnectionLimitList;
-    }
-
-    /**
-     * @return array<array{client_id:?string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}>
+     * @return array<array{client_id:string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}>
      */
     private static function getAppUsage(array $appUsage): array
     {

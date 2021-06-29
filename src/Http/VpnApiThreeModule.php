@@ -113,7 +113,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     case 'openvpn':
                         return $this->getOpenVpnConfigResponse($profileConfig, $accessToken);
                     case 'wireguard':
-                        $wgConfig = $this->wg->getConfig(
+                        $wgConfig = $this->wg->addPeer(
                             $profileConfig,
                             $accessToken->userId(),
                             $accessToken->clientId(),
@@ -167,7 +167,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 if ('openvpn' === $profileConfig->vpnType()) {
                     // OpenVPN
                     $this->storage->deleteCertificatesWithAuthKey($accessToken->authKey());
-                    // XXX do we also need to disconnect the client? probably not
+                    // XXX do we also need to disconnect the client?
 
                     return new Response(null, [], 204);
                 }
@@ -175,7 +175,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 // WireGuard
                 $userId = $accessToken->userId();
                 $authKey = $accessToken->authKey();
-
+                // XXX move this to Wg class
                 foreach ($this->storage->wgGetPeers($userId) as $wgPeer) {
                     if ($requestedProfileId !== $wgPeer['profile_id']) {
                         continue;
@@ -184,7 +184,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         continue;
                     }
 
-                    $this->wg->disconnectPeer(
+                    $this->wg->removePeer(
                         $profileConfig,
                         $userId,
                         $wgPeer['public_key']

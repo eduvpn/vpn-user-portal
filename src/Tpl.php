@@ -99,17 +99,13 @@ class Tpl implements TplInterface
 
     public function clientIdToDisplayName(string $clientId): string
     {
-        // XXX this should really not be here!
+        // XXX this should probably not be here...
         $clientDb = new ClientDb();
         if (null === $clientInfo = $clientDb->get($clientId)) {
             return $this->e($clientId);
         }
 
-        if (null === $displayName = $clientInfo->displayName()) {
-            return $this->e($clientId);
-        }
-
-        return $this->e($displayName);
+        return $this->e($clientInfo->displayName());
     }
 
     public static function languageCodeToHuman(string $uiLanguage): string

@@ -95,32 +95,15 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $profileConfigList = $this->config->profileConfigList();
-                $userPermissions = $userInfo->permissionList();
-                $visibleProfileList = self::filterProfileList($profileConfigList, $userPermissions);
-
-                $configList = $this->storage->getCertificates($userInfo->userId());
-                $configList = array_merge($configList, $this->storage->wgGetPeers($userInfo->userId()));
-
-                // if query parameter "all" is set, show all certificates, also
-                // those issued to OAuth clients
-                $showAll = null !== $request->optionalQueryParameter('all');
-
-                $manualConfigList = [];
-                if (false === $showAll) {
-                    foreach ($configList as $configInfo) {
-                        if (null === $configInfo['auth_key']) {
-                            $manualConfigList[] = $configInfo;
-                        }
-                    }
-                }
+                $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'profileConfigList' => $visibleProfileList,
-                            'userCertificateList' => $showAll ? $configList : $manualConfigList,
+                            'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
+                            'configList' => $this->filterConfigList($visibleProfileList, $userInfo->userId()),
                         ]
                     )
                 );
@@ -164,38 +147,37 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/deleteOpenVpnConfig',
+            '/deleteConfig',
             function (UserInfo $userInfo, Request $request): Response {
-                $commonName = InputValidation::commonName($request->requirePostParameter('commonName'));
-                if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
-                    throw new HttpException('certificate does not exist', 400);
+                if (null !== $commonName = $request->optionalPostParameter('commonName')) {
+                    // OpenVPN
+                    $commonName = InputValidation::commonName($commonName);
+                    if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
+                        throw new HttpException('certificate does not exist', 400);
+                    }
+                    if ($userInfo->userId() !== $certInfo['user_id']) {
+                        throw new HttpException('certificate does not belong to this user', 400);
+                    }
+
+                    $this->storage->addUserLog(
+                        $certInfo['user_id'],
+                        LoggerInterface::NOTICE,
+                        sprintf('certificate "%s" deleted by user', $certInfo['display_name']),
+                        $this->dateTime
+                    );
+
+                    $this->storage->deleteCertificate($userInfo->userId(), $commonName);
+                    $this->daemonWrapper->killClient($commonName);
                 }
-                if ($userInfo->userId() !== $certInfo['user_id']) {
-                    throw new HttpException('certificate does not belong to this user', 400);
+
+                if (null !== $publicKey = $request->optionalPostParameter('publicKey')) {
+                    // WireGuard
+                    // XXX verify publicKey input!
+                    $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
+                    // XXX do not allow deleting app created configs
+                    $profileConfig = $this->config->profileConfig($profileId);
+                    $this->wg->removePeer($profileConfig, $userInfo->userId(), $publicKey);
                 }
-
-                $this->storage->addUserLog(
-                    $certInfo['user_id'],
-                    LoggerInterface::NOTICE,
-                    sprintf('certificate "%s" deleted by user', $certInfo['display_name']),
-                    $this->dateTime
-                );
-
-                $this->storage->deleteCertificate($userInfo->userId(), $commonName);
-                $this->daemonWrapper->killClient($commonName);
-
-                return new RedirectResponse($request->getRootUri().'configurations', 302);
-            }
-        );
-
-        $service->post(
-            '/deleteWireGuardConfig',
-            function (UserInfo $userInfo, Request $request): Response {
-                $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
-                // XXX verify publicKey input!
-                $publicKey = $request->requirePostParameter('publicKey');
-                $profileConfig = $this->config->profileConfig($profileId);
-                $this->wg->disconnectPeer($profileConfig, $userInfo->userId(), $publicKey);
 
                 return new RedirectResponse($request->getRootUri().'configurations', 302);
             }
@@ -204,37 +186,13 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             function (UserInfo $userInfo, Request $request): Response {
-                $userPermissions = $userInfo->permissionList();
-                $authorizationList = $this->oauthStorage->getAuthorizations($userInfo->userId());
-                $authorizedClientInfoList = [];
-                foreach ($authorizationList as $authorization) {
-                    if (null !== $clientInfo = $this->clientDb->get($authorization->clientId())) {
-                        $authorizedClientInfoList[] = [
-                            'auth_key' => $authorization->authKey(),
-                            'client_id' => $authorization->clientId(),
-                            'display_name' => null !== $clientInfo->displayName() ? $clientInfo->displayName() : $authorization->clientId(),
-                        ];
-                    }
-                }
-                $userMessages = $this->storage->getUserLog($userInfo->userId());
-
-                // get the fancy profile name
-                $profileConfigList = $this->config->profileConfigList();
-
-                $idNameMapping = [];
-                foreach ($profileConfigList as $profileConfig) {
-                    $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
-                }
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalAccount',
                         [
                             'userInfo' => $userInfo,
-                            'userPermissions' => $userPermissions,
-                            'authorizedClientInfoList' => $authorizedClientInfoList,
-                            'userMessages' => $userMessages,
-                            'idNameMapping' => $idNameMapping,
+                            'authorizationList' => $this->oauthStorage->getAuthorizations($userInfo->userId()),
+                            'userMessages' => $this->storage->getUserLog($userInfo->userId()),
                         ]
                     )
                 );
@@ -245,6 +203,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/removeClientAuthorization',
             function (UserInfo $userInfo, Request $request): Response {
                 // XXX input validation auth_auth
+                // XXX also disable/stop WireGuard configs
                 $authKey = $request->requirePostParameter('auth_key');
 
                 if (null === $authorization = $this->oauthStorage->getAuthorization($authKey)) {
@@ -252,11 +211,8 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $displayName = $authorization->clientId();
-                // try to get a friendly name for the OAuth client
                 if (null !== $clientInfo = $this->clientDb->get($authorization->clientId())) {
-                    if (null !== $clientDisplayName = $clientInfo->displayName()) {
-                        $displayName = $clientDisplayName;
-                    }
+                    $displayName = $clientInfo->displayName();
                 }
 
                 // delete OAuth authorization
@@ -324,7 +280,7 @@ class VpnPortalModule implements ServiceModuleInterface
     {
         // XXX take ProfileConfig as a parameter...
         $profileConfig = $this->config->profileConfig($profileId);
-        $wgConfig = $this->wg->getConfig(
+        $wgConfig = $this->wg->addPeer(
             $profileConfig,
             $userId,
             $displayName,
@@ -418,5 +374,35 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return $filteredProfileConfigList;
+    }
+
+    /**
+     * @param array<string,\LC\Portal\ProfileConfig> $profileConfigList
+     *
+     * @return array<array{profile_id:string,display_name:string,profile_display_name:string,expires_at:\DateTimeImmutable,public_key:?string,common_name:?string}>
+     */
+    private function filterConfigList(array $profileConfigList, string $userId): array
+    {
+        $configList = $this->storage->getCertificates($userId);
+        $configList = array_merge($configList, $this->storage->wgGetPeers($userId));
+
+        $filteredConfigList = [];
+        foreach ($configList as $c) {
+            if (null !== $c['auth_key']) {
+                continue;
+            }
+            $profileId = $c['profile_id'];
+
+            $filteredConfigList[] = [
+                'profile_id' => $profileId,
+                'profile_display_name' => \array_key_exists($profileId, $profileConfigList) ? $profileConfigList[$profileId]->displayName() : $profileId,
+                'display_name' => $c['display_name'],
+                'expires_at' => $c['expires_at'],
+                'public_key' => $c['public_key'] ?? null,
+                'common_name' => $c['common_name'] ?? null,
+            ];
+        }
+
+        return $filteredConfigList;
     }
 }
