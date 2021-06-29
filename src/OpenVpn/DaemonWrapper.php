@@ -49,13 +49,14 @@ class DaemonWrapper
             if ('openvpn' !== $profileConfig->vpnType()) {
                 continue;
             }
-            $profileNodeIpPortList[$profileConfig->profileId()] = [];
-            $profileNodeIpPortList[$profileConfig->profileId()]['nodeIp'] = $profileConfig->nodeIp();
-            $profileNumber = $profileConfig->profileNumber();
-            $profileNodeIpPortList[$profileConfig->profileId()]['portList'] = [];
+            $portList = [];
             for ($i = 0; $i < \count($profileConfig->vpnProtoPorts()); ++$i) {
-                $profileNodeIpPortList[$profileConfig->profileId()]['portList'][] = 11940 + self::toPort($profileNumber, $i);
+                $portList[] = 11940 + self::toPort($profileConfig->profileNumber(), $i);
             }
+            $profileNodeIpPortList[$profileConfig->profileId()] = [
+                'nodeIp' => $profileConfig->nodeIp(),
+                'portList' => $portList,
+            ];
         }
 
         // walk over every profile, fetch the connected clients for
@@ -119,9 +120,8 @@ class DaemonWrapper
                 // multiple profiles can have the same nodeIp
                 $nodeIpPortList[$nodeIp] = [];
             }
-            $profileNumber = $profileConfig->profileNumber();
             for ($i = 0; $i < \count($profileConfig->vpnProtoPorts()); ++$i) {
-                $nodeIpPortList[$nodeIp][] = 11940 + self::toPort($profileNumber, $i);
+                $nodeIpPortList[$nodeIp][] = 11940 + self::toPort($profileConfig->profileNumber(), $i);
             }
         }
 
