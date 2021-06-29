@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
-<?php /** @var array<array{a:string}> $vpnConnections */?>
+<?php /** @var array<string, array<array{common_name:string,display_name:string,expires_at:\DateTimeImmutable,management_port:int,user_id:string,user_is_disabled:bool, virtual_address:array{0:string,1:string}}>> $vpnConnections */?>
 <?php /** @var array<string,string> $idNameMapping */?>
 <?php /** @var string $requestRoot */?>
 
