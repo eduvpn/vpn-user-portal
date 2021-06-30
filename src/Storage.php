@@ -550,7 +550,7 @@ class Storage
         return (bool) $stmt->fetchColumn(0);
     }
 
-    public function clientConnect(string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
+    public function clientConnect(string $userId, string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
     {
         // update "lost" client entries when a new client connects that gets
         // the IP address of an existing entry that was not "closed" yet. This
@@ -565,6 +565,8 @@ class Storage
                 disconnected_at = :date_time,
                 client_lost = 1
             WHERE
+                user_id = :user_id
+            AND
                 profile_id = :profile_id
             AND
                 ip_four = :ip_four
@@ -575,15 +577,13 @@ class Storage
     SQL
         );
 
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':date_time', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
         $stmt->execute();
 
-        // this query is so complex, because we want to store the user_id in the
-        // log as well, not just the common_name... the user may delete the
-        // certificate, or the user account may be deleted...
         $stmt = $this->db->prepare(
 <<< 'SQL'
         INSERT INTO connection_log
@@ -597,16 +597,7 @@ class Storage
             )
         VALUES
             (
-                (
-                    SELECT
-                        u.user_id
-                    FROM
-                        users u, certificates c
-                    WHERE
-                        u.user_id = c.user_id
-                    AND
-                        c.common_name = :common_name
-                ),
+                :user_id,
                 :profile_id,
                 :common_name,
                 :ip_four,
@@ -616,6 +607,7 @@ class Storage
     SQL
         );
 
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
@@ -624,7 +616,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function clientDisconnect(string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $disconnectedAt, int $bytesTransferred): void
+    public function clientDisconnect(string $userId, string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $disconnectedAt, int $bytesTransferred): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -634,6 +626,8 @@ class Storage
             disconnected_at = :disconnected_at,
             bytes_transferred = :bytes_transferred
         WHERE
+            user_id = :user_id
+        AND
             profile_id = :profile_id
         AND
             common_name = :common_name
@@ -648,6 +642,7 @@ class Storage
     SQL
         );
 
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);

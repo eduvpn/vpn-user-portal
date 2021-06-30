@@ -65,7 +65,7 @@ class Wg
 
         // add connection log entry
         // XXX if we have an "open" log for this publicKey, close it first, i guess that is what "clientLost" indicator is for?
-        $this->storage->clientConnect($profileConfig->profileId(), $publicKey, $ipFour, $ipSix, $this->dateTime);
+        $this->storage->clientConnect($userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, $this->dateTime);
 
         return new WgConfig(
             $profileConfig,
@@ -105,7 +105,7 @@ class Wg
         // time... this may be easy for WG, but difficult for OpenVPN, so we
         // should disconnect the other connection if it is already enabled when
         // connecting new
-        $this->storage->clientDisconnect($profileConfig->profileId(), $publicKey, $ipFour, $ipSix, $this->dateTime, $bytesTransferred);
+        $this->storage->clientDisconnect($userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, $this->dateTime, $bytesTransferred);
     }
 
     /**

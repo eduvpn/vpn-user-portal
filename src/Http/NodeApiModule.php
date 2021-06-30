@@ -96,9 +96,8 @@ class NodeApiModule implements ServiceModuleInterface
         $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
         $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
-
-        $this->verifyConnection($profileId, $commonName);
-        $this->storage->clientConnect($profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
+        $userId = $this->verifyConnection($profileId, $commonName);
+        $this->storage->clientConnect($userId, $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
     }
 
     public function disconnect(Request $request): void
@@ -110,10 +109,15 @@ class NodeApiModule implements ServiceModuleInterface
         $disconnectedAt = InputValidation::disconnectedAt($request->requirePostParameter('disconnected_at'));
         $bytesTransferred = InputValidation::bytesTransferred($request->requirePostParameter('bytes_transferred'));
 
-        $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+        if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
+            // CN does not exist (anymore)
+            // XXX do we need to do something special?
+            return;
+        }
+        $this->storage->clientDisconnect($certInfo['user_id'], $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
     }
 
-    private function verifyConnection(string $profileId, string $commonName): void
+    private function verifyConnection(string $profileId, string $commonName): string
     {
         // verify status of certificate/user
         if (null === $userCertInfo = $this->storage->getUserCertificateInfo($commonName)) {
@@ -127,6 +131,8 @@ class NodeApiModule implements ServiceModuleInterface
         }
 
         $this->verifyAcl($profileId, $userId);
+
+        return $userId;
     }
 
     private function verifyAcl(string $profileId, string $userId): void
