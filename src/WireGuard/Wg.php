@@ -11,8 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
-use fkooman\OAuth\Server\AccessToken;
+use DateTimeImmutable;
 // XXX introduce WgException?
+use fkooman\OAuth\Server\AccessToken;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use RuntimeException;
@@ -24,18 +25,20 @@ class Wg
 {
     private WgDaemon $wgDaemon;
     private Storage $storage;
+    private DateTimeImmutable $dateTime;
 
     public function __construct(WgDaemon $wgDaemon, Storage $storage)
     {
         $this->wgDaemon = $wgDaemon;
         $this->storage = $storage;
+        $this->dateTime = new DateTimeImmutable();
     }
 
     /**
      * XXX want only 1 code path both for portal and for API.
      * XXX why can accesstoken be null? from portal?
      */
-    public function addPeer(ProfileConfig $profileConfig, string $userId, string $displayName, \DateTimeImmutable $expiresAt, ?AccessToken $accessToken, ?string $publicKey): WgConfig
+    public function addPeer(ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, ?AccessToken $accessToken, ?string $publicKey): WgConfig
     {
         $privateKey = null;
         if (null === $publicKey) {
@@ -50,14 +53,19 @@ class Wg
         [$ipFour, $ipSix] = $ipInfo;
 
         // store peer in the DB
-        // XXX needs expiresat!
-        // XXX  should we do this (db) outside the Wg class?
+        // XXX we should override this public key if it already exists here
         $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $accessToken);
 
         // add peer to WG
+        // XXX make sure the public key config is overriden if the public key already exists
         $this->wgDaemon->addPeer('http://'.$profileConfig->nodeIp().':8080', $publicKey, $ipFour, $ipSix);
 
+        // XXX we do not need to get the public key from the daemon!
         $wgInfo = $this->wgDaemon->getInfo('http://'.$profileConfig->nodeIp().':8080');
+
+        // add connection log entry
+        // XXX if we have an "open" log for this publicKey, close it first, i guess that is what "clientLost" indicator is for?
+        $this->storage->clientConnect($profileConfig->profileId(), $publicKey, $ipFour, $ipSix, $this->dateTime);
 
         return new WgConfig(
             $profileConfig,
@@ -73,8 +81,31 @@ class Wg
     {
         $this->storage->wgRemovePeer($userId, $publicKey);
         // XXX we have to make sure the user owns the public key, otherwise it can be used to disconnect other users!
-        // XXX what if multiple users use the same wireguard public key?
-        $this->wgDaemon->removePeer('http://'.$profileConfig->nodeIp().':8080', $publicKey);
+        // XXX what if multiple users use the same wireguard public key? that won't work and that is good!
+        $peerInfo = $this->wgDaemon->removePeer('http://'.$profileConfig->nodeIp().':8080', $publicKey);
+
+        $bytesTransferred = 0;
+        if (\array_key_exists('BytesTransferred', $peerInfo) && \is_int($peerInfo['BytesTransferred'])) {
+            $bytesTransferred = $peerInfo['BytesTransferred'];
+        }
+
+        $ipFour = '0.0.0.0/32';
+        $ipSix = '::/32';
+        foreach ($peerInfo['AllowedIPs'] as $ip) {
+            if (false !== strpos($ip, ':')) {
+                [$ipSix, ] = explode('/', $ip);
+                continue;
+            }
+            [$ipFour, ] = explode('/', $ip);
+        }
+
+        // close connection log
+        // XXX we should simplify connection log in that closing it does not
+        // require ip4/ip6 and just make sure one CN/public key can only be used one at a
+        // time... this may be easy for WG, but difficult for OpenVPN, so we
+        // should disconnect the other connection if it is already enabled when
+        // connecting new
+        $this->storage->clientDisconnect($profileConfig->profileId(), $publicKey, $ipFour, $ipSix, $this->dateTime, $bytesTransferred);
     }
 
     /**

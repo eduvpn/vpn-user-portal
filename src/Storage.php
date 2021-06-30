@@ -624,7 +624,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function clientDisconnect(string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt, DateTimeImmutable $disconnectedAt, int $bytesTransferred): void
+    public function clientDisconnect(string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $disconnectedAt, int $bytesTransferred): void
     {
         $stmt = $this->db->prepare(
 <<< 'SQL'
@@ -642,7 +642,9 @@ class Storage
         AND
             ip_six = :ip_six
         AND
-            connected_at = :connected_at
+            disconnected_at IS NULL
+        AND
+            bytes_transferred IS NULL
     SQL
         );
 
@@ -650,7 +652,6 @@ class Storage
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
-        $stmt->bindValue(':connected_at', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':disconnected_at', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':bytes_transferred', $bytesTransferred, PDO::PARAM_INT);
         $stmt->execute();

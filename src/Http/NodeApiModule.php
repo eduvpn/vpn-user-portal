@@ -107,12 +107,10 @@ class NodeApiModule implements ServiceModuleInterface
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
         $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
         $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
-
-        $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
         $disconnectedAt = InputValidation::disconnectedAt($request->requirePostParameter('disconnected_at'));
         $bytesTransferred = InputValidation::bytesTransferred($request->requirePostParameter('bytes_transferred'));
 
-        $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)), Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+        $this->storage->clientDisconnect($profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
     }
 
     private function verifyConnection(string $profileId, string $commonName): void

@@ -53,7 +53,7 @@ class WgDaemon
         );
     }
 
-    public function removePeer(string $wgDaemonEndpoint, string $publicKey): void
+    public function removePeer(string $wgDaemonEndpoint, string $publicKey): array
     {
         $rawPostData = implode('&', ['PublicKey='.urlencode($publicKey)]);
 
@@ -63,6 +63,8 @@ class WgDaemon
             [],
             $rawPostData
         );
+
+        return Json::decode($httpResponse->getBody());
     }
 
     /**
