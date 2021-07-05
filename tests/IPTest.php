@@ -24,6 +24,19 @@ class IPTest extends TestCase
         $this->assertSame('192.168.1.0/24', (string) $splitRange[0]);
     }
 
+    public function testNetmask(): void
+    {
+        $ip = new IP('192.168.1.0/24');
+        $this->assertSame('255.255.255.0', $ip->getNetmask());
+        $ip = new IP('10.0.0.0/8');
+        $this->assertSame('255.0.0.0', $ip->getNetmask());
+        $ip = new IP('10.0.0.128/25');
+        $this->assertSame('255.255.255.128', $ip->getNetmask());
+        // it makes no sense for IPv6, but still fun :-P
+        $ip = new IP('fd00::/64');
+        $this->assertSame('ffff:ffff:ffff:ffff::', $ip->getNetmask());
+    }
+
     public function testIPv4Two(): void
     {
         $ip = new IP('192.168.1.0/24');
@@ -31,6 +44,12 @@ class IPTest extends TestCase
         $this->assertSame(2, \count($splitRange));
         $this->assertSame('192.168.1.0/25', (string) $splitRange[0]);
         $this->assertSame('192.168.1.128/25', (string) $splitRange[1]);
+
+        $ip = new IP('0.0.0.0/0');
+        $splitRange = $ip->split(2);
+        $this->assertSame(2, \count($splitRange));
+        $this->assertSame('0.0.0.0/1', (string) $splitRange[0]);
+        $this->assertSame('128.0.0.0/1', (string) $splitRange[1]);
     }
 
     public function testIPv4Four(): void
@@ -164,13 +183,16 @@ class IPTest extends TestCase
         $splitRange = $ip->split(4);
         $this->assertSame(4, \count($splitRange));
         $this->assertSame('192.168.1.0/26', (string) $splitRange[0]);
-        $this->assertSame('192.168.1.1', $splitRange[0]->getFirstHost());
+        $this->assertSame('192.168.1.1', $splitRange[0]->getFirstHost()->getAddress());
         $this->assertSame('192.168.1.64/26', (string) $splitRange[1]);
-        $this->assertSame('192.168.1.65', $splitRange[1]->getFirstHost());
+        $this->assertSame('192.168.1.65', $splitRange[1]->getFirstHost()->getAddress());
         $this->assertSame('192.168.1.128/26', (string) $splitRange[2]);
-        $this->assertSame('192.168.1.129', $splitRange[2]->getFirstHost());
+        $this->assertSame('192.168.1.129', $splitRange[2]->getFirstHost()->getAddress());
         $this->assertSame('192.168.1.192/26', (string) $splitRange[3]);
-        $this->assertSame('192.168.1.193', $splitRange[3]->getFirstHost());
+        $this->assertSame('192.168.1.193', $splitRange[3]->getFirstHost()->getAddress());
+
+        $ip = new IP('192.168.1.5/24');
+        $this->assertSame('192.168.1.1', $ip->getFirstHost()->getAddress());
     }
 
     public function testGetFirstHost6(): void
@@ -179,13 +201,16 @@ class IPTest extends TestCase
         $splitRange = $ip->split(4);
         $this->assertSame(4, \count($splitRange));
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
-        $this->assertSame('1111:2222:3333:4444::1', $splitRange[0]->getFirstHost());
+        $this->assertSame('1111:2222:3333:4444::1', $splitRange[0]->getFirstHost()->getAddress());
         $this->assertSame('1111:2222:3333:4444::1:0/112', (string) $splitRange[1]);
-        $this->assertSame('1111:2222:3333:4444::1:1', $splitRange[1]->getFirstHost());
+        $this->assertSame('1111:2222:3333:4444::1:1', $splitRange[1]->getFirstHost()->getAddress());
         $this->assertSame('1111:2222:3333:4444::2:0/112', (string) $splitRange[2]);
-        $this->assertSame('1111:2222:3333:4444::2:1', $splitRange[2]->getFirstHost());
+        $this->assertSame('1111:2222:3333:4444::2:1', $splitRange[2]->getFirstHost()->getAddress());
         $this->assertSame('1111:2222:3333:4444::3:0/112', (string) $splitRange[3]);
-        $this->assertSame('1111:2222:3333:4444::3:1', $splitRange[3]->getFirstHost());
+        $this->assertSame('1111:2222:3333:4444::3:1', $splitRange[3]->getFirstHost()->getAddress());
+
+        $ip = new IP('1111:2222:3333:4444::5/64');
+        $this->assertSame('1111:2222:3333:4444::1', $ip->getFirstHost()->getAddress());
     }
 
     public function testIPv4NonFirstTwo(): void
