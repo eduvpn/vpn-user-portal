@@ -34,6 +34,7 @@
         "ext-curl": "*",
         "ext-date": "*",
         "ext-hash": "*",
+        "ext-gmp": "*",
         "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
