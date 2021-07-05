@@ -19,7 +19,7 @@
             </tr>
         <?php endif; ?>
 
-        <?php if (0 !== count($userInfo->permissionList())): ?>
+        <?php if ($showPermissions && 0 !== count($userInfo->permissionList())): ?>
         <tr>
             <th><?=$this->t('Permission(s)'); ?></th>
             <td>
@@ -31,6 +31,17 @@
             </td>
         </tr>
         <?php endif; ?>
+
+        <tr>
+            <th><?=$this->t('Profile(s)'); ?></th>
+            <td>
+                <ul>
+                    <?php foreach ($profileConfigList as $profileConfig): ?>
+                        <li><?=$this->e($profileConfig->displayName()); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </td>
+        </tr>
     </table>
 
     <h2><?=$this->t('Authorized Applications'); ?></h2>

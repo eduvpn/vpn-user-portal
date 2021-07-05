@@ -76,6 +76,11 @@ class Config
         return $this->optionalString('styleName');
     }
 
+    public function showPermissions(): bool
+    {
+        return $this->requireBool('showPermissions', false);
+    }
+
     public function profileConfig(string $profileId): ProfileConfig
     {
         return new ProfileConfig(

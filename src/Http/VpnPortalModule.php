@@ -186,10 +186,15 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/account',
             function (UserInfo $userInfo, Request $request): Response {
+                $profileConfigList = $this->config->profileConfigList();
+                $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalAccount',
                         [
+                            'profileConfigList' => $visibleProfileList,
+                            'showPermissions' => $this->config->showPermissions(),
                             'userInfo' => $userInfo,
                             'authorizationList' => $this->oauthStorage->getAuthorizations($userInfo->userId()),
                             'userMessages' => $this->storage->getUserLog($userInfo->userId()),

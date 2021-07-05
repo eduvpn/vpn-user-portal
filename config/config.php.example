@@ -169,6 +169,11 @@ return [
     // DEFAULT: 'en-US'
     //'defaultLanguage' => 'en-US',
 
+    // Hide the user's permissions obtained through the authentication backend
+    // on the "Account" page
+    // DEFAULT: false
+    //'showPermissions' => false,
+    
     // the supported UI languages
     // DEFAULT: ['en-US']
     //'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'ro-RO', 'uk-UA'],
