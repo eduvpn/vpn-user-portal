@@ -24,6 +24,16 @@
                 </ul>
             </td>
         </tr>
+        <tr>
+            <th><?=$this->t('Profiles'); ?></th>
+            <td>
+                <ul>
+                    <?php foreach ($visibleProfileList as $profileId => $profileInfo): ?>
+                        <li><?=$this->e($profileInfo['displayName']); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </td>
+        </tr>
         <?php endif; ?>
     </table>
 

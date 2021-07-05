@@ -224,6 +224,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 // get the fancy profile name
                 $profileList = $this->serverClient->getRequireArray('profile_list');
+                $visibleProfileList = self::getProfileList($profileList, $userPermissions);
 
                 $idNameMapping = [];
                 foreach ($profileList as $profileId => $profileData) {
@@ -242,6 +243,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'userMessages' => $userMessages,
                             'userConnectionLogEntries' => $userConnectionLogEntries,
                             'idNameMapping' => $idNameMapping,
+                            'visibleProfileList' => $visibleProfileList,
                         ]
                     )
                 );
