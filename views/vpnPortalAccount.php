@@ -1,5 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var bool $showPermissions */?>
+<?php /** @var array<\LC\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var \LC\Portal\Http\UserInfo $userInfo */?>
 <?php /** @var array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}> $userMessages */?>
 <?php /** @var array<\fkooman\OAuth\Server\Authorization> $authorizationList */?>

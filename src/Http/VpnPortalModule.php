@@ -359,7 +359,7 @@ class VpnPortalModule implements ServiceModuleInterface
      *
      * @param array<\LC\Portal\ProfileConfig> $profileConfigList
      *
-     * @return array<string,\LC\Portal\ProfileConfig>
+     * @return array<\LC\Portal\ProfileConfig>
      */
     private static function filterProfileList(array $profileConfigList, array $userPermissions): array
     {
@@ -375,7 +375,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
             }
 
-            $filteredProfileConfigList[$profileConfig->profileId()] = $profileConfig;
+            $filteredProfileConfigList[] = $profileConfig;
         }
 
         return $filteredProfileConfigList;

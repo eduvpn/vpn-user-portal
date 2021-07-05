@@ -245,7 +245,7 @@ class OpenVpnServerConfig
             $routeIp = new IP($route);
             if (6 === $routeIp->getFamily()) {
                 // IPv6
-                $routeConfig[] = sprintf('push "route-ipv6 %s"', $routeIp->getAddressPrefix());
+                $routeConfig[] = sprintf('push "route-ipv6 %s"', (string) $routeIp);
             } else {
                 // IPv4
                 $routeConfig[] = sprintf('push "route %s %s"', $routeIp->getAddress(), $routeIp->getNetmask());
@@ -269,10 +269,10 @@ class OpenVpnServerConfig
         foreach ($dnsList as $dnsAddress) {
             // replace the macros by IP addresses (LOCAL_DNS)
             if ('@GW4@' === $dnsAddress) {
-                $dnsAddress = $rangeIp->getFirstHost();
+                $dnsAddress = $rangeIp->getFirstHost()->getAddress();
             }
             if ('@GW6@' === $dnsAddress) {
-                $dnsAddress = $range6Ip->getFirstHost();
+                $dnsAddress = $range6Ip->getFirstHost()->getAddress();
             }
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
@@ -305,7 +305,7 @@ class OpenVpnServerConfig
         return [
             'client-to-client',
             sprintf('push "route %s %s"', $rangeIp->getAddress(), $rangeIp->getNetmask()),
-            sprintf('push "route-ipv6 %s"', $range6Ip->getAddressPrefix()),
+            sprintf('push "route-ipv6 %s"', (string) $range6Ip),
         ];
     }
 

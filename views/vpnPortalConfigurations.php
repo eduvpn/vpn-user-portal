@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
 <?php /** @var \DateTimeImmutable $expiryDate */?>
-<?php /** @var array<string,\LC\Portal\ProfileConfig> $profileConfigList */?>
+<?php /** @var array<\LC\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<array{profile_id:string,display_name:string,profile_display_name:string,expires_at:\DateTimeImmutable,public_key:?string,common_name:?string}> $configList */?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
