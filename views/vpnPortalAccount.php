@@ -13,7 +13,7 @@
             </tr>
         <?php endif; ?>
 
-        <?php if (0 !== count($userPermissions)): ?>
+        <?php if ($showPermissions && 0 !== count($userPermissions)): ?>
         <tr>
             <th><?=$this->t('Permission(s)'); ?></th>
             <td>
@@ -24,17 +24,23 @@
                 </ul>
             </td>
         </tr>
+        <?php endif; ?>
         <tr>
             <th><?=$this->t('Profiles'); ?></th>
             <td>
+<?php if (0 === count($visibleProfileList)): ?>
+                <em>
+                    <?=$this->t('No VPN profiles are available for your account.'); ?>
+                </em>
+<?php else: ?>
                 <ul>
                     <?php foreach ($visibleProfileList as $profileId => $profileInfo): ?>
                         <li><?=$this->e($profileInfo['displayName']); ?></li>
                     <?php endforeach; ?>
                 </ul>
+<?php endif; ?>
             </td>
         </tr>
-        <?php endif; ?>
     </table>
 
     <details>

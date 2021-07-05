@@ -237,7 +237,8 @@ class VpnPortalModule implements ServiceModuleInterface
                         [
                             'hasTotpSecret' => $hasTotpSecret,
                             'userInfo' => $userInfo,
-                            'userPermissions' => $this->config->requireBool('showPermissions', true) ? $userPermissions : [],
+                            'showPermissions' => $this->config->requireBool('showPermissions', true),
+                            'userPermissions' => $userPermissions,
                             'authorizedClients' => $authorizedClients,
                             'twoFactorMethods' => $this->config->requireArray('twoFactorMethods', ['totp']),
                             'userMessages' => $userMessages,
