@@ -98,6 +98,7 @@ class VpnPortalModuleTest extends TestCase
                 'vpnPortalAccount' => [
                     'hasTotpSecret' => false,
                     'userInfo' => [],
+                    'showPermissions' => true,
                     'userPermissions' => [],
                     'authorizedClients' => [],
                     'twoFactorMethods' => [
@@ -107,6 +108,11 @@ class VpnPortalModuleTest extends TestCase
                     'userConnectionLogEntries' => [],
                     'idNameMapping' => [
                         'internet' => 'Internet Access',
+                    ],
+                    'visibleProfileList' => [
+                        'internet' => [
+                            'displayName' => 'Internet Access',
+                        ],
                     ],
                 ],
             ],
