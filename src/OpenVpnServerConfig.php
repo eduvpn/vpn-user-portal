@@ -93,7 +93,9 @@ class OpenVpnServerConfig
 
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo): string
     {
+        /** @var \LC\Portal\IP $rangeIp */
         $rangeIp = $processConfig['range'];
+        /** @var \LC\Portal\IP $range6Ip */
         $range6Ip = $processConfig['range6'];
 
         // static options
@@ -120,8 +122,8 @@ class OpenVpnServerConfig
             sprintf('reneg-sec %d', 10 * 60 * 60),
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
-            sprintf('server %s %s', $rangeIp->getNetwork(), $rangeIp->getNetmask()),
-            sprintf('server-ipv6 %s', $range6Ip->getAddressPrefix()),
+            sprintf('server %s %s', (string) $rangeIp->getNetwork(), $rangeIp->getNetmask()),
+            sprintf('server-ipv6 %s', (string) $range6Ip),
             // OpenVPN's pool management does NOT include the last usable IP in
             // the range in the pool, and obviously not the first one as that
             // will be used by OpenVPN itself. So, if you have the range
