@@ -8,11 +8,13 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
-
 ## 2.3.12
 
 remove `sessionExpireAtNight` as it is too complicated to implement correctly 
 in eduVPN/Let's Connect! 2.x.
+
+We have now the `showPermissions` option that takes a `bool` to show/hide the
+"Permission(s)" on the user's "Account" page. The default is `true`.
 
 ## 2.3.11
 
