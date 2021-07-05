@@ -127,7 +127,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 // make sure the profileId is in the list of allowed profiles for this
                 // user, it would not result in the ability to use the VPN, but
                 // better prevent it early
-                if (!\array_key_exists($profileId, $visibleProfileList)) {
+                if (!$this->isAllowedProfile($visibleProfileList, $profileId)) {
                     throw new HttpException('no permission to download a configuration for this profile', 403);
                 }
 
@@ -379,6 +379,20 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return $filteredProfileConfigList;
+    }
+
+    /**
+     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
+     */
+    private static function isAllowedProfile(array $profileConfigList, string $profileId): bool
+    {
+        foreach ($profileConfigList as $profileConfig) {
+            if ($profileId === $profileConfig->profileId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
