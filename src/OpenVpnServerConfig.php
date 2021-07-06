@@ -85,7 +85,6 @@ class OpenVpnServerConfig
     private static function getProtoPort(array $vpnProcesses, string $listenAddress): array
     {
         $convertedPortProto = [];
-
         foreach ($vpnProcesses as $vpnProcess) {
             [$proto, $port] = explode('/', $vpnProcess);
             $convertedPortProto[] = [self::getFamilyProto($listenAddress, $proto), (int) $port];
@@ -99,13 +98,12 @@ class OpenVpnServerConfig
      */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo): string
     {
-        /** @var \LC\Portal\IP $rangeIp */
         $rangeIp = $processConfig['range'];
-        /** @var \LC\Portal\IP $range6Ip */
         $range6Ip = $processConfig['range6'];
 
         // static options
         $serverConfig = [
+            '# OpenVPN Server Config | Automatically Generated | Do NOT modify!',
             'verb 3',
             'dev-type tun',
             sprintf('user %s', self::VPN_USER),
@@ -210,8 +208,6 @@ class OpenVpnServerConfig
 
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
-
-        array_unshift($serverConfig, '# OpenVPN Server Config | Automatically Generated | Do NOT modify!');
 
         return implode(\PHP_EOL, $serverConfig);
     }
