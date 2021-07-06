@@ -79,18 +79,24 @@ class OpenVpnServerConfig
         throw new RuntimeException('only "tcp" and "udp" are supported as protocols');
     }
 
+    /**
+     * @return array<array{0:string,1:int}>
+     */
     private static function getProtoPort(array $vpnProcesses, string $listenAddress): array
     {
         $convertedPortProto = [];
 
         foreach ($vpnProcesses as $vpnProcess) {
             [$proto, $port] = explode('/', $vpnProcess);
-            $convertedPortProto[] = [self::getFamilyProto($listenAddress, $proto), $port];
+            $convertedPortProto[] = [self::getFamilyProto($listenAddress, $proto), (int) $port];
         }
 
         return $convertedPortProto;
     }
 
+    /**
+     * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,local:string,managementPort:int} $processConfig
+     */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo): string
     {
         /** @var \LC\Portal\IP $rangeIp */
