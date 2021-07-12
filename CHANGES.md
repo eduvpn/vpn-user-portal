@@ -7,6 +7,7 @@
 - no longer show "Danger Zone" when managing your own account
 - allow hiding the "Permission(s)" on the user's "Account" page
 - show profiles available to the user on the "Account" page
+- fix margin for lists in tables
 
 ## 2.3.11 (2021-06-08)
 - support expiring VPN session at night now for all scenarios where 
