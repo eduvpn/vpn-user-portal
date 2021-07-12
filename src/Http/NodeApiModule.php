@@ -16,6 +16,7 @@ use LC\Portal\Config;
 use LC\Portal\Dt;
 use LC\Portal\Exception\NodeApiException;
 use LC\Portal\LoggerInterface;
+use LC\Portal\LoggerInterface;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 
@@ -27,13 +28,16 @@ class NodeApiModule implements ServiceModuleInterface
 
     private ServerConfig $serverConfig;
 
+    private LoggerInterface $logger;
+
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, Storage $storage, ServerConfig $serverConfig)
+    public function __construct(Config $config, Storage $storage, ServerConfig $serverConfig, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->storage = $storage;
         $this->serverConfig = $serverConfig;
+        $this->logger = $logger;
         $this->dateTime = Dt::get();
     }
 
@@ -98,6 +102,7 @@ class NodeApiModule implements ServiceModuleInterface
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
         $userId = $this->verifyConnection($profileId, $commonName);
         $this->storage->clientConnect($userId, $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
+        $this->logger->info('[CONNECT] USER_ID: '.$userId.' IP_4: '.$ipFour.' IP_6: '.$ipSix);
     }
 
     public function disconnect(Request $request): void
@@ -114,7 +119,10 @@ class NodeApiModule implements ServiceModuleInterface
             // XXX do we need to do something special?
             return;
         }
-        $this->storage->clientDisconnect($certInfo['user_id'], $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+        $userId = $certInfo['user_id'];
+
+        $this->storage->clientDisconnect($userId, $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+        $this->logger->info('[DISCONNECT] USER_ID: '.$userId.' IP_4: '.$ipFour.' IP_6: '.$ipSix);
     }
 
     private function verifyConnection(string $profileId, string $commonName): string

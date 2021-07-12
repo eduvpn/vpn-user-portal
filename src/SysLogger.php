@@ -41,4 +41,9 @@ class SysLogger implements LoggerInterface
     {
         syslog(\LOG_NOTICE, $logMessage);
     }
+
+    public function info(string $logMessage): void
+    {
+        syslog(\LOG_INFO, $logMessage);
+    }
 }

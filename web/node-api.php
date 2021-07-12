@@ -55,7 +55,8 @@ try {
             new ServerConfig(
                 new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data')),
                 new WgServerConfig($baseDir.'/data')
-            )
+            ),
+            new SysLogger('vpn-user-portal-node-api')
         )
     );
     $request = Request::createFromGlobals();
