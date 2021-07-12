@@ -16,7 +16,6 @@ use LC\Portal\Config;
 use LC\Portal\Dt;
 use LC\Portal\Exception\NodeApiException;
 use LC\Portal\LoggerInterface;
-use LC\Portal\LoggerInterface;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 
@@ -102,7 +101,9 @@ class NodeApiModule implements ServiceModuleInterface
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
         $userId = $this->verifyConnection($profileId, $commonName);
         $this->storage->clientConnect($userId, $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
-        $this->logger->info('[CONNECT] USER_ID: '.$userId.' IP_4: '.$ipFour.' IP_6: '.$ipSix);
+        $this->logger->info(
+            sprintf('CONNECT %s (%s) [%s,%s]', $userId, $profileId, $ipFour, $ipSix)
+        );
     }
 
     public function disconnect(Request $request): void
@@ -120,9 +121,10 @@ class NodeApiModule implements ServiceModuleInterface
             return;
         }
         $userId = $certInfo['user_id'];
-
         $this->storage->clientDisconnect($userId, $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
-        $this->logger->info('[DISCONNECT] USER_ID: '.$userId.' IP_4: '.$ipFour.' IP_6: '.$ipSix);
+        $this->logger->info(
+            sprintf('DISCONNECT %s (%s) [%s,%s]', $userId, $profileId, $ipFour, $ipSix)
+        );
     }
 
     private function verifyConnection(string $profileId, string $commonName): string
