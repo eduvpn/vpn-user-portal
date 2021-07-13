@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS connection_log(
     ip_four VARCHAR(255) NOT NULL,
     ip_six VARCHAR(255) NOT NULL,
     date_time VARCHAR(255) NOT NULL,
-    event_type VARCHAR(1) NOT NULL,
+    event_type VARCHAR(1) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS user_log(
     date_time VARCHAR(255) NOT NULL,
