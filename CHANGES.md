@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.12 (...)
+## 2.3.12 (2021-07-13)
 - remove 
   [nightly session expiry](https://github.com/eduvpn/documentation/blob/v2/EXPIRE_AT_NIGHT.md)
   again as it was very broken
