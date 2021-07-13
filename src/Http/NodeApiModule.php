@@ -100,7 +100,7 @@ class NodeApiModule implements ServiceModuleInterface
         $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
         $userId = $this->verifyConnection($profileId, $commonName);
-        $this->storage->clientConnect($userId, $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
+        $this->storage->clientConnect($userId, $profileId, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
         $this->logger->info(
             sprintf('CONNECT %s (%s) [%s,%s]', $userId, $profileId, $ipFour, $ipSix)
         );
@@ -113,7 +113,8 @@ class NodeApiModule implements ServiceModuleInterface
         $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
         $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
         $disconnectedAt = InputValidation::disconnectedAt($request->requirePostParameter('disconnected_at'));
-        $bytesTransferred = InputValidation::bytesTransferred($request->requirePostParameter('bytes_transferred'));
+//        $bytesTransferred = InputValidation::bytesTransferred($request->requirePostParameter('bytes_transferred'));
+        // XXX add bytesTransferred to some global table
 
         if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
             // CN does not exist (anymore)
@@ -121,7 +122,7 @@ class NodeApiModule implements ServiceModuleInterface
             return;
         }
         $userId = $certInfo['user_id'];
-        $this->storage->clientDisconnect($userId, $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)), $bytesTransferred);
+        $this->storage->clientDisconnect($userId, $profileId, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)));
         $this->logger->info(
             sprintf('DISCONNECT %s (%s) [%s,%s]', $userId, $profileId, $ipFour, $ipSix)
         );

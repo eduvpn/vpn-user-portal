@@ -65,7 +65,7 @@ class Wg
 
         // add connection log entry
         // XXX if we have an "open" log for this publicKey, close it first, i guess that is what "clientLost" indicator is for?
-        $this->storage->clientConnect($userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, $this->dateTime);
+        $this->storage->clientConnect($userId, $profileConfig->profileId(), $ipFour, $ipSix, $this->dateTime);
 
         return new WgConfig(
             $profileConfig,
@@ -84,10 +84,11 @@ class Wg
         // XXX what if multiple users use the same wireguard public key? that won't work and that is good!
         $peerInfo = $this->wgDaemon->removePeer('http://'.$profileConfig->nodeIp().':8080', $publicKey);
 
-        $bytesTransferred = 0;
-        if (\array_key_exists('BytesTransferred', $peerInfo) && \is_int($peerInfo['BytesTransferred'])) {
-            $bytesTransferred = $peerInfo['BytesTransferred'];
-        }
+//        $bytesTransferred = 0;
+//        if (\array_key_exists('BytesTransferred', $peerInfo) && \is_int($peerInfo['BytesTransferred'])) {
+//            $bytesTransferred = $peerInfo['BytesTransferred'];
+//        }
+        // XXX add bytesTransferred to some global table
 
         $ipFour = '0.0.0.0/32';
         $ipSix = '::/32';
@@ -99,13 +100,15 @@ class Wg
             [$ipFour, ] = explode('/', $ip);
         }
 
+        // XXX
+
         // close connection log
         // XXX we should simplify connection log in that closing it does not
         // require ip4/ip6 and just make sure one CN/public key can only be used one at a
         // time... this may be easy for WG, but difficult for OpenVPN, so we
         // should disconnect the other connection if it is already enabled when
         // connecting new
-        $this->storage->clientDisconnect($userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, $this->dateTime, $bytesTransferred);
+        $this->storage->clientDisconnect($userId, $profileConfig->profileId(), $ipFour, $ipSix, $this->dateTime);
     }
 
     /**

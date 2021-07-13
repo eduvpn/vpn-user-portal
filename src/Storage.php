@@ -17,7 +17,7 @@ use PDO;
 
 class Storage
 {
-    const CURRENT_SCHEMA_VERSION = '2021062801';
+    const CURRENT_SCHEMA_VERSION = '2021071301';
 
     private PDO $db;
 
@@ -550,105 +550,75 @@ class Storage
         return (bool) $stmt->fetchColumn(0);
     }
 
-    public function clientConnect(string $userId, string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
+    public function clientConnect(string $userId, string $profileId, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
     {
-        // update "lost" client entries when a new client connects that gets
-        // the IP address of an existing entry that was not "closed" yet. This
-        // may occur when the OpenVPN process dies without writing the
-        // disconnect event to the log. We fix this when a new client
-        // wants to connect and gets this exact same IP address...
-        $stmt = $this->db->prepare(
-<<< 'SQL'
-            UPDATE
-                connection_log
-            SET
-                disconnected_at = :date_time,
-                client_lost = 1
-            WHERE
-                user_id = :user_id
-            AND
-                profile_id = :profile_id
-            AND
-                ip_four = :ip_four
-            AND
-                ip_six = :ip_six
-            AND
-                disconnected_at IS NULL
-    SQL
-        );
-
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':date_time', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
-        $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
-        $stmt->execute();
-
         $stmt = $this->db->prepare(
 <<< 'SQL'
         INSERT INTO connection_log
             (
                 user_id,
                 profile_id,
-                common_name,
                 ip_four,
                 ip_six,
-                connected_at
+                date_time,
+                event_type
             )
         VALUES
             (
                 :user_id,
                 :profile_id,
-                :common_name,
                 :ip_four,
                 :ip_six,
-                :connected_at
+                :date_time,
+                :event_type
             )
     SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
-        $stmt->bindValue(':connected_at', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':event_type', 'C', PDO::PARAM_STR);
+
         $stmt->execute();
     }
 
-    public function clientDisconnect(string $userId, string $profileId, string $commonName, string $ipFour, string $ipSix, DateTimeImmutable $disconnectedAt, int $bytesTransferred): void
+    public function clientDisconnect(string $userId, string $profileId, string $ipFour, string $ipSix, DateTimeImmutable $disconnectedAt): void
     {
+        // XXX do we have to make sure a "C" event_type exists for this entry
+        // or do we worry about that later?!
         $stmt = $this->db->prepare(
 <<< 'SQL'
-        UPDATE
-            connection_log
-        SET
-            disconnected_at = :disconnected_at,
-            bytes_transferred = :bytes_transferred
-        WHERE
-            user_id = :user_id
-        AND
-            profile_id = :profile_id
-        AND
-            common_name = :common_name
-        AND
-            ip_four = :ip_four
-        AND
-            ip_six = :ip_six
-        AND
-            disconnected_at IS NULL
-        AND
-            bytes_transferred IS NULL
+        INSERT INTO connection_log
+            (
+                user_id,
+                profile_id,
+                ip_four,
+                ip_six,
+                date_time,
+                event_type
+            )
+        VALUES
+            (
+                :user_id,
+                :profile_id,
+                :ip_four,
+                :ip_six,
+                :date_time,
+                :event_type
+            )
     SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
-        $stmt->bindValue(':disconnected_at', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':bytes_transferred', $bytesTransferred, PDO::PARAM_INT);
+        $stmt->bindValue(':date_time', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':event_type', 'D', PDO::PARAM_STR);
+
         $stmt->execute();
     }
 
@@ -657,11 +627,11 @@ class Storage
      */
     public function getConnectionLogForUser(string $userId): array
     {
+        // XXX this is currently broken!
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
             l.user_id,
-            l.common_name,
             l.profile_id,
             l.ip_four,
             l.ip_six,
@@ -748,14 +718,13 @@ class Storage
 
     public function cleanConnectionLog(DateTimeImmutable $dateTime): void
     {
+        // XXX we have to make sure this makes sense
         $stmt = $this->db->prepare(
 <<< 'SQL'
         DELETE FROM
             connection_log
         WHERE
-            connected_at < :date_time
-        AND
-            disconnected_at IS NOT NULL
+            date_time < :date_time
     SQL
         );
 

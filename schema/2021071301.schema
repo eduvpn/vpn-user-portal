@@ -3,6 +3,12 @@ CREATE TABLE IF NOT EXISTS users(
     permission_list TEXT NOT NULL,
     is_disabled BOOLEAN NOT NULL
 );
+CREATE TABLE IF NOT EXISTS local_users (
+    user_id VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at VARCHAR(255) NOT NULL,
+    UNIQUE(user_id)
+);
 CREATE TABLE IF NOT EXISTS oauth_authorizations (
     auth_key VARCHAR(255) NOT NULL,
     client_id VARCHAR(255) NOT NULL,
@@ -15,12 +21,6 @@ CREATE TABLE IF NOT EXISTS oauth_refresh_token_log (
     auth_key VARCHAR(255) NOT NULL REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
     refresh_token_id VARCHAR(255) NOT NULL,
     UNIQUE(auth_key,refresh_token_id)
-);
-CREATE TABLE IF NOT EXISTS local_users (
-    user_id VARCHAR(255) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at VARCHAR(255) NOT NULL,
-    UNIQUE(user_id)
 );
 CREATE TABLE IF NOT EXISTS certificates(
     profile_id VARCHAR(255) NOT NULL,
@@ -42,14 +42,11 @@ CREATE TABLE IF NOT EXISTS wg_peers (
 );
 CREATE TABLE IF NOT EXISTS connection_log(
     user_id VARCHAR(255) NOT NULL,
-    common_name VARCHAR(255) NOT NULL,
     profile_id VARCHAR(255) NOT NULL,
     ip_four VARCHAR(255) NOT NULL,
     ip_six VARCHAR(255) NOT NULL,
-    connected_at VARCHAR(255) NOT NULL,
-    disconnected_at VARCHAR(255),
-    bytes_transferred INTEGER,
-    client_lost BOOLEAN DEFAULT 0
+    date_time VARCHAR(255) NOT NULL,
+    event_type VARCHAR(1) NOT NULL,
 );
 CREATE TABLE IF NOT EXISTS user_log(
     date_time VARCHAR(255) NOT NULL,
