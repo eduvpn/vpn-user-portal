@@ -17,7 +17,7 @@ use PDO;
 
 class Storage
 {
-    const CURRENT_SCHEMA_VERSION = '2021071301';
+    const CURRENT_SCHEMA_VERSION = '2021071302';
 
     private PDO $db;
 
@@ -587,6 +587,8 @@ class Storage
 
     public function clientDisconnect(string $userId, string $profileId, string $ipFour, string $ipSix, DateTimeImmutable $disconnectedAt): void
     {
+        // XXX how to link disconnect and connect together? with OpenVPN we
+        // can use connected_at, but with WireGuard?
         // XXX do we have to make sure a "C" event_type exists for this entry
         // or do we worry about that later?!
         $stmt = $this->db->prepare(
@@ -623,35 +625,38 @@ class Storage
     }
 
     /**
-     * @return array<array{profile_id:string,ip_four:string,ip_six:string,disconnected_at:?\DateTimeImmutable,connected_at:\DateTimeImmutable,bytes_transferred:int}>
+     * @return array<array{profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable}>
      */
     public function getConnectionLogForUser(string $userId): array
     {
-        // XXX this is currently broken!
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
-            l.user_id,
-            l.profile_id,
-            l.ip_four,
-            l.ip_six,
-            l.connected_at,
-            l.disconnected_at,
-            l.bytes_transferred,
-            l.client_lost,
-            c.auth_key AS auth_key
-        FROM
-            connection_log l,
-            certificates c
-        WHERE
-            l.user_id = :user_id
-        AND
-            l.common_name = c.common_name
-        ORDER BY
-            l.connected_at
-        DESC
+            profile_id,
+            ip_four,
+            ip_six,
+            date_time AS connected_at,
+            (
+                SELECT
+                    date_time
+                FROM
+                    connection_log
+                WHERE
+                    event_type = 'D'
+                AND user_id = c.user_id
+                AND profile_id = c.profile_id
+                AND ip_four = c.ip_four
+                AND ip_six = c.ip_six
+            ) AS disconnected_at
+            FROM
+                connection_log c
+            WHERE
+                event_type = 'C'
+            AND
+                user_id= :user_id
     SQL
         );
+
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -661,9 +666,8 @@ class Storage
                 'profile_id' => (string) $resultRow['profile_id'],
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
-                'disconnected_at' => null === $resultRow['disconnected_at'] ? null : Dt::get((string) $resultRow['disconnected_at']),
                 'connected_at' => Dt::get((string) $resultRow['connected_at']),
-                'bytes_transferred' => (int) $resultRow['disconnected_at'],
+                'disconnected_at' => null === $resultRow['disconnected_at'] ? null : Dt::get((string) $resultRow['disconnected_at']),
             ];
         }
 
@@ -671,31 +675,39 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,profile_id:string,common_name:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable,client_lost:bool}>
+     * @return array<array{user_id:string,profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:\DateTimeImmutable}>
      */
     public function getLogEntries(DateTimeImmutable $dateTime, string $ipAddress)
     {
+        // XXX what if user is not disconnected yet?
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
-            user_id,
-            profile_id,
-            common_name,
-            ip_four,
-            ip_six,
-            connected_at,
-            disconnected_at,
-            client_lost
+            c.user_id AS user_id,
+            c.profile_id AS profile_id,
+            c.ip_four AS ip_four,
+            c.ip_six AS ip_six,
+            c.date_time AS connected_at,
+            d.date_time AS disconnected_at
         FROM
-            connection_log
+            connection_log c, connection_log d
         WHERE
-            (ip_four = :ip_address OR ip_six = :ip_address)
+            (c.ip_four = :ip_address OR c.ip_six = :ip_address)
         AND
-            connected_at < :date_time
+            (d.ip_four = :ip_address OR d.ip_six = :ip_address)
         AND
-            (disconnected_at > :date_time OR disconnected_at IS NULL)
+            c.event_type = 'C'
+        AND
+            c.date_time <= :date_time
+        AND
+            d.event_type = 'D'
+        AND
+            d.date_time >= :date_time
+        GROUP BY
+            c.user_id
     SQL
         );
+
         $stmt->bindValue(':ip_address', $ipAddress, PDO::PARAM_STR);
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
@@ -704,12 +716,10 @@ class Storage
             $logEntries[] = [
                 'user_id' => (string) $resultRow['user_id'],
                 'profile_id' => (string) $resultRow['profile_id'],
-                'common_name' => (string) $resultRow['common_name'],
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
                 'connected_at' => Dt::get((string) $resultRow['connected_at']),
-                'disconnected_at' => null === $resultRow['disconnected_at'] ? null : Dt::get((string) $resultRow['disconnected_at']),
-                'client_lost' => (bool) $resultRow['client_log'],
+                'disconnected_at' => Dt::get((string) $resultRow['disconnected_at']),
             ];
         }
 

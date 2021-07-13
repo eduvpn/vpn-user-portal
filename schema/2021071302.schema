@@ -4,13 +4,13 @@ CREATE TABLE IF NOT EXISTS users(
     is_disabled BOOLEAN NOT NULL
 );
 CREATE TABLE IF NOT EXISTS local_users (
-    user_id VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL PRIMARY KEY,
     password_hash VARCHAR(255) NOT NULL,
     created_at VARCHAR(255) NOT NULL,
     UNIQUE(user_id)
 );
 CREATE TABLE IF NOT EXISTS oauth_authorizations (
-    auth_key VARCHAR(255) NOT NULL,
+    auth_key VARCHAR(255) NOT NULL PRIMARY KEY,
     client_id VARCHAR(255) NOT NULL,
     scope VARCHAR(255) NOT NULL,
     expires_at VARCHAR(255) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS certificates(
 CREATE TABLE IF NOT EXISTS wg_peers (
     profile_id VARCHAR(255) NOT NULL,
     display_name VARCHAR(255) NOT NULL,
-    public_key VARCHAR(255) NOT NULL,
+    public_key VARCHAR(255) NOT NULL UNIQUE,
     ip_four VARCHAR(255) NOT NULL UNIQUE,
     ip_six VARCHAR(255) NOT NULL UNIQUE,
     expires_at VARCHAR(255) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS connection_log(
     ip_four VARCHAR(255) NOT NULL,
     ip_six VARCHAR(255) NOT NULL,
     date_time VARCHAR(255) NOT NULL,
-    event_type VARCHAR(1) NOT NULL
+    event_type CHAR(1) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS user_log(
     date_time VARCHAR(255) NOT NULL,
