@@ -80,7 +80,6 @@
         </thead>
         <tbody>
 <?php foreach ($userConnectionLogEntries as $logEntry): ?>
-<?php if (null !== $logEntry['disconnected_at']): ?>
             <tr>
                 <td title="<?=$this->e($logEntry['profile_id']); ?>">
 <?php if (array_key_exists($logEntry['profile_id'], $idNameMapping)): ?>
@@ -89,9 +88,14 @@
                     <?=$this->e($logEntry['profile_id']); ?>
 <?php endif; ?>
                 <td title="IPv4: <?=$this->e($logEntry['ip_four']); ?>, IPv6: <?=$this->e($logEntry['ip_six']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
-                <td><?=$this->d($logEntry['disconnected_at']); ?></td>
-            </tr>
+                <td>
+<?php if (null === $logEntry['disconnected_at']): ?>
+                    <em><?=$this->t('N/A'); ?></em>
+<?php else: ?>
+                    <?=$this->d($logEntry['disconnected_at']); ?>
 <?php endif; ?>
+                </td>
+            </tr>
 <?php endforeach; ?>
         </tbody>
     </table>
