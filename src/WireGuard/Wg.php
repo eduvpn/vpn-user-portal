@@ -47,6 +47,12 @@ class Wg
             $publicKey = self::extractPublicKey($privateKey);
         }
 
+        // check whether we already have the peer with this public key,
+        // disconnect it if we do...
+        if ($this->storage->wgHasPeer($publicKey)) {
+            $this->removePeer($profileConfig, $userId, $publicKey);
+        }
+
         if (null === $ipInfo = $this->getIpAddress($profileConfig)) {
             // unable to get new IP address to assign to peer
             throw new RuntimeException('unable to get a an IP address');
@@ -54,7 +60,6 @@ class Wg
         [$ipFour, $ipSix] = $ipInfo;
 
         // store peer in the DB
-        // XXX we should override this public key if it already exists here
         $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $accessToken);
 
         // add peer to WG
