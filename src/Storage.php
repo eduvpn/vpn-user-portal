@@ -17,7 +17,7 @@ use PDO;
 
 class Storage
 {
-    const CURRENT_SCHEMA_VERSION = '2021071302';
+    const CURRENT_SCHEMA_VERSION = '2021071401';
 
     private PDO $db;
 
@@ -560,8 +560,7 @@ class Storage
                 profile_id,
                 ip_four,
                 ip_six,
-                date_time,
-                event_type
+                connected_at
             )
         VALUES
             (
@@ -569,8 +568,7 @@ class Storage
                 :profile_id,
                 :ip_four,
                 :ip_six,
-                :date_time,
-                :event_type
+                :connected_at
             )
     SQL
         );
@@ -579,38 +577,27 @@ class Storage
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
-        $stmt->bindValue(':date_time', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':event_type', 'C', PDO::PARAM_STR);
-
+        $stmt->bindValue(':connected_at', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
     public function clientDisconnect(string $userId, string $profileId, string $ipFour, string $ipSix, DateTimeImmutable $disconnectedAt): void
     {
-        // XXX how to link disconnect and connect together? with OpenVPN we
-        // can use connected_at, but with WireGuard?
-        // XXX do we have to make sure a "C" event_type exists for this entry
-        // or do we worry about that later?!
+        // XXX make sure the entry with disconnect_at IS NULL exists, otherwise scream
         $stmt = $this->db->prepare(
 <<< 'SQL'
-        INSERT INTO connection_log
-            (
-                user_id,
-                profile_id,
-                ip_four,
-                ip_six,
-                date_time,
-                event_type
-            )
-        VALUES
-            (
-                :user_id,
-                :profile_id,
-                :ip_four,
-                :ip_six,
-                :date_time,
-                :event_type
-            )
+        UPDATE
+            connection_log
+        SET
+            disconnected_at = :disconnect_at
+        WHERE
+            user_id = :user_id
+        AND
+            profile_id = :profile_id
+        AND
+            ip_four = :ip_four
+        AND
+            ip_six = :ip_six
     SQL
         );
 
@@ -618,9 +605,7 @@ class Storage
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
-        $stmt->bindValue(':date_time', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':event_type', 'D', PDO::PARAM_STR);
-
+        $stmt->bindValue(':disconnected_at', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -635,25 +620,12 @@ class Storage
             profile_id,
             ip_four,
             ip_six,
-            date_time AS connected_at,
-            (
-                SELECT
-                    date_time
-                FROM
-                    connection_log
-                WHERE
-                    event_type = 'D'
-                AND user_id = c.user_id
-                AND profile_id = c.profile_id
-                AND ip_four = c.ip_four
-                AND ip_six = c.ip_six
-            ) AS disconnected_at
-            FROM
-                connection_log c
-            WHERE
-                event_type = 'C'
-            AND
-                user_id= :user_id
+            connected_at,
+            disconnected_at
+        FROM
+            connection_log
+        WHERE
+            user_id= :user_id
     SQL
         );
 
@@ -675,36 +647,27 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:\DateTimeImmutable}>
+     * @return array<array{user_id:string,profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable}>
      */
     public function getLogEntries(DateTimeImmutable $dateTime, string $ipAddress)
     {
-        // XXX what if user is not disconnected yet?
         $stmt = $this->db->prepare(
 <<< 'SQL'
         SELECT
-            c.user_id AS user_id,
-            c.profile_id AS profile_id,
-            c.ip_four AS ip_four,
-            c.ip_six AS ip_six,
-            c.date_time AS connected_at,
-            d.date_time AS disconnected_at
+            user_id,
+            profile_id,
+            ip_four,
+            ip_six,
+            connected_at,
+            disconnected_at
         FROM
-            connection_log c, connection_log d
+            connection_log
         WHERE
-            (c.ip_four = :ip_address OR c.ip_six = :ip_address)
+            (ip_four = :ip_address OR ip_six = :ip_address)
         AND
-            (d.ip_four = :ip_address OR d.ip_six = :ip_address)
+            connected_at <= :date_time
         AND
-            c.event_type = 'C'
-        AND
-            c.date_time <= :date_time
-        AND
-            d.event_type = 'D'
-        AND
-            d.date_time >= :date_time
-        GROUP BY
-            c.user_id
+            disconnected_at >= :date_time
     SQL
         );
 
@@ -719,7 +682,7 @@ class Storage
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
                 'connected_at' => Dt::get((string) $resultRow['connected_at']),
-                'disconnected_at' => Dt::get((string) $resultRow['disconnected_at']),
+                'disconnected_at' => null === $resultRow['disconnected_at'] ? null : Dt::get((string) $resultRow['disconnected_at']),
             ];
         }
 
@@ -728,13 +691,15 @@ class Storage
 
     public function cleanConnectionLog(DateTimeImmutable $dateTime): void
     {
-        // XXX we have to make sure this makes sense
+        // XXX test this!
         $stmt = $this->db->prepare(
 <<< 'SQL'
         DELETE FROM
             connection_log
         WHERE
-            date_time < :date_time
+            disconnected_at IS NOT NULL
+        AND
+            disconnected_at < :date_time
     SQL
         );
 
@@ -817,7 +782,7 @@ class Storage
     {
         $stmt = $this->db->prepare('DELETE FROM certificates WHERE expires_at < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        // XXX also clean wireguard
+        // XXX also clean wireguard somewhere
         $stmt->execute();
     }
 
