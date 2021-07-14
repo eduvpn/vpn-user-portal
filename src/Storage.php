@@ -589,7 +589,7 @@ class Storage
         UPDATE
             connection_log
         SET
-            disconnected_at = :disconnect_at
+            disconnected_at = :disconnected_at
         WHERE
             user_id = :user_id
         AND
@@ -598,6 +598,8 @@ class Storage
             ip_four = :ip_four
         AND
             ip_six = :ip_six
+        AND
+            disconnected_at IS NULL
     SQL
         );
 
