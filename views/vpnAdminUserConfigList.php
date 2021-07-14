@@ -65,7 +65,7 @@
 
     <h2><?=$this->t('Connections'); ?></h2>
     <p>
-        <?=$this->t('The most recent, concluded, VPN connections with this account.'); ?>
+        <?=$this->t('The most recent VPN connections with this account.'); ?>
     </p>
 <?php if (0 === count($userConnectionLogEntries)): ?>
     <p class="plain"><?=$this->t('No connections yet.'); ?></p>
