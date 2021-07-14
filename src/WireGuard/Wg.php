@@ -12,8 +12,9 @@ declare(strict_types=1);
 namespace LC\Portal\WireGuard;
 
 use DateTimeImmutable;
-// XXX introduce WgException?
 use fkooman\OAuth\Server\AccessToken;
+// XXX introduce WgException
+use LC\Portal\Dt;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use RuntimeException;
@@ -31,7 +32,7 @@ class Wg
     {
         $this->wgDaemon = $wgDaemon;
         $this->storage = $storage;
-        $this->dateTime = new DateTimeImmutable();
+        $this->dateTime = Dt::get();
     }
 
     /**

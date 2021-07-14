@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\Storage;
 
 try {
@@ -26,7 +27,7 @@ try {
         $baseDir.'/schema'
     );
 
-    $cleanBefore = new DateTimeImmutable('now -32 days');
+    $cleanBefore = Dt::get('now -32 days');
     $storage->cleanConnectionLog($cleanBefore);
     $storage->cleanExpiredCertificates($cleanBefore);
     $storage->cleanExpiredOAuthAuthorizations($cleanBefore);
