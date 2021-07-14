@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
-<?php /** @var array<array{profile_id:string,ip_four:string,ip_six:string,disconnected_at:?\DateTimeImmutable,connected_at:\DateTimeImmutable,bytes_transferred:int}> $userConnectionLogEntries */ ?>
+<?php /** @var array<array{profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable}> $userConnectionLogEntries */ ?>
 <?php /** @var string $userId */?>
 <?php /** @var bool $isDisabled */?>
 <?php /** @var bool $isSelf */?>
@@ -89,7 +89,7 @@
                     <?=$this->e($logEntry['profile_id']); ?>
 <?php endif; ?>
                 <td title="IPv4: <?=$this->e($logEntry['ip_four']); ?>, IPv6: <?=$this->e($logEntry['ip_six']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
-                <td title="<?=$this->bth($logEntry['bytes_transferred']); ?>"><?=$this->d($logEntry['disconnected_at']); ?></td>
+                <td><?=$this->d($logEntry['disconnected_at']); ?></td>
             </tr>
 <?php endif; ?>
 <?php endforeach; ?>
