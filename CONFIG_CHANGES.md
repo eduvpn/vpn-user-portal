@@ -8,6 +8,13 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.3.13
+
+Support `authorizationAttribute` configuration option for the RADIUS 
+authentication backend. This allows you to specify an attribute to be used for
+authorization. See 
+[documentation](https://github.com/eduvpn/documentation/blob/v2/RADIUS.md).
+
 ## 2.3.12
 
 remove `sessionExpireAtNight` as it is too complicated to implement correctly 
