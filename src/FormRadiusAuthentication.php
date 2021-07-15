@@ -21,7 +21,7 @@ class FormRadiusAuthentication extends FormAuthentication
     public function __construct(Config $config, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
     {
         $serverList = $config->requireArray('serverList');
-        $userAuth = new RadiusAuth($logger, $serverList, $config->optionalInt('authorizationAttribute'));
+        $userAuth = new RadiusAuth($logger, $serverList, $config->optionalInt('permissionAttribute'));
         if (null !== $addRealm = $config->optionalString('addRealm')) {
             $userAuth->setRealm($addRealm);
         }

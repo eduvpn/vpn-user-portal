@@ -10,7 +10,7 @@ working!
 
 ## 2.3.13
 
-Support `authorizationAttribute` configuration option for the RADIUS 
+Support `permissionAttribute` configuration option for the RADIUS 
 authentication backend. This allows you to specify an attribute to be used for
 authorization. See 
 [documentation](https://github.com/eduvpn/documentation/blob/v2/RADIUS.md).
