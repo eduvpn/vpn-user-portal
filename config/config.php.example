@@ -108,6 +108,8 @@ return [
 //        ],
 //        //'addRealm' => 'example.org',
 //        //'nasIdentifier' => 'vpn.example.org',
+          //'permissionAttribute' => RADIUS_REPLY_MESSAGE,
+          //'permissionAttribute' => 16,
 //    ],
 
 //    // SAML (php-saml-sp)

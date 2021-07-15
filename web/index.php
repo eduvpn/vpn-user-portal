@@ -181,7 +181,8 @@ try {
                         $logger,
                         $config->s('RadiusAuthModule')->requireArray('serverList'),
                         $config->s('RadiusAuthModule')->optionalString('addRealm'),
-                        $config->s('RadiusAuthModule')->optionalString('nasIdentifier')
+                        $config->s('RadiusAuthModule')->optionalString('nasIdentifier'),
+                        $config->s('RadiusAuthModule')->optionalInt('permissionAttribute'),
                     ),
                     $sessionBackend,
                     $tpl

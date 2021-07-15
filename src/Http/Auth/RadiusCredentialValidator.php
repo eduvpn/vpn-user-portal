@@ -22,8 +22,9 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
     private array $serverList;
     private ?string $radiusRealm;
     private ?string $nasIdentifier;
+    private ?int $permissionAttribute;
 
-    public function __construct(LoggerInterface $logger, array $serverList, ?string $radiusRealm, ?string $nasIdentifier = null)
+    public function __construct(LoggerInterface $logger, array $serverList, ?string $radiusRealm, ?string $nasIdentifier = null, ?int $permissionAttribute)
     {
         if (false === \extension_loaded('radius')) {
             throw new RuntimeException('"radius" PHP extension not available');
@@ -32,6 +33,7 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
         $this->serverList = $serverList;
         $this->radiusRealm = $radiusRealm;
         $this->nasIdentifier = $nasIdentifier;
+        $this->permissionAttribute = $permissionAttribute;
     }
 
     /**
@@ -75,18 +77,34 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
             radius_put_attr($radiusAuth, \RADIUS_NAS_IDENTIFIER, $this->nasIdentifier);
         }
 
-        if (\RADIUS_ACCESS_ACCEPT === radius_send_request($radiusAuth)) {
-            return new UserInfo($authUser, []);
+        /** @var int|false $radiusResponse */
+        $radiusResponse = radius_send_request($radiusAuth);
+        if (false === $radiusResponse) {
+            $errorMsg = sprintf('RADIUS error: %s', radius_strerror($radiusAuth));
+            $this->logger->error($errorMsg);
+
+            throw new RadiusException($errorMsg);
         }
 
-        if (\RADIUS_ACCESS_REJECT === radius_send_request($radiusAuth)) {
-            // wrong authUser/authPass
+        if (\RADIUS_ACCESS_ACCEPT !== $radiusResponse) {
+            // most likely wrong authUser/authPass, not necessarily an error
             return false;
         }
 
-        $errorMsg = sprintf('RADIUS error: %s', radius_strerror($radiusAuth));
-        $this->logger->error($errorMsg);
+        $permissionList = [];
+        if (null !== $this->permissionAttribute) {
+            // find the authorization attribute and use its value
+            while ($radiusAttribute = radius_get_attr($radiusAuth)) {
+                if (!\is_array($radiusAttribute)) {
+                    continue;
+                }
+                if ($this->permissionAttribute !== $radiusAttribute['attr']) {
+                    continue;
+                }
+                $permissionList[] = $radiusAttribute['data'];
+            }
+        }
 
-        throw new RadiusException($errorMsg);
+        return new UserInfo($authUser, $permissionList);
     }
 }
