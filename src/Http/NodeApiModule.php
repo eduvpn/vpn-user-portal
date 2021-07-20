@@ -96,13 +96,14 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
+        $originatingIp = InputValidation::ipAddress($request->requirePostParameter('originating_ip'));
         $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
         $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
         $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
         $userId = $this->verifyConnection($profileId, $commonName);
         $this->storage->clientConnect($userId, $profileId, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
         $this->logger->info(
-            sprintf('CONNECT %s (%s) [%s,%s]', $userId, $profileId, $ipFour, $ipSix)
+            sprintf('CONNECT %s (%s) [%s => %s,%s]', $userId, $profileId, $originatingIp, $ipFour, $ipSix)
         );
     }
 
@@ -110,6 +111,7 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
         $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
+        $originatingIp = InputValidation::ipAddress($request->requirePostParameter('originating_ip'));
         $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
         $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
         $disconnectedAt = InputValidation::disconnectedAt($request->requirePostParameter('disconnected_at'));
@@ -124,7 +126,7 @@ class NodeApiModule implements ServiceModuleInterface
         $userId = $certInfo['user_id'];
         $this->storage->clientDisconnect($userId, $profileId, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)));
         $this->logger->info(
-            sprintf('DISCONNECT %s (%s) [%s,%s]', $userId, $profileId, $ipFour, $ipSix)
+            sprintf('DISCONNECT %s (%s) [%s => %s,%s]', $userId, $profileId, $originatingIp, $ipFour, $ipSix)
         );
     }
 
