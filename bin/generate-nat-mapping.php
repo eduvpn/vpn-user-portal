@@ -22,13 +22,16 @@ try {
     $externalIpSix = '2001:db8::1';
     $portsPerHost = 256;
     $firstPort = 10000;
+    $profileIdList = [];
 
     for ($i = 1; $i < $argc; ++$i) {
         if ('-4' === $argv[$i]) {
             $ipFour = true;
+            $ipSix = false;
             continue;
         }
         if ('-6' === $argv[$i]) {
+            $ipFour = false;
             $ipSix = true;
             continue;
         }
@@ -41,6 +44,12 @@ try {
         if ('--external-v6' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $externalIpSix = $argv[$i + 1];
+            }
+            continue;
+        }
+        if ('--profile' === $argv[$i]) {
+            if ($i + 1 < $argc) {
+                $profileIdList[] = $argv[$i + 1];
             }
             continue;
         }
@@ -60,12 +69,14 @@ try {
             $appName = $argv[0];
             echo <<< EOF
                 SYNTAX: $appName
-                            [-4]                            only IPv4
-                            [-6]                            only IPv6
-                            [--ports-per-host N]            ports per VPN client (256)
-                            [--first-port N]                first port (10000)
-                            [--external-v4 EXTERNAL_IP]     external IPv4 address
-                            [--external-v6 EXTERNAL_IP]     external IPv6 address
+                    [--profile ID]                  Only Profile ID (can be specified
+                                                    multiple times)
+                    [-4]                            Only IPv4
+                    [-6]                            Only IPv6
+                    [--ports-per-host N]            Ports per VPN client (256)
+                    [--first-port N]                First port (10000)
+                    [--external-v4 EXTERNAL_IP]     External IPv4 address
+                    [--external-v6 EXTERNAL_IP]     External IPv6 address
 
                 EOF;
             exit(0);
@@ -73,20 +84,23 @@ try {
     }
 
     $config = Config::fromFile($baseDir.'/config/config.php');
+
+    if (0 === count($profileIdList)) {
+        $profileConfigList = $config->profileConfigList();
+    } else {
+        $profileConfigList = [];
+        foreach ($profileIdList as $profileId) {
+            $profileConfigList[] = $config->profileConfig($profileId);
+        }
+    }
+
     if ($ipFour) {
         $clientIpCount = 0;
         echo '###############################################################################'.\PHP_EOL;
-        echo '# IPv4'.\PHP_EOL;
-        echo '#'.\PHP_EOL;
-        echo '# Ports per Host: '.$portsPerHost.\PHP_EOL;
-        echo '# First Port    : '.$firstPort.\PHP_EOL;
-        echo '# External IP   : '.$externalIpFour.\PHP_EOL;
+        echo '# IPv4                                                                        #'.\PHP_EOL;
         echo '###############################################################################'.\PHP_EOL;
-        foreach ($config->profileConfigList() as $profileConfig) {
-            echo \PHP_EOL;
-            echo '###############################################################################'.\PHP_EOL;
+        foreach ($profileConfigList as $profileConfig) {
             echo '# Profile: "'.$profileConfig->displayName().'" ('.$profileConfig->profileId().')'.\PHP_EOL;
-            echo '###############################################################################'.\PHP_EOL;
             $ipFourRange = IP::fromIpPrefix($profileConfig->range());
             $splitCount = count($profileConfig->vpnProtoPorts());
             $ipFourSplitRangeList = $ipFourRange->split($splitCount);
@@ -106,17 +120,10 @@ try {
     if ($ipSix) {
         $clientIpCount = 0;
         echo '###############################################################################'.\PHP_EOL;
-        echo '# IPv6'.\PHP_EOL;
-        echo '#'.\PHP_EOL;
-        echo '# Ports per Host: '.$portsPerHost.\PHP_EOL;
-        echo '# First Port    : '.$firstPort.\PHP_EOL;
-        echo '# External IP   : '.$externalIpSix.\PHP_EOL;
+        echo '# IPv6                                                                        #'.\PHP_EOL;
         echo '###############################################################################'.\PHP_EOL;
-        foreach ($config->profileConfigList() as $profileConfig) {
-            echo \PHP_EOL;
-            echo '###############################################################################'.\PHP_EOL;
+        foreach ($profileConfigList as $profileConfig) {
             echo '# Profile: "'.$profileConfig->displayName().'" ('.$profileConfig->profileId().')'.\PHP_EOL;
-            echo '###############################################################################'.\PHP_EOL;
             $ipFourRange = IP::fromIpPrefix($profileConfig->range());
             $ipSixRange = IP::fromIpPrefix($profileConfig->range6());
             $splitCount = count($profileConfig->vpnProtoPorts());
