@@ -233,16 +233,33 @@ class IPTest extends TestCase
 
     public function testHostIpListFour(): void
     {
-        $ip = IP::fromIpPrefix('192.168.1.0/29');
+        $ip = IP::fromIpPrefix('10.42.42.0/29');
         $hostIpList = $ip->clientIpList();
         $this->assertSame(5, \count($hostIpList));
         $this->assertSame(
             [
-                '192.168.1.2',
-                '192.168.1.3',
-                '192.168.1.4',
-                '192.168.1.5',
-                '192.168.1.6',
+                '10.42.42.2',
+                '10.42.42.3',
+                '10.42.42.4',
+                '10.42.42.5',
+                '10.42.42.6',
+            ],
+            $hostIpList
+        );
+    }
+
+    public function testHostIpListFourNonNull(): void
+    {
+        $ip = IP::fromIpPrefix('10.42.42.8/29');
+        $hostIpList = $ip->clientIpList();
+        $this->assertSame(5, \count($hostIpList));
+        $this->assertSame(
+            [
+                '10.42.42.10',
+                '10.42.42.11',
+                '10.42.42.12',
+                '10.42.42.13',
+                '10.42.42.14',
             ],
             $hostIpList
         );
@@ -251,26 +268,15 @@ class IPTest extends TestCase
     public function testHostIpListSix(): void
     {
         $ip = IP::fromIpPrefix('fd42::/64');
-        $hostIpList = $ip->clientIpList(16);
-        $this->assertSame(16, \count($hostIpList));
+        $hostIpList = $ip->clientIpList(5);
+        $this->assertSame(5, \count($hostIpList));
         $this->assertSame(
             [
-                'fd42::1000',
-                'fd42::1001',
-                'fd42::1002',
-                'fd42::1003',
-                'fd42::1004',
-                'fd42::1005',
-                'fd42::1006',
-                'fd42::1007',
-                'fd42::1008',
-                'fd42::1009',
-                'fd42::100a',
-                'fd42::100b',
-                'fd42::100c',
-                'fd42::100d',
-                'fd42::100e',
-                'fd42::100f',
+                'fd42::2',
+                'fd42::3',
+                'fd42::4',
+                'fd42::5',
+                'fd42::6',
             ],
             $hostIpList
         );

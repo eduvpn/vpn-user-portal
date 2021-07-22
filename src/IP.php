@@ -167,20 +167,13 @@ class IP
     }
 
     /**
-     * XXX actually use this everywhere.
-     * Obtain the list of IP addresses available in a certain range. It follows
-     * the OpenVPN convention. For IPv4 the first address is
-     * $(NETWORK_ADDRESS) + 2. For IPv6 the first address is ::1000.
-     *
-     * This method is used for WireGuard, but also in the case of OpenVPN to
-     * create reverse DNS entries of VPN profiles and NAT traceability tables.
-     *
      * @return array<string>
      */
-    public function clientIpList(?int $maxNoOfClients = null): array
+    public function clientIpList(?int $maxNoOfHosts = null): array
     {
-        if (null === $maxNoOfClients) {
-            $maxNoOfClients = $this->numberOfHosts();
+        // XXX use this code also to generate DNS (reverse)
+        if (null === $maxNoOfHosts) {
+            $maxNoOfHosts = $this->numberOfHosts() - 1;
         }
 
         if (self::IP_4 === $this->ipFamily && 31 <= $this->ipPrefix) {
@@ -190,14 +183,12 @@ class IP
             throw new IPException('network not big enough');
         }
 
-        $startIndex = self::IP_4 === $this->ipFamily ? 2 : hexdec('1000');
-        $endIndex = self::IP_4 === $this->ipFamily ? $maxNoOfClients : $maxNoOfClients + hexdec('1000') - 1;
         $hostIpList = [];
-        for ($i = $startIndex; $i <= $endIndex; ++$i) {
+        for ($i = 0; $i < $maxNoOfHosts; ++$i) {
             $hostIpList[] = self::toAddress(
                 gmp_add(
                     self::fromAddress($this->network()->address()),
-                    $i
+                    2 + $i
                 ),
                 $this->addressBits()
             );
