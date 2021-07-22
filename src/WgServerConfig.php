@@ -37,8 +37,8 @@ class WgServerConfig
             }
             $ipFour = IP::fromIpPrefix($profileConfig->range());
             $ipSix = IP::fromIpPrefix($profileConfig->range6());
-            $ipFourList[] = $ipFour->firstHost();
-            $ipSixList[] = $ipSix->firstHost();
+            $ipFourList[] = $ipFour->firstHostPrefix();
+            $ipSixList[] = $ipSix->firstHostPrefix();
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 

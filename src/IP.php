@@ -137,6 +137,11 @@ class IP
         );
     }
 
+    public function firstHostPrefix(): string
+    {
+        return $this->firstHost().'/'.$this->prefix();
+    }
+
     /**
      * @return array<IP>
      */
