@@ -37,8 +37,8 @@ class OpenVpnServerConfig
     public function getProfile(ProfileConfig $profileConfig): array
     {
         $certInfo = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
-        $range = new IP($profileConfig->range());
-        $range6 = new IP($profileConfig->range6());
+        $range = IP::fromIpPrefix($profileConfig->range());
+        $range6 = IP::fromIpPrefix($profileConfig->range6());
         $processCount = \count($profileConfig->vpnProtoPorts());
         $allowedProcessCount = [1, 2, 4, 8, 16, 32, 64];
         if (!\in_array($processCount, $allowedProcessCount, true)) {
@@ -126,7 +126,7 @@ class OpenVpnServerConfig
             sprintf('reneg-sec %d', 10 * 60 * 60),
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
-            sprintf('server %s %s', (string) $rangeIp->getNetwork(), $rangeIp->getNetmask()),
+            sprintf('server %s %s', (string) $rangeIp->network(), $rangeIp->netmask()),
             sprintf('server-ipv6 %s', (string) $range6Ip),
             // OpenVPN's pool management does NOT include the last usable IP in
             // the range in the pool, and obviously not the first one as that
@@ -151,7 +151,7 @@ class OpenVpnServerConfig
             // the next available OpenVPN process...
             // @see https://community.openvpn.net/openvpn/ticket/1347
             // @see https://community.openvpn.net/openvpn/ticket/1348
-            sprintf('max-clients %d', $rangeIp->getNumberOfHosts() - 2),
+            sprintf('max-clients %d', $rangeIp->numberOfHosts() - 2),
             // technically we do NOT need "keepalive" (ping/ping-restart) on
             // TCP, but it seems we do need it to avoid clients disconnecting
             // after 2 minutes of inactivity when the first (previous?) remote
@@ -246,13 +246,13 @@ class OpenVpnServerConfig
 
         // there may be some routes specified, push those, and not the default
         foreach ($routeList as $route) {
-            $routeIp = new IP($route);
-            if (6 === $routeIp->getFamily()) {
+            $routeIp = IP::fromIpPrefix($route);
+            if (IP::IP_6 === $routeIp->family()) {
                 // IPv6
                 $routeConfig[] = sprintf('push "route-ipv6 %s"', (string) $routeIp);
             } else {
                 // IPv4
-                $routeConfig[] = sprintf('push "route %s %s"', $routeIp->getAddress(), $routeIp->getNetmask());
+                $routeConfig[] = sprintf('push "route %s %s"', $routeIp->address(), $routeIp->netmask());
             }
         }
 
@@ -273,10 +273,10 @@ class OpenVpnServerConfig
         foreach ($dnsList as $dnsAddress) {
             // replace the macros by IP addresses (LOCAL_DNS)
             if ('@GW4@' === $dnsAddress) {
-                $dnsAddress = $rangeIp->getFirstHost()->getAddress();
+                $dnsAddress = $rangeIp->firstHost();
             }
             if ('@GW6@' === $dnsAddress) {
-                $dnsAddress = $range6Ip->getFirstHost()->getAddress();
+                $dnsAddress = $range6Ip->firstHost();
             }
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
@@ -303,12 +303,12 @@ class OpenVpnServerConfig
             return [];
         }
 
-        $rangeIp = new IP($profileConfig->range());
-        $range6Ip = new IP($profileConfig->range6());
+        $rangeIp = IP::fromIpPrefix($profileConfig->range());
+        $range6Ip = IP::fromIpPrefix($profileConfig->range6());
 
         return [
             'client-to-client',
-            sprintf('push "route %s %s"', $rangeIp->getAddress(), $rangeIp->getNetmask()),
+            sprintf('push "route %s %s"', $rangeIp->address(), $rangeIp->netmask()),
             sprintf('push "route-ipv6 %s"', (string) $range6Ip),
         ];
     }

@@ -15,6 +15,7 @@ use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
 // XXX introduce WgException
 use LC\Portal\Dt;
+use LC\Portal\IP;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use RuntimeException;
@@ -125,45 +126,16 @@ class Wg
         // make a list of all allocated IPv4 addresses (the IPv6 address is
         // based on the IPv4 address)
         $allocatedIpFourList = $this->storage->wgGetAllocatedIpFourAddresses();
-        $ipInRangeList = self::getIpInRangeList($profileConfig->range());
-        foreach ($ipInRangeList as $ipInRange) {
-            if (!\in_array($ipInRange, $allocatedIpFourList, true)) {
-                // include this IPv4 address in IPv6 address
-                [$ipSixAddress, $ipSixPrefix] = explode('/', $profileConfig->range6());
-                $ipSixPrefix = (int) $ipSixPrefix;
-                $ipFourHex = bin2hex(inet_pton($ipInRange));
-                $ipSixHex = bin2hex(inet_pton($ipSixAddress));
-                // clear the last $ipSixPrefix/4 elements
-                $ipSixHex = substr_replace($ipSixHex, str_repeat('0', (int) ($ipSixPrefix / 4)), -((int) ($ipSixPrefix / 4)));
-                $ipSixHex = substr_replace($ipSixHex, $ipFourHex, -8);
-                $ipSix = inet_ntop(hex2bin($ipSixHex));
-
-                return [$ipInRange, $ipSix];
+        $ipFourInRangeList = IP::fromIpPrefix($profileConfig->range())->clientIpList();
+        $ipSixInRangeList = IP::fromIpPrefix($profileConfig->range6())->clientIpList(\count($ipFourInRangeList));
+        foreach ($ipFourInRangeList as $k => $ipFourInRange) {
+            if (!\in_array($ipFourInRange, $allocatedIpFourList, true)) {
+                return [$ipFourInRange, $ipSixInRangeList[$k]];
             }
         }
 
+        // no free IP available
         return null;
-    }
-
-    /**
-     * @return array<string>
-     */
-    private static function getIpInRangeList(string $ipAddressPrefix): array
-    {
-        [$ipAddress, $ipPrefix] = explode('/', $ipAddressPrefix);
-        $ipPrefix = (int) $ipPrefix;
-        $ipNetmask = long2ip(-1 << (32 - $ipPrefix));
-        $ipNetwork = long2ip(ip2long($ipAddress) & ip2long($ipNetmask));
-        $numberOfHosts = (int) 2 ** (32 - $ipPrefix) - 2;
-        if ($ipPrefix > 30) {
-            return [];
-        }
-        $hostList = [];
-        for ($i = 2; $i <= $numberOfHosts; ++$i) {
-            $hostList[] = long2ip(ip2long($ipNetwork) + $i);
-        }
-
-        return $hostList;
     }
 
     private static function generatePrivateKey(): string

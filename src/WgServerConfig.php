@@ -35,10 +35,10 @@ class WgServerConfig
                 // we only want WireGuard profiles
                 continue;
             }
-            $ipFour = new IP($profileConfig->range());
-            $ipSix = new IP($profileConfig->range6());
-            $ipFourList[] = (string) $ipFour->getFirstHost();
-            $ipSixList[] = (string) $ipSix->getFirstHost();
+            $ipFour = IP::fromIpPrefix($profileConfig->range());
+            $ipSix = IP::fromIpPrefix($profileConfig->range6());
+            $ipFourList[] = $ipFour->firstHost();
+            $ipSixList[] = $ipSix->firstHost();
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 

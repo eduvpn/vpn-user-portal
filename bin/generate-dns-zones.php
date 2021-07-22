@@ -41,16 +41,16 @@ try {
         $rangeFour = $profileConfig->range();
         $rangeSix = $profileConfig->range6();
         $splitCount = count($profileConfig->vpnProtoPorts());
-        $ipFour = new IP($rangeFour);
-        $ipSix = new IP($rangeSix);
+        $ipFour = IP::fromIpPrefix($rangeFour);
+        $ipSix = IP::fromIpPrefix($rangeSix);
         $ipFourSplit = $ipFour->split($splitCount);
         $ipSixSplit = $ipSix->split($splitCount);
         $gatewayNo = 1;
         $profileNumber = $profileConfig->profileNumber();
         for ($j = 0; $j < $splitCount; ++$j) {
-            $noOfHosts = $ipFourSplit[$j]->getNumberOfHosts();
-            $firstFourHost = $ipFourSplit[$j]->getFirstHost()->getAddress();
-            $firstSixHost = $ipSixSplit[$j]->getFirstHost()->getAddress();
+            $noOfHosts = $ipFourSplit[$j]->numberOfHosts();
+            $firstFourHost = $ipFourSplit[$j]->firstHost();
+            $firstSixHost = $ipSixSplit[$j]->firstHost();
             $forwardDns[sprintf('gw-%03d-%03d', $profileNumber, $gatewayNo)] = ['ipFour' => $firstFourHost, 'ipSix' => $firstSixHost];
             $gwIpFourOrigin = implode('.', array_slice(array_reverse(explode('.', $firstFourHost)), 1, 3)).'.in-addr.arpa.';
             $gwIpSixOrigin = implode('.', str_split(strrev(substr(bin2hex(inet_pton($firstSixHost)), 0, 16)), 1)).'.ip6.arpa.';

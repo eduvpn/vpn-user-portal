@@ -50,11 +50,10 @@ class WgConfig
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
-        // XXX what is up with /24 and /64? this needs to come from range/range6
-        $ipFour = new IP($this->profileConfig->range());
-        $ipSix = new IP($this->profileConfig->range6());
+        $ipFour = IP::fromIpPrefix($this->profileConfig->range());
+        $ipSix = IP::fromIpPrefix($this->profileConfig->range6());
 
-        $output[] = 'Address = '.$this->ipFour.'/'.$ipFour->getPrefix().', '.$this->ipSix.'/'.$ipSix->getPrefix();
+        $output[] = 'Address = '.$this->ipFour.'/'.$ipFour->prefix().', '.$this->ipSix.'/'.$ipSix->prefix();
         if (0 !== \count($this->profileConfig->dns())) {
             $output[] = 'DNS = '.implode(', ', $this->profileConfig->dns());
         }

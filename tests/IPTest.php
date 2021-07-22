@@ -18,7 +18,7 @@ class IPTest extends TestCase
 {
     public function testIPv4One(): void
     {
-        $ip = new IP('192.168.1.0/24');
+        $ip = IP::fromIpPrefix('192.168.1.0/24');
         $splitRange = $ip->split(1);
         $this->assertSame(1, \count($splitRange));
         $this->assertSame('192.168.1.0/24', (string) $splitRange[0]);
@@ -26,26 +26,26 @@ class IPTest extends TestCase
 
     public function testNetmask(): void
     {
-        $ip = new IP('192.168.1.0/24');
-        $this->assertSame('255.255.255.0', $ip->getNetmask());
-        $ip = new IP('10.0.0.0/8');
-        $this->assertSame('255.0.0.0', $ip->getNetmask());
-        $ip = new IP('10.0.0.128/25');
-        $this->assertSame('255.255.255.128', $ip->getNetmask());
+        $ip = IP::fromIpPrefix('192.168.1.0/24');
+        $this->assertSame('255.255.255.0', $ip->netmask());
+        $ip = IP::fromIpPrefix('10.0.0.0/8');
+        $this->assertSame('255.0.0.0', $ip->netmask());
+        $ip = IP::fromIpPrefix('10.0.0.128/25');
+        $this->assertSame('255.255.255.128', $ip->netmask());
         // it makes no sense for IPv6, but still fun :-P
-        $ip = new IP('fd00::/64');
-        $this->assertSame('ffff:ffff:ffff:ffff::', $ip->getNetmask());
+        $ip = IP::fromIpPrefix('fd00::/64');
+        $this->assertSame('ffff:ffff:ffff:ffff::', $ip->netmask());
     }
 
     public function testIPv4Two(): void
     {
-        $ip = new IP('192.168.1.0/24');
+        $ip = IP::fromIpPrefix('192.168.1.0/24');
         $splitRange = $ip->split(2);
         $this->assertSame(2, \count($splitRange));
         $this->assertSame('192.168.1.0/25', (string) $splitRange[0]);
         $this->assertSame('192.168.1.128/25', (string) $splitRange[1]);
 
-        $ip = new IP('0.0.0.0/0');
+        $ip = IP::fromIpPrefix('0.0.0.0/0');
         $splitRange = $ip->split(2);
         $this->assertSame(2, \count($splitRange));
         $this->assertSame('0.0.0.0/1', (string) $splitRange[0]);
@@ -54,7 +54,7 @@ class IPTest extends TestCase
 
     public function testIPv4Four(): void
     {
-        $ip = new IP('192.168.1.0/24');
+        $ip = IP::fromIpPrefix('192.168.1.0/24');
         $splitRange = $ip->split(4);
         $this->assertSame(4, \count($splitRange));
         $this->assertSame('192.168.1.0/26', (string) $splitRange[0]);
@@ -65,7 +65,7 @@ class IPTest extends TestCase
 
     public function testIPv4ThirtyTwo(): void
     {
-        $ip = new IP('10.0.0.0/8');
+        $ip = IP::fromIpPrefix('10.0.0.0/8');
         $splitRange = $ip->split(32);
         $this->assertSame(32, \count($splitRange));
         $this->assertSame('10.0.0.0/13', (string) $splitRange[0]);
@@ -104,7 +104,7 @@ class IPTest extends TestCase
 
     public function testIPv6One(): void
     {
-        $ip = new IP('1111:2222:3333:4444::/64');
+        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(1);
         $this->assertSame(1, \count($splitRange));
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -112,7 +112,7 @@ class IPTest extends TestCase
 
     public function testIPv6OneWithMinSpace(): void
     {
-        $ip = new IP('1111:2222:3333:4444::/112');
+        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/112');
         $splitRange = $ip->split(1);
         $this->assertSame(1, \count($splitRange));
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -120,7 +120,7 @@ class IPTest extends TestCase
 
     public function testIPv6Two(): void
     {
-        $ip = new IP('1111:2222:3333:4444::/64');
+        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(2);
         $this->assertSame(2, \count($splitRange));
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -129,7 +129,7 @@ class IPTest extends TestCase
 
     public function testIPv6Four(): void
     {
-        $ip = new IP('1111:2222:3333:4444::/64');
+        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(4);
         $this->assertSame(4, \count($splitRange));
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -140,7 +140,7 @@ class IPTest extends TestCase
 
     public function testIPv6ThirtyTwo(): void
     {
-        $ip = new IP('1111:2222:3333:4444::/64');
+        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(32);
         $this->assertSame(32, \count($splitRange));
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -179,43 +179,43 @@ class IPTest extends TestCase
 
     public function testGetFirstHost(): void
     {
-        $ip = new IP('192.168.1.0/24');
+        $ip = IP::fromIpPrefix('192.168.1.0/24');
         $splitRange = $ip->split(4);
         $this->assertSame(4, \count($splitRange));
         $this->assertSame('192.168.1.0/26', (string) $splitRange[0]);
-        $this->assertSame('192.168.1.1', $splitRange[0]->getFirstHost()->getAddress());
+        $this->assertSame('192.168.1.1', $splitRange[0]->firstHost());
         $this->assertSame('192.168.1.64/26', (string) $splitRange[1]);
-        $this->assertSame('192.168.1.65', $splitRange[1]->getFirstHost()->getAddress());
+        $this->assertSame('192.168.1.65', $splitRange[1]->firstHost());
         $this->assertSame('192.168.1.128/26', (string) $splitRange[2]);
-        $this->assertSame('192.168.1.129', $splitRange[2]->getFirstHost()->getAddress());
+        $this->assertSame('192.168.1.129', $splitRange[2]->firstHost());
         $this->assertSame('192.168.1.192/26', (string) $splitRange[3]);
-        $this->assertSame('192.168.1.193', $splitRange[3]->getFirstHost()->getAddress());
+        $this->assertSame('192.168.1.193', $splitRange[3]->firstHost());
 
-        $ip = new IP('192.168.1.5/24');
-        $this->assertSame('192.168.1.1', $ip->getFirstHost()->getAddress());
+        $ip = IP::fromIpPrefix('192.168.1.5/24');
+        $this->assertSame('192.168.1.1', $ip->firstHost());
     }
 
     public function testGetFirstHost6(): void
     {
-        $ip = new IP('1111:2222:3333:4444::/64');
+        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(4);
         $this->assertSame(4, \count($splitRange));
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
-        $this->assertSame('1111:2222:3333:4444::1', $splitRange[0]->getFirstHost()->getAddress());
+        $this->assertSame('1111:2222:3333:4444::1', $splitRange[0]->firstHost());
         $this->assertSame('1111:2222:3333:4444::1:0/112', (string) $splitRange[1]);
-        $this->assertSame('1111:2222:3333:4444::1:1', $splitRange[1]->getFirstHost()->getAddress());
+        $this->assertSame('1111:2222:3333:4444::1:1', $splitRange[1]->firstHost());
         $this->assertSame('1111:2222:3333:4444::2:0/112', (string) $splitRange[2]);
-        $this->assertSame('1111:2222:3333:4444::2:1', $splitRange[2]->getFirstHost()->getAddress());
+        $this->assertSame('1111:2222:3333:4444::2:1', $splitRange[2]->firstHost());
         $this->assertSame('1111:2222:3333:4444::3:0/112', (string) $splitRange[3]);
-        $this->assertSame('1111:2222:3333:4444::3:1', $splitRange[3]->getFirstHost()->getAddress());
+        $this->assertSame('1111:2222:3333:4444::3:1', $splitRange[3]->firstHost());
 
-        $ip = new IP('1111:2222:3333:4444::5/64');
-        $this->assertSame('1111:2222:3333:4444::1', $ip->getFirstHost()->getAddress());
+        $ip = IP::fromIpPrefix('1111:2222:3333:4444::5/64');
+        $this->assertSame('1111:2222:3333:4444::1', $ip->firstHost());
     }
 
     public function testIPv4NonFirstTwo(): void
     {
-        $ip = new IP('192.168.1.128/24');
+        $ip = IP::fromIpPrefix('192.168.1.128/24');
         $splitRange = $ip->split(2);
         $this->assertSame(2, \count($splitRange));
         $this->assertSame('192.168.1.0/25', (string) $splitRange[0]);
@@ -224,10 +224,55 @@ class IPTest extends TestCase
 
     public function testIPv6NonFirstTwo(): void
     {
-        $ip = new IP('1111:2222:3333:4444::ffff/64');
+        $ip = IP::fromIpPrefix('1111:2222:3333:4444::ffff/64');
         $splitRange = $ip->split(2);
         $this->assertSame(2, \count($splitRange));
         $this->assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
         $this->assertSame('1111:2222:3333:4444::1:0/112', (string) $splitRange[1]);
+    }
+
+    public function testHostIpListFour(): void
+    {
+        $ip = IP::fromIpPrefix('192.168.1.0/29');
+        $hostIpList = $ip->clientIpList();
+        $this->assertSame(5, \count($hostIpList));
+        $this->assertSame(
+            [
+                '192.168.1.2',
+                '192.168.1.3',
+                '192.168.1.4',
+                '192.168.1.5',
+                '192.168.1.6',
+            ],
+            $hostIpList
+        );
+    }
+
+    public function testHostIpListSix(): void
+    {
+        $ip = IP::fromIpPrefix('fd42::/64');
+        $hostIpList = $ip->clientIpList(16);
+        $this->assertSame(16, \count($hostIpList));
+        $this->assertSame(
+            [
+                'fd42::1000',
+                'fd42::1001',
+                'fd42::1002',
+                'fd42::1003',
+                'fd42::1004',
+                'fd42::1005',
+                'fd42::1006',
+                'fd42::1007',
+                'fd42::1008',
+                'fd42::1009',
+                'fd42::100a',
+                'fd42::100b',
+                'fd42::100c',
+                'fd42::100d',
+                'fd42::100e',
+                'fd42::100f',
+            ],
+            $hostIpList
+        );
     }
 }

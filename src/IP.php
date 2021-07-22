@@ -23,85 +23,117 @@ class IP
     const IP_4 = 4;
     const IP_6 = 6;
 
-    private string $ipAddress;
+    private GMP $ipAddress;
     private int $ipPrefix;
+    private int $ipFamily;
 
-    public function __construct(string $ipAddressPrefix)
+    private function __construct(GMP $ipAddress, int $ipPrefix, int $ipFamily)
     {
-        $this->ipAddress = self::extractAddress($ipAddressPrefix);
-        $this->ipPrefix = self::extractPrefix($ipAddressPrefix);
+        $this->ipAddress = $ipAddress;
+        $this->ipPrefix = $ipPrefix;
+        $this->ipFamily = $ipFamily;
     }
 
     public function __toString(): string
     {
-        return $this->ipAddress.'/'.$this->ipPrefix;
+        return $this->address().'/'.$this->ipPrefix;
     }
 
-    public function getAddress(): string
+    public static function fromIp(string $ipAddress, ?int $ipPrefix = null): self
     {
-        return $this->ipAddress;
+        if (false === strpos($ipAddress, ':')) {
+            // IPv4
+            return self::fromIpFour($ipAddress, $ipPrefix);
+        }
+
+        // IPv6
+        return self::fromIpSix($ipAddress, $ipPrefix);
     }
 
-    public function getPrefix(): int
+    public static function fromIpPrefix(string $ipAddressPrefix): self
     {
-        return $this->ipPrefix;
+        if (false === strpos($ipAddressPrefix, '/')) {
+            // no prefix specified
+            return self::fromIp($ipAddressPrefix);
+        }
+
+        [$ipAddress, $ipPrefix] = explode('/', $ipAddressPrefix, 2);
+
+        return self::fromIp($ipAddress, (int) $ipPrefix);
     }
 
-    public function getNetwork(): self
+    public function address(): string
     {
-        return new self(
-            self::gmpToAddr(
+        return self::toAddress($this->ipAddress, $this->addressBits());
+    }
+
+    public function network(): self
+    {
+        return self::fromIp(
+            self::toAddress(
                 gmp_and(
-                    self::addrToGmp($this->getAddress()),
+                    $this->ipAddress,
                     gmp_and(
-                        gmp_sub(gmp_pow(2, $this->getAddressBits()), 1),
-                        gmp_sub(gmp_pow(2, $this->getAddressBits()), gmp_pow(2, $this->getAddressBits() - $this->getPrefix()))
+                        gmp_sub(gmp_pow(2, $this->addressBits()), 1),
+                        gmp_sub(gmp_pow(2, $this->addressBits()), gmp_pow(2, $this->addressBits() - $this->ipPrefix))
                     )
                 ),
-                $this->getAddressBits(),
-            ).'/'.$this->getPrefix()
+                $this->addressBits()
+            ),
+            $this->ipPrefix
         );
     }
 
-    public function getNetmask(): string
+    public function netmask(): string
     {
-        return self::gmpToAddr(
+        return self::toAddress(
             gmp_xor(
-                gmp_sub(gmp_pow(2, $this->getAddressBits()), 1),
-                gmp_sub(gmp_pow(2, $this->getAddressBits() - $this->getPrefix()), 1),
+                gmp_sub(gmp_pow(2, $this->addressBits()), 1),
+                gmp_sub(gmp_pow(2, $this->addressBits() - $this->ipPrefix), 1),
             ),
-            $this->getAddressBits()
+            $this->addressBits()
         );
     }
 
     /**
-     * IPv4 only.
+     * Get the number of available IP addresses in the network represented by
+     * the IP range specified in this object. Works only with IPv4 because we
+     * want an "int" as the return type.
      */
-    public function getNumberOfHosts(): int
+    public function numberOfHosts(): int
     {
-        $this->requireIPv4();
+        if (self::IP_4 === $this->ipFamily) {
+            // IPv4
+            return (int) 2 ** (32 - $this->ipPrefix) - 2;
+        }
 
-        return (int) 2 ** (32 - $this->getPrefix()) - 2;
+        // IPv6
+        if (0 === $intVal = gmp_intval(gmp_pow(2, (128 - $this->ipPrefix)))) {
+            throw new IPException('too many hosts to fit in "int"');
+        }
+
+        return $intVal;
     }
 
-    public function getFirstHost(): self
+    /**
+     * Get the first usable IP in the network represented by the IP range
+     * specified in this object.
+     */
+    public function firstHost(): string
     {
-        if (self::IP_4 === $this->getFamily() && 31 <= $this->ipPrefix) {
+        if (self::IP_4 === $this->ipFamily && 31 <= $this->ipPrefix) {
             throw new IPException('network not big enough');
         }
-        if (self::IP_6 === $this->getFamily() && 127 <= $this->ipPrefix) {
+        if (self::IP_6 === $this->ipFamily && 127 <= $this->ipPrefix) {
             throw new IPException('network not big enough');
         }
 
-        return new self(
-            self::gmpToAddr(
-                gmp_add(
-                    $this->addrToGmp($this->getNetwork()->getAddress()),
-                    1
-                ),
-                $this->getAddressBits()
-            ).'/'.
-            $this->getPrefix()
+        return self::toAddress(
+            gmp_add(
+                self::fromAddress($this->network()->address()),
+                1
+            ),
+            $this->addressBits()
         );
     }
 
@@ -111,120 +143,131 @@ class IP
     public function split(int $networkCount): array
     {
         // XXX introduce "maxPrefix" parameter?
-        if (2 ** ($this->getAddressBits() - $this->getPrefix() - 2) < $networkCount) {
+        if (2 ** ($this->addressBits() - $this->ipPrefix - 2) < $networkCount) {
             throw new IPException('network too small to split in this many networks');
         }
 
         $requiredBits = (int) log($networkCount, 2);
-        $prefixBits = self::IP_4 === $this->getFamily() ? $this->getPrefix() + $requiredBits : 112;
-        if (self::IP_6 === $this->getFamily()) {
+        $prefixBits = self::IP_4 === $this->ipFamily ? $this->ipPrefix + $requiredBits : 112;
+        if (self::IP_6 === $this->ipFamily) {
             $minPrefix = 112 - $requiredBits;
-            if ($minPrefix < $this->getPrefix()) {
+            if ($minPrefix < $this->ipPrefix) {
                 throw new IPException('network too small, must be >= /'.$minPrefix);
             }
         }
-        $netIp = $this->getNetwork();
+        $netIp = $this->network();
         $splitRanges = [];
         for ($i = 0; $i < $networkCount; ++$i) {
-            $noOfHosts = gmp_pow(2, $this->getAddressBits() - $prefixBits);
-            $netAddress = gmp_add(gmp_mul($i, $noOfHosts), self::addrToGmp($netIp->getAddress()));
-            $splitRanges[] = new self(self::gmpToAddr($netAddress, $this->getAddressBits()).'/'.$prefixBits);
+            $noOfHosts = gmp_pow(2, $this->addressBits() - $prefixBits);
+            $netAddress = gmp_add(gmp_mul($i, $noOfHosts), self::fromAddress($netIp->address()));
+            $splitRanges[] = new self($netAddress, $prefixBits, $this->ipFamily);
         }
 
         return $splitRanges;
     }
 
-    public function getFamily(): int
+    /**
+     * XXX actually use this everywhere.
+     * Obtain the list of IP addresses available in a certain range. It follows
+     * the OpenVPN convention. For IPv4 the first address is
+     * $(NETWORK_ADDRESS) + 2. For IPv6 the first address is ::1000.
+     *
+     * This method is used for WireGuard, but also in the case of OpenVPN to
+     * create reverse DNS entries of VPN profiles and NAT traceability tables.
+     *
+     * @return array<string>
+     */
+    public function clientIpList(?int $maxNoOfClients = null): array
     {
-        return false === strpos($this->ipAddress, ':') ? self::IP_4 : self::IP_6;
+        if (null === $maxNoOfClients) {
+            $maxNoOfClients = $this->numberOfHosts();
+        }
+
+        if (self::IP_4 === $this->ipFamily && 31 <= $this->ipPrefix) {
+            throw new IPException('network not big enough');
+        }
+        if (self::IP_6 === $this->ipFamily && 127 <= $this->ipPrefix) {
+            throw new IPException('network not big enough');
+        }
+
+        $startIndex = self::IP_4 === $this->ipFamily ? 2 : hexdec('1000');
+        $endIndex = self::IP_4 === $this->ipFamily ? $maxNoOfClients : $maxNoOfClients + hexdec('1000') - 1;
+        $hostIpList = [];
+        for ($i = $startIndex; $i <= $endIndex; ++$i) {
+            $hostIpList[] = self::toAddress(
+                gmp_add(
+                    self::fromAddress($this->network()->address()),
+                    $i
+                ),
+                $this->addressBits()
+            );
+        }
+
+        return $hostIpList;
     }
 
-    private function getAddressBits(): int
+    public function prefix(): int
     {
-        return self::IP_4 === $this->getFamily() ? 32 : 128;
+        return $this->ipPrefix;
     }
 
-    private static function gmpToAddr(GMP $addr, int $addrBits): string
+    public function family(): int
     {
+        return $this->ipFamily;
+    }
+
+    private function addressBits(): int
+    {
+        return self::IP_4 === $this->ipFamily ? 32 : 128;
+    }
+
+    private static function fromIpFour(string $ipAddress, ?int $ipPrefix = null): self
+    {
+        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
+            throw new IPException('invalid IPv4 address');
+        }
+        if (null === $ipPrefix) {
+            $ipPrefix = 32;
+        }
+        if ($ipPrefix < 0 || $ipPrefix > 32) {
+            throw new IPException('invalid IPv4 prefix');
+        }
+
+        return new self(self::fromAddress($ipAddress), $ipPrefix, self::IP_4);
+    }
+
+    private static function fromIpSix(string $ipAddress, ?int $ipPrefix = null): self
+    {
+        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+            throw new IPException('invalid IPv6 address');
+        }
+        if (null === $ipPrefix) {
+            $ipPrefix = 128;
+        }
+        if ($ipPrefix < 0 || $ipPrefix > 128) {
+            throw new IPException('invalid IPv6 prefix');
+        }
+
+        return new self(self::fromAddress($ipAddress), $ipPrefix, self::IP_6);
+    }
+
+    private static function fromAddress(string $ipAddress): GMP
+    {
+        return gmp_init(bin2hex(inet_pton($ipAddress)), 16);
+    }
+
+    private static function toAddress(GMP $ipAddress, int $addressBits): string
+    {
+//        echo gmp_strval($ipAddress).PHP_EOL;
         return inet_ntop(
             hex2bin(
                 str_pad(
-                    gmp_strval(
-                        $addr,
-                        16
-                    ),
-                    (int) ($addrBits / 4),
+                    gmp_strval($ipAddress, 16),
+                    (int) ($addressBits / 4),
                     '0',
                     \STR_PAD_LEFT
                 )
             )
         );
-    }
-
-    private static function addrToGmp(string $addr): GMP
-    {
-        return gmp_init(bin2hex(inet_pton($addr)), 16);
-    }
-
-    private static function extractAddress(string $ipAddressPrefix): string
-    {
-        if (false === strpos($ipAddressPrefix, '/')) {
-            // normalize
-            return inet_ntop(inet_pton($ipAddressPrefix));
-        }
-
-        // prefix is part of the input
-        [$ipAddress, ] = explode('/', $ipAddressPrefix, 2);
-        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
-            throw new IPException('invalid IP address');
-        }
-
-        // normalize
-        return inet_ntop(inet_pton($ipAddress));
-    }
-
-    private static function extractPrefix(string $ipAddressPrefix): int
-    {
-        if (false === strpos($ipAddressPrefix, '/')) {
-            // prefix is not part of the input
-            if (false === strpos($ipAddressPrefix, ':')) {
-                // IPv4
-                return 32;
-            }
-
-            // IPv6
-            return 128;
-        }
-
-        // prefix is part of the input
-        [$ipAddress, $ipPrefix] = explode('/', $ipAddressPrefix, 2);
-        if (!is_numeric($ipPrefix)) {
-            throw new IPException('prefix must be numeric');
-        }
-        if ($ipPrefix < 0) {
-            throw new IPException('prefix must be >= 0');
-        }
-        if (false === strpos($ipAddress, ':')) {
-            // IPv4
-            if ($ipPrefix > 32) {
-                throw new IPException('prefix for IPv4 address must be <= 32');
-            }
-
-            return (int) $ipPrefix;
-        }
-
-        // IPv6
-        if ($ipPrefix > 128) {
-            throw new IPException('prefix for IPv6 address must be <= 128');
-        }
-
-        return (int) $ipPrefix;
-    }
-
-    private function requireIPv4(): void
-    {
-        if (self::IP_4 !== $this->getFamily()) {
-            throw new IPException('method only for IPv4');
-        }
     }
 }

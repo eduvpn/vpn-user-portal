@@ -114,6 +114,11 @@ class ProfileConfig
      */
     public function vpnProtoPorts(): array
     {
+        if ('wireguard' === $this->vpnType()) {
+            // for WireGuard we have only one port for all profiles
+            return ['udp/51820'];
+        }
+
         return $this->config->requireArray('vpnProtoPorts', ['udp/1194', 'tcp/1194']);
     }
 
