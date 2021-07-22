@@ -258,7 +258,6 @@ class IP
 
     private static function toAddress(GMP $ipAddress, int $addressBits): string
     {
-//        echo gmp_strval($ipAddress).PHP_EOL;
         return inet_ntop(
             hex2bin(
                 str_pad(
