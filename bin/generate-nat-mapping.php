@@ -81,7 +81,7 @@ try {
         echo '# Ports per Host: '.$portsPerHost.\PHP_EOL;
         echo '# First Port    : '.$firstPort.\PHP_EOL;
         echo '# External IP   : '.$externalIpFour.\PHP_EOL;
-        echo '###############################################################################'.\PHP_EOL.\PHP_EOL;
+        echo '###############################################################################'.\PHP_EOL;
         foreach ($config->profileConfigList() as $profileConfig) {
             echo \PHP_EOL;
             echo '###############################################################################'.\PHP_EOL;
