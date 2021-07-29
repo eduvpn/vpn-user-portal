@@ -109,6 +109,8 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
 
+                // XXX delete all OpenVPN and WireGuard active configs with this auth_id
+
                 switch ($profileConfig->vpnType()) {
                     case 'openvpn':
                         return $this->getOpenVpnConfigResponse($profileConfig, $accessToken);
@@ -140,6 +142,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             function (AccessToken $accessToken, Request $request): Response {
                 // XXX duplicate from connect
                 // XXX catch InputValidationException
+                // XXX why do we need profile_id again?
                 $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());

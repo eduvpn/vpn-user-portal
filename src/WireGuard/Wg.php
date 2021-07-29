@@ -98,7 +98,7 @@ class Wg
         // XXX add bytesTransferred to some global table
 
         $ipFour = '0.0.0.0/32';
-        $ipSix = '::/32';
+        $ipSix = '::/0';
         foreach ($peerInfo['AllowedIPs'] as $ip) {
             if (false !== strpos($ip, ':')) {
                 [$ipSix, ] = explode('/', $ip);

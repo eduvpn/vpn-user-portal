@@ -190,6 +190,13 @@ return [
 //        //'remoteAccess' => false,
 //    ],
 
+    // how/what to log the connect/disconnect events to syslog
+    // EVENT_TYPE = {CONNECT,DISCONNECT}
+    // DEFAULT: '{{TYPE}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]'
+    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]',
+    // also log the client's originating IP
+    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{ORIGINATING_IP}} => {{IP_FOUR}},{{IP_SIX}}]',
+
     // Allow disabling manual configuration downloads from the portal.
     // DEFAULT: true
 //    'enableConfigDownload' => true,
