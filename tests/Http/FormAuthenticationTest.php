@@ -17,7 +17,11 @@ use LC\Portal\Http\SimpleAuth;
 use LC\Portal\Tests\TestTpl;
 use PHPUnit\Framework\TestCase;
 
-class FormAuthenticationTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class FormAuthenticationTest extends TestCase
 {
     public function testAuthenticated(): void
     {
@@ -39,7 +43,7 @@ class FormAuthenticationTest extends TestCase
 
         $request = new TestRequest([]);
 
-        $this->assertSame('foo', $formAuthentication->executeBefore($request, [])->getUserId());
+        static::assertSame('foo', $formAuthentication->executeBefore($request, [])->getUserId());
     }
 
     public function testNotAuthenticated(): void
@@ -63,7 +67,7 @@ class FormAuthenticationTest extends TestCase
         );
 
         $response = $formAuthentication->executeBefore($request, []);
-        $this->assertSame('{"formAuthentication":{"_form_auth_invalid_credentials":false,"_form_auth_redirect_to":"http:\/\/vpn.example\/","_show_logout_button":false}}', $response->getBody());
+        static::assertSame('{"formAuthentication":{"_form_auth_invalid_credentials":false,"_form_auth_redirect_to":"http:\/\/vpn.example\/","_show_logout_button":false}}', $response->getBody());
     }
 
     public function testVerifyCorrect(): void
@@ -98,8 +102,8 @@ class FormAuthenticationTest extends TestCase
         );
 
         $response = $service->run($request);
-        $this->assertSame('foo', $session->get('_form_auth_user'));
-        $this->assertSame(302, $response->getStatusCode());
+        static::assertSame('foo', $session->get('_form_auth_user'));
+        static::assertSame(302, $response->getStatusCode());
     }
 
     public function testVerifyIncorrect(): void
@@ -134,8 +138,8 @@ class FormAuthenticationTest extends TestCase
         );
 
         $response = $service->run($request);
-        $this->assertNull($session->get('_form_auth_user'));
+        static::assertNull($session->get('_form_auth_user'));
 
-        $this->assertSame('{"formAuthentication":{"_form_auth_invalid_credentials":true,"_form_auth_invalid_credentials_user":"foo","_form_auth_redirect_to":"http:\/\/vpn.example\/account","_show_logout_button":false}}', $response->getBody());
+        static::assertSame('{"formAuthentication":{"_form_auth_invalid_credentials":true,"_form_auth_invalid_credentials_user":"foo","_form_auth_redirect_to":"http:\/\/vpn.example\/account","_show_logout_button":false}}', $response->getBody());
     }
 }

@@ -16,7 +16,11 @@ use LC\Portal\Http\Response;
 use LC\Portal\Http\Service;
 use PHPUnit\Framework\TestCase;
 
-class ServiceTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ServiceTest extends TestCase
 {
     public function testGet(): void
     {
@@ -27,7 +31,8 @@ class ServiceTest extends TestCase
         );
 
         $service = new Service();
-        $service->get('/foo',
+        $service->get(
+            '/foo',
         /**
          * @return \LC\Portal\Http\Response
          */
@@ -36,16 +41,17 @@ class ServiceTest extends TestCase
             $response->setBody('{}');
 
             return $response;
-        });
-        $service->post('/bar',
-        /*
-         * @return \LC\Portal\Http\Response
-         */
-        fn (Request $request) => new Response());
+        }
+        );
+        $service->post(
+            '/bar',
+        // @return \LC\Portal\Http\Response
+        fn (Request $request) => new Response()
+        );
         $response = $service->run($request);
 
-        $this->assertSame(201, $response->getStatusCode());
-        $this->assertSame('{}', $response->getBody());
+        static::assertSame(201, $response->getStatusCode());
+        static::assertSame('{}', $response->getBody());
     }
 
     public function testMissingDocument(): void
@@ -57,7 +63,8 @@ class ServiceTest extends TestCase
         );
 
         $service = new Service();
-        $service->get('/foo',
+        $service->get(
+            '/foo',
         /**
          * @return \LC\Portal\Http\Response
          */
@@ -66,11 +73,12 @@ class ServiceTest extends TestCase
             $response->setBody('{}');
 
             return $response;
-        });
+        }
+        );
         $response = $service->run($request);
 
-        $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('{"error":"\"/bar\" not found"}', $response->getBody());
+        static::assertSame(404, $response->getStatusCode());
+        static::assertSame('{"error":"\"/bar\" not found"}', $response->getBody());
     }
 
     public function testUnsupportedMethod(): void
@@ -83,22 +91,20 @@ class ServiceTest extends TestCase
         );
 
         $service = new Service();
-        $service->get('/foo',
-            /*
-             * @return \LC\Portal\Http\Response
-             */
+        $service->get(
+            '/foo',
+            // @return \LC\Portal\Http\Response
             fn (Request $request) => new Response()
         );
-        $service->post('/foo',
-            /*
-             * @return \LC\Portal\Http\Response
-             */
+        $service->post(
+            '/foo',
+            // @return \LC\Portal\Http\Response
             fn (Request $request) => new Response()
         );
         $response = $service->run($request);
-        $this->assertSame(405, $response->getStatusCode());
-        $this->assertSame('GET,POST', $response->getHeader('Allow'));
-        $this->assertSame('{"error":"method \"DELETE\" not allowed"}', $response->getBody());
+        static::assertSame(405, $response->getStatusCode());
+        static::assertSame('GET,POST', $response->getHeader('Allow'));
+        static::assertSame('{"error":"method \"DELETE\" not allowed"}', $response->getBody());
     }
 
     public function testUnsupportedMethodMissingDocument(): void
@@ -111,21 +117,19 @@ class ServiceTest extends TestCase
         );
 
         $service = new Service();
-        $service->get('/foo',
-            /*
-             * @return \LC\Portal\Http\Response
-             */
+        $service->get(
+            '/foo',
+            // @return \LC\Portal\Http\Response
             fn (Request $request) => new Response()
         );
-        $service->post('/foo',
-            /*
-             * @return \LC\Portal\Http\Response
-             */
+        $service->post(
+            '/foo',
+            // @return \LC\Portal\Http\Response
             fn (Request $request) => new Response()
         );
         $response = $service->run($request);
-        $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('{"error":"\"/bar\" not found"}', $response->getBody());
+        static::assertSame(404, $response->getStatusCode());
+        static::assertSame('{"error":"\"/bar\" not found"}', $response->getBody());
     }
 
     public function testHooks(): void
@@ -138,14 +142,13 @@ class ServiceTest extends TestCase
 
         $service = new Service();
         $callbackHook = new CallbackHook(
-            /*
-             * @return string
-             */
+            // @return string
             fn (Request $request) => '12345'
         );
         $service->addBeforeHook('test', $callbackHook);
 
-        $service->get('/foo',
+        $service->get(
+            '/foo',
         /**
          * @return \LC\Portal\Http\Response
          */
@@ -154,11 +157,12 @@ class ServiceTest extends TestCase
             $response->setBody($hookData['test']);
 
             return $response;
-        });
+        }
+        );
         $response = $service->run($request);
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('12345', $response->getBody());
+        static::assertSame(200, $response->getStatusCode());
+        static::assertSame('12345', $response->getBody());
     }
 
     public function testHookResponse(): void
@@ -170,21 +174,19 @@ class ServiceTest extends TestCase
         );
         $service = new Service();
         $callbackHook = new CallbackHook(
-            /*
-             * @return \LC\Portal\Http\Response
-             */
+            // @return \LC\Portal\Http\Response
             fn (Request $request) => new Response(201)
         );
         $service->addBeforeHook('test', $callbackHook);
 
-        $service->get('/foo',
-        /*
-         * @return \LC\Portal\Http\Response
-         */
-        fn (Request $request, array $hookData) => new Response());
+        $service->get(
+            '/foo',
+        // @return \LC\Portal\Http\Response
+        fn (Request $request, array $hookData) => new Response()
+        );
         $response = $service->run($request);
 
-        $this->assertSame(201, $response->getStatusCode());
+        static::assertSame(201, $response->getStatusCode());
     }
 
     public function testHookDataPassing(): void
@@ -218,7 +220,7 @@ class ServiceTest extends TestCase
             )
         );
         $response = $service->run($request);
-        $this->assertSame('12345', $response->getBody());
+        static::assertSame('12345', $response->getBody());
     }
 
     public function testBrowserNotFoundWithoutTpl(): void
@@ -231,14 +233,14 @@ class ServiceTest extends TestCase
         );
 
         $service = new Service();
-        $service->get('/foo',
-        /*
-         * @return \LC\Portal\Http\Response
-         */
-        fn (Request $request) => new Response(200));
+        $service->get(
+            '/foo',
+        // @return \LC\Portal\Http\Response
+        fn (Request $request) => new Response(200)
+        );
         $response = $service->run($request);
-        $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('404: "/bar" not found', $response->getBody());
+        static::assertSame(404, $response->getStatusCode());
+        static::assertSame('404: "/bar" not found', $response->getBody());
     }
 
     public function testBrowserNotFoundWithTpl(): void
@@ -251,13 +253,13 @@ class ServiceTest extends TestCase
         );
 
         $service = new Service(new TestHtmlTpl());
-        $service->get('/foo',
-        /*
-         * @return \LC\Portal\Http\Response
-         */
-        fn (Request $request) => new Response(200));
+        $service->get(
+            '/foo',
+        // @return \LC\Portal\Http\Response
+        fn (Request $request) => new Response(200)
+        );
         $response = $service->run($request);
-        $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('<html><head><title>404</title></head><body><h1>Error (404)</h1><p>"/bar" not found</p></body></html>', $response->getBody());
+        static::assertSame(404, $response->getStatusCode());
+        static::assertSame('<html><head><title>404</title></head><body><h1>Error (404)</h1><p>"/bar" not found</p></body></html>', $response->getBody());
     }
 }

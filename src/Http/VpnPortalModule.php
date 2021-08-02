@@ -138,8 +138,10 @@ class VpnPortalModule implements ServiceModuleInterface
                 switch ($profileConfig->vpnType()) {
                     case 'openvpn':
                         return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
+
                     case 'wireguard':
                         return $this->getWireGuardConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
+
                     default:
                         throw new HttpException('unsupported VPN type', 500);
                 }

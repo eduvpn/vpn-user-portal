@@ -102,6 +102,7 @@ class Wg
         foreach ($peerInfo['AllowedIPs'] as $ip) {
             if (false !== strpos($ip, ':')) {
                 [$ipSix, ] = explode('/', $ip);
+
                 continue;
             }
             [$ipFour, ] = explode('/', $ip);
@@ -149,7 +150,7 @@ class Wg
     private static function extractPublicKey(string $privateKey): string
     {
         ob_start();
-        passthru("echo $privateKey | /usr/bin/wg pubkey");
+        passthru("echo {$privateKey} | /usr/bin/wg pubkey");
 
         return trim(ob_get_clean());
     }

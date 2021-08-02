@@ -14,16 +14,20 @@ namespace LC\Portal\Tests;
 use LC\Portal\ServerConfigCheck;
 use PHPUnit\Framework\TestCase;
 
-class ServerConfigCheckTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ServerConfigCheckTest extends TestCase
 {
     public function testcheckOverlap(): void
     {
         // IPv4
-        $this->assertEmpty(ServerConfigCheck::checkOverlap(['192.168.0.0/24', '10.0.0.0/8']));
-        $this->assertEmpty(ServerConfigCheck::checkOverlap(['192.168.0.0/24', '192.168.1.0/24']));
-        $this->assertEmpty(ServerConfigCheck::checkOverlap(['192.168.0.0/25', '192.168.0.128/25']));
+        static::assertEmpty(ServerConfigCheck::checkOverlap(['192.168.0.0/24', '10.0.0.0/8']));
+        static::assertEmpty(ServerConfigCheck::checkOverlap(['192.168.0.0/24', '192.168.1.0/24']));
+        static::assertEmpty(ServerConfigCheck::checkOverlap(['192.168.0.0/25', '192.168.0.128/25']));
 
-        $this->assertSame(
+        static::assertSame(
             [
                 [
                     '192.168.0.0/24',
@@ -33,7 +37,7 @@ class ServerConfigCheckTest extends TestCase
             ServerConfigCheck::checkOverlap(['192.168.0.0/24', '192.168.0.0/24'])
         );
 
-        $this->assertSame(
+        static::assertSame(
             [
                 [
                     '192.168.0.0/25',
@@ -44,10 +48,10 @@ class ServerConfigCheckTest extends TestCase
         );
 
         // IPv6
-        $this->assertEmpty(ServerConfigCheck::checkOverlap(['fd00::/8', 'fc00::/8']));
-        $this->assertEmpty(ServerConfigCheck::checkOverlap(['fd11:1111:1111:1111::/64', 'fd11:1111:1111:1112::/64']));
+        static::assertEmpty(ServerConfigCheck::checkOverlap(['fd00::/8', 'fc00::/8']));
+        static::assertEmpty(ServerConfigCheck::checkOverlap(['fd11:1111:1111:1111::/64', 'fd11:1111:1111:1112::/64']));
 
-        $this->assertSame(
+        static::assertSame(
             [
                 [
                     'fd11:1111:1111:1111::/64',
@@ -57,7 +61,7 @@ class ServerConfigCheckTest extends TestCase
             ServerConfigCheck::checkOverlap(['fd11:1111:1111:1111::/64', 'fd11:1111:1111:1111::/64'])
         );
 
-        $this->assertSame(
+        static::assertSame(
             [
                 [
                     'fd11:1111:1111:1111::/100',

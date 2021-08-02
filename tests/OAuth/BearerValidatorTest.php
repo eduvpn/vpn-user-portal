@@ -22,7 +22,11 @@ use LC\Portal\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
-class BearerValidatorTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class BearerValidatorTest extends TestCase
 {
     /** @var \LC\Portal\OAuth\BearerValidator */
     private $bearerValidator;
@@ -81,10 +85,10 @@ class BearerValidatorTest extends TestCase
         );
 
         $accessTokenInfo = $this->bearerValidator->validate('Bearer '.$bearerToken);
-        $this->assertSame('foo', $accessTokenInfo->getUserId());
-        $this->assertSame('org.letsconnect-vpn.app.windows', $accessTokenInfo->getClientId());
-        $this->assertSame('config', (string) $accessTokenInfo->getScope());
-        $this->assertTrue($accessTokenInfo->getIsLocal());
+        static::assertSame('foo', $accessTokenInfo->getUserId());
+        static::assertSame('org.letsconnect-vpn.app.windows', $accessTokenInfo->getClientId());
+        static::assertSame('config', (string) $accessTokenInfo->getScope());
+        static::assertTrue($accessTokenInfo->getIsLocal());
     }
 
     public function testRemoteToken(): void
@@ -102,9 +106,9 @@ class BearerValidatorTest extends TestCase
             ]
         );
         $accessTokenInfo = $this->bearerValidator->validate('Bearer '.$bearerToken);
-        $this->assertSame('https://vpn.example.org!!foo', $accessTokenInfo->getUserId());
-        $this->assertSame('org.letsconnect-vpn.app.windows', $accessTokenInfo->getClientId());
-        $this->assertSame('config', (string) $accessTokenInfo->getScope());
-        $this->assertFalse($accessTokenInfo->getIsLocal());
+        static::assertSame('https://vpn.example.org!!foo', $accessTokenInfo->getUserId());
+        static::assertSame('org.letsconnect-vpn.app.windows', $accessTokenInfo->getClientId());
+        static::assertSame('config', (string) $accessTokenInfo->getScope());
+        static::assertFalse($accessTokenInfo->getIsLocal());
     }
 }

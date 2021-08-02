@@ -20,7 +20,7 @@ class Json
      */
     public static function encode($jsonData): string
     {
-        $jsonString = json_encode($jsonData, \JSON_UNESCAPED_SLASHES);
+        $jsonString = json_encode($jsonData, JSON_UNESCAPED_SLASHES);
         // 5.5.0 	The return value on failure was changed from null string to FALSE.
         if (false === $jsonString || 'null' === $jsonString) {
             throw new JsonException('unable to encode JSON');
@@ -32,7 +32,7 @@ class Json
     public static function decode(string $jsonString): array
     {
         $jsonData = json_decode($jsonString, true);
-        if (null === $jsonData && \JSON_ERROR_NONE !== json_last_error()) {
+        if (null === $jsonData && JSON_ERROR_NONE !== json_last_error()) {
             throw new JsonException('unable to parse/decode JSON');
         }
 

@@ -25,7 +25,11 @@ use LC\Portal\VpnPortalModule;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
-class VpnPortalModuleTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class VpnPortalModuleTest extends TestCase
 {
     /** @var \LC\Portal\Http\Service */
     private $service;
@@ -72,7 +76,7 @@ class VpnPortalModuleTest extends TestCase
 
     public function testHomeGet(): void
     {
-        $this->assertSame(
+        static::assertSame(
             [
                 'vpnPortalHome' => [],
             ],
@@ -82,7 +86,7 @@ class VpnPortalModuleTest extends TestCase
 
     public function testConfigurtionsPost(): void
     {
-        $this->assertSame(
+        static::assertSame(
             trim(file_get_contents(sprintf('%s/data/foo_MyConfig.ovpn', __DIR__))),
             $this->makeRequest(
                 'POST',
@@ -96,7 +100,7 @@ class VpnPortalModuleTest extends TestCase
 
     public function testAccount(): void
     {
-        $this->assertSame(
+        static::assertSame(
             [
                 'vpnPortalAccount' => [
                     'hasTotpSecret' => false,
@@ -119,7 +123,7 @@ class VpnPortalModuleTest extends TestCase
 
     public function testConfigurations(): void
     {
-        $this->assertSame(
+        static::assertSame(
             [
                 'vpnPortalConfigurations' => [
                     'expiryDate' => '2019-04-01',
@@ -144,7 +148,7 @@ class VpnPortalModuleTest extends TestCase
 
     public function testDisableConfirm(): void
     {
-        $this->assertSame(
+        static::assertSame(
             302,
             $this->makeRequest('POST', '/deleteCertificate', [], ['commonName' => '12345678901234567890123456789012'], true)->getStatusCode()
         );
@@ -157,7 +161,7 @@ class VpnPortalModuleTest extends TestCase
      * @param array<string,string> $postData
      * @param bool                 $returnResponseObj
      *
-     * @return \LC\Portal\Http\Response|array
+     * @return array|\LC\Portal\Http\Response
      */
     private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $returnResponseObj = false)
     {

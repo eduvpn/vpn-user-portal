@@ -121,6 +121,7 @@ try {
         if ('--alert' === $arg) {
             $alertOnly = true;
             $searchForPercentage = true;
+
             continue;
         }
         if ($searchForPercentage) {
@@ -204,5 +205,6 @@ try {
     outputConversion($outputData, $asJson);
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
+
     exit(1);
 }

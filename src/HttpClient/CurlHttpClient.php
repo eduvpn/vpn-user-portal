@@ -43,15 +43,15 @@ class CurlHttpClient implements HttpClientInterface
 
         $headerList = '';
         $curlOptions = [
-            \CURLOPT_URL => $requestUrl,
-            \CURLOPT_HTTPHEADER => array_merge($this->requestHeaders, $requestHeaders),
-            \CURLOPT_HEADER => false,
-            \CURLOPT_RETURNTRANSFER => true,
-            \CURLOPT_FOLLOWLOCATION => false,
-            \CURLOPT_CONNECTTIMEOUT => 10,
-            \CURLOPT_TIMEOUT => 15,
-            \CURLOPT_PROTOCOLS => \CURLPROTO_HTTP | \CURLPROTO_HTTPS,
-            \CURLOPT_HEADERFUNCTION =>
+            CURLOPT_URL => $requestUrl,
+            CURLOPT_HTTPHEADER => array_merge($this->requestHeaders, $requestHeaders),
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_HEADERFUNCTION =>
             /**
              * @suppress PhanUnusedClosureParameter
              *
@@ -76,7 +76,7 @@ class CurlHttpClient implements HttpClientInterface
             throw new HttpClientException(sprintf('failure performing the HTTP request: "%s"', curl_error($curlChannel)));
         }
 
-        $responseCode = (int) curl_getinfo($curlChannel, \CURLINFO_HTTP_CODE);
+        $responseCode = (int) curl_getinfo($curlChannel, CURLINFO_HTTP_CODE);
         curl_close($curlChannel);
 
         return new HttpClientResponse(
@@ -119,16 +119,16 @@ class CurlHttpClient implements HttpClientInterface
 
         $headerList = '';
         $curlOptions = [
-            \CURLOPT_URL => $requestUrl,
-            \CURLOPT_HTTPHEADER => array_merge($this->requestHeaders, $requestHeaders),
-            \CURLOPT_POSTFIELDS => $rawPost,
-            \CURLOPT_HEADER => false,
-            \CURLOPT_RETURNTRANSFER => true,
-            \CURLOPT_FOLLOWLOCATION => false,
-            \CURLOPT_CONNECTTIMEOUT => 10,
-            \CURLOPT_TIMEOUT => 15,
-            \CURLOPT_PROTOCOLS => \CURLPROTO_HTTP | \CURLPROTO_HTTPS,
-            \CURLOPT_HEADERFUNCTION =>
+            CURLOPT_URL => $requestUrl,
+            CURLOPT_HTTPHEADER => array_merge($this->requestHeaders, $requestHeaders),
+            CURLOPT_POSTFIELDS => $rawPost,
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_HEADERFUNCTION =>
             /**
              * @suppress PhanUnusedClosureParameter
              *
@@ -153,7 +153,7 @@ class CurlHttpClient implements HttpClientInterface
             throw new HttpClientException(sprintf('failure performing the HTTP request: "%s"', curl_error($curlChannel)));
         }
 
-        $responseCode = (int) curl_getinfo($curlChannel, \CURLINFO_HTTP_CODE);
+        $responseCode = (int) curl_getinfo($curlChannel, CURLINFO_HTTP_CODE);
         curl_close($curlChannel);
 
         return new HttpClientResponse(

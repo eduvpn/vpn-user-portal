@@ -18,9 +18,9 @@ use RuntimeException;
 
 class OpenVpnServerConfig
 {
-    const VPN_USER = 'openvpn';
-    const VPN_GROUP = 'openvpn';
-    const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
+    public const VPN_USER = 'openvpn';
+    public const VPN_GROUP = 'openvpn';
+    public const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
 
     private CaInterface $ca;
     private TlsCrypt $tlsCrypt;
@@ -209,7 +209,7 @@ class OpenVpnServerConfig
         // Client-to-client
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
 
-        return implode(\PHP_EOL, $serverConfig);
+        return implode(PHP_EOL, $serverConfig);
     }
 
     /**

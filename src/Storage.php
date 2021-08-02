@@ -17,7 +17,7 @@ use PDO;
 
 class Storage
 {
-    const CURRENT_SCHEMA_VERSION = '2021071401';
+    public const CURRENT_SCHEMA_VERSION = '2021071401';
 
     private PDO $db;
 
@@ -231,12 +231,12 @@ class Storage
     public function localUserDelete(string $userId): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        DELETE FROM
-            local_users
-        WHERE
-            user_id = :user_id
-    SQL
+            <<< 'SQL'
+                    DELETE FROM
+                        local_users
+                    WHERE
+                        user_id = :user_id
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -291,14 +291,14 @@ class Storage
     public function getUsers(): array
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            user_id,
-            permission_list,
-            is_disabled
-        FROM
-            users
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        user_id,
+                        permission_list,
+                        is_disabled
+                    FROM
+                        users
+                SQL
         );
         $stmt->execute();
 
@@ -320,14 +320,14 @@ class Storage
     public function getPermissionList(string $userId)
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            permission_list
-        FROM
-            users
-        WHERE
-            user_id = :user_id
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        permission_list
+                    FROM
+                        users
+                    WHERE
+                        user_id = :user_id
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -338,12 +338,12 @@ class Storage
     public function userDelete(string $userId): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        DELETE FROM
-            users
-        WHERE
-            user_id = :user_id
-    SQL
+            <<< 'SQL'
+                    DELETE FROM
+                        users
+                    WHERE
+                        user_id = :user_id
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -355,14 +355,14 @@ class Storage
     public function userUpdate(string $userId, array $permissionList): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        UPDATE
-            users
-        SET
-            permission_list = :permission_list
-        WHERE
-            user_id = :user_id
-    SQL
+            <<< 'SQL'
+                    UPDATE
+                        users
+                    SET
+                        permission_list = :permission_list
+                    WHERE
+                        user_id = :user_id
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
@@ -373,12 +373,12 @@ class Storage
     public function addCertificate(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        INSERT INTO certificates
-            (profile_id, common_name, user_id, display_name, expires_at, auth_key)
-        VALUES
-            (:profile_id, :common_name, :user_id, :display_name, :expires_at, :auth_key)
-    SQL
+            <<< 'SQL'
+                    INSERT INTO certificates
+                        (profile_id, common_name, user_id, display_name, expires_at, auth_key)
+                    VALUES
+                        (:profile_id, :common_name, :user_id, :display_name, :expires_at, :auth_key)
+                SQL
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
@@ -395,20 +395,20 @@ class Storage
     public function getCertificates(string $userId): array
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            profile_id,
-            common_name,
-            display_name,
-            expires_at,
-            auth_key
-        FROM
-            certificates
-        WHERE
-            user_id = :user_id
-        ORDER BY
-            expires_at DESC
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        profile_id,
+                        common_name,
+                        display_name,
+                        expires_at,
+                        auth_key
+                    FROM
+                        certificates
+                    WHERE
+                        user_id = :user_id
+                    ORDER BY
+                        expires_at DESC
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -433,19 +433,19 @@ class Storage
     public function getUserCertificateInfo(string $commonName): ?array
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            u.user_id AS user_id,
-            u.is_disabled AS user_is_disabled,
-            c.display_name AS display_name,
-            c.expires_at AS expires_at
-        FROM
-            users u, certificates c
-        WHERE
-            u.user_id = c.user_id
-        AND
-            c.common_name = :common_name
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        u.user_id AS user_id,
+                        u.is_disabled AS user_is_disabled,
+                        c.display_name AS display_name,
+                        c.expires_at AS expires_at
+                    FROM
+                        users u, certificates c
+                    WHERE
+                        u.user_id = c.user_id
+                    AND
+                        c.common_name = :common_name
+                SQL
         );
 
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
@@ -466,14 +466,14 @@ class Storage
     public function deleteCertificate(string $userId, string $commonName): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        DELETE FROM
-            certificates
-        WHERE
-            user_id = :user_id
-        AND
-            common_name = :common_name
-    SQL
+            <<< 'SQL'
+                    DELETE FROM
+                        certificates
+                    WHERE
+                        user_id = :user_id
+                    AND
+                        common_name = :common_name
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
@@ -484,12 +484,12 @@ class Storage
     {
         // XXX this is taken care of by foreign keys?
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        DELETE FROM
-            certificates
-        WHERE
-            auth_key = :auth_key
-    SQL
+            <<< 'SQL'
+                    DELETE FROM
+                        certificates
+                    WHERE
+                        auth_key = :auth_key
+                SQL
         );
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
@@ -498,14 +498,14 @@ class Storage
     public function userDisable(string $userId): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        UPDATE
-            users
-        SET
-            is_disabled = 1
-        WHERE
-            user_id = :user_id
-    SQL
+            <<< 'SQL'
+                    UPDATE
+                        users
+                    SET
+                        is_disabled = 1
+                    WHERE
+                        user_id = :user_id
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -514,14 +514,14 @@ class Storage
     public function userEnable(string $userId): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        UPDATE
-            users
-        SET
-            is_disabled = 0
-        WHERE
-            user_id = :user_id
-    SQL
+            <<< 'SQL'
+                    UPDATE
+                        users
+                    SET
+                        is_disabled = 0
+                    WHERE
+                        user_id = :user_id
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -530,14 +530,14 @@ class Storage
     public function userExists(string $userId): bool
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            COUNT(user_id)
-        FROM
-            users
-        WHERE
-            user_id = :user_id
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        COUNT(user_id)
+                    FROM
+                        users
+                    WHERE
+                        user_id = :user_id
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -548,14 +548,14 @@ class Storage
     public function userIsDisabled(string $userId): bool
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            is_disabled
-        FROM
-            users
-        WHERE
-            user_id = :user_id
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        is_disabled
+                    FROM
+                        users
+                    WHERE
+                        user_id = :user_id
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
@@ -569,24 +569,24 @@ class Storage
     public function clientConnect(string $userId, string $profileId, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        INSERT INTO connection_log
-            (
-                user_id,
-                profile_id,
-                ip_four,
-                ip_six,
-                connected_at
-            )
-        VALUES
-            (
-                :user_id,
-                :profile_id,
-                :ip_four,
-                :ip_six,
-                :connected_at
-            )
-    SQL
+            <<< 'SQL'
+                    INSERT INTO connection_log
+                        (
+                            user_id,
+                            profile_id,
+                            ip_four,
+                            ip_six,
+                            connected_at
+                        )
+                    VALUES
+                        (
+                            :user_id,
+                            :profile_id,
+                            :ip_four,
+                            :ip_six,
+                            :connected_at
+                        )
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -601,22 +601,22 @@ class Storage
     {
         // XXX make sure the entry with disconnect_at IS NULL exists, otherwise scream
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        UPDATE
-            connection_log
-        SET
-            disconnected_at = :disconnected_at
-        WHERE
-            user_id = :user_id
-        AND
-            profile_id = :profile_id
-        AND
-            ip_four = :ip_four
-        AND
-            ip_six = :ip_six
-        AND
-            disconnected_at IS NULL
-    SQL
+            <<< 'SQL'
+                    UPDATE
+                        connection_log
+                    SET
+                        disconnected_at = :disconnected_at
+                    WHERE
+                        user_id = :user_id
+                    AND
+                        profile_id = :profile_id
+                    AND
+                        ip_four = :ip_four
+                    AND
+                        ip_six = :ip_six
+                    AND
+                        disconnected_at IS NULL
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -633,21 +633,21 @@ class Storage
     public function getConnectionLogForUser(string $userId): array
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            profile_id,
-            ip_four,
-            ip_six,
-            connected_at,
-            disconnected_at
-        FROM
-            connection_log
-        WHERE
-            user_id= :user_id
-        ORDER BY
-            connected_at
-        DESC
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        profile_id,
+                        ip_four,
+                        ip_six,
+                        connected_at,
+                        disconnected_at
+                    FROM
+                        connection_log
+                    WHERE
+                        user_id= :user_id
+                    ORDER BY
+                        connected_at
+                    DESC
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -673,23 +673,23 @@ class Storage
     public function getLogEntries(DateTimeImmutable $dateTime, string $ipAddress)
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            user_id,
-            profile_id,
-            ip_four,
-            ip_six,
-            connected_at,
-            disconnected_at
-        FROM
-            connection_log
-        WHERE
-            (ip_four = :ip_address OR ip_six = :ip_address)
-        AND
-            connected_at <= :date_time
-        AND
-            disconnected_at >= :date_time
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        user_id,
+                        profile_id,
+                        ip_four,
+                        ip_six,
+                        connected_at,
+                        disconnected_at
+                    FROM
+                        connection_log
+                    WHERE
+                        (ip_four = :ip_address OR ip_six = :ip_address)
+                    AND
+                        connected_at <= :date_time
+                    AND
+                        disconnected_at >= :date_time
+                SQL
         );
 
         $stmt->bindValue(':ip_address', $ipAddress, PDO::PARAM_STR);
@@ -714,14 +714,14 @@ class Storage
     {
         // XXX test this!
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        DELETE FROM
-            connection_log
-        WHERE
-            disconnected_at IS NOT NULL
-        AND
-            disconnected_at < :date_time
-    SQL
+            <<< 'SQL'
+                    DELETE FROM
+                        connection_log
+                    WHERE
+                        disconnected_at IS NOT NULL
+                    AND
+                        disconnected_at < :date_time
+                SQL
         );
 
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
@@ -734,12 +734,12 @@ class Storage
     public function cleanUserLog(DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        DELETE FROM
-            user_log
-        WHERE
-            date_time < :date_time
-    SQL
+            <<< 'SQL'
+                    DELETE FROM
+                        user_log
+                    WHERE
+                        date_time < :date_time
+                SQL
         );
 
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
@@ -754,16 +754,16 @@ class Storage
     public function getUserLog(string $userId): array
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            log_level, log_message, date_time
-        FROM
-            user_log
-        WHERE
-            user_id = :user_id
-        ORDER BY
-            date_time DESC
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        log_level, log_message, date_time
+                    FROM
+                        user_log
+                    WHERE
+                        user_id = :user_id
+                    ORDER BY
+                        date_time DESC
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -784,12 +784,12 @@ class Storage
     public function addUserLog(string $userId, int $logLevel, string $logMessage, DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        INSERT INTO user_log
-            (user_id, log_level, log_message, date_time)
-        VALUES
-            (:user_id, :log_level, :log_message, :date_time)
-    SQL
+            <<< 'SQL'
+                    INSERT INTO user_log
+                        (user_id, log_level, log_message, date_time)
+                    VALUES
+                        (:user_id, :log_level, :log_message, :date_time)
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -822,19 +822,19 @@ class Storage
     public function userAdd(string $userId, array $permissionList): void
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        INSERT INTO
-            users (
-                user_id,
-                permission_list,
-                is_disabled
-            )
-        VALUES (
-            :user_id,
-            :permission_list,
-            :is_disabled
-        )
-    SQL
+            <<< 'SQL'
+                    INSERT INTO
+                        users (
+                            user_id,
+                            permission_list,
+                            is_disabled
+                        )
+                    VALUES (
+                        :user_id,
+                        :permission_list,
+                        :is_disabled
+                    )
+                SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
@@ -848,17 +848,17 @@ class Storage
     public function getAppUsage()
     {
         $stmt = $this->db->prepare(
-<<< 'SQL'
-        SELECT
-            client_id,
-            COUNT(DISTINCT client_id) AS client_count
-        FROM
-            oauth_authorizations
-        GROUP BY
-            client_id
-        ORDER BY
-            client_count DESC
-    SQL
+            <<< 'SQL'
+                    SELECT
+                        client_id,
+                        COUNT(DISTINCT client_id) AS client_count
+                    FROM
+                        oauth_authorizations
+                    GROUP BY
+                        client_id
+                    ORDER BY
+                        client_count DESC
+                SQL
         );
         $stmt->execute();
 

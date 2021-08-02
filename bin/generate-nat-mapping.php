@@ -28,47 +28,54 @@ try {
         if ('-4' === $argv[$i]) {
             $ipFour = true;
             $ipSix = false;
+
             continue;
         }
         if ('-6' === $argv[$i]) {
             $ipFour = false;
             $ipSix = true;
+
             continue;
         }
         if ('--external-v4' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $externalIpFour = $argv[$i + 1];
             }
+
             continue;
         }
         if ('--external-v6' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $externalIpSix = $argv[$i + 1];
             }
+
             continue;
         }
         if ('--profile' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $profileIdList[] = $argv[$i + 1];
             }
+
             continue;
         }
         if ('--ports-per-host' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $portsPerHost = (int) $argv[$i + 1];
             }
+
             continue;
         }
         if ('--first-port' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $firstPort = (int) $argv[$i + 1];
             }
+
             continue;
         }
         if ('--help' === $argv[$i] || '-h' === $argv[$i]) {
             $appName = $argv[0];
             echo <<< EOF
-                SYNTAX: $appName
+                SYNTAX: {$appName}
                     [--profile ID]                  Only Profile ID (can be specified
                                                     multiple times)
                     [-4]                            Only IPv4
@@ -79,6 +86,7 @@ try {
                     [--external-v6 EXTERNAL_IP]     External IPv6 address
 
                 EOF;
+
             exit(0);
         }
     }
@@ -146,5 +154,6 @@ try {
     }
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
+
     exit(1);
 }

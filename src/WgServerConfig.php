@@ -44,9 +44,9 @@ class WgServerConfig
 
         $wgConfig = <<< EOF
             [Interface]
-            Address = $ipList
+            Address = {$ipList}
             ListenPort = 51820
-            PrivateKey = $privateKey
+            PrivateKey = {$privateKey}
             EOF;
 
         return ['wg0.conf' => $wgConfig];
@@ -84,7 +84,7 @@ class WgServerConfig
     private static function extractPublicKey(string $privateKey): string
     {
         ob_start();
-        passthru("echo $privateKey | /usr/bin/wg pubkey");
+        passthru("echo {$privateKey} | /usr/bin/wg pubkey");
 
         return trim(ob_get_clean());
     }

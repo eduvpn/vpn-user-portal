@@ -36,6 +36,7 @@ class TestHttpClient implements HttpClientInterface
                 }
 
                 return new HttpClientResponse(400, [], self::wrapError('unexpected_request'));
+
             default:
                 throw new RuntimeException(sprintf('unexpected requestUrl "%s"', $requestUrl));
         }
@@ -58,6 +59,7 @@ class TestHttpClient implements HttpClientInterface
                 }
 
                 return new HttpClientResponse(200, [], self::wrapError('verify_totp_key', 'invalid OTP key'));
+
             default:
                 throw new RuntimeException(sprintf('unexpected requestUrl "%s"', $requestUrl));
         }

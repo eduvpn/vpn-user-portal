@@ -214,7 +214,7 @@ class Tpl implements TplInterface
             $v = $this->batch($v, $cb);
         }
 
-        return htmlentities($v, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+        return htmlentities($v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**
@@ -245,6 +245,7 @@ class Tpl implements TplInterface
         foreach ($functionList as $f) {
             if ('escape' === $f) {
                 $v = $this->e($v);
+
                 continue;
             }
             if (\array_key_exists($f, $this->callbackList)) {

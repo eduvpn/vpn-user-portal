@@ -15,8 +15,8 @@ use RuntimeException;
 
 class DaemonSocket
 {
-    /** @var resource|null */
-    private $daemonSocket = null;
+    /** @var null|resource */
+    private $daemonSocket;
 
     private string $certDir;
 
@@ -46,9 +46,7 @@ class DaemonSocket
      */
     public function connections(): array
     {
-        $connectionList = self::parseConnectionList($this->sendCommand('LIST'));
-
-        return $connectionList;
+        return self::parseConnectionList($this->sendCommand('LIST'));
     }
 
     /**
@@ -75,9 +73,12 @@ class DaemonSocket
         // never use TLS to connect to localhost, no matter whether useTls is
         // true...
         if (!\in_array($nodeIp, ['127.0.0.1', '::1'], true) && $useTls) {
-            // we MUST have a TLS cert
-            // @see https://www.php.net/manual/en/context.ssl.php
-            // @see https://www.php.net/manual/en/transports.inet.php
+            /**
+             * we MUST have a TLS cert.
+             *
+             * @see https://www.php.net/manual/en/context.ssl.php
+             * @see https://www.php.net/manual/en/transports.inet.php
+             */
             $streamContext = stream_context_create(
                 [
                     'ssl' => [
@@ -94,7 +95,7 @@ class DaemonSocket
             );
 
             $socketAddress = sprintf('ssl://%s:41194', $nodeIp);
-            if (false === $daemonSocket = @stream_socket_client($socketAddress, $errno, $errstr, 5, \STREAM_CLIENT_CONNECT, $streamContext)) {
+            if (false === $daemonSocket = @stream_socket_client($socketAddress, $errno, $errstr, 5, STREAM_CLIENT_CONNECT, $streamContext)) {
                 throw new RuntimeException(sprintf('unable to open socket to "%s": [%d]: %s', $socketAddress, $errno, $errstr));
             }
 
@@ -102,7 +103,7 @@ class DaemonSocket
         }
 
         $socketAddress = sprintf('tcp://%s:41194', $nodeIp);
-        if (false === $daemonSocket = @stream_socket_client($socketAddress, $errno, $errstr, 5, \STREAM_CLIENT_CONNECT)) {
+        if (false === $daemonSocket = @stream_socket_client($socketAddress, $errno, $errstr, 5, STREAM_CLIENT_CONNECT)) {
             throw new RuntimeException(sprintf('unable to open socket to "%s": [%d]: %s', $socketAddress, $errno, $errstr));
         }
 

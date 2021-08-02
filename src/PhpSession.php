@@ -15,9 +15,9 @@ use LC\Portal\Http\SessionInterface;
 
 class PhpSession implements SessionInterface
 {
-    const SESSION_NAME = 'SID';
+    public const SESSION_NAME = 'SID';
 
-    const SESSION_EXPIRY = 1800; // 30 minutes
+    public const SESSION_EXPIRY = 1800; // 30 minutes
 
     public function __construct(bool $secureCookie, string $cookiePath)
     {

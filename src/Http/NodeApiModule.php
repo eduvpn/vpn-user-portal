@@ -49,7 +49,7 @@ class NodeApiModule implements ServiceModuleInterface
                 $serverConfigList = $this->serverConfig->get($this->config->profileConfigList());
                 $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {
-                    $bodyLines[] = $configName.':'.sodium_bin2base64($configFile, \SODIUM_BASE64_VARIANT_ORIGINAL);
+                    $bodyLines[] = $configName.':'.sodium_bin2base64($configFile, SODIUM_BASE64_VARIANT_ORIGINAL);
                 }
 
                 /// XXX content type?

@@ -138,10 +138,14 @@ try {
                     'foo' => 'bar',
                 ]
             );
+
             break;
+
         case 'PhpSamlSpAuthModule':
             $authModule = new PhpSamlSpAuthModule($config->s('PhpSamlSpAuthModule'));
+
             break;
+
         case 'DbAuthModule':
             $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
@@ -160,19 +164,27 @@ try {
                     $storage
                 )
             );
+
             break;
+
         case 'MellonAuthModule':
             $authModule = new MellonAuthModule($config->s('MellonAuthModule'));
+
             break;
+
         case 'ShibAuthModule':
             $authModule = new ShibAuthModule(
                 $config->s('ShibAuthModule')->requireString('userIdAttribute'),
                 $config->s('ShibAuthModule')->requireArray('permissionAttributeList', [])
             );
+
             break;
+
         case 'ClientCertAuthModule':
             $authModule = new ClientCertAuthModule();
+
             break;
+
         case 'RadiusAuthModule':
             $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
@@ -188,7 +200,9 @@ try {
                     $tpl
                 )
             );
+
             break;
+
         case 'LdapAuthModule':
             $ldapClient = new LdapClient(
                 $config->s('LdapAuthModule')->requireString('ldapUri')
@@ -212,7 +226,9 @@ try {
                     $tpl
                 )
             );
+
             break;
+
         default:
             throw new RuntimeException('unsupported authentication mechanism');
     }

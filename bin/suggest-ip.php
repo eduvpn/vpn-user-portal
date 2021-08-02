@@ -30,6 +30,7 @@ for ($i = 1; $i < $argc; ++$i) {
     }
     if ('--help' === $argv[$i] || '-h' === $argv[$i]) {
         echo 'SYNTAX: '.$argv[0].' [-4] [-6]'.\PHP_EOL;
+
         exit(0);
     }
 }
@@ -41,7 +42,7 @@ if (!$showFour && !$showSix) {
 
 if ($showFour) {
     $ipFourPrefix = sprintf(
-    '10.%s.%s.0/24',
+        '10.%s.%s.0/24',
         hexdec(bin2hex(random_bytes(1))),
         hexdec(bin2hex(random_bytes(1)))
     );

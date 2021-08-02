@@ -30,24 +30,28 @@ class TestHttpClient implements HttpClientInterface
                     'Content-Type: application/json',
                     file_get_contents(sprintf('%s/data/server_list.json', __DIR__))
                 );
+
             case 'https://disco.eduvpn.org/v2/server_list.json.minisig':
                 return new HttpClientResponse(
                     200,
                     '',
                     file_get_contents(sprintf('%s/data/server_list.json.minisig', __DIR__))
                 );
+
             case 'https://disco.eduvpn.org/v2/server_list_rollback.json':
                 return new HttpClientResponse(
                     200,
                     'Content-Type: application/json',
                     file_get_contents(sprintf('%s/data/server_list_rollback.json', __DIR__))
                 );
+
             case 'https://disco.eduvpn.org/v2/server_list_rollback.json.minisig':
                 return new HttpClientResponse(
                     200,
                     '',
                     file_get_contents(sprintf('%s/data/server_list_rollback.json.minisig', __DIR__))
                 );
+
             default:
                 throw new RuntimeException('no such requestUrl');
         }

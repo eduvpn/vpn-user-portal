@@ -78,7 +78,7 @@ class PasswdModule implements ServiceModuleInterface
                     );
                 }
 
-                $passwordHash = password_hash($newUserPass, \PASSWORD_DEFAULT);
+                $passwordHash = password_hash($newUserPass, PASSWORD_DEFAULT);
                 if (!\is_string($passwordHash)) {
                     throw new HttpException('unable to generate password hash', 500);
                 }

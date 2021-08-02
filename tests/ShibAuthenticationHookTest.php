@@ -16,7 +16,11 @@ use LC\Portal\Http\Request;
 use LC\Portal\ShibAuthentication;
 use PHPUnit\Framework\TestCase;
 
-class ShibAuthenticationHookTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ShibAuthenticationHookTest extends TestCase
 {
     public function testBasic(): void
     {
@@ -34,8 +38,8 @@ class ShibAuthenticationHookTest extends TestCase
             ),
             []
         );
-        $this->assertSame('https://idp.example.org/saml!https://sp.example.org/saml!abcdef', $userInfo->getUserId());
-        $this->assertSame([], $userInfo->getPermissionList());
+        static::assertSame('https://idp.example.org/saml!https://sp.example.org/saml!abcdef', $userInfo->getUserId());
+        static::assertSame([], $userInfo->getPermissionList());
     }
 
     public function testPermissionList(): void
@@ -56,7 +60,7 @@ class ShibAuthenticationHookTest extends TestCase
             ),
             []
         );
-        $this->assertSame('https://idp.example.org/saml!https://sp.example.org/saml!abcdef', $userInfo->getUserId());
-        $this->assertSame(['a', 'b'], $userInfo->getPermissionList());
+        static::assertSame('https://idp.example.org/saml!https://sp.example.org/saml!abcdef', $userInfo->getUserId());
+        static::assertSame(['a', 'b'], $userInfo->getPermissionList());
     }
 }

@@ -20,7 +20,7 @@ use RuntimeException;
 
 class Migration
 {
-    const NO_VERSION = '0000000000';
+    public const NO_VERSION = '0000000000';
 
     private PDO $dbh;
     private string $schemaVersion;

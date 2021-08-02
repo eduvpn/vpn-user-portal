@@ -20,8 +20,8 @@ use LC\Portal\Exception\IPException;
  */
 class IP
 {
-    const IP_4 = 4;
-    const IP_6 = 6;
+    public const IP_4 = 4;
+    public const IP_6 = 6;
 
     private GMP $ipAddress;
     private int $ipPrefix;
@@ -219,7 +219,7 @@ class IP
 
     private static function fromIpFour(string $ipAddress, ?int $ipPrefix = null): self
     {
-        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
+        if (false === filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             throw new IPException('invalid IPv4 address');
         }
         if (null === $ipPrefix) {
@@ -234,7 +234,7 @@ class IP
 
     private static function fromIpSix(string $ipAddress, ?int $ipPrefix = null): self
     {
-        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+        if (false === filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             throw new IPException('invalid IPv6 address');
         }
         if (null === $ipPrefix) {
@@ -260,7 +260,7 @@ class IP
                     gmp_strval($ipAddress, 16),
                     (int) ($addressBits / 4),
                     '0',
-                    \STR_PAD_LEFT
+                    STR_PAD_LEFT
                 )
             )
         );

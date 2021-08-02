@@ -114,6 +114,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 switch ($profileConfig->vpnType()) {
                     case 'openvpn':
                         return $this->getOpenVpnConfigResponse($profileConfig, $accessToken);
+
                     case 'wireguard':
                         $wgConfig = $this->wg->addPeer(
                             $profileConfig,
@@ -131,6 +132,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                                 'Content-Type' => 'application/x-wireguard-profile',
                             ]
                         );
+
                     default:
                         return new JsonResponse(['error' => 'invalid vpn_type'], [], 500);
                 }

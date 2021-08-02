@@ -15,7 +15,11 @@ use LC\Portal\Config;
 use LC\Portal\Exception\ConfigException;
 use PHPUnit\Framework\TestCase;
 
-class ConfigTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ConfigTest extends TestCase
 {
     public function testSimpleConfig(): void
     {
@@ -24,7 +28,7 @@ class ConfigTest extends TestCase
                 'foo' => 'bar',
             ]
         );
-        $this->assertSame('bar', $c->requireString('foo'));
+        static::assertSame('bar', $c->requireString('foo'));
     }
 
     public function testNestedConfig(): void
@@ -36,21 +40,21 @@ class ConfigTest extends TestCase
                 ],
             ]
         );
-        $this->assertSame('baz', $c->s('foo')->requireString('bar'));
+        static::assertSame('baz', $c->s('foo')->requireString('bar'));
     }
 
     public function testNoParameters(): void
     {
         $configData = ['foo' => 'bar'];
         $c = new Config($configData);
-        $this->assertSame($configData, $c->toArray());
+        static::assertSame($configData, $c->toArray());
     }
 
     public function testExists(): void
     {
         $c = new Config(['foo' => 'bar']);
-        $this->assertNotNull($c->requireString('foo'));
-        $this->assertNull($c->optionalString('bar'));
+        static::assertNotNull($c->requireString('foo'));
+        static::assertNull($c->optionalString('bar'));
     }
 
     public function testMissingConfig(): void
@@ -58,9 +62,9 @@ class ConfigTest extends TestCase
         try {
             $c = new Config([]);
             $c->requireString('foo');
-            self::fail();
+            static::fail();
         } catch (ConfigException $e) {
-            self::assertSame('key "foo" not available', $e->getMessage());
+            static::assertSame('key "foo" not available', $e->getMessage());
         }
     }
 
@@ -75,22 +79,22 @@ class ConfigTest extends TestCase
                 ]
             );
             $c->s('foo')->requireString('baz');
-            self::fail();
+            static::fail();
         } catch (ConfigException $e) {
-            self::assertSame('key "baz" not available', $e->getMessage());
+            static::assertSame('key "baz" not available', $e->getMessage());
         }
     }
 
     public function testFromFile(): void
     {
         $c = Config::fromFile(sprintf('%s/data/config.php', __DIR__));
-        $this->assertSame('b', $c->s('bar')->requireString('a'));
+        static::assertSame('b', $c->s('bar')->requireString('a'));
     }
 
     public function testMyConfigDefaultValues(): void
     {
         $c = new MyConfig(['a' => ['b' => ['c' => 'd']]]);
-        $this->assertSame(['baz'], $c->s('foo')->s('bar')->toArray());
-        $this->assertSame(['b' => ['c' => 'd']], $c->requireArray('a'));
+        static::assertSame(['baz'], $c->s('foo')->s('bar')->toArray());
+        static::assertSame(['b' => ['c' => 'd']], $c->requireArray('a'));
     }
 }

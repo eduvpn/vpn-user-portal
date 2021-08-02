@@ -15,7 +15,11 @@ use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Http\Request;
 use PHPUnit\Framework\TestCase;
 
-class RequestTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class RequestTest extends TestCase
 {
     public function testGetServerName(): void
     {
@@ -28,7 +32,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('vpn.example', $request->getServerName());
+        static::assertSame('vpn.example', $request->getServerName());
     }
 
     public function testGetRequestMethod(): void
@@ -42,7 +46,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('GET', $request->getRequestMethod());
+        static::assertSame('GET', $request->getRequestMethod());
     }
 
     public function testGetPathInfo(): void
@@ -56,7 +60,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('/foo/bar', $request->getPathInfo());
+        static::assertSame('/foo/bar', $request->getPathInfo());
     }
 
     public function testMissingPathInfo(): void
@@ -70,7 +74,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('/', $request->getPathInfo());
+        static::assertSame('/', $request->getPathInfo());
     }
 
     public function testNoPathInfo(): void
@@ -84,7 +88,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('/', $request->getPathInfo());
+        static::assertSame('/', $request->getPathInfo());
     }
 
     public function testRequireQueryParameter(): void
@@ -101,7 +105,7 @@ class RequestTest extends TestCase
                 'user_id' => 'foo',
             ]
         );
-        $this->assertSame('foo', $request->requireQueryParameter('user_id'));
+        static::assertSame('foo', $request->requireQueryParameter('user_id'));
     }
 
     public function testOptionalQueryParameter(): void
@@ -118,7 +122,7 @@ class RequestTest extends TestCase
                 'user_id' => 'foo',
             ]
         );
-        $this->assertNull($request->optionalQueryParameter('foo'));
+        static::assertNull($request->optionalQueryParameter('foo'));
     }
 
     public function testGetMissingQueryParameter(): void
@@ -134,9 +138,9 @@ class RequestTest extends TestCase
                 ]
             );
             $request->requireQueryParameter('user_id');
-            self::fail();
+            static::fail();
         } catch (HttpException $e) {
-            self::assertSame('missing query parameter "user_id"', $e->getMessage());
+            static::assertSame('missing query parameter "user_id"', $e->getMessage());
         }
     }
 
@@ -155,7 +159,7 @@ class RequestTest extends TestCase
                 'user_id' => 'foo',
             ]
         );
-        $this->assertSame('foo', $request->requirePostParameter('user_id'));
+        static::assertSame('foo', $request->requirePostParameter('user_id'));
     }
 
     public function testRequireHeader(): void
@@ -170,7 +174,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('text/html', $request->requireHeader('HTTP_ACCEPT'));
+        static::assertSame('text/html', $request->requireHeader('HTTP_ACCEPT'));
     }
 
     public function testOptionalHeader(): void
@@ -185,8 +189,8 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('text/html', $request->optionalHeader('HTTP_ACCEPT'));
-        $this->assertNull($request->optionalHeader('HTTP_FOO'));
+        static::assertSame('text/html', $request->optionalHeader('HTTP_ACCEPT'));
+        static::assertNull($request->optionalHeader('HTTP_FOO'));
     }
 
     public function testRequestUri(): void
@@ -200,7 +204,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('http://vpn.example/', $request->getUri());
+        static::assertSame('http://vpn.example/', $request->getUri());
     }
 
     public function testHttpsRequestUri(): void
@@ -215,7 +219,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('https://vpn.example/', $request->getUri());
+        static::assertSame('https://vpn.example/', $request->getUri());
     }
 
     public function testNonStandardPortRequestUri(): void
@@ -229,7 +233,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('http://vpn.example:8080/', $request->getUri());
+        static::assertSame('http://vpn.example:8080/', $request->getUri());
     }
 
     public function testGetRootSimple(): void
@@ -243,7 +247,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('/', $request->getRoot());
+        static::assertSame('/', $request->getRoot());
     }
 
     public function testGetRootSame(): void
@@ -257,7 +261,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('/', $request->getRoot());
+        static::assertSame('/', $request->getRoot());
     }
 
     public function testGetRootPathInfo(): void
@@ -271,7 +275,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/admin/index.php',
             ]
         );
-        $this->assertSame('/admin/', $request->getRoot());
+        static::assertSame('/admin/', $request->getRoot());
     }
 
     public function testScriptNameInRequestUri(): void
@@ -285,8 +289,8 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/admin/index.php',
             ]
         );
-        $this->assertSame('/admin/', $request->getRoot());
-        $this->assertSame('/foo/bar', $request->getPathInfo());
+        static::assertSame('/admin/', $request->getRoot());
+        static::assertSame('/foo/bar', $request->getPathInfo());
     }
 
     public function testGetRootQueryString(): void
@@ -300,8 +304,8 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/index.php',
             ]
         );
-        $this->assertSame('/', $request->getRoot());
-        $this->assertSame('/', $request->getPathInfo());
+        static::assertSame('/', $request->getRoot());
+        static::assertSame('/', $request->getPathInfo());
     }
 
     public function testGetRootPathInfoQueryString(): void
@@ -315,7 +319,7 @@ class RequestTest extends TestCase
                 'SCRIPT_NAME' => '/admin/index.php',
             ]
         );
-        $this->assertSame('/admin/', $request->getRoot());
-        $this->assertSame('/foo/bar', $request->getPathInfo());
+        static::assertSame('/admin/', $request->getRoot());
+        static::assertSame('/foo/bar', $request->getPathInfo());
     }
 }

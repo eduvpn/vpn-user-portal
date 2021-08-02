@@ -4,3 +4,4 @@
 /config/views
 /config/*.key
 /.phpunit.cache
+/.php-cs-fixer.cache

@@ -30,5 +30,6 @@ try {
     }
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
+
     exit(1);
 }

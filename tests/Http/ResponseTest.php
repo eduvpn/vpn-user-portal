@@ -14,7 +14,11 @@ namespace LC\Portal\Tests\Http;
 use LC\Portal\Http\Response;
 use PHPUnit\Framework\TestCase;
 
-class ResponseTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ResponseTest extends TestCase
 {
     public function testImport(): void
     {
@@ -26,14 +30,14 @@ class ResponseTest extends TestCase
             ]
         );
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(
+        static::assertSame(200, $response->getStatusCode());
+        static::assertSame(
             [
                 'Content-Type' => 'application/json',
                 'X-Foo' => 'Bar',
             ],
             $response->getHeaders()
         );
-        $this->assertSame('{"a": "b"}', $response->getBody());
+        static::assertSame('{"a": "b"}', $response->getBody());
     }
 }

@@ -14,12 +14,16 @@ namespace LC\Portal\Tests\Http;
 use LC\Portal\Http\RedirectResponse;
 use PHPUnit\Framework\TestCase;
 
-class RedirectResponseTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class RedirectResponseTest extends TestCase
 {
     public function testRedirect(): void
     {
         $response = new RedirectResponse('http://vpn.example.org/foo');
-        $this->assertSame('http://vpn.example.org/foo', $response->getHeader('Location'));
-        $this->assertSame(302, $response->getStatusCode());
+        static::assertSame('http://vpn.example.org/foo', $response->getHeader('Location'));
+        static::assertSame(302, $response->getStatusCode());
     }
 }

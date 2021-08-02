@@ -131,7 +131,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
     }
 
     /**
-     * @return string|false
+     * @return false|string
      */
     private function getBindDn(string $authUser)
     {

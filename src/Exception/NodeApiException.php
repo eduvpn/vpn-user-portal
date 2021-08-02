@@ -15,11 +15,11 @@ use Exception;
 
 class NodeApiException extends Exception
 {
-    /** @var string|null */
+    /** @var null|string */
     private $userId;
 
     /**
-     * @param string|null $userId
+     * @param null|string $userId
      * @param string      $message
      * @param int         $code
      */
@@ -30,7 +30,7 @@ class NodeApiException extends Exception
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function getUserId()
     {

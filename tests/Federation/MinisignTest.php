@@ -14,11 +14,15 @@ namespace LC\Portal\Tests\Federation;
 use LC\Portal\Federation\Minisign;
 use PHPUnit\Framework\TestCase;
 
-class MinisignTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class MinisignTest extends TestCase
 {
     public function testVerify(): void
     {
-        $this->assertTrue(
+        static::assertTrue(
             Minisign::verify(
                 file_get_contents(__DIR__.'/data/message.txt'),
                 file_get_contents(__DIR__.'/data/message.txt.minisig'),

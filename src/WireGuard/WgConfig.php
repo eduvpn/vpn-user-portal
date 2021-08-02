@@ -63,7 +63,7 @@ class WgConfig
         $output[] = 'AllowedIPs = '.implode(', ', $routeList);
         $output[] = 'Endpoint = '.$this->profileConfig->hostName().':51820';
 
-        return implode(\PHP_EOL, $output);
+        return implode(PHP_EOL, $output);
     }
 
     public function publicKey(): string

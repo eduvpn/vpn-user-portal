@@ -29,7 +29,7 @@ class InputValidation
     {
         self::requireUtf8($displayName, 'displayName');
 
-        $displayName = filter_var($displayName, \FILTER_UNSAFE_RAW, \FILTER_FLAG_STRIP_LOW);
+        $displayName = filter_var($displayName, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 
         if (0 === mb_strlen($displayName)) {
             throw new InputValidationException('invalid "display_name"');
@@ -132,7 +132,7 @@ class InputValidation
      */
     public static function ipAddress($ipAddress)
     {
-        if (false === filter_var($ipAddress, \FILTER_VALIDATE_IP)) {
+        if (false === filter_var($ipAddress, FILTER_VALIDATE_IP)) {
             throw new InputValidationException('invalid "ip_address"');
         }
 
@@ -142,7 +142,7 @@ class InputValidation
 
     public static function ipFour(string $ipFour): string
     {
-        if (false === filter_var($ipFour, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
+        if (false === filter_var($ipFour, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             throw new InputValidationException('invalid "ipFour"');
         }
 
@@ -151,7 +151,7 @@ class InputValidation
 
     public static function ipSix(string $ipSix): string
     {
-        if (false === filter_var($ipSix, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+        if (false === filter_var($ipSix, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             throw new InputValidationException('invalid "ipSix"');
         }
 

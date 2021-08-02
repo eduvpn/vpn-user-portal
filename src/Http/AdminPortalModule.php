@@ -204,6 +204,7 @@ class AdminPortalModule implements ServiceModuleInterface
                                 $this->daemonWrapper->killClient($clientInfo['common_name']);
                             }
                         }
+
                         break;
 
                     case 'enableAccount':
@@ -359,6 +360,6 @@ class AdminPortalModule implements ServiceModuleInterface
      */
     private static function getCoordinates(float $f): array
     {
-        return [cos(2 * \M_PI * $f), sin(2 * \M_PI * $f)];
+        return [cos(2 * M_PI * $f), sin(2 * M_PI * $f)];
     }
 }

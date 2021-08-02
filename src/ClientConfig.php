@@ -16,9 +16,9 @@ use LC\Portal\CA\CertInfo;
 
 class ClientConfig
 {
-    const STRATEGY_FIRST = 0;
-    const STRATEGY_RANDOM = 1;
-    const STRATEGY_ALL = 2;
+    public const STRATEGY_FIRST = 0;
+    public const STRATEGY_RANDOM = 1;
+    public const STRATEGY_ALL = 2;
 
     public static function get(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, int $remoteStrategy): string
     {
@@ -80,7 +80,7 @@ class ClientConfig
             $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) substr($remoteProtoPort, 4), substr($remoteProtoPort, 0, 3));
         }
 
-        return implode(\PHP_EOL, $clientConfig);
+        return implode(PHP_EOL, $clientConfig);
     }
 
     /**
@@ -100,18 +100,22 @@ class ClientConfig
             if (0 === strpos($vpnProtoPort, 'udp')) {
                 if (\in_array($vpnProtoPort, ['udp/53', 'udp/443'], true)) {
                     $specialUdpPorts[] = $vpnProtoPort;
+
                     continue;
                 }
                 $normalUdpPorts[] = $vpnProtoPort;
+
                 continue;
             }
 
             if (0 === strpos($vpnProtoPort, 'tcp')) {
                 if (\in_array($vpnProtoPort, ['tcp/80', 'tcp/443'], true)) {
                     $specialTcpPorts[] = $vpnProtoPort;
+
                     continue;
                 }
                 $normalTcpPorts[] = $vpnProtoPort;
+
                 continue;
             }
         }
@@ -138,12 +142,17 @@ class ClientConfig
         switch ($remoteStrategy) {
             case self::STRATEGY_ALL:
                 $clientPortList = array_merge($clientPortList, $pickFrom);
+
                 break;
+
             case self::STRATEGY_RANDOM:
                 $clientPortList[] = $pickFrom[random_int(0, \count($pickFrom) - 1)];
+
                 break;
+
             default:
                 $clientPortList[] = reset($pickFrom);
+
                 break;
         }
     }

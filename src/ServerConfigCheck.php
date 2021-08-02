@@ -82,7 +82,7 @@ class ServerConfigCheck
         $overlapList = self::checkOverlap($rangeList);
         if (0 !== \count($overlapList)) {
             foreach ($overlapList as $o) {
-                echo sprintf('WARNING: IP range %s overlaps with IP range %s', $o[0], $o[1]).\PHP_EOL;
+                echo sprintf('WARNING: IP range %s overlaps with IP range %s', $o[0], $o[1]).PHP_EOL;
             }
         }
     }
@@ -155,7 +155,7 @@ class ServerConfigCheck
                 ),
                 32,
                 '0',
-                \STR_PAD_LEFT
+                STR_PAD_LEFT
             );
         }
 

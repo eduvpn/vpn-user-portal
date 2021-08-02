@@ -15,7 +15,11 @@ use Exception;
 use LC\Portal\Federation\ForeignKeyListFetcher;
 use PHPUnit\Framework\TestCase;
 
-class ForeignKeyListFetcherTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ForeignKeyListFetcherTest extends TestCase
 {
     public function testFetch(): void
     {
@@ -29,7 +33,7 @@ class ForeignKeyListFetcherTest extends TestCase
                 'RWTzeZBS1e59OQtxV7UBpG/NfCpuAeOxQQqvqLqp1zVq4rGT5Fyq2gGN',
             ]
         );
-        $this->assertSame(
+        static::assertSame(
             [
                 '07wQOlf0uFqs5PL7zkcnMY73HpH0_uP09l68pK1YgBI' => [
                     'public_key' => 'bRTz33KIuYo_w_-AbzNtdmLDqIm11_eGiHXQniojxY4',
@@ -59,9 +63,9 @@ class ForeignKeyListFetcherTest extends TestCase
                     'RWTzeZBS1e59OQtxV7UBpG/NfCpuAeOxQQqvqLqp1zVq4rGT5Fyq2gGN',
                 ]
             );
-            $this->fail();
+            static::fail();
         } catch (Exception $e) {
-            $this->assertSame('rollback to older version of file not allowed, we have "5", we got "4"', $e->getMessage());
+            static::assertSame('rollback to older version of file not allowed, we have "5", we got "4"', $e->getMessage());
         }
     }
 }

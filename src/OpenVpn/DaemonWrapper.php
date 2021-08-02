@@ -70,6 +70,7 @@ class DaemonWrapper
             $connectionList[$profileId] = [];
             $nodeIp = $nodeIpPortList['nodeIp'];
             $portList = $nodeIpPortList['portList'];
+
             try {
                 $this->daemonSocket->open($nodeIp);
                 $this->daemonSocket->setPorts($portList);
@@ -79,6 +80,7 @@ class DaemonWrapper
                     if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
                         // we do not have information on this CN, what is going on?!
                         $this->logger->warning(sprintf('"common_name "%s" not found', $commonName));
+
                         continue;
                     }
                     if (null !== $userId) {

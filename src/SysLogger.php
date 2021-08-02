@@ -17,7 +17,7 @@ class SysLogger implements LoggerInterface
 {
     public function __construct(string $appName)
     {
-        if (false === openlog($appName, \LOG_PERROR | \LOG_ODELAY, \LOG_USER)) {
+        if (false === openlog($appName, LOG_PERROR | LOG_ODELAY, LOG_USER)) {
             throw new RuntimeException('unable to open syslog');
         }
     }
@@ -29,21 +29,21 @@ class SysLogger implements LoggerInterface
 
     public function warning(string $logMessage): void
     {
-        syslog(\LOG_WARNING, $logMessage);
+        syslog(LOG_WARNING, $logMessage);
     }
 
     public function error(string $logMessage): void
     {
-        syslog(\LOG_ERR, $logMessage);
+        syslog(LOG_ERR, $logMessage);
     }
 
     public function notice(string $logMessage): void
     {
-        syslog(\LOG_NOTICE, $logMessage);
+        syslog(LOG_NOTICE, $logMessage);
     }
 
     public function info(string $logMessage): void
     {
-        syslog(\LOG_INFO, $logMessage);
+        syslog(LOG_INFO, $logMessage);
     }
 }

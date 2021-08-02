@@ -22,7 +22,7 @@ $sourceStr = [];
 foreach ($tplFileList as $tplFile) {
     $phpFile = file_get_contents($tplFile);
     // find all translatable strings in the template...
-    preg_match_all("/this->t\('(.*?)'\)/", $phpFile, $matches);
+    preg_match_all("/this->t\\('(.*?)'\\)/", $phpFile, $matches);
     foreach ($matches[1] as $m) {
         if (!in_array($m, $sourceStr, true)) {
             $sourceStr[] = stripslashes($m);
@@ -81,5 +81,5 @@ foreach ($localeFileList as $localeFile) {
 
 function quoteStr($str)
 {
-    return str_replace("'", "\'", $str);
+    return str_replace("'", "\\'", $str);
 }

@@ -24,7 +24,7 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
     private ?string $nasIdentifier;
     private ?int $permissionAttribute;
 
-    public function __construct(LoggerInterface $logger, array $serverList, ?string $radiusRealm, ?string $nasIdentifier = null, ?int $permissionAttribute)
+    public function __construct(LoggerInterface $logger, array $serverList, ?string $radiusRealm, ?string $nasIdentifier, ?int $permissionAttribute)
     {
         if (false === \extension_loaded('radius')) {
             throw new RuntimeException('"radius" PHP extension not available');
@@ -64,17 +64,17 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
             }
         }
 
-        if (false === radius_create_request($radiusAuth, \RADIUS_ACCESS_REQUEST)) {
+        if (false === radius_create_request($radiusAuth, RADIUS_ACCESS_REQUEST)) {
             $errorMsg = sprintf('RADIUS error: %s', radius_strerror($radiusAuth));
             $this->logger->error($errorMsg);
 
             throw new RadiusException($errorMsg);
         }
 
-        radius_put_attr($radiusAuth, \RADIUS_USER_NAME, $authUser);
-        radius_put_attr($radiusAuth, \RADIUS_USER_PASSWORD, $authPass);
+        radius_put_attr($radiusAuth, RADIUS_USER_NAME, $authUser);
+        radius_put_attr($radiusAuth, RADIUS_USER_PASSWORD, $authPass);
         if (null !== $this->nasIdentifier) {
-            radius_put_attr($radiusAuth, \RADIUS_NAS_IDENTIFIER, $this->nasIdentifier);
+            radius_put_attr($radiusAuth, RADIUS_NAS_IDENTIFIER, $this->nasIdentifier);
         }
 
         $radiusResponse = radius_send_request($radiusAuth);
@@ -85,7 +85,7 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
             throw new RadiusException($errorMsg);
         }
 
-        if (\RADIUS_ACCESS_ACCEPT !== $radiusResponse) {
+        if (RADIUS_ACCESS_ACCEPT !== $radiusResponse) {
             // most likely wrong authUser/authPass, not necessarily an error
             return false;
         }

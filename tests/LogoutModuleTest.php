@@ -15,7 +15,11 @@ use LC\Portal\Http\Service;
 use LC\Portal\LogoutModule;
 use PHPUnit\Framework\TestCase;
 
-class LogoutModuleTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class LogoutModuleTest extends TestCase
 {
     public function testVerifyLogout(): void
     {
@@ -33,8 +37,8 @@ class LogoutModuleTest extends TestCase
             []
         );
         $response = $service->run($request);
-        $this->assertSame(302, $response->getStatusCode());
-        $this->assertSame('http://example.org/foo', $response->getHeader('Location'));
+        static::assertSame(302, $response->getStatusCode());
+        static::assertSame('http://example.org/foo', $response->getHeader('Location'));
     }
 
     public function testVerifyMellonLogoutWithUrl(): void
@@ -53,7 +57,7 @@ class LogoutModuleTest extends TestCase
             []
         );
         $response = $service->run($request);
-        $this->assertSame(302, $response->getStatusCode());
-        $this->assertSame('http://vpn.example/saml/logout?ReturnTo=http%3A%2F%2Fexample.org%2Ffoo', $response->getHeader('Location'));
+        static::assertSame(302, $response->getStatusCode());
+        static::assertSame('http://vpn.example/saml/logout?ReturnTo=http%3A%2F%2Fexample.org%2Ffoo', $response->getHeader('Location'));
     }
 }

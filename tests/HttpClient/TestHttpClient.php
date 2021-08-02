@@ -26,12 +26,14 @@ class TestHttpClient implements HttpClientInterface
         switch ($requestUrl) {
             case 'serverClient/foo':
                 return new HttpClientResponse(200, '', self::wrap('foo', true));
+
             case 'serverClient/foo':
                 if ('bar' === $queryParameters['foo']) {
                     return new HttpClientResponse(200, '', self::wrap('foo', true));
                 }
 
                 return new HttpClientResponse(400, '', self::wrapError('unexpected_request'));
+
             case 'serverClient/error':
                 return new HttpClientResponse(400, '', json_encode(['error' => 'errorValue']));
 
@@ -50,6 +52,7 @@ class TestHttpClient implements HttpClientInterface
         switch ($requestUrl) {
             case 'serverClient/foo':
                 return new HttpClientResponse(200, '', self::wrap('foo', true));
+
             default:
                 throw new RuntimeException(sprintf('unexpected requestUrl "%s"', $requestUrl));
         }

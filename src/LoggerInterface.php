@@ -13,10 +13,10 @@ namespace LC\Portal;
 
 interface LoggerInterface
 {
-    const WARNING = 10;
-    const ERROR = 20;
-    const NOTICE = 30;
-    const INFO = 40;
+    public const WARNING = 10;
+    public const ERROR = 20;
+    public const NOTICE = 30;
+    public const INFO = 40;
 
     public function warning(string $logMessage): void;
 

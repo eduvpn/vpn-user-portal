@@ -15,7 +15,11 @@ use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Http\NodeAuthenticationHook;
 use PHPUnit\Framework\TestCase;
 
-class NodeAuthenticationHookTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class NodeAuthenticationHookTest extends TestCase
 {
     /**
      * @doesNotPerformAssertions

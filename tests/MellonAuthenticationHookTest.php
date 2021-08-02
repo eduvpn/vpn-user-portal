@@ -16,7 +16,11 @@ use LC\Portal\Http\Request;
 use LC\Portal\MellonAuthentication;
 use PHPUnit\Framework\TestCase;
 
-class MellonAuthenticationHookTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class MellonAuthenticationHookTest extends TestCase
 {
     public function testBasic(): void
     {
@@ -34,8 +38,8 @@ class MellonAuthenticationHookTest extends TestCase
             ),
             []
         );
-        $this->assertSame('abcdef', $userInfo->getUserId());
-        $this->assertSame([], $userInfo->getPermissionList());
+        static::assertSame('abcdef', $userInfo->getUserId());
+        static::assertSame([], $userInfo->getPermissionList());
     }
 
     public function testSerialization(): void
@@ -57,8 +61,8 @@ class MellonAuthenticationHookTest extends TestCase
             ),
             []
         );
-        $this->assertSame('https://idp.example.org/saml!https://sp.example.org/saml!abcdef', $userInfo->getUserId());
-        $this->assertSame([], $userInfo->getPermissionList());
+        static::assertSame('https://idp.example.org/saml!https://sp.example.org/saml!abcdef', $userInfo->getUserId());
+        static::assertSame([], $userInfo->getPermissionList());
     }
 
     public function testPermissionList(): void
@@ -79,7 +83,7 @@ class MellonAuthenticationHookTest extends TestCase
             ),
             []
         );
-        $this->assertSame('abcdef', $userInfo->getUserId());
-        $this->assertSame(['a', 'b'], $userInfo->getPermissionList());
+        static::assertSame('abcdef', $userInfo->getUserId());
+        static::assertSame(['a', 'b'], $userInfo->getPermissionList());
     }
 }

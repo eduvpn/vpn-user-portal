@@ -33,6 +33,7 @@ class TestHttpClient implements HttpClientInterface
         if (0 !== \count($queryParameters)) {
             $requestUrl .= '?'.http_build_query($queryParameters);
         }
+
         switch ($requestUrl) {
             case 'serverClient/profile_list':
                 return self::wrap(
@@ -52,6 +53,7 @@ class TestHttpClient implements HttpClientInterface
                         ],
                     ]
                 );
+
             case 'serverClient/client_certificate_list?user_id=foo':
                 return self::wrap(
                     'client_certificate_list',
@@ -64,20 +66,28 @@ class TestHttpClient implements HttpClientInterface
                         ],
                     ]
                 );
+
             case 'serverClient/user_connection_log?user_id=foo':
                 return self::wrap('user_connection_log', []);
+
             case 'serverClient/user_session_expires_at?user_id=foo':
                 return self::wrap('user_session_expires_at', $dateTime->format(DateTime::ATOM));
+
             case 'serverClient/user_messages?user_id=foo':
                 return self::wrap('user_messages', []);
+
             case 'serverClient/system_messages?message_type=motd':
                 return self::wrap('system_messages', [['id' => 1, 'message_type' => 'motd', 'message_body' => 'Hello World!']]);
+
             case 'serverClient/has_totp_secret?user_id=foo':
                 return self::wrap('has_totp_secret', false);
+
             case 'serverClient/is_disabled_user?user_id=foo':
                 return self::wrap('is_disabled_user', false);
+
             case 'serverClient/client_certificate_info?common_name=12345678901234567890123456789012':
                 return self::wrap('client_certificate_info', ['display_name' => 'Foo']);
+
             case 'serverClient/server_info?profile_id=internet':
                 return self::wrap(
                     'server_info',
@@ -86,6 +96,7 @@ class TestHttpClient implements HttpClientInterface
                         'tls_crypt' => 'TLS_CRYPT_KEY',
                     ]
                 );
+
             default:
                 throw new RuntimeException(sprintf('unexpected requestUrl "%s"', $requestUrl));
         }
@@ -116,12 +127,16 @@ class TestHttpClient implements HttpClientInterface
                         'private_key' => 'KEYPEM',
                     ]
                 );
+
             case 'serverClient/delete_client_certificate':
                 return self::wrap('delete_client_certificate', true);
+
             case 'serverClient/kill_client':
                 return self::wrap('kill_client', true);
+
             case 'serverClient/set_voot_token':
                 return self::wrap('set_voot_token', true);
+
             default:
                 throw new RuntimeException(sprintf('unexpected requestUrl "%s"', $requestUrl));
         }

@@ -15,7 +15,11 @@ use LC\Portal\Http\CsrfProtectionHook;
 use LC\Portal\Http\Exception\HttpException;
 use PHPUnit\Framework\TestCase;
 
-class CsrfProtectionHookTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class CsrfProtectionHookTest extends TestCase
 {
     public function testGoodPostReferrer(): void
     {
@@ -28,7 +32,7 @@ class CsrfProtectionHookTest extends TestCase
         );
 
         $referrerCheckHook = new CsrfProtectionHook();
-        $this->assertTrue($referrerCheckHook->executeBefore($request, []));
+        static::assertTrue($referrerCheckHook->executeBefore($request, []));
     }
 
     public function testGoodPostOrigin(): void
@@ -42,7 +46,7 @@ class CsrfProtectionHookTest extends TestCase
         );
 
         $referrerCheckHook = new CsrfProtectionHook();
-        $this->assertTrue($referrerCheckHook->executeBefore($request, []));
+        static::assertTrue($referrerCheckHook->executeBefore($request, []));
     }
 
     public function testGet(): void
@@ -54,7 +58,7 @@ class CsrfProtectionHookTest extends TestCase
         );
 
         $referrerCheckHook = new CsrfProtectionHook();
-        $this->assertFalse($referrerCheckHook->executeBefore($request, []));
+        static::assertFalse($referrerCheckHook->executeBefore($request, []));
     }
 
     public function testCheckPostNoReferrer(): void
@@ -69,9 +73,9 @@ class CsrfProtectionHookTest extends TestCase
 
             $referrerCheckHook = new CsrfProtectionHook();
             $referrerCheckHook->executeBefore($request, []);
-            self::fail();
+            static::fail();
         } catch (HttpException $e) {
-            self::assertSame('CSRF protection failed, no HTTP_ORIGIN or HTTP_REFERER', $e->getMessage());
+            static::assertSame('CSRF protection failed, no HTTP_ORIGIN or HTTP_REFERER', $e->getMessage());
         }
     }
 
@@ -80,17 +84,17 @@ class CsrfProtectionHookTest extends TestCase
         try {
             $request = new TestRequest(
                 [
-                'REQUEST_METHOD' => 'POST',
-                'HTTP_REFERER' => 'http://www.attacker.org/foo',
-                'HTTP_ACCEPT' => 'text/html',
+                    'REQUEST_METHOD' => 'POST',
+                    'HTTP_REFERER' => 'http://www.attacker.org/foo',
+                    'HTTP_ACCEPT' => 'text/html',
                 ]
             );
 
             $referrerCheckHook = new CsrfProtectionHook();
             $referrerCheckHook->executeBefore($request, []);
-            self::fail();
+            static::fail();
         } catch (HttpException $e) {
-            self::assertSame('CSRF protection failed: unexpected HTTP_REFERER', $e->getMessage());
+            static::assertSame('CSRF protection failed: unexpected HTTP_REFERER', $e->getMessage());
         }
     }
 
@@ -99,17 +103,17 @@ class CsrfProtectionHookTest extends TestCase
         try {
             $request = new TestRequest(
                 [
-                'REQUEST_METHOD' => 'POST',
-                'HTTP_ORIGIN' => 'http://www.attacker.org',
-                'HTTP_ACCEPT' => 'text/html',
+                    'REQUEST_METHOD' => 'POST',
+                    'HTTP_ORIGIN' => 'http://www.attacker.org',
+                    'HTTP_ACCEPT' => 'text/html',
                 ]
             );
 
             $referrerCheckHook = new CsrfProtectionHook();
             $referrerCheckHook->executeBefore($request, []);
-            self::fail();
+            static::fail();
         } catch (HttpException $e) {
-            self::assertSame('CSRF protection failed: unexpected HTTP_ORIGIN', $e->getMessage());
+            static::assertSame('CSRF protection failed: unexpected HTTP_ORIGIN', $e->getMessage());
         }
     }
 
@@ -124,6 +128,6 @@ class CsrfProtectionHookTest extends TestCase
 
         $referrerCheckHook = new CsrfProtectionHook();
         $referrerCheckHook->executeBefore($request, []);
-        $this->assertTrue(true);
+        static::assertTrue(true);
     }
 }

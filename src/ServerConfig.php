@@ -38,8 +38,6 @@ class ServerConfig
             }
         }
 
-        $serverConfig = array_merge($serverConfig, $this->wgServerConfig->get($profileConfigList));
-
-        return $serverConfig;
+        return array_merge($serverConfig, $this->wgServerConfig->get($profileConfigList));
     }
 }

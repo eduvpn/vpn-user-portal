@@ -13,7 +13,7 @@ namespace LC\Portal\Http;
 
 class QrModule implements ServiceModuleInterface
 {
-    const QR_ENCODE_PATH = '/usr/bin/qrencode';
+    public const QR_ENCODE_PATH = '/usr/bin/qrencode';
 
     public function init(Service $service): void
     {

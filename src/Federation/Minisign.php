@@ -21,16 +21,16 @@ use Exception;
 class Minisign
 {
     /** @var string */
-    const SIGNIFY_ALGO_DESCRIPTION = 'Ed';
+    public const SIGNIFY_ALGO_DESCRIPTION = 'Ed';
 
     /** @var int */
-    const SIGNIFY_KEY_ID_LENGTH = 8;
+    public const SIGNIFY_KEY_ID_LENGTH = 8;
 
     /** @var int */
-    const ED_SIGNATURE_LENGTH = 64;
+    public const ED_SIGNATURE_LENGTH = 64;
 
     /** @var int */
-    const ED_PUBLIC_KEY_LENGTH = 32;
+    public const ED_PUBLIC_KEY_LENGTH = 32;
 
     /**
      * @param array<string> $encodedPublicKeyList
@@ -42,7 +42,7 @@ class Minisign
     public static function verify(string $messageText, string $messageSignature, array $encodedPublicKeyList)
     {
         $signatureData = self::getLine($messageSignature, 1);
-        $msgSig = sodium_base642bin($signatureData, \SODIUM_BASE64_VARIANT_ORIGINAL);
+        $msgSig = sodium_base642bin($signatureData, SODIUM_BASE64_VARIANT_ORIGINAL);
         // <signature_algorithm> || <key_id> || <signature>
         //    signature_algorithm: Ed
         //    key_id: 8 random bytes, matching the public key
@@ -75,7 +75,7 @@ class Minisign
         //    key_id: 8 random bytes
         //    public_key: Ed25519 public key
         foreach ($encodedPublicKeyList as $encodedPublicKey) {
-            $publicKey = sodium_base642bin($encodedPublicKey, \SODIUM_BASE64_VARIANT_ORIGINAL);
+            $publicKey = sodium_base642bin($encodedPublicKey, SODIUM_BASE64_VARIANT_ORIGINAL);
             if (\strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH + self::ED_PUBLIC_KEY_LENGTH !== \strlen($publicKey)) {
                 throw new Exception('invalid public key (not long enough)');
             }

@@ -24,16 +24,19 @@ try {
             if ($i + 1 < $argc) {
                 $userId = $argv[$i + 1];
             }
+
             continue;
         }
         if ('--pass' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $userPass = $argv[$i + 1];
             }
+
             continue;
         }
         if ('--help' === $argv[$i]) {
             echo 'SYNTAX: '.$argv[0].' [--user USER] [--pass PASS]'.\PHP_EOL;
+
             exit(0);
         }
     }
@@ -83,5 +86,6 @@ try {
     $storage->localUserAdd($userId, $passwordHash, Dt::get());
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
+
     exit(1);
 }
