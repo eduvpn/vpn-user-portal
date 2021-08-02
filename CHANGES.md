@@ -1,7 +1,7 @@
 # Changelog
 
-## 2.3.13 (...)
-- support RADIUS attribute for authorization
+## 2.3.13 (2021-08-02)
+- support (non vendor-specific) RADIUS attribute for authorization
 
 ## 2.3.12 (2021-07-13)
 - remove 
