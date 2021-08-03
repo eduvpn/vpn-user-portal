@@ -133,8 +133,8 @@ class VpnApiModule implements ServiceModuleInterface
                         $clientCertificate = $this->getCertificate($accessTokenInfo);
                         $vpnConfig = $vpnConfigOnlyResponse->getBody();
                         $vpnConfig .= "\r\n<cert>\r\n".$clientCertificate['certificate']."\r\n</cert>\r\n<key>\r\n".$clientCertificate['private_key']."\r\n</key>";
-
                         $response = new Response(200, 'application/x-openvpn-profile');
+                        $response->addHeader('Expires', $this->getExpiresAt($accessTokenInfo)->format('D, d M Y H:i:s \G\M\T'));
                         $response->setBody($vpnConfig);
 
                         return $response;
