@@ -129,13 +129,12 @@ class VpnApiModule implements ServiceModuleInterface
                             return new ApiErrorResponse('profile_config', 'profile not available or no permission');
                         }
 
-                        $vpnConfigOnlyResponse = $this->getConfigOnly($requestedProfileId, $remoteStrategy);
+                        $vpnConfig = $this->getConfigOnly($requestedProfileId, $remoteStrategy);
                         $clientCertificate = $this->getCertificate($accessTokenInfo);
-                        $vpnConfig = $vpnConfigOnlyResponse->getBody();
-                        $vpnConfig .= "\r\n<cert>\r\n".$clientCertificate['certificate']."\r\n</cert>\r\n<key>\r\n".$clientCertificate['private_key']."\r\n</key>";
+                        $vpnConfig .= "\n<cert>\n".$clientCertificate['certificate']."\n</cert>\n<key>\n".$clientCertificate['private_key']."\n</key>";
                         $response = new Response(200, 'application/x-openvpn-profile');
                         $response->addHeader('Expires', $this->getExpiresAt($accessTokenInfo)->format('D, d M Y H:i:s \G\M\T'));
-                        $response->setBody($vpnConfig);
+                        $response->setBody(str_replace("\n", "\r\n", $vpnConfig));
 
                         return $response;
                     } catch (InputValidationException $e) {
@@ -306,7 +305,11 @@ class VpnApiModule implements ServiceModuleInterface
                         return new ApiErrorResponse('profile_config', 'profile not available or no permission');
                     }
 
-                    return $this->getConfigOnly($requestedProfileId, $remoteStrategy);
+                    $vpnConfig = $this->getConfigOnly($requestedProfileId, $remoteStrategy);
+                    $response = new Response(200, 'application/x-openvpn-profile');
+                    $response->setBody(str_replace("\n", "\r\n", $vpnConfig));
+
+                    return $response;
                 } catch (InputValidationException $e) {
                     return new ApiErrorResponse('profile_config', $e->getMessage());
                 }
@@ -361,7 +364,7 @@ class VpnApiModule implements ServiceModuleInterface
      * @param string $profileId
      * @param int    $remoteStrategy
      *
-     * @return Response
+     * @return string
      */
     private function getConfigOnly($profileId, $remoteStrategy)
     {
@@ -373,13 +376,7 @@ class VpnApiModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info', ['profile_id' => $profileId]);
 
-        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, [], $remoteStrategy);
-        $clientConfig = str_replace("\n", "\r\n", $clientConfig);
-
-        $response = new Response(200, 'application/x-openvpn-profile');
-        $response->setBody($clientConfig);
-
-        return $response;
+        return ClientConfig::get($profileConfig, $serverInfo, [], $remoteStrategy);
     }
 
     /**
