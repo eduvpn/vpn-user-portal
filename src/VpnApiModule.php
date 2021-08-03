@@ -17,6 +17,7 @@ use LC\Common\Http\ApiErrorResponse;
 use LC\Common\Http\ApiResponse;
 use LC\Common\Http\Exception\InputValidationException;
 use LC\Common\Http\InputValidation;
+use LC\Common\Http\JsonResponse;
 use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
@@ -52,6 +53,108 @@ class VpnApiModule implements ServiceModuleInterface
      */
     public function init(Service $service)
     {
+        // API 3
+        $service->get(
+            '/v3/info',
+            /**
+             * @return \LC\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
+                $accessTokenInfo = $hookData['auth'];
+
+                $profileList = $this->serverClient->getRequireArray('profile_list');
+                $userPermissions = $this->getPermissionList($accessTokenInfo);
+
+                $responseData = [
+                    'info' => [
+                        'profile_list' => [],
+                    ],
+                ];
+
+                $userProfileList = [];
+                foreach ($profileList as $profileId => $profileData) {
+                    $profileConfig = new ProfileConfig(new Config($profileData));
+                    if ($profileConfig->hideProfile()) {
+                        continue;
+                    }
+                    if ($profileConfig->enableAcl()) {
+                        // is the user member of the aclPermissionList?
+                        if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
+                            continue;
+                        }
+                    }
+
+                    $responseData['info']['profile_list'][] = [
+                        'profile_id' => $profileId,
+                        'display_name' => $profileConfig->displayName(),
+                    ];
+                }
+
+                return new JsonResponse($responseData, 200);
+            }
+        );
+
+        // API 3
+        $service->post(
+            '/v3/connect',
+            /**
+             * @return \LC\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
+                $accessTokenInfo = $hookData['auth'];
+                try {
+                    $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
+                    $remoteStrategy = ClientConfig::STRATEGY_RANDOM;
+                    $profileList = $this->serverClient->getRequireArray('profile_list');
+                    $userPermissions = $this->getPermissionList($accessTokenInfo);
+                    $availableProfiles = [];
+                    foreach ($profileList as $profileId => $profileData) {
+                        $profileConfig = new ProfileConfig(new Config($profileData));
+                        if ($profileConfig->hideProfile()) {
+                            continue;
+                        }
+                        if ($profileConfig->enableAcl()) {
+                            // is the user member of the userPermissions?
+                            if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
+                                continue;
+                            }
+                        }
+
+                        $availableProfiles[] = $profileId;
+                    }
+
+                    if (!\in_array($requestedProfileId, $availableProfiles, true)) {
+                        return new ApiErrorResponse('profile_config', 'profile not available or no permission');
+                    }
+
+                    $vpnConfigOnlyResponse = $this->getConfigOnly($requestedProfileId, $remoteStrategy);
+                    $clientCertificate = $this->getCertificate($accessTokenInfo);
+                    $vpnConfig = $vpnConfigOnlyResponse->getBody();
+                    $vpnConfig .= "\r\n<cert>\r\n".$clientCertificate['certificate']."\r\n</cert>\r\n<key>\r\n".$clientCertificate['private_key']."\r\n</key>";
+
+                    $response = new Response(200, 'application/x-openvpn-profile');
+                    $response->setBody($vpnConfig);
+
+                    return $response;
+                } catch (InputValidationException $e) {
+                    return new ApiErrorResponse('profile_config', $e->getMessage());
+                }
+            }
+        );
+
+        // API 3
+        $service->post(
+            '/v3/disconnect',
+            /**
+             * @return \LC\Common\Http\Response
+             */
+            function (Request $request, array $hookData) {
+                return new Response(204);
+            }
+        );
+
         // API 1, 2
         $service->get(
             '/profile_list',

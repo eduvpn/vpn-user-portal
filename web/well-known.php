@@ -30,6 +30,11 @@ try {
                 'authorization_endpoint' => $appRootUri.'/_oauth/authorize',
                 'token_endpoint' => $appRootUri.'/oauth.php/token',
             ],
+            'http://eduvpn.org/api#3' => [
+                'api_endpoint' => $appRootUri.'/api.php/v3',
+                'authorization_endpoint' => $appRootUri.'/_oauth/authorize',
+                'token_endpoint' => $appRootUri.'/oauth.php/token',
+            ],
         ],
         'v' => trim(FileIO::readFile(sprintf('%s/VERSION', $baseDir))),
     ];
