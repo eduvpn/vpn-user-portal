@@ -134,7 +134,7 @@ class VpnApiModule implements ServiceModuleInterface
                         $vpnConfig .= "\n<cert>\n".$clientCertificate['certificate']."\n</cert>\n<key>\n".$clientCertificate['private_key']."\n</key>";
                         $response = new Response(200, 'application/x-openvpn-profile');
                         $response->addHeader('Expires', $this->getExpiresAt($accessTokenInfo)->format('D, d M Y H:i:s \G\M\T'));
-                        $response->setBody(str_replace("\n", "\r\n", $vpnConfig));
+                        $response->setBody($vpnConfig);
 
                         return $response;
                     } catch (InputValidationException $e) {
