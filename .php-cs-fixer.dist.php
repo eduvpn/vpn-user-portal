@@ -11,6 +11,8 @@ return $config->setRules(
 	    '@PHPUnit84Migration:risky' => true,
 	    'no_alternative_syntax' => false,
 	    'echo_tag_syntax' => ['format' => 'short'],
+        // breaks src/Http/Auth/PhpSamlSpAuthModule.php null assignment
+	    'no_unset_on_property' => false,
         'header_comment' => [
             'header' => <<< 'EOD'
                 eduVPN - End-user friendly VPN.

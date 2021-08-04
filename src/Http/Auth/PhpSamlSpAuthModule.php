@@ -54,7 +54,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
 
         // we no longer need "samlAuth" afterwards, call its destructor to
         // clean up the SamlAuth session and get back our own...
-        $this->samlAuth = null;
+        unset($this->samlAuth);
 
         $userId = $samlAttributes[$userIdAttribute][0];
 
