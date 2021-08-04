@@ -17,11 +17,13 @@ class ServerInfo
 {
     private CaInterface $ca;
     private string $wgPublicKey;
+    private string $oauthPublicKey;
 
-    public function __construct(CaInterface $ca, string $wgPublicKey)
+    public function __construct(CaInterface $ca, string $wgPublicKey, string $oauthPublicKey)
     {
         $this->ca = $ca;
         $this->wgPublicKey = $wgPublicKey;
+        $this->oauthPublicKey = $oauthPublicKey;
     }
 
     public function ca(): CaInterface
@@ -32,5 +34,10 @@ class ServerInfo
     public function wgPublicKey(): string
     {
         return $this->wgPublicKey;
+    }
+
+    public function oauthPublicKey(): string
+    {
+        return $this->oauthPublicKey;
     }
 }

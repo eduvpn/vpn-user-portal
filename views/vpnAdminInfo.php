@@ -46,6 +46,14 @@
                     </dl>
                 </td>
             </tr>
+            <tr>
+                <th><?=$this->t('OAuth'); ?></th>
+                <td>
+                    <dl>
+                        <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($serverInfo->oauthPublicKey()); ?></code></dd>
+                    </dl>
+                </td>
+            </tr>
         </tbody>
     </table>
     </details>
