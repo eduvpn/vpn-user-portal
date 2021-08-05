@@ -14,7 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\OAuth\Server\PublicSigner;
+use fkooman\OAuth\Server\Signer\EdDSA;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
@@ -52,7 +52,7 @@ try {
     $bearerValidator = new BearerValidator(
         $oauthStorage,
         new ClientDb(),
-        new PublicSigner(FileIO::readFile($baseDir.'/config/oauth.key')),
+        new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key')),
     );
     $service = new ApiService($bearerValidator);
 

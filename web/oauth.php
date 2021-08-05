@@ -13,7 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\OAuth\Server\PublicSigner;
+use fkooman\OAuth\Server\Signer\EdDSA;
 use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
@@ -48,7 +48,7 @@ try {
     $oauthServer = new VpnOAuthServer(
         new OAuthStorage($db, 'oauth_'),
         new ClientDb(),
-        new PublicSigner(FileIO::readFile($baseDir.'/config/oauth.key'))
+        new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'))
     );
 
     $ca = new VpnCa($baseDir.'/data/ca', 'EdDSA', $config->vpnCaPath(), $config->caExpiry());
