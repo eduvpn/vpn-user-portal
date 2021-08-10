@@ -15,15 +15,15 @@ use DateTimeImmutable;
 
 class InputValidation
 {
-    public const REGEXP_USER_ID = '/^.+/$/';
+    public const REGEXP_USER_ID = '/^.+$/';
     public const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';
     public const REGEXP_COMMON_NAME = '/^[a-fA-F0-9]{32}$/';
     public const REGEXP_USER_PASS = '/^.{8,}$/';
-    public const REGEXP_DISPLAY_NAME = '/^.+/$/';
+    public const REGEXP_DISPLAY_NAME = '/^.+$/';
 
     public static function re(string $inputStr, string $regExp): bool
     {
-        return 1 !== preg_match($regExp, $inputStr);
+        return 1 === preg_match($regExp, $inputStr);
     }
 
     public static function ipAddress(string $ipAddress): bool

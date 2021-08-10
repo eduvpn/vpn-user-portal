@@ -119,7 +119,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_DISPLAY_NAME));
 
-                $profileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
+                $profileId = $request->requirePostParameter('profileId', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userPermissions);
@@ -174,7 +174,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 if (null !== $publicKey = $request->optionalPostParameter('publicKey')) {
                     // WireGuard
                     // XXX verify publicKey input!
-                    $profileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
+                    $profileId = $request->requirePostParameter('profileId', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
                     // XXX do not allow deleting app created configs
                     $profileConfig = $this->config->profileConfig($profileId);
                     $this->wg->removePeer($profileConfig, $userInfo->userId(), $publicKey);

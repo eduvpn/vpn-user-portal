@@ -174,7 +174,7 @@ class Request
         if (!\is_string($this->getData[$queryKey])) {
             throw new HttpException(sprintf('value of query parameter "%s" MUST be string', $queryKey), 400);
         }
-        $this->validate($c, $queryKey, $this->getData[$queryKey]);
+        self::validate($c, $queryKey, $this->getData[$queryKey]);
 
         return $this->getData[$queryKey];
     }
@@ -206,7 +206,7 @@ class Request
         if (!\is_string($this->postData[$postKey])) {
             throw new HttpException(sprintf('value of post parameter "%s" MUST be string', $postKey), 400);
         }
-        $this->validate($c, $postKey, $this->postData[$postKey]);
+        self::validate($c, $postKey, $this->postData[$postKey]);
 
         return $this->postData[$postKey];
     }
@@ -297,7 +297,7 @@ class Request
             return;
         }
 
-        if (false === ${$c($inputStr)}) {
+        if (false === $c($inputStr)) {
             throw new HttpException(sprintf('invalid "%s"', $k), 400);
         }
     }
