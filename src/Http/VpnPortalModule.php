@@ -117,9 +117,9 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('downloading configuration files has been disabled by the admin', 403);
                 }
 
-                $displayName = InputValidation::displayName($request->requirePostParameter('displayName'));
-                $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
+                $displayName = $request->requirePostParameter('displayName', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_DISPLAY_NAME));
 
+                $profileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userPermissions);
@@ -151,9 +151,8 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/deleteConfig',
             function (UserInfo $userInfo, Request $request): Response {
-                if (null !== $commonName = $request->optionalPostParameter('commonName')) {
+                if (null !== $commonName = $request->optionalPostParameter('commonName', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_COMMON_NAME))) {
                     // OpenVPN
-                    $commonName = InputValidation::commonName($commonName);
                     if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
                         throw new HttpException('certificate does not exist', 400);
                     }
@@ -175,7 +174,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 if (null !== $publicKey = $request->optionalPostParameter('publicKey')) {
                     // WireGuard
                     // XXX verify publicKey input!
-                    $profileId = InputValidation::profileId($request->requirePostParameter('profileId'));
+                    $profileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
                     // XXX do not allow deleting app created configs
                     $profileConfig = $this->config->profileConfig($profileId);
                     $this->wg->removePeer($profileConfig, $userInfo->userId(), $publicKey);

@@ -17,7 +17,6 @@ use LC\Portal\CA\CaInterface;
 use LC\Portal\ClientConfig;
 use LC\Portal\Config;
 use LC\Portal\Dt;
-use LC\Portal\Http\Exception\InputValidationException;
 use LC\Portal\LoggerInterface;
 use LC\Portal\ProfileConfig;
 use LC\Portal\RandomInterface;
@@ -89,7 +88,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             '/v3/connect',
             function (AccessToken $accessToken, Request $request): Response {
                 // XXX catch InputValidationException
-                $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
+                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $availableProfiles = [];
@@ -149,7 +148,8 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 // XXX duplicate from connect
                 // XXX catch InputValidationException
                 // XXX why do we need profile_id again?
-                $requestedProfileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
+
+                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $availableProfiles = [];

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
+use Closure;
 use LC\Portal\Http\Exception\HttpException;
 
 class Request
@@ -160,7 +161,10 @@ class Request
         return $queryString;
     }
 
-    public function requireQueryParameter(string $queryKey): string
+    /**
+     * @param ?Closure(string):bool $c
+     */
+    public function requireQueryParameter(string $queryKey, ?Closure $c = null): string
     {
         if (!\array_key_exists($queryKey, $this->getData)) {
             throw new HttpException(sprintf('missing query parameter "%s"', $queryKey), 400);
@@ -168,20 +172,27 @@ class Request
         if (!\is_string($this->getData[$queryKey])) {
             throw new HttpException(sprintf('value of query parameter "%s" MUST be string', $queryKey), 400);
         }
+        $this->validate($c, $queryKey, $this->getData[$queryKey]);
 
         return $this->getData[$queryKey];
     }
 
-    public function optionalQueryParameter(string $queryKey): ?string
+    /**
+     * @param ?Closure(string):bool $c
+     */
+    public function optionalQueryParameter(string $queryKey, ?Closure $c = null): ?string
     {
         if (!\array_key_exists($queryKey, $this->getData)) {
             return null;
         }
 
-        return $this->requireQueryParameter($queryKey);
+        return $this->requireQueryParameter($queryKey, $c);
     }
 
-    public function requirePostParameter(string $postKey): string
+    /**
+     * @param ?Closure(string):bool $c
+     */
+    public function requirePostParameter(string $postKey, ?Closure $c = null): string
     {
         if (!\array_key_exists($postKey, $this->postData)) {
             throw new HttpException(sprintf('missing post parameter "%s"', $postKey), 400);
@@ -189,17 +200,21 @@ class Request
         if (!\is_string($this->postData[$postKey])) {
             throw new HttpException(sprintf('value of post parameter "%s" MUST be string', $postKey), 400);
         }
+        $this->validate($c, $postKey, $this->postData[$postKey]);
 
         return $this->postData[$postKey];
     }
 
-    public function optionalPostParameter(string $postKey): ?string
+    /**
+     * @param ?Closure(string):bool $c
+     */
+    public function optionalPostParameter(string $postKey, ?Closure $c = null): ?string
     {
         if (!\array_key_exists($postKey, $this->postData)) {
             return null;
         }
 
-        return $this->requirePostParameter($postKey);
+        return $this->requirePostParameter($postKey, $c);
     }
 
     /**
@@ -234,6 +249,7 @@ class Request
         return $postData;
     }
 
+    // XXX introduce validator function as well?!
     public function getCookie(string $cookieKey): ?string
     {
         if (!\array_key_exists($cookieKey, $this->cookieData)) {
@@ -243,6 +259,7 @@ class Request
         return $this->cookieData[$cookieKey];
     }
 
+    // XXX introduce validator function as well?!
     public function requireHeader(string $headerKey): string
     {
         if (!\array_key_exists($headerKey, $this->serverData)) {
@@ -256,6 +273,7 @@ class Request
         return $this->serverData[$headerKey];
     }
 
+    // XXX introduce validator function as well?!
     public function optionalHeader(string $headerKey): ?string
     {
         if (!\array_key_exists($headerKey, $this->serverData)) {
@@ -263,5 +281,16 @@ class Request
         }
 
         return $this->requireHeader($headerKey);
+    }
+
+    private static function validate(?Closure $c, string $k, string $inputStr): void
+    {
+        if (null === $c) {
+            return;
+        }
+
+        if (false === ${$c}) {
+            throw new HttpException(sprintf('invalid "%s"', $k), 400);
+        }
     }
 }

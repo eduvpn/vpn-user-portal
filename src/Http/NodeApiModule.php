@@ -94,12 +94,12 @@ class NodeApiModule implements ServiceModuleInterface
 
     public function connect(Request $request): void
     {
-        $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
-        $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
-        $originatingIp = InputValidation::ipAddress($request->requirePostParameter('originating_ip'));
-        $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
-        $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
-        $connectedAt = InputValidation::connectedAt($request->requirePostParameter('connected_at'));
+        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
+        $commonName = $request->requirePostParameter('common_name', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_COMMON_NAME));
+        $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => InputValidation::ipAddress($s));
+        $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => InputValidation::ipFour($s));
+        $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => InputValidation::ipSix($s));
+        $connectedAt = (int) $request->requirePostParameter('connected_at', fn (string $s) => is_numeric($s) && $s > 0);
         $userId = $this->verifyConnection($profileId, $commonName);
         $this->storage->clientConnect($userId, $profileId, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
         $this->logger->info(
@@ -109,12 +109,12 @@ class NodeApiModule implements ServiceModuleInterface
 
     public function disconnect(Request $request): void
     {
-        $profileId = InputValidation::profileId($request->requirePostParameter('profile_id'));
-        $commonName = InputValidation::commonName($request->requirePostParameter('common_name'));
-        $originatingIp = InputValidation::ipAddress($request->requirePostParameter('originating_ip'));
-        $ipFour = InputValidation::ipFour($request->requirePostParameter('ip_four'));
-        $ipSix = InputValidation::ipSix($request->requirePostParameter('ip_six'));
-        $disconnectedAt = InputValidation::disconnectedAt($request->requirePostParameter('disconnected_at'));
+        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
+        $commonName = $request->requirePostParameter('common_name', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_COMMON_NAME));
+        $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => InputValidation::ipAddress($s));
+        $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => InputValidation::ipFour($s));
+        $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => InputValidation::ipSix($s));
+        $disconnectedAt = (int) $request->requirePostParameter('disconnected_at', fn (string $s) => is_numeric($s) && $s > 0);
 //        $bytesTransferred = InputValidation::bytesTransferred($request->requirePostParameter('bytes_transferred'));
         // XXX add bytesTransferred to some global table
 

@@ -117,8 +117,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $adminUserId = $userInfo->userId();
-                $userId = $request->requireQueryParameter('user_id');
-                InputValidation::userId($userId);
+                $userId = $request->requirePostParameter('user_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_ID));
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
@@ -156,8 +155,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $adminUserId = $userInfo->userId();
-                $userId = $request->requirePostParameter('user_id');
-                InputValidation::userId($userId);
+                $userId = $request->requirePostParameter('user_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_ID));
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
@@ -283,7 +281,9 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $dateTime = InputValidation::dateTime($request->requirePostParameter('date_time'));
+                $dateTime = new DateTimeImmutable(
+                    $request->requirePostParameter('date_time', fn (string $s) => InputValidation::dateTime($s))
+                );
                 // XXX make sure it works correctly regarding timezone!
 
                 // make sure it is NOT in the future
@@ -291,8 +291,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     throw new HttpException('can not specify a time in the future', 400);
                 }
 
-                $ipAddress = $request->requirePostParameter('ip_address');
-                InputValidation::ipAddress($ipAddress);
+                $ipAddress = $request->requirePostParameter('ip_address', fn (string $s) => InputValidation::ipAddress($s));
 
                 return new HtmlResponse(
                     $this->tpl->render(
