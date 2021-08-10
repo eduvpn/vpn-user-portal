@@ -162,6 +162,8 @@ class Request
     }
 
     /**
+     * XXX make the closure not optional.
+     *
      * @param ?Closure(string):bool $c
      */
     public function requireQueryParameter(string $queryKey, ?Closure $c = null): string
@@ -178,6 +180,8 @@ class Request
     }
 
     /**
+     * XXX make the closure not optional.
+     *
      * @param ?Closure(string):bool $c
      */
     public function optionalQueryParameter(string $queryKey, ?Closure $c = null): ?string
@@ -190,6 +194,8 @@ class Request
     }
 
     /**
+     * XXX make the closure not optional.
+     *
      * @param ?Closure(string):bool $c
      */
     public function requirePostParameter(string $postKey, ?Closure $c = null): string
@@ -206,6 +212,8 @@ class Request
     }
 
     /**
+     * XXX make the closure not optional.
+     *
      * @param ?Closure(string):bool $c
      */
     public function optionalPostParameter(string $postKey, ?Closure $c = null): ?string
@@ -289,7 +297,7 @@ class Request
             return;
         }
 
-        if (false === ${$c}) {
+        if (false === ${$c($inputStr)}) {
             throw new HttpException(sprintf('invalid "%s"', $k), 400);
         }
     }
