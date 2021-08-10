@@ -31,7 +31,7 @@ class WgServerConfig
         $ipFourList = [];
         $ipSixList = [];
         foreach ($profileConfigList as $profileConfig) {
-            if ('wireguard' !== $profileConfig->vpnType()) {
+            if ('wireguard' !== $profileConfig->vpnProto()) {
                 // we only want WireGuard profiles
                 continue;
             }

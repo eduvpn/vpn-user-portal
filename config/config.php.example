@@ -209,10 +209,10 @@ return [
     // List of VPN profiles
     'vpnProfiles' => [
         'default-ovpn' => [
-            // The type of the VPN
+            // The VPN protocol
             // REQUIRED
-            'vpnType' => 'openvpn',
-            //'vpnType' => 'wireguard',
+            'vpnProto' => 'openvpn',
+            //'vpnProto' => 'wireguard',
 
             // The number of this profile, every profile per instance has a
             // unique number
@@ -314,10 +314,10 @@ return [
         ],
         
         'default-wg' => [
-            // The type of the VPN
+            // The VPN protocol
             // REQUIRED
-            'vpnType' => 'wireguard',
-            //'vpnType' => 'openvpn',
+            'vpnProto' => 'wireguard',
+            //'vpnProto' => 'openvpn',
 
             // The number of this profile, every profile per instance has a
             // unique number

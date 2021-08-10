@@ -135,7 +135,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
 
-                switch ($profileConfig->vpnType()) {
+                switch ($profileConfig->vpnProto()) {
                     case 'openvpn':
                         return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
 

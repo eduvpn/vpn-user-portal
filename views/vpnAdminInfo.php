@@ -65,7 +65,7 @@
             <tr>
                 <th></th>
                 <td>
-<?php if ('openvpn' === $profileConfig->vpnType()): ?>
+<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
         <span class="plain"><?=$this->t('OpenVPN'); ?></span>
 <?php else: ?>
         <span class="plain"><?=$this->t('WireGuard'); ?></span>
@@ -152,7 +152,7 @@
             </tr>
 <?php endif; ?>
 
-<?php if ('openvpn' === $profileConfig->vpnType()): ?>
+<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
 <?php if (0 !== count($profileConfig->vpnProtoPorts())): ?>
             <tr><th><?=$this->t('Protocols/Ports'); ?></th>
             <td>
@@ -164,7 +164,7 @@
 <?php endif; ?>
 <?php endif; ?>
 
-<?php if ('openvpn' === $profileConfig->vpnType()): ?>
+<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
 <?php if (0 !== count($profileConfig->exposedVpnProtoPorts())): ?>
             <tr><th><?=$this->t('Offered Protocols/Ports'); ?></th>
             <td>

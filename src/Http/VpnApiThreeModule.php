@@ -57,7 +57,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $userProfileList = [];
                 foreach ($profileConfigList as $profileConfig) {
-                    if (!\in_array($profileConfig->vpnType(), $protoSupport, true)) {
+                    if (!\in_array($profileConfig->vpnProto(), $protoSupport, true)) {
                         continue;
                     }
                     if ($profileConfig->hideProfile()) {
@@ -115,7 +115,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
                 // XXX delete all OpenVPN and WireGuard active configs with this auth_id
 
-                switch ($profileConfig->vpnType()) {
+                switch ($profileConfig->vpnProto()) {
                     case 'openvpn':
                         return $this->getOpenVpnConfigResponse($profileConfig, $accessToken);
 
@@ -173,7 +173,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
 
-                if ('openvpn' === $profileConfig->vpnType()) {
+                if ('openvpn' === $profileConfig->vpnProto()) {
                     // OpenVPN
                     $this->storage->deleteCertificatesWithAuthKey($accessToken->authKey());
                     // XXX do we also need to disconnect the client?

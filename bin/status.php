@@ -26,7 +26,7 @@ function getMaxClientLimit(Config $config): array
 {
     $maxConcurrentConnectionLimitList = [];
     foreach ($config->profileConfigList() as $profileConfig) {
-        if ('openvpn' !== $profileConfig->vpnType()) {
+        if ('openvpn' !== $profileConfig->vpnProto()) {
             continue;
         }
         [$ipFour, $ipFourPrefix] = explode('/', $profileConfig->range());
@@ -44,7 +44,7 @@ function getProfilePortMapping(Config $config): array
 {
     $profilePortMapping = [];
     foreach ($config->profileConfigList() as $profileConfig) {
-        if ('openvpn' !== $profileConfig->vpnType()) {
+        if ('openvpn' !== $profileConfig->vpnProto()) {
             continue;
         }
         $profileNumber = $profileConfig->profileNumber();

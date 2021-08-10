@@ -33,7 +33,7 @@ class ServerConfig
 //        ServerConfigCheck::verify($profileConfigList);
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
-            if ('openvpn' === $profileConfig->vpnType()) {
+            if ('openvpn' === $profileConfig->vpnProto()) {
                 $serverConfig = array_merge($serverConfig, $this->openVpnServerConfig->getProfile($profileConfig));
             }
         }

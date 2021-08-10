@@ -25,9 +25,9 @@ class ProfileConfig
         return $this->config->requireString('profileId');
     }
 
-    public function vpnType(): string
+    public function vpnProto(): string
     {
-        return $this->config->requireString('vpnType');
+        return $this->config->requireString('vpnProto');
     }
 
     public function profileNumber(): int
@@ -114,7 +114,7 @@ class ProfileConfig
      */
     public function vpnProtoPorts(): array
     {
-        if ('wireguard' === $this->vpnType()) {
+        if ('wireguard' === $this->vpnProto()) {
             // for WireGuard we have only one port for all profiles
             return ['udp/51820'];
         }

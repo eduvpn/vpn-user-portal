@@ -46,7 +46,7 @@ class DaemonWrapper
         // figure out the nodeIp + portList for each profile...
         $profileNodeIpPortList = [];
         foreach ($this->config->profileConfigList() as $profileConfig) {
-            if ('openvpn' !== $profileConfig->vpnType()) {
+            if ('openvpn' !== $profileConfig->vpnProto()) {
                 continue;
             }
             $portList = [];
@@ -114,7 +114,7 @@ class DaemonWrapper
     {
         $nodeIpPortList = [];
         foreach ($this->config->profileConfigList() as $profileConfig) {
-            if ('openvpn' !== $profileConfig->vpnType()) {
+            if ('openvpn' !== $profileConfig->vpnProto()) {
                 continue;
             }
             $nodeIp = $profileConfig->nodeIp();
