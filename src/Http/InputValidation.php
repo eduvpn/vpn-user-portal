@@ -21,7 +21,7 @@ class InputValidation
     public const REGEXP_USER_AUTH_PASS = '/^.+$/';
     public const REGEXP_USER_PASS = '/^.{8,}$/';
     public const REGEXP_DISPLAY_NAME = '/^.+$/';
-    public const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+/=]+$/';
+    public const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+\\/\\=]+$/';    // XXX improve this!
     public const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
 
     public static function re(string $inputStr, string $regExp): bool
@@ -31,7 +31,7 @@ class InputValidation
 
     public static function ipAddress(string $ipAddress): bool
     {
-        return false === filter_var($ipAddress, FILTER_VALIDATE_IP);
+        return false !== filter_var($ipAddress, FILTER_VALIDATE_IP);
     }
 
     public static function ipFour(string $ipFour): bool
