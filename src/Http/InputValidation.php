@@ -18,6 +18,7 @@ class InputValidation
     public const REGEXP_USER_ID = '/^.+$/';
     public const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';
     public const REGEXP_COMMON_NAME = '/^[a-fA-F0-9]{32}$/';
+    public const REGEXP_USER_AUTH_PASS = '/^.+$/';
     public const REGEXP_USER_PASS = '/^.{8,}$/';
     public const REGEXP_DISPLAY_NAME = '/^.+$/';
     public const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+/=]+$/';

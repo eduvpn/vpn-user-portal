@@ -39,7 +39,7 @@ class UserPassModule implements ServiceModuleInterface
                 $this->session->remove('_form_auth_user');
 
                 $authUser = $request->requirePostParameter('userName', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_ID));
-                $authPass = $request->requirePostParameter('userPass', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_PASS));
+                $authPass = $request->requirePostParameter('userPass', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_AUTH_PASS));
                 $redirectTo = $request->requirePostParameter('_form_auth_redirect_to', fn (string $s) => self::validateRedirectTo($request, $s));
 
                 self::validateRedirectTo($request, $redirectTo);
