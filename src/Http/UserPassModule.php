@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use LC\Portal\Http\Auth\CredentialValidatorInterface;
-use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Json;
 use LC\Portal\TplInterface;
 
@@ -39,9 +38,9 @@ class UserPassModule implements ServiceModuleInterface
             function (Request $request): Response {
                 $this->session->remove('_form_auth_user');
 
-                $authUser = $request->requirePostParameter('userName');
-                $authPass = $request->requirePostParameter('userPass');
-                $redirectTo = $request->requirePostParameter('_form_auth_redirect_to');
+                $authUser = $request->requirePostParameter('userName', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_ID));
+                $authPass = $request->requirePostParameter('userPass', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_PASS));
+                $redirectTo = $request->requirePostParameter('_form_auth_redirect_to', fn (string $s) => self::validateRedirectTo($request, $s));
 
                 self::validateRedirectTo($request, $redirectTo);
 
@@ -70,21 +69,21 @@ class UserPassModule implements ServiceModuleInterface
         );
     }
 
-    private static function validateRedirectTo(Request $request, string $redirectTo): void
+    private static function validateRedirectTo(Request $request, string $redirectTo): bool
     {
-        // XXX improve this!
-        // XXX probably needed in other locations as well!
-        // validate the URL
+        // XXX improve this, take idea from php-saml-sp
         if (false === filter_var($redirectTo, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
-            throw new HttpException('invalid redirect_to URL', 400);
+            return false;
         }
         // extract the "host" part of the URL
         $redirectToHost = parse_url($redirectTo, PHP_URL_HOST);
         if (!\is_string($redirectToHost)) {
-            throw new HttpException('invalid redirect_to URL, unable to extract host', 400);
+            return false;
         }
         if ($request->getServerName() !== $redirectToHost) {
-            throw new HttpException('redirect_to does not match expected host', 400);
+            return false;
         }
+
+        return true;
     }
 }

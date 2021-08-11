@@ -125,7 +125,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                             $accessToken->clientId(),
                             $accessToken->authorizationExpiresAt(),
                             $accessToken,
-                            self::validatePublicKey($request->requirePostParameter('public_key'))
+                            $request->requirePostParameter('public_key', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PUBLIC_KEY))
                         );
 
                         return new Response(
@@ -243,12 +243,6 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                 'Content-Type' => 'application/x-openvpn-profile',
             ]
         );
-    }
-
-    private function validatePublicKey(string $publicKey): string
-    {
-        // XXX implement validation
-        return $publicKey;
     }
 
     /**

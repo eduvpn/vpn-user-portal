@@ -25,6 +25,7 @@ use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
 use LC\Portal\TlsCrypt;
+use LC\Portal\Tpl;
 use LC\Portal\TplInterface;
 use LC\Portal\WireGuard\Wg;
 
@@ -171,9 +172,8 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->daemonWrapper->killClient($commonName);
                 }
 
-                if (null !== $publicKey = $request->optionalPostParameter('publicKey')) {
+                if (null !== $publicKey = $request->optionalPostParameter('publicKey', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PUBLIC_KEY))) {
                     // WireGuard
-                    // XXX verify publicKey input!
                     $profileId = $request->requirePostParameter('profileId', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
                     // XXX do not allow deleting app created configs
                     $profileConfig = $this->config->profileConfig($profileId);
@@ -208,9 +208,8 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/removeClientAuthorization',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX input validation auth_auth
                 // XXX also disable/stop WireGuard configs
-                $authKey = $request->requirePostParameter('auth_key');
+                $authKey = $request->requirePostParameter('auth_key', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_AUTH_KEY));
 
                 if (null === $authorization = $this->oauthStorage->getAuthorization($authKey)) {
                     throw new HttpException('no such authorization', 400);
@@ -263,7 +262,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->postBeforeAuth(
             '/setLanguage',
             function (Request $request): Response {
-                $this->cookie->set('L', $request->requirePostParameter('uiLanguage'));
+                $this->cookie->set('L', $request->requirePostParameter('uiLanguage', fn (string $s) => \array_key_exists($s, Tpl::supportedLanguages())));
 
                 return new RedirectResponse($request->requireHeader('HTTP_REFERER'), 302);
             }

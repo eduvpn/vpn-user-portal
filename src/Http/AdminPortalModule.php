@@ -167,9 +167,9 @@ class AdminPortalModule implements ServiceModuleInterface
                     throw new HttpException('cannot manage own account', 400);
                 }
 
-                $userAction = $request->requirePostParameter('user_action');
-                // no need to explicitly validate userAction, as we will have
-                // switch below with whitelisted acceptable values
+                // we use switch/case for user_action, so no need to explicity
+                // validate it
+                $userAction = $request->requirePostParameter('user_action', null);
 
                 switch ($userAction) {
                     case 'disableAccount':

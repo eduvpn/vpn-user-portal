@@ -20,7 +20,8 @@ class QrModule implements ServiceModuleInterface
         $service->get(
             '/qr',
             function (UserInfo $userInfo, Request $request): Response {
-                $qrText = $request->requireQueryParameter('qr_text');
+                // XXX we do NOT validate the string here, probably should!
+                $qrText = $request->requireQueryParameter('qr_text', null);
 
                 return new Response(self::generate($qrText), ['Content-Type' => 'image/png']);
             }

@@ -162,11 +162,9 @@ class Request
     }
 
     /**
-     * XXX make the closure not optional.
-     *
      * @param ?Closure(string):bool $c
      */
-    public function requireQueryParameter(string $queryKey, ?Closure $c = null): string
+    public function requireQueryParameter(string $queryKey, ?Closure $c): string
     {
         if (!\array_key_exists($queryKey, $this->getData)) {
             throw new HttpException(sprintf('missing query parameter "%s"', $queryKey), 400);
@@ -174,17 +172,19 @@ class Request
         if (!\is_string($this->getData[$queryKey])) {
             throw new HttpException(sprintf('value of query parameter "%s" MUST be string', $queryKey), 400);
         }
-        self::validate($c, $queryKey, $this->getData[$queryKey]);
+        if (null !== $c) {
+            if (false === $c($this->getData[$queryKey])) {
+                throw new HttpException(sprintf('invalid "%s"', $queryKey), 400);
+            }
+        }
 
         return $this->getData[$queryKey];
     }
 
     /**
-     * XXX make the closure not optional.
-     *
      * @param ?Closure(string):bool $c
      */
-    public function optionalQueryParameter(string $queryKey, ?Closure $c = null): ?string
+    public function optionalQueryParameter(string $queryKey, ?Closure $c): ?string
     {
         if (!\array_key_exists($queryKey, $this->getData)) {
             return null;
@@ -194,11 +194,9 @@ class Request
     }
 
     /**
-     * XXX make the closure not optional.
-     *
      * @param ?Closure(string):bool $c
      */
-    public function requirePostParameter(string $postKey, ?Closure $c = null): string
+    public function requirePostParameter(string $postKey, ?Closure $c): string
     {
         if (!\array_key_exists($postKey, $this->postData)) {
             throw new HttpException(sprintf('missing post parameter "%s"', $postKey), 400);
@@ -206,17 +204,19 @@ class Request
         if (!\is_string($this->postData[$postKey])) {
             throw new HttpException(sprintf('value of post parameter "%s" MUST be string', $postKey), 400);
         }
-        self::validate($c, $postKey, $this->postData[$postKey]);
+        if (null !== $c) {
+            if (false === $c($this->postData[$postKey])) {
+                throw new HttpException(sprintf('invalid "%s"', $postKey), 400);
+            }
+        }
 
         return $this->postData[$postKey];
     }
 
     /**
-     * XXX make the closure not optional.
-     *
      * @param ?Closure(string):bool $c
      */
-    public function optionalPostParameter(string $postKey, ?Closure $c = null): ?string
+    public function optionalPostParameter(string $postKey, ?Closure $c): ?string
     {
         if (!\array_key_exists($postKey, $this->postData)) {
             return null;
@@ -289,16 +289,5 @@ class Request
         }
 
         return $this->requireHeader($headerKey);
-    }
-
-    private static function validate(?Closure $c, string $k, string $inputStr): void
-    {
-        if (null === $c) {
-            return;
-        }
-
-        if (false === $c($inputStr)) {
-            throw new HttpException(sprintf('invalid "%s"', $k), 400);
-        }
     }
 }
