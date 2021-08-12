@@ -9,10 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\OpenVpn;
 
 use LC\Portal\CA\CaInfo;
 use LC\Portal\CA\CertInfo;
+use LC\Portal\ProfileConfig;
 
 class ClientConfig
 {

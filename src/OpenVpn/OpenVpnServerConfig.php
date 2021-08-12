@@ -9,10 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace LC\Portal\OpenVpn;
 
 use LC\Portal\CA\CaInterface;
 use LC\Portal\CA\CertInfo;
+use LC\Portal\IP;
+use LC\Portal\ProfileConfig;
 use RangeException;
 use RuntimeException;
 

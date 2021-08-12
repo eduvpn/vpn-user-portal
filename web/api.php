@@ -24,10 +24,10 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\VpnApiThreeModule;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\OAuth\ClientDb;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\Random;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
-use LC\Portal\TlsCrypt;
 use LC\Portal\WireGuard\Wg;
 use LC\Portal\WireGuard\WgDaemon;
 

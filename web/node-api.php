@@ -20,12 +20,12 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\NodeApiModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
-use LC\Portal\OpenVpnServerConfig;
+use LC\Portal\OpenVpn\OpenVpnServerConfig;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
-use LC\Portal\TlsCrypt;
-use LC\Portal\WgServerConfig;
+use LC\Portal\WireGuard\WgServerConfig;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');

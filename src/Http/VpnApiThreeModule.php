@@ -14,14 +14,14 @@ namespace LC\Portal\Http;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
 use LC\Portal\CA\CaInterface;
-use LC\Portal\ClientConfig;
 use LC\Portal\Config;
 use LC\Portal\Dt;
 use LC\Portal\LoggerInterface;
+use LC\Portal\OpenVpn\ClientConfig;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ProfileConfig;
 use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
 use LC\Portal\WireGuard\Wg;
 
 class VpnApiThreeModule implements ApiServiceModuleInterface

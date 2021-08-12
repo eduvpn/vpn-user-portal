@@ -49,16 +49,16 @@ use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
+use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\PhpSession;
 use LC\Portal\Random;
 use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
-use LC\Portal\TlsCrypt;
 use LC\Portal\Tpl;
-use LC\Portal\WgServerConfig;
 use LC\Portal\WireGuard\Wg;
 use LC\Portal\WireGuard\WgDaemon;
+use LC\Portal\WireGuard\WgServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
 
