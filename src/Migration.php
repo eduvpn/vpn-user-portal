@@ -202,7 +202,7 @@ class Migration
     private function runQueries(array $queryList): void
     {
         foreach ($queryList as $dbQuery) {
-            if (0 === \strlen(trim($dbQuery))) {
+            if (0 === Binary::safeStrlen(trim($dbQuery))) {
                 // ignore empty line(s)
                 continue;
             }

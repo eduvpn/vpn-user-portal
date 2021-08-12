@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\HttpClient;
 
+use LC\Portal\Binary;
 use LC\Portal\HttpClient\Exception\HttpClientException;
 use RuntimeException;
 
@@ -63,7 +64,7 @@ class CurlHttpClient implements HttpClientInterface
             function ($curlChannel, $headerLine) use (&$headerList) {
                 $headerList .= $headerLine;
 
-                return \strlen($headerLine);
+                return Binary::safeStrlen($headerLine);
             },
         ];
 
@@ -140,7 +141,7 @@ class CurlHttpClient implements HttpClientInterface
             function ($curlChannel, $headerLine) use (&$headerList) {
                 $headerList .= $headerLine;
 
-                return \strlen($headerLine);
+                return Binary::safeStrlen($headerLine);
             },
         ];
 

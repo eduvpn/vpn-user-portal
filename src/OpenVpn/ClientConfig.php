@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
+use LC\Portal\Binary;
 use LC\Portal\OpenVpn\CA\CaInfo;
 use LC\Portal\OpenVpn\CA\CertInfo;
 use LC\Portal\ProfileConfig;
@@ -78,7 +79,7 @@ class ClientConfig
 
         // remote entries
         foreach ($remoteProtoPortList as $remoteProtoPort) {
-            $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) substr($remoteProtoPort, 4), substr($remoteProtoPort, 0, 3));
+            $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) Binary::safeSubstr($remoteProtoPort, 4), Binary::safeSubstr($remoteProtoPort, 0, 3));
         }
 
         return implode(PHP_EOL, $clientConfig);

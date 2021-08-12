@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Federation;
 
 use Exception;
+use LC\Portal\Binary;
 
 /**
  * Validate Signify/Minisign signatures.
@@ -47,19 +48,19 @@ class Minisign
         //    signature_algorithm: Ed
         //    key_id: 8 random bytes, matching the public key
         //    signature (PureEdDSA): ed25519(<file data>)
-        if (\strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH + self::ED_SIGNATURE_LENGTH !== \strlen($msgSig)) {
+        if (Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH + self::ED_SIGNATURE_LENGTH !== Binary::safeStrlen($msgSig)) {
             throw new Exception('invalid signature (not long enough)');
         }
-        if (self::SIGNIFY_ALGO_DESCRIPTION !== substr($msgSig, 0, \strlen(self::SIGNIFY_ALGO_DESCRIPTION))) {
+        if (self::SIGNIFY_ALGO_DESCRIPTION !== Binary::safeSubstr($msgSig, 0, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION))) {
             throw new Exception('unsupported algorithm, we only support "Ed"');
         }
 
-        $signatureKeyId = substr($msgSig, \strlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_KEY_ID_LENGTH);
+        $signatureKeyId = Binary::safeSubstr($msgSig, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_KEY_ID_LENGTH);
         // check whether we have a public key with this key ID
         $publicKey = self::getPublicKey($signatureKeyId, $encodedPublicKeyList);
 
         return sodium_crypto_sign_verify_detached(
-            substr($msgSig, \strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH),
+            Binary::safeSubstr($msgSig, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH),
             $messageText,
             $publicKey
         );
@@ -76,15 +77,15 @@ class Minisign
         //    public_key: Ed25519 public key
         foreach ($encodedPublicKeyList as $encodedPublicKey) {
             $publicKey = sodium_base642bin($encodedPublicKey, SODIUM_BASE64_VARIANT_ORIGINAL);
-            if (\strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH + self::ED_PUBLIC_KEY_LENGTH !== \strlen($publicKey)) {
+            if (Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH + self::ED_PUBLIC_KEY_LENGTH !== Binary::safeStrlen($publicKey)) {
                 throw new Exception('invalid public key (not long enough)');
             }
-            if (self::SIGNIFY_ALGO_DESCRIPTION !== substr($publicKey, 0, \strlen(self::SIGNIFY_ALGO_DESCRIPTION))) {
+            if (self::SIGNIFY_ALGO_DESCRIPTION !== Binary::safeSubstr($publicKey, 0, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION))) {
                 throw new Exception('unsupported algorithm, we only support "Ed"');
             }
-            $keyId = substr($publicKey, \strlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_KEY_ID_LENGTH);
+            $keyId = Binary::safeSubstr($publicKey, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION), self::SIGNIFY_KEY_ID_LENGTH);
             if ($keyId === $signatureKeyId) {
-                return substr($publicKey, \strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH);
+                return Binary::safeSubstr($publicKey, Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH);
             }
         }
 

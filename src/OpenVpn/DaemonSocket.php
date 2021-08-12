@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
+use LC\Portal\Binary;
 use RuntimeException;
 
 class DaemonSocket
@@ -129,7 +130,7 @@ class DaemonSocket
         if (0 !== strpos($statusLine, 'OK: ')) {
             throw new RuntimeException(sprintf('expected "OK <n>", got "%s"', $statusLine));
         }
-        $resultLineCount = (int) substr($statusLine, 4);
+        $resultLineCount = (int) Binary::safeSubstr($statusLine, 4);
         $resultData = [];
         for ($i = 0; $i < $resultLineCount; ++$i) {
             $resultData[] = trim($this->readLineFromSocket());

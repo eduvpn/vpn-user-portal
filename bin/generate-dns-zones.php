@@ -12,6 +12,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use LC\Portal\Binary;
 use LC\Portal\Config;
 use LC\Portal\IP;
 
@@ -53,7 +54,7 @@ try {
             $firstSixHost = $ipSixSplit[$j]->firstHost();
             $forwardDns[sprintf('gw-%03d-%03d', $profileNumber, $gatewayNo)] = ['ipFour' => $firstFourHost, 'ipSix' => $firstSixHost];
             $gwIpFourOrigin = implode('.', array_slice(array_reverse(explode('.', $firstFourHost)), 1, 3)).'.in-addr.arpa.';
-            $gwIpSixOrigin = implode('.', str_split(strrev(substr(bin2hex(inet_pton($firstSixHost)), 0, 16)), 1)).'.ip6.arpa.';
+            $gwIpSixOrigin = implode('.', str_split(strrev(Binary::safeSubstr(bin2hex(inet_pton($firstSixHost)), 0, 16)), 1)).'.ip6.arpa.';
             $reverseFour[$gwIpFourOrigin][$firstFourHost] = sprintf('gw-%03d-%03d.%s.', $profileNumber, $gatewayNo, $domainName);
             $reverseSix[$gwIpSixOrigin][$firstSixHost] = sprintf('gw-%03d-%03d.%s.', $profileNumber, $gatewayNo, $domainName);
             $longFourIp = ip2long($firstFourHost);
@@ -61,9 +62,9 @@ try {
             for ($i = 0; $i < $noOfHosts - 1; ++$i) {
                 $clientFourIp = long2ip($longFourIp + $i + 1);
                 $sixStart = pack('n', 4096 + $i);
-                $clientSixIp = inet_ntop(substr($longSixIp, 0, 14).$sixStart);
+                $clientSixIp = inet_ntop(Binary::safeSubstr($longSixIp, 0, 14).$sixStart);
                 $ipFourOrigin = implode('.', array_slice(array_reverse(explode('.', $clientFourIp)), 1, 3)).'.in-addr.arpa.';
-                $ipSixOrigin = implode('.', str_split(strrev(substr(bin2hex($longSixIp), 0, 16)), 1)).'.ip6.arpa.';
+                $ipSixOrigin = implode('.', str_split(strrev(Binary::safeSubstr(bin2hex($longSixIp), 0, 16)), 1)).'.ip6.arpa.';
                 $reverseFour[$ipFourOrigin][$clientFourIp] = sprintf('c-%03d-%03d-%03d.%s.', $profileNumber, $gatewayNo, $i + 1, $domainName);
                 $reverseSix[$ipSixOrigin][$clientSixIp] = sprintf('c-%03d-%03d-%03d.%s.', $profileNumber, $gatewayNo, $i + 1, $domainName);
                 $forwardDns[sprintf('c-%03d-%03d-%03d', $profileNumber, $gatewayNo, $i + 1)] = ['ipFour' => $clientFourIp, 'ipSix' => $clientSixIp];
@@ -99,7 +100,7 @@ try {
     foreach ($reverseSix as $ipSixOrigin => $ipEntryList) {
         echo sprintf('$ORIGIN %s', $ipSixOrigin).\PHP_EOL;
         foreach ($ipEntryList as $ipEntry => $hostName) {
-            $ipLast = implode('.', str_split(strrev(substr(bin2hex(inet_pton($ipEntry)), 16)), 1));
+            $ipLast = implode('.', str_split(strrev(Binary::safeSubstr(bin2hex(inet_pton($ipEntry)), 16)), 1));
             echo sprintf('%s IN PTR %s', $ipLast, $hostName).\PHP_EOL;
         }
     }

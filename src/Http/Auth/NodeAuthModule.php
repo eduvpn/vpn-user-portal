@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
+use LC\Portal\Binary;
 use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
@@ -35,11 +36,7 @@ class NodeAuthModule extends AbstractAuthModule
         if (0 !== strpos($authHeader, 'Bearer ')) {
             return null;
         }
-        $userAuthToken = substr($authHeader, 7);
-        if (!\is_string($userAuthToken)) {
-            return null;
-        }
-
+        $userAuthToken = Binary::safeSubstr($authHeader, 7);
         if (!hash_equals($this->authToken, $userAuthToken)) {
             return null;
         }

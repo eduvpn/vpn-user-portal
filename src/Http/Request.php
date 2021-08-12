@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use Closure;
+use LC\Portal\Binary;
 use LC\Portal\Http\Exception\HttpException;
 
 class Request
@@ -138,12 +139,12 @@ class Request
 
         // trim the query string (if any)
         if (false !== $queryStart = strpos($requestUri, '?')) {
-            $requestUri = substr($requestUri, 0, $queryStart);
+            $requestUri = Binary::safeSubstr($requestUri, 0, $queryStart);
         }
 
         // remove the VPN_APP_ROOT (if any)
         if (null !== $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
-            $requestUri = substr($requestUri, \strlen($appRoot));
+            $requestUri = Binary::safeSubstr($requestUri, Binary::safeStrlen($appRoot));
         }
 
         return $requestUri;

@@ -117,8 +117,8 @@ class ServerConfigCheck
     {
         [$ipAddress, $ipPrefix] = explode('/', $ipRange);
         $binIp = self::ipToBin($ipAddress);
-        $minIp = substr($binIp, 0, (int) $ipPrefix).str_repeat('0', \strlen($binIp) - (int) $ipPrefix);
-        $maxIp = substr($binIp, 0, (int) $ipPrefix).str_repeat('1', \strlen($binIp) - (int) $ipPrefix);
+        $minIp = Binary::safeSubstr($binIp, 0, (int) $ipPrefix).str_repeat('0', Binary::safeStrlen($binIp) - (int) $ipPrefix);
+        $maxIp = Binary::safeSubstr($binIp, 0, (int) $ipPrefix).str_repeat('1', Binary::safeStrlen($binIp) - (int) $ipPrefix);
         foreach ($minMaxList as $minMax) {
             if ($minIp >= $minMax[0] && $minIp <= $minMax[1]) {
                 $overlapList[] = [$ipRange, $minMax[2]];
@@ -146,10 +146,10 @@ class ServerConfigCheck
         $binStr = '';
         // base_convert does not work with arbitrary length input, so here we
         // limit it to 32 bits
-        for ($i = 0; $i < \strlen($hexStr) / 8; ++$i) {
+        for ($i = 0; $i < Binary::safeStrlen($hexStr) / 8; ++$i) {
             $binStr .= str_pad(
                 base_convert(
-                    substr($hexStr, $i * 8, 8),
+                    Binary::safeSubstr($hexStr, $i * 8, 8),
                     16,
                     2
                 ),
