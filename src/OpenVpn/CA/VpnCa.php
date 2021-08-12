@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\CA;
+namespace LC\Portal\OpenVpn\CA;
 
 use DateInterval;
 use DateTimeImmutable;
-use LC\Portal\CA\Exception\CaException;
 use LC\Portal\Dt;
 use LC\Portal\FileIO;
+use LC\Portal\OpenVpn\CA\Exception\CaException;
 use RuntimeException;
 
 class VpnCa implements CaInterface

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Portal\CA\CaInterface;
+use LC\Portal\OpenVpn\CA\CaInterface;
 
 class ServerInfo
 {

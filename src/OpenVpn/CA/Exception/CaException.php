@@ -9,7 +9,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\CA\Exception;
+namespace LC\Portal\OpenVpn\CA\Exception;
 
 use Exception;
 

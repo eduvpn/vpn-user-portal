@@ -14,7 +14,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer\EdDSA;
-use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\Expiry;
 use LC\Portal\FileIO;
@@ -24,6 +23,7 @@ use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\VpnOAuthServer;
+use LC\Portal\OpenVpn\CA\VpnCa;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 

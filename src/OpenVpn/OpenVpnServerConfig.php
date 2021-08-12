@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
-use LC\Portal\CA\CaInterface;
-use LC\Portal\CA\CertInfo;
 use LC\Portal\IP;
+use LC\Portal\OpenVpn\CA\CaInterface;
+use LC\Portal\OpenVpn\CA\CertInfo;
 use LC\Portal\ProfileConfig;
 use RangeException;
 use RuntimeException;

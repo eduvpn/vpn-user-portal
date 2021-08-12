@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
-use LC\Portal\CA\CaInfo;
-use LC\Portal\CA\CertInfo;
+use LC\Portal\OpenVpn\CA\CaInfo;
+use LC\Portal\OpenVpn\CA\CertInfo;
 use LC\Portal\ProfileConfig;
 
 class ClientConfig

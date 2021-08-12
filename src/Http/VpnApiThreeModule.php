@@ -13,10 +13,10 @@ namespace LC\Portal\Http;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
-use LC\Portal\CA\CaInterface;
 use LC\Portal\Config;
 use LC\Portal\Dt;
 use LC\Portal\LoggerInterface;
+use LC\Portal\OpenVpn\CA\CaInterface;
 use LC\Portal\OpenVpn\ClientConfig;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ProfileConfig;

@@ -12,7 +12,6 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Portal\CA\VpnCa;
 use LC\Portal\Config;
 use LC\Portal\FileIO;
 use LC\Portal\Http\Auth\NodeAuthModule;
@@ -20,6 +19,7 @@ use LC\Portal\Http\JsonResponse;
 use LC\Portal\Http\NodeApiModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
+use LC\Portal\OpenVpn\CA\VpnCa;
 use LC\Portal\OpenVpn\OpenVpnServerConfig;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ServerConfig;
