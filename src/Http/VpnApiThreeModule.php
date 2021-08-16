@@ -24,7 +24,7 @@ use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\Wg;
 
-class VpnApiThreeModule implements ApiServiceModuleInterface
+class VpnApiThreeModule implements ServiceModuleInterface
 {
     private Config $config;
     private Storage $storage;
@@ -45,7 +45,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
         $this->dateTime = Dt::get();
     }
 
-    public function init(ApiService $service): void
+    public function init(ServiceInterface $service): void
     {
         $service->get(
             '/v3/info',

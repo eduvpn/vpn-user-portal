@@ -32,7 +32,7 @@ class LogoutModule implements ServiceModuleInterface
         $this->session = $session;
     }
 
-    public function init(Service $service): void
+    public function init(ServiceInterface $service): void
     {
         $service->post(
             '/_logout',

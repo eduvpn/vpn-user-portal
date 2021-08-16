@@ -31,7 +31,7 @@ class PasswdModule implements ServiceModuleInterface
         $this->storage = $storage;
     }
 
-    public function init(Service $service): void
+    public function init(ServiceInterface $service): void
     {
         $service->get(
             '/passwd',

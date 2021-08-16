@@ -69,7 +69,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->dateTime = $dateTime;
     }
 
-    public function init(Service $service): void
+    public function init(ServiceInterface $service): void
     {
         $service->get(
             '/',

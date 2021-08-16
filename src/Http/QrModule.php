@@ -15,7 +15,7 @@ class QrModule implements ServiceModuleInterface
 {
     public const QR_ENCODE_PATH = '/usr/bin/qrencode';
 
-    public function init(Service $service): void
+    public function init(ServiceInterface $service): void
     {
         $service->get(
             '/qr',

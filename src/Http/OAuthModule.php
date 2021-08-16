@@ -29,7 +29,7 @@ class OAuthModule implements ServiceModuleInterface
         $this->oauthServer = $oauthServer;
     }
 
-    public function init(Service $service): void
+    public function init(ServiceInterface $service): void
     {
         $service->get(
             '/_oauth/authorize',

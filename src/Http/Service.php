@@ -13,7 +13,7 @@ namespace LC\Portal\Http;
 
 use LC\Portal\Http\Exception\HttpException;
 
-class Service
+class Service implements ServiceInterface
 {
     private ?AuthModuleInterface $authModule = null;
 

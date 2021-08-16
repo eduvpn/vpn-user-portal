@@ -40,7 +40,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->dateTime = Dt::get();
     }
 
-    public function init(Service $service): void
+    public function init(ServiceInterface $service): void
     {
         $service->post(
             '/server_config',

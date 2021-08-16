@@ -31,7 +31,7 @@ class UserPassModule implements ServiceModuleInterface
         $this->tpl = $tpl;
     }
 
-    public function init(Service $service): void
+    public function init(ServiceInterface $service): void
     {
         $service->postBeforeAuth(
             '/_form/auth/verify',

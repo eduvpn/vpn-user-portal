@@ -14,7 +14,7 @@ namespace LC\Portal\Http;
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\OAuthException;
 
-class ApiService
+class ApiService implements ServiceInterface
 {
     private BearerValidator $bearerValidator;
     private array $routeList = [];
@@ -34,7 +34,12 @@ class ApiService
         $this->routeList[$pathInfo]['POST'] = $callback;
     }
 
-    public function addModule(ApiServiceModuleInterface $module): void
+    public function postBeforeAuth(string $pathInfo, callable $callback): void
+    {
+        // NOP
+    }
+
+    public function addModule(ServiceModuleInterface $module): void
     {
         $module->init($this);
     }
