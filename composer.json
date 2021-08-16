@@ -47,8 +47,7 @@
     "require-dev": {
         "ext-json": "*",
         "fkooman/saml-sp": "2.x-dev",
-        "phpunit/phpunit": "^9",
-        "friendsofphp/php-cs-fixer": "^3"
+        "phpunit/phpunit": "^9"
     },
     "suggest": {
         "ext-ldap": "Support LDAP user authentication",
