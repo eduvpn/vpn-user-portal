@@ -32,7 +32,7 @@ class OAuthModule implements ServiceModuleInterface
     public function init(ServiceInterface $service): void
     {
         $service->get(
-            '/_oauth/authorize',
+            '/oauth/authorize',
             function (UserInfo $userInfo, Request $request): Response {
                 try {
                     if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($userInfo->userId())) {
@@ -59,7 +59,7 @@ class OAuthModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/_oauth/authorize',
+            '/oauth/authorize',
             function (UserInfo $userInfo, Request $request): Response {
                 try {
                     $authorizeResponse = $this->oauthServer->postAuthorize(
