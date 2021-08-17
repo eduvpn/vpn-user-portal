@@ -42,7 +42,7 @@ class Config
 
     public function apiConfig(): ApiConfig
     {
-        return new ApiConfig($this->requireArray('Api'));
+        return new ApiConfig($this->s('Api')->toArray());
     }
 
     public function vpnCaPath(): string
