@@ -81,12 +81,10 @@ class Config
     public function profileConfig(string $profileId): ProfileConfig
     {
         return new ProfileConfig(
-//            new self(
-                array_merge(
-                    ['profileId' => $profileId],
-                    $this->s('vpnProfiles')->requireArray($profileId)
-                )
-//            )
+            array_merge(
+                ['profileId' => $profileId],
+                $this->s('vpnProfiles')->requireArray($profileId)
+            )
         );
     }
 
@@ -98,12 +96,10 @@ class Config
         $profileConfigList = [];
         foreach ($this->s('vpnProfiles')->toArray() as $profileId => $profileData) {
             $profileConfigList[] = new ProfileConfig(
-//                new self(
-                    array_merge(
-                        ['profileId' => $profileId],
-                        $profileData
-//                    )
-                    )
+                array_merge(
+                    ['profileId' => $profileId],
+                    $profileData
+                )
             );
         }
 
