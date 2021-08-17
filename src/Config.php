@@ -20,7 +20,7 @@ class Config
 
     private array $configData;
 
-    private function __construct(array $configData)
+    public function __construct(array $configData)
     {
         $this->configData = $configData;
     }
@@ -104,13 +104,27 @@ class Config
         foreach ($this->s('vpnProfiles')->toArray() as $profileId => $profileData) {
             $profileConfigList[] = new ProfileConfig(
                 array_merge(
-                    ['profileId' => $profileId],
+                    [
+                        'profileId' => $profileId,
+                    ],
                     $profileData
                 )
             );
         }
 
         return $profileConfigList;
+    }
+
+    public function dbConfig(string $baseDir): DbConfig
+    {
+        return new DbConfig(
+            array_merge(
+                [
+                    'baseDir' => $baseDir,
+                ],
+                $this->s('Db')->toArray()
+            )
+        );
     }
 
     /**

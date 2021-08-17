@@ -39,9 +39,9 @@ try {
 
     $storage = new Storage(
         new PDO(
-            $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
-            $config->s('Db')->optionalString('dbUser'),
-            $config->s('Db')->optionalString('dbPass')
+            $config->dbConfig($baseDir)->dbDsn(),
+            $config->dbConfig($baseDir)->dbUser(),
+            $config->dbConfig($baseDir)->dbPass()
         ),
         $baseDir.'/schema'
     );

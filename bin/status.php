@@ -151,9 +151,9 @@ try {
     $maxClientLimit = getMaxClientLimit($config);
 
     $db = new PDO(
-        $config->s('Db')->requireString('dbDsn', 'sqlite://'.$baseDir.'/data/db.sqlite'),
-        $config->s('Db')->optionalString('dbUser'),
-        $config->s('Db')->optionalString('dbPass')
+        $config->dbConfig($baseDir)->dbDsn(),
+        $config->dbConfig($baseDir)->dbUser(),
+        $config->dbConfig($baseDir)->dbPass()
     );
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
