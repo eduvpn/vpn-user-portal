@@ -15,28 +15,9 @@ use LC\Portal\Exception\ConfigException;
 
 trait ConfigTrait
 {
-    protected array $configData;
-
-    public function __construct(array $configData)
-    {
-        $this->configData = $configData;
-    }
-
-    /**
-     * @psalm-suppress UnresolvableInclude
-     */
-    public static function fromFile(string $configFile): self
-    {
-        if (false === FileIO::exists($configFile)) {
-            throw new ConfigException(sprintf('unable to read "%s"', $configFile));
-        }
-
-        return new self(require $configFile);
-    }
-
     public function s(string $k): self
     {
-        return new self($this->requireArray($k));
+        return new self($this->requireArray($k, []));
     }
 
     public function optionalString(string $k): ?string

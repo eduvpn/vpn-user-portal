@@ -18,6 +18,13 @@ class Config
 {
     use ConfigTrait;
 
+    private array $configData;
+
+    private function __construct(array $configData)
+    {
+        $this->configData = $configData;
+    }
+
     public function sessionExpiry(): DateInterval
     {
         return new DateInterval($this->requireString('sessionExpiry', 'P90D'));

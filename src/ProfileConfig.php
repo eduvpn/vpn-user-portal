@@ -15,6 +15,13 @@ class ProfileConfig
 {
     use ConfigTrait;
 
+    private array $configData;
+
+    public function __construct(array $configData)
+    {
+        $this->configData = $configData;
+    }
+
     public function profileId(): string
     {
         return $this->requireString('profileId');

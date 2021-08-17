@@ -17,6 +17,13 @@ class ApiConfig
 {
     use ConfigTrait;
 
+    private array $configData;
+
+    public function __construct(array $configData)
+    {
+        $this->configData = $configData;
+    }
+
     public function remoteAccess(): bool
     {
         return $this->requireBool('remoteAccess', false);
