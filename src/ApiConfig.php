@@ -15,20 +15,15 @@ use DateInterval;
 
 class ApiConfig
 {
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    use ConfigTrait;
 
     public function remoteAccess(): bool
     {
-        return $this->config->requireBool('remoteAccess', false);
+        return $this->requireBool('remoteAccess', false);
     }
 
     public function tokenExpiry(): DateInterval
     {
-        return new DateInterval($this->config->requireString('tokenExpiry', 'PT1H'));
+        return new DateInterval($this->requireString('tokenExpiry', 'PT1H'));
     }
 }

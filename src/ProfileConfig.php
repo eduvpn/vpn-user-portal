@@ -13,51 +13,46 @@ namespace LC\Portal;
 
 class ProfileConfig
 {
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    use ConfigTrait;
 
     public function profileId(): string
     {
-        return $this->config->requireString('profileId');
+        return $this->requireString('profileId');
     }
 
     public function vpnProto(): string
     {
-        return $this->config->requireString('vpnProto');
+        return $this->requireString('vpnProto');
     }
 
     public function profileNumber(): int
     {
-        return $this->config->requireInt('profileNumber');
+        return $this->requireInt('profileNumber');
     }
 
     public function hostName(): string
     {
-        return $this->config->requireString('hostName');
+        return $this->requireString('hostName');
     }
 
     public function range(): string
     {
-        return $this->config->requireString('range');
+        return $this->requireString('range');
     }
 
     public function range6(): string
     {
-        return $this->config->requireString('range6');
+        return $this->requireString('range6');
     }
 
     public function displayName(): string
     {
-        return $this->config->requireString('displayName');
+        return $this->requireString('displayName');
     }
 
     public function defaultGateway(): bool
     {
-        return $this->config->requireBool('defaultGateway', true);
+        return $this->requireBool('defaultGateway', true);
     }
 
     /**
@@ -65,7 +60,7 @@ class ProfileConfig
      */
     public function routes(): array
     {
-        return $this->config->requireArray('routes', []);
+        return $this->requireArray('routes', []);
     }
 
     /**
@@ -73,27 +68,27 @@ class ProfileConfig
      */
     public function dns(): array
     {
-        return $this->config->requireArray('dns', []);
+        return $this->requireArray('dns', []);
     }
 
     public function clientToClient(): bool
     {
-        return $this->config->requireBool('clientToClient', false);
+        return $this->requireBool('clientToClient', false);
     }
 
     public function listenIp(): string
     {
-        return $this->config->requireString('listenIp', '::');
+        return $this->requireString('listenIp', '::');
     }
 
     public function enableLog(): bool
     {
-        return $this->config->requireBool('enableLog', false);
+        return $this->requireBool('enableLog', false);
     }
 
     public function enableAcl(): bool
     {
-        return $this->config->requireBool('enableAcl', false);
+        return $this->requireBool('enableAcl', false);
     }
 
     /**
@@ -101,12 +96,12 @@ class ProfileConfig
      */
     public function aclPermissionList(): array
     {
-        return $this->config->requireArray('aclPermissionList', []);
+        return $this->requireArray('aclPermissionList', []);
     }
 
     public function nodeIp(): string
     {
-        return $this->config->requireString('nodeIp', '127.0.0.1');
+        return $this->requireString('nodeIp', '127.0.0.1');
     }
 
     /**
@@ -119,7 +114,7 @@ class ProfileConfig
             return ['udp/51820'];
         }
 
-        return $this->config->requireArray('vpnProtoPorts', ['udp/1194', 'tcp/1194']);
+        return $this->requireArray('vpnProtoPorts', ['udp/1194', 'tcp/1194']);
     }
 
     /**
@@ -127,22 +122,22 @@ class ProfileConfig
      */
     public function exposedVpnProtoPorts(): array
     {
-        return $this->config->requireArray('exposedVpnProtoPorts', []);
+        return $this->requireArray('exposedVpnProtoPorts', []);
     }
 
     public function hideProfile(): bool
     {
-        return $this->config->requireBool('hideProfile', false);
+        return $this->requireBool('hideProfile', false);
     }
 
     public function blockLan(): bool
     {
-        return $this->config->requireBool('blockLan', false);
+        return $this->requireBool('blockLan', false);
     }
 
     public function dnsDomain(): ?string
     {
-        return $this->config->optionalString('dnsDomain');
+        return $this->optionalString('dnsDomain');
     }
 
     /**
@@ -150,6 +145,6 @@ class ProfileConfig
      */
     public function dnsDomainSearch(): array
     {
-        return $this->config->requireArray('dnsDomainSearch', []);
+        return $this->requireArray('dnsDomainSearch', []);
     }
 }

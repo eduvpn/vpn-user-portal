@@ -14,17 +14,9 @@ namespace LC\Portal;
 use DateInterval;
 use LC\Portal\Exception\ConfigException;
 
-/**
- * XXX finish getting rid of generic methods.
- */
 class Config
 {
-    private array $configData;
-
-    public function __construct(array $configData)
-    {
-        $this->configData = $configData;
-    }
+    use ConfigTrait;
 
     public function sessionExpiry(): DateInterval
     {
@@ -43,7 +35,7 @@ class Config
 
     public function apiConfig(): ApiConfig
     {
-        return new ApiConfig($this->s('Api'));
+        return new ApiConfig($this->requireArray('Api'));
     }
 
     public function vpnCaPath(): string
@@ -89,12 +81,12 @@ class Config
     public function profileConfig(string $profileId): ProfileConfig
     {
         return new ProfileConfig(
-            new self(
+//            new self(
                 array_merge(
                     ['profileId' => $profileId],
                     $this->s('vpnProfiles')->requireArray($profileId)
                 )
-            )
+//            )
         );
     }
 
@@ -106,128 +98,16 @@ class Config
         $profileConfigList = [];
         foreach ($this->s('vpnProfiles')->toArray() as $profileId => $profileData) {
             $profileConfigList[] = new ProfileConfig(
-                new self(
+//                new self(
                     array_merge(
                         ['profileId' => $profileId],
                         $profileData
+//                    )
                     )
-                )
             );
         }
 
         return $profileConfigList;
-    }
-
-    public function s(string $k): self
-    {
-        if (!\array_key_exists($k, $this->configData)) {
-            return new self([]);
-        }
-        if (!\is_array($this->configData[$k])) {
-            throw new ConfigException('key "'.$k.'" not of type array');
-        }
-
-        return new self($this->configData[$k]);
-    }
-
-    public function optionalString(string $k): ?string
-    {
-        if (!\array_key_exists($k, $this->configData)) {
-            return null;
-        }
-        if (!\is_string($this->configData[$k])) {
-            throw new ConfigException('key "'.$k.'" not of type string');
-        }
-
-        return $this->configData[$k];
-    }
-
-    public function requireString(string $k, ?string $d = null): string
-    {
-        if (null === $v = $this->optionalString($k)) {
-            if (null !== $d) {
-                return $d;
-            }
-
-            throw new ConfigException('key "'.$k.'" not available');
-        }
-
-        return $v;
-    }
-
-    public function optionalInt(string $k): ?int
-    {
-        if (!\array_key_exists($k, $this->configData)) {
-            return null;
-        }
-        if (!\is_int($this->configData[$k])) {
-            throw new ConfigException('key "'.$k.'" not of type int');
-        }
-
-        return $this->configData[$k];
-    }
-
-    public function requireInt(string $k, ?int $d = null): int
-    {
-        if (null === $v = $this->optionalInt($k)) {
-            if (null !== $d) {
-                return $d;
-            }
-
-            throw new ConfigException('key "'.$k.'" not available');
-        }
-
-        return $v;
-    }
-
-    public function optionalBool(string $k): ?bool
-    {
-        if (!\array_key_exists($k, $this->configData)) {
-            return null;
-        }
-        if (!\is_bool($this->configData[$k])) {
-            throw new ConfigException('key "'.$k.'" not of type bool');
-        }
-
-        return $this->configData[$k];
-    }
-
-    public function requireBool(string $k, ?bool $d = null): bool
-    {
-        if (null === $v = $this->optionalBool($k)) {
-            if (null !== $d) {
-                return $d;
-            }
-
-            throw new ConfigException('key "'.$k.'" not available');
-        }
-
-        return $v;
-    }
-
-    public function optionalArray(string $k): ?array
-    {
-        if (!\array_key_exists($k, $this->configData)) {
-            return null;
-        }
-        if (!\is_array($this->configData[$k])) {
-            throw new ConfigException('key "'.$k.'" not of type array');
-        }
-
-        return $this->configData[$k];
-    }
-
-    public function requireArray(string $k, array $d = null): array
-    {
-        if (null === $v = $this->optionalArray($k)) {
-            if (null !== $d) {
-                return $d;
-            }
-
-            throw new ConfigException('key "'.$k.'" not available');
-        }
-
-        return $v;
     }
 
     /**
@@ -240,10 +120,5 @@ class Config
         }
 
         return new self(require $configFile);
-    }
-
-    private function toArray(): array
-    {
-        return $this->configData;
     }
 }
