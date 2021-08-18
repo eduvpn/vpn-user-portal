@@ -11,26 +11,26 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http\Auth;
 
-use LC\Portal\Config;
 use LC\Portal\Http\RedirectResponse;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Response;
 use LC\Portal\Http\UserInfo;
+use LC\Portal\MellonAuthConfig;
 
 class MellonAuthModule extends AbstractAuthModule
 {
-    private Config $config;
+    private MellonAuthConfig $config;
 
-    public function __construct(Config $config)
+    public function __construct(MellonAuthConfig $config)
     {
         $this->config = $config;
     }
 
     public function userInfo(Request $request): ?UserInfo
     {
-        $userIdAttribute = $this->config->requireString('userIdAttribute');
-        $nameIdSerialization = $this->config->requireBool('nameIdSerialization', false);
-        $permissionAttributeList = $this->config->requireArray('permissionAttributeList', []);
+        $userIdAttribute = $this->config->userIdAttribute();
+        $nameIdSerialization = $this->config->nameIdSerialization();
+        $permissionAttributeList = $this->config->permissionAttributeList();
 
         $userId = trim(strip_tags($request->requireHeader($userIdAttribute)));
 
@@ -39,13 +39,13 @@ class MellonAuthModule extends AbstractAuthModule
                 // only for NAME_ID and eduPersonTargetedID, serialize it the way Shibboleth does
                 // it by prefixing it with the IdP entityID and SP entityID
                 $idpEntityId = $request->requireHeader('MELLON_IDP');
-                $spEntityId = $this->config->requireString('spEntityId');
+                $spEntityId = $this->config->spEntityId();
                 $userId = sprintf('%s!%s!%s', $idpEntityId, $spEntityId, $userId);
             }
         }
 
         $permissionList = [];
-        foreach ($this->config->requireArray('permissionAttributeList', []) as $permissionAttribute) {
+        foreach ($permissionAttributeList as $permissionAttribute) {
             if (null !== $permissionAttributeValue = $request->optionalHeader($permissionAttribute)) {
                 $permissionList = array_merge($permissionList, explode(';', $permissionAttributeValue));
             }

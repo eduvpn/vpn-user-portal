@@ -127,6 +127,11 @@ class Config
         );
     }
 
+    public function mellonAuthConfig(): MellonAuthConfig
+    {
+        return new MellonAuthConfig($this->s('MellonAuthModule')->toArray());
+    }
+
     /**
      * @psalm-suppress UnresolvableInclude
      */

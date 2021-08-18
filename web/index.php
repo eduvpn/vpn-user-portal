@@ -168,7 +168,7 @@ try {
             break;
 
         case 'MellonAuthModule':
-            $authModule = new MellonAuthModule($config->s('MellonAuthModule'));
+            $authModule = new MellonAuthModule($config->mellonAuthConfig());
 
             break;
 
