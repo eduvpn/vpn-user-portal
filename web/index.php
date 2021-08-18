@@ -204,23 +204,17 @@ try {
             break;
 
         case 'LdapAuthModule':
+            // XXX move ldapClient to LdapCredentialValidator
             $ldapClient = new LdapClient(
-                $config->s('LdapAuthModule')->requireString('ldapUri')
+                $config->ldapAuthConfig()->ldapUri()
             );
             $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
                 new UserPassModule(
                     new LdapCredentialValidator(
+                        $config->ldapAuthConfig(),
                         $logger,
-                        $ldapClient,
-                        $config->s('LdapAuthModule')->optionalString('bindDnTemplate'),
-                        $config->s('LdapAuthModule')->optionalString('baseDn'),
-                        $config->s('LdapAuthModule')->optionalString('userFilterTemplate'),
-                        $config->s('LdapAuthModule')->optionalString('userIdAttribute'),
-                        $config->s('LdapAuthModule')->optionalString('addRealm'),
-                        $config->s('LdapAuthModule')->requireArray('permissionAttributeList', []),
-                        $config->s('LdapAuthModule')->optionalString('searchBindDn'),
-                        $config->s('LdapAuthModule')->optionalString('searchBindPass')
+                        $ldapClient
                     ),
                     $sessionBackend,
                     $tpl

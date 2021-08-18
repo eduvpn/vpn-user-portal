@@ -132,6 +132,11 @@ class Config
         return new MellonAuthConfig($this->s('MellonAuthModule')->toArray());
     }
 
+    public function ldapAuthConfig(): LdapAuthConfig
+    {
+        return new LdapAuthConfig($this->s('LdapAuthModule')->toArray());
+    }
+
     /**
      * @psalm-suppress UnresolvableInclude
      */
