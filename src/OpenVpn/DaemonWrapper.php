@@ -51,7 +51,7 @@ class DaemonWrapper
             $profileId = $profileConfig->profileId();
             $connectionList[$profileId] = [];
             $httpResponse = $this->httpClient->get(
-                $profileConfig->nodeBaseUrl().'/openvpn/connection_list',
+                $profileConfig->nodeBaseUrl().'/ovpn/connection_list',
                 [
                     'ProfileNumber' => (string) $profileConfig->profileNumber(),
                     'ProcessCount' => (string) \count($profileConfig->vpnProtoPorts()),
