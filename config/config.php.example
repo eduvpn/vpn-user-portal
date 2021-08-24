@@ -202,10 +202,6 @@ return [
 //    'enableConfigDownload' => true,
 //    'enableConfigDownload' => false,
 
-    // DEFAULT = true (for remote connections)
-    // XXX make sure of this!
-    //'vpnDaemonTls' => false,
-
     // List of VPN profiles
     'vpnProfiles' => [
         'default-ovpn' => [
@@ -259,9 +255,9 @@ return [
             // DEFAULT = '::'
             //'listenIp' => '::',
 
-            // The IP address to use for connecting to VPN node
-            // DEFAULT = '127.0.0.1'
-            //'nodeIp' => '127.0.0.1',
+            // The base URL to connect to the VPN node
+            // DEFAULT = 'http://127.0.0.1:41194'
+            //'nodeBaseUrl' => 'http://127.0.0.1:41194',
 
             // Block access to local LAN when VPN is active
             // DEFAULT = false
@@ -365,9 +361,9 @@ return [
             // DEFAULT = '::'
             //'listenIp' => '::',
 
-            // The IP address to use for connecting to VPN node
-            // DEFAULT = '127.0.0.1'
-            //'nodeIp' => '127.0.0.1',
+            // The base URL to connect to the VPN node
+            // DEFAULT = 'http://127.0.0.1:41194'
+            //'nodeBaseUrl' => 'http://127.0.0.1:41194',
 
             // Block access to local LAN when VPN is active
             // XXX WG?!

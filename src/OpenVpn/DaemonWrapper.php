@@ -58,7 +58,7 @@ class DaemonWrapper
                 ]
             );
 
-            $connectionList = Json::decode($httpResponse->getBody())['ConnectionList'];
+            $connectionList = Json::decode($httpResponse->getBody())['connection_list'];
             foreach ($connectionList as $connectionInfo) {
                 $commonName = $connectionInfo['common_name'];
                 if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
