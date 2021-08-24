@@ -47,7 +47,7 @@ class WgDaemon
 
         // XXX catch errors
         $httpResponse = $this->httpClient->postRaw(
-            $wgDaemonEndpoint.'/add_peer',
+            $wgDaemonEndpoint.'/wg/add_peer',
             [],
             $rawPostData
         );
@@ -59,7 +59,7 @@ class WgDaemon
 
         // XXX catch errors
         $httpResponse = $this->httpClient->postRaw(
-            $wgDaemonEndpoint.'/remove_peer',
+            $wgDaemonEndpoint.'/wg/remove_peer',
             [],
             $rawPostData
         );
@@ -87,7 +87,7 @@ class WgDaemon
     {
         // XXX catch errors
         // XXX make sure WG "backend" is in sync with local DB (somehow)
-        $httpResponse = $this->httpClient->get($wgDaemonEndpoint.'/info', [], []);
+        $httpResponse = $this->httpClient->get($wgDaemonEndpoint.'/wg/info', [], []);
 
         return Json::decode($httpResponse->getBody());
     }
