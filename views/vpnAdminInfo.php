@@ -104,8 +104,8 @@
 <?php if ('::' !== $listenIp = $profileConfig->listenIp()): ?>
             <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($listenIp); ?></code></td></tr>
 <?php endif; ?>
-<?php if ('127.0.0.1' !== $nodeIp = $profileConfig->nodeIp()): ?>
-            <tr><th><?=$this->t('Node IP'); ?></th><td><code><?=$this->e($nodeIp); ?></code></td></tr>
+<?php if ('http://127.0.0.1:41994' !== $nodeBaseUrl = $profileConfig->nodeBaseUrl()): ?>
+            <tr><th><?=$this->t('Node Base URL'); ?></th><td><code><?=$this->e($nodeBaseUrl); ?></code></td></tr>
 <?php endif; ?>
 
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>

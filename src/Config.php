@@ -60,11 +60,6 @@ class Config
         return $this->requireBool('enableConfigDownload', true);
     }
 
-    public function vpnDaemonTls(): bool
-    {
-        return $this->requireBool('vpnDaemonTls', true);
-    }
-
     public function defaultLanguage(): string
     {
         return $this->requireString('defaultLanguage', 'en-US');

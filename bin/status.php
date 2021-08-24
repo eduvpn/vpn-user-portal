@@ -13,8 +13,8 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
+use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
-use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
@@ -102,6 +102,24 @@ function outputConversion(array $outputData, bool $asJson): void
     }
 }
 
+// XXX we have to convert profileNumber and processNumber to proto/port instead...
+function toPort(int $profileNumber, int $processNumber): int
+{
+    if (1 > $profileNumber || 64 < $profileNumber) {
+        throw new RangeException('1 <= profileNumber <= 64');
+    }
+
+    if (0 > $processNumber || 64 <= $processNumber) {
+        throw new RangeException('0 <= processNumber < 64');
+    }
+
+    // we have 2^16 - 11940 ports available for management ports, so let's
+    // say we have 2^14 ports available to distribute over profiles and
+    // processes, let's take 12 bits, so we have 64 profiles with each 64
+    // processes...
+    return ($profileNumber - 1 << 6) | $processNumber;
+}
+
 try {
     // XXX implement WireGuard status
     // XXX use argv[0] for SysLogger param?
@@ -161,7 +179,7 @@ try {
     $daemonWrapper = new DaemonWrapper(
         $config,
         $storage,
-        new DaemonSocket($baseDir.'/config/vpn-daemon', $config->vpnDaemonTls()),
+        new CurlHttpClient(),
         $logger
     );
 

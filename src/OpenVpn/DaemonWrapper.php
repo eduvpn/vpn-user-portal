@@ -12,10 +12,10 @@ declare(strict_types=1);
 namespace LC\Portal\OpenVpn;
 
 use LC\Portal\Config;
+use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\Json;
 use LC\Portal\LoggerInterface;
 use LC\Portal\Storage;
-use RangeException;
-use RuntimeException;
 
 /**
  * Use vpn-daemon instead of direct OpenVPN management port socket connections.
@@ -26,85 +26,65 @@ class DaemonWrapper
 
     private Storage $storage;
 
-    private DaemonSocket $daemonSocket;
+    private HttpClientInterface $httpClient;
 
     private LoggerInterface $logger;
 
-    public function __construct(Config $config, Storage $storage, DaemonSocket $daemonSocket, LoggerInterface $logger)
+    public function __construct(Config $config, Storage $storage, HttpClientInterface $httpClient, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->storage = $storage;
-        $this->daemonSocket = $daemonSocket;
+        $this->httpClient = $httpClient;
         $this->logger = $logger;
     }
 
     /**
-     * @return array<string, array<array{common_name:string,display_name:string,expires_at:\DateTimeImmutable,management_port:int,user_id:string,user_is_disabled:bool, virtual_address:array{0:string,1:string}}>>
+     * @return array<string, array<array{common_name:string,display_name:string,expires_at:\DateTimeImmutable,profile_number:int,process_number:int,user_id:string,user_is_disabled:bool,virtual_address:array{0:string,1:string}}>>
      */
     public function getConnectionList(?string $userId): array
     {
-        // figure out the nodeIp + portList for each profile...
-        $profileNodeIpPortList = [];
+        $connectionList = [];
         foreach ($this->config->profileConfigList() as $profileConfig) {
             if ('openvpn' !== $profileConfig->vpnProto()) {
                 continue;
             }
-            $portList = [];
-            for ($i = 0; $i < \count($profileConfig->vpnProtoPorts()); ++$i) {
-                $portList[] = 11940 + self::toPort($profileConfig->profileNumber(), $i);
-            }
-            $profileNodeIpPortList[$profileConfig->profileId()] = [
-                'nodeIp' => $profileConfig->nodeIp(),
-                'portList' => $portList,
-            ];
-        }
-
-        // walk over every profile, fetch the connected clients for
-        // that profile and augment it with info from storage,
-        // optionally filter it...
-        //
-        // FIXME: do not connect (again) as long as nodeIp
-        // remains the same!
-        $connectionList = [];
-        foreach ($profileNodeIpPortList as $profileId => $nodeIpPortList) {
+            $profileId = $profileConfig->profileId();
             $connectionList[$profileId] = [];
-            $nodeIp = $nodeIpPortList['nodeIp'];
-            $portList = $nodeIpPortList['portList'];
+            $httpResponse = $this->httpClient->get(
+                $profileConfig->nodeBaseUrl().'/openvpn/connection_list',
+                [
+                    'ProfileNumber' => (string) $profileConfig->profileNumber(),
+                    'ProcessCount' => (string) \count($profileConfig->vpnProtoPorts()),
+                ]
+            );
 
-            try {
-                $this->daemonSocket->open($nodeIp);
-                $this->daemonSocket->setPorts($portList);
-                $daemonConnectionList = $this->daemonSocket->connections();
-                foreach ($daemonConnectionList as $connectionInfo) {
-                    $commonName = $connectionInfo['common_name'];
-                    if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
-                        // we do not have information on this CN, what is going on?!
-                        $this->logger->warning(sprintf('"common_name "%s" not found', $commonName));
+            $connectionList = Json::decode($httpResponse->getBody())['ConnectionList'];
+            foreach ($connectionList as $connectionInfo) {
+                $commonName = $connectionInfo['common_name'];
+                if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
+                    // we do not have information on this CN, what is going on?!
+                    $this->logger->warning(sprintf('"common_name "%s" not found', $commonName));
 
+                    continue;
+                }
+                if (null !== $userId) {
+                    // filter by userId
+                    if ($userId !== $certInfo['user_id']) {
                         continue;
                     }
-                    if (null !== $userId) {
-                        // filter by userId
-                        if ($userId !== $certInfo['user_id']) {
-                            continue;
-                        }
-                    }
-
-                    $connectionList[$profileId][] = [
-                        'management_port' => $connectionInfo['management_port'],
-                        'common_name' => $connectionInfo['common_name'],
-                        'virtual_address' => $connectionInfo['virtual_address'],
-                        'user_id' => $certInfo['user_id'],
-                        'user_is_disabled' => $certInfo['user_is_disabled'],
-                        'display_name' => $certInfo['display_name'],
-                        'expires_at' => $certInfo['expires_at'],
-                    ];
                 }
-            } catch (RuntimeException $e) {
-                // can't do much here...
-                $this->logger->warning(sprintf('DAEMON %s [%s]: %s', $nodeIp, implode(',', $portList), $e->getMessage()));
+
+                $connectionList[$profileId][] = [
+                    'common_name' => $connectionInfo['common_name'],
+                    'virtual_address' => [$connectionInfo['ip_four'], $connectionInfo['ip_six']],   // XXX ip_four and ip_six
+                    'profile_number' => (int) $connectionInfo['profile_number'],
+                    'process_number' => (int) $connectionInfo['process_number'],
+                    'user_id' => $certInfo['user_id'],
+                    'user_is_disabled' => $certInfo['user_is_disabled'],    // XXX why?
+                    'display_name' => $certInfo['display_name'],            // XXX why?
+                    'expires_at' => $certInfo['expires_at'],
+                ];
             }
-            $this->daemonSocket->close();
         }
 
         return $connectionList;
@@ -112,49 +92,20 @@ class DaemonWrapper
 
     public function killClient(string $commonName): void
     {
-        $nodeIpPortList = [];
         foreach ($this->config->profileConfigList() as $profileConfig) {
             if ('openvpn' !== $profileConfig->vpnProto()) {
                 continue;
             }
-            $nodeIp = $profileConfig->nodeIp();
-            if (!\array_key_exists($nodeIp, $nodeIpPortList)) {
-                // multiple profiles can have the same nodeIp
-                $nodeIpPortList[$nodeIp] = [];
-            }
-            for ($i = 0; $i < \count($profileConfig->vpnProtoPorts()); ++$i) {
-                $nodeIpPortList[$nodeIp][] = 11940 + self::toPort($profileConfig->profileNumber(), $i);
-            }
+            $profileId = $profileConfig->profileId();
+            $httpResponse = $this->httpClient->post(
+                $profileConfig->nodeBaseUrl().'/ovpn/disconnect',
+                [],
+                [
+                    'CommonName' => $commonName,
+                    'ProfileNumber' => (string) $profileConfig->profileNumber(),
+                    'ProcessCount' => (string) \count($profileConfig->vpnProtoPorts()),
+                ]
+            );
         }
-
-        // send the "DISCONNECT" command for all IPs and/ports
-        foreach ($nodeIpPortList as $nodeIp => $portList) {
-            try {
-                $this->daemonSocket->open($nodeIp);
-                $this->daemonSocket->setPorts($portList);
-                $this->daemonSocket->disconnect([$commonName]);
-            } catch (RuntimeException $e) {
-                // can't do much here...
-                $this->logger->warning(sprintf('DAEMON %s [%s]: %s', $nodeIp, implode(',', $portList), $e->getMessage()));
-            }
-            $this->daemonSocket->close();
-        }
-    }
-
-    public static function toPort(int $profileNumber, int $processNumber): int
-    {
-        if (1 > $profileNumber || 64 < $profileNumber) {
-            throw new RangeException('1 <= profileNumber <= 64');
-        }
-
-        if (0 > $processNumber || 64 <= $processNumber) {
-            throw new RangeException('0 <= processNumber < 64');
-        }
-
-        // we have 2^16 - 11940 ports available for management ports, so let's
-        // say we have 2^14 ports available to distribute over profiles and
-        // processes, let's take 12 bits, so we have 64 profiles with each 64
-        // processes...
-        return ($profileNumber - 1 << 6) | $processNumber;
     }
 }

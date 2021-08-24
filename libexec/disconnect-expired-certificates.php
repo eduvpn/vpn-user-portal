@@ -14,7 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\Dt;
-use LC\Portal\OpenVpn\DaemonSocket;
+use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
@@ -38,7 +38,7 @@ try {
     $daemonWrapper = new DaemonWrapper(
         $config,
         $storage,
-        new DaemonSocket($baseDir.'/config/vpn-daemon', $config->vpnDaemonTls()),
+        new CurlHttpClient(),
         $logger
     );
 

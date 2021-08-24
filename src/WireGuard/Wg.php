@@ -65,10 +65,10 @@ class Wg
 
         // add peer to WG
         // XXX make sure the public key config is overriden if the public key already exists
-        $this->wgDaemon->addPeer('http://'.$profileConfig->nodeIp().':8080', $publicKey, $ipFour, $ipSix);
+        $this->wgDaemon->addPeer($profileConfig->nodeBaseUrl(), $publicKey, $ipFour, $ipSix);
 
         // XXX we do not need to get the public key from the daemon!
-        $wgInfo = $this->wgDaemon->getInfo('http://'.$profileConfig->nodeIp().':8080');
+        $wgInfo = $this->wgDaemon->getInfo($profileConfig->nodeBaseUrl());
 
         // add connection log entry
         // XXX if we have an "open" log for this publicKey, close it first, i guess that is what "clientLost" indicator is for?
@@ -89,7 +89,7 @@ class Wg
         $this->storage->wgRemovePeer($userId, $publicKey);
         // XXX we have to make sure the user owns the public key, otherwise it can be used to disconnect other users!
         // XXX what if multiple users use the same wireguard public key? that won't work and that is good!
-        $peerInfo = $this->wgDaemon->removePeer('http://'.$profileConfig->nodeIp().':8080', $publicKey);
+        $peerInfo = $this->wgDaemon->removePeer($profileConfig->nodeBaseUrl(), $publicKey);
 
 //        $bytesTransferred = 0;
 //        if (\array_key_exists('BytesTransferred', $peerInfo) && \is_int($peerInfo['BytesTransferred'])) {

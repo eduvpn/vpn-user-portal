@@ -47,7 +47,6 @@ use LC\Portal\LdapClient;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OpenVpn\CA\VpnCa;
-use LC\Portal\OpenVpn\DaemonSocket;
 use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\PhpSession;
@@ -251,7 +250,7 @@ try {
     $daemonWrapper = new DaemonWrapper(
         $config,
         $storage,
-        new DaemonSocket($baseDir.'/config/vpn-daemon', $config->vpnDaemonTls()),
+        new CurlHttpClient(),
         $logger
     );
 

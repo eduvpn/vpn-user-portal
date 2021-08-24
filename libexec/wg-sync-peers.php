@@ -31,7 +31,7 @@ try {
     foreach ($config->profileConfigList() as $profileConfig) {
         if ('wireguard' === $profileConfig->vpnProto()) {
             // extract the peers from the DB per profile
-            $wgDaemon->syncPeers('http://'.$profileConfig->nodeIp().':8080', $storage->wgGetAllPeers($profileConfig->profileId()));
+            $wgDaemon->syncPeers($profileConfig->nodeBaseUrl(), $storage->wgGetAllPeers($profileConfig->profileId()));
         }
     }
 } catch (Exception $e) {
