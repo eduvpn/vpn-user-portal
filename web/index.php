@@ -292,12 +292,11 @@ try {
     $service->addBeforeHook('disabled_user', new DisabledUserHook($serverClient));
     $service->addBeforeHook('update_session_info', new UpdateSessionInfoHook($seSession, $serverClient, $sessionExpiry));
 
-    $service->addModule(new QrModule());
-
     // two factor module
     if (0 !== count($twoFactorMethods)) {
         $twoFactorModule = new TwoFactorModule($serverClient, $seSession, $tpl);
         $service->addModule($twoFactorModule);
+        $service->addModule(new QrModule());
     }
 
     // isAdmin
