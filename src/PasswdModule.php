@@ -65,6 +65,9 @@ class PasswdModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
 
+                // we do not validate the input here because we validate it
+                // strictly... we do not want to limit the current password to
+                // the "new password" restrictions
                 $userPass = $request->requirePostParameter('userPass');
                 $newUserPass = InputValidation::userPass($request->requirePostParameter('newUserPass'));
                 $newUserPassConfirm = InputValidation::userPass($request->requirePostParameter('newUserPassConfirm'));

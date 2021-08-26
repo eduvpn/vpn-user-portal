@@ -145,8 +145,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
-                $userId = $request->requireQueryParameter('user_id');
-                InputValidation::userId($userId);
+                $userId = InputValidation::userId($request->requireQueryParameter('user_id'));
 
                 $clientCertificateList = $this->serverClient->getRequireArray('client_certificate_list', ['user_id' => $userId]);
                 $userMessages = $this->serverClient->getRequireArray('user_messages', ['user_id' => $userId]);
@@ -189,8 +188,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 /** @var \LC\Common\Http\UserInfo */
                 $userInfo = $hookData['auth'];
                 $adminUserId = $userInfo->getUserId();
-                $userId = $request->requirePostParameter('user_id');
-                InputValidation::userId($userId);
+                $userId = InputValidation::userId($request->requirePostParameter('user_id'));
 
                 // if the current user being managed is the account itself,
                 // do not allow this. We don't want admins allow to disable
@@ -399,9 +397,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 }
                 // convert it to UTC as our server logs are all in UTC
                 $dateTime->setTimeZone(new DateTimeZone('UTC'));
-
-                $ipAddress = $request->requirePostParameter('ip_address');
-                InputValidation::ipAddress($ipAddress);
+                $ipAddress = InputValidation::ipAddress($request->requirePostParameter('ip_address'));
 
                 return new HtmlResponse(
                     $this->tpl->render(
