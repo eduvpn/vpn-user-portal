@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.14 (2021-08-26)
+- improve input validation
+
 ## 2.3.13 (2021-08-02)
 - support (non vendor-specific) RADIUS attribute for authorization
 
