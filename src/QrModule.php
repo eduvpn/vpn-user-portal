@@ -9,10 +9,12 @@
 
 namespace LC\Portal;
 
+use LC\Common\Http\InputValidation;
 use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
+use LC\Common\Http\UserInfo;
 
 class QrModule implements ServiceModuleInterface
 {
@@ -24,18 +26,45 @@ class QrModule implements ServiceModuleInterface
     public function init(Service $service)
     {
         $service->get(
-            '/qr',
+            '/qr/totp',
             /**
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
-                $qrText = $request->requireQueryParameter('qr_text');
-
+                /** @var \LC\Common\Http\UserInfo */
+                $userInfo = $hookData['auth'];
+                $totpSecret = InputValidation::totpSecret($request->requireQueryParameter('secret'));
                 $response = new Response(200, 'image/png');
-                $response->setBody(self::generate($qrText));
+                $response->setBody(self::generate(self::getOtpAuthUrl($request, $userInfo, $totpSecret)));
 
                 return $response;
             }
+        );
+    }
+
+    /**
+     * @param string $labelStr
+     *
+     * @return string
+     */
+    private static function labelEncode($labelStr)
+    {
+        return rawurlencode(str_replace(':', '_', $labelStr));
+    }
+
+    /**
+     * @param string $totpSecret
+     *
+     * @return string
+     */
+    private static function getOtpAuthUrl(Request $request, UserInfo $userInfo, $totpSecret)
+    {
+        return sprintf(
+            'otpauth://totp/%s:%s?secret=%s&issuer=%s',
+            self::labelEncode($request->getServerName()),
+            self::labelEncode($userInfo->getUserId()),
+            $totpSecret,
+            self::labelEncode($request->getServerName())
         );
     }
 

@@ -28,7 +28,7 @@
                     <dt><?=$this->t('Secret'); ?></dt>
                     <dd><code><?=$this->e($totpSecret); ?></code></dd>
                     <dt><?=$this->t('QR'); ?></dt>
-                    <dd><img alt="<?=$this->t('QR'); ?>" src="qr?qr_text=<?=$this->e($otpAuthUrl); ?>"></dd>
+                    <dd><img alt="<?=$this->t('QR'); ?>" src="qr/totp?secret=<?=$this->e($totpSecret); ?>"></dd>
                 </dl>
 
                 <p>
