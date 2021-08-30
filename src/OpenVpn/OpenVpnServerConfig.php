@@ -237,6 +237,7 @@ class OpenVpnServerConfig
         }
 
         // there may be some routes specified, push those, and not the default
+        $routeConfig = [];
         foreach ($routeList as $route) {
             $routeIp = IP::fromIpPrefix($route);
             if (IP::IP_6 === $routeIp->family()) {
