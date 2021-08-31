@@ -9,7 +9,6 @@
 
 namespace LC\Portal;
 
-use DateTime;
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
 use LC\Common\Config;
@@ -28,14 +27,10 @@ class PhpSamlSpAuthentication implements BeforeHookInterface
     /** @var \fkooman\SAML\SP\Api\SamlAuth */
     private $samlAuth;
 
-    /** @var \DateTime */
-    private $dateTime;
-
     public function __construct(Config $config)
     {
         $this->config = $config;
         $this->samlAuth = new SamlAuth();
-        $this->dateTime = new DateTime();
     }
 
     /**
