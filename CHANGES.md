@@ -1,7 +1,8 @@
 # Changelog
 
 ## 2.3.14 (2021-08-26)
-- improve input validation
+- **SECURITY**: implement proper input validation for QR code generation
+- only enable QR code module when 2FA is enabled
 
 ## 2.3.13 (2021-08-02)
 - support (non vendor-specific) RADIUS attribute for authorization
