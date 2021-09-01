@@ -52,15 +52,11 @@ class VpnApiThreeModule implements ServiceModuleInterface
         $service->get(
             '/v3/info',
             function (AccessToken $accessToken, Request $request): Response {
-                $protoSupport = self::determineProtoSupport($request);
                 $profileConfigList = $this->config->profileConfigList();
                 // XXX really think about storing permissions in OAuth token!
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $userProfileList = [];
                 foreach ($profileConfigList as $profileConfig) {
-                    if (!\in_array($profileConfig->vpnProto(), $protoSupport, true)) {
-                        continue;
-                    }
                     if ($profileConfig->hideProfile()) {
                         continue;
                     }
@@ -254,31 +250,5 @@ class VpnApiThreeModule implements ServiceModuleInterface
         } catch (ClientConfigException $e) {
             throw new HttpException($e->getMessage(), 406);
         }
-    }
-
-    /**
-     * Return the list of protocols the client claims to support. Client is
-     * assumed to support all protocols if the X-Proto-Support header is not
-     * set.
-     *
-     * @return array<string>
-     */
-    private static function determineProtoSupport(Request $request): array
-    {
-        $supportedProtoList = ['openvpn', 'wireguard'];
-        if (null === $protoSupportHeader = $request->optionalHeader('HTTP_X_PROTO_SUPPORT')) {
-            // client claims to support everything
-            return $supportedProtoList;
-        }
-
-        $availableProtoList = [];
-        $requestProtoList = explode(',', $protoSupportHeader);
-        foreach ($requestProtoList as $requestProto) {
-            if (\in_array($requestProto, $supportedProtoList, true)) {
-                $availableProtoList[] = $requestProto;
-            }
-        }
-
-        return $availableProtoList;
     }
 }
