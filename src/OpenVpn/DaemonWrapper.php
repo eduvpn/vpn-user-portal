@@ -39,7 +39,7 @@ class DaemonWrapper
     }
 
     /**
-     * @return array<string, array<array{common_name:string,display_name:string,expires_at:\DateTimeImmutable,profile_number:int,process_number:int,user_id:string,user_is_disabled:bool,virtual_address:array{0:string,1:string}}>>
+     * @return array<string, array<array{common_name:string,display_name:string,expires_at:\DateTimeImmutable,user_id:string,user_is_disabled:bool,virtual_address:array{0:string,1:string}}>>
      */
     public function getConnectionList(?string $userId): array
     {
@@ -51,14 +51,14 @@ class DaemonWrapper
             $profileId = $profileConfig->profileId();
             $connectionList[$profileId] = [];
             $httpResponse = $this->httpClient->get(
-                $profileConfig->nodeBaseUrl().'/o/list',
+                $profileConfig->nodeBaseUrl().'/o/connection_list',
                 [
                     'profile_number' => (string) $profileConfig->profileNumber(),
                     'process_count' => (string) \count($profileConfig->vpnProtoPorts()),
                 ]
             );
 
-            $connectionList = Json::decode($httpResponse->getBody())['list'];
+            $connectionList = Json::decode($httpResponse->getBody())['connection_list'];
             foreach ($connectionList as $connectionInfo) {
                 $commonName = $connectionInfo['common_name'];
                 if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
