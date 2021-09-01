@@ -58,8 +58,9 @@ class DaemonWrapper
                 ]
             );
 
-            $connectionList = Json::decode($httpResponse->getBody())['connection_list'];
-            foreach ($connectionList as $connectionInfo) {
+            // XXX introduce ->json() method in Response class
+            $jsonData = Json::decode($httpResponse->getBody());
+            foreach ($jsonData['connection_list'] as $connectionInfo) {
                 $commonName = $connectionInfo['common_name'];
                 if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
                     // we do not have information on this CN, what is going on?!
