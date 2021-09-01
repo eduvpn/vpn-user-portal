@@ -120,7 +120,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_DISPLAY_NAME));
-                $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => 'on' === $s);
+                $tcpOnly = 'on' === $request->optionalPostParameter('tcpOnly', fn (string $s) => 'on' === $s);
                 $profileId = $request->requirePostParameter('profileId', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
