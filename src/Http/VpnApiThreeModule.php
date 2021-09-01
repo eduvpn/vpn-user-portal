@@ -119,7 +119,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                 switch ($profileConfig->vpnProto()) {
                     case 'openvpn':
-                        $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => 'on' === $s);
+                        $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => \in_array($s, ['on', 'off'], true));
 
                         return $this->getOpenVpnConfigResponse($profileConfig, $accessToken, $tcpOnly);
 
