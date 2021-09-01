@@ -14,6 +14,7 @@ namespace LC\Portal\OpenVpn;
 use LC\Portal\Binary;
 use LC\Portal\OpenVpn\CA\CaInfo;
 use LC\Portal\OpenVpn\CA\CertInfo;
+use LC\Portal\OpenVpn\Exception\ClientConfigException;
 use LC\Portal\ProfileConfig;
 
 class ClientConfig
@@ -22,7 +23,7 @@ class ClientConfig
     public const STRATEGY_RANDOM = 1;
     public const STRATEGY_ALL = 2;
 
-    public static function get(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, int $remoteStrategy): string
+    public static function get(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, int $remoteStrategy, bool $tcpOnly): string
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->hostName();
@@ -32,7 +33,13 @@ class ClientConfig
             $vpnProtoPorts = $profileConfig->exposedVpnProtoPorts();
         }
 
-        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy);
+        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy, $tcpOnly);
+        // make sure we have remotes
+        // we assume that *without* tcpOnly we always have remotes,
+        // otherwise it is a server configuration bug
+        if ($tcpOnly && 0 === \count($remoteProtoPortList)) {
+            throw new ClientConfigException('no TCP remotes available');
+        }
 
         $clientConfig = [
             'dev tun',
@@ -91,7 +98,7 @@ class ClientConfig
      *
      * @return array<string>
      */
-    public static function remotePortProtoList(array $vpnProtoPorts, int $remoteStrategy): array
+    public static function remotePortProtoList(array $vpnProtoPorts, int $remoteStrategy, bool $tcpOnly): array
     {
         $specialUdpPorts = [];
         $specialTcpPorts = [];
@@ -123,9 +130,11 @@ class ClientConfig
         }
 
         $clientPortList = [];
-        self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
+        if (!$tcpOnly) {
+            self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
+            self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
+        }
         self::getItem($clientPortList, $normalTcpPorts, $remoteStrategy);
-        self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
         self::getItem($clientPortList, $specialTcpPorts, $remoteStrategy);
 
         return $clientPortList;

@@ -15,9 +15,11 @@ use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
 use LC\Portal\Config;
 use LC\Portal\Dt;
+use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\CA\CaInterface;
 use LC\Portal\OpenVpn\ClientConfig;
+use LC\Portal\OpenVpn\Exception\ClientConfigException;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ProfileConfig;
 use LC\Portal\RandomInterface;
@@ -116,7 +118,9 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                 switch ($profileConfig->vpnProto()) {
                     case 'openvpn':
-                        return $this->getOpenVpnConfigResponse($profileConfig, $accessToken);
+                        $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => 'on' === $s);
+
+                        return $this->getOpenVpnConfigResponse($profileConfig, $accessToken, $tcpOnly);
 
                     case 'wireguard':
                         $wgConfig = $this->wg->addPeer(
@@ -137,6 +141,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                         );
 
                     default:
+                        // XXX why not exception?
                         return new JsonResponse(['error' => 'invalid vpn_type'], [], 500);
                 }
             }
@@ -208,41 +213,46 @@ class VpnApiThreeModule implements ServiceModuleInterface
     /**
      * XXX want only 1 code path both for portal and for API.
      */
-    private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, AccessToken $accessToken): Response
+    private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, AccessToken $accessToken, bool $tcpOnly): Response
     {
-        $commonName = $this->random->get(16);
-        $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->authorizationExpiresAt());
-        $this->storage->addCertificate(
-            $accessToken->userId(),
-            $profileConfig->profileId(),
-            $commonName,
-            $accessToken->clientId(),
-            $accessToken->authorizationExpiresAt(),
-            $accessToken
-        );
+        try {
+            $commonName = $this->random->get(16);
+            $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->authorizationExpiresAt());
+            $this->storage->addCertificate(
+                $accessToken->userId(),
+                $profileConfig->profileId(),
+                $commonName,
+                $accessToken->clientId(),
+                $accessToken->authorizationExpiresAt(),
+                $accessToken
+            );
 
-        $this->storage->addUserLog(
-            $accessToken->userId(),
-            LoggerInterface::NOTICE,
-            sprintf('new certificate generated for "%s"', $accessToken->clientId()),
-            $this->dateTime
-        );
+            $this->storage->addUserLog(
+                $accessToken->userId(),
+                LoggerInterface::NOTICE,
+                sprintf('new certificate generated for "%s"', $accessToken->clientId()),
+                $this->dateTime
+            );
 
-        $clientConfig = ClientConfig::get(
-            $profileConfig,
-            $this->ca->caCert(),
-            $this->tlsCrypt,
-            $certInfo,
-            ClientConfig::STRATEGY_RANDOM
-        );
+            $clientConfig = ClientConfig::get(
+                $profileConfig,
+                $this->ca->caCert(),
+                $this->tlsCrypt,
+                $certInfo,
+                ClientConfig::STRATEGY_RANDOM,
+                $tcpOnly
+            );
 
-        return new Response(
-            $clientConfig,
-            [
-                'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                'Content-Type' => 'application/x-openvpn-profile',
-            ]
-        );
+            return new Response(
+                $clientConfig,
+                [
+                    'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                    'Content-Type' => 'application/x-openvpn-profile',
+                ]
+            );
+        } catch (ClientConfigException $e) {
+            throw new HttpException($e->getMessage(), 406);
+        }
     }
 
     /**

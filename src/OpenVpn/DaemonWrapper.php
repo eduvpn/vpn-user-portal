@@ -51,14 +51,14 @@ class DaemonWrapper
             $profileId = $profileConfig->profileId();
             $connectionList[$profileId] = [];
             $httpResponse = $this->httpClient->get(
-                $profileConfig->nodeBaseUrl().'/ovpn/connection_list',
+                $profileConfig->nodeBaseUrl().'/o/list',
                 [
-                    'ProfileNumber' => (string) $profileConfig->profileNumber(),
-                    'ProcessCount' => (string) \count($profileConfig->vpnProtoPorts()),
+                    'profile_number' => (string) $profileConfig->profileNumber(),
+                    'process_count' => (string) \count($profileConfig->vpnProtoPorts()),
                 ]
             );
 
-            $connectionList = Json::decode($httpResponse->getBody())['connection_list'];
+            $connectionList = Json::decode($httpResponse->getBody())['list'];
             foreach ($connectionList as $connectionInfo) {
                 $commonName = $connectionInfo['common_name'];
                 if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
@@ -77,8 +77,8 @@ class DaemonWrapper
                 $connectionList[$profileId][] = [
                     'common_name' => $connectionInfo['common_name'],
                     'virtual_address' => [$connectionInfo['ip_four'], $connectionInfo['ip_six']],   // XXX ip_four and ip_six
-                    'profile_number' => (int) $connectionInfo['profile_number'],
-                    'process_number' => (int) $connectionInfo['process_number'],
+                    //                    'profile_number' => (int) $connectionInfo['profile_number'],
+                    //                    'process_number' => (int) $connectionInfo['process_number'],
                     'user_id' => $certInfo['user_id'],
                     'user_is_disabled' => $certInfo['user_is_disabled'],    // XXX why?
                     'display_name' => $certInfo['display_name'],            // XXX why?
@@ -98,12 +98,12 @@ class DaemonWrapper
             }
             $profileId = $profileConfig->profileId();
             $httpResponse = $this->httpClient->post(
-                $profileConfig->nodeBaseUrl().'/ovpn/disconnect',
+                $profileConfig->nodeBaseUrl().'/o/disconnect',
                 [],
                 [
-                    'CommonName' => $commonName,
-                    'ProfileNumber' => (string) $profileConfig->profileNumber(),
-                    'ProcessCount' => (string) \count($profileConfig->vpnProtoPorts()),
+                    'common_name' => $commonName,
+                    'profile_number' => (string) $profileConfig->profileNumber(),
+                    'process_count' => (string) \count($profileConfig->vpnProtoPorts()),
                 ]
             );
         }
