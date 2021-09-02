@@ -128,7 +128,7 @@ class VpnApiModule implements ServiceModuleInterface
                         }
 
                         if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                            return new JsonResponse(['error' => 'profile not available, or no permission'], 400);
+                            return new JsonResponse(['error' => 'profile not available'], 400);
                         }
 
                         $tcpOnly = 'on' === InputValidation::tcpOnly($request->optionalPostParameter('tcp_only'));
