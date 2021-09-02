@@ -160,11 +160,16 @@ class ClientConfig
         }
 
         $clientPortList = [];
+        // we use twice the conditional, to keep the same order of ports, we
+        // may have to reconsider this though at some point? i.e. first try
+        // all available UDP options, and only then try TCP...
         if (!$tcpOnly) {
             self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
-            self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
         }
         self::getItem($clientPortList, $normalTcpPorts, $remoteStrategy);
+        if (!$tcpOnly) {
+            self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
+        }
         self::getItem($clientPortList, $specialTcpPorts, $remoteStrategy);
 
         return $clientPortList;
