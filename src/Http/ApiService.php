@@ -13,6 +13,7 @@ namespace LC\Portal\Http;
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\OAuthException;
+use LC\Portal\Http\Exception\HttpException;
 
 class ApiService implements ServiceInterface
 {
@@ -64,7 +65,10 @@ class ApiService implements ServiceInterface
         } catch (OAuthException $e) {
             $jsonResponse = $e->getJsonResponse();
 
+            // XXX convert to JsonResponse?
             return new Response($jsonResponse->getBody(), $jsonResponse->getHeaders(), $jsonResponse->getStatusCode());
+        } catch (HttpException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], $e->responseHeaders(), $e->statusCode());
         }
     }
 }

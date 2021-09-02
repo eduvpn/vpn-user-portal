@@ -79,6 +79,8 @@ class Service implements ServiceInterface
             return $this->routeList[$pathInfo][$requestMethod]($request);
         }
 
+        // XXX code reaches this from oauth.php, maybe when wrong oauth (refresh) token is provided? the previous
+        // it was probably because the old token endpoint was used? info.json got updated at some point...
         if (null === $this->authModule) {
             throw new HttpException('authentication required, but no authentication module loaded', 500);
         }

@@ -38,7 +38,7 @@ class ClientConfig
         // we assume that *without* tcpOnly we always have remotes,
         // otherwise it is a server configuration bug
         if ($tcpOnly && 0 === \count($remoteProtoPortList)) {
-            throw new ClientConfigException('no TCP remotes available');
+            throw new ClientConfigException('no TCP connection possible');
         }
 
         $clientConfig = [

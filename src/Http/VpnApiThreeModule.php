@@ -106,7 +106,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 }
 
                 if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                    return new JsonResponse(['error' => 'profile not available or no permission'], [], 400);
+                    return new JsonResponse(['error' => 'profile not available'], [], 400);
                 }
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
@@ -170,7 +170,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 }
 
                 if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                    return new JsonResponse(['error' => 'profile not available or no permission'], [], 400);
+                    return new JsonResponse(['error' => 'profile not available'], [], 400);
                 }
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
