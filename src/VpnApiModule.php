@@ -93,6 +93,7 @@ class VpnApiModule implements ServiceModuleInterface
                         $responseData['info']['profile_list'][] = [
                             'profile_id' => $profileId,
                             'display_name' => $profileConfig->displayName(),
+                            'vpn_proto' => 'openvpn',
                         ];
                     }
 
