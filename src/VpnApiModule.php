@@ -64,7 +64,6 @@ class VpnApiModule implements ServiceModuleInterface
                     /** @var \LC\Portal\OAuth\VpnAccessTokenInfo */
                     $accessTokenInfo = $hookData['auth'];
 
-                    $protoSupport = self::determineProtoSupport($request);
                     $profileList = $this->serverClient->getRequireArray('profile_list');
                     $userPermissions = $this->getPermissionList($accessTokenInfo);
 
@@ -76,9 +75,6 @@ class VpnApiModule implements ServiceModuleInterface
 
                     $userProfileList = [];
                     foreach ($profileList as $profileId => $profileData) {
-                        if (!\in_array('openvpn', $protoSupport, true)) {
-                            continue;
-                        }
                         $profileConfig = new ProfileConfig(new Config($profileData));
                         if ($profileConfig->hideProfile()) {
                             continue;
@@ -463,31 +459,5 @@ class VpnApiModule implements ServiceModuleInterface
         }
 
         return new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $accessTokenInfo->getUserId()]));
-    }
-
-    /**
-     * Return the list of protocols the client claims to support. Client is
-     * assumed to support all protocols if the X-Proto-Support header is not
-     * set.
-     *
-     * @return array<string>
-     */
-    private static function determineProtoSupport(Request $request)
-    {
-        $supportedProtoList = ['openvpn', 'wireguard'];
-        if (null === $protoSupportHeader = $request->optionalHeader('HTTP_X_PROTO_SUPPORT')) {
-            // client claims to support everything
-            return $supportedProtoList;
-        }
-
-        $availableProtoList = [];
-        $requestProtoList = explode(',', $protoSupportHeader);
-        foreach ($requestProtoList as $requestProto) {
-            if (\in_array($requestProto, $supportedProtoList, true)) {
-                $availableProtoList[] = $requestProto;
-            }
-        }
-
-        return $availableProtoList;
     }
 }
