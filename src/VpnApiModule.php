@@ -128,10 +128,10 @@ class VpnApiModule implements ServiceModuleInterface
                         }
 
                         if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                            return new ApiErrorResponse('profile_config', 'profile not available or no permission');
+                            return new JsonResponse(['error' => 'profile not available, or no permission'], 400);
                         }
 
-                        $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only');
+                        $tcpOnly = 'on' === InputValidation::tcpOnly($request->optionalPostParameter('tcp_only'));
                         $vpnConfig = $this->getConfigOnly($requestedProfileId, $remoteStrategy, $tcpOnly);
                         $clientCertificate = $this->getCertificate($accessTokenInfo);
                         $vpnConfig .= "\n<cert>\n".$clientCertificate['certificate']."\n</cert>\n<key>\n".$clientCertificate['private_key']."\n</key>";
