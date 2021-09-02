@@ -10,6 +10,7 @@
 namespace LC\Portal;
 
 use LC\Common\ProfileConfig;
+use LC\Portal\Exception\ClientConfigException;
 
 class ClientConfig
 {
@@ -18,11 +19,12 @@ class ClientConfig
     const STRATEGY_ALL = 2;
 
     /**
-     * @param int $remoteStrategy
+     * @param int  $remoteStrategy
+     * @param bool $tcpOnly
      *
      * @return string
      */
-    public static function get(ProfileConfig $profileConfig, array $serverInfo, array $clientCertificate, $remoteStrategy)
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, array $clientCertificate, $remoteStrategy, $tcpOnly)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->hostName();
@@ -32,7 +34,13 @@ class ClientConfig
             $vpnProtoPorts = $profileConfig->exposedVpnProtoPorts();
         }
 
-        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy);
+        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy, $tcpOnly);
+        // make sure we have remotes
+        // we assume that *without* tcpOnly we always have remotes,
+        // otherwise it is a server configuration bug
+        if ($tcpOnly && 0 === \count($remoteProtoPortList)) {
+            throw new ClientConfigException('no TCP remotes available');
+        }
 
         $clientConfig = [
             '# OpenVPN Client Configuration',
@@ -112,18 +120,19 @@ class ClientConfig
             $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) substr($remoteProtoPort, 4), substr($remoteProtoPort, 0, 3));
         }
 
-        return implode(PHP_EOL, $clientConfig);
+        return implode(\PHP_EOL, $clientConfig);
     }
 
     /**
      * Pick a "normal" UDP and TCP port. Pick a "special" UDP and TCP
      * port.
      *
-     * @param int $remoteStrategy
+     * @param int  $remoteStrategy
+     * @param bool $tcpOnly
      *
      * @return array<string>
      */
-    public static function remotePortProtoList(array $vpnProtoPorts, $remoteStrategy)
+    public static function remotePortProtoList(array $vpnProtoPorts, $remoteStrategy, $tcpOnly)
     {
         $specialUdpPorts = [];
         $specialTcpPorts = [];
@@ -151,9 +160,11 @@ class ClientConfig
         }
 
         $clientPortList = [];
-        self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
+        if (!$tcpOnly) {
+            self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
+            self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
+        }
         self::getItem($clientPortList, $normalTcpPorts, $remoteStrategy);
-        self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
         self::getItem($clientPortList, $specialTcpPorts, $remoteStrategy);
 
         return $clientPortList;

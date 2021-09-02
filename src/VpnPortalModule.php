@@ -378,7 +378,8 @@ class VpnPortalModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info', ['profile_id' => $profileId]);
 
-        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $clientCertificate, ClientConfig::STRATEGY_RANDOM);
+        // last parameter is "tcpOnly". From the portal we always return both UDP & TCP remotes
+        $clientConfig = ClientConfig::get($profileConfig, $serverInfo, $clientCertificate, ClientConfig::STRATEGY_RANDOM, false);
 
         // convert the OpenVPN file to "Windows" format, no platform cares, but
         // in Notepad on Windows it looks not so great everything on one line

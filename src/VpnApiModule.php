@@ -24,6 +24,7 @@ use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
+use LC\Portal\Exception\ClientConfigException;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
@@ -130,7 +131,8 @@ class VpnApiModule implements ServiceModuleInterface
                             return new ApiErrorResponse('profile_config', 'profile not available or no permission');
                         }
 
-                        $vpnConfig = $this->getConfigOnly($requestedProfileId, $remoteStrategy);
+                        $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only');
+                        $vpnConfig = $this->getConfigOnly($requestedProfileId, $remoteStrategy, $tcpOnly);
                         $clientCertificate = $this->getCertificate($accessTokenInfo);
                         $vpnConfig .= "\n<cert>\n".$clientCertificate['certificate']."\n</cert>\n<key>\n".$clientCertificate['private_key']."\n</key>";
                         $response = new Response(200, 'application/x-openvpn-profile');
@@ -139,7 +141,9 @@ class VpnApiModule implements ServiceModuleInterface
 
                         return $response;
                     } catch (InputValidationException $e) {
-                        return new ApiErrorResponse('profile_config', $e->getMessage());
+                        return new JsonResponse(['error' => $e->getMessage()], 400);
+                    } catch (ClientConfigException $e) {
+                        return new JsonResponse(['error' => $e->getMessage()], 406);
                     }
                 }
             );
@@ -306,7 +310,9 @@ class VpnApiModule implements ServiceModuleInterface
                         return new ApiErrorResponse('profile_config', 'profile not available or no permission');
                     }
 
-                    $vpnConfig = $this->getConfigOnly($requestedProfileId, $remoteStrategy);
+                    // APIv2 has no support for "tcpOnly" OpenVPN profiles, so
+                    // always false...
+                    $vpnConfig = $this->getConfigOnly($requestedProfileId, $remoteStrategy, false);
                     $response = new Response(200, 'application/x-openvpn-profile');
                     $response->setBody(str_replace("\n", "\r\n", $vpnConfig));
 
@@ -364,10 +370,11 @@ class VpnApiModule implements ServiceModuleInterface
     /**
      * @param string $profileId
      * @param int    $remoteStrategy
+     * @param bool   $tcpOnly
      *
      * @return string
      */
-    private function getConfigOnly($profileId, $remoteStrategy)
+    private function getConfigOnly($profileId, $remoteStrategy, $tcpOnly)
     {
         // obtain information about this profile to be able to construct
         // a client configuration file
@@ -377,7 +384,7 @@ class VpnApiModule implements ServiceModuleInterface
         // get the CA & tls-auth
         $serverInfo = $this->serverClient->getRequireArray('server_info', ['profile_id' => $profileId]);
 
-        return ClientConfig::get($profileConfig, $serverInfo, [], $remoteStrategy);
+        return ClientConfig::get($profileConfig, $serverInfo, [], $remoteStrategy, $tcpOnly);
     }
 
     /**
