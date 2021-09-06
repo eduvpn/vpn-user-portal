@@ -20,15 +20,6 @@ class FileIO
         return file_exists($filePath);
     }
 
-    public static function readFileIfExists(string $filePath): ?string
-    {
-        if (!self::exists($filePath)) {
-            return null;
-        }
-
-        return self::readFile($filePath);
-    }
-
     public static function readFile(string $filePath): string
     {
         if (false === self::exists($filePath)) {
