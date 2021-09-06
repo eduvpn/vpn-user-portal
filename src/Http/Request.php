@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use Closure;
 use LC\Portal\Binary;
 use LC\Portal\Http\Exception\HttpException;
+use RangeException;
 
 class Request
 {
@@ -163,7 +164,7 @@ class Request
     }
 
     /**
-     * @param ?Closure(string):bool $c
+     * @param ?Closure(string):void $c
      */
     public function requireQueryParameter(string $queryKey, ?Closure $c): string
     {
@@ -174,7 +175,9 @@ class Request
             throw new HttpException(sprintf('value of query parameter "%s" MUST be string', $queryKey), 400);
         }
         if (null !== $c) {
-            if (false === $c($this->getData[$queryKey])) {
+            try {
+                $c($this->getData[$queryKey]);
+            } catch (RangeException $e) {
                 throw new HttpException(sprintf('invalid "%s"', $queryKey), 400);
             }
         }
@@ -183,7 +186,7 @@ class Request
     }
 
     /**
-     * @param ?Closure(string):bool $c
+     * @param ?Closure(string):void $c
      */
     public function optionalQueryParameter(string $queryKey, ?Closure $c): ?string
     {
@@ -195,7 +198,7 @@ class Request
     }
 
     /**
-     * @param ?Closure(string):bool $c
+     * @param ?Closure(string):void $c
      */
     public function requirePostParameter(string $postKey, ?Closure $c): string
     {
@@ -206,7 +209,9 @@ class Request
             throw new HttpException(sprintf('value of post parameter "%s" MUST be string', $postKey), 400);
         }
         if (null !== $c) {
-            if (false === $c($this->postData[$postKey])) {
+            try {
+                $c($this->postData[$postKey]);
+            } catch (RangeException $e) {
                 throw new HttpException(sprintf('invalid "%s"', $postKey), 400);
             }
         }
@@ -215,7 +220,7 @@ class Request
     }
 
     /**
-     * @param ?Closure(string):bool $c
+     * @param ?Closure(string):void $c
      */
     public function optionalPostParameter(string $postKey, ?Closure $c): ?string
     {

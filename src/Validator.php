@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateTimeImmutable;
+use RangeException;
 
 class Validator
 {
@@ -24,28 +25,38 @@ class Validator
     public const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+\\/\\=]+$/';    // XXX improve this!
     public const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
 
-    public static function re(string $inputStr, string $regExp): bool
+    public static function re(string $inputStr, string $regExp): void
     {
-        return 1 === preg_match($regExp, $inputStr);
+        if (1 !== preg_match($regExp, $inputStr)) {
+            throw new RangeException();
+        }
     }
 
-    public static function ipAddress(string $ipAddress): bool
+    public static function ipAddress(string $ipAddress): void
     {
-        return false !== filter_var($ipAddress, FILTER_VALIDATE_IP);
+        if (false === filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+            throw new RangeException();
+        }
     }
 
-    public static function ipFour(string $ipFour): bool
+    public static function ipFour(string $ipFour): void
     {
-        return false !== filter_var($ipFour, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        if (false === filter_var($ipFour, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            throw new RangeException();
+        }
     }
 
-    public static function ipSix(string $ipSix): bool
+    public static function ipSix(string $ipSix): void
     {
-        return false !== filter_var($ipSix, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        if (false === filter_var($ipSix, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            throw new RangeException();
+        }
     }
 
-    public static function dateTime(string $dateTime): bool
+    public static function dateTime(string $dateTime): void
     {
-        return false !== DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateTime);
+        if (false === DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateTime)) {
+            throw new RangeException();
+        }
     }
 }
