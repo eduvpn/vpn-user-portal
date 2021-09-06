@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\OpenVpn;
 
 use LC\Portal\FileIO;
+use RangeException;
 
 class TlsCrypt
 {
@@ -24,24 +25,27 @@ class TlsCrypt
 
     public function get(string $profileId): string
     {
-        // check whether we still have global legacy "ta.key". Use it if we
-        // find it...
-        $globalTlsCryptKey = sprintf('%s/ta.key', $this->keyDir);
-        if (@file_exists($globalTlsCryptKey)) {
-            return FileIO::readFile($globalTlsCryptKey);
+        // make extra sure the profileId is safe
+        // XXX use Validator
+        if (1 !== preg_match('/^[a-zA-Z0-9-.]+$/', $profileId)) {
+            throw new RangeException('invalid "profileId"');
         }
 
-        // check whether we already have profile tls-crypt key...
-        $profileTlsCryptKey = sprintf('%s/tls-crypt-%s.key', $this->keyDir, $profileId);
-        if (@file_exists($profileTlsCryptKey)) {
-            return FileIO::readFile($profileTlsCryptKey);
+        // check whether we still have global legacy "ta.key". Use it if we
+        // find it...
+        if (null !== $tlsCryptKey = FileIO::readFileIfExists($this->keyDir.'/tls-crypt.key')) {
+            return $tlsCryptKey;
+        }
+
+        $tlsCryptKeyFile = $this->keyDir.'/tls-crypt-'.$profileId.'.key';
+        if (null !== $tlsCryptKey = FileIO::readFileIfExists($tlsCryptKeyFile)) {
+            return $tlsCryptKey;
         }
 
         // no key yet, create one
-        $tlsCryptKey = self::generate();
-        FileIO::writeFile($profileTlsCryptKey, $tlsCryptKey);
+        FileIO::writeFile($tlsCryptKeyFile, self::generate());
 
-        return FileIO::readFile($profileTlsCryptKey);
+        return FileIO::readFile($tlsCryptKeyFile);
     }
 
     private static function generate(): string
