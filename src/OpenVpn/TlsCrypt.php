@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
+use DomainException;
 use LC\Portal\FileIO;
+use RuntimeException;
 
 class TlsCrypt
 {
@@ -24,38 +26,38 @@ class TlsCrypt
 
     public function get(string $profileId): string
     {
-        // check whether we still have global legacy "ta.key". Use it if we
-        // find it...
-        $globalTlsCryptKey = sprintf('%s/ta.key', $this->keyDir);
-        if (@file_exists($globalTlsCryptKey)) {
-            return FileIO::readFile($globalTlsCryptKey);
+        // make absolutely sure profileId is safe to use
+        if (1 !== preg_match('/^[a-zA-Z0-9-.]+$/', $profileId)) {
+            throw new DomainException('invalid "profileId"');
         }
 
-        // check whether we already have profile tls-crypt key...
-        $profileTlsCryptKey = sprintf('%s/tls-crypt-%s.key', $this->keyDir, $profileId);
-        if (@file_exists($profileTlsCryptKey)) {
-            return FileIO::readFile($profileTlsCryptKey);
+        // if we have "tls-crypt.key" we'll use that for all profiles, if not,
+        // we use the profile specific ones
+        if (null !== $tlsCryptKey = FileIO::readFileIfExists($this->keyDir.'/tls-crypt.key')) {
+            return $tlsCryptKey;
         }
 
-        // no key yet, create one
-        $tlsCryptKey = self::generate();
-        FileIO::writeFile($profileTlsCryptKey, $tlsCryptKey);
+        if (null !== $tlsCryptKey = FileIO::readFileIfExists($this->keyDir.'/tls-crypt-'.$profileId.'.key')) {
+            return $tlsCryptKey;
+        }
 
-        return FileIO::readFile($profileTlsCryptKey);
+        // create key
+        // NOTE: this requires OpenVPN 2.5
+        self::exec('/usr/sbin/openvpn --genkey tls-crypt --secret '.$this->keyDir.'/tls-crypt-'.$profileId.'.key');
+
+        return FileIO::readFile($this->keyDir.'/tls-crypt-'.$profileId.'.key');
     }
 
-    private static function generate(): string
+    private static function exec(string $execCmd): void
     {
-        // Same as $(openvpn --genkey --secret <file>)
-        $randomData = wordwrap(sodium_bin2hex(random_bytes(256)), 32, "\n", true);
+        exec(
+            sprintf('%s 2>&1', $execCmd),
+            $commandOutput,
+            $returnValue
+        );
 
-        return <<< EOF
-            #
-            # 2048 bit OpenVPN static key
-            #
-            -----BEGIN OpenVPN Static key V1-----
-            {$randomData}
-            -----END OpenVPN Static key V1-----
-            EOF;
+        if (0 !== $returnValue) {
+            throw new RuntimeException(sprintf('command "%s" did not complete successfully: "%s"', $execCmd, implode(PHP_EOL, $commandOutput)));
+        }
     }
 }
