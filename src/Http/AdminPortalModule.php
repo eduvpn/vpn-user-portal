@@ -21,6 +21,7 @@ use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
+use LC\Portal\Validator;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
@@ -117,7 +118,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $adminUserId = $userInfo->userId();
-                $userId = $request->requirePostParameter('user_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_ID));
+                $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_ID));
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
@@ -155,7 +156,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $adminUserId = $userInfo->userId();
-                $userId = $request->requirePostParameter('user_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_ID));
+                $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_ID));
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
@@ -282,7 +283,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $dateTime = new DateTimeImmutable(
-                    $request->requirePostParameter('date_time', fn (string $s) => InputValidation::dateTime($s))
+                    $request->requirePostParameter('date_time', fn (string $s) => Validator::dateTime($s))
                 );
                 // XXX make sure it works correctly regarding timezone!
 
@@ -291,7 +292,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     throw new HttpException('can not specify a time in the future', 400);
                 }
 
-                $ipAddress = $request->requirePostParameter('ip_address', fn (string $s) => InputValidation::ipAddress($s));
+                $ipAddress = $request->requirePostParameter('ip_address', fn (string $s) => Validator::ipAddress($s));
 
                 return new HtmlResponse(
                     $this->tpl->render(

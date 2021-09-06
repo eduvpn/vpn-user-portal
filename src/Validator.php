@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace LC\Portal;
 
 use DateTimeImmutable;
 
-class InputValidation
+class Validator
 {
     public const REGEXP_USER_ID = '/^.+$/';
     public const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';

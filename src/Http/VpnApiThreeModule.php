@@ -24,6 +24,7 @@ use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ProfileConfig;
 use LC\Portal\RandomInterface;
 use LC\Portal\Storage;
+use LC\Portal\Validator;
 use LC\Portal\WireGuard\Wg;
 
 class VpnApiThreeModule implements ServiceModuleInterface
@@ -87,7 +88,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
             '/v3/connect',
             function (AccessToken $accessToken, Request $request): Response {
                 // XXX catch InputValidationException
-                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
+                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::re($s, Validator::REGEXP_PROFILE_ID));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $availableProfiles = [];
@@ -126,7 +127,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                             $accessToken->clientId(),
                             $accessToken->authorizationExpiresAt(),
                             $accessToken,
-                            $request->requirePostParameter('public_key', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PUBLIC_KEY))
+                            $request->requirePostParameter('public_key', fn (string $s) => Validator::re($s, Validator::REGEXP_PUBLIC_KEY))
                         );
 
                         return new Response(
@@ -151,7 +152,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 // XXX catch InputValidationException
                 // XXX why do we need profile_id again?
 
-                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_PROFILE_ID));
+                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::re($s, Validator::REGEXP_PROFILE_ID));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $availableProfiles = [];

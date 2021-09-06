@@ -15,6 +15,7 @@ use LC\Portal\Http\Auth\DbCredentialValidator;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
+use LC\Portal\Validator;
 
 class PasswdModule implements ServiceModuleInterface
 {
@@ -50,9 +51,9 @@ class PasswdModule implements ServiceModuleInterface
         $service->post(
             '/passwd',
             function (UserInfo $userInfo, Request $request): Response {
-                $userPass = $request->requirePostParameter('userPass', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_AUTH_PASS));
-                $newUserPass = $request->requirePostParameter('newUserPass', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_PASS));
-                $newUserPassConfirm = $request->requirePostParameter('newUserPassConfirm', fn (string $s) => InputValidation::re($s, InputValidation::REGEXP_USER_PASS));
+                $userPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_AUTH_PASS));
+                $newUserPass = $request->requirePostParameter('newUserPass', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_PASS));
+                $newUserPassConfirm = $request->requirePostParameter('newUserPassConfirm', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_PASS));
 
                 if (!$this->dbCredentialValidator->isValid($userInfo->userId(), $userPass)) {
                     return new HtmlResponse(
