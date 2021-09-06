@@ -14,6 +14,11 @@ namespace LC\Portal;
 use DateTimeImmutable;
 use RangeException;
 
+/**
+ * This class MUST contain all (input) validation methods that are used
+ * throughout the code. Each method MUST throw a "RangeException" in case the
+ * validation fails.
+ */
 class Validator
 {
     private const REGEXP_USER_ID = '/^.+$/';
@@ -24,13 +29,14 @@ class Validator
     private const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+\\/\\=]+$/';    // XXX improve this!
     private const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
     private const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';
+    private const REGEXP_SERVER_NAME = '/^[a-zA-Z0-9-.]+$/';
 
     /**
      * @throws \RangeException
      */
     public static function displayName(string $displayName): void
     {
-        self::re($displayName, self::REGEXP_DISPLAY_NAME);
+        self::re($displayName, self::REGEXP_DISPLAY_NAME, __FUNCTION__);
     }
 
     /**
@@ -38,7 +44,7 @@ class Validator
      */
     public static function authKey(string $authKey): void
     {
-        self::re($authKey, self::REGEXP_AUTH_KEY);
+        self::re($authKey, self::REGEXP_AUTH_KEY, __FUNCTION__);
     }
 
     /**
@@ -46,7 +52,7 @@ class Validator
      */
     public static function publicKey(string $publicKey): void
     {
-        self::re($publicKey, self::REGEXP_PUBLIC_KEY);
+        self::re($publicKey, self::REGEXP_PUBLIC_KEY, __FUNCTION__);
     }
 
     /**
@@ -54,7 +60,7 @@ class Validator
      */
     public static function userId(string $userId): void
     {
-        self::re($userId, self::REGEXP_USER_ID);
+        self::re($userId, self::REGEXP_USER_ID, __FUNCTION__);
     }
 
     /**
@@ -62,7 +68,7 @@ class Validator
      */
     public static function userPass(string $userPass): void
     {
-        self::re($userPass, self::REGEXP_USER_PASS);
+        self::re($userPass, self::REGEXP_USER_PASS, __FUNCTION__);
     }
 
     /**
@@ -70,7 +76,7 @@ class Validator
      */
     public static function userAuthPass(string $userAuthPass): void
     {
-        self::re($userAuthPass, self::REGEXP_USER_AUTH_PASS);
+        self::re($userAuthPass, self::REGEXP_USER_AUTH_PASS, __FUNCTION__);
     }
 
     /**
@@ -78,7 +84,15 @@ class Validator
      */
     public static function commonName(string $commonName): void
     {
-        self::re($commonName, self::REGEXP_COMMON_NAME);
+        self::re($commonName, self::REGEXP_COMMON_NAME, __FUNCTION__);
+    }
+
+    /**
+     * @throws \RangeException
+     */
+    public static function serverName(string $serverName): void
+    {
+        self::re($serverName, self::REGEXP_SERVER_NAME, __FUNCTION__);
     }
 
     /**
@@ -86,7 +100,7 @@ class Validator
      */
     public static function profileId(string $profileId): void
     {
-        self::re($profileId, self::REGEXP_PROFILE_ID);
+        self::re($profileId, self::REGEXP_PROFILE_ID, __FUNCTION__);
     }
 
     /**
@@ -95,7 +109,7 @@ class Validator
     public static function ipAddress(string $ipAddress): void
     {
         if (false === filter_var($ipAddress, FILTER_VALIDATE_IP)) {
-            throw new RangeException();
+            throw new RangeException('not an IP address');
         }
     }
 
@@ -105,7 +119,7 @@ class Validator
     public static function ipFour(string $ipFour): void
     {
         if (false === filter_var($ipFour, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            throw new RangeException();
+            throw new RangeException('not an IPv4 address');
         }
     }
 
@@ -115,7 +129,7 @@ class Validator
     public static function ipSix(string $ipSix): void
     {
         if (false === filter_var($ipSix, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            throw new RangeException();
+            throw new RangeException('not an IPv6 address');
         }
     }
 
@@ -125,17 +139,18 @@ class Validator
     public static function dateTime(string $dateTime): void
     {
         if (false === DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateTime)) {
-            throw new RangeException();
+            throw new RangeException('not a valid date/time format');
         }
     }
 
     /**
      * @throws \RangeException
      */
-    private static function re(string $inputStr, string $regExp): void
+    private static function re(string $inputStr, string $regExp, string $errorKey): void
     {
         if (1 !== preg_match($regExp, $inputStr)) {
-            throw new RangeException();
+            // XXX we MUST NOT show inputStr here in case it is password!
+            throw new RangeException('invalid/insufficient characters in "'.$errorKey.'" ['.$inputStr.']');
         }
     }
 }

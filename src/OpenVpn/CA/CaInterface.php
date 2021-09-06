@@ -23,7 +23,7 @@ interface CaInterface
     /**
      * Generate a certificate for the VPN server.
      */
-    public function serverCert(string $commonName, string $profileId): CertInfo;
+    public function serverCert(string $serverName, string $profileId): CertInfo;
 
     /**
      * Generate a certificate for a VPN client.

@@ -16,6 +16,7 @@ use DateTimeImmutable;
 use LC\Portal\Dt;
 use LC\Portal\FileIO;
 use LC\Portal\OpenVpn\CA\Exception\CaException;
+use LC\Portal\Validator;
 use RuntimeException;
 
 class VpnCa implements CaInterface
@@ -51,11 +52,14 @@ class VpnCa implements CaInterface
     /**
      * Generate a certificate for the VPN server.
      */
-    public function serverCert(string $commonName, string $profileId): CertInfo
+    public function serverCert(string $serverName, string $profileId): CertInfo
     {
-        $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA', $commonName, $profileId));
+        Validator::serverName($serverName);
+        Validator::profileId($profileId);
 
-        return $this->certInfo($commonName);
+        $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA', $serverName, $profileId));
+
+        return $this->certInfo($serverName);
     }
 
     /**
@@ -63,6 +67,9 @@ class VpnCa implements CaInterface
      */
     public function clientCert(string $commonName, string $profileId, DateTimeImmutable $expiresAt): CertInfo
     {
+        Validator::commonName($commonName);
+        Validator::profileId($profileId);
+
         // prevent expiresAt to be in the past
         if ($this->dateTime->getTimestamp() >= $expiresAt->getTimestamp()) {
             throw new CaException(sprintf('can not issue certificates that expire in the past (%s)', $expiresAt->format(DateTimeImmutable::ATOM)));
