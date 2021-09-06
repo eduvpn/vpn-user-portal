@@ -95,7 +95,7 @@ class NodeApiModule implements ServiceModuleInterface
 
     public function connect(Request $request): void
     {
-        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::re($s, Validator::REGEXP_PROFILE_ID));
+        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
         $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::re($s, Validator::REGEXP_COMMON_NAME));
         $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
         $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
@@ -110,7 +110,7 @@ class NodeApiModule implements ServiceModuleInterface
 
     public function disconnect(Request $request): void
     {
-        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::re($s, Validator::REGEXP_PROFILE_ID));
+        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
         $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::re($s, Validator::REGEXP_COMMON_NAME));
         $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
         $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));

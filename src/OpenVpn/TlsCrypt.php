@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\OpenVpn;
 
 use LC\Portal\FileIO;
-use RangeException;
+use LC\Portal\Validator;
 
 class TlsCrypt
 {
@@ -25,18 +25,16 @@ class TlsCrypt
 
     public function get(string $profileId): string
     {
-        // make extra sure the profileId is safe
-        // XXX use Validator
-        if (1 !== preg_match('/^[a-zA-Z0-9-.]+$/', $profileId)) {
-            throw new RangeException('invalid "profileId"');
-        }
+        // validate profileId also here, to make absolutely sure...
+        Validator::profileId($profileId);
 
-        // check whether we still have global legacy "ta.key". Use it if we
-        // find it...
+        // if we have "tls-crypt.key" we'll use that for all profiles, if not,
+        // we use the profile specific ones
         if (null !== $tlsCryptKey = FileIO::readFileIfExists($this->keyDir.'/tls-crypt.key')) {
             return $tlsCryptKey;
         }
 
+        // profile specific tls-crypt file
         $tlsCryptKeyFile = $this->keyDir.'/tls-crypt-'.$profileId.'.key';
         if (null !== $tlsCryptKey = FileIO::readFileIfExists($tlsCryptKeyFile)) {
             return $tlsCryptKey;

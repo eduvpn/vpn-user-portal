@@ -88,7 +88,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
             '/v3/connect',
             function (AccessToken $accessToken, Request $request): Response {
                 // XXX catch InputValidationException
-                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::re($s, Validator::REGEXP_PROFILE_ID));
+                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $availableProfiles = [];
@@ -152,7 +152,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 // XXX catch InputValidationException
                 // XXX why do we need profile_id again?
 
-                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::re($s, Validator::REGEXP_PROFILE_ID));
+                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->getPermissionList($accessToken->userId());
                 $availableProfiles = [];
