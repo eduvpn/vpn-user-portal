@@ -51,9 +51,9 @@ class PasswdModule implements ServiceModuleInterface
         $service->post(
             '/passwd',
             function (UserInfo $userInfo, Request $request): Response {
-                $userPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_AUTH_PASS));
-                $newUserPass = $request->requirePostParameter('newUserPass', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_PASS));
-                $newUserPassConfirm = $request->requirePostParameter('newUserPassConfirm', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_PASS));
+                $userPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::userAuthPass($s));
+                $newUserPass = $request->requirePostParameter('newUserPass', fn (string $s) => Validator::userPass($s));
+                $newUserPassConfirm = $request->requirePostParameter('newUserPassConfirm', fn (string $s) => Validator::userPass($s));
 
                 if (!$this->dbCredentialValidator->isValid($userInfo->userId(), $userPass)) {
                     return new HtmlResponse(

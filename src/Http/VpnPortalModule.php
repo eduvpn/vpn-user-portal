@@ -120,7 +120,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('downloading configuration files has been disabled by the admin', 403);
                 }
 
-                $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::re($s, Validator::REGEXP_DISPLAY_NAME));
+                $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));
                 $tcpOnly = 'on' === $request->optionalPostParameter('tcpOnly', fn (string $s) => \in_array($s, ['on', 'off'], true));
                 $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
@@ -154,7 +154,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/deleteConfig',
             function (UserInfo $userInfo, Request $request): Response {
-                if (null !== $commonName = $request->optionalPostParameter('commonName', fn (string $s) => Validator::re($s, Validator::REGEXP_COMMON_NAME))) {
+                if (null !== $commonName = $request->optionalPostParameter('commonName', fn (string $s) => Validator::commonName($s))) {
                     // OpenVPN
                     if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
                         throw new HttpException('certificate does not exist', 400);
@@ -174,7 +174,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->daemonWrapper->killClient($commonName);
                 }
 
-                if (null !== $publicKey = $request->optionalPostParameter('publicKey', fn (string $s) => Validator::re($s, Validator::REGEXP_PUBLIC_KEY))) {
+                if (null !== $publicKey = $request->optionalPostParameter('publicKey', fn (string $s) => Validator::publicKey($s))) {
                     // WireGuard
                     $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));
                     // XXX do not allow deleting app created configs
@@ -211,7 +211,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/removeClientAuthorization',
             function (UserInfo $userInfo, Request $request): Response {
                 // XXX also disable/stop WireGuard configs
-                $authKey = $request->requirePostParameter('auth_key', fn (string $s) => Validator::re($s, Validator::REGEXP_AUTH_KEY));
+                $authKey = $request->requirePostParameter('auth_key', fn (string $s) => Validator::authKey($s));
 
                 if (null === $authorization = $this->oauthStorage->getAuthorization($authKey)) {
                     throw new HttpException('no such authorization', 400);

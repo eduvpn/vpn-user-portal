@@ -118,7 +118,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $adminUserId = $userInfo->userId();
-                $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_ID));
+                $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::userId($s));
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
@@ -156,7 +156,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $adminUserId = $userInfo->userId();
-                $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_ID));
+                $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::userId($s));
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }

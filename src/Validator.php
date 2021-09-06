@@ -16,23 +16,69 @@ use RangeException;
 
 class Validator
 {
-    public const REGEXP_USER_ID = '/^.+$/';
-    public const REGEXP_COMMON_NAME = '/^[a-fA-F0-9]{32}$/';
-    public const REGEXP_USER_AUTH_PASS = '/^.+$/';
-    public const REGEXP_USER_PASS = '/^.{8,}$/';
-    public const REGEXP_DISPLAY_NAME = '/^.+$/';
-    public const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+\\/\\=]+$/';    // XXX improve this!
-    public const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
+    private const REGEXP_USER_ID = '/^.+$/';
+    private const REGEXP_COMMON_NAME = '/^[a-fA-F0-9]{32}$/';
+    private const REGEXP_USER_AUTH_PASS = '/^.+$/';
+    private const REGEXP_USER_PASS = '/^.{8,}$/';
+    private const REGEXP_DISPLAY_NAME = '/^.+$/';
+    private const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+\\/\\=]+$/';    // XXX improve this!
+    private const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
     private const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';
 
     /**
      * @throws \RangeException
      */
-    public static function re(string $inputStr, string $regExp): void
+    public static function displayName(string $displayName): void
     {
-        if (1 !== preg_match($regExp, $inputStr)) {
-            throw new RangeException();
-        }
+        self::re($displayName, self::REGEXP_DISPLAY_NAME);
+    }
+
+    /**
+     * @throws \RangeException
+     */
+    public static function authKey(string $authKey): void
+    {
+        self::re($authKey, self::REGEXP_AUTH_KEY);
+    }
+
+    /**
+     * @throws \RangeException
+     */
+    public static function publicKey(string $publicKey): void
+    {
+        self::re($publicKey, self::REGEXP_PUBLIC_KEY);
+    }
+
+    /**
+     * @throws \RangeException
+     */
+    public static function userId(string $userId): void
+    {
+        self::re($userId, self::REGEXP_USER_ID);
+    }
+
+    /**
+     * @throws \RangeException
+     */
+    public static function userPass(string $userPass): void
+    {
+        self::re($userPass, self::REGEXP_USER_PASS);
+    }
+
+    /**
+     * @throws \RangeException
+     */
+    public static function userAuthPass(string $userAuthPass): void
+    {
+        self::re($userAuthPass, self::REGEXP_USER_AUTH_PASS);
+    }
+
+    /**
+     * @throws \RangeException
+     */
+    public static function commonName(string $commonName): void
+    {
+        self::re($commonName, self::REGEXP_COMMON_NAME);
     }
 
     /**
@@ -79,6 +125,16 @@ class Validator
     public static function dateTime(string $dateTime): void
     {
         if (false === DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateTime)) {
+            throw new RangeException();
+        }
+    }
+
+    /**
+     * @throws \RangeException
+     */
+    private static function re(string $inputStr, string $regExp): void
+    {
+        if (1 !== preg_match($regExp, $inputStr)) {
             throw new RangeException();
         }
     }

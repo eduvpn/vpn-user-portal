@@ -127,7 +127,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                             $accessToken->clientId(),
                             $accessToken->authorizationExpiresAt(),
                             $accessToken,
-                            $request->requirePostParameter('public_key', fn (string $s) => Validator::re($s, Validator::REGEXP_PUBLIC_KEY))
+                            $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s))
                         );
 
                         return new Response(

@@ -39,8 +39,8 @@ class UserPassModule implements ServiceModuleInterface
             function (Request $request): Response {
                 $this->session->remove('_form_auth_user');
 
-                $authUser = $request->requirePostParameter('userName', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_ID));
-                $authPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::re($s, Validator::REGEXP_USER_AUTH_PASS));
+                $authUser = $request->requirePostParameter('userName', fn (string $s) => Validator::userId($s));
+                $authPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::userAuthPass($s));
                 $redirectTo = $request->requirePostParameter('_form_auth_redirect_to', fn (string $s) => self::validateRedirectTo($request, $s));
 
                 self::validateRedirectTo($request, $redirectTo);
