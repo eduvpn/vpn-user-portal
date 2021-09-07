@@ -8,6 +8,25 @@ This will help upgrades to a future 3.x release. Configuration changes during
 the 2.x life cycle are NOT required. Any existing configuration file will keep
 working!
 
+## 2.4.0
+
+We now support a new version of the API that is used by the upcoming eduVPN / 
+Let's Connect! 3.x as well. This API is much simpler than the old API and also
+allows for transparent support of WireGuard.
+
+Initially this API is behind a toggle and needs to be explicitly enabled by the
+administrator. In a future version we plan to enable it by default.
+
+```
+'enableApiThree' => true,
+```
+
+Please note that every time an application that uses the API connects a new 
+certificate is generated, which may be inefficient (when using RSA). We default
+to RSA at the moment, but you SHOULD switch to ECDSA or EdDSA, see 
+[this](https://github.com/eduvpn/documentation/blob/v2/SECURITY.md#ca) for more 
+information.
+
 ## 2.3.13
 
 Support `permissionAttribute` configuration option for the RADIUS 
