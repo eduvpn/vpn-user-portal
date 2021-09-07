@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Federation;
 
 use Exception;
+use LC\Portal\Base64;
 use LC\Portal\Binary;
 
 /**
@@ -43,7 +44,7 @@ class Minisign
     public static function verify(string $messageText, string $messageSignature, array $encodedPublicKeyList)
     {
         $signatureData = self::getLine($messageSignature, 1);
-        $msgSig = sodium_base642bin($signatureData, SODIUM_BASE64_VARIANT_ORIGINAL);
+        $msgSig = Base64::decode($signatureData);
         // <signature_algorithm> || <key_id> || <signature>
         //    signature_algorithm: Ed
         //    key_id: 8 random bytes, matching the public key
@@ -76,7 +77,7 @@ class Minisign
         //    key_id: 8 random bytes
         //    public_key: Ed25519 public key
         foreach ($encodedPublicKeyList as $encodedPublicKey) {
-            $publicKey = sodium_base642bin($encodedPublicKey, SODIUM_BASE64_VARIANT_ORIGINAL);
+            $publicKey = Base64::decode($encodedPublicKey);
             if (Binary::safeStrlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH + self::ED_PUBLIC_KEY_LENGTH !== Binary::safeStrlen($publicKey)) {
                 throw new Exception('invalid public key (not long enough)');
             }

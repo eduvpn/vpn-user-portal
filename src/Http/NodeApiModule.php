@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\Http;
 
 use DateTimeImmutable;
+use LC\Portal\Base64;
 use LC\Portal\Config;
 use LC\Portal\Dt;
 use LC\Portal\Exception\NodeApiException;
@@ -50,7 +51,7 @@ class NodeApiModule implements ServiceModuleInterface
                 $serverConfigList = $this->serverConfig->get($this->config->profileConfigList());
                 $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {
-                    $bodyLines[] = $configName.':'.sodium_bin2base64($configFile, SODIUM_BASE64_VARIANT_ORIGINAL);
+                    $bodyLines[] = $configName.':'.Base64::encode($configFile);
                 }
 
                 /// XXX content type?
