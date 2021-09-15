@@ -61,8 +61,7 @@ class ClientConfig
             // >= TLSv1.3
             'tls-version-min 1.3',
 
-            // only allow AES-256-GCM
-            'data-ciphers AES-256-GCM',
+            'data-ciphers AES-256-GCM:CHACHA20-POLY1305',
 
             // server dictates data channel key renegotiation interval
             'reneg-sec 0',
