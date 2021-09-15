@@ -120,7 +120,7 @@ class OpenVpnServerConfig
             // >= TLSv1.3
             'tls-version-min 1.3',
 
-            'data-ciphers '.self::getDataCiphers(),
+            self::getDataCiphers(),
 
             // renegotiate data channel key every 10 hours instead of every hour
             sprintf('reneg-sec %d', 10 * 60 * 60),
