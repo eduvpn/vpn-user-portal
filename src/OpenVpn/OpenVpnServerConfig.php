@@ -117,12 +117,10 @@ class OpenVpnServerConfig
 
             // Only ECDHE
             'dh none',
-
             // >= TLSv1.3
             'tls-version-min 1.3',
 
-            // only allow AES-256-GCM
-            'data-ciphers AES-256-GCM',
+            'data-ciphers '.self::getDataCiphers(),
 
             // renegotiate data channel key every 10 hours instead of every hour
             sprintf('reneg-sec %d', 10 * 60 * 60),
@@ -212,6 +210,22 @@ class OpenVpnServerConfig
         $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
 
         return implode(PHP_EOL, $serverConfig);
+    }
+
+    private static function getDataCiphers(): string
+    {
+        // XXX make sure this is actually a good idea! I think so though...
+        // the only problem might be that in multi-node setups the controller,
+        // where this code runs, may not have AES acceleration, but the nodes
+        // do... do we need an override for this case? Ugh! Or maybe the node
+        // can specify it in the API call or something when requesting config,
+        // this is getting nasty!
+        if (!sodium_crypto_aead_aes256gcm_is_available()) {
+            // without hardware AES acceleration we'll prefer ChaCha20-Poly1305
+            return 'data-ciphers CHACHA20-POLY1305:AES-256-GCM';
+        }
+
+        return 'data-ciphers AES-256-GCM:CHACHA20-POLY1305';
     }
 
     /**
