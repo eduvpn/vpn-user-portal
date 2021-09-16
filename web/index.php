@@ -256,6 +256,7 @@ try {
 
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($db, 'oauth_');
+    $wgServerConfig = new WgServerConfig($baseDir.'/data');
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
@@ -264,7 +265,7 @@ try {
         $cookieBackend,
         $sessionBackend,
         $daemonWrapper,
-        new Wg(new WgDaemon(new CurlHttpClient()), $storage),
+        new Wg(new WgDaemon(new CurlHttpClient()), $storage, $wgServerConfig->publicKey()),
         $storage,
         $oauthStorage,
         new TlsCrypt($baseDir.'/data'),
@@ -276,7 +277,6 @@ try {
     $service->addModule($vpnPortalModule);
 
     $oauthSigner = new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'));
-    $wgServerConfig = new WgServerConfig($baseDir.'/data');
     $adminPortalModule = new AdminPortalModule(
         $baseDir.'/data',
         $config,

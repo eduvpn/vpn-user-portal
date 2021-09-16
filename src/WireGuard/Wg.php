@@ -18,6 +18,7 @@ use LC\Portal\Dt;
 use LC\Portal\IP;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
+use LC\Portal\WireGuard\Exception\WgException;
 use RuntimeException;
 
 /**
@@ -27,12 +28,14 @@ class Wg
 {
     private WgDaemon $wgDaemon;
     private Storage $storage;
+    private string $wgPublicKey;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(WgDaemon $wgDaemon, Storage $storage)
+    public function __construct(WgDaemon $wgDaemon, Storage $storage, string $wgPublicKey)
     {
         $this->wgDaemon = $wgDaemon;
         $this->storage = $storage;
+        $this->wgPublicKey = $wgPublicKey;
         $this->dateTime = Dt::get();
     }
 
@@ -67,9 +70,6 @@ class Wg
         // XXX make sure the public key config is overriden if the public key already exists
         $this->wgDaemon->addPeer($profileConfig->nodeBaseUrl(), $publicKey, $ipFour, $ipSix);
 
-        // XXX we do not need to get the public key from the daemon!
-        $wgInfo = $this->wgDaemon->getInfo($profileConfig->nodeBaseUrl());
-
         // add connection log entry
         // XXX if we have an "open" log for this publicKey, close it first, i guess that is what "clientLost" indicator is for?
         $this->storage->clientConnect($userId, $profileConfig->profileId(), $ipFour, $ipSix, $this->dateTime);
@@ -80,7 +80,7 @@ class Wg
             $privateKey,
             $ipFour,
             $ipSix,
-            $wgInfo['PublicKey']
+            $this->wgPublicKey,
         );
     }
 
@@ -97,18 +97,8 @@ class Wg
 //        }
         // XXX add bytesTransferred to some global table
 
-        $ipFour = '0.0.0.0/32';
-        $ipSix = '::/0';
-        foreach ($peerInfo['AllowedIPs'] as $ip) {
-            if (false !== strpos($ip, ':')) {
-                [$ipSix, ] = explode('/', $ip);
-
-                continue;
-            }
-            [$ipFour, ] = explode('/', $ip);
-        }
-
-        // XXX
+        $ipFour = self::extractIpFour($peerInfo['ip_net']);
+        $ipSix = self::extractIpSix($peerInfo['ip_net']);
 
         // close connection log
         // XXX we should simplify connection log in that closing it does not
@@ -117,6 +107,34 @@ class Wg
         // should disconnect the other connection if it is already enabled when
         // connecting new
         $this->storage->clientDisconnect($userId, $profileConfig->profileId(), $ipFour, $ipSix, $this->dateTime);
+    }
+
+    private static function extractIpFour(array $ipNetList): string
+    {
+        foreach ($ipNetList as $ipNet) {
+            if (false === strpos($ipNet, ':')) {
+                [$ipFour, ] = explode('/', $ipNet);
+
+                return $ipFour;
+            }
+        }
+
+        // XXX better error
+        throw new WgException('unable to find IPv4 address');
+    }
+
+    private static function extractIpSix(array $ipNetList): string
+    {
+        foreach ($ipNetList as $ipNet) {
+            if (false !== strpos($ipNet, ':')) {
+                [$ipSix, ] = explode('/', $ipNet);
+
+                return $ipSix;
+            }
+        }
+
+        // XXX better error
+        throw new WgException('unable to find IPv6 address');
     }
 
     /**

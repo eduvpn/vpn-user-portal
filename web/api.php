@@ -30,6 +30,7 @@ use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\WireGuard\Wg;
 use LC\Portal\WireGuard\WgDaemon;
+use LC\Portal\WireGuard\WgServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
 
@@ -56,6 +57,8 @@ try {
     );
     $service = new ApiService($bearerValidator);
 
+    $wgServerConfig = new WgServerConfig($baseDir.'/data');
+
     // API v3
     $service->addModule(
         new VpnApiThreeModule(
@@ -64,7 +67,7 @@ try {
             new TlsCrypt($baseDir.'/data'),
             new Random(),
             $ca,
-            new Wg(new WgDaemon(new CurlHttpClient()), $storage)
+            new Wg(new WgDaemon(new CurlHttpClient()), $storage, $wgServerConfig->publicKey())
         )
     );
 

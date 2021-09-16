@@ -28,26 +28,24 @@ class WgDaemon
 
     public function getPeers(string $wgDaemonEndpoint): array
     {
-        $wgInfo = $this->getInfo($wgDaemonEndpoint);
+        $peerList = Json::decode($this->httpClient->get($wgDaemonEndpoint.'/w/peer_list', [], [])->getBody());
 
-        return \array_key_exists('Peers', $wgInfo) ? $wgInfo['Peers'] : [];
+        return $peerList['peer_list'];
     }
 
     public function addPeer(string $wgDaemonEndpoint, string $publicKey, string $ipFour, string $ipSix): void
     {
-        $wgInfo = $this->getInfo($wgDaemonEndpoint);
         $rawPostData = implode(
             '&',
             [
-                'PublicKey='.urlencode($publicKey),
-                'AllowedIPs='.urlencode($ipFour.'/32'),
-                'AllowedIPs='.urlencode($ipSix.'/128'),
+                'public_key='.urlencode($publicKey),
+                'ip_net='.urlencode($ipFour.'/32'),
+                'ip_net='.urlencode($ipSix.'/128'),
             ]
         );
 
-        // XXX catch errors
-        $httpResponse = $this->httpClient->postRaw(
-            $wgDaemonEndpoint.'/wg/add_peer',
+        $this->httpClient->postRaw(
+            $wgDaemonEndpoint.'/w/add_peer',
             [],
             $rawPostData
         );
@@ -55,11 +53,9 @@ class WgDaemon
 
     public function removePeer(string $wgDaemonEndpoint, string $publicKey): array
     {
-        $rawPostData = implode('&', ['PublicKey='.urlencode($publicKey)]);
-
-        // XXX catch errors
+        $rawPostData = implode('&', ['public_key='.urlencode($publicKey)]);
         $httpResponse = $this->httpClient->postRaw(
-            $wgDaemonEndpoint.'/wg/remove_peer',
+            $wgDaemonEndpoint.'/w/remove_peer',
             [],
             $rawPostData
         );
@@ -78,17 +74,5 @@ class WgDaemon
         foreach ($peerInfoList as $peerInfo) {
             $this->addPeer($wgDaemonEndpoint, $peerInfo['public_key'], $peerInfo['ip_four'], $peerInfo['ip_six']);
         }
-    }
-
-    /**
-     * @return array{PublicKey:string,ListenPort:int,Peers:array}
-     */
-    public function getInfo(string $wgDaemonEndpoint): array
-    {
-        // XXX catch errors
-        // XXX make sure WG "backend" is in sync with local DB (somehow)
-        $httpResponse = $this->httpClient->get($wgDaemonEndpoint.'/wg/info', [], []);
-
-        return Json::decode($httpResponse->getBody());
     }
 }
