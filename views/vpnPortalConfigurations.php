@@ -30,8 +30,7 @@
                 </select>
                 <label for="displayName"><?=$this->t('Name'); ?></label>
                 <input type="text" name="displayName" id="displayName" size="32" maxlength="64" placeholder="<?=$this->t('Name'); ?>" autofocus required>
-                <input type="checkbox" id="tcpOnly" name="tcpOnly">
-                <label for="tcpOnly"><?=$this->t('TCP Only (OpenVPN only)'); ?></label>
+                <label for="tcpOnly"><input type="checkbox" id="tcpOnly" name="tcpOnly"> <?=$this->t('Connect only over TCP (OpenVPN)'); ?></label>
             </fieldset>
             <fieldset>
                 <button type="submit"><?=$this->t('Download'); ?></button>
