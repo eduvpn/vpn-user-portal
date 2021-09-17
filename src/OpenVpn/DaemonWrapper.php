@@ -53,8 +53,7 @@ class DaemonWrapper
             $httpResponse = $this->httpClient->get(
                 $profileConfig->nodeBaseUrl().'/o/connection_list',
                 [
-                    'profile_number' => (string) $profileConfig->profileNumber(),
-                    'process_count' => (string) \count($profileConfig->vpnProtoPorts()),
+                    'profile_id' => $profileConfig->profileId(),
                 ]
             );
 
@@ -103,8 +102,7 @@ class DaemonWrapper
                 [],
                 [
                     'common_name' => $commonName,
-                    'profile_number' => (string) $profileConfig->profileNumber(),
-                    'process_count' => (string) \count($profileConfig->vpnProtoPorts()),
+                    'profile_id' => $profileConfig->profileId(),
                 ]
             );
         }
