@@ -59,7 +59,7 @@ class OpenVpnServerConfig
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
             $processConfig['local'] = $profileConfig->listenIp();
-            $processConfig['managementPort'] = 11940 + self::toPort($profileNumber, $i);
+            $processConfig['processNumber'] = $i;
 
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $i);
             $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo);
@@ -96,7 +96,7 @@ class OpenVpnServerConfig
     }
 
     /**
-     * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,local:string,managementPort:int} $processConfig
+     * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,local:string,processNumber:int} $processConfig
      */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo): string
     {
@@ -164,7 +164,7 @@ class OpenVpnServerConfig
             'script-security 2',
             sprintf('dev %s', $processConfig['dev']),
             sprintf('port %d', $processConfig['port']),
-            sprintf('management 127.0.0.1 %d', $processConfig['managementPort']),
+            sprintf('management /run/openvpn-server/%s-%d.sock unix', $profileConfig->profileId(), $processConfig['processNumber']),
             sprintf('setenv PROFILE_ID %s', $profileConfig->profileId()),
             sprintf('proto %s', $processConfig['proto']),
             sprintf('local %s', $processConfig['local']),
