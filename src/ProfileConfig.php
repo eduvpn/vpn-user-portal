@@ -32,11 +32,6 @@ class ProfileConfig
         return $this->requireString('vpnProto');
     }
 
-    public function profileNumber(): int
-    {
-        return $this->requireInt('profileNumber');
-    }
-
     public function hostName(): string
     {
         return $this->requireString('hostName');

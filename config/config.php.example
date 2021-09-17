@@ -210,11 +210,6 @@ return [
             'vpnProto' => 'openvpn',
             //'vpnProto' => 'wireguard',
 
-            // The number of this profile, every profile per instance has a
-            // unique number
-            // REQUIRED
-            'profileNumber' => 1,
-
             // The name of the profile as shown in the user and admin portals
             // REQUIRED
             'displayName' => 'Default (OpenVPN)',
@@ -314,11 +309,6 @@ return [
             // REQUIRED
             'vpnProto' => 'wireguard',
             //'vpnProto' => 'openvpn',
-
-            // The number of this profile, every profile per instance has a
-            // unique number
-            // REQUIRED
-            'profileNumber' => 2,
 
             // The name of the profile as shown in the user and admin portals
             // REQUIRED

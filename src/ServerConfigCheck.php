@@ -23,18 +23,9 @@ class ServerConfigCheck
      */
     public static function verify(array $profileConfigList): void
     {
-        // make sure profileNumber is unique for all profiles
-        $profileNumberList = [];
         $listenProtoPortList = [];
         $rangeList = [];
         foreach ($profileConfigList as $profileConfig) {
-            // make sure profileNumber is not reused in multiple profiles
-            $profileNumber = $profileConfig->profileNumber();
-            if (\in_array($profileNumber, $profileNumberList, true)) {
-                throw new RuntimeException(sprintf('"profileNumber" (%d) in profile "%s" already used', $profileNumber, $profileConfig->profileId()));
-            }
-            $profileNumberList[] = $profileNumber;
-
             // make sure DNS is set when defaultGateway is true
             if ($profileConfig->defaultGateway() && 0 === \count($profileConfig->dns())) {
                 throw new RuntimeException(sprintf('no DNS set for profile "%s", but defaultGateway is true', $profileConfig->profileId()));

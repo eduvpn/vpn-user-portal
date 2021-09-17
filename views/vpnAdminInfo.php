@@ -97,7 +97,6 @@
                 </td>
             </tr>
 
-            <tr><th><?=$this->t('Profile Number'); ?></th><td><?=$this->e((string) $profileConfig->profileNumber()); ?></td></tr>
             <tr><th><?=$this->t('Hostname'); ?></th><td><code><?=$this->e($profileConfig->hostName()); ?></code></td></tr>
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range()); ?></code></td></tr>
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range6()); ?></code></td></tr>

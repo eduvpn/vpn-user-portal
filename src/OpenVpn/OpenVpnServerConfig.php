@@ -15,7 +15,6 @@ use LC\Portal\IP;
 use LC\Portal\OpenVpn\CA\CaInterface;
 use LC\Portal\OpenVpn\CA\CertInfo;
 use LC\Portal\ProfileConfig;
-use RangeException;
 use RuntimeException;
 
 class OpenVpnServerConfig
@@ -26,6 +25,7 @@ class OpenVpnServerConfig
 
     private CaInterface $ca;
     private TlsCrypt $tlsCrypt;
+    private int $tunDev = 0;
 
     public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt)
     {
@@ -48,20 +48,19 @@ class OpenVpnServerConfig
         }
         $splitRange = $range->split($processCount);
         $splitRange6 = $range6->split($processCount);
-        $profileNumber = $profileConfig->profileNumber();
         $processConfig = [];
         $profileServerConfig = [];
-        for ($i = 0; $i < $processCount; ++$i) {
-            [$proto, $port] = self::getProtoPort($profileConfig->vpnProtoPorts(), $profileConfig->listenIp())[$i];
-            $processConfig['range'] = $splitRange[$i];
-            $processConfig['range6'] = $splitRange6[$i];
-            $processConfig['dev'] = sprintf('tun%d', self::toPort($profileConfig->profileNumber(), $i));
+        for ($processNumber = 0; $processNumber < $processCount; ++$processNumber) {
+            [$proto, $port] = self::getProtoPort($profileConfig->vpnProtoPorts(), $profileConfig->listenIp())[$processNumber];
+            $processConfig['range'] = $splitRange[$processNumber];
+            $processConfig['range6'] = $splitRange6[$processNumber];
+            $processConfig['dev'] = sprintf('tun%d', $this->tunDev++);
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
             $processConfig['local'] = $profileConfig->listenIp();
-            $processConfig['processNumber'] = $i;
+            $processConfig['processNumber'] = $processNumber;
 
-            $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $i);
+            $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
             $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo);
         }
 
@@ -318,22 +317,5 @@ class OpenVpnServerConfig
             sprintf('push "route %s %s"', $rangeIp->address(), $rangeIp->netmask()),
             sprintf('push "route-ipv6 %s"', (string) $range6Ip),
         ];
-    }
-
-    private static function toPort(int $profileNumber, int $processNumber): int
-    {
-        if (1 > $profileNumber || 64 < $profileNumber) {
-            throw new RangeException('1 <= profileNumber <= 64');
-        }
-
-        if (0 > $processNumber || 64 <= $processNumber) {
-            throw new RangeException('0 <= processNumber < 64');
-        }
-
-        // we have 2^16 - 11940 ports available for management ports, so let's
-        // say we have 2^14 ports available to distribute over profiles and
-        // processes, let's take 12 bits, so we have 64 profiles with each 64
-        // processes...
-        return ($profileNumber - 1 << 6) | $processNumber;
     }
 }
