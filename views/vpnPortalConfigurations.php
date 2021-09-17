@@ -23,7 +23,7 @@
         <form method="post" class="frm">
             <fieldset>
                 <label for="profileId"><?=$this->t('Profile'); ?></label>
-                <select name="profileId" id="profileId" size="<?=max(10, count($profileConfigList)); ?>" required>
+                <select name="profileId" id="profileId" size="<?=min(10, count($profileConfigList)); ?>" required>
 <?php foreach ($profileConfigList as $profileConfig): ?>
                     <option value="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></option>
 <?php endforeach; ?>
