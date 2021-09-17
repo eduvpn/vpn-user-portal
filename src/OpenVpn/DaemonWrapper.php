@@ -53,7 +53,7 @@ class DaemonWrapper
             $httpResponse = $this->httpClient->get(
                 $profileConfig->nodeBaseUrl().'/o/connection_list',
                 [
-                    'profile_id' => $profileConfig->profileId(),
+                    'profile_id' => $profileId,
                 ]
             );
 
@@ -96,7 +96,6 @@ class DaemonWrapper
             if ('openvpn' !== $profileConfig->vpnProto()) {
                 continue;
             }
-            $profileId = $profileConfig->profileId();
             $httpResponse = $this->httpClient->post(
                 $profileConfig->nodeBaseUrl().'/o/disconnect',
                 [],
