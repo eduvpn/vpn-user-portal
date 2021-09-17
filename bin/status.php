@@ -16,60 +16,19 @@ use LC\Portal\Config;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
 use LC\Portal\OpenVpn\DaemonWrapper;
+use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 
-/**
- * @return array<string,int>
- */
-function getMaxClientLimit(Config $config): array
+// XXX WireGuard status is (still) missing!
+
+function getMaxClientLimit(ProfileConfig $profileConfig): int
 {
-    $maxConcurrentConnectionLimitList = [];
-    foreach ($config->profileConfigList() as $profileConfig) {
-        if ('openvpn' !== $profileConfig->vpnProto()) {
-            continue;
-        }
-        [$ipFour, $ipFourPrefix] = explode('/', $profileConfig->range());
-        $vpnProtoPortsCount = count($profileConfig->vpnProtoPorts());
-        $maxConcurrentConnectionLimitList[$profileConfig->profileId()] = ((int) 2 ** (32 - (int) $ipFourPrefix)) - 3 * $vpnProtoPortsCount;
-    }
+    // OpenVPN can have multiple processes, WireGuard has only one...
+    $processCount = 'openvpn' === $profileConfig->vpnProto() ? count($profileConfig->vpnProtoPorts()) : 1;
+    [$ipFour, $ipFourPrefix] = explode('/', $profileConfig->range());
 
-    return $maxConcurrentConnectionLimitList;
-}
-
-/**
- * @return array<string,array{vpnProtoPorts:array<string>,profileNumber:int}>
- */
-function getProfilePortMapping(Config $config): array
-{
-    $profilePortMapping = [];
-    foreach ($config->profileConfigList() as $profileConfig) {
-        if ('openvpn' !== $profileConfig->vpnProto()) {
-            continue;
-        }
-        $profileNumber = $profileConfig->profileNumber();
-        $vpnProtoPorts = $profileConfig->vpnProtoPorts();
-        $profilePortMapping[$profileConfig->profileId()] = ['vpnProtoPorts' => $vpnProtoPorts, 'profileNumber' => $profileNumber];
-    }
-
-    return $profilePortMapping;
-}
-
-function convertToProtoPort(array $profilePortMapping, array $portClientCount): array
-{
-    $profileNumber = $profilePortMapping['profileNumber'];
-    $vpnProtoPorts = $profilePortMapping['vpnProtoPorts'];
-    $protoPortCount = [];
-    foreach ($vpnProtoPorts as $k => $vpnProtoPort) {
-        $managementPort = 11940 + DaemonWrapper::toPort($profileNumber, $k);
-        $clientCount = 0;
-        if (array_key_exists($managementPort, $portClientCount)) {
-            $clientCount = $portClientCount[$managementPort];
-        }
-        $protoPortCount[$vpnProtoPort] = $clientCount;
-    }
-
-    return $protoPortCount;
+    return ((int) 2 ** (32 - (int) $ipFourPrefix)) - 3 * $processCount;
 }
 
 function showHelp(array $argv): void
@@ -102,37 +61,12 @@ function outputConversion(array $outputData, bool $asJson): void
     }
 }
 
-// XXX we have to convert profileNumber and processNumber to proto/port instead...
-function toPort(int $profileNumber, int $processNumber): int
-{
-    if (1 > $profileNumber || 64 < $profileNumber) {
-        throw new RangeException('1 <= profileNumber <= 64');
-    }
-
-    if (0 > $processNumber || 64 <= $processNumber) {
-        throw new RangeException('0 <= processNumber < 64');
-    }
-
-    // we have 2^16 - 11940 ports available for management ports, so let's
-    // say we have 2^14 ports available to distribute over profiles and
-    // processes, let's take 12 bits, so we have 64 profiles with each 64
-    // processes...
-    return ($profileNumber - 1 << 6) | $processNumber;
-}
-
 try {
-    // XXX implement WireGuard status
-    // XXX use argv[0] for SysLogger param?
-    $logger = new SysLogger('vpn-user-portal');
-    $configDir = sprintf('%s/config', $baseDir);
-    $configFile = sprintf('%s/config.php', $configDir);
-    $config = Config::fromFile($configFile);
-    $dataDir = sprintf('%s/data', $baseDir);
-
+    $config = Config::fromFile($baseDir.'/config/config.php');
     $alertOnly = false;
     $asJson = false;
     $alertPercentage = 90;
-    $includeConnections = false;    // only for JSON
+    $includeConnections = false; // only for JSON
     $searchForPercentage = false;
     $showHelp = false;
     foreach ($argv as $arg) {
@@ -166,8 +100,6 @@ try {
         return;
     }
 
-    $maxClientLimit = getMaxClientLimit($config);
-
     $db = new PDO(
         $config->dbConfig($baseDir)->dbDsn(),
         $config->dbConfig($baseDir)->dbUser(),
@@ -180,28 +112,20 @@ try {
         $config,
         $storage,
         new CurlHttpClient(),
-        $logger
+        new SysLogger($argv[0])
     );
 
     $outputData = [];
     foreach ($daemonWrapper->getConnectionList(null) as $profileId => $connectionInfoList) {
-        // extract only stuff we need
         $displayConnectionInfo = [];
-        $portClientCount = [];
         foreach ($connectionInfoList as $connectionInfo) {
-            $managementPort = $connectionInfo['management_port'];
-            if (!array_key_exists($managementPort, $portClientCount)) {
-                $portClientCount[$managementPort] = 0;
-            }
-            ++$portClientCount[$connectionInfo['management_port']];
-
             $displayConnectionInfo[] = [
                 'user_id' => $connectionInfo['user_id'],
                 'virtual_address' => $connectionInfo['virtual_address'],
             ];
         }
         $activeConnectionCount = count($displayConnectionInfo);
-        $profileMaxClientLimit = $maxClientLimit[$profileId];
+        $profileMaxClientLimit = getMaxClientLimit($config->profileConfig($profileId));
         $percentInUse = floor($activeConnectionCount / $profileMaxClientLimit * 100);
         if ($alertOnly && $alertPercentage > $percentInUse) {
             continue;
@@ -213,7 +137,6 @@ try {
             'percentage_in_use' => $percentInUse,
         ];
         if ($asJson) {
-            $outputRow['port_client_count'] = convertToProtoPort(getProfilePortMapping($config)[$profileId], $portClientCount);
             if ($includeConnections) {
                 $outputRow['connection_list'] = $displayConnectionInfo;
             }
