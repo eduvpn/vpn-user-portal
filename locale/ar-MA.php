@@ -97,7 +97,6 @@ return [
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'سجل دخولك من فضلك باستعمال اسم المستخدم وكلمة المرور.',
     'Profile' => 'مظهر',
-    //'Profile Number' => '',
     'Profiles' => 'مظاهر',
     //'Protocols/Ports' => '',
     //'Public Key' => '',

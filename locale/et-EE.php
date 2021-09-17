@@ -97,7 +97,6 @@ return [
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Palun logi oma kasutajanime ja parooliga sisse.',
     'Profile' => 'Profiil',
-    //'Profile Number' => '',
     //'Profiles' => '',
     //'Protocols/Ports' => '',
     //'Public Key' => '',

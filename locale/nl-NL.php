@@ -97,7 +97,6 @@ return [
     'Permissions' => 'Permissies',
     'Please sign in with your username and password.' => 'Log in met je gebruikersnaam en wachtwoord.',
     'Profile' => 'Profiel',
-    'Profile Number' => 'Profielnummer',
     'Profiles' => 'Profielen',
     'Protocols/Ports' => 'Protocollen/poorten',
     'Public Key' => 'Public Key',

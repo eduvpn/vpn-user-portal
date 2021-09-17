@@ -97,7 +97,6 @@ return [
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Conectează-te cu numele și parola ta de utilizator.',
     'Profile' => 'Profil',
-    'Profile Number' => 'Număr profil',
     'Profiles' => 'Profiluri',
     'Protocols/Ports' => 'Protocoale/Porturi',
     //'Public Key' => '',

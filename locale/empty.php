@@ -97,7 +97,6 @@ return [
     'Permissions' => '',
     'Please sign in with your username and password.' => '',
     'Profile' => '',
-    'Profile Number' => '',
     'Profiles' => '',
     'Protocols/Ports' => '',
     'Public Key' => '',

@@ -97,7 +97,6 @@ return [
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Будь ласка, увійдіть, використовуючи своє ім’я користувача та пароль.',
     'Profile' => 'Профайл',
-    //'Profile Number' => '',
     'Profiles' => 'Профайли',
     //'Protocols/Ports' => '',
     //'Public Key' => '',

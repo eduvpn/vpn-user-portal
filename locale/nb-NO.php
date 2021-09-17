@@ -97,7 +97,6 @@ return [
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Logg inn med ditt brukernavn og passord.',
     'Profile' => 'Profil',
-    //'Profile Number' => '',
     'Profiles' => 'Profiler',
     //'Protocols/Ports' => '',
     //'Public Key' => '',

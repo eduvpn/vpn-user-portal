@@ -97,7 +97,6 @@ return [
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Bitte melde dich mit Benutzername und Passwort an.',
     'Profile' => 'Profil',
-    //'Profile Number' => '',
     'Profiles' => 'Profile',
     //'Protocols/Ports' => '',
     //'Public Key' => '',
