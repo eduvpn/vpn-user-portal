@@ -20,7 +20,6 @@ use LC\Portal\Json;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\Exception\WgException;
-use RuntimeException;
 
 /**
  * Obtain and register a WireGuard configuration file.
@@ -68,7 +67,7 @@ class Wg
 
         if (null === $ipInfo = $this->getIpAddress($profileConfig)) {
             // unable to get new IP address to assign to peer
-            throw new RuntimeException('unable to get a an IP address');
+            throw new WgException('unable to get a an IP address');
         }
         [$ipFour, $ipSix] = $ipInfo;
 
