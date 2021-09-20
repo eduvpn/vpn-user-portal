@@ -213,12 +213,11 @@ class OpenVpnServerConfig
 
     private static function getDataCiphers(): string
     {
-        // XXX make sure this is actually a good idea! I think so though...
-        // the only problem might be that in multi-node setups the controller,
-        // where this code runs, may not have AES acceleration, but the nodes
-        // do... do we need an override for this case? Ugh! Or maybe the node
-        // can specify it in the API call or something when requesting config,
-        // this is getting nasty!
+        // Both AES-256-GCM and CHACHA20-POLY1305 are supported. The
+        // *server* picks the one it wants to use based on what the client
+        // supports. On server with hardware AES the server prefers
+        // AES-256-GCM. If the client does not have hardware AES, the
+        // client should remove AES-256-GCM from the supported ciphers...
         if (!sodium_crypto_aead_aes256gcm_is_available()) {
             // without hardware AES acceleration we'll prefer ChaCha20-Poly1305
             return 'data-ciphers CHACHA20-POLY1305:AES-256-GCM';

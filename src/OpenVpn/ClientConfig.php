@@ -61,6 +61,11 @@ class ClientConfig
             // >= TLSv1.3
             'tls-version-min 1.3',
 
+            // Both AES-256-GCM and CHACHA20-POLY1305 are supported. The
+            // *server* picks the one it wants to use based on what the client
+            // supports. On server with hardware AES the server prefers
+            // AES-256-GCM. If the client does not have hardware AES, the
+            // client should remove AES-256-GCM from the supported ciphers...
             'data-ciphers AES-256-GCM:CHACHA20-POLY1305',
 
             // server dictates data channel key renegotiation interval
