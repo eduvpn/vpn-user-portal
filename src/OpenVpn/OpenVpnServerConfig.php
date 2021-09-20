@@ -119,7 +119,7 @@ class OpenVpnServerConfig
             // >= TLSv1.3
             'tls-version-min 1.3',
 
-            self::getDataCiphers(),
+            self::getDataCiphers($profileConfig),
 
             // renegotiate data channel key every 10 hours instead of every hour
             sprintf('reneg-sec %d', 10 * 60 * 60),
@@ -211,19 +211,34 @@ class OpenVpnServerConfig
         return implode(PHP_EOL, $serverConfig);
     }
 
-    private static function getDataCiphers(): string
+    /**
+     * Allow overriding the data ciphers used for the OpenVPN data channel.
+     *
+     * The default is AES-256-GCM:CHACHA20-POLY1305. The server picks the
+     * cipher based on what the client supports. The above will use
+     * AES-256-GCM when the client supports it, otherwise CHACHA20-POLY1305.
+     * You can also specify only one, making this cipher required.
+     *
+     * Use cases:
+     * - A Raspberry Pi does not support AES-NI making CHACHA20-POLY1305 much
+     *   faster, so it is better to prefer CHACHA20-POLY1305;
+     * - If you don't trust your CPU's AES-NI you can force CHACHA20-POLY1305
+     *   which is much faster than software AES.
+     */
+    private static function getDataCiphers(ProfileConfig $profileConfig): string
     {
-        // Both AES-256-GCM and CHACHA20-POLY1305 are supported. The
-        // *server* picks the one it wants to use based on what the client
-        // supports. On server with hardware AES the server prefers
-        // AES-256-GCM. If the client does not have hardware AES, the
-        // client should remove AES-256-GCM from the supported ciphers...
-        if (!sodium_crypto_aead_aes256gcm_is_available()) {
-            // without hardware AES acceleration we'll prefer ChaCha20-Poly1305
-            return 'data-ciphers CHACHA20-POLY1305:AES-256-GCM';
+        $dataCiphers = [];
+        foreach ($profileConfig->dataCiphers() as $dataCipher) {
+            if (\in_array($dataCipher, ['AES-256-GCM', 'CHACHA20-POLY1305'], true)) {
+                $dataCiphers[] = $dataCipher;
+            }
         }
 
-        return 'data-ciphers AES-256-GCM:CHACHA20-POLY1305';
+        if (0 === \count($dataCiphers)) {
+            throw new RuntimeException('requested "dataCiphers" not supported');
+        }
+
+        return 'data-ciphers '.implode(':', $dataCiphers);
     }
 
     /**
