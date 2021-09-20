@@ -13,9 +13,10 @@ namespace LC\Portal\WireGuard;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
-// XXX introduce WgException
 use LC\Portal\Dt;
+use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\IP;
+use LC\Portal\Json;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\Exception\WgException;
@@ -26,17 +27,25 @@ use RuntimeException;
  */
 class Wg
 {
-    private WgDaemon $wgDaemon;
+    private HttpClientInterface $httpClient;
     private Storage $storage;
     private string $wgPublicKey;
     private DateTimeImmutable $dateTime;
+    private HttpClientInterface $httpClient;
 
-    public function __construct(WgDaemon $wgDaemon, Storage $storage, string $wgPublicKey)
+    public function __construct(HttpClientInterface $httpClient, Storage $storage, string $wgPublicKey)
     {
-        $this->wgDaemon = $wgDaemon;
+        $this->httpClient = $httpClient;
         $this->storage = $storage;
         $this->wgPublicKey = $wgPublicKey;
         $this->dateTime = Dt::get();
+    }
+
+    public function getPeers(ProfileConfig $profileConfig): array
+    {
+        $peerList = Json::decode($this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', [], [])->getBody());
+
+        return $peerList['peer_list'];
     }
 
     /**
@@ -68,7 +77,20 @@ class Wg
 
         // add peer to WG
         // XXX make sure the public key config is overriden if the public key already exists
-        $this->wgDaemon->addPeer($profileConfig->nodeBaseUrl(), $publicKey, $ipFour, $ipSix);
+        $rawPostData = implode(
+            '&',
+            [
+                'public_key='.urlencode($publicKey),
+                'ip_net='.urlencode($ipFour.'/32'),
+                'ip_net='.urlencode($ipSix.'/128'),
+            ]
+        );
+
+        $this->httpClient->postRaw(
+            $profileConfig->nodeBaseUrl().'/w/add_peer',
+            [],
+            $rawPostData
+        );
 
         // add connection log entry
         // XXX if we have an "open" log for this publicKey, close it first, i guess that is what "clientLost" indicator is for?
@@ -89,7 +111,14 @@ class Wg
         $this->storage->wgRemovePeer($userId, $publicKey);
         // XXX we have to make sure the user owns the public key, otherwise it can be used to disconnect other users!
         // XXX what if multiple users use the same wireguard public key? that won't work and that is good!
-        $peerInfo = $this->wgDaemon->removePeer($profileConfig->nodeBaseUrl(), $publicKey);
+        $rawPostData = implode('&', ['public_key='.urlencode($publicKey)]);
+        $httpResponse = $this->httpClient->postRaw(
+            $profileConfig->nodeBaseUrl().'/w/remove_peer',
+            [],
+            $rawPostData
+        );
+
+        $peerInfo = Json::decode($httpResponse->getBody());
 
 //        $bytesTransferred = 0;
 //        if (\array_key_exists('BytesTransferred', $peerInfo) && \is_int($peerInfo['BytesTransferred'])) {
@@ -107,6 +136,32 @@ class Wg
         // should disconnect the other connection if it is already enabled when
         // connecting new
         $this->storage->clientDisconnect($userId, $profileConfig->profileId(), $ipFour, $ipSix, $this->dateTime);
+    }
+
+    /**
+     * Very inefficient way to register all peers (again) with WG.
+     */
+    public function syncPeers(ProfileConfig $profileConfig, array $peerInfoList): void
+    {
+        // XXX this only adds peers, it may also needs to remove the ones that
+        // shouldn't be there anymore. We need to implement a proper sync
+        // together with wg-daemon...
+        foreach ($peerInfoList as $peerInfo) {
+            $rawPostData = implode(
+                '&',
+                [
+                    'public_key='.urlencode($peerInfo['public_key']),
+                    'ip_net='.urlencode($peerInfo['ip_four'].'/32'),
+                    'ip_net='.urlencode($peerInfo['ip_six'].'/128'),
+                ]
+            );
+
+            $this->httpClient->postRaw(
+                $profileConfig->nodeBaseUrl().'/w/add_peer',
+                [],
+                $rawPostData
+            );
+        }
     }
 
     private static function extractIpFour(array $ipNetList): string

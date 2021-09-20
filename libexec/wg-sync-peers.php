@@ -15,7 +15,8 @@ $baseDir = dirname(__DIR__);
 use LC\Portal\Config;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Storage;
-use LC\Portal\WireGuard\WgDaemon;
+use LC\Portal\WireGuard\Wg;
+use LC\Portal\WireGuard\WgServerConfig;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
@@ -27,11 +28,14 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $wgDaemon = new WgDaemon(new CurlHttpClient());
+
+    $wgServerConfig = new WgServerConfig($baseDir.'/data');
+
+    $wg = new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey());
     foreach ($config->profileConfigList() as $profileConfig) {
         if ('wireguard' === $profileConfig->vpnProto()) {
             // extract the peers from the DB per profile
-            $wgDaemon->syncPeers($profileConfig->nodeBaseUrl(), $storage->wgGetAllPeers($profileConfig->profileId()));
+            $wg->syncPeers($profileConfig, $storage->wgGetAllPeers($profileConfig->profileId()));
         }
     }
 } catch (Exception $e) {
