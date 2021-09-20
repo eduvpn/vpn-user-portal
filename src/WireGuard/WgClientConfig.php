@@ -17,7 +17,7 @@ use LC\Portal\ProfileConfig;
 /**
  * Represent a WireGuard client configuration file.
  */
-class WgConfig
+class WgClientConfig
 {
     private ProfileConfig $profileConfig;
     private string $publicKey;

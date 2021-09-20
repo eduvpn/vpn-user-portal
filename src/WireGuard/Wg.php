@@ -52,7 +52,7 @@ class Wg
      * XXX want only 1 code path both for portal and for API.
      * XXX why can accesstoken be null? from portal?
      */
-    public function addPeer(ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, ?AccessToken $accessToken, ?string $publicKey): WgConfig
+    public function addPeer(ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, ?AccessToken $accessToken, ?string $publicKey): WgClientConfig
     {
         $privateKey = null;
         if (null === $publicKey) {
@@ -96,7 +96,7 @@ class Wg
         // XXX if we have an "open" log for this publicKey, close it first, i guess that is what "clientLost" indicator is for?
         $this->storage->clientConnect($userId, $profileConfig->profileId(), $ipFour, $ipSix, $this->dateTime);
 
-        return new WgConfig(
+        return new WgClientConfig(
             $profileConfig,
             $publicKey,
             $privateKey,
