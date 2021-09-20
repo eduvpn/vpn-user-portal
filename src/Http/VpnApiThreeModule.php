@@ -71,6 +71,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                         'profile_id' => $profileConfig->profileId(),
                         'display_name' => $profileConfig->displayName(),
                         'vpn_proto' => $profileConfig->vpnProto(),
+                        'default_gateway' => $profileConfig->defaultGateway(),
                     ];
                 }
 
