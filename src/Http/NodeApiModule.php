@@ -50,7 +50,7 @@ class NodeApiModule implements ServiceModuleInterface
                 // XXX we may want to restrict the profiles for particular nodes!
                 $serverConfigList = $this->serverConfig->get(
                     $this->config->profileConfigList(),
-                    'on' === $request->optionalPostParameter('aes_hw', fn (string $s) => Validator::aesHw($s))
+                    'yes' === $request->optionalPostParameter('cpu_has_aes', fn (string $s) => Validator::cpuHasAes($s))
                 );
                 $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {

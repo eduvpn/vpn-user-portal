@@ -30,14 +30,14 @@ class ServerConfig
      *
      * @return array<string,string>
      */
-    public function get(array $profileConfigList, bool $aesHw): array
+    public function get(array $profileConfigList, bool $cpuHasAes): array
     {
         // XXX fix ServerConfigCheck for WG as well!
 //        ServerConfigCheck::verify($profileConfigList);
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
             if ('openvpn' === $profileConfig->vpnProto()) {
-                $serverConfig = array_merge($serverConfig, $this->openVpnServerConfig->getProfile($profileConfig, $aesHw));
+                $serverConfig = array_merge($serverConfig, $this->openVpnServerConfig->getProfile($profileConfig, $cpuHasAes));
             }
         }
 

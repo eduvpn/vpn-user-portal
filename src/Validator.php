@@ -143,10 +143,10 @@ class Validator
         }
     }
 
-    public static function aesHw(string $aesHw): void
+    public static function cpuHasAes(string $cpuHasAes): void
     {
-        if (!\in_array($aesHw, ['on', 'off'], true)) {
-            throw new RangeException('not "on" or "off"');
+        if (!\in_array($cpuHasAes, ['yes', 'no'], true)) {
+            throw new RangeException('not "yes" or "no"');
         }
     }
 

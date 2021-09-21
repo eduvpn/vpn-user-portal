@@ -36,7 +36,7 @@ class OpenVpnServerConfig
     /**
      * @return array<string,string>
      */
-    public function getProfile(ProfileConfig $profileConfig, bool $aesHw): array
+    public function getProfile(ProfileConfig $profileConfig, bool $cpuHasAes): array
     {
         $certInfo = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
         $range = IP::fromIpPrefix($profileConfig->range());
@@ -60,7 +60,7 @@ class OpenVpnServerConfig
             $processConfig['local'] = $profileConfig->listenIp();
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
-            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $aesHw);
+            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $cpuHasAes);
         }
 
         return $profileServerConfig;
@@ -96,7 +96,7 @@ class OpenVpnServerConfig
     /**
      * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,local:string,processNumber:int} $processConfig
      */
-    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $aesHw): string
+    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $cpuHasAes): string
     {
         $rangeIp = $processConfig['range'];
         $range6Ip = $processConfig['range6'];
@@ -118,7 +118,7 @@ class OpenVpnServerConfig
             // >= TLSv1.3
             'tls-version-min 1.3',
 
-            self::getDataCiphers($aesHw),
+            self::getDataCiphers($cpuHasAes),
 
             // renegotiate data channel key every 10 hours instead of every hour
             sprintf('reneg-sec %d', 10 * 60 * 60),
@@ -210,9 +210,9 @@ class OpenVpnServerConfig
         return implode(PHP_EOL, $serverConfig);
     }
 
-    private static function getDataCiphers(bool $aesHw): string
+    private static function getDataCiphers(bool $cpuHasAes): string
     {
-        if ($aesHw) {
+        if ($cpuHasAes) {
             return 'data-ciphers AES-256-GCM:CHACHA20-POLY1305';
         }
 
