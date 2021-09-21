@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use DateInterval;
+use DateTimeImmutable;
 use LC\Portal\HttpClient\HttpClientInterface;
 
 /**
@@ -18,6 +20,7 @@ use LC\Portal\HttpClient\HttpClientInterface;
  */
 class ConnectionList
 {
+    protected DateTimeImmutable $dateTime;
     private Config $config;
     private Storage $storage;
     private HttpClientInterface $httpClient;
@@ -27,6 +30,7 @@ class ConnectionList
         $this->config = $config;
         $this->storage = $storage;
         $this->httpClient = $httpClient;
+        $this->dateTime = new DateTimeImmutable();
     }
 
     /**
@@ -82,8 +86,21 @@ class ConnectionList
                     // found it!
                     $publicKey = $pl['public_key'];
 
-                    // XXX make sure peer was seen in the last 3 minutes
                     // XXX make sure IP matches
+                    // XXX maybe move this to vpn-daemon itself?!
+                    if (null === $w[$publicKey]['last_handshake_time']) {
+                        // never seen
+                        continue;
+                    }
+
+                    // filter out entries that haven't been seen in the last
+                    // three minutes
+                    $lht = new DateTimeImmutable($w[$publicKey]['last_handshake_time']);
+                    $threeMinutesAgo = $this->dateTime->sub(new DateInterval('PT3M'));
+                    if ($lht < $threeMinutesAgo) {
+                        continue;
+                    }
+
                     $connectionList[$profileId][] = [
                         'user_id' => $pl['user_id'],
                         'connection_id' => $pl['public_key'],
