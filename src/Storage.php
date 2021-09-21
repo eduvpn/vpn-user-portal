@@ -399,11 +399,11 @@ class Storage
                     SELECT
                         user_id,
                         common_name,
-                        display_name,
+                        display_name
                     FROM
                         certificates
                     WHERE
-                        profile_id := profile_id
+                        profile_id = :profile_id
                 SQL
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
