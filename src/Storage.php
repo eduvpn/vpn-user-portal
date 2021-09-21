@@ -390,6 +390,38 @@ class Storage
     }
 
     /**
+     * @return array<array{user_id:string,common_name:string,display_name:string}>
+     */
+    public function certificateList(string $profileId): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    SELECT
+                        user_id,
+                        common_name,
+                        display_name,
+                    FROM
+                        certificates
+                    WHERE
+                        profile_id := profile_id
+                SQL
+        );
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $certificateList = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $certificateList[] = [
+                'user_id' => (string) $resultRow['user_id'],
+                'common_name' => (string) $resultRow['common_name'],
+                'display_name' => (string) $resultRow['display_name'],
+            ];
+        }
+
+        return $certificateList;
+    }
+
+    /**
      * @return array<array{profile_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
     public function getCertificates(string $userId): array
