@@ -143,6 +143,13 @@ class Validator
         }
     }
 
+    public static function aesHw(string $aesHw): void
+    {
+        if (!\in_array($aesHw, ['on', 'off'], true)) {
+            throw new RangeException('not "on" or "off"');
+        }
+    }
+
     /**
      * @throws \RangeException
      */

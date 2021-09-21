@@ -48,7 +48,10 @@ class NodeApiModule implements ServiceModuleInterface
             '/server_config',
             function (UserInfo $userInfo, Request $request): Response {
                 // XXX we may want to restrict the profiles for particular nodes!
-                $serverConfigList = $this->serverConfig->get($this->config->profileConfigList());
+                $serverConfigList = $this->serverConfig->get(
+                    $this->config->profileConfigList(),
+                    'on' === $request->optionalPostParameter('aes_hw', fn (string $s) => Validator::aesHw($s))
+                );
                 $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {
                     $bodyLines[] = $configName.':'.Base64::encode($configFile);

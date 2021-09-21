@@ -36,7 +36,7 @@ class OpenVpnServerConfig
     /**
      * @return array<string,string>
      */
-    public function getProfile(ProfileConfig $profileConfig): array
+    public function getProfile(ProfileConfig $profileConfig, bool $aesHw): array
     {
         $certInfo = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
         $range = IP::fromIpPrefix($profileConfig->range());
@@ -59,9 +59,8 @@ class OpenVpnServerConfig
             $processConfig['port'] = $port;
             $processConfig['local'] = $profileConfig->listenIp();
             $processConfig['processNumber'] = $processNumber;
-
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
-            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo);
+            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $aesHw);
         }
 
         return $profileServerConfig;
@@ -97,7 +96,7 @@ class OpenVpnServerConfig
     /**
      * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,local:string,processNumber:int} $processConfig
      */
-    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo): string
+    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $aesHw): string
     {
         $rangeIp = $processConfig['range'];
         $range6Ip = $processConfig['range6'];
@@ -119,7 +118,7 @@ class OpenVpnServerConfig
             // >= TLSv1.3
             'tls-version-min 1.3',
 
-            self::getDataCiphers($profileConfig),
+            self::getDataCiphers($aesHw),
 
             // renegotiate data channel key every 10 hours instead of every hour
             sprintf('reneg-sec %d', 10 * 60 * 60),
@@ -211,34 +210,13 @@ class OpenVpnServerConfig
         return implode(PHP_EOL, $serverConfig);
     }
 
-    /**
-     * Allow overriding the data ciphers used for the OpenVPN data channel.
-     *
-     * The default is AES-256-GCM:CHACHA20-POLY1305. The server picks the
-     * cipher based on what the client supports. The above will use
-     * AES-256-GCM when the client supports it, otherwise CHACHA20-POLY1305.
-     * You can also specify only one, making this cipher required.
-     *
-     * Use cases:
-     * - A Raspberry Pi does not support AES-NI making CHACHA20-POLY1305 much
-     *   faster, so it is better to prefer CHACHA20-POLY1305;
-     * - If you don't trust your CPU's AES-NI you can force CHACHA20-POLY1305
-     *   which is much faster than software AES.
-     */
-    private static function getDataCiphers(ProfileConfig $profileConfig): string
+    private static function getDataCiphers(bool $aesHw): string
     {
-        $dataCiphers = [];
-        foreach ($profileConfig->dataCiphers() as $dataCipher) {
-            if (\in_array($dataCipher, ['AES-256-GCM', 'CHACHA20-POLY1305'], true)) {
-                $dataCiphers[] = $dataCipher;
-            }
+        if ($aesHw) {
+            return 'data-ciphers AES-256-GCM:CHACHA20-POLY1305';
         }
 
-        if (0 === \count($dataCiphers)) {
-            throw new RuntimeException('requested "dataCiphers" not supported');
-        }
-
-        return 'data-ciphers '.implode(':', $dataCiphers);
+        return 'data-ciphers CHACHA20-POLY1305:AES-256-GCM';
     }
 
     /**

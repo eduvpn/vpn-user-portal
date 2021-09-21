@@ -145,14 +145,6 @@ class ProfileConfig
     /**
      * @return array<string>
      */
-    public function dataCiphers(): array
-    {
-        return $this->requireArray('dataCiphers', ['AES-256-GCM', 'CHACHA20-POLY1305']);
-    }
-
-    /**
-     * @return array<string>
-     */
     public function dnsDomainSearch(): array
     {
         return $this->requireArray('dnsDomainSearch', []);
