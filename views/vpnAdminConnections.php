@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \LC\Portal\Tpl $this */?>
-<?php /** @var array<string, array<array{common_name:string,display_name:string,expires_at:\DateTimeImmutable,management_port:int,user_id:string,user_is_disabled:bool, virtual_address:array{0:string,1:string}}>> $vpnConnections */?>
+<?php /** @var array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>> $profileConnectionList */?>
 <?php /** @var array<string,string> $idNameMapping */?>
 <?php /** @var string $requestRoot */?>
 
@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-    <?php foreach ($vpnConnections as $profileId => $connectionList): ?>
+    <?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
         <tr>
             <td><a title="<?=$this->e($profileId); ?>" href="#<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></a></td>
             <td><?=count($connectionList); ?></td>
@@ -22,7 +22,7 @@
     <?php endforeach; ?>
         </tbody>
     </table>
-<?php foreach ($vpnConnections as $profileId => $connectionList): ?>
+<?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
         <h2 id="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></h2>
         <?php if (0 === count($connectionList)): ?>
             <p class="plain"><?=$this->t('No clients connected.'); ?></p>
@@ -46,7 +46,7 @@
                     </td>
                     <td>
                         <ul>
-                            <?php foreach ($connection['virtual_address'] as $ip): ?>
+                            <?php foreach ($connection['ip_list'] as $ip): ?>
                             <li><code><?=$this->e($ip); ?></code></li>
                             <?php endforeach; ?>
                         </ul>

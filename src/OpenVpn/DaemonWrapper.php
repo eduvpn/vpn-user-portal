@@ -39,6 +39,8 @@ class DaemonWrapper
     }
 
     /**
+     * XXX remove this!
+     *
      * @return array<string, array<array{common_name:string,display_name:string,expires_at:\DateTimeImmutable,user_id:string,user_is_disabled:bool,virtual_address:array{0:string,1:string}}>>
      */
     public function getConnectionList(?string $userId): array

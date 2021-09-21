@@ -15,6 +15,7 @@ $baseDir = dirname(__DIR__);
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer\EdDSA;
 use LC\Portal\Config;
+use LC\Portal\ConnectionList;
 use LC\Portal\Dt;
 use LC\Portal\Expiry;
 use LC\Portal\FileIO;
@@ -280,6 +281,7 @@ try {
         $baseDir.'/data',
         $config,
         $tpl,
+        new ConnectionList($config, new CurlHttpClient(), $storage),
         $daemonWrapper,
         $storage,
         $oauthStorage,

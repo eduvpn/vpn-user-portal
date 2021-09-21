@@ -39,13 +39,6 @@ class Wg
         $this->dateTime = Dt::get();
     }
 
-    public function getPeers(ProfileConfig $profileConfig): array
-    {
-        $peerList = Json::decode($this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', [], [])->getBody());
-
-        return $peerList['peer_list'];
-    }
-
     /**
      * XXX want only 1 code path both for portal and for API.
      * XXX why can accesstoken be null? from portal?

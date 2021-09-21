@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\Config;
+use LC\Portal\ConnectionList;
 use LC\Portal\Dt;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\LoggerInterface;
@@ -28,6 +29,7 @@ class AdminPortalModule implements ServiceModuleInterface
     private string $dataDir;
     private Config $config;
     private TplInterface $tpl;
+    private ConnectionList $connectionList;
     private DaemonWrapper $daemonWrapper;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
@@ -35,11 +37,12 @@ class AdminPortalModule implements ServiceModuleInterface
     private ServerInfo $serverInfo;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $dataDir, Config $config, TplInterface $tpl, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
+    public function __construct(string $dataDir, Config $config, TplInterface $tpl, ConnectionList $connectionList, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
     {
         $this->dataDir = $dataDir;
         $this->config = $config;
         $this->tpl = $tpl;
+        $this->connectionList = $connectionList;
         $this->daemonWrapper = $daemonWrapper;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
@@ -63,14 +66,12 @@ class AdminPortalModule implements ServiceModuleInterface
                     $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
                 }
 
-                $connectionList = $this->daemonWrapper->getConnectionList(null);
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminConnections',
                         [
                             'idNameMapping' => $idNameMapping,
-                            'vpnConnections' => $connectionList,
+                            'profileConnectionList' => $this->connectionList->get(),
                         ]
                     )
                 );

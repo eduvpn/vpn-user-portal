@@ -34,7 +34,7 @@ class ConnectionList
     }
 
     /**
-     * @return array<string,array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>
+     * @return array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>>
      */
     public function get(): array
     {
