@@ -13,18 +13,16 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
+use LC\Portal\ConnectionList;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
-use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
-use LC\Portal\SysLogger;
-
-// XXX WireGuard status is (still) missing!
 
 function getMaxClientLimit(ProfileConfig $profileConfig): int
 {
-    // OpenVPN can have multiple processes, WireGuard has only one...
+    // OpenVPN can have multiple processes, WireGuard has no processes, but
+    // counts as 1...
     $processCount = 'openvpn' === $profileConfig->vpnProto() ? count($profileConfig->vpnProtoPorts()) : 1;
     [$ipFour, $ipFourPrefix] = explode('/', $profileConfig->range());
 
@@ -108,20 +106,19 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    $daemonWrapper = new DaemonWrapper(
+    $connectionList = new ConnectionList(
         $config,
-        $storage,
         new CurlHttpClient(),
-        new SysLogger($argv[0])
+        $storage
     );
 
     $outputData = [];
-    foreach ($daemonWrapper->getConnectionList(null) as $profileId => $connectionInfoList) {
+    foreach ($connectionList->get() as $profileId => $connectionInfoList) {
         $displayConnectionInfo = [];
         foreach ($connectionInfoList as $connectionInfo) {
             $displayConnectionInfo[] = [
                 'user_id' => $connectionInfo['user_id'],
-                'virtual_address' => $connectionInfo['virtual_address'],
+                'ip_list' => $connectionInfo['ip_list'],
             ];
         }
         $activeConnectionCount = count($displayConnectionInfo);
