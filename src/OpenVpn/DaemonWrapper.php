@@ -60,7 +60,7 @@ class DaemonWrapper
             );
 
             // XXX introduce ->json() method in Response class
-            $jsonData = Json::decode($httpResponse->getBody());
+            $jsonData = Json::decode($httpResponse->body());
             foreach ($jsonData['connection_list'] as $connectionInfo) {
                 $commonName = $connectionInfo['common_name'];
                 if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {

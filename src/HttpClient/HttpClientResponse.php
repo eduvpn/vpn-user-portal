@@ -14,7 +14,7 @@ namespace LC\Portal\HttpClient;
 class HttpClientResponse
 {
     /** @var int */
-    private $responseCode;
+    private $statusCode;
 
     /** @var string */
     private $headerList;
@@ -22,16 +22,16 @@ class HttpClientResponse
     /** @var string */
     private $responseBody;
 
-    public function __construct(int $responseCode, string $headerList, string $responseBody)
+    public function __construct(int $statusCode, string $headerList, string $responseBody)
     {
-        $this->responseCode = $responseCode;
+        $this->statusCode = $statusCode;
         $this->headerList = $headerList;
         $this->responseBody = $responseBody;
     }
 
-    public function getCode(): int
+    public function statusCode(): int
     {
-        return $this->responseCode;
+        return $this->statusCode;
     }
 
     /**
@@ -39,7 +39,7 @@ class HttpClientResponse
      * matching header key. If multiple headers with the same name are present
      * the next ones are ignored!
      */
-    public function getHeader(string $headerKey): ?string
+    public function header(string $headerKey): ?string
     {
         foreach (explode("\r\n", $this->headerList) as $headerLine) {
             if (false === strpos($headerLine, ':')) {
@@ -54,12 +54,12 @@ class HttpClientResponse
         return null;
     }
 
-    public function getHeaderList(): string
+    public function headerList(): string
     {
         return $this->headerList;
     }
 
-    public function getBody(): string
+    public function body(): string
     {
         return $this->responseBody;
     }

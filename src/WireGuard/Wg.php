@@ -109,7 +109,7 @@ class Wg
             $rawPostData
         );
 
-        $peerInfo = Json::decode($httpResponse->getBody());
+        $peerInfo = Json::decode($httpResponse->body());
 
 //        $bytesTransferred = 0;
 //        if (\array_key_exists('BytesTransferred', $peerInfo) && \is_int($peerInfo['BytesTransferred'])) {

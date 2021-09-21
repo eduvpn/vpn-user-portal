@@ -47,7 +47,7 @@ class ConnectionList
                 // OpenVPN
                 $certificateList = $this->storage->certificateList($profileId);
                 $daemonConnectionList = Json::decode(
-                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/o/connection_list', ['profile_id' => $profileId])->getBody()
+                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/o/connection_list', ['profile_id' => $profileId])->body()
                 );
                 $o = [];
                 foreach ($daemonConnectionList['connection_list'] as $connectionEntry) {
@@ -73,7 +73,7 @@ class ConnectionList
             // WireGuard
             $storageWgPeerList = $this->storage->wgGetAllPeers($profileId);
             $daemonWgPeerList = Json::decode(
-                $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', [])->getBody()
+                $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', [])->body()
             );
 
             $w = [];
