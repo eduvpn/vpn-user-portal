@@ -29,7 +29,7 @@ return [
     //'Client-to-client' => '',
     'Configurations' => 'اعدادات',
     'Confirm' => 'مصادقة',
-    //'Connect only over TCP (OpenVPN)' => '',
+    //'Connect over TCP only (OpenVPN)' => '',
     'Connected' => 'متصل',
     'Connections' => 'اتصالات',
     'Created' => 'منشأ',
