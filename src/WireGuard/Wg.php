@@ -30,7 +30,6 @@ class Wg
     private Storage $storage;
     private string $wgPublicKey;
     private DateTimeImmutable $dateTime;
-    private HttpClientInterface $httpClient;
 
     public function __construct(HttpClientInterface $httpClient, Storage $storage, string $wgPublicKey)
     {
