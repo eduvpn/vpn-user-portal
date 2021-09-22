@@ -215,7 +215,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
     private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, AccessToken $accessToken, bool $tcpOnly): Response
     {
         try {
-            $commonName = $this->random->get(16);
+            $commonName = $this->random->get(32);
             $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->authorizationExpiresAt());
             $this->storage->addCertificate(
                 $accessToken->userId(),

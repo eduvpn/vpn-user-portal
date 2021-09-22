@@ -313,7 +313,7 @@ class VpnPortalModule implements ServiceModuleInterface
             // XXX take ProfileConfig as a parameter...
             // create a certificate
             // generate a random string as the certificate's CN
-            $commonName = $this->random->get(16);
+            $commonName = $this->random->get(32);
             $certInfo = $this->ca->clientCert($commonName, $profileId, $expiresAt);
             $this->storage->addCertificate(
                 $userId,

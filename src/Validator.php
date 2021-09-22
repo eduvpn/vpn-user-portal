@@ -22,7 +22,7 @@ use RangeException;
 class Validator
 {
     private const REGEXP_USER_ID = '/^.+$/';
-    private const REGEXP_COMMON_NAME = '/^[a-fA-F0-9]{32}$/';
+    private const REGEXP_COMMON_NAME = '/^[a-fA-F0-9]{64}$/';
     private const REGEXP_USER_AUTH_PASS = '/^.+$/';
     private const REGEXP_USER_PASS = '/^.{8,}$/';
     private const REGEXP_DISPLAY_NAME = '/^.+$/';
