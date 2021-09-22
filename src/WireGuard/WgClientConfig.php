@@ -55,7 +55,7 @@ class WgClientConfig
 
         $output[] = 'Address = '.$this->ipFour.'/'.$ipFour->prefix().', '.$this->ipSix.'/'.$ipSix->prefix();
         if (0 !== \count($this->profileConfig->dns())) {
-            $output[] = 'DNS = '.implode(', ', $this->profileConfig->dns());
+            $output[] = 'DNS = '.implode(', ', $this->dns());
         }
         $output[] = '';
         $output[] = '[Peer]';
@@ -79,5 +79,28 @@ class WgClientConfig
     public function getIpSix(): string
     {
         return $this->ipSix;
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function dns(): array
+    {
+        $dnsServerList = [];
+        foreach ($this->profileConfig->dns() as $configDnsServer) {
+            if ('@GW4@' === $configDnsServer) {
+                $dnsServerList[] = IP::fromIpPrefix($this->profileConfig->range())->firstHost();
+
+                continue;
+            }
+            if ('@GW6@' === $configDnsServer) {
+                $dnsServerList[] = IP::fromIpPrefix($this->profileConfig->range6())->firstHost();
+
+                continue;
+            }
+            $dnsServerList[] = $configDnsServer;
+        }
+
+        return $dnsServerList;
     }
 }
