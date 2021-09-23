@@ -101,6 +101,11 @@ class WgClientConfig
             $dnsServerList[] = $configDnsServer;
         }
 
-        return $dnsServerList;
+        /**
+         * add DNS search domains.
+         *
+         * @see wg-quick(8)
+         */
+        return array_merge($dnsServerList, $this->profileConfig->dnsDomainSearch());
     }
 }
