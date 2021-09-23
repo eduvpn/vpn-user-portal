@@ -308,7 +308,7 @@ header.main h1 {
 }
 
 p.warning, p.error, p.plain {
-  padding: 1.5em;
+  padding: 1em 1.5em;
   border-radius: 0.5em;
 }
 
@@ -347,13 +347,13 @@ span.warning {
 }
 
 p.warning {
-  color: #fff;
-  background-color: #ff9900;
+  border: 1px solid #ff9900;
+  color: #ff9900;
 }
 
 p.error {
-  color: #fff;
-  background-color: #ed3415;
+  border: 1px solid #ed3415;
+  color: #ed3415;
 }
 
 main div.auth {
