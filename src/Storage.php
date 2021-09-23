@@ -495,6 +495,23 @@ class Storage
         ];
     }
 
+    public function oDeleteCertificate(string $userId, string $commonName): void
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    DELETE FROM
+                        certificates
+                    WHERE
+                        user_id = :user_id
+                    AND
+                        common_name = :common_name
+                SQL
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
     public function deleteCertificate(string $userId, string $commonName): void
     {
         $stmt = $this->db->prepare(

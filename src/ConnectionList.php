@@ -113,4 +113,25 @@ class ConnectionList
 
         return $connectionList;
     }
+
+    public function disconnect(string $userId, string $profileId, string $connectionId): void
+    {
+        // XXX better error handling when profile is not there
+        $profileConfig = $this->config->profileConfig($profileId);
+        if ('openvpn' === $profileConfig->vpnProto()) {
+            $this->storage->oDeleteCertificate($userId, $connectionId);
+            $this->httpClient->post($profileConfig->nodeBaseUrl().'/o/disconnect_client', [], ['profile_id' => $profileId, 'common_name' => $connectionId]);
+
+            return;
+        }
+
+        // WG
+        $this->storage->wgRemovePeer($userId, $connectionId);
+        $rawPostData = implode('&', ['public_key='.urlencode($connectionId)]);
+        $this->httpClient->postRaw(
+            $profileConfig->nodeBaseUrl().'/w/remove_peer',
+            [],
+            $rawPostData
+        );
+    }
 }
