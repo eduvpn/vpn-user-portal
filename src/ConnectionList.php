@@ -39,6 +39,14 @@ class ConnectionList
     public function get(): array
     {
         $connectionList = [];
+
+        $oListCache = [];
+        $wListCache = [];
+
+        // we should only perform the query to the vpn-daemon once for every
+        // unique nodeBaseUrl, that is much more efficient, especially for WG
+        // as it will always return the exact same list
+
         foreach ($this->config->profileConfigList() as $profileConfig) {
             $profileId = $profileConfig->profileId();
             $connectionList[$profileId] = [];
@@ -46,23 +54,25 @@ class ConnectionList
             if ('openvpn' === $profileConfig->vpnProto()) {
                 // OpenVPN
                 $certificateList = $this->storage->certificateList($profileId);
-                $daemonConnectionList = Json::decode(
-                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/o/connection_list', ['profile_id' => $profileId])->body()
-                );
-                $o = [];
-                foreach ($daemonConnectionList['connection_list'] as $connectionEntry) {
-                    $o[$connectionEntry['common_name']] = $connectionEntry;
+                if (!\array_key_exists($profileConfig->nodeBaseUrl(), $oListCache)) {
+                    $daemonConnectionList = Json::decode(
+                        $this->httpClient->get($profileConfig->nodeBaseUrl().'/o/connection_list')->body()
+                    );
+                    $oListCache[$profileConfig->nodeBaseUrl()] = [];
+                    foreach ($daemonConnectionList['connection_list'] as $connectionEntry) {
+                        $oListCache[$profileConfig->nodeBaseUrl()][$connectionEntry['common_name']] = $connectionEntry;
+                    }
                 }
 
                 foreach ($certificateList as $cl) {
-                    if (\array_key_exists($cl['common_name'], $o)) {
+                    if (\array_key_exists($cl['common_name'], $oListCache[$profileConfig->nodeBaseUrl()])) {
                         // found it!
                         $commonName = $cl['common_name'];
                         $connectionList[$profileId][] = [
                             'user_id' => $cl['user_id'],
                             'connection_id' => $cl['common_name'],
                             'display_name' => $cl['display_name'],
-                            'ip_list' => [$o[$commonName]['ip_four'], $o[$commonName]['ip_six']],
+                            'ip_list' => [$oListCache[$profileConfig->nodeBaseUrl()][$commonName]['ip_four'], $oListCache[$profileConfig->nodeBaseUrl()][$commonName]['ip_six']],
                         ];
                     }
                 }
@@ -72,30 +82,33 @@ class ConnectionList
 
             // WireGuard
             $storageWgPeerList = $this->storage->wgGetAllPeers($profileId);
-            $daemonWgPeerList = Json::decode(
-                $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', [])->body()
-            );
 
-            $w = [];
-            foreach ($daemonWgPeerList['peer_list'] as $peerEntry) {
-                $w[$peerEntry['public_key']] = $peerEntry;
+            if (!\array_key_exists($profileConfig->nodeBaseUrl(), $wListCache)) {
+                $daemonWgPeerList = Json::decode(
+                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', [])->body()
+                );
+
+                $wListCache[$profileConfig->nodeBaseUrl()] = [];
+                foreach ($daemonWgPeerList['peer_list'] as $peerEntry) {
+                    $wListCache[$profileConfig->nodeBaseUrl()][$peerEntry['public_key']] = $peerEntry;
+                }
             }
 
             foreach ($storageWgPeerList as $pl) {
-                if (\array_key_exists($pl['public_key'], $w)) {
+                if (\array_key_exists($pl['public_key'], $wListCache[$profileConfig->nodeBaseUrl()])) {
                     // found it!
                     $publicKey = $pl['public_key'];
 
                     // XXX make sure IP matches
                     // XXX maybe move this to vpn-daemon itself?!
-                    if (null === $w[$publicKey]['last_handshake_time']) {
+                    if (null === $wListCache[$profileConfig->nodeBaseUrl()][$publicKey]['last_handshake_time']) {
                         // never seen
                         continue;
                     }
 
                     // filter out entries that haven't been seen in the last
                     // three minutes
-                    $lht = new DateTimeImmutable($w[$publicKey]['last_handshake_time']);
+                    $lht = new DateTimeImmutable($wListCache[$profileConfig->nodeBaseUrl()][$publicKey]['last_handshake_time']);
                     $threeMinutesAgo = $this->dateTime->sub(new DateInterval('PT3M'));
                     if ($lht < $threeMinutesAgo) {
                         continue;
@@ -120,7 +133,7 @@ class ConnectionList
         $profileConfig = $this->config->profileConfig($profileId);
         if ('openvpn' === $profileConfig->vpnProto()) {
             $this->storage->oDeleteCertificate($userId, $connectionId);
-            $this->httpClient->post($profileConfig->nodeBaseUrl().'/o/disconnect_client', [], ['profile_id' => $profileId, 'common_name' => $connectionId]);
+            $this->httpClient->post($profileConfig->nodeBaseUrl().'/o/disconnect_client', [], ['common_name' => $connectionId]);
 
             return;
         }
@@ -133,5 +146,6 @@ class ConnectionList
             [],
             $rawPostData
         );
+        // XXX write closing log entry
     }
 }

@@ -17,7 +17,7 @@ interface HttpClientInterface
      * @param array<string,string> $queryParameters
      * @param array<string>        $requestHeaders
      */
-    public function get(string $requestUrl, array $queryParameters, array $requestHeaders = []): HttpClientResponse;
+    public function get(string $requestUrl, array $queryParameters = [], array $requestHeaders = []): HttpClientResponse;
 
     /**
      * @param array<string,string> $queryParameters

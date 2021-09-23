@@ -31,7 +31,7 @@ class CurlHttpClient implements HttpClientInterface
      * @param array<string,string> $queryParameters
      * @param array<string>        $requestHeaders
      */
-    public function get(string $requestUrl, array $queryParameters, array $requestHeaders = []): HttpClientResponse
+    public function get(string $requestUrl, array $queryParameters = [], array $requestHeaders = []): HttpClientResponse
     {
         if (false === $curlChannel = curl_init()) {
             throw new RuntimeException('unable to create cURL channel');

@@ -178,6 +178,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     // WireGuard
                     $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));
                     // XXX do not allow deleting app created configs
+                    // XXX currently there is an error when deleting and the profile no longer exists... do something better here!
                     $profileConfig = $this->config->profileConfig($profileId);
                     $this->wg->removePeer($profileConfig, $userInfo->userId(), $publicKey);
                 }
