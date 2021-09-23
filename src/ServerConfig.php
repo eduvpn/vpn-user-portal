@@ -30,7 +30,7 @@ class ServerConfig
      *
      * @return array<string,string>
      */
-    public function get(array $profileConfigList, bool $cpuHasAes): array
+    public function get(array $profileConfigList, int $wgPort, bool $cpuHasAes): array
     {
         // XXX fix ServerConfigCheck for WG as well!
 //        ServerConfigCheck::verify($profileConfigList);
@@ -41,6 +41,6 @@ class ServerConfig
             }
         }
 
-        return array_merge($serverConfig, $this->wgServerConfig->get($profileConfigList));
+        return array_merge($serverConfig, $this->wgServerConfig->get($profileConfigList, $wgPort));
     }
 }

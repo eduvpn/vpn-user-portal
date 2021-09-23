@@ -202,6 +202,12 @@ return [
 //    'enableConfigDownload' => true,
 //    'enableConfigDownload' => false,
 
+
+    // DEFAULT: 51820
+    // OPTIONAL
+    //'wgPort' => 51820,    // listen on UDP/51820 (default WireGuard)
+    //'wgPort' => 443,      // listen on UDP/443
+
     // List of VPN profiles
     'vpnProfiles' => [
         'default-ovpn' => [

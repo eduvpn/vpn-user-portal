@@ -50,6 +50,7 @@ class NodeApiModule implements ServiceModuleInterface
                 // XXX we may want to restrict the profiles for particular nodes!
                 $serverConfigList = $this->serverConfig->get(
                     $this->config->profileConfigList(),
+                    $this->config->wgPort(),
                     'yes' === $request->optionalPostParameter('cpu_has_aes', fn (string $s) => Validator::cpuHasAes($s))
                 );
                 $bodyLines = [];

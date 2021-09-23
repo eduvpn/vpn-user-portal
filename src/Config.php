@@ -80,6 +80,11 @@ class Config
         return $this->requireBool('showPermissions', false);
     }
 
+    public function wgPort(): int
+    {
+        return $this->requireInt('wgPort', 51820);
+    }
+
     public function profileConfig(string $profileId): ProfileConfig
     {
         return new ProfileConfig(

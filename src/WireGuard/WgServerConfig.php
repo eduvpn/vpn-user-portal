@@ -28,7 +28,7 @@ class WgServerConfig
      *
      * @return array<string,string>
      */
-    public function get(array $profileConfigList): array
+    public function get(array $profileConfigList, int $wgPort): array
     {
         $privateKey = $this->privateKey();
         $ipFourList = [];
@@ -48,7 +48,7 @@ class WgServerConfig
         $wgConfig = <<< EOF
             [Interface]
             Address = {$ipList}
-            ListenPort = 51820
+            ListenPort = {$wgPort}
             PrivateKey = {$privateKey}
             EOF;
 
