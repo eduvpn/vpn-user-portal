@@ -17,6 +17,8 @@ use RuntimeException;
 
 class CurlHttpClient implements HttpClientInterface
 {
+    use HttpClientTrait;
+
     /** @var array<string> */
     private $requestHeaders = [];
 
@@ -148,25 +150,5 @@ class CurlHttpClient implements HttpClientInterface
             $headerList,
             $responseData
         );
-    }
-
-    /**
-     * @param array<string,array<string>|string> $postParameters
-     */
-    private static function buildQuery(array $postParameters): string
-    {
-        $qParts = [];
-        foreach ($postParameters as $k => $v) {
-            if (\is_string($v)) {
-                $qParts[] = urlencode($k).'='.urlencode($v);
-            }
-            if (\is_array($v)) {
-                foreach ($v as $w) {
-                    $qParts[] = urlencode($k).'='.urlencode($w);
-                }
-            }
-        }
-
-        return implode('&', $qParts);
     }
 }
