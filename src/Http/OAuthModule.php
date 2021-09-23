@@ -44,12 +44,7 @@ class OAuthModule implements ServiceModuleInterface
                     return new HtmlResponse(
                         $this->tpl->render(
                             'authorizeOAuthClient',
-                            array_merge(
-                                [
-                                    '_show_logout_button' => false,
-                                ],
-                                $this->oauthServer->getAuthorize()
-                            )
+                            $this->oauthServer->getAuthorize()
                         )
                     );
                 } catch (OAuthException $e) {
