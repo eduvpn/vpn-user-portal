@@ -88,25 +88,11 @@ class CurlHttpClient implements HttpClientInterface
     }
 
     /**
-     * @param array<string,string> $queryParameters
-     * @param array<string,string> $postData
-     * @param array<string>        $requestHeaders
+     * @param array<string,string>               $queryParameters
+     * @param array<string,array<string>|string> $postParameters
+     * @param array<string>                      $requestHeaders
      */
-    public function post(string $requestUrl, array $queryParameters, array $postData, array $requestHeaders = []): HttpClientResponse
-    {
-        return $this->postRaw(
-            $requestUrl,
-            $queryParameters,
-            http_build_query($postData),
-            $requestHeaders
-        );
-    }
-
-    /**
-     * @param array<string,string> $queryParameters
-     * @param array<string>        $requestHeaders
-     */
-    public function postRaw(string $requestUrl, array $queryParameters, string $rawPost, array $requestHeaders = []): HttpClientResponse
+    public function post(string $requestUrl, array $queryParameters = [], array $postParameters = [], array $requestHeaders = []): HttpClientResponse
     {
         // XXX do not duplicate all GET code
         if (false === $curlChannel = curl_init()) {
@@ -122,7 +108,7 @@ class CurlHttpClient implements HttpClientInterface
         $curlOptions = [
             CURLOPT_URL => $requestUrl,
             CURLOPT_HTTPHEADER => array_merge($this->requestHeaders, $requestHeaders),
-            CURLOPT_POSTFIELDS => $rawPost,
+            CURLOPT_POSTFIELDS => self::buildQuery($postParameters),
             CURLOPT_HEADER => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => false,
@@ -162,5 +148,25 @@ class CurlHttpClient implements HttpClientInterface
             $headerList,
             $responseData
         );
+    }
+
+    /**
+     * @param array<string,array<string>|string> $postParameters
+     */
+    private static function buildQuery(array $postParameters): string
+    {
+        $qParts = [];
+        foreach ($postParameters as $k => $v) {
+            if (\is_string($v)) {
+                $qParts[] = urlencode($k).'='.urlencode($v);
+            }
+            if (\is_array($v)) {
+                foreach ($v as $w) {
+                    $qParts[] = urlencode($k).'='.urlencode($w);
+                }
+            }
+        }
+
+        return implode('&', $qParts);
     }
 }

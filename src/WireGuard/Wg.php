@@ -70,19 +70,13 @@ class Wg
 
         // add peer to WG
         // XXX make sure the public key config is overriden if the public key already exists
-        $rawPostData = implode(
-            '&',
-            [
-                'public_key='.urlencode($publicKey),
-                'ip_net='.urlencode($ipFour.'/32'),
-                'ip_net='.urlencode($ipSix.'/128'),
-            ]
-        );
-
-        $this->httpClient->postRaw(
+        $this->httpClient->post(
             $profileConfig->nodeBaseUrl().'/w/add_peer',
             [],
-            $rawPostData
+            [
+                'public_key' => $publicKey,
+                'ip_net' => [$ipFour.'/32', $ipSix.'/128'],
+            ]
         );
 
         // add connection log entry
@@ -105,11 +99,10 @@ class Wg
         $this->storage->wgRemovePeer($userId, $publicKey);
         // XXX we have to make sure the user owns the public key, otherwise it can be used to disconnect other users!
         // XXX what if multiple users use the same wireguard public key? that won't work and that is good!
-        $rawPostData = implode('&', ['public_key='.urlencode($publicKey)]);
-        $httpResponse = $this->httpClient->postRaw(
+        $httpResponse = $this->httpClient->post(
             $profileConfig->nodeBaseUrl().'/w/remove_peer',
             [],
-            $rawPostData
+            ['public_key' => $publicKey]
         );
 
         $peerInfo = Json::decode($httpResponse->body());
@@ -141,19 +134,13 @@ class Wg
         // shouldn't be there anymore. We need to implement a proper sync
         // together with wg-daemon...
         foreach ($peerInfoList as $peerInfo) {
-            $rawPostData = implode(
-                '&',
-                [
-                    'public_key='.urlencode($peerInfo['public_key']),
-                    'ip_net='.urlencode($peerInfo['ip_four'].'/32'),
-                    'ip_net='.urlencode($peerInfo['ip_six'].'/128'),
-                ]
-            );
-
-            $this->httpClient->postRaw(
+            $this->httpClient->post(
                 $profileConfig->nodeBaseUrl().'/w/add_peer',
                 [],
-                $rawPostData
+                [
+                    'public_key' => $peerInfo['public_key'],
+                    'ip_net' => [$peerInfo['ip_four'].'/32', $peerInfo['ip_six'].'/128'],
+                ]
             );
         }
     }
