@@ -265,7 +265,7 @@ try {
         $cookieBackend,
         $sessionBackend,
         $daemonWrapper,
-        new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey()),
+        new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey(), $config->wgPort()),
         $storage,
         $oauthStorage,
         new TlsCrypt($baseDir.'/data'),

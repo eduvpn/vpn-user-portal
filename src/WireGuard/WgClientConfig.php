@@ -25,8 +25,9 @@ class WgClientConfig
     private string $ipFour;
     private string $ipSix;
     private string $serverPublicKey;
+    private int $wgPort;
 
-    public function __construct(ProfileConfig $profileConfig, string $publicKey, ?string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey)
+    public function __construct(ProfileConfig $profileConfig, string $publicKey, ?string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort)
     {
         $this->profileConfig = $profileConfig;
         $this->publicKey = $publicKey;
@@ -34,6 +35,7 @@ class WgClientConfig
         $this->ipFour = $ipFour;
         $this->ipSix = $ipSix;
         $this->serverPublicKey = $serverPublicKey;
+        $this->wgPort = $wgPort;
     }
 
     public function __toString(): string
@@ -61,7 +63,7 @@ class WgClientConfig
         $output[] = '[Peer]';
         $output[] = 'PublicKey = '.$this->serverPublicKey;
         $output[] = 'AllowedIPs = '.implode(', ', $routeList);
-        $output[] = 'Endpoint = '.$this->profileConfig->hostName().':51820';
+        $output[] = 'Endpoint = '.$this->profileConfig->hostName().':'.(string) $this->wgPort;
 
         return implode(PHP_EOL, $output);
     }

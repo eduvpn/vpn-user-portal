@@ -31,7 +31,7 @@ try {
 
     $wgServerConfig = new WgServerConfig($baseDir.'/data');
 
-    $wg = new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey());
+    $wg = new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey(), $config->wgPort());
     foreach ($config->profileConfigList() as $profileConfig) {
         if ('wireguard' === $profileConfig->vpnProto()) {
             // extract the peers from the DB per profile

@@ -66,7 +66,7 @@ try {
             new TlsCrypt($baseDir.'/data'),
             new Random(),
             $ca,
-            new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey())
+            new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey(), $config->wgPort())
         )
     );
 

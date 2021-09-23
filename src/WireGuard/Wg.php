@@ -29,13 +29,15 @@ class Wg
     private HttpClientInterface $httpClient;
     private Storage $storage;
     private string $wgPublicKey;
+    private int $wgPort;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(HttpClientInterface $httpClient, Storage $storage, string $wgPublicKey)
+    public function __construct(HttpClientInterface $httpClient, Storage $storage, string $wgPublicKey, int $wgPort)
     {
         $this->httpClient = $httpClient;
         $this->storage = $storage;
         $this->wgPublicKey = $wgPublicKey;
+        $this->wgPort = $wgPort;
         $this->dateTime = Dt::get();
     }
 
@@ -94,6 +96,7 @@ class Wg
             $ipFour,
             $ipSix,
             $this->wgPublicKey,
+            $this->wgPort
         );
     }
 
