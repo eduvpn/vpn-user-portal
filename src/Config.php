@@ -87,10 +87,14 @@ class Config
 
     public function profileConfig(string $profileId): ProfileConfig
     {
+        if (null === $profileData = $this->s('vpnProfiles')->optionalArray($profileId)) {
+            throw new ConfigException('profile "'.$profileId.'" does not exist');
+        }
+
         return new ProfileConfig(
             array_merge(
                 ['profileId' => $profileId],
-                $this->s('vpnProfiles')->requireArray($profileId)
+                $profileData
             )
         );
     }
