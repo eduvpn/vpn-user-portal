@@ -130,6 +130,11 @@ class ConnectionManager
     {
         // TODO:
         // - record connect/disconnect event for WG
+        // - should we also have a profileId as a parameter to limit the
+        //   number of processes we have to access? BUT we MUST make sure we
+        //   disconnect/removepeer clients that are connected to profiles that
+        //   no longer exist... or does apply-changes take care of that? Maybe
+        //   not for WG
         //
         // keep the record of all nodeBaseUrls we talked to so we only hit them
         // once... multiple profiles can have the same nodeBaseUrl if the run
