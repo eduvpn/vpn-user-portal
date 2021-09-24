@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use DateInterval;
 use DateTimeImmutable;
 use LC\Portal\HttpClient\HttpClientInterface;
 
@@ -96,23 +95,6 @@ class ConnectionManager
             foreach ($storageWgPeerList as $pl) {
                 if (\array_key_exists($pl['public_key'], $w)) {
                     // found it!
-                    $publicKey = $pl['public_key'];
-
-                    // XXX make sure IP matches
-                    // XXX maybe move this to vpn-daemon itself?!
-                    if (null === $w[$publicKey]['last_handshake_time']) {
-                        // never seen
-                        continue;
-                    }
-
-                    // filter out entries that haven't been seen in the last
-                    // three minutes
-                    $lht = new DateTimeImmutable($w[$publicKey]['last_handshake_time']);
-                    $threeMinutesAgo = $this->dateTime->sub(new DateInterval('PT3M'));
-                    if ($lht < $threeMinutesAgo) {
-                        continue;
-                    }
-
                     $connectionList[$profileId][] = [
                         'user_id' => $pl['user_id'],
                         'connection_id' => $pl['public_key'],
