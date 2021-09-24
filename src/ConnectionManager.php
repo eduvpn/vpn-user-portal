@@ -126,6 +126,34 @@ class ConnectionManager
         return $connectionList;
     }
 
+    /**
+     * Remove and disconnect all VPN clients connected with this
+     * OAuth authorization ("auth_key"). This works because VPN
+     * clients are not allowed to be connected more than once.
+     * In the normal situation there is only 1 active connection
+     * when "/disconnect" is called, but in case a previous
+     * "/disconnect" was never sent, e.g. because the client
+     * crashed this also functions as a "cleanup" of sorts.
+     */
+    public function disconnectByAuthKey(string $authKey): void
+    {
+        // OpenVPN
+        foreach ($this->storage->oCertListByAuthKey($authKey) as $oCertInfo) {
+            $this->disconnect(
+                $oCertInfo['user_id'],
+                $oCertInfo['common_name']
+            );
+        }
+
+        // WireGuard
+        foreach ($this->storage->wPeerListByAuthKey($authKey) as $wPeerInfo) {
+            $this->disconnect(
+                $wPeerInfo['user_id'],
+                $wPeerInfo['public_key']
+            );
+        }
+    }
+
     public function disconnect(string $userId, string $connectionId): void
     {
         // TODO:

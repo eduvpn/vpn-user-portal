@@ -48,7 +48,6 @@ use LC\Portal\LdapClient;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OpenVpn\CA\VpnCa;
-use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\PhpSession;
 use LC\Portal\Random;
@@ -246,14 +245,6 @@ try {
     );
 
     $service->addBeforeHook($adminHook);
-
-    $daemonWrapper = new DaemonWrapper(
-        $config,
-        $storage,
-        new CurlHttpClient(),
-        $logger
-    );
-
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($db, 'oauth_');
     $wgServerConfig = new WgServerConfig($baseDir.'/data');
@@ -264,7 +255,7 @@ try {
         $tpl,
         $cookieBackend,
         $sessionBackend,
-        $daemonWrapper,
+        new ConnectionManager($config, new CurlHttpClient(), $storage),
         new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey(), $config->wgPort()),
         $storage,
         $oauthStorage,
@@ -282,7 +273,6 @@ try {
         $config,
         $tpl,
         new ConnectionManager($config, new CurlHttpClient(), $storage),
-        $daemonWrapper,
         $storage,
         $oauthStorage,
         $adminHook,

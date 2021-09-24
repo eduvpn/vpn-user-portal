@@ -16,7 +16,6 @@ use fkooman\OAuth\Server\AccessToken;
 use LC\Portal\Dt;
 use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\IP;
-use LC\Portal\Json;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\Exception\WgException;
@@ -53,12 +52,6 @@ class Wg
             $publicKey = self::extractPublicKey($privateKey);
         }
 
-        // check whether we already have the peer with this public key,
-        // disconnect it if we do...
-        if ($this->storage->wgHasPeer($publicKey)) {
-            $this->removePeer($profileConfig, $userId, $publicKey);
-        }
-
         if (null === $ipInfo = $this->getIpAddress($profileConfig)) {
             // unable to get new IP address to assign to peer
             throw new WgException('unable to get a an IP address');
@@ -92,37 +85,6 @@ class Wg
             $this->wgPublicKey,
             $this->wgPort
         );
-    }
-
-    public function removePeer(ProfileConfig $profileConfig, string $userId, string $publicKey): void
-    {
-        $this->storage->wgRemovePeer($userId, $publicKey);
-        // XXX we have to make sure the user owns the public key, otherwise it can be used to disconnect other users!
-        // XXX what if multiple users use the same wireguard public key? that won't work and that is good!
-        $httpResponse = $this->httpClient->post(
-            $profileConfig->nodeBaseUrl().'/w/remove_peer',
-            [],
-            ['public_key' => $publicKey]
-        );
-
-        $peerInfo = Json::decode($httpResponse->body());
-
-//        $bytesTransferred = 0;
-//        if (\array_key_exists('BytesTransferred', $peerInfo) && \is_int($peerInfo['BytesTransferred'])) {
-//            $bytesTransferred = $peerInfo['BytesTransferred'];
-//        }
-        // XXX add bytesTransferred to some global table
-
-        $ipFour = self::extractIpFour($peerInfo['ip_net']);
-        $ipSix = self::extractIpSix($peerInfo['ip_net']);
-
-        // close connection log
-        // XXX we should simplify connection log in that closing it does not
-        // require ip4/ip6 and just make sure one CN/public key can only be used one at a
-        // time... this may be easy for WG, but difficult for OpenVPN, so we
-        // should disconnect the other connection if it is already enabled when
-        // connecting new
-        $this->storage->clientDisconnect($userId, $profileConfig->profileId(), $ipFour, $ipSix, $this->dateTime);
     }
 
     /**

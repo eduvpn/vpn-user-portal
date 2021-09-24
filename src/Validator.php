@@ -74,6 +74,15 @@ class Validator
     /**
      * @throws \RangeException
      */
+    public static function connectionId(string $connectionId): void
+    {
+        // XXX improve this!
+        self::re($connectionId, self::REGEXP_PUBLIC_KEY, __FUNCTION__);
+    }
+
+    /**
+     * @throws \RangeException
+     */
     public static function userAuthPass(string $userAuthPass): void
     {
         self::re($userAuthPass, self::REGEXP_USER_AUTH_PASS, __FUNCTION__);

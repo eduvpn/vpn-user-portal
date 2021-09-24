@@ -16,6 +16,7 @@ use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer\EdDSA;
 use LC\Portal\Config;
+use LC\Portal\ConnectionManager;
 use LC\Portal\FileIO;
 use LC\Portal\Http\ApiService;
 use LC\Portal\Http\JsonResponse;
@@ -66,6 +67,7 @@ try {
             new TlsCrypt($baseDir.'/data'),
             new Random(),
             $ca,
+            new ConnectionManager($config, new CurlHttpClient(), $storage),
             new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey(), $config->wgPort())
         )
     );

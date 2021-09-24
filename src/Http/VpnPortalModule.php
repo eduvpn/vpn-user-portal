@@ -16,12 +16,12 @@ use DateTimeImmutable;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\Config;
+use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\LoggerInterface;
 use LC\Portal\OpenVpn\CA\CaInterface;
 use LC\Portal\OpenVpn\ClientConfig;
-use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\OpenVpn\Exception\ClientConfigException;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\RandomInterface;
@@ -37,7 +37,7 @@ class VpnPortalModule implements ServiceModuleInterface
     private TplInterface $tpl;
     private CookieInterface $cookie;
     private SessionInterface $session;
-    private DaemonWrapper $daemonWrapper;
+    private ConnectionManager $connectionManager;
     private Wg $wg;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
@@ -48,7 +48,7 @@ class VpnPortalModule implements ServiceModuleInterface
     private DateInterval $sessionExpiry;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, SessionInterface $session, DaemonWrapper $daemonWrapper, Wg $wg, Storage $storage, OAuthStorage $oauthStorage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
+    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, SessionInterface $session, ConnectionManager $connectionManager, Wg $wg, Storage $storage, OAuthStorage $oauthStorage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
@@ -56,7 +56,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->session = $session;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
-        $this->daemonWrapper = $daemonWrapper;
+        $this->connectionManager = $connectionManager;
         $this->wg = $wg;
         $this->tlsCrypt = $tlsCrypt;
         $this->random = $random;
@@ -154,34 +154,10 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/deleteConfig',
             function (UserInfo $userInfo, Request $request): Response {
-                if (null !== $commonName = $request->optionalPostParameter('commonName', fn (string $s) => Validator::commonName($s))) {
-                    // OpenVPN
-                    if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
-                        throw new HttpException('certificate does not exist', 400);
-                    }
-                    if ($userInfo->userId() !== $certInfo['user_id']) {
-                        throw new HttpException('certificate does not belong to this user', 400);
-                    }
-
-                    $this->storage->addUserLog(
-                        $certInfo['user_id'],
-                        LoggerInterface::NOTICE,
-                        sprintf('certificate "%s" deleted by user', $certInfo['display_name']),
-                        $this->dateTime
-                    );
-
-                    $this->storage->deleteCertificate($userInfo->userId(), $commonName);
-                    $this->daemonWrapper->killClient($commonName);
-                }
-
-                if (null !== $publicKey = $request->optionalPostParameter('publicKey', fn (string $s) => Validator::publicKey($s))) {
-                    // WireGuard
-                    $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));
-                    // XXX do not allow deleting app created configs
-                    // XXX currently there is an error when deleting and the profile no longer exists... do something better here!
-                    $profileConfig = $this->config->profileConfig($profileId);
-                    $this->wg->removePeer($profileConfig, $userInfo->userId(), $publicKey);
-                }
+                $this->connectionManager->disconnect(
+                    $userInfo->userId(),
+                    $request->requirePostParameter('connectionId', fn (string $s) => Validator::connectionId($s))
+                );
 
                 return new RedirectResponse($request->getRootUri().'configurations', 302);
             }
@@ -211,40 +187,18 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/removeClientAuthorization',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX also disable/stop WireGuard configs
+                // XXX make sure authKey belongs to current user!
                 $authKey = $request->requirePostParameter('auth_key', fn (string $s) => Validator::authKey($s));
-
-                if (null === $authorization = $this->oauthStorage->getAuthorization($authKey)) {
+                if (null === $this->oauthStorage->getAuthorization($authKey)) {
                     throw new HttpException('no such authorization', 400);
                 }
 
-                $displayName = $authorization->clientId();
-                if (null !== $clientInfo = $this->clientDb->get($authorization->clientId())) {
-                    $displayName = $clientInfo->displayName();
-                }
+                // disconnect all OpenVPN and WireGuard clients under this
+                // OAuth authorization
+                $this->connectionManager->disconnectByAuthKey($authKey);
 
-                // delete OAuth authorization
+                // delete the OAuth authorization
                 $this->oauthStorage->deleteAuthorization($authKey);
-
-                // XXX maybe introduce a method to retrieve them by auth_key?
-                $certificateList = $this->storage->getCertificates($userInfo->userId());
-                $disconnectList = [];
-                foreach ($certificateList as $certInfo) {
-                    if ($certInfo['auth_key'] === $authKey) {
-                        $disconnectList[] = $certInfo['common_name'];
-                    }
-                }
-
-                $this->storage->deleteCertificatesWithAuthKey($authKey);
-                $this->storage->addUserLog(
-                    $userInfo->userId(),
-                    LoggerInterface::NOTICE,
-                    sprintf('API authorization for client "%s" revoked', $displayName),
-                    $this->dateTime
-                );
-                foreach ($disconnectList as $commonName) {
-                    $this->daemonWrapper->killClient($commonName);
-                }
 
                 return new RedirectResponse($request->getRootUri().'account', 302);
             }

@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
 use LC\Portal\Config;
+use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\LoggerInterface;
@@ -34,16 +35,18 @@ class VpnApiThreeModule implements ServiceModuleInterface
     private TlsCrypt $tlsCrypt;
     private RandomInterface $random;
     private CaInterface $ca;
+    private ConnectionManager $connectionManager;
     private Wg $wg;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, Wg $wg)
+    public function __construct(Config $config, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ConnectionManager $connectionManager, Wg $wg)
     {
         $this->config = $config;
         $this->storage = $storage;
         $this->tlsCrypt = $tlsCrypt;
         $this->random = $random;
         $this->ca = $ca;
+        $this->connectionManager = $connectionManager;
         $this->wg = $wg;
         $this->dateTime = Dt::get();
     }
@@ -88,6 +91,8 @@ class VpnApiThreeModule implements ServiceModuleInterface
         $service->post(
             '/v3/connect',
             function (AccessToken $accessToken, Request $request): Response {
+                $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
+
                 // XXX catch InputValidationException
                 $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
@@ -112,8 +117,6 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 }
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
-
-                // XXX delete all OpenVPN and WireGuard active configs with this auth_id
 
                 switch ($profileConfig->vpnProto()) {
                     case 'openvpn':
@@ -149,60 +152,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
         $service->post(
             '/v3/disconnect',
             function (AccessToken $accessToken, Request $request): Response {
-                // XXX duplicate from connect
-                // XXX catch InputValidationException
-                // XXX why do we need profile_id again?
-
-                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
-                $profileConfigList = $this->config->profileConfigList();
-                $userPermissions = $this->storage->getPermissionList($accessToken->userId());
-                $availableProfiles = [];
-                foreach ($profileConfigList as $profileConfig) {
-                    if ($profileConfig->hideProfile()) {
-                        continue;
-                    }
-                    if ($profileConfig->enableAcl()) {
-                        // is the user member of the userPermissions?
-                        if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
-                            continue;
-                        }
-                    }
-
-                    $availableProfiles[] = $profileConfig->profileId();
-                }
-
-                if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                    return new JsonResponse(['error' => 'profile not available'], [], 400);
-                }
-
-                $profileConfig = $this->config->profileConfig($requestedProfileId);
-
-                if ('openvpn' === $profileConfig->vpnProto()) {
-                    // OpenVPN
-                    $this->storage->deleteCertificatesWithAuthKey($accessToken->authKey());
-                    // XXX do we also need to disconnect the client?
-
-                    return new Response(null, [], 204);
-                }
-
-                // WireGuard
-                $userId = $accessToken->userId();
-                $authKey = $accessToken->authKey();
-                // XXX move this to Wg class
-                foreach ($this->storage->wgGetPeers($userId) as $wgPeer) {
-                    if ($requestedProfileId !== $wgPeer['profile_id']) {
-                        continue;
-                    }
-                    if ($authKey !== $wgPeer['auth_key']) {
-                        continue;
-                    }
-
-                    $this->wg->removePeer(
-                        $profileConfig,
-                        $userId,
-                        $wgPeer['public_key']
-                    );
-                }
+                $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
                 return new Response(null, [], 204);
             }

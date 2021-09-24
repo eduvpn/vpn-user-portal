@@ -52,12 +52,11 @@
                     <td><?=$this->d($configItem['expires_at']); ?></td>
                     <td class="text-right">
                         <form class="frm" method="post" action="deleteConfig">
-                            <input type="hidden" name="profileId" value="<?=$this->e($configItem['profile_id']); ?>">
 <?php if (null !== $configItem['common_name']): ?>
-                            <input type="hidden" name="commonName" value="<?=$this->e($configItem['common_name']); ?>">
+                            <input type="hidden" name="connectionId" value="<?=$this->e($configItem['common_name']); ?>">
 <?php endif; ?>
 <?php if (null !== $configItem['public_key']): ?>
-                            <input type="hidden" name="publicKey" value="<?=$this->e($configItem['public_key']); ?>">
+                            <input type="hidden" name="connectionId" value="<?=$this->e($configItem['public_key']); ?>">
 <?php endif; ?>
                             <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>
                         </form>

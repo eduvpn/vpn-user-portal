@@ -18,7 +18,6 @@ use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
 use LC\Portal\Http\Exception\HttpException;
 use LC\Portal\LoggerInterface;
-use LC\Portal\OpenVpn\DaemonWrapper;
 use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
@@ -30,20 +29,18 @@ class AdminPortalModule implements ServiceModuleInterface
     private Config $config;
     private TplInterface $tpl;
     private ConnectionManager $connectionManager;
-    private DaemonWrapper $daemonWrapper;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
     private AdminHook $adminHook;
     private ServerInfo $serverInfo;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $dataDir, Config $config, TplInterface $tpl, ConnectionManager $connectionManager, DaemonWrapper $daemonWrapper, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
+    public function __construct(string $dataDir, Config $config, TplInterface $tpl, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
     {
         $this->dataDir = $dataDir;
         $this->config = $config;
         $this->tpl = $tpl;
         $this->connectionManager = $connectionManager;
-        $this->daemonWrapper = $daemonWrapper;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
         $this->adminHook = $adminHook;
@@ -175,9 +172,6 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 switch ($userAction) {
                     case 'disableAccount':
-                        // get active connections for this user
-                        $connectionList = $this->daemonWrapper->getConnectionList($userId);
-
                         // disable the user
                         $this->storage->userDisable($userId);
                         $this->storage->addUserLog($userId, LoggerInterface::NOTICE, 'account disabled by admin', $this->dateTime);
@@ -198,12 +192,8 @@ class AdminPortalModule implements ServiceModuleInterface
                             $this->storage->deleteCertificatesWithAuthKey($clientAuthorization->authKey());
                         }
 
-                        // kill all active connections for this user
-                        foreach ($connectionList as $profileId => $clientConnectionList) {
-                            foreach ($clientConnectionList as $clientInfo) {
-                                $this->daemonWrapper->killClient($clientInfo['common_name']);
-                            }
-                        }
+                        // XXX disconnect all VPN clients (OpenVPN, WG) of this
+                        // user that are currently active
 
                         break;
 
@@ -216,18 +206,11 @@ class AdminPortalModule implements ServiceModuleInterface
                     case 'deleteAccount':
                         // XXX maybe we should introduce some kind of admin log
                         // where events that can't be associated to accounts are logged...
+                        // XXX disconnect all VPN clients (OpenVPN, WG) of this
+                        // user that are currently active
                         $this->storage->userDelete($userId);
                         if ('DbAuthModule' === $this->config->authModule()) {
                             $this->storage->localUserDelete($userId);
-                        }
-
-                        // get active connections for this user
-                        $connectionList = $this->daemonWrapper->getConnectionList($userId);
-                        // kill all active connections for this user
-                        foreach ($connectionList as $profileId => $clientConnectionList) {
-                            foreach ($clientConnectionList as $clientInfo) {
-                                $this->daemonWrapper->killClient($clientInfo['common_name']);
-                            }
                         }
 
                         return new RedirectResponse($request->getRootUri().'users');
