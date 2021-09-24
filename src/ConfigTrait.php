@@ -107,7 +107,7 @@ trait ConfigTrait
         return $this->configData[$k];
     }
 
-    public function requireArray(string $k, array $d = null): array
+    public function requireArray(string $k, ?array $d = null): array
     {
         if (null === $v = $this->optionalArray($k)) {
             if (null !== $d) {
