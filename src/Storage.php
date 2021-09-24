@@ -100,22 +100,6 @@ class Storage
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public function wgHasPeer(string $publicKey): bool
-    {
-        $stmt = $this->db->prepare(
-            'SELECT
-                COUNT(public_key)
-             FROM wg_peers
-             WHERE
-                public_key = :public_key'
-        );
-
-        $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return 1 === (int) $stmt->fetchColumn();
-    }
-
     /**
      * @return array<array{profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
@@ -554,23 +538,6 @@ class Storage
     }
 
     public function oDeleteCertificate(string $userId, string $commonName): void
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                    DELETE FROM
-                        certificates
-                    WHERE
-                        user_id = :user_id
-                    AND
-                        common_name = :common_name
-                SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    public function deleteCertificate(string $userId, string $commonName): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'

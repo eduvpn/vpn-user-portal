@@ -9,7 +9,7 @@ use Phan\Issue;
  *
  * - Go through this file and verify that there are no missing/unnecessary files/directories.
  *   (E.g. this only includes direct composer dependencies - You may have to manually add indirect composer dependencies to 'directory_list')
- * - Look at 'plugins' and add or remove plugins if appropriate (see https://github.com/phan/phan/tree/v4/.phan/plugins#plugins)
+ * - Look at 'plugins' and add or remove plugins if appropriate (see https://github.com/phan/phan/tree/v5/.phan/plugins#plugins)
  * - Add global suppressions for pre-existing issues to suppress_issue_types (https://github.com/phan/phan/wiki/Tutorial-for-Analyzing-a-Large-Sloppy-Code-Base)
  *   - Consider setting up a baseline if there are a large number of pre-existing issues (see `phan --extended-help`)
  *
@@ -18,7 +18,7 @@ use Phan\Issue;
  * after this file is read.
  *
  * @see https://github.com/phan/phan/wiki/Phan-Config-Settings for all configurable options
- * @see https://github.com/phan/phan/tree/v4/src/Phan/Config.php
+ * @see https://github.com/phan/phan/tree/v5/src/Phan/Config.php
  *
  * A Note About Paths
  * ==================
@@ -322,7 +322,7 @@ return [
     //
     // Plugins which are bundled with Phan can be added here by providing their name (e.g. `'AlwaysReturnPlugin'`)
     //
-    // Documentation about available bundled plugins can be found [here](https://github.com/phan/phan/tree/v4/.phan/plugins).
+    // Documentation about available bundled plugins can be found [here](https://github.com/phan/phan/tree/v5/.phan/plugins).
     //
     // Alternately, you can pass in the full path to a PHP file with the plugin's implementation (e.g. `'vendor/phan/phan/.phan/plugins/AlwaysReturnPlugin.php'`)
     'plugins' => [
@@ -339,8 +339,9 @@ return [
     // Thus, both first-party and third-party code being used by
     // your application should be included in this list.
     'directory_list' => [
-        'src',
-        'vendor/fkooman/jwt/src',
+	    'src',
+	    'bin',
+	    'libexec',
         'vendor/fkooman/oauth2-server/src',
         'vendor/fkooman/saml-sp/src',
         'vendor/phpunit/phpunit/src',
