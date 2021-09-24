@@ -52,6 +52,7 @@
                     <td><?=$this->d($configItem['expires_at']); ?></td>
                     <td class="text-right">
                         <form class="frm" method="post" action="deleteConfig">
+                            <input type="hidden" name="profileId" value="<?=$this->e($configItem['profile_id']); ?>">
 <?php if (null !== $configItem['common_name']): ?>
                             <input type="hidden" name="connectionId" value="<?=$this->e($configItem['common_name']); ?>">
 <?php endif; ?>
