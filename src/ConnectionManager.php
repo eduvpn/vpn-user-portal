@@ -18,7 +18,7 @@ use LC\Portal\HttpClient\HttpClientInterface;
 /**
  * List, add and remove connections.
  */
-class ConnectionList
+class ConnectionManager
 {
     protected DateTimeImmutable $dateTime;
     private Config $config;

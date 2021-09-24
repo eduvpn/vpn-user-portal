@@ -13,7 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
-use LC\Portal\ConnectionList;
+use LC\Portal\ConnectionManager;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
 use LC\Portal\ProfileConfig;
@@ -106,14 +106,14 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    $connectionList = new ConnectionList(
+    $connectionManager = new ConnectionManager(
         $config,
         new CurlHttpClient(),
         $storage
     );
 
     $outputData = [];
-    foreach ($connectionList->get() as $profileId => $connectionInfoList) {
+    foreach ($connectionManager->get() as $profileId => $connectionInfoList) {
         $displayConnectionInfo = [];
         foreach ($connectionInfoList as $connectionInfo) {
             $displayConnectionInfo[] = [
