@@ -107,34 +107,6 @@ class Wg
         }
     }
 
-    private static function extractIpFour(array $ipNetList): string
-    {
-        foreach ($ipNetList as $ipNet) {
-            if (false === strpos($ipNet, ':')) {
-                [$ipFour, ] = explode('/', $ipNet);
-
-                return $ipFour;
-            }
-        }
-
-        // XXX better error
-        throw new WgException('unable to find IPv4 address');
-    }
-
-    private static function extractIpSix(array $ipNetList): string
-    {
-        foreach ($ipNetList as $ipNet) {
-            if (false !== strpos($ipNet, ':')) {
-                [$ipSix, ] = explode('/', $ipNet);
-
-                return $ipSix;
-            }
-        }
-
-        // XXX better error
-        throw new WgException('unable to find IPv6 address');
-    }
-
     /**
      * @return ?array{0:string,1:string}
      */

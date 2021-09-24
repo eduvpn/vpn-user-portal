@@ -342,6 +342,7 @@ return [
 	    'src',
 	    'bin',
 	    'libexec',
+	    'views',
         'vendor/fkooman/oauth2-server/src',
         'vendor/fkooman/saml-sp/src',
         'vendor/phpunit/phpunit/src',
