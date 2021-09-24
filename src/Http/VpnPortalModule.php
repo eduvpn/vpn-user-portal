@@ -156,6 +156,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->connectionManager->disconnect(
                     $userInfo->userId(),
+                    $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s)),
                     $request->requirePostParameter('connectionId', fn (string $s) => Validator::connectionId($s))
                 );
 

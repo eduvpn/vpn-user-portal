@@ -137,13 +137,14 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,public_key:string}>
+     * @return array<array{user_id:string,profile_id:string,public_key:string}>
      */
     public function wPeerListByAuthKey(string $authKey): array
     {
         $stmt = $this->db->prepare(
             'SELECT
                 user_id,
+                profile_id,
                 public_key
              FROM
                 wg_peers
@@ -156,6 +157,7 @@ class Storage
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $peerList[] = [
                 'user_id' => (string) $resultRow['user_id'],
+                'profile_id' => (string) $resultRow['profile_id'],
                 'public_key' => (string) $resultRow['public_key'],
             ];
         }
@@ -399,7 +401,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,common_name:string}>
+     * @return array<array{user_id:string,profile_id:string,common_name:string}>
      */
     public function oCertListByAuthKey(string $authKey): array
     {
@@ -407,6 +409,7 @@ class Storage
             <<< 'SQL'
                     SELECT
                         user_id,
+                        profile_id,
                         common_name
                     FROM
                         certificates
@@ -421,6 +424,7 @@ class Storage
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $certList[] = [
                 'user_id' => (string) $resultRow['user_id'],
+                'profile_id' => (string) $resultRow['profile_id'],
                 'common_name' => (string) $resultRow['common_name'],
             ];
         }

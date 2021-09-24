@@ -123,6 +123,7 @@ class ConnectionManager
         foreach ($this->storage->oCertListByAuthKey($authKey) as $oCertInfo) {
             $this->disconnect(
                 $oCertInfo['user_id'],
+                $oCertInfo['profile_id'],
                 $oCertInfo['common_name']
             );
         }
@@ -131,6 +132,7 @@ class ConnectionManager
         foreach ($this->storage->wPeerListByAuthKey($authKey) as $wPeerInfo) {
             $this->disconnect(
                 $wPeerInfo['user_id'],
+                $wPeerInfo['profile_id'],
                 $wPeerInfo['public_key']
             );
         }
@@ -142,6 +144,7 @@ class ConnectionManager
         foreach ($this->storage->oCertListByUserId($userId) as $oCertInfo) {
             $this->disconnect(
                 $userId,
+                $oCertInfo['profile_id'],
                 $oCertInfo['common_name']
             );
         }
@@ -150,12 +153,13 @@ class ConnectionManager
         foreach ($this->storage->wPeerListByUserId($userId) as $wPeerInfo) {
             $this->disconnect(
                 $userId,
+                $wPeerInfo['profile_id'],
                 $wPeerInfo['public_key']
             );
         }
     }
 
-    public function disconnect(string $userId, string $connectionId): void
+    public function disconnect(string $userId, string $profileId, string $connectionId): void
     {
         // TODO:
         // - record connect/disconnect event for WG
@@ -171,13 +175,11 @@ class ConnectionManager
         //
         // XXX profileId is needed one way or the other to prevent sending
         // OpenVPN disconnects to WG and vice versa
-        $nodeBaseUrlList = [];
+        // XXX do NOT keep this a foreach, this is so sucky haha
         foreach ($this->config->profileConfigList() as $profileConfig) {
-            if (\in_array($profileConfig->nodeBaseUrl(), $nodeBaseUrlList, true)) {
+            if ($profileId !== $profileConfig->profileId()) {
                 continue;
             }
-            $nodeBaseUrlList[] = $profileConfig->nodeBaseUrl();
-
             if ('openvpn' === $profileConfig->vpnProto()) {
                 $this->storage->oCertDelete($userId, $connectionId);
                 // XXX error handling
