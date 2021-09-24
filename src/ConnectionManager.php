@@ -154,6 +154,25 @@ class ConnectionManager
         }
     }
 
+    public function disconnectByUserId(string $userId): void
+    {
+        // OpenVPN
+        foreach ($this->storage->oCertListByUserId($userId) as $oCertInfo) {
+            $this->disconnect(
+                $userId,
+                $oCertInfo['common_name']
+            );
+        }
+
+        // WireGuard
+        foreach ($this->storage->wPeerListByUserId($userId) as $wPeerInfo) {
+            $this->disconnect(
+                $userId,
+                $wPeerInfo['public_key']
+            );
+        }
+    }
+
     public function disconnect(string $userId, string $connectionId): void
     {
         // TODO:

@@ -172,29 +172,19 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 switch ($userAction) {
                     case 'disableAccount':
-                        // disable the user
                         $this->storage->userDisable($userId);
-                        $this->storage->addUserLog($userId, LoggerInterface::NOTICE, 'account disabled by admin', $this->dateTime);
-
-                        // * revoke all OAuth clients of this user
-                        // * delete all client certificates associated with the OAuth clients of this user
                         $clientAuthorizations = $this->oauthStorage->getAuthorizations($userId);
                         foreach ($clientAuthorizations as $clientAuthorization) {
+                            // delete and disconnect all (active) configurations
+                            // for this OAuth client authorization
+                            $this->connectionManager->disconnectByAuthKey($clientAuthorization->authKey());
                             $this->oauthStorage->deleteAuthorization($clientAuthorization->authKey());
-                            $this->storage->addUserLog(
-                                $userId,
-                                LoggerInterface::NOTICE,
-                                sprintf('certificate(s) for OAuth client "%s" deleted', $clientAuthorization->clientId()),
-                                $this->dateTime
-                            );
-
-                            // XXX this is done by foreign keys?
-                            $this->storage->deleteCertificatesWithAuthKey($clientAuthorization->authKey());
                         }
 
-                        // XXX disconnect all VPN clients (OpenVPN, WG) of this
-                        // user that are currently active
-
+                        // *disconnect* but do not (yet) delete all non-OAuth configs
+                        // XXX how do we do that? for OpenVPN easy, for WG we
+                        // need to avoid the sync to reinstate peer configs for disabled accounts...
+                        // the sync would need to be smarter!
                         break;
 
                     case 'enableAccount':
@@ -204,12 +194,15 @@ class AdminPortalModule implements ServiceModuleInterface
                         break;
 
                     case 'deleteAccount':
-                        // XXX maybe we should introduce some kind of admin log
-                        // where events that can't be associated to accounts are logged...
-                        // XXX disconnect all VPN clients (OpenVPN, WG) of this
-                        // user that are currently active
+                        // delete and disconnect all (active) VPN configurations
+                        // for this user
+                        $this->connectionManager->disconnectByUserId($userId);
+
+                        // delete all user data (except log)
                         $this->storage->userDelete($userId);
+
                         if ('DbAuthModule' === $this->config->authModule()) {
+                            // remove the user from the local database
                             $this->storage->localUserDelete($userId);
                         }
 

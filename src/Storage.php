@@ -166,6 +166,31 @@ class Storage
     }
 
     /**
+     * @return array<array{public_key:string}>
+     */
+    public function wPeerListByUserId(string $userId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT
+                public_key
+             FROM
+                wg_peers
+             WHERE
+                user_id = :user_id'
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+        $peerList = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $peerList[] = [
+                'public_key' => (string) $resultRow['public_key'],
+            ];
+        }
+
+        return $peerList;
+    }
+
+    /**
      * @return array<array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
     public function wgGetAllPeers(string $profileId): array
@@ -409,8 +434,7 @@ class Storage
             <<< 'SQL'
                     SELECT
                         user_id,
-                        common_name,
-                        display_name
+                        common_name
                     FROM
                         certificates
                     WHERE
@@ -420,15 +444,43 @@ class Storage
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
 
-        $certificateList = [];
+        $certList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $certificateList[] = [
+            $certList[] = [
                 'user_id' => (string) $resultRow['user_id'],
                 'common_name' => (string) $resultRow['common_name'],
             ];
         }
 
-        return $certificateList;
+        return $certList;
+    }
+
+    /**
+     * @return array<array{common_name:string}>
+     */
+    public function oCertListByUserId(string $userId): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    SELECT
+                        common_name
+                    FROM
+                        certificates
+                    WHERE
+                        user_id = :user_id
+                SQL
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $certList = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $certList[] = [
+                'common_name' => (string) $resultRow['common_name'],
+            ];
+        }
+
+        return $certList;
     }
 
     /**
