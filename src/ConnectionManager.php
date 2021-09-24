@@ -168,13 +168,15 @@ class ConnectionManager
         // keep the record of all nodeBaseUrls we talked to so we only hit them
         // once... multiple profiles can have the same nodeBaseUrl if the run
         // on the same machine/VM
+        //
+        // XXX profileId is needed one way or the other to prevent sending
+        // OpenVPN disconnects to WG and vice versa
         $nodeBaseUrlList = [];
         foreach ($this->config->profileConfigList() as $profileConfig) {
             if (\in_array($profileConfig->nodeBaseUrl(), $nodeBaseUrlList, true)) {
-                $nodeBaseUrlList[] = $profileConfig->nodeBaseUrl();
-
                 continue;
             }
+            $nodeBaseUrlList[] = $profileConfig->nodeBaseUrl();
 
             if ('openvpn' === $profileConfig->vpnProto()) {
                 $this->storage->oCertDelete($userId, $connectionId);
@@ -187,7 +189,9 @@ class ConnectionManager
             // WireGuard
             $this->storage->wPeerRemove($userId, $connectionId);
             // XXX error handling
-            $this->httpClient->post($profileConfig->nodeBaseUrl(), [], ['public_key' => $connectionId]);
+            // XXX it doesn't seem to be working! the peer is removed from the DB, but not from the WG process...
+            // (using OAuth client)
+            $this->httpClient->post($profileConfig->nodeBaseUrl().'/w/remove_peer', [], ['public_key' => $connectionId]);
         }
     }
 }
