@@ -121,7 +121,8 @@ class AdminPortalModule implements ServiceModuleInterface
                     throw new HttpException('account does not exist', 404);
                 }
 
-                $clientCertificateList = $this->storage->getCertificates($userId);
+                $clientCertificateList = $this->storage->oCertListByUserId($userId);
+                // XXX add WG as well
                 $userMessages = $this->storage->getUserLog($userId);
                 $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
                 // get the fancy profile name

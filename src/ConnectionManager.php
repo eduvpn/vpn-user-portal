@@ -55,7 +55,7 @@ class ConnectionManager
 
             if ('openvpn' === $profileConfig->vpnProto()) {
                 // OpenVPN
-                $certificateList = $this->storage->certificateList($profileId);
+                $certificateList = $this->storage->oCertListByProfileId($profileId);
                 // XXX error handling
                 $daemonConnectionList = Json::decode(
                     $this->httpClient->get($profileConfig->nodeBaseUrl().'/o/connection_list')->body()
@@ -82,7 +82,7 @@ class ConnectionManager
             }
 
             // WireGuard
-            $storageWgPeerList = $this->storage->wgGetAllPeers($profileId);
+            $storageWgPeerList = $this->storage->wPeerListByProfileId($profileId);
             // XXX error handling
             $daemonWgPeerList = Json::decode(
                 $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', [])->body()
@@ -203,7 +203,7 @@ class ConnectionManager
             }
 
             // WireGuard
-            $this->storage->wgRemovePeer($userId, $connectionId);
+            $this->storage->wRemovePeer($userId, $connectionId);
             // XXX error handling
             $this->httpClient->post($profileConfig->nodeBaseUrl(), [], ['public_key' => $connectionId]);
         }

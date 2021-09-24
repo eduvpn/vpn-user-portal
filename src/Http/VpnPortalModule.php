@@ -364,8 +364,8 @@ class VpnPortalModule implements ServiceModuleInterface
      */
     private function filterConfigList(array $profileConfigList, string $userId): array
     {
-        $configList = $this->storage->getCertificates($userId);
-        $configList = array_merge($configList, $this->storage->wgGetPeers($userId));
+        $configList = $this->storage->oCertListByUserId($userId);
+        $configList = array_merge($configList, $this->storage->wPeerListByUserId($userId));
 
         $filteredConfigList = [];
         foreach ($configList as $c) {

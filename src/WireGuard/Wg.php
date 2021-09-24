@@ -20,9 +20,6 @@ use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\WireGuard\Exception\WgException;
 
-/**
- * Obtain and register a WireGuard configuration file.
- */
 class Wg
 {
     private HttpClientInterface $httpClient;
