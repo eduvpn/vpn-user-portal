@@ -26,9 +26,4 @@ class Dt
         // whatever the local time zone is, always convert to UTC
         return $dateTime->setTimeZone(new DateTimeZone('UTC'));
     }
-
-    public static function atom(?string $dateTimeString = null): string
-    {
-        return self::get($dateTimeString)->format(DateTimeImmutable::ATOM);
-    }
 }

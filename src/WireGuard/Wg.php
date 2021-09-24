@@ -78,7 +78,6 @@ class Wg
 
         return new WgClientConfig(
             $profileConfig,
-            $publicKey,
             $privateKey,
             $ipFour,
             $ipSix,

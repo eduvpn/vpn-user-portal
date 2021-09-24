@@ -341,6 +341,7 @@ return [
     'directory_list' => [
 	    'src',
 	    'bin',
+	    'web',
 	    'libexec',
 	    'views',
         'vendor/fkooman/oauth2-server/src',

@@ -20,17 +20,15 @@ use LC\Portal\ProfileConfig;
 class WgClientConfig
 {
     private ProfileConfig $profileConfig;
-    private string $publicKey;
     private ?string $privateKey;
     private string $ipFour;
     private string $ipSix;
     private string $serverPublicKey;
     private int $wgPort;
 
-    public function __construct(ProfileConfig $profileConfig, string $publicKey, ?string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort)
+    public function __construct(ProfileConfig $profileConfig, ?string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort)
     {
         $this->profileConfig = $profileConfig;
-        $this->publicKey = $publicKey;
         $this->privateKey = $privateKey;
         $this->ipFour = $ipFour;
         $this->ipSix = $ipSix;
@@ -66,21 +64,6 @@ class WgClientConfig
         $output[] = 'Endpoint = '.$this->profileConfig->hostName().':'.(string) $this->wgPort;
 
         return implode(PHP_EOL, $output);
-    }
-
-    public function publicKey(): string
-    {
-        return $this->publicKey;
-    }
-
-    public function getIpFour(): string
-    {
-        return $this->ipFour;
-    }
-
-    public function getIpSix(): string
-    {
-        return $this->ipSix;
     }
 
     /**

@@ -49,7 +49,6 @@ class Migration
      */
     public function run(): bool
     {
-        $driverName = $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
         $currentVersion = $this->getCurrentVersion();
         if ($currentVersion === $this->schemaVersion) {
             // database schema is up to date, no update required

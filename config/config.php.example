@@ -183,11 +183,6 @@ return [
 //    'Api' => [
 //        // expire OAuth access tokens after 1 hour (default)
 //        //'tokenExpiry' => 'PT1H',
-//        // Enable Remote Access, i.e. users from other VPN servers listed in
-//        // the below remoteAccessList files to access this VPN server through
-//        // the OAuth API
-//        // DEFAULT = false
-//        //'remoteAccess' => false,
 //    ],
 
     // how/what to log the connect/disconnect events to syslog

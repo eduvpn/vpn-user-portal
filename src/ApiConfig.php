@@ -24,11 +24,6 @@ class ApiConfig
         $this->configData = $configData;
     }
 
-    public function remoteAccess(): bool
-    {
-        return $this->requireBool('remoteAccess', false);
-    }
-
     public function tokenExpiry(): DateInterval
     {
         return new DateInterval($this->requireString('tokenExpiry', 'PT1H'));
