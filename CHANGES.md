@@ -1,7 +1,8 @@
 # Changelog
 
 ## 2.3.14 (2021-08-26)
-- **SECURITY**: implement proper input validation for QR code generation
+- **SECURITY**: implement proper input validation for QR code generation 
+  (CVE-2021-41583)
 - only enable QR code module when 2FA is enabled
 
 ## 2.3.13 (2021-08-02)
