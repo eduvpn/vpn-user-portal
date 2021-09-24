@@ -58,7 +58,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
             function (AccessToken $accessToken, Request $request): Response {
                 $profileConfigList = $this->config->profileConfigList();
                 // XXX really think about storing permissions in OAuth token!
-                $userPermissions = $this->storage->getPermissionList($accessToken->userId());
+                $userPermissions = $this->storage->userPermissionList($accessToken->userId());
                 $userProfileList = [];
                 foreach ($profileConfigList as $profileConfig) {
                     if ($profileConfig->hideProfile()) {
@@ -96,7 +96,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 // XXX catch InputValidationException
                 $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
-                $userPermissions = $this->storage->getPermissionList($accessToken->userId());
+                $userPermissions = $this->storage->userPermissionList($accessToken->userId());
                 $availableProfiles = [];
                 foreach ($profileConfigList as $profileConfig) {
                     if ($profileConfig->hideProfile()) {
@@ -167,7 +167,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
         try {
             $commonName = $this->random->get(32);
             $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->authorizationExpiresAt());
-            $this->storage->addCertificate(
+            $this->storage->oCertAdd(
                 $accessToken->userId(),
                 $profileConfig->profileId(),
                 $commonName,
@@ -176,7 +176,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $accessToken
             );
 
-            $this->storage->addUserLog(
+            $this->storage->userLogAdd(
                 $accessToken->userId(),
                 LoggerInterface::NOTICE,
                 sprintf('new certificate generated for "%s"', $accessToken->clientId()),

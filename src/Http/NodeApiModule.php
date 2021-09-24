@@ -72,7 +72,7 @@ class NodeApiModule implements ServiceModuleInterface
                     return new Response('OK');
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
-                        $this->storage->addUserLog($userId, LoggerInterface::ERROR, 'unable to connect: '.$e->getMessage(), $this->dateTime);
+                        $this->storage->userLogAdd($userId, LoggerInterface::ERROR, 'unable to connect: '.$e->getMessage(), $this->dateTime);
                     }
 
                     return new Response('ERR');
@@ -89,7 +89,7 @@ class NodeApiModule implements ServiceModuleInterface
                     return new Response('OK');
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
-                        $this->storage->addUserLog($userId, LoggerInterface::ERROR, 'unable to disconnect: '.$e->getMessage(), $this->dateTime);
+                        $this->storage->userLogAdd($userId, LoggerInterface::ERROR, 'unable to disconnect: '.$e->getMessage(), $this->dateTime);
                     }
 
                     return new Response('ERR');
@@ -124,12 +124,12 @@ class NodeApiModule implements ServiceModuleInterface
 //        $bytesTransferred = Validator::bytesTransferred($request->requirePostParameter('bytes_transferred'));
         // XXX add bytesTransferred to some global table
 
-        if (null === $certInfo = $this->storage->getUserCertificateInfo($commonName)) {
+        if (null === $userInfo = $this->storage->oUserInfoByCommonName($commonName)) {
             // CN does not exist (anymore)
             // XXX do we need to do something special?
             return;
         }
-        $userId = $certInfo['user_id'];
+        $userId = $userInfo['user_id'];
         $this->storage->clientDisconnect($userId, $profileId, $ipFour, $ipSix, Dt::get(sprintf('@%d', $disconnectedAt)));
         $this->logger->info(
             $this->logMessage('DISCONNECT', $userId, $profileId, $originatingIp, $ipFour, $ipSix)
@@ -139,13 +139,13 @@ class NodeApiModule implements ServiceModuleInterface
     private function verifyConnection(string $profileId, string $commonName): string
     {
         // verify status of certificate/user
-        if (null === $userCertInfo = $this->storage->getUserCertificateInfo($commonName)) {
+        if (null === $userInfo = $this->storage->oUserInfoByCommonName($commonName)) {
             // we do not (yet) know the user as only an existing *//* certificate can be linked back to a user...
             throw new NodeApiException(null, sprintf('user or certificate does not exist [profile_id: %s, common_name: %s]', $profileId, $commonName));
         }
 
-        $userId = $userCertInfo['user_id'];
-        if ($userCertInfo['user_is_disabled']) {
+        $userId = $userInfo['user_id'];
+        if ($userInfo['user_is_disabled']) {
             throw new NodeApiException($userId, 'unable to connect, account is disabled');
         }
 
@@ -159,7 +159,7 @@ class NodeApiModule implements ServiceModuleInterface
         $profileConfig = $this->config->profileConfig($profileId);
         if ($profileConfig->enableAcl()) {
             // ACL is enabled for this profile
-            $userPermissionList = $this->storage->getPermissionList($userId);
+            $userPermissionList = $this->storage->userPermissionList($userId);
             $profilePermissionList = $profileConfig->aclPermissionList();
             if (false === self::hasPermission($userPermissionList, $profilePermissionList)) {
                 throw new NodeApiException($userId, sprintf('unable to connect, user permissions are [%s], but requires any of [%s]', implode(',', $userPermissionList), implode(',', $profilePermissionList)));

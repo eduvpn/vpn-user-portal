@@ -195,7 +195,7 @@ class ConnectionManager
             }
 
             if ('openvpn' === $profileConfig->vpnProto()) {
-                $this->storage->oDeleteCertificate($userId, $connectionId);
+                $this->storage->oCertDelete($userId, $connectionId);
                 // XXX error handling
                 $this->httpClient->post($profileConfig->nodeBaseUrl().'/o/disconnect_client', [], ['common_name' => $connectionId]);
 
@@ -203,7 +203,7 @@ class ConnectionManager
             }
 
             // WireGuard
-            $this->storage->wRemovePeer($userId, $connectionId);
+            $this->storage->wPeerRemove($userId, $connectionId);
             // XXX error handling
             $this->httpClient->post($profileConfig->nodeBaseUrl(), [], ['public_key' => $connectionId]);
         }

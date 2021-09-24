@@ -56,7 +56,7 @@ class Wg
         [$ipFour, $ipSix] = $ipInfo;
 
         // store peer in the DB
-        $this->storage->wgAddPeer($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $accessToken);
+        $this->storage->wPeerAdd($userId, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $accessToken);
 
         // add peer to WG
         // XXX make sure the public key config is overriden if the public key already exists

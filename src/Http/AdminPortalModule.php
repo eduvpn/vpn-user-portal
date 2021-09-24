@@ -97,7 +97,7 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $userList = $this->storage->getUsers();
+                $userList = $this->storage->userList();
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -123,7 +123,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 $clientCertificateList = $this->storage->oCertListByUserId($userId);
                 // XXX add WG as well
-                $userMessages = $this->storage->getUserLog($userId);
+                $userMessages = $this->storage->userLog($userId);
                 $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
                 // get the fancy profile name
                 $profileConfigList = $this->config->profileConfigList();
@@ -190,7 +190,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
                     case 'enableAccount':
                         $this->storage->userEnable($userId);
-                        $this->storage->addUserLog($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
+                        $this->storage->userLogAdd($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
 
                         break;
 
@@ -248,7 +248,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
-                            'appUsage' => self::getAppUsage($this->storage->getAppUsage()),
+                            'appUsage' => self::appUsage($this->storage->appUsage()),
                         ]
                     )
                 );
@@ -298,7 +298,7 @@ class AdminPortalModule implements ServiceModuleInterface
     /**
      * @return array<array{client_id:string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}>
      */
-    private static function getAppUsage(array $appUsage): array
+    private static function appUsage(array $appUsage): array
     {
         // limit to top 8, we don't care about the small ones...
         $appUsage = \array_slice($appUsage, 0, 8);

@@ -33,7 +33,7 @@ class Storage
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
     }
 
-    public function wgAddPeer(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
+    public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
     {
         $stmt = $this->db->prepare(
             'INSERT INTO wg_peers (
@@ -69,7 +69,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function wRemovePeer(string $userId, string $publicKey): void
+    public function wPeerRemove(string $userId, string $publicKey): void
     {
         $stmt = $this->db->prepare(
             'DELETE FROM
@@ -297,7 +297,7 @@ class Storage
     /**
      * @return array<array{user_id:string,permission_list:array<string>,is_disabled:bool}>
      */
-    public function getUsers(): array
+    public function userList(): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -326,7 +326,7 @@ class Storage
     /**
      * @return array<string>
      */
-    public function getPermissionList(string $userId)
+    public function userPermissionList(string $userId)
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -379,7 +379,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function addCertificate(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
+    public function oCertAdd(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -499,17 +499,15 @@ class Storage
     }
 
     /**
-     * @return ?array{user_id:string,user_is_disabled:bool,display_name:string,expires_at:\DateTimeImmutable}
+     * @return ?array{user_id:string,user_is_disabled:bool}
      */
-    public function getUserCertificateInfo(string $commonName): ?array
+    public function oUserInfoByCommonName(string $commonName): ?array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
                         u.user_id AS user_id,
-                        u.is_disabled AS user_is_disabled,
-                        c.display_name AS display_name,
-                        c.expires_at AS expires_at
+                        u.is_disabled AS user_is_disabled
                     FROM
                         users u, certificates c
                     WHERE
@@ -534,7 +532,7 @@ class Storage
         ];
     }
 
-    public function oDeleteCertificate(string $userId, string $commonName): void
+    public function oCertDelete(string $userId, string $commonName): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -807,7 +805,7 @@ class Storage
      *
      * @return array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}>
      */
-    public function getUserLog(string $userId): array
+    public function userLog(string $userId): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -837,7 +835,7 @@ class Storage
         return $logMessages;
     }
 
-    public function addUserLog(string $userId, int $logLevel, string $logMessage, DateTimeImmutable $dateTime): void
+    public function userLogAdd(string $userId, int $logLevel, string $logMessage, DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -901,7 +899,7 @@ class Storage
     /**
      * @return array<array{client_id:string,client_count:int}>
      */
-    public function getAppUsage()
+    public function appUsage()
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
