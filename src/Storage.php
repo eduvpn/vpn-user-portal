@@ -606,21 +606,6 @@ class Storage
         $stmt->execute();
     }
 
-    public function deleteCertificatesWithAuthKey(string $authKey): void
-    {
-        // XXX this is taken care of by foreign keys?
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                    DELETE FROM
-                        certificates
-                    WHERE
-                        auth_key = :auth_key
-                SQL
-        );
-        $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
     public function userDisable(string $userId): void
     {
         $stmt = $this->db->prepare(
