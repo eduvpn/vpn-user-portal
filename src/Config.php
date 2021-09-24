@@ -93,7 +93,9 @@ class Config
 
         return new ProfileConfig(
             array_merge(
-                ['profileId' => $profileId],
+                [
+                    'profileId' => $profileId,
+                ],
                 $profileData
             )
         );
