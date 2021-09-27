@@ -35,20 +35,19 @@ class ConnectionManager
     /**
      * @return array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>>
      */
-    public function get(): array
+    public function get(bool $showAll = false): array
     {
         $connectionList = [];
         // keep the record of all nodeBaseUrls we talked to so we only hit them
         // once... multiple profiles can have the same nodeBaseUrl if the run
         // on the same machine/VM
-        $nodeBaseUrlList = [];
+
+        $daemonCache = [
+            'o' => [],
+            'w' => [],
+        ];
+
         foreach ($this->config->profileConfigList() as $profileConfig) {
-            if (\in_array($profileConfig->nodeBaseUrl(), $nodeBaseUrlList, true)) {
-                $nodeBaseUrlList[] = $profileConfig->nodeBaseUrl();
-
-                continue;
-            }
-
             $profileId = $profileConfig->profileId();
             $connectionList[$profileId] = [];
 
@@ -56,9 +55,16 @@ class ConnectionManager
                 // OpenVPN
                 $certificateList = $this->storage->oCertListByProfileId($profileId);
                 // XXX error handling
-                $daemonConnectionList = Json::decode(
-                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/o/connection_list')->body()
-                );
+
+                if (\array_key_exists($profileConfig->nodeBaseUrl(), $daemonCache['o'])) {
+                    $daemonConnectionList = $daemonCache['o'][$profileConfig->nodeBaseUrl()];
+                } else {
+                    $daemonConnectionList = Json::decode(
+                        $this->httpClient->get($profileConfig->nodeBaseUrl().'/o/connection_list')->body()
+                    );
+                    $daemonCache['o'][$profileConfig->nodeBaseUrl()] = $daemonConnectionList;
+                }
+
                 $o = [];
                 foreach ($daemonConnectionList['connection_list'] as $connectionEntry) {
                     $o[$connectionEntry['common_name']] = $connectionEntry;
@@ -83,9 +89,15 @@ class ConnectionManager
             // WireGuard
             $storageWgPeerList = $this->storage->wPeerListByProfileId($profileId);
             // XXX error handling
-            $daemonWgPeerList = Json::decode(
-                $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', [])->body()
-            );
+
+            if (\array_key_exists($profileConfig->nodeBaseUrl(), $daemonCache['w'])) {
+                $daemonWgPeerList = $daemonCache['w'][$profileConfig->nodeBaseUrl()];
+            } else {
+                $daemonWgPeerList = Json::decode(
+                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', ['show_all' => $showAll])->body()
+                );
+                $daemonCache['w'][$profileConfig->nodeBaseUrl()] = $daemonWgPeerList;
+            }
 
             $w = [];
             foreach ($daemonWgPeerList['peer_list'] as $peerEntry) {
@@ -177,8 +189,6 @@ class ConnectionManager
 
         // WireGuard
         $this->storage->wPeerRemove($userId, $connectionId);
-        // XXX it doesn't seem to be working! the peer is removed from the DB, but not from the WG process...
-        // (using OAuth client)
         $this->httpClient->post($profileConfig->nodeBaseUrl().'/w/remove_peer', [], ['public_key' => $connectionId]);
     }
 }
