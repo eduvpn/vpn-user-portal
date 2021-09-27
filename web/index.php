@@ -279,6 +279,7 @@ try {
         new ServerInfo(
             $ca,
             $wgServerConfig->publicKey(),
+            $config->wgPort(),
             $oauthSigner->publicKey()
         )
     );
