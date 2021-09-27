@@ -43,6 +43,7 @@
                 <td>
                     <dl>
                         <dt><?=$this->t('Public Key'); ?></dt><dd><code><?=$this->e($serverInfo->wgPublicKey()); ?></code></dd>
+                        <dt><?=$this->t('Port'); ?></dt><dd><code><?=$this->e((string) $serverInfo->wgPort()); ?></code></dd>
                     </dl>
                 </td>
             </tr>
