@@ -85,6 +85,11 @@ class Config
         return $this->requireInt('wgPort', 51820);
     }
 
+    public function hasProfile(string $profileId): bool
+    {
+        return null !== $this->s('vpnProfiles')->optionalArray($profileId);
+    }
+
     public function profileConfig(string $profileId): ProfileConfig
     {
         if (null === $profileData = $this->s('vpnProfiles')->optionalArray($profileId)) {

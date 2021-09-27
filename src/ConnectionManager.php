@@ -161,39 +161,24 @@ class ConnectionManager
 
     public function disconnect(string $userId, string $profileId, string $connectionId): void
     {
-        // TODO:
-        // - record connect/disconnect event for WG
-        // - should we also have a profileId as a parameter to limit the
-        //   number of processes we have to access? BUT we MUST make sure we
-        //   disconnect/removepeer clients that are connected to profiles that
-        //   no longer exist... or does apply-changes take care of that? Maybe
-        //   not for WG
-        //
-        // keep the record of all nodeBaseUrls we talked to so we only hit them
-        // once... multiple profiles can have the same nodeBaseUrl if the run
-        // on the same machine/VM
-        //
-        // XXX profileId is needed one way or the other to prevent sending
-        // OpenVPN disconnects to WG and vice versa
-        // XXX do NOT keep this a foreach, this is so sucky haha
-        foreach ($this->config->profileConfigList() as $profileConfig) {
-            if ($profileId !== $profileConfig->profileId()) {
-                continue;
-            }
-            if ('openvpn' === $profileConfig->vpnProto()) {
-                $this->storage->oCertDelete($userId, $connectionId);
-                // XXX error handling
-                $this->httpClient->post($profileConfig->nodeBaseUrl().'/o/disconnect_client', [], ['common_name' => $connectionId]);
-
-                continue;
-            }
-
-            // WireGuard
-            $this->storage->wPeerRemove($userId, $connectionId);
-            // XXX error handling
-            // XXX it doesn't seem to be working! the peer is removed from the DB, but not from the WG process...
-            // (using OAuth client)
-            $this->httpClient->post($profileConfig->nodeBaseUrl().'/w/remove_peer', [], ['public_key' => $connectionId]);
+        // XXX write proper log entries for all cases
+        if (!$this->config->hasProfile($profileId)) {
+            // profile does not exist (anymore)
+            return;
         }
+        $profileConfig = $this->config->profileConfig($profileId);
+
+        if ('openvpn' === $profileConfig->vpnProto()) {
+            $this->storage->oCertDelete($userId, $connectionId);
+            $this->httpClient->post($profileConfig->nodeBaseUrl().'/o/disconnect_client', [], ['common_name' => $connectionId]);
+
+            return;
+        }
+
+        // WireGuard
+        $this->storage->wPeerRemove($userId, $connectionId);
+        // XXX it doesn't seem to be working! the peer is removed from the DB, but not from the WG process...
+        // (using OAuth client)
+        $this->httpClient->post($profileConfig->nodeBaseUrl().'/w/remove_peer', [], ['public_key' => $connectionId]);
     }
 }
