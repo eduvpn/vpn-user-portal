@@ -11,13 +11,14 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
+use LC\Portal\ClientConfigInterface;
 use LC\Portal\IP;
 use LC\Portal\ProfileConfig;
 
 /**
  * Represent a WireGuard client configuration file.
  */
-class WgClientConfig
+class WgClientConfig implements ClientConfigInterface
 {
     private ProfileConfig $profileConfig;
     private ?string $privateKey;
@@ -36,7 +37,12 @@ class WgClientConfig
         $this->wgPort = $wgPort;
     }
 
-    public function __toString(): string
+    public function contentType(): string
+    {
+        return 'application/x-wireguard-profile';
+    }
+
+    public function get(): string
     {
         $routeList = [];
         if ($this->profileConfig->defaultGateway()) {

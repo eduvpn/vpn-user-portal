@@ -136,10 +136,10 @@ class VpnApiThreeModule implements ServiceModuleInterface
                         );
 
                         return new Response(
-                            (string) $wgConfig,
+                            $wgConfig->get(),
                             [
                                 'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                                'Content-Type' => 'application/x-wireguard-profile',
+                                'Content-Type' => $wgConfig->contentType(),
                             ]
                         );
 
@@ -184,7 +184,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $this->dateTime
             );
 
-            $clientConfig = ClientConfig::get(
+            $clientConfig = new ClientConfig(
                 $profileConfig,
                 $this->ca->caCert(),
                 $this->tlsCrypt,
@@ -194,10 +194,10 @@ class VpnApiThreeModule implements ServiceModuleInterface
             );
 
             return new Response(
-                $clientConfig,
+                $clientConfig->get(),
                 [
                     'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                    'Content-Type' => 'application/x-openvpn-profile',
+                    'Content-Type' => $clientConfig->contentType(),
                 ]
             );
         } catch (ClientConfigException $e) {

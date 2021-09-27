@@ -12,32 +12,55 @@ declare(strict_types=1);
 namespace LC\Portal\OpenVpn;
 
 use LC\Portal\Binary;
+use LC\Portal\ClientConfigInterface;
 use LC\Portal\OpenVpn\CA\CaInfo;
 use LC\Portal\OpenVpn\CA\CertInfo;
 use LC\Portal\OpenVpn\Exception\ClientConfigException;
 use LC\Portal\ProfileConfig;
 
-class ClientConfig
+class ClientConfig implements ClientConfigInterface
 {
     public const STRATEGY_FIRST = 0;
     public const STRATEGY_RANDOM = 1;
     public const STRATEGY_ALL = 2;
 
-    public static function get(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, int $remoteStrategy, bool $tcpOnly): string
+    private ProfileConfig $profileConfig;
+    private CaInfo $caInfo;
+    private TlsCrypt $tlsCrypt;
+    private CertInfo $certInfo;
+    private int $remoteStrategy;
+    private bool $tcpOnly;
+
+    public function __construct(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, int $remoteStrategy, bool $tcpOnly)
+    {
+        $this->profileConfig = $profileConfig;
+        $this->caInfo = $caInfo;
+        $this->tlsCrypt = $tlsCrypt;
+        $this->certInfo = $certInfo;
+        $this->remoteStrategy = $remoteStrategy;
+        $this->tcpOnly = $tcpOnly;
+    }
+
+    public function contentType(): string
+    {
+        return 'application/x-openvpn-profile';
+    }
+
+    public function get(): string
     {
         // make a list of ports/proto to add to the configuration file
-        $hostName = $profileConfig->hostName();
+        $hostName = $this->profileConfig->hostName();
 
-        $vpnProtoPorts = $profileConfig->vpnProtoPorts();
-        if (0 !== \count($profileConfig->exposedVpnProtoPorts())) {
-            $vpnProtoPorts = $profileConfig->exposedVpnProtoPorts();
+        $vpnProtoPorts = $this->profileConfig->vpnProtoPorts();
+        if (0 !== \count($this->profileConfig->exposedVpnProtoPorts())) {
+            $vpnProtoPorts = $this->profileConfig->exposedVpnProtoPorts();
         }
 
-        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy, $tcpOnly);
+        $remoteProtoPortList = $this->remotePortProtoList($vpnProtoPorts);
         // make sure we have remotes
         // we assume that *without* tcpOnly we always have remotes,
         // otherwise it is a server configuration bug
-        if ($tcpOnly && 0 === \count($remoteProtoPortList)) {
+        if ($this->tcpOnly && 0 === \count($remoteProtoPortList)) {
             throw new ClientConfigException('no TCP connection possible');
         }
 
@@ -68,19 +91,19 @@ class ClientConfig
             'reneg-sec 0',
 
             '<ca>',
-            $caInfo->pemCert(),
+            $this->caInfo->pemCert(),
             '</ca>',
 
             '<cert>',
-            $certInfo->pemCert(),
+            $this->certInfo->pemCert(),
             '</cert>',
 
             '<key>',
-            $certInfo->pemKey(),
+            $this->certInfo->pemKey(),
             '</key>',
 
             '<tls-crypt>',
-            $tlsCrypt->get($profileConfig->profileId()),
+            $this->tlsCrypt->get($this->profileConfig->profileId()),
             '</tls-crypt>',
         ];
 
@@ -89,7 +112,11 @@ class ClientConfig
             $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) Binary::safeSubstr($remoteProtoPort, 4), Binary::safeSubstr($remoteProtoPort, 0, 3));
         }
 
-        return implode(PHP_EOL, $clientConfig);
+        // convert the OpenVPN file to "Windows" format, no platform cares, but
+        // in Notepad on Windows it looks not so great everything on one line
+        // XXX it seems TunnelKit *does* care and wants Windows format?!
+        // or maybe it just needs it to be consistent...
+        return str_replace("\n", "\r\n", implode(PHP_EOL, $clientConfig));
     }
 
     /**
@@ -98,7 +125,7 @@ class ClientConfig
      *
      * @return array<string>
      */
-    public static function remotePortProtoList(array $vpnProtoPorts, int $remoteStrategy, bool $tcpOnly): array
+    public function remotePortProtoList(array $vpnProtoPorts): array
     {
         $specialUdpPorts = [];
         $specialTcpPorts = [];
@@ -130,12 +157,12 @@ class ClientConfig
         }
 
         $clientPortList = [];
-        if (!$tcpOnly) {
-            self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
-            self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
+        if (!$this->tcpOnly) {
+            $this->getItem($clientPortList, $normalUdpPorts);
+            $this->getItem($clientPortList, $specialUdpPorts);
         }
-        self::getItem($clientPortList, $normalTcpPorts, $remoteStrategy);
-        self::getItem($clientPortList, $specialTcpPorts, $remoteStrategy);
+        $this->getItem($clientPortList, $normalTcpPorts);
+        $this->getItem($clientPortList, $specialTcpPorts);
 
         return $clientPortList;
     }
@@ -144,13 +171,13 @@ class ClientConfig
      * @param array<string> &$clientPortList
      * @param array<string> $pickFrom
      */
-    private static function getItem(array &$clientPortList, array $pickFrom, int $remoteStrategy): void
+    private function getItem(array &$clientPortList, array $pickFrom): void
     {
         if (0 === \count($pickFrom)) {
             return;
         }
 
-        switch ($remoteStrategy) {
+        switch ($this->remoteStrategy) {
             case self::STRATEGY_ALL:
                 $clientPortList = array_merge($clientPortList, $pickFrom);
 

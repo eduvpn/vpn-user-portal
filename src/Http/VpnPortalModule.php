@@ -257,7 +257,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $this->tpl->render(
                 'vpnPortalWgConfig',
                 [
-                    'wgConfig' => (string) $wgConfig,
+                    'wgConfig' => $wgConfig->get(),
                 ]
             )
         );
@@ -289,11 +289,7 @@ class VpnPortalModule implements ServiceModuleInterface
             );
 
             $profileConfig = $this->config->profileConfig($profileId);
-            $clientConfig = ClientConfig::get($profileConfig, $this->ca->caCert(), $this->tlsCrypt, $certInfo, ClientConfig::STRATEGY_RANDOM, $tcpOnly);
-
-            // convert the OpenVPN file to "Windows" format, no platform cares, but
-            // in Notepad on Windows it looks not so great everything on one line
-            $clientConfig = str_replace("\n", "\r\n", $clientConfig);
+            $clientConfig = new ClientConfig($profileConfig, $this->ca->caCert(), $this->tlsCrypt, $certInfo, ClientConfig::STRATEGY_RANDOM, $tcpOnly);
 
             // XXX consider the timezone in the data call, this will be weird
             // when not using same timezone as user machine...
@@ -306,9 +302,9 @@ class VpnPortalModule implements ServiceModuleInterface
             $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
 
             return new Response(
-                $clientConfig,
+                $clientConfig->get(),
                 [
-                    'Content-Type' => 'application/x-openvpn-profile',
+                    'Content-Type' => $clientConfig->contentType(),
                     'Content-Disposition' => sprintf('attachment; filename="%s.ovpn"', $clientConfigFile),
                 ]
             );
