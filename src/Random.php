@@ -13,8 +13,8 @@ namespace LC\Portal;
 
 class Random implements RandomInterface
 {
-    public function get(int $length): string
+    public function get(int $len): string
     {
-        return sodium_bin2hex(random_bytes($length));
+        return random_bytes($len);
     }
 }

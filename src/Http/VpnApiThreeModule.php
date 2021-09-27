@@ -13,6 +13,7 @@ namespace LC\Portal\Http;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
+use LC\Portal\Base64;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
@@ -165,7 +166,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
     private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, AccessToken $accessToken, bool $tcpOnly): Response
     {
         try {
-            $commonName = $this->random->get(32);
+            $commonName = Base64::encode($this->random->get(32));
             $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->authorizationExpiresAt());
             $this->storage->oCertAdd(
                 $accessToken->userId(),

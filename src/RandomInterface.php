@@ -13,5 +13,5 @@ namespace LC\Portal;
 
 interface RandomInterface
 {
-    public function get(int $length): string;
+    public function get(int $len): string;
 }

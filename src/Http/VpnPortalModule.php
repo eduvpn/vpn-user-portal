@@ -15,6 +15,7 @@ use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
+use LC\Portal\Base64;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
@@ -269,7 +270,7 @@ class VpnPortalModule implements ServiceModuleInterface
             // XXX take ProfileConfig as a parameter...
             // create a certificate
             // generate a random string as the certificate's CN
-            $commonName = $this->random->get(32);
+            $commonName = Base64::encode($this->random->get(32));
             $certInfo = $this->ca->clientCert($commonName, $profileId, $expiresAt);
             $this->storage->oCertAdd(
                 $userId,
