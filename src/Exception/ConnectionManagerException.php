@@ -9,10 +9,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\WireGuard\Exception;
+namespace LC\Portal\Exception;
 
 use Exception;
 
-class WgException extends Exception
+class ConnectionManagerException extends Exception
 {
 }

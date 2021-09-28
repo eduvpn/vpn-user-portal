@@ -12,17 +12,20 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use LC\Portal\OpenVpn\CA\CaInterface;
+use LC\Portal\OpenVpn\TlsCrypt;
 
 class ServerInfo
 {
     private CaInterface $ca;
+    private TlsCrypt $tlsCrypt;
     private string $wgPublicKey;
     private int $wgPort;
     private string $oauthPublicKey;
 
-    public function __construct(CaInterface $ca, string $wgPublicKey, int $wgPort, string $oauthPublicKey)
+    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, string $wgPublicKey, int $wgPort, string $oauthPublicKey)
     {
         $this->ca = $ca;
+        $this->tlsCrypt = $tlsCrypt;
         $this->wgPublicKey = $wgPublicKey;
         $this->wgPort = $wgPort;
         $this->oauthPublicKey = $oauthPublicKey;
@@ -31,6 +34,11 @@ class ServerInfo
     public function ca(): CaInterface
     {
         return $this->ca;
+    }
+
+    public function tlsCrypt(): TlsCrypt
+    {
+        return $this->tlsCrypt;
     }
 
     public function wgPublicKey(): string

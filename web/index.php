@@ -50,12 +50,10 @@ use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OpenVpn\CA\VpnCa;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\PhpSession;
-use LC\Portal\Random;
 use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\Tpl;
-use LC\Portal\WireGuard\Wg;
 use LC\Portal\WireGuard\WgServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
@@ -248,6 +246,15 @@ try {
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($db, 'oauth_');
     $wgServerConfig = new WgServerConfig($baseDir.'/data');
+    $oauthSigner = new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'));
+    $tlsCrypt = new TlsCrypt($baseDir.'/data');
+    $serverInfo = new ServerInfo(
+        $ca,
+        $tlsCrypt,
+        $wgServerConfig->publicKey(),
+        $config->wgPort(),
+        $oauthSigner->publicKey()
+    );
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
@@ -256,18 +263,14 @@ try {
         $cookieBackend,
         $sessionBackend,
         new ConnectionManager($config, new CurlHttpClient(), $storage),
-        new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey(), $config->wgPort()),
         $storage,
         $oauthStorage,
-        new TlsCrypt($baseDir.'/data'),
-        new Random(),
-        $ca,
+        $serverInfo,
         $oauthClientDb,
         $sessionExpiry
     );
     $service->addModule($vpnPortalModule);
 
-    $oauthSigner = new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'));
     $adminPortalModule = new AdminPortalModule(
         $baseDir.'/data',
         $config,
@@ -276,12 +279,7 @@ try {
         $storage,
         $oauthStorage,
         $adminHook,
-        new ServerInfo(
-            $ca,
-            $wgServerConfig->publicKey(),
-            $config->wgPort(),
-            $oauthSigner->publicKey()
-        )
+        $serverInfo
     );
     $service->addModule($adminPortalModule);
 

@@ -28,17 +28,17 @@ class ClientConfig implements ClientConfigInterface
     private CaInfo $caInfo;
     private TlsCrypt $tlsCrypt;
     private CertInfo $certInfo;
-    private int $remoteStrategy;
     private bool $tcpOnly;
+    private int $remoteStrategy;
 
-    public function __construct(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, int $remoteStrategy, bool $tcpOnly)
+    public function __construct(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $tcpOnly, int $remoteStrategy)
     {
         $this->profileConfig = $profileConfig;
         $this->caInfo = $caInfo;
         $this->tlsCrypt = $tlsCrypt;
         $this->certInfo = $certInfo;
-        $this->remoteStrategy = $remoteStrategy;
         $this->tcpOnly = $tcpOnly;
+        $this->remoteStrategy = $remoteStrategy;
     }
 
     public function contentType(): string
@@ -46,6 +46,11 @@ class ClientConfig implements ClientConfigInterface
         return 'application/x-openvpn-profile';
     }
 
+    /**
+     * XXX should this thing throw clientconfigexception? or the constructor?
+     *
+     * @throws \LC\Portal\OpenVpn\Exception\ClientConfigException
+     */
     public function get(): string
     {
         // make a list of ports/proto to add to the configuration file

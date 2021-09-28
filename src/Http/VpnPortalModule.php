@@ -15,41 +15,31 @@ use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use LC\Portal\Base64;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
 use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\LoggerInterface;
-use LC\Portal\OpenVpn\CA\CaInterface;
-use LC\Portal\OpenVpn\ClientConfig;
-use LC\Portal\OpenVpn\Exception\ClientConfigException;
-use LC\Portal\OpenVpn\TlsCrypt;
-use LC\Portal\RandomInterface;
+use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\Tpl;
 use LC\Portal\TplInterface;
 use LC\Portal\Validator;
-use LC\Portal\WireGuard\Wg;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
+    protected DateTimeImmutable $dateTime;
     private Config $config;
     private TplInterface $tpl;
     private CookieInterface $cookie;
     private SessionInterface $session;
     private ConnectionManager $connectionManager;
-    private Wg $wg;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
-    private TlsCrypt $tlsCrypt;
-    private RandomInterface $random;
-    private CaInterface $ca;
+    private ServerInfo $serverInfo;
     private ClientDbInterface $clientDb;
     private DateInterval $sessionExpiry;
-    private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, SessionInterface $session, ConnectionManager $connectionManager, Wg $wg, Storage $storage, OAuthStorage $oauthStorage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
+    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, SessionInterface $session, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
@@ -57,19 +47,11 @@ class VpnPortalModule implements ServiceModuleInterface
         $this->session = $session;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
+        $this->serverInfo = $serverInfo;
         $this->connectionManager = $connectionManager;
-        $this->wg = $wg;
-        $this->tlsCrypt = $tlsCrypt;
-        $this->random = $random;
-        $this->ca = $ca;
         $this->clientDb = $clientDb;
         $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = Dt::get();
-    }
-
-    public function setDateTime(DateTimeImmutable $dateTime): void
-    {
-        $this->dateTime = $dateTime;
     }
 
     public function init(ServiceInterface $service): void
@@ -242,13 +224,14 @@ class VpnPortalModule implements ServiceModuleInterface
 
     private function getWireGuardConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
     {
-        // XXX take ProfileConfig as a parameter...
-        $profileConfig = $this->config->profileConfig($profileId);
-        $wgConfig = $this->wg->addPeer(
-            $profileConfig,
+        // XXX we don't do anything with serverName?
+        $clientConfig = $this->connectionManager->connect(
+            $this->serverInfo,
             $userId,
+            $profileId,
             $displayName,
             $expiresAt,
+            false,
             null,
             null
         );
@@ -257,60 +240,38 @@ class VpnPortalModule implements ServiceModuleInterface
             $this->tpl->render(
                 'vpnPortalWgConfig',
                 [
-                    'wgConfig' => $wgConfig->get(),
+                    'wgConfig' => $clientConfig->get(),
                 ]
             )
         );
     }
 
-    // XXX merge this with the one in VpnApiThreeModule!
     private function getOpenVpnConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $tcpOnly): Response
     {
-        try {
-            // XXX take ProfileConfig as a parameter...
-            // create a certificate
-            // generate a random string as the certificate's CN
-            $commonName = Base64::encode($this->random->get(32));
-            $certInfo = $this->ca->clientCert($commonName, $profileId, $expiresAt);
-            $this->storage->oCertAdd(
-                $userId,
-                $profileId,
-                $commonName,
-                $displayName,
-                $expiresAt,
-                null
-            );
+        // XXX we don't do anything with serverName?
+        $clientConfig = $this->connectionManager->connect(
+            $this->serverInfo,
+            $userId,
+            $profileId,
+            $displayName,
+            $expiresAt,
+            $tcpOnly,
+            null,
+            null
+        );
 
-            $this->storage->userLogAdd(
-                $userId,
-                LoggerInterface::NOTICE,
-                sprintf('new certificate "%s" generated by user', $displayName),
-                $this->dateTime
-            );
+        // special characters don't work in file names as NetworkManager
+        // URL encodes the filename when searching for certificates
+        // https://bugzilla.gnome.org/show_bug.cgi?id=795601
+        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), str_replace(' ', '_', $displayName));
 
-            $profileConfig = $this->config->profileConfig($profileId);
-            $clientConfig = new ClientConfig($profileConfig, $this->ca->caCert(), $this->tlsCrypt, $certInfo, ClientConfig::STRATEGY_RANDOM, $tcpOnly);
-
-            // XXX consider the timezone in the data call, this will be weird
-            // when not using same timezone as user machine...
-
-            // special characters don't work in file names as NetworkManager
-            // URL encodes the filename when searching for certificates
-            // https://bugzilla.gnome.org/show_bug.cgi?id=795601
-            $displayName = str_replace(' ', '_', $displayName);
-
-            $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), $displayName);
-
-            return new Response(
-                $clientConfig->get(),
-                [
-                    'Content-Type' => $clientConfig->contentType(),
-                    'Content-Disposition' => sprintf('attachment; filename="%s.ovpn"', $clientConfigFile),
-                ]
-            );
-        } catch (ClientConfigException $e) {
-            throw new HttpException($e->getMessage(), 406);
-        }
+        return new Response(
+            $clientConfig->get(),
+            [
+                'Content-Type' => $clientConfig->contentType(),
+                'Content-Disposition' => sprintf('attachment; filename="%s.ovpn"', $clientConfigFile),
+            ]
+        );
     }
 
     /**

@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateTimeImmutable;
-use fkooman\OAuth\Server\AccessToken;
 use PDO;
 
 class Storage
@@ -33,7 +32,7 @@ class Storage
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
     }
 
-    public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
+    public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?string $authKey): void
     {
         $stmt = $this->db->prepare(
             'INSERT INTO wg_peers (
@@ -65,7 +64,7 @@ class Storage
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
         $stmt->bindValue(':expires_at', $expiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':auth_key', null !== $accessToken ? $accessToken->authKey() : null, PDO::PARAM_STR | PDO::PARAM_NULL);
+        $stmt->bindValue(':auth_key', $authKey ?? null, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
     }
 
@@ -381,7 +380,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function oCertAdd(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $expiresAt, ?AccessToken $accessToken): void
+    public function oCertAdd(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $expiresAt, ?string $authKey): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -396,7 +395,7 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':display_name', $displayName, PDO::PARAM_STR);
         $stmt->bindValue(':expires_at', $expiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':auth_key', null !== $accessToken ? $accessToken->authKey() : null, PDO::PARAM_STR | PDO::PARAM_NULL);
+        $stmt->bindValue(':auth_key', $authKey ?? null, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
     }
 

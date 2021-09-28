@@ -12,14 +12,20 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use DateTimeImmutable;
+use LC\Portal\Exception\ConnectionManagerException;
 use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\OpenVpn\ClientConfig;
+use LC\Portal\WireGuard\WgClientConfig;
 
 /**
  * List, add and remove connections.
+ * XXX:
+ * - create a separate VpnDaemon class that abstracts all HTTP request/responses
+ *   and verifies/restructures them.
  */
 class ConnectionManager
 {
-    protected DateTimeImmutable $dateTime;
+    protected RandomInterface $random;
     private Config $config;
     private Storage $storage;
     private HttpClientInterface $httpClient;
@@ -29,7 +35,7 @@ class ConnectionManager
         $this->config = $config;
         $this->storage = $storage;
         $this->httpClient = $httpClient;
-        $this->dateTime = new DateTimeImmutable();
+        $this->random = new Random();
     }
 
     /**
@@ -94,7 +100,7 @@ class ConnectionManager
                 $daemonWgPeerList = $daemonCache['w'][$profileConfig->nodeBaseUrl()];
             } else {
                 $daemonWgPeerList = Json::decode(
-                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', ['show_all' => $showAll])->body()
+                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', ['show_all' => $showAll ? 'yes' : 'no'])->body()
                 );
                 $daemonCache['w'][$profileConfig->nodeBaseUrl()] = $daemonWgPeerList;
             }
@@ -171,6 +177,68 @@ class ConnectionManager
         }
     }
 
+    public function connect(ServerInfo $serverInfo, string $userId, string $profileId, string $displayName, DateTimeImmutable $expiresAt, bool $tcpOnly, ?string $publicKey, ?string $authKey): ClientConfigInterface
+    {
+        if (!$this->config->hasProfile($profileId)) {
+            throw new ConnectionManagerException('profile "'.$profileId.'" does not exist');
+        }
+        $profileConfig = $this->config->profileConfig($profileId);
+        if ('openvpn' === $profileConfig->vpnProto()) {
+            $commonName = Base64::encode($this->random->get(32));
+            $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
+            $this->storage->oCertAdd(
+                $userId,
+                $profileId,
+                $commonName,
+                $displayName,
+                $expiresAt,
+                $authKey
+            );
+
+            // this thing can throw an ClientConfigException!
+            return new ClientConfig(
+                $profileConfig,
+                $serverInfo->ca()->caCert(),
+                $serverInfo->tlsCrypt(),
+                $certInfo,
+                $tcpOnly,
+                ClientConfig::STRATEGY_RANDOM
+            );
+        }
+
+        // WireGuard
+        $privateKey = null;
+        if (null === $publicKey) {
+            $privateKey = self::generatePrivateKey();
+            $publicKey = self::extractPublicKey($privateKey);
+        }
+
+        [$ipFour, $ipSix] = $this->getIpAddress($profileConfig);
+
+        // store peer in the DB
+        $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
+
+        // add peer to WG
+        // XXX make sure the public key config is overriden if the public key already exists
+        $this->httpClient->post(
+            $profileConfig->nodeBaseUrl().'/w/add_peer',
+            [],
+            [
+                'public_key' => $publicKey,
+                'ip_net' => [$ipFour.'/32', $ipSix.'/128'],
+            ]
+        );
+
+        return new WgClientConfig(
+            $profileConfig,
+            $privateKey,
+            $ipFour,
+            $ipSix,
+            $serverInfo->wgPublicKey(), // XXX server public key
+            $this->config->wgPort()
+        );
+    }
+
     public function disconnect(string $userId, string $profileId, string $connectionId): void
     {
         // XXX write proper log entries for all cases
@@ -190,5 +258,40 @@ class ConnectionManager
         // WireGuard
         $this->storage->wPeerRemove($userId, $connectionId);
         $this->httpClient->post($profileConfig->nodeBaseUrl().'/w/remove_peer', [], ['public_key' => $connectionId]);
+    }
+
+    /**
+     * @return array{0:string,1:string}
+     */
+    private function getIpAddress(ProfileConfig $profileConfig): array
+    {
+        // make a list of all allocated IPv4 addresses (the IPv6 address is
+        // based on the IPv4 address)
+        $allocatedIpFourList = $this->storage->wgGetAllocatedIpFourAddresses();
+        $ipFourInRangeList = IP::fromIpPrefix($profileConfig->range())->clientIpList();
+        $ipSixInRangeList = IP::fromIpPrefix($profileConfig->range6())->clientIpList(\count($ipFourInRangeList));
+        foreach ($ipFourInRangeList as $k => $ipFourInRange) {
+            if (!\in_array($ipFourInRange, $allocatedIpFourList, true)) {
+                return [$ipFourInRange, $ipSixInRangeList[$k]];
+            }
+        }
+
+        throw new ConnectionManagerException('no free IP address');
+    }
+
+    private static function generatePrivateKey(): string
+    {
+        ob_start();
+        passthru('/usr/bin/wg genkey');
+
+        return trim(ob_get_clean());
+    }
+
+    private static function extractPublicKey(string $privateKey): string
+    {
+        ob_start();
+        passthru("echo {$privateKey} | /usr/bin/wg pubkey");
+
+        return trim(ob_get_clean());
     }
 }

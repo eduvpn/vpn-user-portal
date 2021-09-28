@@ -15,6 +15,7 @@ $baseDir = dirname(__DIR__);
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer\EdDSA;
+use fkooman\OAuth\Server\Signer\EdDSA;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
 use LC\Portal\FileIO;
@@ -26,10 +27,10 @@ use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OpenVpn\CA\VpnCa;
 use LC\Portal\OpenVpn\TlsCrypt;
-use LC\Portal\Random;
+use LC\Portal\OpenVpn\TlsCrypt;
+use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
-use LC\Portal\WireGuard\Wg;
 use LC\Portal\WireGuard\WgServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
@@ -58,17 +59,21 @@ try {
     $service = new ApiService($bearerValidator);
 
     $wgServerConfig = new WgServerConfig($baseDir.'/data');
+    $oauthSigner = new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'));
+    $serverInfo = new ServerInfo(
+        $ca,
+        new TlsCrypt($baseDir.'/data'),
+        $wgServerConfig->publicKey(),
+        $config->wgPort(),
+        $oauthSigner->publicKey()
+    );
 
-    // API v3
     $service->addModule(
         new VpnApiThreeModule(
             $config,
             $storage,
-            new TlsCrypt($baseDir.'/data'),
-            new Random(),
-            $ca,
-            new ConnectionManager($config, new CurlHttpClient(), $storage),
-            new Wg(new CurlHttpClient(), $storage, $wgServerConfig->publicKey(), $config->wgPort())
+            $serverInfo,
+            new ConnectionManager($config, new CurlHttpClient(), $storage)
         )
     );
 

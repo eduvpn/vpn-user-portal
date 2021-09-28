@@ -18,6 +18,8 @@ class WgServerConfig
 {
     private string $dataDir;
 
+    // XXX perhaps we can give every node their own wgPort / wgPublicKey
+    // instead of one globally?
     public function __construct(string $dataDir)
     {
         $this->dataDir = $dataDir;

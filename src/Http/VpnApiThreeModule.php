@@ -13,43 +13,25 @@ namespace LC\Portal\Http;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
-use LC\Portal\Base64;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
-use LC\Portal\Dt;
-use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\LoggerInterface;
-use LC\Portal\OpenVpn\CA\CaInterface;
-use LC\Portal\OpenVpn\ClientConfig;
-use LC\Portal\OpenVpn\Exception\ClientConfigException;
-use LC\Portal\OpenVpn\TlsCrypt;
-use LC\Portal\ProfileConfig;
-use LC\Portal\RandomInterface;
+use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\Validator;
-use LC\Portal\WireGuard\Wg;
 
 class VpnApiThreeModule implements ServiceModuleInterface
 {
     private Config $config;
     private Storage $storage;
-    private TlsCrypt $tlsCrypt;
-    private RandomInterface $random;
-    private CaInterface $ca;
+    private ServerInfo $serverInfo;
     private ConnectionManager $connectionManager;
-    private Wg $wg;
-    private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, Storage $storage, TlsCrypt $tlsCrypt, RandomInterface $random, CaInterface $ca, ConnectionManager $connectionManager, Wg $wg)
+    public function __construct(Config $config, Storage $storage, ServerInfo $serverInfo, ConnectionManager $connectionManager)
     {
         $this->config = $config;
         $this->storage = $storage;
-        $this->tlsCrypt = $tlsCrypt;
-        $this->random = $random;
-        $this->ca = $ca;
+        $this->serverInfo = $serverInfo;
         $this->connectionManager = $connectionManager;
-        $this->wg = $wg;
-        $this->dateTime = Dt::get();
     }
 
     public function init(ServiceInterface $service): void
@@ -92,6 +74,8 @@ class VpnApiThreeModule implements ServiceModuleInterface
         $service->post(
             '/v3/connect',
             function (AccessToken $accessToken, Request $request): Response {
+                // make sure all client configurations / connections initiated
+                // by this client are removed / disconnected
                 $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
                 // XXX catch InputValidationException
@@ -119,34 +103,48 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
 
-                switch ($profileConfig->vpnProto()) {
-                    case 'openvpn':
-                        $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => \in_array($s, ['on', 'off'], true));
+                if ('openvpn' === $profileConfig->vpnProto()) {
+                    $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => \in_array($s, ['on', 'off'], true));
 
-                        return $this->getOpenVpnConfigResponse($profileConfig, $accessToken, $tcpOnly);
+                    $clientConfig = $this->connectionManager->connect(
+                        $this->serverInfo,
+                        $accessToken->userId(),
+                        $profileConfig->profileId(),
+                        $accessToken->clientId(),
+                        $accessToken->authorizationExpiresAt(),
+                        $tcpOnly,
+                        null,
+                        $accessToken->authKey(),
+                    );
 
-                    case 'wireguard':
-                        $wgConfig = $this->wg->addPeer(
-                            $profileConfig,
-                            $accessToken->userId(),
-                            $accessToken->clientId(),
-                            $accessToken->authorizationExpiresAt(),
-                            $accessToken,
-                            $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s))
-                        );
-
-                        return new Response(
-                            $wgConfig->get(),
-                            [
-                                'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                                'Content-Type' => $wgConfig->contentType(),
-                            ]
-                        );
-
-                    default:
-                        // XXX why not exception?
-                        return new JsonResponse(['error' => 'invalid vpn_type'], [], 500);
+                    return new Response(
+                        $clientConfig->get(),
+                        [
+                            'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                            'Content-Type' => $clientConfig->contentType(),
+                        ]
+                    );
                 }
+
+                // WireGuard
+                $clientConfig = $this->connectionManager->connect(
+                    $this->serverInfo,
+                    $accessToken->userId(),
+                    $profileConfig->profileId(),
+                    $accessToken->clientId(),
+                    $accessToken->authorizationExpiresAt(),
+                    false,
+                    $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s)),
+                    $accessToken->authKey()
+                );
+
+                return new Response(
+                    $clientConfig->get(),
+                    [
+                        'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                        'Content-Type' => $clientConfig->contentType(),
+                    ]
+                );
             }
         );
 
@@ -158,50 +156,5 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 return new Response(null, [], 204);
             }
         );
-    }
-
-    /**
-     * XXX want only 1 code path both for portal and for API.
-     */
-    private function getOpenVpnConfigResponse(ProfileConfig $profileConfig, AccessToken $accessToken, bool $tcpOnly): Response
-    {
-        try {
-            $commonName = Base64::encode($this->random->get(32));
-            $certInfo = $this->ca->clientCert($commonName, $profileConfig->profileId(), $accessToken->authorizationExpiresAt());
-            $this->storage->oCertAdd(
-                $accessToken->userId(),
-                $profileConfig->profileId(),
-                $commonName,
-                $accessToken->clientId(),
-                $accessToken->authorizationExpiresAt(),
-                $accessToken
-            );
-
-            $this->storage->userLogAdd(
-                $accessToken->userId(),
-                LoggerInterface::NOTICE,
-                sprintf('new certificate generated for "%s"', $accessToken->clientId()),
-                $this->dateTime
-            );
-
-            $clientConfig = new ClientConfig(
-                $profileConfig,
-                $this->ca->caCert(),
-                $this->tlsCrypt,
-                $certInfo,
-                ClientConfig::STRATEGY_RANDOM,
-                $tcpOnly
-            );
-
-            return new Response(
-                $clientConfig->get(),
-                [
-                    'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                    'Content-Type' => $clientConfig->contentType(),
-                ]
-            );
-        } catch (ClientConfigException $e) {
-            throw new HttpException($e->getMessage(), 406);
-        }
     }
 }
