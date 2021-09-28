@@ -26,7 +26,6 @@ use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OpenVpn\CA\VpnCa;
 use LC\Portal\OpenVpn\TlsCrypt;
-use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
