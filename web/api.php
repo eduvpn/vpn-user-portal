@@ -15,7 +15,6 @@ $baseDir = dirname(__DIR__);
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer\EdDSA;
-use fkooman\OAuth\Server\Signer\EdDSA;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
 use LC\Portal\FileIO;
