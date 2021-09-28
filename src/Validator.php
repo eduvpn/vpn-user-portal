@@ -22,11 +22,11 @@ use RangeException;
 class Validator
 {
     private const REGEXP_USER_ID = '/^.+$/';
-    private const REGEXP_COMMON_NAME = '/^[A-Za-z0-9+\\/]+={0,2}$/';    // XXX improve this?
+    private const REGEXP_COMMON_NAME = '/^[A-Za-z0-9_\-]$/'; // Base64UrlSafe
     private const REGEXP_USER_AUTH_PASS = '/^.+$/';
     private const REGEXP_USER_PASS = '/^.{8,}$/';
     private const REGEXP_DISPLAY_NAME = '/^.+$/';
-    private const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+\\/]+={0,2}$/';    // XXX improve this?
+    private const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+\\/]+={0,2}$/'; // Base64 XXX improve this?
     private const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
     private const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';
     private const REGEXP_SERVER_NAME = '/^[a-zA-Z0-9-.]+$/';

@@ -184,7 +184,7 @@ class ConnectionManager
         }
         $profileConfig = $this->config->profileConfig($profileId);
         if ('openvpn' === $profileConfig->vpnProto()) {
-            $commonName = Base64::encode($this->random->get(32));
+            $commonName = Base64UrlSafe::encodeUnpadded($this->random->get(32));
             $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
             $this->storage->oCertAdd(
                 $userId,
