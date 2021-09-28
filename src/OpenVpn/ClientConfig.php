@@ -117,11 +117,7 @@ class ClientConfig implements ClientConfigInterface
             $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) Binary::safeSubstr($remoteProtoPort, 4), Binary::safeSubstr($remoteProtoPort, 0, 3));
         }
 
-        // convert the OpenVPN file to "Windows" format, no platform cares, but
-        // in Notepad on Windows it looks not so great everything on one line
-        // XXX it seems TunnelKit *does* care and wants Windows format?!
-        // or maybe it just needs it to be consistent...
-        return str_replace("\n", "\r\n", implode(PHP_EOL, $clientConfig));
+        return implode(PHP_EOL, $clientConfig);
     }
 
     /**
