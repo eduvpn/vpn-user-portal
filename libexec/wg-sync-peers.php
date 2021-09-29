@@ -17,6 +17,21 @@ use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Storage;
 use LC\Portal\VpnDaemon;
 
+// XXX also disconnect *openvpn* clients, not just WG, but that is mostly in
+// order to kick clients that are currently connected with expired certificates?
+// should this script also delete/disconnect *expired* certificates/public keys from the database? that sounds smart
+// then we can get rid of libexec/disconnect-expired-certificates and not longer need housekeeping to delete certs/public keys
+// housekeeping could then run daily to remove oauth session and log entries
+// this sync script could run every 5 minutes for example taking care of:
+// 1. make sure wg is in sync with db
+// 2. remove old certificates / peer configs from db, and then also
+// 3. disconnect openvpn clients with certs that are no longer valid and remove peers no longer valid
+//
+// rename script to "daemon-sync.php" for example
+//
+// or maybe simply have 1 housekeeping cron job that runs every 5 minutes that
+// does everything? that may make more sense and it is easier to have only 1
+// script instead of 2, or 3
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage(
