@@ -13,28 +13,24 @@ namespace LC\Portal;
 
 use DateTimeImmutable;
 use LC\Portal\Exception\ConnectionManagerException;
-use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\OpenVpn\ClientConfig;
 use LC\Portal\WireGuard\WgClientConfig;
 
 /**
  * List, add and remove connections.
- * XXX:
- * - create a separate VpnDaemon class that abstracts all HTTP request/responses
- *   and verifies/restructures them.
  */
 class ConnectionManager
 {
     protected RandomInterface $random;
     private Config $config;
     private Storage $storage;
-    private HttpClientInterface $httpClient;
+    private VpnDaemon $vpnDaemon;
 
-    public function __construct(Config $config, HttpClientInterface $httpClient, Storage $storage)
+    public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage)
     {
         $this->config = $config;
         $this->storage = $storage;
-        $this->httpClient = $httpClient;
+        $this->vpnDaemon = $vpnDaemon;
         $this->random = new Random();
     }
 
@@ -47,12 +43,6 @@ class ConnectionManager
         // keep the record of all nodeBaseUrls we talked to so we only hit them
         // once... multiple profiles can have the same nodeBaseUrl if the run
         // on the same machine/VM
-
-        $daemonCache = [
-            'o' => [],
-            'w' => [],
-        ];
-
         foreach ($this->config->profileConfigList() as $profileConfig) {
             $profileId = $profileConfig->profileId();
             $connectionList[$profileId] = [];
@@ -60,16 +50,7 @@ class ConnectionManager
             if ('openvpn' === $profileConfig->vpnProto()) {
                 // OpenVPN
                 $certificateList = $this->storage->oCertListByProfileId($profileId);
-                // XXX error handling
-
-                if (\array_key_exists($profileConfig->nodeBaseUrl(), $daemonCache['o'])) {
-                    $daemonConnectionList = $daemonCache['o'][$profileConfig->nodeBaseUrl()];
-                } else {
-                    $daemonConnectionList = Json::decode(
-                        $this->httpClient->get($profileConfig->nodeBaseUrl().'/o/connection_list')->body()
-                    );
-                    $daemonCache['o'][$profileConfig->nodeBaseUrl()] = $daemonConnectionList;
-                }
+                $daemonConnectionList = $this->vpnDaemon->oConnectionList($profileConfig->nodeBaseUrl());
 
                 $o = [];
                 foreach ($daemonConnectionList['connection_list'] as $connectionEntry) {
@@ -94,16 +75,7 @@ class ConnectionManager
 
             // WireGuard
             $storageWgPeerList = $this->storage->wPeerListByProfileId($profileId);
-            // XXX error handling
-
-            if (\array_key_exists($profileConfig->nodeBaseUrl(), $daemonCache['w'])) {
-                $daemonWgPeerList = $daemonCache['w'][$profileConfig->nodeBaseUrl()];
-            } else {
-                $daemonWgPeerList = Json::decode(
-                    $this->httpClient->get($profileConfig->nodeBaseUrl().'/w/peer_list', ['show_all' => $showAll ? 'yes' : 'no'])->body()
-                );
-                $daemonCache['w'][$profileConfig->nodeBaseUrl()] = $daemonWgPeerList;
-            }
+            $daemonWgPeerList = $this->vpnDaemon->wPeerList($profileConfig->nodeBaseUrl(), $showAll);
 
             $w = [];
             foreach ($daemonWgPeerList['peer_list'] as $peerEntry) {
@@ -215,26 +187,15 @@ class ConnectionManager
 
         [$ipFour, $ipSix] = $this->getIpAddress($profileConfig);
 
-        // store peer in the DB
         $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
-
-        // add peer to WG
-        // XXX make sure the public key config is overriden if the public key already exists
-        $this->httpClient->post(
-            $profileConfig->nodeBaseUrl().'/w/add_peer',
-            [],
-            [
-                'public_key' => $publicKey,
-                'ip_net' => [$ipFour.'/32', $ipSix.'/128'],
-            ]
-        );
+        $this->vpnDaemon->wPeerAdd($profileConfig->nodeBaseUrl(), $publicKey, $ipFour, $ipSix);
 
         return new WgClientConfig(
             $profileConfig,
             $privateKey,
             $ipFour,
             $ipSix,
-            $serverInfo->wgPublicKey(), // XXX server public key
+            $serverInfo->wgPublicKey(),
             $this->config->wgPort()
         );
     }
@@ -250,14 +211,13 @@ class ConnectionManager
 
         if ('openvpn' === $profileConfig->vpnProto()) {
             $this->storage->oCertDelete($userId, $connectionId);
-            $this->httpClient->post($profileConfig->nodeBaseUrl().'/o/disconnect_client', [], ['common_name' => $connectionId]);
+            $this->vpnDaemon->oDisconnectClient($profileConfig->nodeBaseUrl(), $connectionId);
 
             return;
         }
 
-        // WireGuard
         $this->storage->wPeerRemove($userId, $connectionId);
-        $this->httpClient->post($profileConfig->nodeBaseUrl().'/w/remove_peer', [], ['public_key' => $connectionId]);
+        $this->vpnDaemon->wPeerRemove($profileConfig->nodeBaseUrl(), $connectionId);
     }
 
     /**

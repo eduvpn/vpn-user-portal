@@ -54,6 +54,7 @@ use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\Tpl;
+use LC\Portal\VpnDaemon;
 use LC\Portal\WireGuard\WgServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
@@ -256,13 +257,15 @@ try {
         $oauthSigner->publicKey()
     );
 
+    $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient()), $storage);
+
     // portal module
     $vpnPortalModule = new VpnPortalModule(
         $config,
         $tpl,
         $cookieBackend,
         $sessionBackend,
-        new ConnectionManager($config, new CurlHttpClient(), $storage),
+        $connectionManager,
         $storage,
         $oauthStorage,
         $serverInfo,
@@ -275,7 +278,7 @@ try {
         $baseDir.'/data',
         $config,
         $tpl,
-        new ConnectionManager($config, new CurlHttpClient(), $storage),
+        $connectionManager,
         $storage,
         $oauthStorage,
         $adminHook,

@@ -18,6 +18,7 @@ use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
+use LC\Portal\VpnDaemon;
 
 function getMaxClientLimit(ProfileConfig $profileConfig): int
 {
@@ -108,7 +109,7 @@ try {
 
     $connectionManager = new ConnectionManager(
         $config,
-        new CurlHttpClient(),
+        new VpnDaemon(new CurlHttpClient()),
         $storage
     );
 

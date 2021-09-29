@@ -29,6 +29,7 @@ use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
+use LC\Portal\VpnDaemon;
 use LC\Portal\WireGuard\WgServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
@@ -71,7 +72,7 @@ try {
             $config,
             $storage,
             $serverInfo,
-            new ConnectionManager($config, new CurlHttpClient(), $storage)
+            new ConnectionManager($config, new VpnDaemon(new CurlHttpClient()), $storage)
         )
     );
 
