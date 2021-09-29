@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use LC\Portal\HttpClient\HttpClientInterface;
+use LC\Portal\HttpClient\HttpClientRequest;
 
 /**
  * Class interfacing with vpn-daemon and preparing the response data to be
@@ -31,40 +32,87 @@ class VpnDaemon
         $this->httpClient = $httpClient;
     }
 
+    /**
+     * @return array<string,array{public_key:string,ip_net:array{0:string,1:string},last_handshake_time:string,bytes_transferred:int}>
+     */
     public function wPeerList(string $nodeBaseUrl, bool $showAll): array
     {
-        return Json::decode(
-            $this->httpClient->get($nodeBaseUrl.'/w/peer_list', ['show_all' => $showAll ? 'yes' : 'no'])->body()
+        $wPeerList = Json::decode(
+            $this->httpClient->send(
+                new HttpClientRequest('GET', $nodeBaseUrl.'/w/peer_list', ['show_all' => $showAll ? 'yes' : 'no'])
+            )->body()
         );
+
+        $pList = [];
+        foreach ($wPeerList['peer_list'] as $peerInfo) {
+            $pList[$peerInfo['public_key']] = $peerInfo;
+        }
+
+        return $pList;
     }
 
     public function wPeerAdd(string $nodeBaseUrl, string $publicKey, string $ipFour, string $ipSix): void
     {
-        // XXX make sure the public key config is overriden if the public key already exists
-        $this->httpClient->post(
-            $nodeBaseUrl.'/w/add_peer',
-            [],
-            [
-                'public_key' => $publicKey,
-                'ip_net' => [$ipFour.'/32', $ipSix.'/128'],
-            ]
+        $this->httpClient->send(
+            new HttpClientRequest(
+                'POST',
+                $nodeBaseUrl.'/w/add_peer',
+                [],
+                [
+                    'public_key' => $publicKey,
+                    'ip_net' => [$ipFour.'/32', $ipSix.'/128'],
+                ]
+            )
         );
     }
 
     public function wPeerRemove(string $nodeBaseUrl, string $publicKey): void
     {
-        $this->httpClient->post($nodeBaseUrl.'/w/remove_peer', [], ['public_key' => $publicKey]);
+        $this->httpClient->send(
+            new HttpClientRequest(
+                'POST',
+                $nodeBaseUrl.'/w/remove_peer',
+                [],
+                [
+                    'public_key' => $publicKey,
+                ]
+            )
+        );
     }
 
+    /**
+     * @return array<string,array{common_name:string,ip_four:string,ip_six:string}>
+     */
     public function oConnectionList(string $nodeBaseUrl): array
     {
-        return Json::decode(
-            $this->httpClient->get($nodeBaseUrl.'/o/connection_list')->body()
+        $oConnectionList = Json::decode(
+            $this->httpClient->send(
+                new HttpClientRequest(
+                    'GET',
+                    $nodeBaseUrl.'/o/connection_list'
+                )
+            )->body()
         );
+
+        $cList = [];
+        foreach ($oConnectionList['connection_list'] as $clientInfo) {
+            $cList[$clientInfo['common_name']] = $clientInfo;
+        }
+
+        return $cList;
     }
 
     public function oDisconnectClient(string $nodeBaseUrl, string $commonName): void
     {
-        $this->httpClient->post($nodeBaseUrl.'/o/disconnect_client', [], ['common_name' => $commonName]);
+        $this->httpClient->send(
+            new HttpClientRequest(
+                'POST',
+                $nodeBaseUrl.'/o/disconnect_client',
+                [],
+                [
+                    'common_name' => $commonName,
+                ]
+            )
+        );
     }
 }

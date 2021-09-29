@@ -49,23 +49,18 @@ class ConnectionManager
 
             if ('openvpn' === $profileConfig->vpnProto()) {
                 // OpenVPN
-                $certificateList = $this->storage->oCertListByProfileId($profileId);
-                $daemonConnectionList = $this->vpnDaemon->oConnectionList($profileConfig->nodeBaseUrl());
+                $oCertListByProfileId = $this->storage->oCertListByProfileId($profileId);
+                $oConnectionList = $this->vpnDaemon->oConnectionList($profileConfig->nodeBaseUrl());
 
-                $o = [];
-                foreach ($daemonConnectionList['connection_list'] as $connectionEntry) {
-                    $o[$connectionEntry['common_name']] = $connectionEntry;
-                }
-
-                foreach ($certificateList as $cl) {
-                    if (\array_key_exists($cl['common_name'], $o)) {
+                foreach ($oCertListByProfileId as $certInfo) {
+                    if (\array_key_exists($certInfo['common_name'], $oConnectionList)) {
                         // found it!
-                        $commonName = $cl['common_name'];
+                        $commonName = $certInfo['common_name'];
                         $connectionList[$profileId][] = [
-                            'user_id' => $cl['user_id'],
-                            'connection_id' => $cl['common_name'],
-                            'display_name' => $cl['display_name'],
-                            'ip_list' => [$o[$commonName]['ip_four'], $o[$commonName]['ip_six']],
+                            'user_id' => $certInfo['user_id'],
+                            'connection_id' => $certInfo['common_name'],
+                            'display_name' => $certInfo['display_name'],
+                            'ip_list' => [$oConnectionList[$commonName]['ip_four'], $oConnectionList[$commonName]['ip_six']],
                         ];
                     }
                 }
@@ -74,22 +69,17 @@ class ConnectionManager
             }
 
             // WireGuard
-            $storageWgPeerList = $this->storage->wPeerListByProfileId($profileId);
-            $daemonWgPeerList = $this->vpnDaemon->wPeerList($profileConfig->nodeBaseUrl(), $showAll);
+            $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId);
+            $wPeerList = $this->vpnDaemon->wPeerList($profileConfig->nodeBaseUrl(), $showAll);
 
-            $w = [];
-            foreach ($daemonWgPeerList['peer_list'] as $peerEntry) {
-                $w[$peerEntry['public_key']] = $peerEntry;
-            }
-
-            foreach ($storageWgPeerList as $pl) {
-                if (\array_key_exists($pl['public_key'], $w)) {
+            foreach ($wPeerListByProfileId as $peerInfo) {
+                if (\array_key_exists($peerInfo['public_key'], $wPeerList)) {
                     // found it!
                     $connectionList[$profileId][] = [
-                        'user_id' => $pl['user_id'],
-                        'connection_id' => $pl['public_key'],
-                        'display_name' => $pl['display_name'],
-                        'ip_list' => [$pl['ip_four'], $pl['ip_six']],
+                        'user_id' => $peerInfo['user_id'],
+                        'connection_id' => $peerInfo['public_key'],
+                        'display_name' => $peerInfo['display_name'],
+                        'ip_list' => [$peerInfo['ip_four'], $peerInfo['ip_six']],
                     ];
                 }
             }
@@ -202,7 +192,6 @@ class ConnectionManager
 
     public function disconnect(string $userId, string $profileId, string $connectionId): void
     {
-        // XXX write proper log entries for all cases
         if (!$this->config->hasProfile($profileId)) {
             // profile does not exist (anymore)
             return;

@@ -17,37 +17,16 @@ use RuntimeException;
 
 class CurlHttpClient implements HttpClientInterface
 {
-    use HttpClientTrait;
-
-    /** @var array<string> */
-    private $requestHeaders = [];
-
-    public function __construct(?string $authToken = null)
-    {
-        if (null !== $authToken) {
-            $this->requestHeaders[] = 'Authorization: Bearer '.$authToken;
-        }
-    }
-
-    /**
-     * @param array<string,string> $queryParameters
-     * @param array<string>        $requestHeaders
-     */
-    public function get(string $requestUrl, array $queryParameters = [], array $requestHeaders = []): HttpClientResponse
+    public function send(HttpClientRequest $httpClientRequest): HttpClientResponse
     {
         if (false === $curlChannel = curl_init()) {
             throw new RuntimeException('unable to create cURL channel');
         }
 
-        if (0 !== \count($queryParameters)) {
-            $qSep = false === strpos($requestUrl, '?') ? '?' : '&';
-            $requestUrl .= $qSep.http_build_query($queryParameters);
-        }
-
         $headerList = '';
         $curlOptions = [
-            CURLOPT_URL => $requestUrl,
-            CURLOPT_HTTPHEADER => array_merge($this->requestHeaders, $requestHeaders),
+            CURLOPT_URL => $httpClientRequest->requestUrl(),
+            CURLOPT_HTTPHEADER => $httpClientRequest->requestHeaders(),
             CURLOPT_HEADER => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => false,
@@ -70,68 +49,9 @@ class CurlHttpClient implements HttpClientInterface
             },
         ];
 
-        if (false === curl_setopt_array($curlChannel, $curlOptions)) {
-            throw new RuntimeException('unable to set cURL options');
+        if ('POST' === $httpClientRequest->requestMethod()) {
+            $curlOptions[CURLOPT_POSTFIELDS] = $httpClientRequest->postParameters();
         }
-
-        $responseData = curl_exec($curlChannel);
-        if (!\is_string($responseData)) {
-            throw new HttpClientException(sprintf('failure performing the HTTP request: "%s"', curl_error($curlChannel)));
-        }
-
-        $responseCode = (int) curl_getinfo($curlChannel, CURLINFO_HTTP_CODE);
-        curl_close($curlChannel);
-
-        return new HttpClientResponse(
-            $responseCode,
-            $headerList,
-            $responseData
-        );
-    }
-
-    /**
-     * @param array<string,string>               $queryParameters
-     * @param array<string,array<string>|string> $postParameters
-     * @param array<string>                      $requestHeaders
-     */
-    public function post(string $requestUrl, array $queryParameters = [], array $postParameters = [], array $requestHeaders = []): HttpClientResponse
-    {
-        // XXX do not duplicate all GET code
-        if (false === $curlChannel = curl_init()) {
-            throw new RuntimeException('unable to create cURL channel');
-        }
-
-        if (0 !== \count($queryParameters)) {
-            $qSep = false === strpos($requestUrl, '?') ? '?' : '&';
-            $requestUrl .= $qSep.http_build_query($queryParameters);
-        }
-
-        $headerList = '';
-        $curlOptions = [
-            CURLOPT_URL => $requestUrl,
-            CURLOPT_HTTPHEADER => array_merge($this->requestHeaders, $requestHeaders),
-            CURLOPT_POSTFIELDS => self::buildQuery($postParameters),
-            CURLOPT_HEADER => false,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => false,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_TIMEOUT => 15,
-            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-            CURLOPT_HEADERFUNCTION =>
-            /**
-             * @suppress PhanUnusedClosureParameter
-             *
-             * @param resource $curlChannel
-             * @param string   $headerLine
-             *
-             * @return int
-             */
-            function ($curlChannel, $headerLine) use (&$headerList) {
-                $headerList .= $headerLine;
-
-                return Binary::safeStrlen($headerLine);
-            },
-        ];
 
         if (false === curl_setopt_array($curlChannel, $curlOptions)) {
             throw new RuntimeException('unable to set cURL options');
@@ -139,16 +59,22 @@ class CurlHttpClient implements HttpClientInterface
 
         $responseData = curl_exec($curlChannel);
         if (!\is_string($responseData)) {
-            throw new HttpClientException(sprintf('failure performing the HTTP request: "%s"', curl_error($curlChannel)));
+            throw new HttpClientException($httpClientRequest, null, sprintf('failure performing the HTTP request: "%s"', curl_error($curlChannel)));
         }
 
         $responseCode = (int) curl_getinfo($curlChannel, CURLINFO_HTTP_CODE);
         curl_close($curlChannel);
 
-        return new HttpClientResponse(
+        $httpClientResponse = new HttpClientResponse(
             $responseCode,
             $headerList,
             $responseData
         );
+
+        if (!$httpClientResponse->isOkay()) {
+            throw new HttpClientException($httpClientRequest, $httpClientResponse);
+        }
+
+        return $httpClientResponse;
     }
 }

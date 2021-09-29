@@ -63,4 +63,9 @@ class HttpClientResponse
     {
         return $this->responseBody;
     }
+
+    public function isOkay(): bool
+    {
+        return 200 <= $this->statusCode && 300 > $this->statusCode;
+    }
 }

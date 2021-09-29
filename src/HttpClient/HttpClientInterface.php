@@ -13,16 +13,5 @@ namespace LC\Portal\HttpClient;
 
 interface HttpClientInterface
 {
-    /**
-     * @param array<string,string> $queryParameters
-     * @param array<string>        $requestHeaders
-     */
-    public function get(string $requestUrl, array $queryParameters = [], array $requestHeaders = []): HttpClientResponse;
-
-    /**
-     * @param array<string,string>               $queryParameters
-     * @param array<string,array<string>|string> $postParameters
-     * @param array<string>                      $requestHeaders
-     */
-    public function post(string $requestUrl, array $queryParameters = [], array $postParameters = [], array $requestHeaders = []): HttpClientResponse;
+    public function send(HttpClientRequest $httpClientRequest): HttpClientResponse;
 }
