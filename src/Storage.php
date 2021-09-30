@@ -16,6 +16,9 @@ use PDO;
 
 class Storage
 {
+    public const INCLUDE_EXPIRED = 10;
+    public const EXCLUDE_EXPIRED = 11;
+
     public const CURRENT_SCHEMA_VERSION = '2021071401';
 
     private PDO $db;
@@ -167,7 +170,7 @@ class Storage
     /**
      * @return array<string,array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
-    public function wPeerListByProfileId(string $profileId): array
+    public function wPeerListByProfileId(string $profileId, int $returnSet): array
     {
         $stmt = $this->db->prepare(
             'SELECT
@@ -188,13 +191,19 @@ class Storage
         $peerList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $publicKey = (string) $resultRow['public_key'];
+            $expiresAt = Dt::get($resultRow['expires_at']);
+            if (self::EXCLUDE_EXPIRED === $returnSet) {
+                if ($expiresAt >= Dt::get()) {
+                    continue;
+                }
+            }
             $peerList[$publicKey] = [
                 'user_id' => (string) $resultRow['user_id'],
                 'display_name' => (string) $resultRow['display_name'],
                 'public_key' => $publicKey,
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
-                'expires_at' => Dt::get($resultRow['expires_at']),
+                'expires_at' => $expiresAt,
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }
@@ -433,16 +442,17 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,common_name:string,display_name:string}>
+     * @return array<array{user_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable}>
      */
-    public function oCertListByProfileId(string $profileId): array
+    public function oCertListByProfileId(string $profileId, int $returnSet): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
                         user_id,
                         common_name,
-                        display_name
+                        display_name,
+                        expires_at
                     FROM
                         certificates
                     WHERE
@@ -454,10 +464,17 @@ class Storage
 
         $certList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $expiresAt = Dt::get($resultRow['expires_at']);
+            if (self::EXCLUDE_EXPIRED === $returnSet) {
+                if ($expiresAt >= Dt::get()) {
+                    continue;
+                }
+            }
             $certList[] = [
                 'user_id' => (string) $resultRow['user_id'],
                 'common_name' => (string) $resultRow['common_name'],
                 'display_name' => (string) $resultRow['display_name'],
+                'expires_at' => $expiresAt,
             ];
         }
 

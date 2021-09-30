@@ -49,7 +49,7 @@ class ConnectionManager
 
             if ('openvpn' === $profileConfig->vpnProto()) {
                 // OpenVPN
-                $oCertListByProfileId = $this->storage->oCertListByProfileId($profileId);
+                $oCertListByProfileId = $this->storage->oCertListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
                 $oConnectionList = $this->vpnDaemon->oConnectionList($profileConfig->nodeBaseUrl());
 
                 foreach ($oCertListByProfileId as $certInfo) {
@@ -69,7 +69,7 @@ class ConnectionManager
             }
 
             // WireGuard
-            $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId);
+            $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
             $wPeerList = $this->vpnDaemon->wPeerList($profileConfig->nodeBaseUrl(), $showAll);
 
             foreach ($wPeerListByProfileId as $peerInfo) {

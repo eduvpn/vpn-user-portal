@@ -54,7 +54,7 @@ try {
         // 3. figure out which ones are missing, add those to WG
         // 4. figure out which ones are no longer there, and remove those <-- XXX todo
 
-        $wPeerListByProfileId = $storage->wPeerListByProfileId($profileConfig->profileId());
+        $wPeerListByProfileId = $storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED);
         $wPeerList = $vpnDaemon->wPeerList($profileConfig->nodeBaseUrl(), true);
 
         // find the peers that are in the database, but not know by the daemon
