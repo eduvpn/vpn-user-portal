@@ -263,7 +263,7 @@ return [
             // The base URL to connect to the VPN node
             // DEFAULT = 'http://127.0.0.1:41194'
             // ** WireGuard,OpenVPN
-            //'nodeBaseUrl' => 'http://127.0.0.1:41194',
+            //'nodeUrl' => 'http://127.0.0.1:41194',
 
             // Block access to local LAN when VPN is active
             // DEFAULT = false
@@ -384,7 +384,7 @@ return [
             // The base URL to connect to the VPN node
             // DEFAULT = 'http://127.0.0.1:41194'
             // ** WireGuard,OpenVPN            
-            //'nodeBaseUrl' => 'http://127.0.0.1:41194',
+            //'nodeUrl' => 'http://127.0.0.1:41194',
 
             // Block access to local LAN when VPN is active
             // ** OpenVPN

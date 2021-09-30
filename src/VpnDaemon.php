@@ -20,7 +20,7 @@ use LC\Portal\HttpClient\HttpClientRequest;
  * oConnectionList to prevent the need to query the same node multiple times in
  * case of multi profile setups.
  *
- * XXX should the nodeBaseUrl parameter be needed on all methods or part of
+ * XXX should the nodeUrl parameter be needed on all methods or part of
  * the constructor?
  */
 class VpnDaemon
@@ -35,11 +35,11 @@ class VpnDaemon
     /**
      * @return array<string,array{public_key:string,ip_net:array{0:string,1:string},last_handshake_time:string,bytes_transferred:int}>
      */
-    public function wPeerList(string $nodeBaseUrl, bool $showAll): array
+    public function wPeerList(string $nodeUrl, bool $showAll): array
     {
         $wPeerList = Json::decode(
             $this->httpClient->send(
-                new HttpClientRequest('GET', $nodeBaseUrl.'/w/peer_list', ['show_all' => $showAll ? 'yes' : 'no'])
+                new HttpClientRequest('GET', $nodeUrl.'/w/peer_list', ['show_all' => $showAll ? 'yes' : 'no'])
             )->body()
         );
 
@@ -52,12 +52,12 @@ class VpnDaemon
     }
 
     // XXX think about adding multiple peers in one call... maybe use JSON content type instead of form encoded?
-    public function wPeerAdd(string $nodeBaseUrl, string $publicKey, string $ipFour, string $ipSix): void
+    public function wPeerAdd(string $nodeUrl, string $publicKey, string $ipFour, string $ipSix): void
     {
         $this->httpClient->send(
             new HttpClientRequest(
                 'POST',
-                $nodeBaseUrl.'/w/add_peer',
+                $nodeUrl.'/w/add_peer',
                 [],
                 [
                     'public_key' => $publicKey,
@@ -68,12 +68,12 @@ class VpnDaemon
     }
 
     // XXX support array for publicKey is probably better!
-    public function wPeerRemove(string $nodeBaseUrl, string $publicKey): void
+    public function wPeerRemove(string $nodeUrl, string $publicKey): void
     {
         $this->httpClient->send(
             new HttpClientRequest(
                 'POST',
-                $nodeBaseUrl.'/w/remove_peer',
+                $nodeUrl.'/w/remove_peer',
                 [],
                 [
                     'public_key' => $publicKey,
@@ -85,13 +85,13 @@ class VpnDaemon
     /**
      * @return array<string,array{common_name:string,ip_four:string,ip_six:string}>
      */
-    public function oConnectionList(string $nodeBaseUrl): array
+    public function oConnectionList(string $nodeUrl): array
     {
         $oConnectionList = Json::decode(
             $this->httpClient->send(
                 new HttpClientRequest(
                     'GET',
-                    $nodeBaseUrl.'/o/connection_list'
+                    $nodeUrl.'/o/connection_list'
                 )
             )->body()
         );
@@ -105,12 +105,12 @@ class VpnDaemon
     }
 
     // XXX support array for commonName is probably better!
-    public function oDisconnectClient(string $nodeBaseUrl, string $commonName): void
+    public function oDisconnectClient(string $nodeUrl, string $commonName): void
     {
         $this->httpClient->send(
             new HttpClientRequest(
                 'POST',
-                $nodeBaseUrl.'/o/disconnect_client',
+                $nodeUrl.'/o/disconnect_client',
                 [],
                 [
                     'common_name' => $commonName,
