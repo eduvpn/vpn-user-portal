@@ -50,7 +50,7 @@ class HttpClientRequest
         if (0 !== \count($this->queryParameters)) {
             // add (additional) query parameters to request URL
             $qSep = false === strpos($requestUrl, '?') ? '?' : '&';
-            $requestUrl .= $requestUrl.$qSep.$this->queryParameters();
+            $requestUrl .= $qSep.$this->queryParameters();
         }
 
         return $requestUrl;
