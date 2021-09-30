@@ -193,7 +193,7 @@ class Storage
             $publicKey = (string) $resultRow['public_key'];
             $expiresAt = Dt::get($resultRow['expires_at']);
             if (self::EXCLUDE_EXPIRED === $returnSet) {
-                if ($expiresAt >= Dt::get()) {
+                if ($expiresAt <= Dt::get()) {
                     continue;
                 }
             }
@@ -466,7 +466,7 @@ class Storage
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $expiresAt = Dt::get($resultRow['expires_at']);
             if (self::EXCLUDE_EXPIRED === $returnSet) {
-                if ($expiresAt >= Dt::get()) {
+                if ($expiresAt <= Dt::get()) {
                     continue;
                 }
             }
