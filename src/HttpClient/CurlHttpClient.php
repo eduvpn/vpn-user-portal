@@ -72,7 +72,7 @@ class CurlHttpClient implements HttpClientInterface
         );
 
         if (!$httpClientResponse->isOkay()) {
-            throw new HttpClientException($httpClientRequest, $httpClientResponse);
+            throw new HttpClientException($httpClientRequest, $httpClientResponse, 'unexpected HTTP response code ('.$responseCode.')');
         }
 
         return $httpClientResponse;
