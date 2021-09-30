@@ -71,6 +71,7 @@ try {
         $wPeerList = $vpnDaemon->wPeerList($nodeUrl, true);
         $publicKeyListToAdd = array_diff(array_keys($peerList), array_keys($wPeerList));
         foreach ($publicKeyListToAdd as $publicKey) {
+            //echo sprintf('**ADD** [%s]: %s (%s,%s)', $nodeUrl, $publicKey, $peerList[$publicKey]['ip_four'], $peerList[$publicKey]['ip_six']).PHP_EOL;
             $vpnDaemon->wPeerAdd(
                 $nodeUrl,
                 $publicKey,
@@ -79,8 +80,9 @@ try {
             );
         }
 
-        $publicKeyListToRemove = array_diff(array_keys($peerList), array_keys($wPeerList));
+        $publicKeyListToRemove = array_diff(array_keys($wPeerList), array_keys($peerList));
         foreach ($publicKeyListToRemove as $publicKey) {
+            //echo sprintf('**REMOVE** [%s]: %s', $nodeUrl, $publicKey).PHP_EOL;
             $vpnDaemon->wPeerRemove(
                 $nodeUrl,
                 $publicKey
