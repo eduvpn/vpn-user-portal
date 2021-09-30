@@ -101,9 +101,9 @@ class ProfileConfig
         return $this->requireArray('aclPermissionList', []);
     }
 
-    public function nodeBaseUrl(): string
+    public function nodeUrl(): string
     {
-        return $this->requireString('nodeBaseUrl', 'http://127.0.0.1:41194');
+        return $this->requireString('nodeUrl', 'http://127.0.0.1:41194');
     }
 
     /**

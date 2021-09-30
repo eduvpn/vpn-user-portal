@@ -29,7 +29,7 @@ use LC\Portal\VpnDaemon;
  *
  * Due to the architecture, e.g. multiple profiles can use the same vpn-daemon
  * and the vpn-daemon has no concept of "profiles" the administration is a bit
- * complicated. A list of peers/clients is created linked to a "nodeBaseUrl",
+ * complicated. A list of peers/clients is created linked to a "nodeUrl",
  * i.e. the URL for connecting to vpn-daemon that belongs to a profile and
  * afterwards perform add/remove/disconnect what is necessary.
  */
@@ -50,7 +50,7 @@ try {
     $certListByNode = [];
 
     foreach ($config->profileConfigList() as $profileConfig) {
-        $nodeUrl = $profileConfig->nodeBaseUrl();
+        $nodeUrl = $profileConfig->nodeUrl();
         if ('wireguard' === $profileConfig->vpnProto()) {
             if (!array_key_exists($nodeUrl, $peerListByNode)) {
                 $peerListByNode[$nodeUrl] = [];
