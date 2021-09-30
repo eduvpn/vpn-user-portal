@@ -89,6 +89,18 @@ try {
             );
         }
     }
+
+    foreach ($certListByNode as $nodeUrl => $certList) {
+        $oConnectionList = $vpnDaemon->oConnectionList($nodeUrl);
+        $commonNameListToDisconnect = array_diff(array_keys($oConnectionList), array_keys($certList));
+        foreach ($commonNameListToDisconnect as $commonName) {
+            //echo sprintf('**DISCONNECT** [%s]: %s', $nodeUrl, $commonName).PHP_EOL;
+            $vpnDaemon->oDisconnectClient(
+                $nodeUrl,
+                $commonName
+            );
+        }
+    }
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 
