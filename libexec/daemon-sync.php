@@ -27,8 +27,6 @@ use LC\Portal\VpnDaemon;
 // 2. remove old certificates / peer configs from db, and then also
 // 3. disconnect openvpn clients with certs that are no longer valid and remove peers no longer valid
 //
-// rename script to "daemon-sync.php" for example
-//
 // or maybe simply have 1 housekeeping cron job that runs every 5 minutes that
 // does everything? that may make more sense and it is easier to have only 1
 // script instead of 2, or 3
