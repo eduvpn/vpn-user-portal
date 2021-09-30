@@ -51,6 +51,7 @@ class VpnDaemon
         return $pList;
     }
 
+    // XXX think about adding multiple peers in one call... maybe use JSON content type instead of form encoded?
     public function wPeerAdd(string $nodeBaseUrl, string $publicKey, string $ipFour, string $ipSix): void
     {
         $this->httpClient->send(
@@ -66,6 +67,7 @@ class VpnDaemon
         );
     }
 
+    // XXX support array for publicKey is probably better!
     public function wPeerRemove(string $nodeBaseUrl, string $publicKey): void
     {
         $this->httpClient->send(
@@ -102,6 +104,7 @@ class VpnDaemon
         return $cList;
     }
 
+    // XXX support array for commonName is probably better!
     public function oDisconnectClient(string $nodeBaseUrl, string $commonName): void
     {
         $this->httpClient->send(

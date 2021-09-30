@@ -45,34 +45,46 @@ try {
         $baseDir.'/schema'
     );
     $vpnDaemon = new VpnDaemon(new CurlHttpClient());
+
+    $peerListByNode = [];
+    $certListByNode = [];
+
     foreach ($config->profileConfigList() as $profileConfig) {
+        $nodeUrl = $profileConfig->nodeBaseUrl();
         if ('wireguard' === $profileConfig->vpnProto()) {
-            $wPeerListByProfileId = $storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED);
-            $wPeerList = $vpnDaemon->wPeerList($profileConfig->nodeBaseUrl(), true);
-
-            // register peers in WG that are (still) missing
-            $publicKeyList = array_diff(array_keys($wPeerListByProfileId), array_keys($wPeerList));
-            foreach ($publicKeyList as $publicKey) {
-                $vpnDaemon->wPeerAdd(
-                    $profileConfig->nodeBaseUrl(),
-                    $publicKey,
-                    $wPeerListByProfileId[$publicKey]['ip_four'],
-                    $wPeerListByProfileId[$publicKey]['ip_six']
-                );
+            if (!array_key_exists($nodeUrl, $peerListByNode)) {
+                $peerListByNode[$nodeUrl] = [];
             }
+            $wPeerListByProfileId = $storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED);
+            $peerListByNode[$nodeUrl] = array_merge($peerListByNode[$nodeUrl], $wPeerListByProfileId);
+        }
+        if ('openvpn' === $profileConfig->vpnProto()) {
+            if (!array_key_exists($nodeUrl, $certListByNode)) {
+                $certListByNode[$nodeUrl] = [];
+            }
+            $oCertListByProfileId = $storage->oCertListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED);
+            $certListByNode[$nodeUrl] = array_merge($certListByNode[$nodeUrl], $oCertListByProfileId);
+        }
+    }
 
-            // remove peers from WG that are no longer there (or expired)
-            // **XXX**
+    foreach ($peerListByNode as $nodeUrl => $peerList) {
+        $wPeerList = $vpnDaemon->wPeerList($nodeUrl, true);
+        $publicKeyListToAdd = array_diff(array_keys($peerList), array_keys($wPeerList));
+        foreach ($publicKeyListToAdd as $publicKey) {
+            $vpnDaemon->wPeerAdd(
+                $nodeUrl,
+                $publicKey,
+                $peerList[$publicKey]['ip_four'],
+                $peerList[$publicKey]['ip_six']
+            );
         }
 
-        if ('openvpn' === $profileConfig->vpnProto()) {
-            // disconnect OpenVPN clients with expired certificate
-            $oCertListByProfileId = $storage->oCertListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED);
-            $oConnectionList = $vpnDaemon->oConnectionList($profileConfig->nodeBaseUrl());
-
-            // disconnect all CNs not in $oCertListByProfileId
-            // but the daemon will portentially return more than just this profile...
-            // **XXX**
+        $publicKeyListToRemove = array_diff(array_keys($peerList), array_keys($wPeerList));
+        foreach ($publicKeyListToRemove as $publicKey) {
+            $vpnDaemon->wPeerRemove(
+                $nodeUrl,
+                $publicKey
+            );
         }
     }
 } catch (Exception $e) {
