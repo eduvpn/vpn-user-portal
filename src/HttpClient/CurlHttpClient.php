@@ -35,14 +35,9 @@ class CurlHttpClient implements HttpClientInterface
             CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_HEADERFUNCTION =>
             /**
-             * @suppress PhanUnusedClosureParameter
-             *
              * @param resource $curlChannel
-             * @param string   $headerLine
-             *
-             * @return int
              */
-            function ($curlChannel, $headerLine) use (&$headerList) {
+            function ($curlChannel, string $headerLine) use (&$headerList): int {
                 $headerList .= $headerLine;
 
                 return Binary::safeStrlen($headerLine);
