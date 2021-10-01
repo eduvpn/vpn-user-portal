@@ -164,9 +164,9 @@ class Request
     }
 
     /**
-     * @param ?Closure(string):void $c
+     * @param Closure(string):void $c
      */
-    public function requireQueryParameter(string $queryKey, ?Closure $c): string
+    public function requireQueryParameter(string $queryKey, Closure $c): string
     {
         if (!\array_key_exists($queryKey, $this->getData)) {
             throw new HttpException(sprintf('missing query parameter "%s"', $queryKey), 400);
@@ -174,21 +174,20 @@ class Request
         if (!\is_string($this->getData[$queryKey])) {
             throw new HttpException(sprintf('value of query parameter "%s" MUST be string', $queryKey), 400);
         }
-        if (null !== $c) {
-            try {
-                $c($this->getData[$queryKey]);
-            } catch (RangeException $e) {
-                throw new HttpException(sprintf('invalid "%s" [%s]', $queryKey, $e->getMessage()), 400);
-            }
+
+        try {
+            $c($this->getData[$queryKey]);
+        } catch (RangeException $e) {
+            throw new HttpException(sprintf('invalid "%s" [%s]', $queryKey, $e->getMessage()), 400);
         }
 
         return $this->getData[$queryKey];
     }
 
     /**
-     * @param ?Closure(string):void $c
+     * @param Closure(string):void $c
      */
-    public function optionalQueryParameter(string $queryKey, ?Closure $c): ?string
+    public function optionalQueryParameter(string $queryKey, Closure $c): ?string
     {
         if (!\array_key_exists($queryKey, $this->getData)) {
             return null;
@@ -198,9 +197,9 @@ class Request
     }
 
     /**
-     * @param ?Closure(string):void $c
+     * @param Closure(string):void $c
      */
-    public function requirePostParameter(string $postKey, ?Closure $c): string
+    public function requirePostParameter(string $postKey, Closure $c): string
     {
         if (!\array_key_exists($postKey, $this->postData)) {
             throw new HttpException(sprintf('missing post parameter "%s"', $postKey), 400);
@@ -208,21 +207,20 @@ class Request
         if (!\is_string($this->postData[$postKey])) {
             throw new HttpException(sprintf('value of post parameter "%s" MUST be string', $postKey), 400);
         }
-        if (null !== $c) {
-            try {
-                $c($this->postData[$postKey]);
-            } catch (RangeException $e) {
-                throw new HttpException(sprintf('invalid "%s" [%s]', $postKey, $e->getMessage()), 400);
-            }
+
+        try {
+            $c($this->postData[$postKey]);
+        } catch (RangeException $e) {
+            throw new HttpException(sprintf('invalid "%s" [%s]', $postKey, $e->getMessage()), 400);
         }
 
         return $this->postData[$postKey];
     }
 
     /**
-     * @param ?Closure(string):void $c
+     * @param Closure(string):void $c
      */
-    public function optionalPostParameter(string $postKey, ?Closure $c): ?string
+    public function optionalPostParameter(string $postKey, Closure $c): ?string
     {
         if (!\array_key_exists($postKey, $this->postData)) {
             return null;

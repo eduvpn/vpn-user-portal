@@ -11,9 +11,11 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
+use LC\Portal\Base64;
 use LC\Portal\ClientConfigInterface;
 use LC\Portal\IP;
 use LC\Portal\ProfileConfig;
+use LC\Portal\QrCode;
 
 /**
  * Represent a WireGuard client configuration file.
@@ -70,6 +72,11 @@ class WgClientConfig implements ClientConfigInterface
         $output[] = 'Endpoint = '.$this->profileConfig->hostName().':'.(string) $this->wgPort;
 
         return implode(PHP_EOL, $output);
+    }
+
+    public function getQr(): string
+    {
+        return Base64::encode(QrCode::generate($this->get()));
     }
 
     /**

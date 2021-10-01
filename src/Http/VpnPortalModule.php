@@ -240,7 +240,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $this->tpl->render(
                 'vpnPortalWgConfig',
                 [
-                    'wgConfig' => $clientConfig->get(),
+                    'wgClientConfig' => $clientConfig,
                 ]
             )
         );

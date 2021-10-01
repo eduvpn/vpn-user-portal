@@ -37,7 +37,6 @@ use LC\Portal\Http\LogoutModule;
 use LC\Portal\Http\OAuthModule;
 use LC\Portal\Http\PasswdModule;
 use LC\Portal\Http\PhpCookie;
-use LC\Portal\Http\QrModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\Http\UpdateUserInfoHook;
@@ -234,7 +233,6 @@ try {
 
     $service->addBeforeHook(new DisabledUserHook($storage));
     $service->addBeforeHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule));
-    $service->addModule(new QrModule());
 
     // isAdmin
     $adminHook = new AdminHook(
