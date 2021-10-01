@@ -15,6 +15,7 @@ $baseDir = dirname(__DIR__);
 use LC\Portal\Config;
 use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Storage;
+use LC\Portal\SysLogger;
 use LC\Portal\VpnDaemon;
 
 /*
@@ -34,6 +35,8 @@ use LC\Portal\VpnDaemon;
  * afterwards perform add/remove/disconnect what is necessary.
  */
 
+$logger = new SysLogger('vpn-user-portal');
+
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage(
@@ -44,7 +47,7 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $vpnDaemon = new VpnDaemon(new CurlHttpClient());
+    $vpnDaemon = new VpnDaemon(new CurlHttpClient(), $logger);
 
     $peerListByNode = [];
     $certListByNode = [];

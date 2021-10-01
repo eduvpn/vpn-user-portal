@@ -39,6 +39,19 @@ class HttpClientRequest
         $this->requestHeaders = $requestHeaders;
     }
 
+    public function __toString(): string
+    {
+        if ('GET' === $this->requestMethod()) {
+            return 'GET'.' '.$this->requestUrl().' ['.implode(',', $this->requestHeaders).']';
+        }
+
+        if ('POST' === $this->requestMethod()) {
+            return 'POST'.' '.$this->requestUrl().' ['.$this->postParameters().'], ['.implode(',', $this->requestHeaders).']';
+        }
+
+        return 'unsupported request method';
+    }
+
     public function requestMethod(): string
     {
         return $this->requestMethod;

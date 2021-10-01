@@ -18,6 +18,7 @@ use LC\Portal\HttpClient\CurlHttpClient;
 use LC\Portal\Json;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
+use LC\Portal\SysLogger;
 use LC\Portal\VpnDaemon;
 
 function getMaxClientLimit(ProfileConfig $profileConfig): int
@@ -59,6 +60,8 @@ function outputConversion(array $outputData, bool $asJson): void
         echo implode(',', array_values($outputRow)).\PHP_EOL;
     }
 }
+
+$logger = new SysLogger('vpn-user-portal');
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
@@ -109,7 +112,7 @@ try {
 
     $connectionManager = new ConnectionManager(
         $config,
-        new VpnDaemon(new CurlHttpClient()),
+        new VpnDaemon(new CurlHttpClient(), $logger),
         $storage
     );
 

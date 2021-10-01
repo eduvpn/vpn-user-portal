@@ -29,6 +29,11 @@ class HttpClientResponse
         $this->responseBody = $responseBody;
     }
 
+    public function __toString(): string
+    {
+        return $this->statusCode().' '.$this->body().' ['.$this->headerList().']';
+    }
+
     public function statusCode(): int
     {
         return $this->statusCode;

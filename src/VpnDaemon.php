@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use LC\Portal\HttpClient\Exception\HttpClientException;
 use LC\Portal\HttpClient\HttpClientInterface;
 use LC\Portal\HttpClient\HttpClientRequest;
 
@@ -26,10 +27,12 @@ use LC\Portal\HttpClient\HttpClientRequest;
 class VpnDaemon
 {
     private HttpClientInterface $httpClient;
+    private LoggerInterface $logger;
 
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(HttpClientInterface $httpClient, LoggerInterface $logger)
     {
         $this->httpClient = $httpClient;
+        $this->logger = $logger;
     }
 
     /**
@@ -37,49 +40,63 @@ class VpnDaemon
      */
     public function wPeerList(string $nodeUrl, bool $showAll): array
     {
-        $wPeerList = Json::decode(
-            $this->httpClient->send(
-                new HttpClientRequest('GET', $nodeUrl.'/w/peer_list', ['show_all' => $showAll ? 'yes' : 'no'])
-            )->body()
-        );
+        try {
+            $wPeerList = Json::decode(
+                $this->httpClient->send(
+                    new HttpClientRequest('GET', $nodeUrl.'/w/peer_list', ['show_all' => $showAll ? 'yes' : 'no'])
+                )->body()
+            );
 
-        $pList = [];
-        foreach ($wPeerList['peer_list'] as $peerInfo) {
-            $pList[$peerInfo['public_key']] = $peerInfo;
+            $pList = [];
+            foreach ($wPeerList['peer_list'] as $peerInfo) {
+                $pList[$peerInfo['public_key']] = $peerInfo;
+            }
+
+            return $pList;
+        } catch (HttpClientException $e) {
+            $this->logger->error((string) $e);
+
+            return [];
         }
-
-        return $pList;
     }
 
     // XXX think about adding multiple peers in one call... maybe use JSON content type instead of form encoded?
     public function wPeerAdd(string $nodeUrl, string $publicKey, string $ipFour, string $ipSix): void
     {
-        $this->httpClient->send(
-            new HttpClientRequest(
-                'POST',
-                $nodeUrl.'/w/add_peer',
-                [],
-                [
-                    'public_key' => $publicKey,
-                    'ip_net' => [$ipFour.'/32', $ipSix.'/128'],
-                ]
-            )
-        );
+        try {
+            $this->httpClient->send(
+                new HttpClientRequest(
+                    'POST',
+                    $nodeUrl.'/w/add_peer',
+                    [],
+                    [
+                        'public_key' => $publicKey,
+                        'ip_net' => [$ipFour.'/32', $ipSix.'/128'],
+                    ]
+                )
+            );
+        } catch (HttpClientException $e) {
+            $this->logger->error((string) $e);
+        }
     }
 
     // XXX support array for publicKey is probably better!
     public function wPeerRemove(string $nodeUrl, string $publicKey): void
     {
-        $this->httpClient->send(
-            new HttpClientRequest(
-                'POST',
-                $nodeUrl.'/w/remove_peer',
-                [],
-                [
-                    'public_key' => $publicKey,
-                ]
-            )
-        );
+        try {
+            $this->httpClient->send(
+                new HttpClientRequest(
+                    'POST',
+                    $nodeUrl.'/w/remove_peer',
+                    [],
+                    [
+                        'public_key' => $publicKey,
+                    ]
+                )
+            );
+        } catch (HttpClientException $e) {
+            $this->logger->error((string) $e);
+        }
     }
 
     /**
@@ -87,35 +104,45 @@ class VpnDaemon
      */
     public function oConnectionList(string $nodeUrl): array
     {
-        $oConnectionList = Json::decode(
-            $this->httpClient->send(
-                new HttpClientRequest(
-                    'GET',
-                    $nodeUrl.'/o/connection_list'
-                )
-            )->body()
-        );
+        try {
+            $oConnectionList = Json::decode(
+                $this->httpClient->send(
+                    new HttpClientRequest(
+                        'GET',
+                        $nodeUrl.'/o/connection_list'
+                    )
+                )->body()
+            );
 
-        $cList = [];
-        foreach ($oConnectionList['connection_list'] as $clientInfo) {
-            $cList[$clientInfo['common_name']] = $clientInfo;
+            $cList = [];
+            foreach ($oConnectionList['connection_list'] as $clientInfo) {
+                $cList[$clientInfo['common_name']] = $clientInfo;
+            }
+
+            return $cList;
+        } catch (HttpClientException $e) {
+            $this->logger->error((string) $e);
+
+            return [];
         }
-
-        return $cList;
     }
 
     // XXX support array for commonName is probably better!
     public function oDisconnectClient(string $nodeUrl, string $commonName): void
     {
-        $this->httpClient->send(
-            new HttpClientRequest(
-                'POST',
-                $nodeUrl.'/o/disconnect_client',
-                [],
-                [
-                    'common_name' => $commonName,
-                ]
-            )
-        );
+        try {
+            $this->httpClient->send(
+                new HttpClientRequest(
+                    'POST',
+                    $nodeUrl.'/o/disconnect_client',
+                    [],
+                    [
+                        'common_name' => $commonName,
+                    ]
+                )
+            );
+        } catch (HttpClientException $e) {
+            $this->logger->error((string) $e);
+        }
     }
 }
