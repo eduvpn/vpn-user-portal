@@ -150,70 +150,59 @@ class AdminPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/user',
+            '/user_disable_account',
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
+                $userId = self::validateUser($request, $userInfo);
 
-                $adminUserId = $userInfo->userId();
-                $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::userId($s));
-                if (!$this->storage->userExists($userId)) {
-                    throw new HttpException('account does not exist', 404);
+                $this->storage->userDisable($userId);
+                $clientAuthorizations = $this->oauthStorage->getAuthorizations($userId);
+                foreach ($clientAuthorizations as $clientAuthorization) {
+                    // delete and disconnect all (active) configurations
+                    // for this OAuth client authorization
+                    $this->connectionManager->disconnectByAuthKey($clientAuthorization->authKey());
+                    $this->oauthStorage->deleteAuthorization($clientAuthorization->authKey());
                 }
 
-                // if the current user being managed is the account itself,
-                // do not allow this. We don't want admins allow to disable
-                // themselves or remove their own 2FA.
-                if ($adminUserId === $userId) {
-                    throw new HttpException('cannot manage own account', 400);
-                }
-
-                // we use switch/case for user_action, so no need to explicity
-                // validate it
-                $userAction = $request->requirePostParameter('user_action', null);
-
-                switch ($userAction) {
-                    case 'disableAccount':
-                        $this->storage->userDisable($userId);
-                        $clientAuthorizations = $this->oauthStorage->getAuthorizations($userId);
-                        foreach ($clientAuthorizations as $clientAuthorization) {
-                            // delete and disconnect all (active) configurations
-                            // for this OAuth client authorization
-                            $this->connectionManager->disconnectByAuthKey($clientAuthorization->authKey());
-                            $this->oauthStorage->deleteAuthorization($clientAuthorization->authKey());
-                        }
-
-                        // *disconnect* but do not (yet) delete all non-OAuth configs
-                        // XXX how do we do that? for OpenVPN easy, for WG we
-                        // need to avoid the sync to reinstate peer configs for disabled accounts...
-                        // the sync would need to be smarter!
-                        break;
-
-                    case 'enableAccount':
-                        $this->storage->userEnable($userId);
-                        $this->storage->userLogAdd($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
-
-                        break;
-
-                    case 'deleteAccount':
-                        // delete and disconnect all (active) VPN configurations
-                        // for this user
-                        $this->connectionManager->disconnectByUserId($userId);
-
-                        // delete all user data (except log)
-                        $this->storage->userDelete($userId);
-
-                        if ('DbAuthModule' === $this->config->authModule()) {
-                            // remove the user from the local database
-                            $this->storage->localUserDelete($userId);
-                        }
-
-                        return new RedirectResponse($request->getRootUri().'users');
-
-                    default:
-                        throw new HttpException('unsupported "user_action"', 400);
-                }
-
+                // XXX mark all non-OAuth configurations as disabled and
+                // disconnect them if necessary
                 return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
+            }
+        );
+
+        $service->post(
+            '/user_enable_account',
+            function (UserInfo $userInfo, Request $request): Response {
+                $this->requireAdmin($userInfo);
+                $userId = self::validateUser($request, $userInfo);
+
+                $this->storage->userEnable($userId);
+                $this->storage->userLogAdd($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
+
+                // XXX unmark all non-OAuth configuratoins as enabled again
+                return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
+            }
+        );
+
+        $service->post(
+            '/user_delete_account',
+            function (UserInfo $userInfo, Request $request): Response {
+                $this->requireAdmin($userInfo);
+                $userId = self::validateUser($request, $userInfo);
+
+                // delete and disconnect all (active) VPN configurations
+                // for this user
+                $this->connectionManager->disconnectByUserId($userId);
+
+                // delete all user data (except log)
+                $this->storage->userDelete($userId);
+
+                if ('DbAuthModule' === $this->config->authModule()) {
+                    // remove the user from the local database
+                    $this->storage->localUserDelete($userId);
+                }
+
+                return new RedirectResponse($request->getRootUri().'users');
             }
         );
 
@@ -293,6 +282,24 @@ class AdminPortalModule implements ServiceModuleInterface
         if (!$this->adminHook->isAdmin($userInfo)) {
             throw new HttpException('user is not an administrator', 403);
         }
+    }
+
+    /**
+     * Validate the user ID, make sure the admin is not performing actions on
+     * their own account, and make sure the user actually exists.
+     */
+    private function validateUser(Request $request, UserInfo $userInfo): string
+    {
+        $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::userId($s));
+        if (!$this->storage->userExists($userId)) {
+            throw new HttpException('account does not exist', 404);
+        }
+
+        if ($userInfo->userId() === $userId) {
+            throw new HttpException('cannot manage own account', 400);
+        }
+
+        return $userId;
     }
 
     /**
