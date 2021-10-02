@@ -15,13 +15,17 @@ use DateInterval;
 use DateTimeImmutable;
 use LC\Portal\Dt;
 use LC\Portal\FileIO;
+use LC\Portal\Hex;
 use LC\Portal\OpenVpn\CA\Exception\CaException;
+use LC\Portal\Random;
+use LC\Portal\RandomInterface;
 use LC\Portal\Validator;
 use RuntimeException;
 
 class VpnCa implements CaInterface
 {
     protected DateTimeImmutable $dateTime;
+    protected RandomInterface $random;
     private string $caDir;
     private string $caKeyType;
     private string $vpnCaPath;
@@ -34,6 +38,7 @@ class VpnCa implements CaInterface
         $this->vpnCaPath = $vpnCaPath;
         $this->caExpiry = $caExpiry;
         $this->dateTime = Dt::get();
+        $this->random = new Random();
         $this->init();
     }
 
@@ -56,10 +61,10 @@ class VpnCa implements CaInterface
     {
         Validator::serverName($serverName);
         Validator::profileId($profileId);
+        $crtKeyFile = Hex::encode($this->random->get(32));
+        $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA -out-crt "%s.crt" -out-key "%s.key"', $serverName, $profileId, $crtKeyFile, $crtKeyFile));
 
-        $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA', $serverName, $profileId));
-
-        return $this->certInfo($serverName);
+        return $this->certInfo($crtKeyFile);
     }
 
     /**
@@ -75,9 +80,10 @@ class VpnCa implements CaInterface
             throw new CaException(sprintf('can not issue certificates that expire in the past (%s)', $expiresAt->format(DateTimeImmutable::ATOM)));
         }
 
-        $this->execVpnCa(sprintf('-client -name "%s" -ou "%s" -not-after %s', $commonName, $profileId, $expiresAt->format(DateTimeImmutable::ATOM)));
+        $crtKeyFile = Hex::encode($this->random->get(32));
+        $this->execVpnCa(sprintf('-client -name "%s" -ou "%s" -not-after "%s" -out-crt "%s.crt" -out-key "%s.key"', $commonName, $profileId, $expiresAt->format(DateTimeImmutable::ATOM), $crtKeyFile, $crtKeyFile));
 
-        return $this->certInfo($commonName);
+        return $this->certInfo($crtKeyFile);
     }
 
     private function isInitialized(): bool
@@ -105,13 +111,13 @@ class VpnCa implements CaInterface
         );
     }
 
-    private function certInfo(string $commonName): CertInfo
+    private function certInfo(string $crtKeyFile): CertInfo
     {
-        $certKeyInfo = $this->certKeyInfo($commonName.'.crt', $commonName.'.key');
+        $certKeyInfo = $this->certKeyInfo($crtKeyFile.'.crt', $crtKeyFile.'.key');
 
         // delete the crt and key from disk as we no longer need them
-        $this->deleteFile($commonName.'.crt');
-        $this->deleteFile($commonName.'.key');
+        $this->deleteFile($crtKeyFile.'.crt');
+        $this->deleteFile($crtKeyFile.'.key');
 
         return $certKeyInfo;
     }

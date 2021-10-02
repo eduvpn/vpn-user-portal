@@ -12,18 +12,18 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 /**
- * Wrapper class around sodium base64 encoding/decoding functions using the
+ * Wrapper class around sodium hex encoding/decoding functions using the
  * paragonie/constant_time_encoding API.
  */
-class Base64UrlSafe
+class Hex
 {
-    public static function encodeUnpadded(string $string): string
+    public static function encode(string $string): string
     {
-        return sodium_bin2base64($string, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
+        return sodium_bin2hex($string);
     }
 
     public static function decode(string $string): string
     {
-        return sodium_base642bin($string, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
+        return sodium_hex2bin($string);
     }
 }
