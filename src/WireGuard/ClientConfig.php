@@ -20,7 +20,7 @@ use LC\Portal\QrCode;
 /**
  * Represent a WireGuard client configuration file.
  */
-class WgClientConfig implements ClientConfigInterface
+class ClientConfig implements ClientConfigInterface
 {
     private ProfileConfig $profileConfig;
     private ?string $privateKey;

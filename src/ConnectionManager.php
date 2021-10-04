@@ -14,8 +14,8 @@ namespace LC\Portal;
 use DateTimeImmutable;
 use LC\Portal\Exception\ConnectionManagerException;
 use LC\Portal\OpenVpn\ClientConfig;
+use LC\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
 use LC\Portal\WireGuard\Key;
-use LC\Portal\WireGuard\WgClientConfig;
 
 /**
  * List, add and remove connections.
@@ -181,7 +181,7 @@ class ConnectionManager
         $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
         $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl(), $publicKey, $ipFour, $ipSix);
 
-        return new WgClientConfig(
+        return new WireGuardClientConfig(
             $profileConfig,
             $privateKey,
             $ipFour,
