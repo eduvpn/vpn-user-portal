@@ -59,7 +59,7 @@ class WgServerConfig
 
     public function publicKey(): string
     {
-        return self::extractPublicKey($this->privateKey());
+        return Key::extractPublicKey($this->privateKey());
     }
 
     private function privateKey(): string
@@ -69,28 +69,9 @@ class WgServerConfig
             return FileIO::readFile($keyFile);
         }
 
-        $privateKey = self::generatePrivateKey();
+        $privateKey = Key::generatePrivateKey();
         FileIO::writeFile($keyFile, $privateKey);
 
         return $privateKey;
-    }
-
-    /**
-     * XXX duplicate in Wg.php.
-     */
-    private static function generatePrivateKey(): string
-    {
-        ob_start();
-        passthru('/usr/bin/wg genkey');
-
-        return trim(ob_get_clean());
-    }
-
-    private static function extractPublicKey(string $privateKey): string
-    {
-        ob_start();
-        passthru("echo {$privateKey} | /usr/bin/wg pubkey");
-
-        return trim(ob_get_clean());
     }
 }

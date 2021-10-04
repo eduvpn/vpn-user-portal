@@ -14,6 +14,7 @@ namespace LC\Portal;
 use DateTimeImmutable;
 use LC\Portal\Exception\ConnectionManagerException;
 use LC\Portal\OpenVpn\ClientConfig;
+use LC\Portal\WireGuard\Key;
 use LC\Portal\WireGuard\WgClientConfig;
 
 /**
@@ -171,8 +172,8 @@ class ConnectionManager
         // WireGuard
         $privateKey = null;
         if (null === $publicKey) {
-            $privateKey = self::generatePrivateKey();
-            $publicKey = self::extractPublicKey($privateKey);
+            $privateKey = Key::generatePrivateKey();
+            $publicKey = Key::extractPublicKey($privateKey);
         }
 
         [$ipFour, $ipSix] = $this->getIpAddress($profileConfig);
@@ -226,21 +227,5 @@ class ConnectionManager
         }
 
         throw new ConnectionManagerException('no free IP address');
-    }
-
-    private static function generatePrivateKey(): string
-    {
-        ob_start();
-        passthru('/usr/bin/wg genkey');
-
-        return trim(ob_get_clean());
-    }
-
-    private static function extractPublicKey(string $privateKey): string
-    {
-        ob_start();
-        passthru("echo {$privateKey} | /usr/bin/wg pubkey");
-
-        return trim(ob_get_clean());
     }
 }
