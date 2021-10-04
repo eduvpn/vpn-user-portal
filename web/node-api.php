@@ -25,7 +25,7 @@ use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
-use LC\Portal\WireGuard\WgServerConfig;
+use LC\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
@@ -54,7 +54,7 @@ try {
             $storage,
             new ServerConfig(
                 new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data')),
-                new WgServerConfig($baseDir.'/data')
+                new WireGuardServerConfig($baseDir.'/data')
             ),
             new SysLogger('vpn-user-portal-node-api')
         )

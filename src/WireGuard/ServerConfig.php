@@ -14,7 +14,7 @@ namespace LC\Portal\WireGuard;
 use LC\Portal\FileIO;
 use LC\Portal\IP;
 
-class WgServerConfig
+class ServerConfig
 {
     private string $dataDir;
 

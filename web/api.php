@@ -30,7 +30,7 @@ use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\VpnDaemon;
-use LC\Portal\WireGuard\WgServerConfig;
+use LC\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
 
@@ -57,12 +57,12 @@ try {
     );
     $service = new ApiService($bearerValidator);
 
-    $wgServerConfig = new WgServerConfig($baseDir.'/data');
+    $wireGuardServerConfig = new WireGuardServerConfig($baseDir.'/data');
     $oauthSigner = new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'));
     $serverInfo = new ServerInfo(
         $ca,
         new TlsCrypt($baseDir.'/data'),
-        $wgServerConfig->publicKey(),
+        $wireGuardServerConfig->publicKey(),
         $config->wgPort(),
         $oauthSigner->publicKey()
     );

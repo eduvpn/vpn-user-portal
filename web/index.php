@@ -54,7 +54,7 @@ use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\Tpl;
 use LC\Portal\VpnDaemon;
-use LC\Portal\WireGuard\WgServerConfig;
+use LC\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
 
@@ -244,13 +244,13 @@ try {
     $service->addBeforeHook($adminHook);
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($db, 'oauth_');
-    $wgServerConfig = new WgServerConfig($baseDir.'/data');
+    $wireGuardServerConfig = new WireGuardServerConfig($baseDir.'/data');
     $oauthSigner = new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'));
     $tlsCrypt = new TlsCrypt($baseDir.'/data');
     $serverInfo = new ServerInfo(
         $ca,
         $tlsCrypt,
-        $wgServerConfig->publicKey(),
+        $wireGuardServerConfig->publicKey(),
         $config->wgPort(),
         $oauthSigner->publicKey()
     );

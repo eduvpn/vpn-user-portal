@@ -12,16 +12,16 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use LC\Portal\OpenVpn\OpenVpnServerConfig;
-use LC\Portal\WireGuard\WgServerConfig;
+use LC\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 class ServerConfig
 {
     private OpenVpnServerConfig $openVpnServerConfig;
-    private WgServerConfig $wgServerConfig;
+    private WireGuardServerConfig $wireGuardServerConfig;
 
-    public function __construct(OpenVpnServerConfig $openVpnServerConfig, WgServerConfig $wgServerConfig)
+    public function __construct(OpenVpnServerConfig $openVpnServerConfig, WireGuardServerConfig $wireGuardServerConfig)
     {
-        $this->wgServerConfig = $wgServerConfig;
+        $this->wireGuardServerConfig = $wireGuardServerConfig;
         $this->openVpnServerConfig = $openVpnServerConfig;
     }
 
@@ -41,6 +41,6 @@ class ServerConfig
             }
         }
 
-        return array_merge($serverConfig, $this->wgServerConfig->get($profileConfigList, $wgPort));
+        return array_merge($serverConfig, $this->wireGuardServerConfig->get($profileConfigList, $wgPort));
     }
 }
