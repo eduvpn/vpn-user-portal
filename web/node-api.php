@@ -20,7 +20,7 @@ use LC\Portal\Http\NodeApiModule;
 use LC\Portal\Http\Request;
 use LC\Portal\Http\Service;
 use LC\Portal\OpenVpn\CA\VpnCa;
-use LC\Portal\OpenVpn\OpenVpnServerConfig;
+use LC\Portal\OpenVpn\ServerConfig as OpenVpnServerConfig;
 use LC\Portal\OpenVpn\TlsCrypt;
 use LC\Portal\ServerConfig;
 use LC\Portal\Storage;

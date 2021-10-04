@@ -17,7 +17,7 @@ use LC\Portal\OpenVpn\CA\CertInfo;
 use LC\Portal\ProfileConfig;
 use RuntimeException;
 
-class OpenVpnServerConfig
+class ServerConfig
 {
     public const VPN_USER = 'openvpn';
     public const VPN_GROUP = 'openvpn';

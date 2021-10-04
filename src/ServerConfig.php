@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use LC\Portal\OpenVpn\OpenVpnServerConfig;
+use LC\Portal\OpenVpn\ServerConfig as OpenVpnServerConfig;
 use LC\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 class ServerConfig
