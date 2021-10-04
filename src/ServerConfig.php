@@ -41,6 +41,11 @@ class ServerConfig
             }
         }
 
-        return array_merge($serverConfig, $this->wireGuardServerConfig->get($profileConfigList, $wgPort));
+        return array_merge(
+            $serverConfig,
+            [
+                'wg.conf' => $this->wireGuardServerConfig->get($profileConfigList, $wgPort),
+            ]
+        );
     }
 }

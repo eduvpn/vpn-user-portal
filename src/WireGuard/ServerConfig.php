@@ -27,10 +27,8 @@ class ServerConfig
 
     /**
      * @param array<\LC\Portal\ProfileConfig> $profileConfigList
-     *
-     * @return array<string,string>
      */
-    public function get(array $profileConfigList, int $wgPort): array
+    public function get(array $profileConfigList, int $wgPort): string
     {
         $privateKey = $this->privateKey();
         $ipFourList = [];
@@ -47,14 +45,12 @@ class ServerConfig
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 
-        $wgConfig = <<< EOF
+        return <<< EOF
             [Interface]
             Address = {$ipList}
             ListenPort = {$wgPort}
             PrivateKey = {$privateKey}
             EOF;
-
-        return ['wg0.conf' => $wgConfig];
     }
 
     public function publicKey(): string
