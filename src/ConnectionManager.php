@@ -13,7 +13,7 @@ namespace LC\Portal;
 
 use DateTimeImmutable;
 use LC\Portal\Exception\ConnectionManagerException;
-use LC\Portal\OpenVpn\ClientConfig;
+use LC\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use LC\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
 use LC\Portal\WireGuard\Key;
 
@@ -159,13 +159,13 @@ class ConnectionManager
             );
 
             // this thing can throw an ClientConfigException!
-            return new ClientConfig(
+            return new OpenVpnClientConfig(
                 $profileConfig,
                 $serverInfo->ca()->caCert(),
                 $serverInfo->tlsCrypt(),
                 $certInfo,
                 $tcpOnly,
-                ClientConfig::STRATEGY_RANDOM
+                OpenVpnClientConfig::STRATEGY_RANDOM
             );
         }
 
