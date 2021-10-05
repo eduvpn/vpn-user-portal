@@ -27,14 +27,12 @@ class VpnCa implements CaInterface
     protected DateTimeImmutable $dateTime;
     protected RandomInterface $random;
     private string $caDir;
-    private string $caKeyType;
     private string $vpnCaPath;
     private DateInterval $caExpiry;
 
-    public function __construct(string $caDir, string $caKeyType, string $vpnCaPath, DateInterval $caExpiry)
+    public function __construct(string $caDir, string $vpnCaPath, DateInterval $caExpiry)
     {
         $this->caDir = $caDir;
-        $this->caKeyType = $caKeyType;
         $this->vpnCaPath = $vpnCaPath;
         $this->caExpiry = $caExpiry;
         $this->dateTime = Dt::get();
@@ -154,7 +152,7 @@ class VpnCa implements CaInterface
 
     private function execVpnCa(string $cmdArgs): void
     {
-        self::exec(sprintf('CA_DIR=%s CA_KEY_TYPE=%s %s %s', $this->caDir, $this->caKeyType, $this->vpnCaPath, $cmdArgs));
+        self::exec(sprintf('CA_DIR=%s CA_KEY_TYPE=EdDSA %s %s', $this->caDir, $this->vpnCaPath, $cmdArgs));
     }
 
     private static function exec(string $execCmd): void
