@@ -103,6 +103,8 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
 
+                // XXX we can make this independent I think?
+
                 if ('openvpn' === $profileConfig->vpnProto()) {
                     $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => \in_array($s, ['on', 'off'], true));
 
