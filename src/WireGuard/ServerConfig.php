@@ -15,13 +15,6 @@ use LC\Portal\IP;
 
 class ServerConfig
 {
-    private string $publicKey;
-
-    public function __construct(string $publicKey)
-    {
-        $this->publicKey = $publicKey;
-    }
-
     /**
      * @param array<\LC\Portal\ProfileConfig> $profileConfigList
      */
@@ -48,10 +41,5 @@ class ServerConfig
             ListenPort = {$wgPort}
             PrivateKey = {{PRIVATE_KEY}}
             EOF;
-    }
-
-    public function publicKey(): string
-    {
-        return $this->publicKey;
     }
 }
