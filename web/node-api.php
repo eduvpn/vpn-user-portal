@@ -54,7 +54,7 @@ try {
             $storage,
             new ServerConfig(
                 new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data')),
-                new WireGuardServerConfig($baseDir.'/data')
+                new WireGuardServerConfig(FileIO::readFile($baseDir.'/config/wireguard.key'))
             ),
             new SysLogger('vpn-user-portal-node-api')
         )

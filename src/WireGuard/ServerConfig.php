@@ -11,18 +11,15 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
-use LC\Portal\FileIO;
 use LC\Portal\IP;
 
 class ServerConfig
 {
-    private string $dataDir;
+    private string $publicKey;
 
-    // XXX perhaps we can give every node their own wgPort / wgPublicKey
-    // instead of one globally?
-    public function __construct(string $dataDir)
+    public function __construct(string $publicKey)
     {
-        $this->dataDir = $dataDir;
+        $this->publicKey = $publicKey;
     }
 
     /**
@@ -30,7 +27,6 @@ class ServerConfig
      */
     public function get(array $profileConfigList, int $wgPort): string
     {
-        $privateKey = $this->privateKey();
         $ipFourList = [];
         $ipSixList = [];
         foreach ($profileConfigList as $profileConfig) {
@@ -45,29 +41,17 @@ class ServerConfig
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 
+        // the server will replace "{{PRIVATE_KEY}}" by its local private key
         return <<< EOF
             [Interface]
             Address = {$ipList}
             ListenPort = {$wgPort}
-            PrivateKey = {$privateKey}
+            PrivateKey = {{PRIVATE_KEY}}
             EOF;
     }
 
     public function publicKey(): string
     {
-        return Key::extractPublicKey($this->privateKey());
-    }
-
-    private function privateKey(): string
-    {
-        $keyFile = $this->dataDir.'/wireguard.key';
-        if (FileIO::exists($keyFile)) {
-            return FileIO::readFile($keyFile);
-        }
-
-        $privateKey = Key::generatePrivateKey();
-        FileIO::writeFile($keyFile, $privateKey);
-
-        return $privateKey;
+        return $this->publicKey;
     }
 }
