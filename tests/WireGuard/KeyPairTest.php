@@ -20,6 +20,10 @@ use PHPUnit\Framework\TestCase;
  */
 final class KeyPairTest extends TestCase
 {
+    /**
+     * We expect the computePublicKey function to result in the same public key
+     * as the wireguard-tools "wg" command.
+     */
     public function testWgCompare(): void
     {
         // wg genkey
@@ -30,7 +34,11 @@ final class KeyPairTest extends TestCase
         static::assertSame($publicKey, KeyPair::computePublicKey($secretKey));
     }
 
-    public function testGenerateCompute()
+    /**
+     * We expect the public key that is in the output of the generate() call to
+     * be identical to the public key derived from the secret key.
+     */
+    public function testGenerateAndComputeCompare()
     {
         $keyPair = KeyPair::generate();
         static::assertSame($keyPair['public_key'], KeyPair::computePublicKey($keyPair['secret_key']));
