@@ -78,7 +78,7 @@ try {
         $translationDirs[] = $baseDir.'/config/locale/'.$styleName;
     }
 
-    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath(), $config->caExpiry());
+    $ca = new VpnCa($baseDir.'/data/ca');
 
     $sessionExpiry = Expiry::calculate(
         $config->sessionExpiry(),

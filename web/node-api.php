@@ -46,7 +46,7 @@ try {
         $baseDir.'/schema'
     );
     $storage->update();
-    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath(), $config->caExpiry());
+    $ca = new VpnCa($baseDir.'/data/ca');
 
     $service->addModule(
         new NodeApiModule(

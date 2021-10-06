@@ -24,20 +24,16 @@ use RuntimeException;
 
 class VpnCa implements CaInterface
 {
+    private const VPN_CA_PATH = '/usr/bin/vpn-ca';
     protected DateTimeImmutable $dateTime;
     protected RandomInterface $random;
     private string $caDir;
-    private string $vpnCaPath;
-    private DateInterval $caExpiry;
 
-    public function __construct(string $caDir, string $vpnCaPath, DateInterval $caExpiry)
+    public function __construct(string $caDir)
     {
         $this->caDir = $caDir;
-        $this->vpnCaPath = $vpnCaPath;
-        $this->caExpiry = $caExpiry;
         $this->dateTime = Dt::get();
         $this->random = new Random();
-        $this->init();
     }
 
     public function caCert(): CaInfo
@@ -84,15 +80,10 @@ class VpnCa implements CaInterface
         return $this->certInfo($crtKeyFile);
     }
 
-    private function isInitialized(): bool
+    public function initCa(DateInterval $caExpiry): void
     {
-        return $this->hasFile('ca.key') && $this->hasFile('ca.crt');
-    }
-
-    private function init(): void
-    {
-        if ($this->isInitialized()) {
-            return;
+        if ($this->hasFile('ca.key') || $this->hasFile('ca.crt')) {
+            throw new CaException('CA already initialized');
         }
 
         if (!FileIO::exists($this->caDir)) {
@@ -100,11 +91,10 @@ class VpnCa implements CaInterface
             FileIO::createDir($this->caDir, 0700);
         }
 
-        // intitialize new CA
         $this->execVpnCa(
             sprintf(
                 '-init-ca -not-after %s -name "VPN CA"',
-                $this->dateTime->add($this->caExpiry)->format(DateTimeImmutable::ATOM)
+                $this->dateTime->add($caExpiry)->format(DateTimeImmutable::ATOM)
             )
         );
     }
@@ -133,26 +123,9 @@ class VpnCa implements CaInterface
         );
     }
 
-    private function readFile(string $fileName): string
-    {
-        return trim(FileIO::readFile($this->caDir.'/'.$fileName));
-    }
-
-    private function hasFile(string $fileName): bool
-    {
-        return FileIO::exists($this->caDir.'/'.$fileName);
-    }
-
-    private function deleteFile(string $fileName): void
-    {
-        if (false === @unlink($this->caDir.'/'.$fileName)) {
-            throw new RuntimeException(sprintf('unable to delete "%s"', $this->caDir.'/'.$fileName));
-        }
-    }
-
     private function execVpnCa(string $cmdArgs): void
     {
-        self::exec(sprintf('CA_DIR=%s CA_KEY_TYPE=EdDSA %s %s', $this->caDir, $this->vpnCaPath, $cmdArgs));
+        self::exec(sprintf('CA_DIR=%s CA_KEY_TYPE=EdDSA %s %s', $this->caDir, self::VPN_CA_PATH, $cmdArgs));
     }
 
     private static function exec(string $execCmd): void
@@ -166,5 +139,20 @@ class VpnCa implements CaInterface
         if (0 !== $returnValue) {
             throw new RuntimeException(sprintf('command "%s" did not complete successfully: "%s"', $execCmd, implode(PHP_EOL, $commandOutput)));
         }
+    }
+
+    private function readFile(string $fileName): string
+    {
+        return trim(FileIO::readFile($this->caDir.'/'.$fileName));
+    }
+
+    private function hasFile(string $fileName): bool
+    {
+        return FileIO::exists($this->caDir.'/'.$fileName);
+    }
+
+    private function deleteFile(string $fileName): void
+    {
+        FileIO::deleteFile($this->caDir.'/'.$fileName);
     }
 }

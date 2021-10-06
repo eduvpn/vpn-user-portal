@@ -14,11 +14,14 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\FileIO;
+use LC\Portal\OpenVpn\CA\VpnCa;
 use LC\Portal\Storage;
 
 try {
     FileIO::createDir($baseDir.'/data');
     $config = Config::fromFile($baseDir.'/config/config.php');
+
+    // initialize the DB
     $storage = new Storage(
         new PDO(
             $config->dbConfig($baseDir)->dbDsn(),
@@ -28,6 +31,10 @@ try {
         $baseDir.'/schema'
     );
     $storage->init();
+
+    // initialize the CA for OpenVPN
+    $vpnCa = new VpnCa($baseDir.'/data/ca');
+    $vpnCa->initCa($config->caExpiry());
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 
