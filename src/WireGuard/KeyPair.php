@@ -13,6 +13,12 @@ namespace LC\Portal\WireGuard;
 
 use LC\Portal\Base64;
 
+/**
+ * Generate a keypair using libsodium functions. The output of "public_key" is
+ * exactly the same when using the "wg pubkey" command to convert the
+ * "secret_key" to "public_key" so we are quite confident this is a good
+ * approach to avoid needing "exec".
+ */
 class KeyPair
 {
     /**
