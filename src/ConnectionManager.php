@@ -15,7 +15,7 @@ use DateTimeImmutable;
 use LC\Portal\Exception\ConnectionManagerException;
 use LC\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use LC\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
-use LC\Portal\WireGuard\Key;
+use LC\Portal\WireGuard\KeyPair;
 
 /**
  * List, add and remove connections.
@@ -172,8 +172,9 @@ class ConnectionManager
         // WireGuard
         $privateKey = null;
         if (null === $publicKey) {
-            $privateKey = Key::generatePrivateKey();
-            $publicKey = Key::extractPublicKey($privateKey);
+            $keyPair = KeyPair::generate();
+            $privateKey = $keyPair['secret_key'];
+            $publicKey = $keyPair['public_key'];
         }
 
         [$ipFour, $ipSix] = $this->getIpAddress($profileConfig);
