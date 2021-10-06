@@ -7,7 +7,7 @@ return $config->setRules(
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => true,
         '@PHP80Migration' => true,
-	    '@PHP80Migration:risky' => true,
+	  //  '@PHP80Migration:risky' => true,
 	    '@PHPUnit84Migration:risky' => true,
 	    'no_alternative_syntax' => false,
 	    'echo_tag_syntax' => ['format' => 'short'],
