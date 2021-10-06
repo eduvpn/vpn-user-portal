@@ -15,10 +15,19 @@ use LC\Portal\IP;
 
 class ServerConfig
 {
+    private string $secretKey;
+    private int $wgPort;
+
+    public function __construct(string $secretKey, int $wgPort)
+    {
+        $this->secretKey = $secretKey;
+        $this->wgPort = $wgPort;
+    }
+
     /**
      * @param array<\LC\Portal\ProfileConfig> $profileConfigList
      */
-    public function get(array $profileConfigList, int $wgPort): string
+    public function get(array $profileConfigList): string
     {
         $ipFourList = [];
         $ipSixList = [];
@@ -34,12 +43,11 @@ class ServerConfig
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 
-        // the server will replace "{{PRIVATE_KEY}}" by its local private key
         return <<< EOF
             [Interface]
             Address = {$ipList}
-            ListenPort = {$wgPort}
-            PrivateKey = {{PRIVATE_KEY}}
+            ListenPort = {$this->wgPort}
+            PrivateKey = {$this->secretKey}
             EOF;
     }
 }

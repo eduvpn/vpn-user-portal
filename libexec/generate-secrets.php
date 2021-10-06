@@ -14,6 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\Signer\EdDSA;
 use LC\Portal\FileIO;
+use LC\Portal\WireGuard\KeyPair;
 
 try {
     // OAuth key
@@ -27,6 +28,15 @@ try {
     if (!FileIO::exists($nodeKeyFile)) {
         $secretKey = random_bytes(32);
         FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey), 0644);
+    }
+
+    // WireGuard Key
+    $wgSecretKeyFile = $baseDir.'/config/wireguard.secret.key';
+    $wgPublicKeyFile = $baseDir.'/config/wireguard.public.key';
+    if (!FileIO::exists($wgSecretKeyFile) && !FileIO::exists($wgPublicKeyFile)) {
+        $keyPair = KeyPair::generate();
+        FileIO::writeFile($wgSecretKeyFile, $keyPair['secret_key']);
+        FileIO::writeFile($wgPublicKeyFile, $keyPair['public_key']);
     }
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

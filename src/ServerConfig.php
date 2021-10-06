@@ -30,7 +30,7 @@ class ServerConfig
      *
      * @return array<string,string>
      */
-    public function get(array $profileConfigList, int $wgPort, bool $cpuHasAes): array
+    public function get(array $profileConfigList, bool $cpuHasAes): array
     {
         // XXX fix ServerConfigCheck for WG as well!
 //        ServerConfigCheck::verify($profileConfigList);
@@ -44,7 +44,7 @@ class ServerConfig
         return array_merge(
             $serverConfig,
             [
-                'wg.conf' => $this->wireGuardServerConfig->get($profileConfigList, $wgPort),
+                'wg.conf' => $this->wireGuardServerConfig->get($profileConfigList),
             ]
         );
     }
