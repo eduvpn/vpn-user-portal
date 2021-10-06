@@ -20,14 +20,14 @@ try {
     // OAuth key
     $apiKeyFile = $baseDir.'/config/oauth.key';
     if (!FileIO::exists($apiKeyFile)) {
-        FileIO::writeFile($apiKeyFile, EdDSA::generateKey(), 0644);
+        FileIO::writeFile($apiKeyFile, EdDSA::generateKey(), 0444);
     }
 
     // Node Key
     $nodeKeyFile = $baseDir.'/config/node.key';
     if (!FileIO::exists($nodeKeyFile)) {
         $secretKey = random_bytes(32);
-        FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey), 0644);
+        FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey), 0444);
     }
 
     // WireGuard Key
@@ -35,8 +35,8 @@ try {
     $wgPublicKeyFile = $baseDir.'/config/wireguard.public.key';
     if (!FileIO::exists($wgSecretKeyFile) && !FileIO::exists($wgPublicKeyFile)) {
         $keyPair = KeyPair::generate();
-        FileIO::writeFile($wgSecretKeyFile, $keyPair['secret_key']);
-        FileIO::writeFile($wgPublicKeyFile, $keyPair['public_key']);
+        FileIO::writeFile($wgSecretKeyFile, $keyPair['secret_key'], 0444);
+        FileIO::writeFile($wgPublicKeyFile, $keyPair['public_key'], 0444);
     }
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
