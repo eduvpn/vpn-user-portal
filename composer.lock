@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "31e08d373399b65814138b9aa8fd920f",
+    "content-hash": "00813e3e3806524a7faf390a0ac3c258",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
@@ -55,6 +55,50 @@
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
             "time": "2021-08-17T14:53:18+00:00"
+        },
+        {
+            "name": "fkooman/secookie",
+            "version": "v6.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://git.sr.ht/~fkooman/php-secookie",
+                "reference": "d15f592292ecc71f2493f2a3b750097265503fda"
+            },
+            "require": {
+                "ext-date": "*",
+                "ext-pcre": "*",
+                "ext-sodium": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fkooman\\SeCookie\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "fkooman\\SeCookie\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "Modern HTTP cookie and session library",
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.sr.ht/~fkooman/php-secookie"
+            },
+            "time": "2021-10-07T19:37:16+00:00"
         }
     ],
     "packages-dev": [
@@ -2207,6 +2251,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "fkooman/secookie": 20,
         "fkooman/oauth2-server": 20,
         "fkooman/saml-sp": 20
     },
