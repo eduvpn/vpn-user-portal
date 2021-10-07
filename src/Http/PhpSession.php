@@ -9,9 +9,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
-
-use LC\Portal\Http\SessionInterface;
+namespace LC\Portal\Http;
 
 class PhpSession implements SessionInterface
 {
