@@ -14,6 +14,10 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer\EdDSA;
+use fkooman\SeCookie\Cookie;
+use fkooman\SeCookie\CookieOptions;
+use fkooman\SeCookie\Session;
+use fkooman\SeCookie\SessionOptions;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
@@ -36,10 +40,10 @@ use LC\Portal\Http\HtmlResponse;
 use LC\Portal\Http\LogoutModule;
 use LC\Portal\Http\OAuthModule;
 use LC\Portal\Http\PasswdModule;
-use LC\Portal\Http\PhpCookie;
-use LC\Portal\Http\PhpSession;
 use LC\Portal\Http\Request;
+use LC\Portal\Http\SeCookie;
 use LC\Portal\Http\Service;
+use LC\Portal\Http\SeSession;
 use LC\Portal\Http\UpdateUserInfoHook;
 use LC\Portal\Http\UserPassModule;
 use LC\Portal\Http\VpnPortalModule;
@@ -98,8 +102,13 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    $cookieBackend = new PhpCookie($config->secureCookie(), $request->getRoot());
-    $sessionBackend = new PhpSession($config->secureCookie(), $request->getRoot());
+    $cookieOptions = CookieOptions::init()->withPath($request->getRoot())->withSameSiteLax();
+    if (!$config->secureCookie()) {
+        $cookieOptions = $cookieOptions->withoutSecure();
+    }
+    $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)));
+    $sessionOptions = SessionOptions::init();
+    $sessionBackend = new SeSession(new Session($sessionOptions, $cookieOptions->withSameSiteStrict()));
 
     // determine whether or not we want to use another language for the UI
     if (null === $uiLanguage = $request->getCookie('L')) {
