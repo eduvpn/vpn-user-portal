@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use LC\Portal\Exception\ConfigException;
+
 class ProfileConfig
 {
     use ConfigTrait;
@@ -107,23 +109,30 @@ class ProfileConfig
     }
 
     /**
+     * OpenVPN only.
+     *
      * @return array<string>
      */
     public function vpnProtoPorts(): array
     {
         if ('wireguard' === $this->vpnProto()) {
-            // for WireGuard we have only one port for all profiles
-            return ['udp/51820'];
+            throw new ConfigException('"vpnProtoPorts" is OpenVPN only');
         }
 
         return $this->requireArray('vpnProtoPorts', ['udp/1194', 'tcp/1194']);
     }
 
     /**
+     * OpenVPN only.
+     *
      * @return array<string>
      */
     public function exposedVpnProtoPorts(): array
     {
+        if ('wireguard' === $this->vpnProto()) {
+            throw new ConfigException('"exposedVpnProtoPorts" is OpenVPN only');
+        }
+
         return $this->requireArray('exposedVpnProtoPorts', []);
     }
 
