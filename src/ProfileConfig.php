@@ -116,7 +116,7 @@ class ProfileConfig
     public function vpnProtoPorts(): array
     {
         if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"vpnProtoPorts" is OpenVPN only');
+            throw new ConfigException('"vpnProtoPorts" is only used for OpenVPN');
         }
 
         return $this->requireArray('vpnProtoPorts', ['udp/1194', 'tcp/1194']);
@@ -130,7 +130,7 @@ class ProfileConfig
     public function exposedVpnProtoPorts(): array
     {
         if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"exposedVpnProtoPorts" is OpenVPN only');
+            throw new ConfigException('"exposedVpnProtoPorts" is only used for OpenVPN');
         }
 
         return $this->requireArray('exposedVpnProtoPorts', []);
