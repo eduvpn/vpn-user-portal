@@ -13,7 +13,6 @@ namespace LC\Portal\WireGuard;
 
 use LC\Portal\Base64;
 use LC\Portal\ClientConfigInterface;
-use LC\Portal\IP;
 use LC\Portal\ProfileConfig;
 use LC\Portal\QrCode;
 
@@ -58,10 +57,7 @@ class ClientConfig implements ClientConfigInterface
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
-        $ipFour = IP::fromIpPrefix($this->profileConfig->range());
-        $ipSix = IP::fromIpPrefix($this->profileConfig->range6());
-
-        $output[] = 'Address = '.$this->ipFour.'/'.$ipFour->prefix().', '.$this->ipSix.'/'.$ipSix->prefix();
+        $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->range()->prefix().', '.$this->ipSix.'/'.$this->profileConfig->range6()->prefix();
         if (0 !== \count($this->profileConfig->dns())) {
             $output[] = 'DNS = '.implode(', ', $this->dns());
         }
@@ -87,12 +83,12 @@ class ClientConfig implements ClientConfigInterface
         $dnsServerList = [];
         foreach ($this->profileConfig->dns() as $configDnsServer) {
             if ('@GW4@' === $configDnsServer) {
-                $dnsServerList[] = IP::fromIpPrefix($this->profileConfig->range())->firstHost();
+                $dnsServerList[] = $this->profileConfig->range()->firstHost();
 
                 continue;
             }
             if ('@GW6@' === $configDnsServer) {
-                $dnsServerList[] = IP::fromIpPrefix($this->profileConfig->range6())->firstHost();
+                $dnsServerList[] = $this->profileConfig->range6()->firstHost();
 
                 continue;
             }

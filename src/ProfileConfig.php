@@ -39,14 +39,14 @@ class ProfileConfig
         return $this->requireString('hostName');
     }
 
-    public function range(): string
+    public function range(): IP
     {
-        return $this->requireString('range');
+        return IP::fromIpPrefix($this->requireString('range'));
     }
 
-    public function range6(): string
+    public function range6(): IP
     {
-        return $this->requireString('range6');
+        return IP::fromIpPrefix($this->requireString('range6'));
     }
 
     public function displayName(): string

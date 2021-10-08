@@ -95,8 +95,8 @@
             </tr>
 
             <tr><th><?=$this->t('Hostname'); ?></th><td><code><?=$this->e($profileConfig->hostName()); ?></code></td></tr>
-            <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range()); ?></code></td></tr>
-            <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><code><?=$this->e($profileConfig->range6()); ?></code></td></tr>
+            <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><code><?=$this->e((string) $profileConfig->range()); ?></code></td></tr>
+            <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><code><?=$this->e((string) $profileConfig->range6()); ?></code></td></tr>
 <?php if ('::' !== $listenIp = $profileConfig->listenIp()): ?>
             <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($listenIp); ?></code></td></tr>
 <?php endif; ?>

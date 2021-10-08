@@ -14,7 +14,6 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\Binary;
 use LC\Portal\Config;
-use LC\Portal\IP;
 
 /*
  * We want to generate forward and reverse DNS zones for all VPN profiles. But
@@ -39,13 +38,9 @@ try {
     $reverseFour = [];
     $reverseSix = [];
     foreach ($config->profileConfigList() as $profileConfig) {
-        $rangeFour = $profileConfig->range();
-        $rangeSix = $profileConfig->range6();
         $splitCount = count($profileConfig->vpnProtoPorts());
-        $ipFour = IP::fromIpPrefix($rangeFour);
-        $ipSix = IP::fromIpPrefix($rangeSix);
-        $ipFourSplit = $ipFour->split($splitCount);
-        $ipSixSplit = $ipSix->split($splitCount);
+        $ipFourSplit = $profileConfig->range()->split($splitCount);
+        $ipSixSplit = $profileConfig->range6()->split($splitCount);
         $gatewayNo = 1;
         $profileId = $profileConfig->profileId();
         for ($j = 0; $j < $splitCount; ++$j) {

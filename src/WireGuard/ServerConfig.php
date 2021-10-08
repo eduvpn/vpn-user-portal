@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal\WireGuard;
 
-use LC\Portal\IP;
-
 class ServerConfig
 {
     private string $secretKey;
@@ -36,10 +34,8 @@ class ServerConfig
                 // we only want WireGuard profiles
                 continue;
             }
-            $ipFour = IP::fromIpPrefix($profileConfig->range());
-            $ipSix = IP::fromIpPrefix($profileConfig->range6());
-            $ipFourList[] = $ipFour->firstHostPrefix();
-            $ipSixList[] = $ipSix->firstHostPrefix();
+            $ipFourList[] = $profileConfig->range()->firstHostPrefix();
+            $ipSixList[] = $profileConfig->range6()->firstHostPrefix();
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 

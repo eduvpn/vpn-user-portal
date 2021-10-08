@@ -13,7 +13,6 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
-use LC\Portal\IP;
 
 try {
     $ipFour = true;
@@ -109,9 +108,8 @@ try {
         echo '###############################################################################'.\PHP_EOL;
         foreach ($profileConfigList as $profileConfig) {
             echo '# Profile: "'.$profileConfig->displayName().'" ('.$profileConfig->profileId().')'.\PHP_EOL;
-            $ipFourRange = IP::fromIpPrefix($profileConfig->range());
             $splitCount = count($profileConfig->vpnProtoPorts());
-            $ipFourSplitRangeList = $ipFourRange->split($splitCount);
+            $ipFourSplitRangeList = $profileConfig->range()->split($splitCount);
             foreach ($ipFourSplitRangeList as $ipFourSplitRange) {
                 $clientIpList = $ipFourSplitRange->clientIpList();
                 foreach ($clientIpList as $clientIp) {
@@ -132,11 +130,9 @@ try {
         echo '###############################################################################'.\PHP_EOL;
         foreach ($profileConfigList as $profileConfig) {
             echo '# Profile: "'.$profileConfig->displayName().'" ('.$profileConfig->profileId().')'.\PHP_EOL;
-            $ipFourRange = IP::fromIpPrefix($profileConfig->range());
-            $ipSixRange = IP::fromIpPrefix($profileConfig->range6());
             $splitCount = count($profileConfig->vpnProtoPorts());
-            $ipFourSplitRangeList = $ipFourRange->split($splitCount);
-            $ipSixSplitRangeList = $ipSixRange->split($splitCount);
+            $ipFourSplitRangeList = $profileConfig->range()->split($splitCount);
+            $ipSixSplitRangeList = $profileConfig->range6()->split($splitCount);
             foreach ($ipSixSplitRangeList as $k => $ipSixSplitRange) {
                 // we look at the IPv4 range size as that dictates how many
                 // IPv6 IPs we need to match the number of IPv4 addresses

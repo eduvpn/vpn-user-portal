@@ -39,15 +39,13 @@ class ServerConfig
     public function getProfile(ProfileConfig $profileConfig, bool $cpuHasAes): array
     {
         $certInfo = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
-        $range = IP::fromIpPrefix($profileConfig->range());
-        $range6 = IP::fromIpPrefix($profileConfig->range6());
         $processCount = \count($profileConfig->vpnProtoPorts());
         $allowedProcessCount = [1, 2, 4, 8, 16, 32, 64];
         if (!\in_array($processCount, $allowedProcessCount, true)) {
             throw new RuntimeException('"vpnProtoPorts" must contain 1,2,4,8,16,32 or 64 entries');
         }
-        $splitRange = $range->split($processCount);
-        $splitRange6 = $range6->split($processCount);
+        $splitRange = $profileConfig->range()->split($processCount);
+        $splitRange6 = $profileConfig->range6()->split($processCount);
         $processConfig = [];
         $profileServerConfig = [];
         for ($processNumber = 0; $processNumber < $processCount; ++$processNumber) {
@@ -301,13 +299,10 @@ class ServerConfig
             return [];
         }
 
-        $rangeIp = IP::fromIpPrefix($profileConfig->range());
-        $range6Ip = IP::fromIpPrefix($profileConfig->range6());
-
         return [
             'client-to-client',
-            sprintf('push "route %s %s"', $rangeIp->address(), $rangeIp->netmask()),
-            sprintf('push "route-ipv6 %s"', (string) $range6Ip),
+            sprintf('push "route %s %s"', $profileConfig->range()->address(), $profileConfig->range()->netmask()),
+            sprintf('push "route-ipv6 %s"', (string) $profileConfig->range6()),
         ];
     }
 }
