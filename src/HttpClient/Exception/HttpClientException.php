@@ -30,7 +30,7 @@ class HttpClientException extends Exception
 
     public function __toString(): string
     {
-        return $this->message.' {'.$this->httpClientRequest.$this->httpClientResponse ?? ''.'}';
+        return $this->message.' {'.$this->httpClientRequest.($this->httpClientResponse ?? '').'}';
     }
 
     public function httpClientRequest(): HttpClientRequest
