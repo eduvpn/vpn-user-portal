@@ -120,6 +120,41 @@ trait ConfigTrait
         return $v;
     }
 
+    /**
+     * @return array<string>
+     */
+    public function optionalStringArray(string $k): ?array
+    {
+        if (!\array_key_exists($k, $this->configData)) {
+            return null;
+        }
+        if (!\is_array($this->configData[$k])) {
+            throw new ConfigException('key "'.$k.'" not of type array');
+        }
+
+        if ($this->configData[$k] !== array_filter($this->configData[$k], 'is_string')) {
+            throw new ConfigException('key "'.$k.'" not of type array<string>');
+        }
+
+        return $this->configData[$k];
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function requireStringArray(string $k, ?array $d = null): array
+    {
+        if (null === $v = $this->optionalStringArray($k)) {
+            if (null !== $d) {
+                return $d;
+            }
+
+            throw new ConfigException('key "'.$k.'" not available');
+        }
+
+        return $v;
+    }
+
     protected function toArray(): array
     {
         return $this->configData;

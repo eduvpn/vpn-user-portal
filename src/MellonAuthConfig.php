@@ -37,7 +37,7 @@ class MellonAuthConfig
      */
     public function permissionAttributeList(): array
     {
-        return $this->requireArray('permissionAttributeList', []);
+        return $this->requireStringArray('permissionAttributeList', []);
     }
 
     public function spEntityId(): string

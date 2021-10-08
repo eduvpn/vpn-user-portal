@@ -57,7 +57,7 @@ class LdapAuthConfig
      */
     public function permissionAttributeList(): array
     {
-        return $this->requireArray('permissionAttributeList', []);
+        return $this->requireStringArray('permissionAttributeList', []);
     }
 
     public function searchBindDn(): ?string

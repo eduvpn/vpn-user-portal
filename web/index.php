@@ -124,7 +124,7 @@ try {
         'requestUri' => $request->getUri(),
         'requestRoot' => $request->getRoot(),
         'requestRootUri' => $request->getRootUri(),
-        'enabledLanguages' => $config->requireArray('enabledLanguages', ['en-US']),
+        'enabledLanguages' => $config->requireStringArray('enabledLanguages', ['en-US']),
         'portalVersion' => trim(FileIO::readFile($baseDir.'/VERSION')),
         'isAdmin' => false,
         'uiLanguage' => $uiLanguage,
@@ -180,7 +180,7 @@ try {
         case 'ShibAuthModule':
             $authModule = new ShibAuthModule(
                 $config->s('ShibAuthModule')->requireString('userIdAttribute'),
-                $config->s('ShibAuthModule')->requireArray('permissionAttributeList', [])
+                $config->s('ShibAuthModule')->requireStringArray('permissionAttributeList', [])
             );
 
             break;
@@ -196,7 +196,7 @@ try {
                 new UserPassModule(
                     new RadiusCredentialValidator(
                         $logger,
-                        $config->s('RadiusAuthModule')->requireArray('serverList'),
+                        $config->s('RadiusAuthModule')->requireStringArray('serverList'),
                         $config->s('RadiusAuthModule')->optionalString('addRealm'),
                         $config->s('RadiusAuthModule')->optionalString('nasIdentifier'),
                         $config->s('RadiusAuthModule')->optionalInt('permissionAttribute'),
@@ -235,7 +235,7 @@ try {
     $service->setAuthModule($authModule);
     $tpl->addDefault(['authModule' => $authModuleCfg]);
 
-    if (null !== $accessPermissionList = $config->optionalArray('accessPermissionList')) {
+    if (null !== $accessPermissionList = $config->optionalStringArray('accessPermissionList')) {
         // hasAccess
         $service->addBeforeHook(new AccessHook($accessPermissionList));
     }
@@ -245,8 +245,8 @@ try {
 
     // isAdmin
     $adminHook = new AdminHook(
-        $config->requireArray('adminPermissionList', []),
-        $config->requireArray('adminUserIdList', []),
+        $config->requireStringArray('adminPermissionList', []),
+        $config->requireStringArray('adminUserIdList', []),
         $tpl
     );
 
@@ -314,6 +314,7 @@ try {
     $logger->error($e->getMessage());
     // XXX getTraceAsString is most likely not secure to just return as HTML!
 //    $response = new HtmlResponse($e->getMessage().$e->getTraceAsString(), [], 500);
-    $response = new HtmlResponse($e->getMessage(), [], 500);
+    // XXX we MUST escape whatever we return as HTML!
+    $response = new HtmlResponse(htmlentities($e->getMessage()), [], 500);
     $response->send();
 }

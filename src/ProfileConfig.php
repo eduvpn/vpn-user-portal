@@ -64,7 +64,7 @@ class ProfileConfig
      */
     public function routes(): array
     {
-        return $this->requireArray('routes', []);
+        return $this->requireStringArray('routes', []);
     }
 
     /**
@@ -72,7 +72,7 @@ class ProfileConfig
      */
     public function dns(): array
     {
-        return $this->requireArray('dns', []);
+        return $this->requireStringArray('dns', []);
     }
 
     public function clientToClient(): bool
@@ -100,7 +100,7 @@ class ProfileConfig
      */
     public function aclPermissionList(): array
     {
-        return $this->requireArray('aclPermissionList', []);
+        return $this->requireStringArray('aclPermissionList', []);
     }
 
     public function nodeUrl(): string
@@ -119,7 +119,7 @@ class ProfileConfig
             throw new ConfigException('"vpnProtoPorts" is only used for OpenVPN');
         }
 
-        return $this->requireArray('vpnProtoPorts', ['udp/1194', 'tcp/1194']);
+        return $this->requireStringArray('vpnProtoPorts', ['udp/1194', 'tcp/1194']);
     }
 
     /**
@@ -133,7 +133,7 @@ class ProfileConfig
             throw new ConfigException('"exposedVpnProtoPorts" is only used for OpenVPN');
         }
 
-        return $this->requireArray('exposedVpnProtoPorts', []);
+        return $this->requireStringArray('exposedVpnProtoPorts', []);
     }
 
     public function blockLan(): bool
@@ -151,6 +151,6 @@ class ProfileConfig
      */
     public function dnsDomainSearch(): array
     {
-        return $this->requireArray('dnsDomainSearch', []);
+        return $this->requireStringArray('dnsDomainSearch', []);
     }
 }

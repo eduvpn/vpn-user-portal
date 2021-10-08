@@ -74,7 +74,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
     private function getAuthOptions(): AuthOptions
     {
         $authOptions = new AuthOptions();
-        if (null !== $authnContext = $this->config->optionalArray('authnContext')) {
+        if (null !== $authnContext = $this->config->optionalStringArray('authnContext')) {
             $authOptions->withAuthnContextClassRef($authnContext);
         }
 
@@ -89,7 +89,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
     private function getPermissionList(array $samlAttributes): array
     {
         $permissionList = [];
-        foreach ($this->config->requireArray('permissionAttributeList', []) as $permissionAttribute) {
+        foreach ($this->config->requireStringArray('permissionAttributeList', []) as $permissionAttribute) {
             if (\array_key_exists($permissionAttribute, $samlAttributes)) {
                 $permissionList = array_merge($permissionList, $samlAttributes[$permissionAttribute]);
             }
