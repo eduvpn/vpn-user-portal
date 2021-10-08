@@ -88,10 +88,6 @@
                     <span class="plain"><?=$this->t('Enable ACL'); ?></span>
 <?php endif; ?>
 
-<?php if ($profileConfig->hideProfile()): ?>
-                    <span class="plain"><?=$this->t('Hide Profile'); ?></span>
-<?php endif; ?>
-
 <?php if ($profileConfig->blockLan()): ?>
                     <span class="plain"><?=$this->t('Block LAN'); ?></span>
 <?php endif; ?>

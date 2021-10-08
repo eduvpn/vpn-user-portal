@@ -286,9 +286,6 @@ class VpnPortalModule implements ServiceModuleInterface
     {
         $filteredProfileConfigList = [];
         foreach ($profileConfigList as $profileConfig) {
-            if ($profileConfig->hideProfile()) {
-                continue;
-            }
             if ($profileConfig->enableAcl()) {
                 // is the user member of the aclPermissionList?
                 if (!self::isMember($profileConfig->aclPermissionList(), $userPermissions)) {

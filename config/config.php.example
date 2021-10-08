@@ -28,142 +28,142 @@ return [
 
     // Database
 
-//    // MariaDB/MySQL
-//    'Db' => [
-//        'dbDsn' => 'mysql:host=localhost;port=3307;dbname=testdb',
-//        'dbUser' => 'user',
-//        'dbPass' => 'pass',
-//    ],
-//    // PostgreSQL
-//    'Db' => [
-//        'dbDsn' => 'pgsql:host=localhost;port=5432;dbname=testdb;user=user;password=pass',
-//    ],
+    //    // MariaDB/MySQL
+    //    'Db' => [
+    //        'dbDsn' => 'mysql:host=localhost;port=3307;dbname=testdb',
+    //        'dbUser' => 'user',
+    //        'dbPass' => 'pass',
+    //    ],
+    //    // PostgreSQL
+    //    'Db' => [
+    //        'dbDsn' => 'pgsql:host=localhost;port=5432;dbname=testdb;user=user;password=pass',
+    //    ],
 
-//    // LDAP
-//    'LdapAuthModule' => [
-//        // *** FreeIPA ***
-//        // -H ldap://ipa.tuxed.example
-//        'ldapUri' => 'ldap://ipa.tuxed.example',
-//        // -D "uid=fkooman,cn=users,cn=accounts,dc=tuxed,dc=example"
-//        'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=tuxed,dc=example',
-//        // (if -b is the same -D we do NOT specify baseDn...)
-//        // to normalize the entered user ID, specify the attribute you want to
-//        // use to identify the user in the VPN server
-//        'userIdAttribute' => 'uid',
+    //    // LDAP
+    //    'LdapAuthModule' => [
+    //        // *** FreeIPA ***
+    //        // -H ldap://ipa.tuxed.example
+    //        'ldapUri' => 'ldap://ipa.tuxed.example',
+    //        // -D "uid=fkooman,cn=users,cn=accounts,dc=tuxed,dc=example"
+    //        'bindDnTemplate' => 'uid={{UID}},cn=users,cn=accounts,dc=tuxed,dc=example',
+    //        // (if -b is the same -D we do NOT specify baseDn...)
+    //        // to normalize the entered user ID, specify the attribute you want to
+    //        // use to identify the user in the VPN server
+    //        'userIdAttribute' => 'uid',
 
-//        // *** AD (NetBIOS domain name) ***
-//        // -H ldap://ad.example.org \
-//        'ldapUri' => 'ldap://ad.example.org',
-//        // -D "DOMAIN\fkooman" \
-//        'bindDnTemplate' => 'DOMAIN\{{UID}}',
-//        // -b "dc=example,dc=org" \
-//        'baseDn' => 'dc=example,dc=org',
-//        // "(sAMAccountName=fkooman)"
-//        'userFilterTemplate' => '(sAMAccountName={{UID}})',
-//        // to normalize the entered user ID, specify the attribute you want to
-//        // use to identify the user in the VPN server
-//        'userIdAttribute' => 'sAMAccountName',
+    //        // *** AD (NetBIOS domain name) ***
+    //        // -H ldap://ad.example.org \
+    //        'ldapUri' => 'ldap://ad.example.org',
+    //        // -D "DOMAIN\fkooman" \
+    //        'bindDnTemplate' => 'DOMAIN\{{UID}}',
+    //        // -b "dc=example,dc=org" \
+    //        'baseDn' => 'dc=example,dc=org',
+    //        // "(sAMAccountName=fkooman)"
+    //        'userFilterTemplate' => '(sAMAccountName={{UID}})',
+    //        // to normalize the entered user ID, specify the attribute you want to
+    //        // use to identify the user in the VPN server
+    //        'userIdAttribute' => 'sAMAccountName',
 
-//        // *** AD (userPrincipalName) ***
-//        // -H ldap://ad.example.org \
-//        'ldapUri' => 'ldap://ad.example.org',
-//        // -D "fkooman@example.org" \
-//        'bindDnTemplate' => '{{UID}}',
+    //        // *** AD (userPrincipalName) ***
+    //        // -H ldap://ad.example.org \
+    //        'ldapUri' => 'ldap://ad.example.org',
+    //        // -D "fkooman@example.org" \
+    //        'bindDnTemplate' => '{{UID}}',
 
-//        // when the user does NOT specify the realm, e.g. only "fkooman", this
-//        // option will add "@example.org" to the "User Name" as specified on
-//        // the login page. If and only if there is no "@" in the provided
-//        // "User Name".!
-//        'addRealm' => 'example.org',
-//        // -b "dc=example,dc=org" \
-//        'baseDn' => 'dc=example,dc=org',
-//        // "(userPrincipalName=fkooman@example.org)"
-//        'userFilterTemplate' => '(userPrincipalName={{UID}})',
-//        // to normalize the entered user ID, specify the attribute you want to
-//        // use to identify the user in the VPN server
-//        'userIdAttribute' => 'userPrincipalName',
-//
-//        // *** Search First ***
-//        // -H ldap://server.ipa.test \
-//        'ldapUri' => 'ldap://server.ipa.test',
-//        // -b "cn=users,cn=accounts,dc=ipa,dc=test" \
-//        'baseDn' => 'cn=users,cn=accounts,dc=ipa,dc=test',
-//        // "(uidNumber=572600001)" \
-//        'userFilterTemplate' => '(uidNumber={{UID}})',
-//        // to normalize the entered user ID, specify the attribute you want to
-//        // use to identify the user in the VPN server
-//        'userIdAttribute' => 'uidNumber',
-//        // in vpn-user-portal >= 2.3.8 you can also perform a bind before
-//        // searching as not all LDAP servers allow anonymous bind to search the
-//        // directory. If at all possible, allow anonymous bind on your LDAP
-//        // server from the VPN server. NEVER USE THE LDAP ADMIN ACCOUNT HERE!
-//        //'searchBindDn' => 'cn=Anonymous Search User,dc=example,dc=org',
-//        //'searchBindPass' => 's3r3t',
-//
-//        //'permissionAttributeList' => [],
-//    ],
+    //        // when the user does NOT specify the realm, e.g. only "fkooman", this
+    //        // option will add "@example.org" to the "User Name" as specified on
+    //        // the login page. If and only if there is no "@" in the provided
+    //        // "User Name".!
+    //        'addRealm' => 'example.org',
+    //        // -b "dc=example,dc=org" \
+    //        'baseDn' => 'dc=example,dc=org',
+    //        // "(userPrincipalName=fkooman@example.org)"
+    //        'userFilterTemplate' => '(userPrincipalName={{UID}})',
+    //        // to normalize the entered user ID, specify the attribute you want to
+    //        // use to identify the user in the VPN server
+    //        'userIdAttribute' => 'userPrincipalName',
+    //
+    //        // *** Search First ***
+    //        // -H ldap://server.ipa.test \
+    //        'ldapUri' => 'ldap://server.ipa.test',
+    //        // -b "cn=users,cn=accounts,dc=ipa,dc=test" \
+    //        'baseDn' => 'cn=users,cn=accounts,dc=ipa,dc=test',
+    //        // "(uidNumber=572600001)" \
+    //        'userFilterTemplate' => '(uidNumber={{UID}})',
+    //        // to normalize the entered user ID, specify the attribute you want to
+    //        // use to identify the user in the VPN server
+    //        'userIdAttribute' => 'uidNumber',
+    //        // in vpn-user-portal >= 2.3.8 you can also perform a bind before
+    //        // searching as not all LDAP servers allow anonymous bind to search the
+    //        // directory. If at all possible, allow anonymous bind on your LDAP
+    //        // server from the VPN server. NEVER USE THE LDAP ADMIN ACCOUNT HERE!
+    //        //'searchBindDn' => 'cn=Anonymous Search User,dc=example,dc=org',
+    //        //'searchBindPass' => 's3r3t',
+    //
+    //        //'permissionAttributeList' => [],
+    //    ],
 
-//    // RADIUS
-//    'RadiusAuthModule' => [
-//        'serverList' => [
-//            [
-//                'host' => 'radius.example.org',
-//                'secret' => 'testing123',
-//                //'port' => 1812,
-//            ],
-//        ],
-//        //'addRealm' => 'example.org',
-//        //'nasIdentifier' => 'vpn.example.org',
-          //'permissionAttribute' => RADIUS_REPLY_MESSAGE,
-          //'permissionAttribute' => 16,
-//    ],
+    //    // RADIUS
+    //    'RadiusAuthModule' => [
+    //        'serverList' => [
+    //            [
+    //                'host' => 'radius.example.org',
+    //                'secret' => 'testing123',
+    //                //'port' => 1812,
+    //            ],
+    //        ],
+    //        //'addRealm' => 'example.org',
+    //        //'nasIdentifier' => 'vpn.example.org',
+    //'permissionAttribute' => RADIUS_REPLY_MESSAGE,
+    //'permissionAttribute' => 16,
+    //    ],
 
-//    // SAML (php-saml-sp)
-//    'PhpSamlSpAuthModule' => [
-//        'userIdAttribute' => 'eduPersonTargetedID',
-//        //'userIdAttribute' => 'eduPersonPrincipalName',
+    //    // SAML (php-saml-sp)
+    //    'PhpSamlSpAuthModule' => [
+    //        'userIdAttribute' => 'eduPersonTargetedID',
+    //        //'userIdAttribute' => 'eduPersonPrincipalName',
 
-//        // ** AUTHORIZATION | PERMISSIONS **
-//        //'permissionAttributeList' => [
-//        //      'eduPersonEntitlement',
-//        //      //'eduPersonAffiliation',
-//        //],
+    //        // ** AUTHORIZATION | PERMISSIONS **
+    //        //'permissionAttributeList' => [
+    //        //      'eduPersonEntitlement',
+    //        //      //'eduPersonAffiliation',
+    //        //],
 
-//        // AuthnContext required for *all* users
-//        //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+    //        // AuthnContext required for *all* users
+    //        //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
 
-//        // Users with certain permissions obtained through
-//        // "permissionAttributeList" MUST also have ANY of the listed
-//        // AuthnContexts. If they currently don't, a new authentication is
-//        // triggered to obtain it
-//        //'permissionAuthnContext' => [
-//        //    'http://eduvpn.org/role/admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
-//        //],
-//    ],
+    //        // Users with certain permissions obtained through
+    //        // "permissionAttributeList" MUST also have ANY of the listed
+    //        // AuthnContexts. If they currently don't, a new authentication is
+    //        // triggered to obtain it
+    //        //'permissionAuthnContext' => [
+    //        //    'http://eduvpn.org/role/admin' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
+    //        //],
+    //    ],
 
-//    // SAML (mod_auth_mellon)
-//    'MellonAuthModule' => [
-//        // OID for eduPersonTargetedId
-//        'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
-//        // OID for eduPersonPrincipalName
-//        //'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6',
+    //    // SAML (mod_auth_mellon)
+    //    'MellonAuthModule' => [
+    //        // OID for eduPersonTargetedId
+    //        'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_10',
+    //        // OID for eduPersonPrincipalName
+    //        //'userIdAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6',
 
-//        // ** AUTHORIZATION | PERMISSIONS **
-//        // OID for eduPersonEntitlement
-//        //'permissionAttributeList' => ['MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7'],
-//        // OID for eduPersonAffiliation
-//        //'permissionAttributeList' => ['MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_1'],
-//    ],
+    //        // ** AUTHORIZATION | PERMISSIONS **
+    //        // OID for eduPersonEntitlement
+    //        //'permissionAttributeList' => ['MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7'],
+    //        // OID for eduPersonAffiliation
+    //        //'permissionAttributeList' => ['MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_1'],
+    //    ],
 
-//    // SAML (Shibboleth)
-//    'ShibAuthModule' => [
-//        'userIdAttribute' => 'persistent-id',
-//        //'userIdAttribute' => 'eppn',
+    //    // SAML (Shibboleth)
+    //    'ShibAuthModule' => [
+    //        'userIdAttribute' => 'persistent-id',
+    //        //'userIdAttribute' => 'eppn',
 
-//        // ** AUTHORIZATION | PERMISSIONS **
-//        //'permissionAttributeList' => ['entitlement'],
-//        //'permissionAttributeList' => ['affiliation'],
-//    ],
+    //        // ** AUTHORIZATION | PERMISSIONS **
+    //        //'permissionAttributeList' => ['entitlement'],
+    //        //'permissionAttributeList' => ['affiliation'],
+    //    ],
 
     // the permission required to be able to access the "admin" portion of
     // the portal, see "permissionAttributeList" in the authentication
@@ -171,7 +171,7 @@ return [
     //'adminPermissionList' => ['http://eduvpn.org/role/admin'],
 
     // list of userIds that have access to the admin
-//    'adminUserIdList' => ['admin'],
+    //    'adminUserIdList' => ['admin'],
 
     // the default language of the UI
     // DEFAULT: 'en-US'
@@ -181,15 +181,15 @@ return [
     // on the "Account" page
     // DEFAULT: false
     //'showPermissions' => false,
-    
+
     // the supported UI languages
     // DEFAULT: ['en-US']
     //'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'ro-RO', 'uk-UA'],
 
-//    'Api' => [
-//        // expire OAuth access tokens after 1 hour (default)
-//        //'tokenExpiry' => 'PT1H',
-//    ],
+    //    'Api' => [
+    //        // expire OAuth access tokens after 1 hour (default)
+    //        //'tokenExpiry' => 'PT1H',
+    //    ],
 
     // how/what to log the connect/disconnect events to syslog
     // EVENT_TYPE = {CONNECT,DISCONNECT}
@@ -200,9 +200,8 @@ return [
 
     // Allow disabling manual configuration downloads from the portal.
     // DEFAULT: true
-//    'enableConfigDownload' => true,
-//    'enableConfigDownload' => false,
-
+    //    'enableConfigDownload' => true,
+    //    'enableConfigDownload' => false,
 
     // DEFAULT: 51820
     // OPTIONAL
@@ -299,7 +298,6 @@ return [
             // The protocols and ports the OpenVPN processes should use, MUST
             // be either 1, 2, 4, 8 or 16 proto/port combinations
             // DEFAULT = ['udp/1194', 'tcp/1194']
-            // XXX allow for WG to specify ['udp/12345'] (only 1 port!
             // ** OpenVPN
             //'vpnProtoPorts' => [
             //    'udp/1194',
@@ -323,14 +321,8 @@ return [
             // DEFAULT = []
             // ** WireGuard,OpenVPN
             //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
-
-            // Hide the profile from the user portal, i.e. do not allow the
-            // user to choose it
-            // DEFAULT = false
-            // ** WireGuard,OpenVPN
-            //'hideProfile' => false,
         ],
-        
+
         'default-wg' => [
             // The VPN protocol
             // REQUIRED
@@ -389,7 +381,7 @@ return [
 
             // The base URL to connect to the VPN node
             // DEFAULT = 'http://127.0.0.1:41194'
-            // ** WireGuard,OpenVPN            
+            // ** WireGuard,OpenVPN
             //'nodeUrl' => 'http://127.0.0.1:41194',
 
             // Block access to local LAN when VPN is active
@@ -406,7 +398,7 @@ return [
             // Whether or not to enable OpenVPN logging
             // XXX WG?
             // DEFAULT = false
-            // ** OpenVPN            
+            // ** OpenVPN
             //'enableLog' => false,
 
             // Whether or not to enable ACLs for controlling who can connect

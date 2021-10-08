@@ -127,11 +127,6 @@ class ProfileConfig
         return $this->requireArray('exposedVpnProtoPorts', []);
     }
 
-    public function hideProfile(): bool
-    {
-        return $this->requireBool('hideProfile', false);
-    }
-
     public function blockLan(): bool
     {
         return $this->requireBool('blockLan', false);
