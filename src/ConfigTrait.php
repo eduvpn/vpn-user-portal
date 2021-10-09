@@ -13,6 +13,9 @@ namespace LC\Portal;
 
 use LC\Portal\Exception\ConfigException;
 
+/**
+ * XXX make all methods private.
+ */
 trait ConfigTrait
 {
     public function s(string $k): self
@@ -153,6 +156,35 @@ trait ConfigTrait
         }
 
         return $v;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function requireStringOrStringArray(string $k, ?array $d = null): array
+    {
+        if (null === $v = $this->optionalStringOrStringArray($k)) {
+            if (null !== $d) {
+                return $d;
+            }
+
+            throw new ConfigException('key "'.$k.'" not available');
+        }
+
+        return $v;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function optionalStringOrStringArray(string $k): ?array
+    {
+        if (!\array_key_exists($k, $this->configData)) {
+            return null;
+        }
+        $this->configData[$k] = (array) $this->configData[$k];
+
+        return $this->requireStringArray($k);
     }
 
     protected function toArray(): array

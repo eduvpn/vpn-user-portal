@@ -24,58 +24,53 @@ use LC\Portal\Config;
  */
 
 try {
-    // ask for the domain name for the (reverse) DNS entries
-    $systemHostName = gethostname();
-    echo sprintf('(Reverse) Domain [%s]: ', $systemHostName);
-    $domainName = trim(fgets(\STDIN));
-    if (empty($domainName)) {
-        $domainName = $systemHostName;
-    }
-
     $config = Config::fromFile($baseDir.'/config/config.php');
-
     $forwardDns = [];
     $reverseFour = [];
     $reverseSix = [];
     foreach ($config->profileConfigList() as $profileConfig) {
-        $splitCount = count($profileConfig->vpnProtoPorts());
-        $ipFourSplit = $profileConfig->range()->split($splitCount);
-        $ipSixSplit = $profileConfig->range6()->split($splitCount);
-        $gatewayNo = 1;
-        $profileId = $profileConfig->profileId();
-        for ($j = 0; $j < $splitCount; ++$j) {
-            $noOfHosts = $ipFourSplit[$j]->numberOfHosts();
-            $firstFourHost = $ipFourSplit[$j]->firstHost();
-            $firstSixHost = $ipSixSplit[$j]->firstHost();
-            $forwardDns[sprintf('gw-%s-%03d', $profileId, $gatewayNo)] = ['ipFour' => $firstFourHost, 'ipSix' => $firstSixHost];
-            $gwIpFourOrigin = implode('.', array_slice(array_reverse(explode('.', $firstFourHost)), 1, 3)).'.in-addr.arpa.';
-            $gwIpSixOrigin = implode('.', str_split(strrev(Binary::safeSubstr(bin2hex(inet_pton($firstSixHost)), 0, 16)), 1)).'.ip6.arpa.';
-            $reverseFour[$gwIpFourOrigin][$firstFourHost] = sprintf('gw-%s-%03d.%s.', $profileId, $gatewayNo, $domainName);
-            $reverseSix[$gwIpSixOrigin][$firstSixHost] = sprintf('gw-%s-%03d.%s.', $profileId, $gatewayNo, $domainName);
-            $longFourIp = ip2long($firstFourHost);
-            $longSixIp = inet_pton($firstSixHost);
-            for ($i = 0; $i < $noOfHosts - 1; ++$i) {
-                $clientFourIp = long2ip($longFourIp + $i + 1);
-                $sixStart = pack('n', 4096 + $i);
-                $clientSixIp = inet_ntop(Binary::safeSubstr($longSixIp, 0, 14).$sixStart);
-                $ipFourOrigin = implode('.', array_slice(array_reverse(explode('.', $clientFourIp)), 1, 3)).'.in-addr.arpa.';
-                $ipSixOrigin = implode('.', str_split(strrev(Binary::safeSubstr(bin2hex($longSixIp), 0, 16)), 1)).'.ip6.arpa.';
-                $reverseFour[$ipFourOrigin][$clientFourIp] = sprintf('c-%s-%03d-%03d.%s.', $profileId, $gatewayNo, $i + 1, $domainName);
-                $reverseSix[$ipSixOrigin][$clientSixIp] = sprintf('c-%s-%03d-%03d.%s.', $profileId, $gatewayNo, $i + 1, $domainName);
-                $forwardDns[sprintf('c-%s-%03d-%03d', $profileId, $gatewayNo, $i + 1)] = ['ipFour' => $clientFourIp, 'ipSix' => $clientSixIp];
+        $splitCount = 'wireguard' === $profileConfig->vpnProto() ? 1 : count($profileConfig->vpnProtoPorts());
+        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+            $ipFourSplit = $profileConfig->range($i)->split($splitCount);
+            $ipSixSplit = $profileConfig->range6($i)->split($splitCount);
+            $gatewayNo = 1;
+            $profileId = $profileConfig->profileId();
+            for ($j = 0; $j < $splitCount; ++$j) {
+                $noOfHosts = $ipFourSplit[$j]->numberOfHosts();
+                $firstFourHost = $ipFourSplit[$j]->firstHost();
+                $firstSixHost = $ipSixSplit[$j]->firstHost();
+                $forwardDns[$profileConfig->hostName($i)][sprintf('gw-%s-%03d', $profileId, $gatewayNo)] = ['ipFour' => $firstFourHost, 'ipSix' => $firstSixHost];
+                $gwIpFourOrigin = implode('.', array_slice(array_reverse(explode('.', $firstFourHost)), 1, 3)).'.in-addr.arpa.';
+                $gwIpSixOrigin = implode('.', str_split(strrev(Binary::safeSubstr(bin2hex(inet_pton($firstSixHost)), 0, 16)), 1)).'.ip6.arpa.';
+                $reverseFour[$gwIpFourOrigin][$firstFourHost] = sprintf('gw-%s-%03d.%s.', $profileId, $gatewayNo, $profileConfig->hostName($i));
+                $reverseSix[$gwIpSixOrigin][$firstSixHost] = sprintf('gw-%s-%03d.%s.', $profileId, $gatewayNo, $profileConfig->hostName($i));
+                $longFourIp = ip2long($firstFourHost);
+                $longSixIp = inet_pton($firstSixHost);
+                for ($k = 0; $k < $noOfHosts - 1; ++$k) {
+                    $clientFourIp = long2ip($longFourIp + $k + 1);
+                    $sixStart = pack('n', 4096 + $k);
+                    $clientSixIp = inet_ntop(Binary::safeSubstr($longSixIp, 0, 14).$sixStart);
+                    $ipFourOrigin = implode('.', array_slice(array_reverse(explode('.', $clientFourIp)), 1, 3)).'.in-addr.arpa.';
+                    $ipSixOrigin = implode('.', str_split(strrev(Binary::safeSubstr(bin2hex($longSixIp), 0, 16)), 1)).'.ip6.arpa.';
+                    $reverseFour[$ipFourOrigin][$clientFourIp] = sprintf('c-%s-%03d-%03d.%s.', $profileId, $gatewayNo, $k + 1, $profileConfig->hostName($i));
+                    $reverseSix[$ipSixOrigin][$clientSixIp] = sprintf('c-%s-%03d-%03d.%s.', $profileId, $gatewayNo, $k + 1, $profileConfig->hostName($i));
+                    $forwardDns[$profileConfig->hostName($i)][sprintf('c-%s-%03d-%03d', $profileId, $gatewayNo, $k + 1)] = ['ipFour' => $clientFourIp, 'ipSix' => $clientSixIp];
+                }
+                ++$gatewayNo;
             }
-            ++$gatewayNo;
         }
     }
 
     echo '###############'.\PHP_EOL;
     echo '# FORWARD DNS #'.\PHP_EOL;
     echo '###############'.\PHP_EOL;
-    echo sprintf('$ORIGIN %s.', $domainName).\PHP_EOL;
-    foreach ($forwardDns as $hostName => $ipList) {
-        echo sprintf('%-20s', $hostName);
-        echo sprintf('IN A    %s', $ipList['ipFour']).\PHP_EOL;
-        echo sprintf('%20sIN AAAA %s', '', $ipList['ipSix']).\PHP_EOL;
+    foreach ($forwardDns as $domainOrigin => $hostNameIpList) {
+        echo sprintf('$ORIGIN %s.', $domainOrigin).\PHP_EOL;
+        foreach ($hostNameIpList as $hostName => $ipList) {
+            echo sprintf('%-40s ', $hostName);
+            echo sprintf('IN A    %s', $ipList['ipFour']).\PHP_EOL;
+            echo sprintf('%40s IN AAAA %s', '', $ipList['ipSix']).\PHP_EOL;
+        }
     }
 
     echo '####################'.\PHP_EOL;

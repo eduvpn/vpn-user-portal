@@ -154,8 +154,36 @@ class Validator
 
     public static function cpuHasAes(string $cpuHasAes): void
     {
-        if (!\in_array($cpuHasAes, ['yes', 'no'], true)) {
-            throw new RangeException('not "yes" or "no"');
+        self::inSet($cpuHasAes, ['yes', 'no']);
+    }
+
+    public static function onOrOff(string $onOrOff): void
+    {
+        self::inSet($onOrOff, ['on', 'off']);
+    }
+
+    public static function nodeNumber(string $nodeNumber): void
+    {
+        self::nonNegativeInt($nodeNumber);
+    }
+
+    public static function nonNegativeInt(string $nonNegativeInt): void
+    {
+        // cast string to int and compare the unsigned int representation as
+        // string with the provided input to make sure we have a number >= 0
+        if ($nonNegativeInt !== sprintf('%u', (int) $nonNegativeInt)) {
+            throw new RangeException('integer not >= 0');
+        }
+    }
+
+    /**
+     * @param array<string> $setHaystack
+     */
+    public static function inSet(string $setNeedle, array $setHaystack): void
+    {
+        // XXX use inSet also for other "in set" functions in this file
+        if (!\in_array($setNeedle, $setHaystack, true)) {
+            throw new RangeException('provided value "'.$setNeedle.'" not any of {'.implode(',', $setHaystack).'}');
         }
     }
 

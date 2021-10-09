@@ -34,19 +34,46 @@ class ProfileConfig
         return $this->requireString('vpnProto');
     }
 
-    public function hostName(): string
+    public function nodeCount(): int
     {
-        return $this->requireString('hostName');
+        if (null === $nodeUrlList = $this->optionalStringOrStringArray('nodeUrl')) {
+            return 1;
+        }
+
+        return \count($nodeUrlList);
     }
 
-    public function range(): IP
+    public function hostName(int $nodeNumber): string
     {
-        return IP::fromIpPrefix($this->requireString('range'));
+//        error_log((string)$nodeNumber);
+        $hostNameList = $this->requireStringOrStringArray('hostName');
+//        var_dump($hostNameList);die();
+        // XXX use something like nodeCount() perhaps
+        if ($nodeNumber > \count($hostNameList)) {
+            throw new ConfigException('"hostName" for node "'.$nodeNumber.'" not set');
+        }
+
+        return $hostNameList[$nodeNumber];
     }
 
-    public function range6(): IP
+    public function range(int $nodeNumber): IP
     {
-        return IP::fromIpPrefix($this->requireString('range6'));
+        $rangeList = $this->requireStringOrStringArray('range');
+        if ($nodeNumber > \count($rangeList)) {
+            throw new ConfigException('"range" for node "'.$nodeNumber.'" not set');
+        }
+
+        return IP::fromIpPrefix($rangeList[$nodeNumber]);
+    }
+
+    public function range6(int $nodeNumber): IP
+    {
+        $range6List = $this->requireStringOrStringArray('range6');
+        if ($nodeNumber > \count($range6List)) {
+            throw new ConfigException('"range6" for node "'.$nodeNumber.'" not set');
+        }
+
+        return IP::fromIpPrefix($range6List[$nodeNumber]);
     }
 
     public function displayName(): string
@@ -103,9 +130,16 @@ class ProfileConfig
         return $this->requireStringArray('aclPermissionList', []);
     }
 
-    public function nodeUrl(): string
+    public function nodeUrl(int $nodeNumber): string
     {
-        return $this->requireString('nodeUrl', 'http://127.0.0.1:41194');
+        // XXX aargh!
+        $nodeUrlList = $this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']);
+        // XXX use something like nodeCount() perhaps
+        if ($nodeNumber > \count($nodeUrlList)) {
+            throw new ConfigException('"nodeUrl" for node "'.$nodeNumber.'" not set');
+        }
+
+        return $nodeUrlList[$nodeNumber];
     }
 
     /**

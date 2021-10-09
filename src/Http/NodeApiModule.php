@@ -50,7 +50,8 @@ class NodeApiModule implements ServiceModuleInterface
                 // XXX we may want to restrict the profiles for particular nodes!
                 $serverConfigList = $this->serverConfig->get(
                     $this->config->profileConfigList(),
-                    'yes' === $request->optionalPostParameter('cpu_has_aes', fn (string $s) => Validator::cpuHasAes($s))
+                    (int) $request->requirePostParameter('node_number', fn (string $s) => Validator::nodeNumber($s)),
+                    'yes' === $request->requirePostParameter('cpu_has_aes', fn (string $s) => Validator::cpuHasAes($s))
                 );
                 $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {
@@ -104,7 +105,8 @@ class NodeApiModule implements ServiceModuleInterface
         $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
         $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
         $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
-        $connectedAt = (int) $request->requirePostParameter('connected_at', fn (string $s) => is_numeric($s) && $s > 0);
+        // XXX use validator not bool returning option!
+        $connectedAt = (int) $request->requirePostParameter('connected_at', fn (string $s) => Validator::nonNegativeInt($s));
         $userId = $this->verifyConnection($profileId, $commonName);
         $this->storage->clientConnect($userId, $profileId, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
         $this->logger->info(
@@ -119,7 +121,7 @@ class NodeApiModule implements ServiceModuleInterface
         $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
         $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
         $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
-        $disconnectedAt = (int) $request->requirePostParameter('disconnected_at', fn (string $s) => is_numeric($s) && $s > 0);
+        $disconnectedAt = (int) $request->requirePostParameter('disconnected_at', fn (string $s) => Validator::nonNegativeInt($s));
 //        $bytesTransferred = Validator::bytesTransferred($request->requirePostParameter('bytes_transferred'));
         // XXX add bytesTransferred to some global table
 

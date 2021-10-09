@@ -52,8 +52,15 @@ try {
     $peerListByNode = [];
     $certListByNode = [];
 
+    // XXX :we should delete from the database the WireGuard peer
+    // configurations with IP addresses that are out of the range/range6 of the
+    // particular profile. I guess
+    // technically they won't work anymore in most cases, but if you do some
+    // IP reassignment it might be possible to have a client connect to another
+    // profile...
     foreach ($config->profileConfigList() as $profileConfig) {
         $nodeUrl = $profileConfig->nodeUrl();
+        // XXX this is not bound to the nodeUrl in the DB, so we have to be a bit more clever here... the range(6) indicates which nodeUrl it belong to...
         if ('wireguard' === $profileConfig->vpnProto()) {
             if (!array_key_exists($nodeUrl, $peerListByNode)) {
                 $peerListByNode[$nodeUrl] = [];

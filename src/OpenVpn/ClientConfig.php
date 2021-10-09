@@ -24,6 +24,7 @@ class ClientConfig implements ClientConfigInterface
     public const STRATEGY_RANDOM = 1;
     public const STRATEGY_ALL = 2;
 
+    private int $nodeNumber;
     private ProfileConfig $profileConfig;
     private CaInfo $caInfo;
     private TlsCrypt $tlsCrypt;
@@ -31,8 +32,9 @@ class ClientConfig implements ClientConfigInterface
     private bool $tcpOnly;
     private int $remoteStrategy;
 
-    public function __construct(ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $tcpOnly, int $remoteStrategy)
+    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $tcpOnly, int $remoteStrategy)
     {
+        $this->nodeNumber = $nodeNumber;
         $this->profileConfig = $profileConfig;
         $this->caInfo = $caInfo;
         $this->tlsCrypt = $tlsCrypt;
@@ -53,9 +55,6 @@ class ClientConfig implements ClientConfigInterface
      */
     public function get(): string
     {
-        // make a list of ports/proto to add to the configuration file
-        $hostName = $this->profileConfig->hostName();
-
         $vpnProtoPorts = $this->profileConfig->vpnProtoPorts();
         if (0 !== \count($this->profileConfig->exposedVpnProtoPorts())) {
             $vpnProtoPorts = $this->profileConfig->exposedVpnProtoPorts();
@@ -112,9 +111,8 @@ class ClientConfig implements ClientConfigInterface
             '</tls-crypt>',
         ];
 
-        // remote entries
         foreach ($remoteProtoPortList as $remoteProtoPort) {
-            $clientConfig[] = sprintf('remote %s %d %s', $hostName, (int) Binary::safeSubstr($remoteProtoPort, 4), Binary::safeSubstr($remoteProtoPort, 0, 3));
+            $clientConfig[] = sprintf('remote %s %d %s', $this->profileConfig->hostName($this->nodeNumber), (int) Binary::safeSubstr($remoteProtoPort, 4), Binary::safeSubstr($remoteProtoPort, 0, 3));
         }
 
         return implode(PHP_EOL, $clientConfig);

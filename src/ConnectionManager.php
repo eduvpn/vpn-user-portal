@@ -38,7 +38,7 @@ class ConnectionManager
     /**
      * @return array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>>
      */
-    public function get(bool $showAll = false): array
+    public function get(): array
     {
         $connectionList = [];
         // keep the record of all nodeUrls we talked to so we only hit them
@@ -51,7 +51,12 @@ class ConnectionManager
             if ('openvpn' === $profileConfig->vpnProto()) {
                 // OpenVPN
                 $oCertListByProfileId = $this->storage->oCertListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
-                $oConnectionList = $this->vpnDaemon->oConnectionList($profileConfig->nodeUrl());
+
+                $oConnectionList = [];
+                for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+                    // XXX foreach over nodeUrls?
+                    $oConnectionList = array_merge($oConnectionList, $this->vpnDaemon->oConnectionList($profileConfig->nodeUrl($i)));
+                }
 
                 foreach ($oCertListByProfileId as $certInfo) {
                     if (\array_key_exists($certInfo['common_name'], $oConnectionList)) {
@@ -71,7 +76,11 @@ class ConnectionManager
 
             // WireGuard
             $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
-            $wPeerList = $this->vpnDaemon->wPeerList($profileConfig->nodeUrl(), $showAll);
+            $wPeerList = [];
+            for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+                // XXX foreach over nodeUrls?
+                $wPeerList = array_merge($wPeerList, $this->vpnDaemon->wPeerList($profileConfig->nodeUrl($i), false));
+            }
 
             foreach ($wPeerListByProfileId as $peerInfo) {
                 if (\array_key_exists($peerInfo['public_key'], $wPeerList)) {
@@ -146,6 +155,15 @@ class ConnectionManager
             throw new ConnectionManagerException('profile "'.$profileId.'" does not exist');
         }
         $profileConfig = $this->config->profileConfig($profileId);
+
+        // Connect to a random node...
+        // XXX we should probably detect whether a node is up, that is a much
+        // better approach than taking random node! need to extend the daemon
+        // to give more info on how it is used so we can direct traffic better
+        // XXX also maybe implement "weight" based on available IP space or
+        // about % in use by querying node?
+        $nodeNumber = random_int(0, $profileConfig->nodeCount() - 1);
+
         if ('openvpn' === $profileConfig->vpnProto()) {
             $commonName = Base64::encode($this->random->get(32));
             $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
@@ -160,6 +178,7 @@ class ConnectionManager
 
             // this thing can throw an ClientConfigException!
             return new OpenVpnClientConfig(
+                $nodeNumber,
                 $profileConfig,
                 $serverInfo->ca()->caCert(),
                 $serverInfo->tlsCrypt(),
@@ -177,12 +196,13 @@ class ConnectionManager
             $publicKey = $keyPair['public_key'];
         }
 
-        [$ipFour, $ipSix] = $this->getIpAddress($profileConfig);
+        [$ipFour, $ipSix] = $this->getIpAddress($profileConfig, $nodeNumber);
 
         $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
-        $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl(), $publicKey, $ipFour, $ipSix);
+        $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
 
         return new WireGuardClientConfig(
+            $nodeNumber,
             $profileConfig,
             $privateKey,
             $ipFour,
@@ -194,6 +214,11 @@ class ConnectionManager
 
     public function disconnect(string $userId, string $profileId, string $connectionId): void
     {
+        // XXX how do we figure out the nodeNumber? We may need to store this
+        // somehwere, or loop over all nodeUrls...
+        // XXX this MUST be changed to diconnect from the proper node!
+        $nodeNumber = 0;
+
         if (!$this->config->hasProfile($profileId)) {
             // profile does not exist (anymore)
             return;
@@ -202,25 +227,25 @@ class ConnectionManager
 
         if ('openvpn' === $profileConfig->vpnProto()) {
             $this->storage->oCertDelete($userId, $connectionId);
-            $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl(), $connectionId);
+            $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
 
             return;
         }
 
         $this->storage->wPeerRemove($userId, $connectionId);
-        $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl(), $connectionId);
+        $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId);
     }
 
     /**
      * @return array{0:string,1:string}
      */
-    private function getIpAddress(ProfileConfig $profileConfig): array
+    private function getIpAddress(ProfileConfig $profileConfig, int $nodeNumber): array
     {
         // make a list of all allocated IPv4 addresses (the IPv6 address is
         // based on the IPv4 address)
         $allocatedIpFourList = $this->storage->wgGetAllocatedIpFourAddresses();
-        $ipFourInRangeList = $profileConfig->range()->clientIpList();
-        $ipSixInRangeList = $profileConfig->range6()->clientIpList(\count($ipFourInRangeList));
+        $ipFourInRangeList = $profileConfig->range($nodeNumber)->clientIpList();
+        $ipSixInRangeList = $profileConfig->range6($nodeNumber)->clientIpList(\count($ipFourInRangeList));
         foreach ($ipFourInRangeList as $k => $ipFourInRange) {
             if (!\in_array($ipFourInRange, $allocatedIpFourList, true)) {
                 return [$ipFourInRange, $ipSixInRangeList[$k]];

@@ -25,7 +25,7 @@ class ServerConfig
     /**
      * @param array<\LC\Portal\ProfileConfig> $profileConfigList
      */
-    public function get(array $profileConfigList): string
+    public function get(array $profileConfigList, int $nodeNumber): string
     {
         $ipFourList = [];
         $ipSixList = [];
@@ -34,8 +34,8 @@ class ServerConfig
                 // we only want WireGuard profiles
                 continue;
             }
-            $ipFourList[] = $profileConfig->range()->firstHostPrefix();
-            $ipSixList[] = $profileConfig->range6()->firstHostPrefix();
+            $ipFourList[] = $profileConfig->range($nodeNumber)->firstHostPrefix();
+            $ipSixList[] = $profileConfig->range6($nodeNumber)->firstHostPrefix();
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 

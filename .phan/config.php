@@ -339,13 +339,15 @@ return [
     // Thus, both first-party and third-party code being used by
     // your application should be included in this list.
     'directory_list' => [
-	    'src',
+        'src',
 	    'bin',
 	    'web',
 	    'libexec',
 	    'views',
-        'vendor/fkooman/oauth2-server/src',
+
+	'vendor/fkooman/oauth2-server/src',
         'vendor/fkooman/saml-sp/src',
+        'vendor/fkooman/secookie/src',
         'vendor/phpunit/phpunit/src',
     ],
 

@@ -27,7 +27,13 @@ function getMaxClientLimit(ProfileConfig $profileConfig): int
     // counts as 1...
     $processCount = 'openvpn' === $profileConfig->vpnProto() ? count($profileConfig->vpnProtoPorts()) : 1;
 
-    return ((int) 2 ** (32 - $profileConfig->range()->prefix())) - 3 * $processCount;
+    $maxClientList = 0;
+    // loop over all nodes of this profile
+    for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+        $maxClientList += ((int) 2 ** (32 - $profileConfig->range($i)->prefix())) - 3 * $processCount;
+    }
+
+    return $maxClientList;
 }
 
 function showHelp(array $argv): void

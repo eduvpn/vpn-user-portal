@@ -36,16 +36,17 @@ class ServerConfig
     /**
      * @return array<string,string>
      */
-    public function getProfile(ProfileConfig $profileConfig, bool $cpuHasAes): array
+    public function getProfile(ProfileConfig $profileConfig, int $nodeNumber, bool $cpuHasAes): array
     {
-        $certInfo = $this->ca->serverCert($profileConfig->hostName(), $profileConfig->profileId());
+        $certInfo = $this->ca->serverCert($profileConfig->hostName($nodeNumber), $profileConfig->profileId());
         $processCount = \count($profileConfig->vpnProtoPorts());
         $allowedProcessCount = [1, 2, 4, 8, 16, 32, 64];
         if (!\in_array($processCount, $allowedProcessCount, true)) {
+            // XXX introduce ServerConfigException
             throw new RuntimeException('"vpnProtoPorts" must contain 1,2,4,8,16,32 or 64 entries');
         }
-        $splitRange = $profileConfig->range()->split($processCount);
-        $splitRange6 = $profileConfig->range6()->split($processCount);
+        $splitRange = $profileConfig->range($nodeNumber)->split($processCount);
+        $splitRange6 = $profileConfig->range6($nodeNumber)->split($processCount);
         $processConfig = [];
         $profileServerConfig = [];
         for ($processNumber = 0; $processNumber < $processCount; ++$processNumber) {
@@ -196,14 +197,18 @@ class ServerConfig
             $serverConfig[] = 'push "explicit-exit-notify 1"';
         }
 
+        if ($profileConfig->clientToClient()) {
+            // XXX document that the administrator may need to push the range
+            // and range6 routes as well when not in full-tunnel when wanting
+            // to reach other clients on other OpenVPN processes
+            $serverConfig[] = 'client-to-client';
+        }
+
         // Routes
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
         // DNS
         $serverConfig = array_merge($serverConfig, self::getDns($rangeIp, $range6Ip, $profileConfig));
-
-        // Client-to-client
-        $serverConfig = array_merge($serverConfig, self::getClientToClient($profileConfig));
 
         return implode(PHP_EOL, $serverConfig);
     }
@@ -288,21 +293,5 @@ class ServerConfig
         }
 
         return $dnsEntries;
-    }
-
-    /**
-     * @return array<string>
-     */
-    private static function getClientToClient(ProfileConfig $profileConfig): array
-    {
-        if (!$profileConfig->clientToClient()) {
-            return [];
-        }
-
-        return [
-            'client-to-client',
-            sprintf('push "route %s %s"', $profileConfig->range()->address(), $profileConfig->range()->netmask()),
-            sprintf('push "route-ipv6 %s"', (string) $profileConfig->range6()),
-        ];
     }
 }

@@ -30,21 +30,22 @@ class ServerConfig
      *
      * @return array<string,string>
      */
-    public function get(array $profileConfigList, bool $cpuHasAes): array
+    public function get(array $profileConfigList, int $nodeNumber, bool $cpuHasAes): array
     {
         // XXX fix ServerConfigCheck for WG as well!
 //        ServerConfigCheck::verify($profileConfigList);
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
             if ('openvpn' === $profileConfig->vpnProto()) {
-                $serverConfig = array_merge($serverConfig, $this->openVpnServerConfig->getProfile($profileConfig, $cpuHasAes));
+                $serverConfig = array_merge($serverConfig, $this->openVpnServerConfig->getProfile($profileConfig, $nodeNumber, $cpuHasAes));
             }
         }
 
         return array_merge(
             $serverConfig,
             [
-                'wg.conf' => $this->wireGuardServerConfig->get($profileConfigList),
+                // XXX add nodeNumber
+                'wg.conf' => $this->wireGuardServerConfig->get($profileConfigList, $nodeNumber),
             ]
         );
     }

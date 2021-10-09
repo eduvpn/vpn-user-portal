@@ -104,7 +104,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));
-                $tcpOnly = 'on' === $request->optionalPostParameter('tcpOnly', fn (string $s) => \in_array($s, ['on', 'off'], true));
+                $tcpOnly = 'on' === $request->optionalPostParameter('tcpOnly', fn (string $s) => Validator::onOrOff($s));
                 $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
@@ -203,7 +203,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->postBeforeAuth(
             '/setLanguage',
             function (Request $request): Response {
-                $this->cookie->set('L', $request->requirePostParameter('uiLanguage', fn (string $s) => \array_key_exists($s, Tpl::supportedLanguages())));
+                $this->cookie->set('L', $request->requirePostParameter('uiLanguage', fn (string $s) => Validator::inSet($s, Tpl::supportedLanguages())));
 
                 return new RedirectResponse($request->requireHeader('HTTP_REFERER'), 302);
             }
