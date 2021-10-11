@@ -168,13 +168,14 @@ class Storage
     }
 
     /**
-     * @return array<string,array{user_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
+     * @return array<string,array{user_id:string,profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
     public function wPeerListByProfileId(string $profileId, int $returnSet): array
     {
         $stmt = $this->db->prepare(
             'SELECT
                 user_id,
+                profile_id,
                 display_name,
                 public_key,
                 ip_four,
@@ -199,6 +200,7 @@ class Storage
             }
             $peerList[$publicKey] = [
                 'user_id' => (string) $resultRow['user_id'],
+                'profile_id' => (string) $resultRow['profile_id'],
                 'display_name' => (string) $resultRow['display_name'],
                 'public_key' => $publicKey,
                 'ip_four' => (string) $resultRow['ip_four'],

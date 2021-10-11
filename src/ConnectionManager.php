@@ -197,6 +197,8 @@ class ConnectionManager
         // XXX this call can throw a ConnectionManagerException!
         [$ipFour, $ipSix] = $this->getIpAddress($profileConfig, $nodeNumber);
 
+        // XXX we MUST make sure public_key is unique on this server!!!
+        // the DB enforces this, but maybe a better error could be given?
         $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
         $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
 

@@ -14,6 +14,8 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\HttpClient\CurlHttpClient;
+use LC\Portal\IP;
+use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
 use LC\Portal\VpnDaemon;
@@ -37,6 +39,25 @@ use LC\Portal\VpnDaemon;
 
 $logger = new SysLogger('vpn-user-portal');
 
+/**
+ * Determine which nodeUrl this WireGuard peer should be registered at. This
+ * is super inefficient!
+ * XXX clean this up!
+ */
+function determineNodeUrl(ProfileConfig $profileConfig, IP $ipFour): ?string
+{
+    for ($i = 0; $i <= $profileConfig->nodeCount(); ++$i) {
+        $rangeFour = $profileConfig->range($i);
+        if (in_array($ipFour->address(), $rangeFour->clientIpList(), true)) {
+            return $profileConfig->nodeUrl($i);
+        }
+    }
+
+    // unable to find nodeUrl because the provided IP is not serviced by any
+    // of the nodes of this profile...
+    return null;
+}
+
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage(
@@ -49,68 +70,74 @@ try {
     );
     $vpnDaemon = new VpnDaemon(new CurlHttpClient(), $logger);
 
-    $peerListByNode = [];
-    $certListByNode = [];
-
-    // XXX :we should delete from the database the WireGuard peer
-    // configurations with IP addresses that are out of the range/range6 of the
-    // particular profile. I guess
-    // technically they won't work anymore in most cases, but if you do some
-    // IP reassignment it might be possible to have a client connect to another
-    // profile...
+    // Obtain a list of all WireGuard/OpenVPN peers/clients that we have in the
+    // database
+    $wPeerListInDatabase = [];
+    $oCertListInDatabase = [];
     foreach ($config->profileConfigList() as $profileConfig) {
-        // XXX consider multiple nodes per profile!
-        $nodeUrl = $profileConfig->nodeUrl(0);
-        // XXX this is not bound to the nodeUrl in the DB, so we have to be a bit more clever here... the range(6) indicates which nodeUrl it belong to...
         if ('wireguard' === $profileConfig->vpnProto()) {
-            if (!array_key_exists($nodeUrl, $peerListByNode)) {
-                $peerListByNode[$nodeUrl] = [];
-            }
-            $wPeerListByProfileId = $storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED);
-            $peerListByNode[$nodeUrl] = array_merge($peerListByNode[$nodeUrl], $wPeerListByProfileId);
+            $wPeerListInDatabase = array_merge($wPeerListInDatabase, $storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED));
         }
         if ('openvpn' === $profileConfig->vpnProto()) {
-            if (!array_key_exists($nodeUrl, $certListByNode)) {
-                $certListByNode[$nodeUrl] = [];
+            $oCertListInDatabase = array_merge($oCertListInDatabase, $storage->oCertListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED));
+        }
+    }
+
+    // Remove/Disconnect WireGuard/OpenVPN peers/client that we no longer have
+    // in our database (or are expired) and obtain a list of *configured*
+    // WireGuard peers in the node(s)
+    $wPeerList = [];
+    foreach ($config->profileConfigList() as $profileConfig) {
+        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+            $nodeUrl = $profileConfig->nodeUrl($i);
+            if ('wireguard' === $profileConfig->vpnProto()) {
+                // if the peer does not exist in the database, remove it...
+                foreach ($vpnDaemon->wPeerList($nodeUrl, true) as $publicKey => $wPeerInfo) {
+                    if (!array_key_exists($publicKey, $wPeerListInDatabase)) {
+                        //echo sprintf('**REMOVE** [%s]: %s', $nodeUrl, $publicKey).PHP_EOL;
+                        //XXX we MUST make sure the IP info also matches, otherwise delete it as well
+                        $vpnDaemon->wPeerRemove(
+                            $nodeUrl,
+                            $publicKey
+                        );
+                    }
+                    $wPeerList[$publicKey] = $wPeerInfo;
+                }
             }
-            $oCertListByProfileId = $storage->oCertListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED);
-            $certListByNode[$nodeUrl] = array_merge($certListByNode[$nodeUrl], $oCertListByProfileId);
+            if ('openvpn' === $profileConfig->vpnProto()) {
+                foreach (array_keys($vpnDaemon->oConnectionList($nodeUrl)) as $commonName) {
+                    if (!array_key_exists($commonName, $oCertListInDatabase)) {
+                        //echo sprintf('**DISCONNECT** [%s]: %s', $nodeUrl, $commonName).PHP_EOL;
+                        $vpnDaemon->oDisconnectClient(
+                            $nodeUrl,
+                            $commonName
+                        );
+                    }
+                }
+            }
         }
     }
 
-    foreach ($peerListByNode as $nodeUrl => $peerList) {
-        $wPeerList = $vpnDaemon->wPeerList($nodeUrl, true);
-        $publicKeyListToAdd = array_diff(array_keys($peerList), array_keys($wPeerList));
-        foreach ($publicKeyListToAdd as $publicKey) {
-            //echo sprintf('**ADD** [%s]: %s (%s,%s)', $nodeUrl, $publicKey, $peerList[$publicKey]['ip_four'], $peerList[$publicKey]['ip_six']).PHP_EOL;
-            $vpnDaemon->wPeerAdd(
-                $nodeUrl,
-                $publicKey,
-                $peerList[$publicKey]['ip_four'],
-                $peerList[$publicKey]['ip_six']
-            );
+    // Register WireGuard peers we have in our database, but not in our node(s)
+    // everything that is in wPeerListInDatabase, but not in wPeerList needs to be added to the appropriate node
+    // XXX not sure this is the correct order or things, may have to flip the parameters
+    $wgPeersToAdd = array_diff(array_keys($wPeerListInDatabase), array_keys($wPeerList));
+    foreach ($wgPeersToAdd as $publicKey) {
+        // based on the publicKey we can now find the profile + node
+        $peerInfo = $wPeerListInDatabase[$publicKey];
+        $profileId = $peerInfo['profile_id'];
+        $ipFour = $peerInfo['ip_four'];
+        $ipSix = $peerInfo['ip_six'];
+        if (null === $nodeUrl = determineNodeUrl($config->profileConfig($profileId), IP::fromIp($ipFour))) {
+            continue;
         }
-
-        $publicKeyListToRemove = array_diff(array_keys($wPeerList), array_keys($peerList));
-        foreach ($publicKeyListToRemove as $publicKey) {
-            //echo sprintf('**REMOVE** [%s]: %s', $nodeUrl, $publicKey).PHP_EOL;
-            $vpnDaemon->wPeerRemove(
-                $nodeUrl,
-                $publicKey
-            );
-        }
-    }
-
-    foreach ($certListByNode as $nodeUrl => $certList) {
-        $oConnectionList = $vpnDaemon->oConnectionList($nodeUrl);
-        $commonNameListToDisconnect = array_diff(array_keys($oConnectionList), array_keys($certList));
-        foreach ($commonNameListToDisconnect as $commonName) {
-            //echo sprintf('**DISCONNECT** [%s]: %s', $nodeUrl, $commonName).PHP_EOL;
-            $vpnDaemon->oDisconnectClient(
-                $nodeUrl,
-                $commonName
-            );
-        }
+        //echo sprintf('**ADD** [%s]: %s (%s,%s)', $nodeUrl, $publicKey, $ipFour, $ipSix).PHP_EOL;
+        $vpnDaemon->wPeerAdd(
+            $nodeUrl,
+            $publicKey,
+            $ipFour,
+            $ipSix
+        );
     }
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
