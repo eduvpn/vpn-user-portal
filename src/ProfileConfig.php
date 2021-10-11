@@ -36,19 +36,12 @@ class ProfileConfig
 
     public function nodeCount(): int
     {
-        if (null === $nodeUrlList = $this->optionalStringOrStringArray('nodeUrl')) {
-            return 1;
-        }
-
-        return \count($nodeUrlList);
+        return \count($this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']));
     }
 
     public function hostName(int $nodeNumber): string
     {
-//        error_log((string)$nodeNumber);
         $hostNameList = $this->requireStringOrStringArray('hostName');
-//        var_dump($hostNameList);die();
-        // XXX use something like nodeCount() perhaps
         if ($nodeNumber > \count($hostNameList)) {
             throw new ConfigException('"hostName" for node "'.$nodeNumber.'" not set');
         }
@@ -132,9 +125,7 @@ class ProfileConfig
 
     public function nodeUrl(int $nodeNumber): string
     {
-        // XXX aargh!
         $nodeUrlList = $this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']);
-        // XXX use something like nodeCount() perhaps
         if ($nodeNumber > \count($nodeUrlList)) {
             throw new ConfigException('"nodeUrl" for node "'.$nodeNumber.'" not set');
         }
