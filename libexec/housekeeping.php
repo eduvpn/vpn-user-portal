@@ -27,6 +27,8 @@ try {
         $baseDir.'/schema'
     );
 
+    // XXX remove WG/OpenVPN peer/certificate configurations for profiles that no longer exist
+    // XXX remove WG peer configurations when IP range no longer matches profile range(s)
     $cleanBefore = Dt::get('now -32 days');
     $storage->cleanConnectionLog($cleanBefore);
     $storage->cleanExpiredCertificates($cleanBefore);
