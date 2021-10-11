@@ -28,13 +28,12 @@ use LC\Portal\VpnDaemon;
  *
  * This script interfaces with `vpn-daemon` running on the node(s). It will
  * first figure out which peers/clients should be there and remove/disconnect
- * the ones that should NOT be there (anymore).
+ * the ones that should NOT be there (anymore). It will then add the WG peers
+ * that should (still) be there.
  *
- * Due to the architecture, e.g. multiple profiles can use the same vpn-daemon
- * and the vpn-daemon has no concept of "profiles" the administration is a bit
- * complicated. A list of peers/clients is created linked to a "nodeUrl",
- * i.e. the URL for connecting to vpn-daemon that belongs to a profile and
- * afterwards perform add/remove/disconnect what is necessary.
+ * Due to the architecture, e.g. multiple profiles can use the same vpn-daemon,
+ * profiles can have multiple vpn-daemons and the vpn-daemon has no concept of
+ * "profiles" the administration is a bit complicated...
  */
 
 $logger = new SysLogger('vpn-user-portal');
