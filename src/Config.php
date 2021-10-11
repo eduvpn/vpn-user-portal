@@ -55,6 +55,7 @@ class Config
         return $this->requireString('authModule', 'DbAuthModule');
     }
 
+    // XXX can we now remove this and instead use 0 for maxNumberOfActivePortalConfigurations?
     public function enableConfigDownload(): bool
     {
         return $this->requireBool('enableConfigDownload', true);
