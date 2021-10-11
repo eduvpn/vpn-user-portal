@@ -60,6 +60,15 @@ class Config
         return $this->requireBool('enableConfigDownload', true);
     }
 
+    /**
+     * The maximum number of active VPN configurations per user through manual
+     * portal download.
+     */
+    public function maxNumberOfActivePortalConfigurations(): int
+    {
+        return $this->requireInt('maxNumberOfActivePortalConfigurations', 3);
+    }
+
     public function defaultLanguage(): string
     {
         return $this->requireString('defaultLanguage', 'en-US');

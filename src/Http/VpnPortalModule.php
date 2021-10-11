@@ -103,6 +103,10 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('downloading configuration files has been disabled by the admin', 403);
                 }
 
+                if ($this->config->maxNumberOfActivePortalConfigurations() <= $this->storage->numberOfActivePortalConfigurations($userInfo->userId())) {
+                    throw new HttpException('only '.$this->config->maxNumberOfActivePortalConfigurations().' active portal VPN configurations at a time allowed', 403);
+                }
+
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));
                 $tcpOnly = 'on' === $request->optionalPostParameter('tcpOnly', fn (string $s) => Validator::onOrOff($s));
                 $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));

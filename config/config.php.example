@@ -208,6 +208,11 @@ return [
     //    'enableConfigDownload' => true,
     //    'enableConfigDownload' => false,
 
+    // Limit the number of active VPN configurations downloaded through the
+    // portal
+    // DEFAULT: 3
+    //'maxNumberOfActivePortalConfigurations' => 3,
+
     // DEFAULT: 51820
     // OPTIONAL
     //'wgPort' => 51820,    // listen on UDP/51820 (default WireGuard)

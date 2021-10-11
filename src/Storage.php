@@ -894,6 +894,35 @@ class Storage
         return (int) $stmt->fetchColumn();
     }
 
+    /**
+     * Get the number of active WireGuard and OpenVPN configurations for a
+     * particular user *NOT* issued to an OAuth client.
+     */
+    public function numberOfActivePortalConfigurations(string $userId): int
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                        SELECT SUM(c)
+                        FROM (
+                            SELECT COUNT(public_key) AS c
+                            FROM wg_peers
+                            WHERE user_id = :user_id
+                            AND auth_key IS NULL
+                        UNION ALL
+                            SELECT COUNT(common_name)
+                            FROM certificates
+                            WHERE user_id = :user_id
+                            AND auth_key IS NULL
+                        )
+                SQL
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
     public function cleanExpiredOAuthAuthorizations(DateTimeImmutable $dateTime): void
     {
         // XXX is this still needed or already done by the OAuth library?!
