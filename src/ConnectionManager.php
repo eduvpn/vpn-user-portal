@@ -54,7 +54,6 @@ class ConnectionManager
 
                 $oConnectionList = [];
                 for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-                    // XXX foreach over nodeUrls?
                     $oConnectionList = array_merge($oConnectionList, $this->vpnDaemon->oConnectionList($profileConfig->nodeUrl($i)));
                 }
 
@@ -78,7 +77,6 @@ class ConnectionManager
             $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
             $wPeerList = [];
             for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-                // XXX foreach over nodeUrls?
                 $wPeerList = array_merge($wPeerList, $this->vpnDaemon->wPeerList($profileConfig->nodeUrl($i), false));
             }
 
@@ -196,6 +194,7 @@ class ConnectionManager
             $publicKey = $keyPair['public_key'];
         }
 
+        // XXX this call can throw a ConnectionManagerException!
         [$ipFour, $ipSix] = $this->getIpAddress($profileConfig, $nodeNumber);
 
         $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);

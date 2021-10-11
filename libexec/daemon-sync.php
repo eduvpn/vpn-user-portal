@@ -59,7 +59,8 @@ try {
     // IP reassignment it might be possible to have a client connect to another
     // profile...
     foreach ($config->profileConfigList() as $profileConfig) {
-        $nodeUrl = $profileConfig->nodeUrl();
+        // XXX consider multiple nodes per profile!
+        $nodeUrl = $profileConfig->nodeUrl(0);
         // XXX this is not bound to the nodeUrl in the DB, so we have to be a bit more clever here... the range(6) indicates which nodeUrl it belong to...
         if ('wireguard' === $profileConfig->vpnProto()) {
             if (!array_key_exists($nodeUrl, $peerListByNode)) {
