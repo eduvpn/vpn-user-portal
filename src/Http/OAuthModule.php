@@ -15,18 +15,22 @@ use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\Http\Response as OAuthResponse;
 use fkooman\OAuth\Server\OAuthServer;
 use LC\Portal\Http\Exception\HttpException;
+use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 
 class OAuthModule implements ServiceModuleInterface
 {
-    private TplInterface $tpl;
-
+    private Storage $storage;
     private OAuthServer $oauthServer;
+    private TplInterface $tpl;
+    private int $maxNumberOfAuthorizedClients;
 
-    public function __construct(TplInterface $tpl, OAuthServer $oauthServer)
+    public function __construct(Storage $storage, OAuthServer $oauthServer, TplInterface $tpl, int $maxNumberOfAuthorizedClients)
     {
-        $this->tpl = $tpl;
+        $this->storage = $storage;
         $this->oauthServer = $oauthServer;
+        $this->tpl = $tpl;
+        $this->maxNumberOfAuthorizedClients = $maxNumberOfAuthorizedClients;
     }
 
     public function init(ServiceInterface $service): void
@@ -34,6 +38,11 @@ class OAuthModule implements ServiceModuleInterface
         $service->get(
             '/oauth/authorize',
             function (UserInfo $userInfo, Request $request): Response {
+                // restrict the number of authorized OAuth clients per user
+                if ($this->maxNumberOfAuthorizedClients <= $this->storage->numberOfAuthorizedClients($userInfo->userId())) {
+                    throw new HttpException('only '.$this->maxNumberOfAuthorizedClients.' active OAuth authorizations at the same time allowed', 403);
+                }
+
                 try {
                     if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($userInfo->userId())) {
                         // optimization where we do not ask for approval

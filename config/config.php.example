@@ -187,8 +187,13 @@ return [
     //'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'ro-RO', 'uk-UA'],
 
     //    'Api' => [
-    //        // expire OAuth access tokens after 1 hour (default)
+    //        // expiry of OAuth access_token
+    //        // DEFAULT: PT1H (1 hour)
     //        //'tokenExpiry' => 'PT1H',
+
+    //        // limit the number of active OAuth clients per user
+    //        // DEFAULT: 3
+    //        //'maxNumberOfAuthorizedClients' => 3,
     //    ],
 
     // how/what to log the connect/disconnect events to syslog

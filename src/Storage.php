@@ -882,6 +882,18 @@ class Storage
         $stmt->execute();
     }
 
+    /**
+     * Get the number of active OAuth authorizations for a particular user.
+     */
+    public function numberOfAuthorizedClients(string $userId): int
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(auth_key) FROM oauth_authorizations WHERE user_id = :user_id');
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
     public function cleanExpiredOAuthAuthorizations(DateTimeImmutable $dateTime): void
     {
         // XXX is this still needed or already done by the OAuth library?!

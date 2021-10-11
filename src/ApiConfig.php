@@ -24,8 +24,19 @@ class ApiConfig
         $this->configData = $configData;
     }
 
+    /**
+     * OAuth "access_token" expiry.
+     */
     public function tokenExpiry(): DateInterval
     {
         return new DateInterval($this->requireString('tokenExpiry', 'PT1H'));
+    }
+
+    /**
+     * Maximum number of OAuth client authorizations (per user).
+     */
+    public function maxNumberOfAuthorizedClients(): int
+    {
+        return $this->requireInt('maxNumberOfAuthorizedClients', 3);
     }
 }

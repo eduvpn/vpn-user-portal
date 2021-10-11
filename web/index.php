@@ -303,8 +303,10 @@ try {
     $oauthServer->setRefreshTokenExpiry($sessionExpiry);
 
     $oauthModule = new OAuthModule(
+        $storage,
+        $oauthServer,
         $tpl,
-        $oauthServer
+        $config->apiConfig()->maxNumberOfAuthorizedClients()
     );
     $service->addModule($oauthModule);
     $service->addModule(new LogoutModule($authModule, $sessionBackend));
