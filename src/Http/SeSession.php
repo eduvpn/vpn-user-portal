@@ -11,16 +11,34 @@ declare(strict_types=1);
 
 namespace LC\Portal\Http;
 
+use fkooman\SeCookie\CookieOptions;
+use fkooman\SeCookie\MemcachedSessionStorage;
 use fkooman\SeCookie\Session;
+use fkooman\SeCookie\SessionOptions;
+use LC\Portal\SessionConfig;
+use Memcached;
 
 class SeSession implements SessionInterface
 {
     private Session $session;
 
-    public function __construct(Session $session)
+    public function __construct(CookieOptions $cookieOptions, SessionConfig $sessionConfig)
     {
-        $session->start();
-        $this->session = $session;
+        // default session storage is "FileSessionStorage"
+        $sessionStorage = null;
+        if ($sessionConfig->useMemCache()) {
+            $memCache = new Memcached();
+            foreach ($sessionConfig->memCacheServerList() as $memCacheServer) {
+                $memCache->addServer($memCacheServer['host'], $memCacheServer['port']);
+            }
+            $sessionStorage = new MemcachedSessionStorage($memCache);
+        }
+        $this->session = new Session(
+            SessionOptions::init(),
+            $cookieOptions,
+            $sessionStorage
+        );
+        $this->session->start();
     }
 
     public function regenerate(): void

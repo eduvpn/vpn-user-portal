@@ -196,6 +196,18 @@ return [
     //        //'maxNumberOfAuthorizedClients' => 5,
     //    ],
 
+    //    'SessionConfig' => [
+    //        // Whether to use memcache for sessions
+    //        // DEFAULT: false
+    //        'useMemCache' => false,
+
+    //        // list of memcache servers host:port
+    //        // DEFAULT: []
+    //        'memCacheServerList' => [
+    //            'localhost:11211',
+    //        ],
+    //    ],
+
     // how/what to log the connect/disconnect events to syslog
     // EVENT_TYPE = {CONNECT,DISCONNECT}
     // DEFAULT: '{{TYPE}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]'

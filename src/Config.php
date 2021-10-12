@@ -45,6 +45,11 @@ class Config
         return new ApiConfig($this->s('Api')->toArray());
     }
 
+    public function sessionConfig(): SessionConfig
+    {
+        return new SessionConfig($this->s('SessionConfig')->toArray());
+    }
+
     public function vpnCaPath(): string
     {
         return $this->requireString('vpnCaPath', '/usr/bin/vpn-ca');

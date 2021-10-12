@@ -16,8 +16,6 @@ use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer\EdDSA;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\CookieOptions;
-use fkooman\SeCookie\Session;
-use fkooman\SeCookie\SessionOptions;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
@@ -102,13 +100,12 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    $cookieOptions = CookieOptions::init()->withPath($request->getRoot())->withSameSiteLax();
+    $cookieOptions = CookieOptions::init()->withPath($request->getRoot());
     if (!$config->secureCookie()) {
         $cookieOptions = $cookieOptions->withoutSecure();
     }
-    $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)));
-    $sessionOptions = SessionOptions::init();
-    $sessionBackend = new SeSession(new Session($sessionOptions, $cookieOptions->withSameSiteStrict()));
+    $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
+    $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config->sessionConfig());
 
     // determine whether or not we want to use another language for the UI
     if (null === $uiLanguage = $request->getCookie('L')) {
