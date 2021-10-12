@@ -40,7 +40,7 @@ class SessionConfig
         foreach ($serverList as $server) {
             [$host, $port] = explode(':', $server, 2);
             $returnServerList[] = [
-                'host' => (string) $host,
+                'host' => $host,
                 'port' => (int) $port,
             ];
         }

@@ -17,6 +17,7 @@ use fkooman\SeCookie\Session;
 use fkooman\SeCookie\SessionOptions;
 use LC\Portal\SessionConfig;
 use Memcached;
+use RuntimeException;
 
 class SeSession implements SessionInterface
 {
@@ -27,6 +28,9 @@ class SeSession implements SessionInterface
         // default session storage is "FileSessionStorage"
         $sessionStorage = null;
         if ($sessionConfig->useMemCache()) {
+            if (!\extension_loaded('memcached')) {
+                throw new RuntimeException('"memcached" PHP extension not available');
+            }
             $memCache = new Memcached();
             foreach ($sessionConfig->memCacheServerList() as $memCacheServer) {
                 $memCache->addServer($memCacheServer['host'], $memCacheServer['port']);
