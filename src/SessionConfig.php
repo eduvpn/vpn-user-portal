@@ -45,8 +45,6 @@ class SessionConfig
             ];
         }
 
-        error_log(var_export($returnServerList, true));
-
         return $returnServerList;
     }
 }
