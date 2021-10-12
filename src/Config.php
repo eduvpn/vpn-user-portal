@@ -67,7 +67,7 @@ class Config
      */
     public function maxNumberOfActivePortalConfigurations(): int
     {
-        return $this->requireInt('maxNumberOfActivePortalConfigurations', 3);
+        return $this->requireInt('maxNumberOfActivePortalConfigurations', 5);
     }
 
     public function defaultLanguage(): string

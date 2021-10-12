@@ -192,8 +192,8 @@ return [
     //        //'tokenExpiry' => 'PT1H',
 
     //        // limit the number of active OAuth clients per user
-    //        // DEFAULT: 3
-    //        //'maxNumberOfAuthorizedClients' => 3,
+    //        // DEFAULT: 5
+    //        //'maxNumberOfAuthorizedClients' => 5,
     //    ],
 
     // how/what to log the connect/disconnect events to syslog
@@ -210,8 +210,8 @@ return [
 
     // Limit the number of active VPN configurations downloaded through the
     // portal
-    // DEFAULT: 3
-    //'maxNumberOfActivePortalConfigurations' => 3,
+    // DEFAULT: 5
+    //'maxNumberOfActivePortalConfigurations' => 5,
 
     // DEFAULT: 51820
     // OPTIONAL
