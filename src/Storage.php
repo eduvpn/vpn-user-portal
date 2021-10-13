@@ -910,8 +910,8 @@ class Storage
                             FROM wg_peers
                             WHERE user_id = :user_id
                             AND auth_key IS NULL
-                        UNION ALL
-                            SELECT COUNT(common_name)
+                        UNION
+                            SELECT COUNT(common_name) AS c
                             FROM certificates
                             WHERE user_id = :user_id
                             AND auth_key IS NULL
