@@ -915,7 +915,7 @@ class Storage
                             FROM certificates
                             WHERE user_id = :user_id
                             AND auth_key IS NULL
-                        )
+                        ) AS c
                 SQL
         );
 
