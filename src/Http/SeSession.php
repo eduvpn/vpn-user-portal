@@ -27,15 +27,15 @@ class SeSession implements SessionInterface
     {
         // default session storage is "FileSessionStorage"
         $sessionStorage = null;
-        if ($sessionConfig->useMemCache()) {
+        if ($sessionConfig->useMemcached()) {
             if (!\extension_loaded('memcached')) {
                 throw new RuntimeException('"memcached" PHP extension not available');
             }
-            $memCache = new Memcached();
-            foreach ($sessionConfig->memCacheServerList() as $memCacheServer) {
-                $memCache->addServer($memCacheServer['host'], $memCacheServer['port']);
+            $m = new Memcached();
+            foreach ($sessionConfig->memcachedServerList() as $memCachedServer) {
+                $m->addServer($memCachedServer['h'], $memCachedServer['p']);
             }
-            $sessionStorage = new MemcachedSessionStorage($memCache);
+            $sessionStorage = new MemcachedSessionStorage($m);
         }
         $this->session = new Session(
             SessionOptions::init(),

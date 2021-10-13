@@ -196,14 +196,14 @@ return [
     //        //'maxNumberOfAuthorizedClients' => 5,
     //    ],
 
-    //    'SessionConfig' => [
-    //        // Whether to use memcache for sessions
+    //    'Session' => [
+    //        // Whether to use memcached for sessions
     //        // DEFAULT: false
-    //        'useMemCache' => false,
+    //        'useMemcached' => false,
 
-    //        // list of memcache servers host:port
+    //        // list of memcached servers host:port
     //        // DEFAULT: []
-    //        'memCacheServerList' => [
+    //        'memcachedServerList' => [
     //            'localhost:11211',
     //        ],
     //    ],

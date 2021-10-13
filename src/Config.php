@@ -47,7 +47,7 @@ class Config
 
     public function sessionConfig(): SessionConfig
     {
-        return new SessionConfig($this->s('SessionConfig')->toArray());
+        return new SessionConfig($this->s('Session')->toArray());
     }
 
     public function vpnCaPath(): string

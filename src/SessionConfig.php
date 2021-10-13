@@ -25,26 +25,26 @@ class SessionConfig
     /**
      * Whether or not to enable MemCache support.
      */
-    public function useMemCache(): bool
+    public function useMemcached(): bool
     {
-        return $this->requireBool('useMemCache', false);
+        return $this->requireBool('useMemcached', false);
     }
 
     /**
-     * @return array<array{host:string,port:int}>
+     * @return array<array{h:string,p:int}>
      */
-    public function memCacheServerList(): array
+    public function memcachedServerList(): array
     {
-        $serverList = $this->requireStringArray('memCacheServerList', []);
-        $returnServerList = [];
-        foreach ($serverList as $server) {
-            [$host, $port] = explode(':', $server, 2);
-            $returnServerList[] = [
-                'host' => $host,
-                'port' => (int) $port,
+        $memcachedServerList = $this->requireStringArray('memcachedServerList', []);
+        $returnMemcachedServerList = [];
+        foreach ($memcachedServerList as $memcachedServer) {
+            [$h, $p] = explode(':', $memcachedServer, 2);
+            $returnMemcachedServerList[] = [
+                'h' => $h,
+                'p' => (int) $p,
             ];
         }
 
-        return $returnServerList;
+        return $returnMemcachedServerList;
     }
 }
