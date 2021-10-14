@@ -42,7 +42,7 @@ class ProfileConfig
     public function hostName(int $nodeNumber): string
     {
         $hostNameList = $this->requireStringOrStringArray('hostName');
-        if ($nodeNumber > \count($hostNameList)) {
+        if ($nodeNumber >= \count($hostNameList)) {
             throw new ConfigException('"hostName" for node "'.$nodeNumber.'" not set');
         }
 
@@ -52,7 +52,7 @@ class ProfileConfig
     public function range(int $nodeNumber): IP
     {
         $rangeList = $this->requireStringOrStringArray('range');
-        if ($nodeNumber > \count($rangeList)) {
+        if ($nodeNumber >= \count($rangeList)) {
             throw new ConfigException('"range" for node "'.$nodeNumber.'" not set');
         }
 
@@ -62,7 +62,7 @@ class ProfileConfig
     public function range6(int $nodeNumber): IP
     {
         $range6List = $this->requireStringOrStringArray('range6');
-        if ($nodeNumber > \count($range6List)) {
+        if ($nodeNumber >= \count($range6List)) {
             throw new ConfigException('"range6" for node "'.$nodeNumber.'" not set');
         }
 
@@ -126,7 +126,7 @@ class ProfileConfig
     public function nodeUrl(int $nodeNumber): string
     {
         $nodeUrlList = $this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']);
-        if ($nodeNumber > \count($nodeUrlList)) {
+        if ($nodeNumber >= \count($nodeUrlList)) {
             throw new ConfigException('"nodeUrl" for node "'.$nodeNumber.'" not set');
         }
 
