@@ -37,6 +37,7 @@
         <summary><?=$this->t('Danger Zone'); ?></summary>
         <form class="frm" method="post" action="<?=$this->e($requestRoot); ?>user_delete_account">
             <fieldset>
+                <input type="hidden" name="user_id" value="<?=$this->e($userId); ?>">
 <?php if ('DbAuthModule' === $authModule): ?>
                 <button class="error"><?=$this->t('Delete Account'); ?></button>
 <?php else: ?>
