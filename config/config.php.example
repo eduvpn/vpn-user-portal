@@ -442,12 +442,6 @@ return [
             // DEFAULT = []
             // ** WireGuard,OpenVPN
             //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
-
-            // Hide the profile from the user portal, i.e. do not allow the
-            // user to choose it
-            // DEFAULT = false
-            // ** WireGuard,OpenVPN
-            //'hideProfile' => false,
         ],
     ],
 ];
