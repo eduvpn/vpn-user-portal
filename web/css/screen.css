@@ -52,6 +52,14 @@ details summary {
   padding-left: 1.5em;
 }
 
+form details summary {
+  margin: 0;
+}
+
+form details[open] summary {
+  margin-bottom: 0.5em;
+}
+
 /* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details */
 details summary::-webkit-details-marker {
   display: none;
@@ -188,6 +196,11 @@ form.frm label {
   font-weight: bold;
   display: block;
   margin: 0.5em 0 0.3em 0;
+}
+
+input[type="checkbox"] + label {
+  display: inline;
+  font-weight: normal;
 }
 
 form.frm {
