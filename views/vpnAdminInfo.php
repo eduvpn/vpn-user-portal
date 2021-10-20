@@ -175,7 +175,10 @@
             <tr><th><?=$this->t('Node URL'); ?></th><td><code><?=$this->e($nodeUrl); ?></code></td></tr>
 <?php endif; ?>
 <?php if (array_key_exists($nodeUrl, $nodeInfoList)) : ?>
-<?php if (null !== $nodeInfo = $nodeInfoList[$nodeUrl]) : ?>
+<?php if (null === $nodeInfo = $nodeInfoList[$nodeUrl]) : ?>
+            <tr><th></th><td><span class="error">Offline</span></td></tr>
+<?php else: ?>
+            <tr><th></th><td><span class="success">Online</span></td></tr>
             <tr><th><?=$this->t('#CPUs'); ?></th><td><?=$this->e((string) $nodeInfo['cpu_count']); ?></td></tr>
             <tr><th><?=$this->t('Load Average'); ?></th><td><?=$this->e(implode(', ', $nodeInfo['load_average'])); ?></td></tr>
 <?php endif; ?>
