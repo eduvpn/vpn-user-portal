@@ -36,6 +36,24 @@ class VpnDaemon
     }
 
     /**
+     * @return null|array{load_average:array<float>,cpu_count:int}
+     */
+    public function nodeInfo(string $nodeUrl): ?array
+    {
+        try {
+            return Json::decode(
+                $this->httpClient->send(
+                    new HttpClientRequest('GET', $nodeUrl.'/i/node')
+                )->body()
+            );
+        } catch (HttpClientException $e) {
+            $this->logger->error((string) $e);
+
+            return null;
+        }
+    }
+
+    /**
      * @return array<string,array{public_key:string,ip_net:array{0:string,1:string},last_handshake_time:string,bytes_transferred:int}>
      */
     public function wPeerList(string $nodeUrl, bool $showAll): array
