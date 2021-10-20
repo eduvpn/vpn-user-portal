@@ -22,12 +22,14 @@ use LC\Portal\ServerInfo;
 use LC\Portal\Storage;
 use LC\Portal\TplInterface;
 use LC\Portal\Validator;
+use LC\Portal\VpnDaemon;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
     private string $dataDir;
     private Config $config;
     private TplInterface $tpl;
+    private VpnDaemon $vpnDaemon;
     private ConnectionManager $connectionManager;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
@@ -35,11 +37,12 @@ class AdminPortalModule implements ServiceModuleInterface
     private ServerInfo $serverInfo;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $dataDir, Config $config, TplInterface $tpl, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
+    public function __construct(string $dataDir, Config $config, TplInterface $tpl, VpnDaemon $vpnDaemon, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
     {
         $this->dataDir = $dataDir;
         $this->config = $config;
         $this->tpl = $tpl;
+        $this->vpnDaemon = $vpnDaemon;
         $this->connectionManager = $connectionManager;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
@@ -80,10 +83,22 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
+                // query all nodes to have them report their status info
+                $nodeInfoList = [];
+                foreach ($this->config->profileConfigList() as $profileConfig) {
+                    for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+                        $nodeUrl = $profileConfig->nodeUrl($i);
+                        if (!\array_key_exists($nodeUrl, $nodeInfoList)) {
+                            $nodeInfoList[$nodeUrl] = $this->vpnDaemon->nodeInfo($nodeUrl);
+                        }
+                    }
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
+                            'nodeInfoList' => $nodeInfoList,
                             'profileConfigList' => $this->config->profileConfigList(),
                             'serverInfo' => $this->serverInfo,
                         ]

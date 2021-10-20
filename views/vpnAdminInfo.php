@@ -2,6 +2,7 @@
 <?php /** @var \LC\Portal\Tpl $this */?>
 <?php /** @var \LC\Portal\ServerInfo $serverInfo */?>
 <?php /** @var array<\LC\Portal\ProfileConfig> $profileConfigList */?>
+<?php /** @var array<string,null|array{load_average:array<float>,cpu_count:int}> $nodeInfoList */?>
 <?php /** @var string $portalVersion */?>
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
@@ -161,7 +162,6 @@
             </tr>
 <?php endif; ?>
 <?php endif; ?>
-
         <tr><th><?=$this->t('Node(s)'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
         <table class="tbl">
@@ -173,6 +173,12 @@
 <?php endif; ?>
 <?php if ('http://127.0.0.1:41194' !== $nodeUrl = $profileConfig->nodeUrl($i)): ?>
             <tr><th><?=$this->t('Node URL'); ?></th><td><code><?=$this->e($nodeUrl); ?></code></td></tr>
+<?php endif; ?>
+<?php if (array_key_exists($nodeUrl, $nodeInfoList)) : ?>
+<?php if (null !== $nodeInfo = $nodeInfoList[$nodeUrl]) : ?>
+            <tr><th><?=$this->t('#CPUs'); ?></th><td><?=$this->e((string) $nodeInfo['cpu_count']); ?></td></tr>
+            <tr><th><?=$this->t('Load Average'); ?></th><td><?=$this->e(implode(', ', $nodeInfo['load_average'])); ?></td></tr>
+<?php endif; ?>
 <?php endif; ?>
         </table>
 <?php endfor; ?>

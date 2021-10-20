@@ -261,7 +261,8 @@ try {
         $oauthSigner->publicKey()
     );
 
-    $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient(), $logger), $storage);
+    $vpnDaemon = new VpnDaemon(new CurlHttpClient(), $logger);
+    $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage);
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(
@@ -282,6 +283,7 @@ try {
         $baseDir.'/data',
         $config,
         $tpl,
+        $vpnDaemon,
         $connectionManager,
         $storage,
         $oauthStorage,
