@@ -60,8 +60,9 @@
     </table>
     </details>
 
-    <?php foreach ($profileConfigList as $profileConfig): ?>
-    <h2 id="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></h2>
+    <h2><?=$this->t('Profiles'); ?></h2>
+<?php foreach ($profileConfigList as $profileConfig): ?>
+    <h3 id="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></h3>
     <table class="tbl">
         <tbody>
             <tr>
@@ -94,6 +95,34 @@
 <?php endif; ?>
                 </td>
             </tr>
+
+            <tr><th><?=$this->t('Hostname'); ?></th><td>
+<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
+            <span class="plain"><code><?=$this->e($profileConfig->hostName($i)); ?></code></span>
+<?php endfor; ?>
+            </td></tr>
+
+            <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
+<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->range($i)); ?></code></span>
+<?php endfor; ?>
+            </td></tr>
+
+            <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
+<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->range6($i)); ?></code></span>
+<?php endfor; ?>
+            </td></tr>
+
+            <tr><th><?=$this->t('Node URL'); ?></th><td>
+<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
+            <span class="plain"><code><?=$this->e($profileConfig->nodeUrl($i)); ?></code></span>
+<?php endfor; ?>
+            </td></tr>
+
+<?php if ('::' !== $listenIp = $profileConfig->listenIp()): ?>
+            <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($listenIp); ?></code></td></tr>
+<?php endif; ?>
 
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
             <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($dnsDomain); ?></code></td></tr>
@@ -162,30 +191,33 @@
             </tr>
 <?php endif; ?>
 <?php endif; ?>
-        <tr><th><?=$this->t('Node(s)'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-        <table class="tbl">
-            <tr><th><?=$this->t('Hostname'); ?></th><td><code><?=$this->e($profileConfig->hostName($i)); ?></code></td></tr>
-            <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td><code><?=$this->e((string) $profileConfig->range($i)); ?></code></td></tr>
-            <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td><code><?=$this->e((string) $profileConfig->range6($i)); ?></code></td></tr>
-<?php if ('::' !== $listenIp = $profileConfig->listenIp()): ?>
-            <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($listenIp); ?></code></td></tr>
-<?php endif; ?>
-<?php if ('http://127.0.0.1:41194' !== $nodeUrl = $profileConfig->nodeUrl($i)): ?>
-            <tr><th><?=$this->t('Node URL'); ?></th><td><code><?=$this->e($nodeUrl); ?></code></td></tr>
-<?php endif; ?>
-<?php if (array_key_exists($nodeUrl, $nodeInfoList)) : ?>
-<?php if (null === $nodeInfo = $nodeInfoList[$nodeUrl]) : ?>
+<?php endforeach; ?>
+        </tbody>
+    </table>
+
+
+    <h2><?=$this->t('Nodes'); ?></h2>
+<?php foreach ($nodeInfoList as $nodeUrl => $nodeInfo): ?>
+    <table class="tbl">
+        <tbody>
+<?php if (null === $nodeInfo): ?>
             <tr><th></th><td><span class="error">Offline</span></td></tr>
 <?php else: ?>
             <tr><th></th><td><span class="success">Online</span></td></tr>
+<?php endif; ?>
+
+<?php if ('http://127.0.0.1:41194' !== $nodeUrl): ?>
+            <tr>
+            <th><?=$this->t('URL'); ?></th>
+            <td><span class="plain"><code><?=$this->e($nodeUrl); ?></code></span></td>
+            </tr>
+<?php endif; ?>
+<?php if (null !== $nodeInfo): ?>
             <tr><th><?=$this->t('#CPUs'); ?></th><td><?=$this->e((string) $nodeInfo['cpu_count']); ?></td></tr>
             <tr><th><?=$this->t('Load Average'); ?></th><td><?=$this->e(implode(', ', $nodeInfo['load_average'])); ?></td></tr>
 <?php endif; ?>
-<?php endif; ?>
-        </table>
-<?php endfor; ?>
-        </td></tr>
-        </table>
+        </tbody>
+    </table>
 <?php endforeach; ?>
+
 <?php $this->stop('content'); ?>
