@@ -102,8 +102,8 @@
 <?php if (0 !== count($profileConfig->dnsDomainSearch())): ?>
             <tr><th><?=$this->t('DNS Search Domain(s)'); ?></th>
             <td>
-<?php foreach ($profileConfig->dnsDomainSearch() as $route): ?>
-                <span class="plain"><code><?=$this->e($route); ?></code></span>
+<?php foreach ($profileConfig->dnsDomainSearch() as $dnsDomain): ?>
+                <span class="plain"><code><?=$this->e($dnsDomain); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
@@ -122,8 +122,8 @@
 <?php if (0 !== count($profileConfig->dns())): ?>
             <tr><th><?=$this->t('DNS Server(s)'); ?></th>
             <td>
-<?php foreach ($profileConfig->dns() as $route): ?>
-                    <span class="plain"><code><?=$this->e($route); ?></code></span>
+<?php foreach ($profileConfig->dns() as $dnsAddress): ?>
+                    <span class="plain"><code><?=$this->e($dnsAddress); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
@@ -132,8 +132,8 @@
 <?php if (0 !== count($profileConfig->aclPermissionList())): ?>
             <tr><th><?=$this->t('ACL Permission List'); ?></th>
             <td>
-<?php foreach ($profileConfig->aclPermissionList() as $route): ?>
-                    <span class="plain"><code><?=$this->e($route); ?></code></span>
+<?php foreach ($profileConfig->aclPermissionList() as $aclPermission): ?>
+                    <span class="plain"><code><?=$this->e($aclPermission); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
@@ -143,8 +143,8 @@
 <?php if (0 !== count($profileConfig->vpnProtoPorts())): ?>
             <tr><th><?=$this->t('Protocols/Ports'); ?></th>
             <td>
-<?php foreach ($profileConfig->vpnProtoPorts() as $route): ?>
-                    <span class="plain"><code><?=$this->e($route); ?></code></span>
+<?php foreach ($profileConfig->vpnProtoPorts() as $vpnProtoPort): ?>
+                    <span class="plain"><code><?=$this->e($vpnProtoPort); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
@@ -155,8 +155,8 @@
 <?php if (0 !== count($profileConfig->exposedVpnProtoPorts())): ?>
             <tr><th><?=$this->t('Offered Protocols/Ports'); ?></th>
             <td>
-<?php foreach ($profileConfig->exposedVpnProtoPorts() as $route): ?>
-                    <span class="plain"><code><?=$this->e($route); ?></code></span>
+<?php foreach ($profileConfig->exposedVpnProtoPorts() as $exposedVpnProtoPort): ?>
+                    <span class="plain"><code><?=$this->e($exposedVpnProtoPort); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
