@@ -32,7 +32,7 @@
                 <input type="text" name="displayName" id="displayName" size="32" maxlength="64" placeholder="<?=$this->t('Name'); ?>" autofocus required>
                 <details>
                     <summary><?=$this->t('Advanced'); ?></summary>
-                    <label for="tcpOnly"><input type="checkbox" id="tcpOnly" name="tcpOnly"> <?=$this->t('Connect over TCP only (OpenVPN)'); ?></label>
+                    <input type="checkbox" id="tcpOnly" name="tcpOnly"> <label for="tcpOnly"><?=$this->t('Connect over TCP only (OpenVPN)'); ?></label>
                 </details>
             </fieldset>
             <fieldset>
