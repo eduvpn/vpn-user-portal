@@ -191,10 +191,9 @@
             </tr>
 <?php endif; ?>
 <?php endif; ?>
-<?php endforeach; ?>
         </tbody>
     </table>
-
+<?php endforeach; ?>
 
     <h2><?=$this->t('Nodes'); ?></h2>
 <?php foreach ($nodeInfoList as $nodeUrl => $nodeInfo): ?>
