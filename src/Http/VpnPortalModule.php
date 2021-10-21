@@ -192,18 +192,6 @@ class VpnPortalModule implements ServiceModuleInterface
             }
         );
 
-        $service->get(
-            '/documentation',
-            function (): Response {
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalDocumentation',
-                        []
-                    )
-                );
-            }
-        );
-
         $service->postBeforeAuth(
             '/setLanguage',
             function (Request $request): Response {

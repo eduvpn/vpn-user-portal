@@ -10,7 +10,6 @@ if ($enableConfigDownload) {
     $menuItems['configurations'] = $this->t('Configurations');
 }
 $menuItems['account'] = $this->t('Account');
-$menuItems['documentation'] = $this->t('Documentation');
 if ($isAdmin) {
     $menuItems['connections'] = $this->t('Connections');
     $menuItems['users'] = $this->t('Users');
