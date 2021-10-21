@@ -23,6 +23,19 @@
                     </ul>
                 </td>
             </tr>
+
+            <tr>
+                <th><?=$this->t('Nodes'); ?></th>
+                <td>
+<?php for ($i = 0; $i < count($nodeInfoList); ++$i): ?>
+<?php if (null === array_values($nodeInfoList)[$i]): ?>
+            <span class="error"><?=$this->e((string) $i); ?>: <?=$this->t('Offline'); ?></span>
+<?php else: ?>
+            <span class="success"><?=$this->e((string) $i); ?>: <?=$this->t('Online'); ?></span>
+<?php endif; ?>
+<?php endfor; ?>
+                </td>
+            </tr>
         </tbody>
     </table>
 
@@ -200,9 +213,9 @@
     <table class="tbl">
         <tbody>
 <?php if (null === $nodeInfo): ?>
-            <tr><th></th><td><span class="error">Offline</span></td></tr>
+            <tr><th></th><td><span class="error"><?=$this->t('Offline'); ?></span></td></tr>
 <?php else: ?>
-            <tr><th></th><td><span class="success">Online</span></td></tr>
+            <tr><th></th><td><span class="success"><?=$this->t('Online'); ?></span></td></tr>
 <?php endif; ?>
 
 <?php if ('http://127.0.0.1:41194' !== $nodeUrl): ?>
