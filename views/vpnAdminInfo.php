@@ -27,13 +27,13 @@
             <tr>
                 <th><?=$this->t('Nodes'); ?></th>
                 <td>
-<?php for ($i = 0; $i < count($nodeInfoList); ++$i): ?>
-<?php if (null === array_values($nodeInfoList)[$i]): ?>
-            <span class="error"><?=$this->e((string) $i); ?>: <?=$this->t('Offline'); ?></span>
+<?php foreach ($nodeInfoList as $nodeUrl => $nodeInfo): ?>
+<?php if (null === $nodeInfo): ?>
+            <span class="error" title="<?=$this->e($nodeUrl); ?>"><?=$this->t('Offline'); ?><br><small><?=$this->t('N/A'); ?></small></span>
 <?php else: ?>
-            <span class="success"><?=$this->e((string) $i); ?>: <?=$this->t('Online'); ?></span>
+            <span class="success" title="<?=$this->e($nodeUrl); ?>"><?=$this->t('Online'); ?><br><small><?=$this->e(implode(', ', $nodeInfo['load_average'])); ?></small></span>
 <?php endif; ?>
-<?php endfor; ?>
+<?php endforeach; ?>
                 </td>
             </tr>
         </tbody>
@@ -207,29 +207,4 @@
         </tbody>
     </table>
 <?php endforeach; ?>
-
-    <h2><?=$this->t('Nodes'); ?></h2>
-<?php foreach ($nodeInfoList as $nodeUrl => $nodeInfo): ?>
-    <table class="tbl">
-        <tbody>
-<?php if (null === $nodeInfo): ?>
-            <tr><th></th><td><span class="error"><?=$this->t('Offline'); ?></span></td></tr>
-<?php else: ?>
-            <tr><th></th><td><span class="success"><?=$this->t('Online'); ?></span></td></tr>
-<?php endif; ?>
-
-<?php if ('http://127.0.0.1:41194' !== $nodeUrl): ?>
-            <tr>
-            <th><?=$this->t('URL'); ?></th>
-            <td><span class="plain"><code><?=$this->e($nodeUrl); ?></code></span></td>
-            </tr>
-<?php endif; ?>
-<?php if (null !== $nodeInfo): ?>
-            <tr><th><?=$this->t('#CPUs'); ?></th><td><?=$this->e((string) $nodeInfo['cpu_count']); ?></td></tr>
-            <tr><th><?=$this->t('Load Average'); ?></th><td><?=$this->e(implode(', ', $nodeInfo['load_average'])); ?></td></tr>
-<?php endif; ?>
-        </tbody>
-    </table>
-<?php endforeach; ?>
-
 <?php $this->stop('content'); ?>
