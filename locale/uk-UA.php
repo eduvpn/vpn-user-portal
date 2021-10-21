@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     //'ACL Permission List' => '',
     'Account' => 'Акаунт',
     'Active' => 'Активний',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'Програма намагається встановити VPN-з’єднання.',
     'An error occurred.' => 'Сталася помилка.',
     'Application Usage' => 'Використання додатку',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Знайти ідентифікатор користувача який використовує IPv4 або IPv6 адресу в конкретний проміжок часу.',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'Тут ви можете змінити пароль для вашого акаунта.',
-    //'Hide Profile' => '',
     'Home' => 'Додому',
     //'Hostname' => '',
     'IP Address' => 'IP Адреса',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'Ще немає з’єднань',
     'No events yet.' => 'Події відсутні.',
     'No user account(s) to show.' => 'Немає облікових записів користувачів для показу',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     //'Offered Protocols/Ports' => '',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'Підтвердьте це лише тоді, коли ви намагаєтесь встановити VPN-з’єднання за допомогою цієї програмою!',
     //'OpenVPN' => '',
     'Password' => 'Пароль',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Будь ласка, увійдіть, використовуючи своє ім’я користувача та пароль.',
+    //'Port' => '',
     'Profile' => 'Профайл',
     'Profiles' => 'Профайли',
     //'Protocols/Ports' => '',

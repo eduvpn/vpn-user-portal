@@ -25,7 +25,7 @@
             </tr>
 
             <tr>
-                <th><?=$this->t('Nodes'); ?></th>
+                <th><?=$this->t('Node(s)'); ?></th>
                 <td>
 <?php foreach ($nodeInfoList as $nodeUrl => $nodeInfo): ?>
 <?php if (null === $nodeInfo): ?>

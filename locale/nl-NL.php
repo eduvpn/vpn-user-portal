@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     'ACL Permission List' => 'ACL-lijst',
     'Account' => 'Account',
     'Active' => 'Actief',
+    'Advanced' => 'Geavanceerd',
     'An application attempts to establish a VPN connection.' => 'Een applicatie probeert een VPN-verbinding op te zetten.',
     'An error occurred.' => 'Er is een fout opgetreden.',
     'Application Usage' => 'Applicatiegebruik',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Zoek het gebruikerskenmerk van een gebruiker die een specifieke IPv4- of IPv6-adres gebruikte.',
     'Fingerprint' => 'Fingerprint',
     'Here you can change the password for your account.' => 'Hier kun je het wachtwoord van je account wijzigen.',
-    'Hide Profile' => 'Verberg profiel',
     'Home' => 'Home',
     'Hostname' => 'Hostname',
     'IP Address' => 'IP-adres',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'Nog geen verbindingen.',
     'No events yet.' => 'Nog geen gebeurtenissen.',
     'No user account(s) to show.' => 'Geen account(s) aanwezig.',
-    'Node Base URL' => 'Node Base URL',
+    'Node URL' => 'Node URL',
+    'Node(s)' => 'Node(s)',
     'OAuth' => 'OAuth',
     'Obtain a new VPN configuration file for use in your VPN client.' => 'Haal een nieuw VPN-configuratiebestand op voor gebruik in je VPN-client.',
     'Offered Protocols/Ports' => 'Aangeboden protocollen/poorten',
+    'Offline' => 'Offline',
     'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => 'Op je mobiele apparaat kun je de QR-code scannen met de WireGuard-applicatie. Op je desktop of laptop kun je het bestand in de WireGuard-applicatie plakken.',
+    'Online' => 'Online',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'Sta dit alleen toe als je probeert een VPN-verbinding op te zetten met deze applicatie!',
     'OpenVPN' => 'OpenVPN',
     'Password' => 'Wachtwoord',
     'Permissions' => 'Permissies',
     'Please sign in with your username and password.' => 'Log in met je gebruikersnaam en wachtwoord.',
+    'Port' => 'Poort',
     'Profile' => 'Profiel',
     'Profiles' => 'Profielen',
     'Protocols/Ports' => 'Protocollen/poorten',

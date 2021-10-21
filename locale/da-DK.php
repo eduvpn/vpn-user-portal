@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     //'ACL Permission List' => '',
     'Account' => 'Konto',
     'Active' => 'Aktiv',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'En applikation prøver at oprette en VPN-forbindelse',
     'An error occurred.' => 'Der opstod en fejl.',
     'Application Usage' => 'Applikationens forbrug',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Find ID for brugeren som brugte en IPv4- eller IPv6-adresse på et bestemt tidspunkt',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'Her kan du ændre adgangskoden til din konto.',
-    //'Hide Profile' => '',
     'Home' => 'Hjem',
     //'Hostname' => '',
     'IP Address' => 'IP-adresse',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'Ingen forbindelse endnu',
     'No events yet.' => 'Endnu ingen hændelser.',
     'No user account(s) to show.' => 'Ingen brugerkonto(i) at vise.',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     //'Offered Protocols/Ports' => '',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'Dette skal du kun godkende hvis du prøver at oprette en VPN-forbindelse med denne applikation!',
     //'OpenVPN' => '',
     'Password' => 'Adgangskode',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Log ind med dit brugernavn og adgangskode.',
+    //'Port' => '',
     'Profile' => 'Profil',
     'Profiles' => 'Profiler',
     //'Protocols/Ports' => '',

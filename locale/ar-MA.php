@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     //'ACL Permission List' => '',
     'Account' => 'حساب',
     'Active' => 'نشط',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'يحاول تطبيق الاتصال مع الشبكة الخاصة الافتراضية.',
     'An error occurred.' => 'حدث خطأ ما.',
     'Application Usage' => 'استخدام التطبيق',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'جد هوية المستخدم الذي استعمل عنوانا ما من نظام الشبكات من الجيل الرابع او السادس عند نقطة في الزمن.',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'يمكنك هنا تغيير كلمة مرور حسابك.',
-    //'Hide Profile' => '',
     'Home' => 'الصفحة الرئيسية',
     //'Hostname' => '',
     'IP Address' => 'عنوان نظام الشبكات',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'لا اتصالات بعد.',
     'No events yet.' => 'لا احداث بعد.',
     'No user account(s) to show.' => 'لا حساب مستخدم للعرض.',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     //'Offered Protocols/Ports' => '',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'وافق فقط عندما تحاول الاتصال بالشبكة الخاصة الافتراضية عبر هذا التطبيق!',
     //'OpenVPN' => '',
     'Password' => 'كلمة المرور',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'سجل دخولك من فضلك باستعمال اسم المستخدم وكلمة المرور.',
+    //'Port' => '',
     'Profile' => 'مظهر',
     'Profiles' => 'مظاهر',
     //'Protocols/Ports' => '',

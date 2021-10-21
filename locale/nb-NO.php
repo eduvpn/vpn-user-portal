@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     //'ACL Permission List' => '',
     'Account' => 'Konto',
     'Active' => 'Aktiv',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'En applikasjon prøver å koble til VPN.',
     'An error occurred.' => 'Noe har gått galt.',
     'Application Usage' => 'Applikasjonsbruk',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Finn brukeridentifikator knyttet til IPv4- eller IPv6-adressen på et bestemt tidspunkt.',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'Her kan du endre passordet til kontoen din.',
-    //'Hide Profile' => '',
     'Home' => 'Hjem',
     //'Hostname' => '',
     'IP Address' => 'IP-adresse',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'Ingen tilkoblinger.',
     'No events yet.' => 'Ingen henvendelser.',
     'No user account(s) to show.' => 'Ingen brukerkonto å vise.',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     //'Offered Protocols/Ports' => '',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'Kun tillat dette dersom du ønsker å koble til VPN med denne applikasjonen!',
     //'OpenVPN' => '',
     'Password' => 'Passord',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Logg inn med ditt brukernavn og passord.',
+    //'Port' => '',
     'Profile' => 'Profil',
     'Profiles' => 'Profiler',
     //'Protocols/Ports' => '',

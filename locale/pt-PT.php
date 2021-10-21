@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     //'ACL Permission List' => '',
     'Account' => 'Conta',
     'Active' => 'Ativo',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'Uma aplicação está a tentar estabelecer uma ligação VPN.',
     'An error occurred.' => 'Ocorreu um erro.',
     'Application Usage' => 'Uso da aplicação',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Encontrar o identificador do utilizador que usou um endereço IPv4 ou IPv6 num determinado momento.',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'Aqui pode mudar a palavra-passe da sua conta',
-    //'Hide Profile' => '',
     'Home' => 'Início',
     //'Hostname' => '',
     'IP Address' => 'Endereço IP',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'Não existem ligações.',
     'No events yet.' => 'Não existem eventos.',
     'No user account(s) to show.' => 'Não existe(m) conta(s) de utilizador',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     //'Offered Protocols/Ports' => '',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'Aprovar apenas se estiver a tentar estabelecer uma ligação VPN com esta aplicação.',
     //'OpenVPN' => '',
     'Password' => 'Palavra-passe',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Por favor autentique-se com o seu nome de utilizador e palavra-passe.',
+    //'Port' => '',
     'Profile' => 'Perfil',
     'Profiles' => 'Perfis',
     //'Protocols/Ports' => '',

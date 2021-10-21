@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     //'ACL Permission List' => '',
     'Account' => 'Konto',
     'Active' => 'Aktiivne',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'Rakendus proovib luua VPN ühendust.',
     'An error occurred.' => 'Tekkis viga',
     //'Application Usage' => '',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Leia kasutajaidentifikaator, millega kasutati konkreetsel ajahetkel IPv4 või IPv6 aadressi.',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'Siin saad oma konto parooli muuta.',
-    //'Hide Profile' => '',
     'Home' => 'Avaleht',
     //'Hostname' => '',
     'IP Address' => 'IP-aadress',
@@ -86,16 +84,20 @@ return [
     //'No connections yet.' => '',
     'No events yet.' => 'Sündmusi veel ei ole.',
     //'No user account(s) to show.' => '',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     //'Offered Protocols/Ports' => '',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'Kiida rakendus heaks ainult juhul, kui püüad sellega VPN-ühendust luua!',
     //'OpenVPN' => '',
     'Password' => 'Parool',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Palun logi oma kasutajanime ja parooliga sisse.',
+    //'Port' => '',
     'Profile' => 'Profiil',
     //'Profiles' => '',
     //'Protocols/Ports' => '',

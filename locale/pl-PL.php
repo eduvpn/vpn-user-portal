@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     //'ACL Permission List' => '',
     'Account' => 'Konto',
     'Active' => 'Aktywny',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'Aplikacja próbuje zestawić połączenie VPN.',
     'An error occurred.' => 'Wystąpił błąd.',
     'Application Usage' => 'Wykorzystanie aplikacji',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Wyszukiwanie użytkownika, który używał adresu IPv4 lub IPv6 w danym momencie.',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'Poniższy formularz umożliwia zmianę hasła.',
-    //'Hide Profile' => '',
     'Home' => 'Strona główna',
     //'Hostname' => '',
     'IP Address' => 'Adres IP',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'Brak połączeń.',
     'No events yet.' => 'Brak zdarzeń.',
     'No user account(s) to show.' => 'Brak użytkowników.',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     //'Offered Protocols/Ports' => '',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'Zaakceptuj tylko wtedy, gdy jesteś pewien, że zestawiasz połączenie VPN za pomocą tej aplikacji!',
     //'OpenVPN' => '',
     'Password' => 'Hasło',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Proszę zalogować się za pomocą nazwy użytkownika i hasła.',
+    //'Port' => '',
     'Profile' => 'Profil',
     'Profiles' => 'Profile',
     //'Protocols/Ports' => '',

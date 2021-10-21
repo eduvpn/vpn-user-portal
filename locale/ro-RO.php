@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     'ACL Permission List' => 'Lista de permisiuni (ACL)',
     'Account' => 'Cont',
     'Active' => 'Activ',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'O aplicație încearcă să stabilească o conexiune VPN.',
     'An error occurred.' => 'A apărut o eroare.',
     'Application Usage' => 'Aplicații utilizate',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Găsește utilizatorul care a folosit o adresă IPv4 sau IPv6 la un moment dat.',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'Aici poți schimba parola contului tău.',
-    'Hide Profile' => 'Ascunde profilul',
     'Home' => 'Acasă',
     'Hostname' => 'Hostname',
     'IP Address' => 'Adresa IP',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'Nicio conexiune momentan.',
     'No events yet.' => 'Niciun eveniment momentan.',
     'No user account(s) to show.' => 'Niciun utilizator de afișat.',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     'Offered Protocols/Ports' => 'Protocoale/Porturi oferite',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'Aprobă acest lucru numai atunci când încerci să stabilești o conexiune VPN cu această aplicație!',
     //'OpenVPN' => '',
     'Password' => 'Parolă',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Conectează-te cu numele și parola ta de utilizator.',
+    //'Port' => '',
     'Profile' => 'Profil',
     'Profiles' => 'Profiluri',
     'Protocols/Ports' => 'Protocoale/Porturi',

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * eduVPN - End-user friendly VPN.
  *
@@ -14,6 +12,7 @@ return [
     //'ACL Permission List' => '',
     'Account' => 'Compte',
     'Active' => 'Active',
+    //'Advanced' => '',
     'An application attempts to establish a VPN connection.' => 'Une application essaie d\'établir une connexion VPN.',
     'An error occurred.' => 'Une erreur est survenue.',
     'Application Usage' => 'Utilisation de l\'application',
@@ -60,7 +59,6 @@ return [
     'Find the user identifier that used an IPv4 or IPv6 address at a particular point in time.' => 'Trouver l\'identifiant utilisateur ayant utilisé une adresse IPv4 ou IPv6 à une heure spécifique',
     //'Fingerprint' => '',
     'Here you can change the password for your account.' => 'Sur cette page vous pouvez modifier le mot de passe associé à votre compte.',
-    //'Hide Profile' => '',
     'Home' => 'Accueil',
     //'Hostname' => '',
     'IP Address' => 'Adresse IP',
@@ -86,16 +84,20 @@ return [
     'No connections yet.' => 'Pas encore de connexions.',
     'No events yet.' => 'Aucun évènement pour le moment.',
     'No user account(s) to show.' => 'Aucun compte utilisateur à afficher.',
-    //'Node Base URL' => '',
+    //'Node URL' => '',
+    //'Node(s)' => '',
     //'OAuth' => '',
     //'Obtain a new VPN configuration file for use in your VPN client.' => '',
     //'Offered Protocols/Ports' => '',
+    //'Offline' => '',
     //'On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.' => '',
+    //'Online' => '',
     'Only approve this when you are trying to establish a VPN connection with this application!' => 'N\'approuvez ceci que lorsque vous essayez d\'établir une connexion VPN avec cette application',
     //'OpenVPN' => '',
     'Password' => 'Mot de passe',
     //'Permissions' => '',
     'Please sign in with your username and password.' => 'Veuillez saisir votre identifiant et votre mot de passe.',
+    //'Port' => '',
     'Profile' => 'Profil',
     'Profiles' => 'Profils',
     //'Protocols/Ports' => '',
