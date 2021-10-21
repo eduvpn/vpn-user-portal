@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.0 (...)
+- include and enable [APIv3]()
+- update German translation
+
 ## 2.3.14 (2021-08-26)
 - **SECURITY**: implement proper input validation for QR code generation 
   (CVE-2021-41583)
