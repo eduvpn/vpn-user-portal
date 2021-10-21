@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.4.0 (...)
-- include and enable [APIv3]()
+- include and enable [APIv3](https://github.com/eduvpn/documentation/blob/v2/API_V3.md)
 - update German translation
 
 ## 2.3.14 (2021-08-26)
