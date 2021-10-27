@@ -277,14 +277,15 @@ class Request
             [$k, $v] = explode('=', $keyValueString, 2);
             $k = urldecode($k);
             $v = urldecode($v);
-            if (\array_key_exists($k, $parsedParameters)) {
-                if (!\is_array($parsedParameters[$k])) {
-                    $parsedParameters[$k] = [$parsedParameters[$k]];
-                }
-                $parsedParameters[$k][] = $v;
-            } else {
+            if (!\array_key_exists($k, $parsedParameters)) {
                 $parsedParameters[$k] = $v;
+
+                continue;
             }
+            if (!\is_array($parsedParameters[$k])) {
+                $parsedParameters[$k] = [$parsedParameters[$k]];
+            }
+            $parsedParameters[$k][] = $v;
         }
 
         return $parsedParameters;
