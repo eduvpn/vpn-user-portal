@@ -262,4 +262,31 @@ class Request
 
         return $this->requireHeader($headerKey);
     }
+
+    /**
+     * XXX only for POST, otherwise use rawurldecode?!
+     * XXX actually use this to parse query/post parameters.
+     *
+     * @return array<string,array<string>|string>
+     */
+    private static function parseQueryString(string $queryString): array
+    {
+        $parsedParameters = [];
+        $queryParameters = explode('&', $queryString);
+        foreach ($queryParameters as $keyValueString) {
+            [$k, $v] = explode('=', $keyValueString, 2);
+            $k = urldecode($k);
+            $v = urldecode($v);
+            if (\array_key_exists($k, $parsedParameters)) {
+                if (!\is_array($parsedParameters[$k])) {
+                    $parsedParameters[$k] = [$parsedParameters[$k]];
+                }
+                $parsedParameters[$k][] = $v;
+            } else {
+                $parsedParameters[$k] = $v;
+            }
+        }
+
+        return $parsedParameters;
+    }
 }
