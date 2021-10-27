@@ -25,7 +25,7 @@ class ServerConfig
     /**
      * @param array<\LC\Portal\ProfileConfig> $profileConfigList
      */
-    public function get(array $profileConfigList, int $nodeNumber): string
+    public function get(array $profileConfigList, int $nodeNumber): ?string
     {
         $ipFourList = [];
         $ipSixList = [];
@@ -38,6 +38,11 @@ class ServerConfig
             $ipSixList[] = $profileConfig->range6($nodeNumber)->firstHostPrefix();
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
+
+        if (0 === \count($ipFourList) || 0 === \count($ipSixList)) {
+            // apparently we did not have any WireGuard profiles...
+            return null;
+        }
 
         return <<< EOF
             [Interface]

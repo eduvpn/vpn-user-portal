@@ -79,6 +79,7 @@ class HttpClientRequest
         return self::buildQuery($this->postParameters);
     }
 
+    // XXX sync with vpn-server-node, we need to 'serialize' them!
     public function requestHeaders(): array
     {
         return $this->requestHeaders;

@@ -41,11 +41,15 @@ class ServerConfig
             }
         }
 
+        if (null === $wgConfig = $this->wireGuardServerConfig->get($profileConfigList, $nodeNumber)) {
+            // no WireGuard profiles
+            return $serverConfig;
+        }
+
         return array_merge(
             $serverConfig,
             [
-                // XXX add nodeNumber
-                'wg.conf' => $this->wireGuardServerConfig->get($profileConfigList, $nodeNumber),
+                'wg.conf' => $wgConfig,
             ]
         );
     }
