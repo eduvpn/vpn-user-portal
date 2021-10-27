@@ -264,6 +264,12 @@ class Request
     }
 
     /**
+     * This function supports multiple POST parameter keys with the same name,
+     * something which PHP does not out of the box, it will only expose the
+     * _last_ value through $_POST. This function corrects this and returns the
+     * value as string in case there was only 1 value, or as array if there
+     * were multiple.
+     *
      * XXX only for POST, otherwise use rawurldecode?!
      * XXX actually use this to parse query/post parameters.
      *
