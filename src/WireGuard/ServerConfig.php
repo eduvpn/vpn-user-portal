@@ -34,8 +34,8 @@ class ServerConfig
                 // we only want WireGuard profiles
                 continue;
             }
-            $ipFourList[] = $profileConfig->range($nodeNumber)->firstHostPrefix();
-            $ipSixList[] = $profileConfig->range6($nodeNumber)->firstHostPrefix();
+            $ipFourList[] = $profileConfig->rangeFour($nodeNumber)->firstHostPrefix();
+            $ipSixList[] = $profileConfig->rangeSix($nodeNumber)->firstHostPrefix();
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 

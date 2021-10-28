@@ -121,13 +121,13 @@
 
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e((string) $profileConfig->range($i)); ?></code></span>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->rangeFour($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
 
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e((string) $profileConfig->range6($i)); ?></code></span>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->rangeSix($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
 

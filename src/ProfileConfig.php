@@ -49,24 +49,24 @@ class ProfileConfig
         return $hostNameList[$nodeNumber];
     }
 
-    public function range(int $nodeNumber): IP
+    public function rangeFour(int $nodeNumber): IP
     {
-        $rangeList = $this->requireStringOrStringArray('range');
-        if ($nodeNumber >= \count($rangeList)) {
-            throw new ConfigException('"range" for node "'.$nodeNumber.'" not set');
+        $rangeFourList = $this->requireStringOrStringArray('rangeFour');
+        if ($nodeNumber >= \count($rangeFourList)) {
+            throw new ConfigException('"rangeFour" for node "'.$nodeNumber.'" not set');
         }
 
-        return IP::fromIpPrefix($rangeList[$nodeNumber]);
+        return IP::fromIpPrefix($rangeFourList[$nodeNumber]);
     }
 
-    public function range6(int $nodeNumber): IP
+    public function rangeSix(int $nodeNumber): IP
     {
-        $range6List = $this->requireStringOrStringArray('range6');
-        if ($nodeNumber >= \count($range6List)) {
-            throw new ConfigException('"range6" for node "'.$nodeNumber.'" not set');
+        $rangeSixList = $this->requireStringOrStringArray('rangeSix');
+        if ($nodeNumber >= \count($rangeSixList)) {
+            throw new ConfigException('"rangeSix" for node "'.$nodeNumber.'" not set');
         }
 
-        return IP::fromIpPrefix($range6List[$nodeNumber]);
+        return IP::fromIpPrefix($rangeSixList[$nodeNumber]);
     }
 
     public function displayName(): string

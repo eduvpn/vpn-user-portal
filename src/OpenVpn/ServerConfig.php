@@ -48,8 +48,8 @@ class ServerConfig
             // XXX introduce ServerConfigException?
             throw new RuntimeException('"udpPortList" and "tcpPortList" together must contain 1,2,4,8,16,32 or 64 entries');
         }
-        $splitRange = $profileConfig->range($nodeNumber)->split($processCount);
-        $splitRange6 = $profileConfig->range6($nodeNumber)->split($processCount);
+        $splitRange = $profileConfig->rangeFour($nodeNumber)->split($processCount);
+        $splitRange6 = $profileConfig->rangeSix($nodeNumber)->split($processCount);
         $processConfig = [];
         $profileServerConfig = [];
 

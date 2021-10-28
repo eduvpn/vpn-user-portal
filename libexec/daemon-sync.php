@@ -46,7 +46,7 @@ $logger = new SysLogger('vpn-user-portal');
 function determineNodeUrl(ProfileConfig $profileConfig, IP $ipFour): ?string
 {
     for ($i = 0; $i <= $profileConfig->nodeCount(); ++$i) {
-        $rangeFour = $profileConfig->range($i);
+        $rangeFour = $profileConfig->rangeFour($i);
         if (in_array($ipFour->address(), $rangeFour->clientIpList(), true)) {
             return $profileConfig->nodeUrl($i);
         }

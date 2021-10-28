@@ -30,7 +30,7 @@ function getMaxClientLimit(ProfileConfig $profileConfig): int
     $maxClientList = 0;
     // loop over all nodes of this profile
     for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-        $maxClientList += ((int) 2 ** (32 - $profileConfig->range($i)->prefix())) - 3 * $processCount;
+        $maxClientList += ((int) 2 ** (32 - $profileConfig->rangeFour($i)->prefix())) - 3 * $processCount;
     }
 
     return $maxClientList;
