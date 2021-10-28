@@ -48,16 +48,16 @@ class ServerConfig
             // XXX introduce ServerConfigException?
             throw new RuntimeException('"udpPortList" and "tcpPortList" together must contain 1,2,4,8,16,32 or 64 entries');
         }
-        $splitRange = $profileConfig->rangeFour($nodeNumber)->split($processCount);
-        $splitRange6 = $profileConfig->rangeSix($nodeNumber)->split($processCount);
+        $splitRangeFour = $profileConfig->rangeFour($nodeNumber)->split($processCount);
+        $splitRangeSix = $profileConfig->rangeSix($nodeNumber)->split($processCount);
         $processConfig = [];
         $profileServerConfig = [];
 
         // XXX what follows is ugly! we should be able to do better! for one make getProcess static
         $processNumber = 0;
         foreach ($profileConfig->udpPortList() as $udpPort) {
-            $processConfig['range'] = $splitRange[$processNumber];
-            $processConfig['range6'] = $splitRange6[$processNumber];
+            $processConfig['rangeFour'] = $splitRangeFour[$processNumber];
+            $processConfig['rangeSix'] = $splitRangeSix[$processNumber];
             $processConfig['tunDev'] = $this->tunDev;
             $processConfig['proto'] = 'udp6';
             $processConfig['port'] = $udpPort;
@@ -69,8 +69,8 @@ class ServerConfig
         }
 
         foreach ($profileConfig->tcpPortList() as $tcpPort) {
-            $processConfig['range'] = $splitRange[$processNumber];
-            $processConfig['range6'] = $splitRange6[$processNumber];
+            $processConfig['rangeFour'] = $splitRangeFour[$processNumber];
+            $processConfig['rangeSix'] = $splitRangeSix[$processNumber];
             $processConfig['tunDev'] = $this->tunDev;
             $processConfig['proto'] = 'tcp6-server';
             $processConfig['port'] = $tcpPort;
@@ -85,12 +85,12 @@ class ServerConfig
     }
 
     /**
-     * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
+     * @param array{rangeFour:\LC\Portal\IP,rangeSix:\LC\Portal\IP,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
      */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes): string
     {
-        $rangeIp = $processConfig['range'];
-        $range6Ip = $processConfig['range6'];
+        $rangeFourIp = $processConfig['rangeFour'];
+        $rangeSixIp = $processConfig['rangeSix'];
 
         // static options
         $serverConfig = [
@@ -115,8 +115,8 @@ class ServerConfig
             sprintf('reneg-sec %d', 10 * 60 * 60),
             sprintf('client-connect %s/client-connect', self::LIBEXEC_DIR),
             sprintf('client-disconnect %s/client-disconnect', self::LIBEXEC_DIR),
-            sprintf('server %s %s', (string) $rangeIp->network(), $rangeIp->netmask()),
-            sprintf('server-ipv6 %s', (string) $range6Ip),
+            sprintf('server %s %s', (string) $rangeFourIp->network(), $rangeFourIp->netmask()),
+            sprintf('server-ipv6 %s', (string) $rangeSixIp),
             // OpenVPN's pool management does NOT include the last usable IP in
             // the range in the pool, and obviously not the first one as that
             // will be used by OpenVPN itself. So, if you have the range
@@ -140,7 +140,7 @@ class ServerConfig
             // the next available OpenVPN process...
             // @see https://community.openvpn.net/openvpn/ticket/1347
             // @see https://community.openvpn.net/openvpn/ticket/1348
-            sprintf('max-clients %d', $rangeIp->numberOfHosts() - 2),
+            sprintf('max-clients %d', $rangeFourIp->numberOfHosts() - 2),
             // technically we do NOT need "keepalive" (ping/ping-restart) on
             // TCP, but it seems we do need it to avoid clients disconnecting
             // after 2 minutes of inactivity when the first (previous?) remote
@@ -199,7 +199,7 @@ class ServerConfig
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
         // DNS
-        $serverConfig = array_merge($serverConfig, self::getDns($rangeIp, $range6Ip, $profileConfig));
+        $serverConfig = array_merge($serverConfig, self::getDns($rangeFourIp, $rangeSixIp, $profileConfig));
 
         return implode(PHP_EOL, $serverConfig);
     }
@@ -254,7 +254,7 @@ class ServerConfig
     /**
      * @return array<string>
      */
-    private static function getDns(IP $rangeIp, IP $range6Ip, ProfileConfig $profileConfig): array
+    private static function getDns(IP $rangeFourIp, IP $rangeSixIp, ProfileConfig $profileConfig): array
     {
         $dnsEntries = [];
         if ($profileConfig->defaultGateway()) {
@@ -265,10 +265,10 @@ class ServerConfig
         foreach ($dnsList as $dnsAddress) {
             // replace the macros by IP addresses (LOCAL_DNS)
             if ('@GW4@' === $dnsAddress) {
-                $dnsAddress = $rangeIp->firstHost();
+                $dnsAddress = $rangeFourIp->firstHost();
             }
             if ('@GW6@' === $dnsAddress) {
-                $dnsAddress = $range6Ip->firstHost();
+                $dnsAddress = $rangeSixIp->firstHost();
             }
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }

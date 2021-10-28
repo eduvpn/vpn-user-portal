@@ -248,12 +248,12 @@ return [
             // ** WireGuard & OpenVPN **
             // The IPv4 range of the network that will be assigned to clients
             // REQUIRED
-            'range' => '10.42.42.0/24',
+            'rangeFour' => '10.42.42.0/24',
 
             // ** WireGuard & OpenVPN **
             // The IPv6 range of the network that will be assigned to clients
             // REQUIRED
-            'range6' => 'fd42::/64',
+            'rangeSix' => 'fd42::/64',
 
             // ** WireGuard & OpenVPN **
             // The hostname the VPN client(s) will connect to
@@ -364,12 +364,12 @@ return [
             // The IPv4 range of the network that will be assigned to clients
             // REQUIRED
             // ** WireGuard,OpenVPN
-            'range' => '10.43.43.0/24',
+            'rangeFour' => '10.43.43.0/24',
 
             // The IPv6 range of the network that will be assigned to clients
             // REQUIRED
             // ** WireGuard,OpenVPN
-            'range6' => 'fd43::/64',
+            'rangeSix' => 'fd43::/64',
 
             // The hostname the VPN client(s) will connect to
             // REQUIRED
