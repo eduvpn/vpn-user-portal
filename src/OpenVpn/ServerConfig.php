@@ -36,7 +36,7 @@ class ServerConfig
     /**
      * @return array<string,string>
      */
-    public function getProfile(ProfileConfig $profileConfig, int $nodeNumber, bool $cpuHasAes): array
+    public function getProfile(ProfileConfig $profileConfig, int $nodeNumber, bool $preferAes): array
     {
         $certInfo = $this->ca->serverCert($profileConfig->hostName($nodeNumber), $profileConfig->profileId());
         $processCount = \count($profileConfig->vpnProtoPorts());
@@ -59,7 +59,7 @@ class ServerConfig
             $processConfig['local'] = $profileConfig->listenIp();
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
-            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $cpuHasAes);
+            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $preferAes);
         }
 
         return $profileServerConfig;
@@ -95,7 +95,7 @@ class ServerConfig
     /**
      * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,local:string,processNumber:int} $processConfig
      */
-    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $cpuHasAes): string
+    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes): string
     {
         $rangeIp = $processConfig['range'];
         $range6Ip = $processConfig['range6'];
@@ -117,7 +117,7 @@ class ServerConfig
             // >= TLSv1.3
             'tls-version-min 1.3',
 
-            self::getDataCiphers($cpuHasAes),
+            self::getDataCiphers($preferAes),
 
             // renegotiate data channel key every 10 hours instead of every hour
             sprintf('reneg-sec %d', 10 * 60 * 60),
@@ -213,9 +213,9 @@ class ServerConfig
         return implode(PHP_EOL, $serverConfig);
     }
 
-    private static function getDataCiphers(bool $cpuHasAes): string
+    private static function getDataCiphers(bool $preferAes): string
     {
-        if ($cpuHasAes) {
+        if ($preferAes) {
             return 'data-ciphers AES-256-GCM:CHACHA20-POLY1305';
         }
 

@@ -152,9 +152,9 @@ class Validator
         }
     }
 
-    public static function cpuHasAes(string $cpuHasAes): void
+    public static function preferAes(string $preferAes): void
     {
-        self::inSet($cpuHasAes, ['yes', 'no']);
+        self::inSet($preferAes, ['yes', 'no']);
     }
 
     public static function onOrOff(string $onOrOff): void

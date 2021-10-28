@@ -51,7 +51,7 @@ class NodeApiModule implements ServiceModuleInterface
                 $serverConfigList = $this->serverConfig->get(
                     $this->config->profileConfigList(),
                     (int) $request->requirePostParameter('node_number', fn (string $s) => Validator::nodeNumber($s)),
-                    'yes' === $request->requirePostParameter('cpu_has_aes', fn (string $s) => Validator::cpuHasAes($s))
+                    'yes' === $request->requirePostParameter('prefer_aes', fn (string $s) => Validator::preferAes($s))
                 );
                 $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {
