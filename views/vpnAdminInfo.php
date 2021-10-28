@@ -161,11 +161,11 @@
             </tr>
 <?php endif; ?>
 
-<?php if (0 !== count($profileConfig->dns())): ?>
+<?php if (0 !== count($profileConfig->dnsServerList())): ?>
             <tr><th><?=$this->t('DNS Server(s)'); ?></th>
             <td>
-<?php foreach ($profileConfig->dns() as $dnsAddress): ?>
-                    <span class="plain"><code><?=$this->e($dnsAddress); ?></code></span>
+<?php foreach ($profileConfig->dnsServerList() as $dnsServer): ?>
+                    <span class="plain"><code><?=$this->e($dnsServer); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>

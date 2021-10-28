@@ -60,7 +60,7 @@ class ClientConfig implements ClientConfigInterface
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
         $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->rangeFour($this->nodeNumber)->prefix().', '.$this->ipSix.'/'.$this->profileConfig->rangeSix($this->nodeNumber)->prefix();
-        if (0 !== \count($this->profileConfig->dns())) {
+        if (0 !== \count($this->profileConfig->dnsServerList())) {
             $output[] = 'DNS = '.implode(', ', $this->dns());
         }
         $output[] = '';
@@ -83,7 +83,7 @@ class ClientConfig implements ClientConfigInterface
     private function dns(): array
     {
         $dnsServerList = [];
-        foreach ($this->profileConfig->dns() as $configDnsServer) {
+        foreach ($this->profileConfig->dnsServerList() as $configDnsServer) {
             if ('@GW4@' === $configDnsServer) {
                 $dnsServerList[] = $this->profileConfig->rangeFour($this->nodeNumber)->firstHost();
 

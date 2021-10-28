@@ -90,9 +90,9 @@ class ProfileConfig
     /**
      * @return array<string>
      */
-    public function dns(): array
+    public function dnsServerList(): array
     {
-        return $this->requireStringArray('dns', []);
+        return $this->requireStringArray('dnsServerList', []);
     }
 
     public function clientToClient(): bool

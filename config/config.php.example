@@ -281,7 +281,7 @@ return [
             // default could be [] when defaultGateway = true, might be confusing?!
             // DEFAULT  = []
             // Quad9 (https://www.quad9.net)
-            'dns' => ['9.9.9.9', '2620:fe::fe'],
+            'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
 
             // ** WireGuard & OpenVPN **
             // The base URL to connect to the VPN node
@@ -398,7 +398,7 @@ return [
             // DEFAULT  = []
             // ** WireGuard,OpenVPN
             // Quad9 (https://www.quad9.net)
-            'dns' => ['9.9.9.9', '2620:fe::fe'],
+            'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
 
             // The address the OpenVPN processes will listen on
             // DEFAULT = '::'

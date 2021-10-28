@@ -261,7 +261,7 @@ class ServerConfig
             // prevent DNS leakage on Windows when VPN is default gateway
             $dnsEntries[] = 'push "block-outside-dns"';
         }
-        $dnsList = $profileConfig->dns();
+        $dnsList = $profileConfig->dnsServerList();
         foreach ($dnsList as $dnsAddress) {
             // replace the macros by IP addresses (LOCAL_DNS)
             if ('@GW4@' === $dnsAddress) {
