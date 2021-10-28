@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
-use LC\Portal\Binary;
 use LC\Portal\ClientConfigInterface;
 use LC\Portal\OpenVpn\CA\CaInfo;
 use LC\Portal\OpenVpn\CA\CertInfo;
@@ -20,19 +19,14 @@ use LC\Portal\ProfileConfig;
 
 class ClientConfig implements ClientConfigInterface
 {
-    public const STRATEGY_FIRST = 0;
-    public const STRATEGY_RANDOM = 1;
-    public const STRATEGY_ALL = 2;
-
     private int $nodeNumber;
     private ProfileConfig $profileConfig;
     private CaInfo $caInfo;
     private TlsCrypt $tlsCrypt;
     private CertInfo $certInfo;
     private bool $tcpOnly;
-    private int $remoteStrategy;
 
-    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $tcpOnly, int $remoteStrategy)
+    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $tcpOnly)
     {
         $this->nodeNumber = $nodeNumber;
         $this->profileConfig = $profileConfig;
@@ -40,7 +34,6 @@ class ClientConfig implements ClientConfigInterface
         $this->tlsCrypt = $tlsCrypt;
         $this->certInfo = $certInfo;
         $this->tcpOnly = $tcpOnly;
-        $this->remoteStrategy = $remoteStrategy;
     }
 
     public function contentType(): string
@@ -55,17 +48,26 @@ class ClientConfig implements ClientConfigInterface
      */
     public function get(): string
     {
-        $vpnProtoPorts = $this->profileConfig->vpnProtoPorts();
-        if (0 !== \count($this->profileConfig->exposedVpnProtoPorts())) {
-            $vpnProtoPorts = $this->profileConfig->exposedVpnProtoPorts();
+        $udpPortList = $this->profileConfig->udpPortList();
+        $tcpPortList = $this->profileConfig->tcpPortList();
+        if (0 !== \count($this->profileConfig->exposedUdpPortList())) {
+            $udpPortList = $this->profileConfig->exposedUdpPortList();
+        }
+        if (0 !== \count($this->profileConfig->exposedTcpPortList())) {
+            $tcpPortList = $this->profileConfig->exposedTcpPortList();
         }
 
-        $remoteProtoPortList = $this->remotePortProtoList($vpnProtoPorts);
-        // make sure we have remotes
-        // we assume that *without* tcpOnly we always have remotes,
-        // otherwise it is a server configuration bug
-        if ($this->tcpOnly && 0 === \count($remoteProtoPortList)) {
-            throw new ClientConfigException('no TCP connection possible');
+        $udpPortList = self::filterPortList($udpPortList, [53, 443]);
+        $tcpPortList = self::filterPortList($tcpPortList, [80, 443]);
+
+        // make sure we have _something_ to connect to
+        if (0 === \count($udpPortList) && 0 === \count($tcpPortList)) {
+            throw new ClientConfigException('no UDP/TCP port available');
+        }
+
+        // make sure we have a TCP port to connect to when "tcp only"
+        if ($this->tcpOnly && 0 === \count($tcpPortList)) {
+            throw new ClientConfigException('no TCP port available');
         }
 
         $clientConfig = [
@@ -111,86 +113,49 @@ class ClientConfig implements ClientConfigInterface
             '</tls-crypt>',
         ];
 
-        foreach ($remoteProtoPortList as $remoteProtoPort) {
-            $clientConfig[] = sprintf('remote %s %d %s', $this->profileConfig->hostName($this->nodeNumber), (int) Binary::safeSubstr($remoteProtoPort, 4), Binary::safeSubstr($remoteProtoPort, 0, 3));
+        // UDP
+        foreach ($udpPortList as $udpPort) {
+            $clientConfig[] = sprintf('remote %s %d udp', $this->profileConfig->hostName($this->nodeNumber), $udpPort);
+        }
+
+        // TCP
+        foreach ($tcpPortList as $tcpPort) {
+            $clientConfig[] = sprintf('remote %s %d tcp', $this->profileConfig->hostName($this->nodeNumber), $tcpPort);
         }
 
         return implode(PHP_EOL, $clientConfig);
     }
 
     /**
-     * Pick a "normal" UDP and TCP port. Pick a "special" UDP and TCP
-     * port.
+     * Pick a random port from the available ports the client can connect to
+     * that is not a "special" port. Also add a special port. This is a very
+     * simple form of "load balancing" over different ports while always adding
+     * a "special" port to increase the chances a client can connect on
+     * "difficult" networks.
      *
-     * @return array<string>
+     * @param array<int> $availablePortList
+     * @param array<int> $specialPortList
+     *
+     * @return array<int>
      */
-    public function remotePortProtoList(array $vpnProtoPorts): array
+    private static function filterPortList(array $availablePortList, array $specialPortList): array
     {
-        $specialUdpPorts = [];
-        $specialTcpPorts = [];
-        $normalUdpPorts = [];
-        $normalTcpPorts = [];
-
-        foreach ($vpnProtoPorts as $vpnProtoPort) {
-            if (0 === strpos($vpnProtoPort, 'udp')) {
-                if (\in_array($vpnProtoPort, ['udp/53', 'udp/443'], true)) {
-                    $specialUdpPorts[] = $vpnProtoPort;
-
-                    continue;
-                }
-                $normalUdpPorts[] = $vpnProtoPort;
-
-                continue;
-            }
-
-            if (0 === strpos($vpnProtoPort, 'tcp')) {
-                if (\in_array($vpnProtoPort, ['tcp/80', 'tcp/443'], true)) {
-                    $specialTcpPorts[] = $vpnProtoPort;
-
-                    continue;
-                }
-                $normalTcpPorts[] = $vpnProtoPort;
-
-                continue;
-            }
-        }
-
         $clientPortList = [];
-        if (!$this->tcpOnly) {
-            $this->getItem($clientPortList, $normalUdpPorts);
-            $this->getItem($clientPortList, $specialUdpPorts);
+
+        // remove specialPortList entries from portList
+        $normalAvailablePortList = array_diff($availablePortList, $specialPortList);
+        $specialAvailablePortList = array_intersect($availablePortList, $specialPortList);
+
+        // add a normal port (if available)
+        if (0 !== \count($normalAvailablePortList)) {
+            $clientPortList[] = $normalAvailablePortList[random_int(0, \count($normalAvailablePortList) - 1)];
         }
-        $this->getItem($clientPortList, $normalTcpPorts);
-        $this->getItem($clientPortList, $specialTcpPorts);
+
+        // add a special port (if available)
+        if (0 !== \count($specialAvailablePortList)) {
+            $clientPortList[] = $specialAvailablePortList[random_int(0, \count($specialAvailablePortList) - 1)];
+        }
 
         return $clientPortList;
-    }
-
-    /**
-     * @param array<string> &$clientPortList
-     * @param array<string> $pickFrom
-     */
-    private function getItem(array &$clientPortList, array $pickFrom): void
-    {
-        if (0 === \count($pickFrom)) {
-            return;
-        }
-
-        switch ($this->remoteStrategy) {
-            case self::STRATEGY_ALL:
-                $clientPortList = array_merge($clientPortList, $pickFrom);
-
-                break;
-
-            case self::STRATEGY_RANDOM:
-                $clientPortList[] = $pickFrom[random_int(0, \count($pickFrom) - 1)];
-
-                break;
-
-            default:
-                $clientPortList[] = reset($pickFrom);
-
-                break;
-        }
     }
 }

@@ -124,6 +124,41 @@ trait ConfigTrait
     }
 
     /**
+     * @return array<int>
+     */
+    public function optionalIntArray(string $k): ?array
+    {
+        if (!\array_key_exists($k, $this->configData)) {
+            return null;
+        }
+        if (!\is_array($this->configData[$k])) {
+            throw new ConfigException('key "'.$k.'" not of type array');
+        }
+
+        if ($this->configData[$k] !== array_filter($this->configData[$k], 'is_int')) {
+            throw new ConfigException('key "'.$k.'" not of type array<int>');
+        }
+
+        return $this->configData[$k];
+    }
+
+    /**
+     * @return array<int>
+     */
+    public function requireIntArray(string $k, ?array $d = null): array
+    {
+        if (null === $v = $this->optionalIntArray($k)) {
+            if (null !== $d) {
+                return $d;
+            }
+
+            throw new ConfigException('key "'.$k.'" not available');
+        }
+
+        return $v;
+    }
+
+    /**
      * @return array<string>
      */
     public function optionalStringArray(string $k): ?array

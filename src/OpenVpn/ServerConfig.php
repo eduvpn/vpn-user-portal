@@ -39,59 +39,53 @@ class ServerConfig
     public function getProfile(ProfileConfig $profileConfig, int $nodeNumber, bool $preferAes): array
     {
         $certInfo = $this->ca->serverCert($profileConfig->hostName($nodeNumber), $profileConfig->profileId());
-        $processCount = \count($profileConfig->vpnProtoPorts());
+
+        // make sure the number of OpenVPN server processes is a factor of two
+        // so we can easily split the assigned IP space
+        $processCount = \count($profileConfig->udpPortList()) + \count($profileConfig->tcpPortList());
         $allowedProcessCount = [1, 2, 4, 8, 16, 32, 64];
         if (!\in_array($processCount, $allowedProcessCount, true)) {
-            // XXX introduce ServerConfigException
-            throw new RuntimeException('"vpnProtoPorts" must contain 1,2,4,8,16,32 or 64 entries');
+            // XXX introduce ServerConfigException?
+            throw new RuntimeException('"udpPortList" and "tcpPortList" together must contain 1,2,4,8,16,32 or 64 entries');
         }
         $splitRange = $profileConfig->range($nodeNumber)->split($processCount);
         $splitRange6 = $profileConfig->range6($nodeNumber)->split($processCount);
         $processConfig = [];
         $profileServerConfig = [];
-        for ($processNumber = 0; $processNumber < $processCount; ++$processNumber) {
-            [$proto, $port] = self::getProtoPort($profileConfig->vpnProtoPorts())[$processNumber];
+
+        // XXX what follows is ugly! we should be able to do better! for one make getProcess static
+        $processNumber = 0;
+        foreach ($profileConfig->udpPortList() as $udpPort) {
             $processConfig['range'] = $splitRange[$processNumber];
             $processConfig['range6'] = $splitRange6[$processNumber];
-            $processConfig['dev'] = sprintf('tun%d', $this->tunDev++);
-            $processConfig['proto'] = $proto;
-            $processConfig['port'] = $port;
+            $processConfig['tunDev'] = $this->tunDev;
+            $processConfig['proto'] = 'udp6';
+            $processConfig['port'] = $udpPort;
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
             $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $preferAes);
+            ++$processNumber;
+            ++$this->tunDev;
+        }
+
+        foreach ($profileConfig->tcpPortList() as $tcpPort) {
+            $processConfig['range'] = $splitRange[$processNumber];
+            $processConfig['range6'] = $splitRange6[$processNumber];
+            $processConfig['tunDev'] = $this->tunDev;
+            $processConfig['proto'] = 'tcp6-server';
+            $processConfig['port'] = $tcpPort;
+            $processConfig['processNumber'] = $processNumber;
+            $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
+            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $preferAes);
+            ++$processNumber;
+            ++$this->tunDev;
         }
 
         return $profileServerConfig;
     }
 
-    private static function getFamilyProto(string $proto): string
-    {
-        if ('udp' === $proto) {
-            return 'udp6';
-        }
-        if ('tcp' === $proto) {
-            return 'tcp6-server';
-        }
-
-        throw new RuntimeException('only "tcp" and "udp" are supported as protocols');
-    }
-
     /**
-     * @return array<array{0:string,1:int}>
-     */
-    private static function getProtoPort(array $vpnProcesses): array
-    {
-        $convertedPortProto = [];
-        foreach ($vpnProcesses as $vpnProcess) {
-            [$proto, $port] = explode('/', $vpnProcess);
-            $convertedPortProto[] = [self::getFamilyProto($proto), (int) $port];
-        }
-
-        return $convertedPortProto;
-    }
-
-    /**
-     * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,processNumber:int} $processConfig
+     * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
      */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes): string
     {
@@ -157,7 +151,7 @@ class ServerConfig
             // @see https://sourceforge.net/p/openvpn/mailman/message/37168823/
             'keepalive 10 60',
             'script-security 2',
-            sprintf('dev %s', $processConfig['dev']),
+            sprintf('dev tun%d', $processConfig['tunDev']),
             sprintf('port %d', $processConfig['port']),
             sprintf('management /run/openvpn-server/%s-%d.sock unix', $profileConfig->profileId(), $processConfig['processNumber']),
             sprintf('setenv PROFILE_ID %s', $profileConfig->profileId()),

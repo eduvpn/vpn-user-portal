@@ -29,7 +29,7 @@ try {
     $reverseFour = [];
     $reverseSix = [];
     foreach ($config->profileConfigList() as $profileConfig) {
-        $splitCount = 'wireguard' === $profileConfig->vpnProto() ? 1 : count($profileConfig->vpnProtoPorts());
+        $splitCount = 'wireguard' === $profileConfig->vpnProto() ? 1 : (count($profileConfig->udpPortList()) + count($profileConfig->tcpPortList()));
         for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
             $ipFourSplit = $profileConfig->range($i)->split($splitCount);
             $ipSixSplit = $profileConfig->range6($i)->split($splitCount);

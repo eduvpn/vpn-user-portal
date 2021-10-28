@@ -25,7 +25,7 @@ function getMaxClientLimit(ProfileConfig $profileConfig): int
 {
     // OpenVPN can have multiple processes, WireGuard has no processes, but
     // counts as 1...
-    $processCount = 'openvpn' === $profileConfig->vpnProto() ? count($profileConfig->vpnProtoPorts()) : 1;
+    $processCount = 'openvpn' === $profileConfig->vpnProto() ? (count($profileConfig->udpPortList()) + count($profileConfig->tcpPortList())) : 1;
 
     $maxClientList = 0;
     // loop over all nodes of this profile

@@ -95,16 +95,20 @@
                     <span class="plain"><?=$this->t('Client-to-client'); ?></span>
     <?php endif; ?>
 
+<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
 <?php if ($profileConfig->enableLog()): ?>
                     <span class="plain"><?=$this->t('OpenVPN Server Log'); ?></span>
+<?php endif; ?>
 <?php endif; ?>
 
 <?php if ($profileConfig->enableAcl()): ?>
                     <span class="plain"><?=$this->t('ACL'); ?></span>
 <?php endif; ?>
 
+<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
 <?php if ($profileConfig->blockLan()): ?>
                     <span class="plain"><?=$this->t('Block LAN'); ?></span>
+<?php endif; ?>
 <?php endif; ?>
                 </td>
             </tr>
@@ -178,11 +182,11 @@
 <?php endif; ?>
 
 <?php if ('openvpn' === $profileConfig->vpnProto()): ?>
-<?php if (0 !== count($profileConfig->vpnProtoPorts())): ?>
-            <tr><th><?=$this->t('Protocols/Ports'); ?></th>
+<?php if (0 !== count($profileConfig->udpPortList())): ?>
+            <tr><th><?=$this->t('UDP Ports'); ?></th>
             <td>
-<?php foreach ($profileConfig->vpnProtoPorts() as $vpnProtoPort): ?>
-                    <span class="plain"><code><?=$this->e($vpnProtoPort); ?></code></span>
+<?php foreach ($profileConfig->udpPortList() as $udpPort): ?>
+                    <span class="plain"><code><?=$this->e((string) $udpPort); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
@@ -190,11 +194,35 @@
 <?php endif; ?>
 
 <?php if ('openvpn' === $profileConfig->vpnProto()): ?>
-<?php if (0 !== count($profileConfig->exposedVpnProtoPorts())): ?>
-            <tr><th><?=$this->t('Offered Protocols/Ports'); ?></th>
+<?php if (0 !== count($profileConfig->tcpPortList())): ?>
+            <tr><th><?=$this->t('TCP Ports'); ?></th>
             <td>
-<?php foreach ($profileConfig->exposedVpnProtoPorts() as $exposedVpnProtoPort): ?>
-                    <span class="plain"><code><?=$this->e($exposedVpnProtoPort); ?></code></span>
+<?php foreach ($profileConfig->tcpPortList() as $tcpPort): ?>
+                    <span class="plain"><code><?=$this->e((string) $tcpPort); ?></code></span>
+<?php endforeach; ?>
+            </td>
+            </tr>
+<?php endif; ?>
+<?php endif; ?>
+
+<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
+<?php if (0 !== count($profileConfig->exposedUdpPortList())): ?>
+            <tr><th><?=$this->t('Offered UDP Ports'); ?></th>
+            <td>
+<?php foreach ($profileConfig->exposedUdpPortList() as $exposedUdpPort): ?>
+                    <span class="plain"><code><?=$this->e((string) $exposedUdpPort); ?></code></span>
+<?php endforeach; ?>
+            </td>
+            </tr>
+<?php endif; ?>
+<?php endif; ?>
+
+<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
+<?php if (0 !== count($profileConfig->exposedTcpPortList())): ?>
+            <tr><th><?=$this->t('Offered TCP Ports'); ?></th>
+            <td>
+<?php foreach ($profileConfig->exposedTcpPortList() as $exposedTcpPort): ?>
+                    <span class="plain"><code><?=$this->e((string) $exposedTcpPort); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>

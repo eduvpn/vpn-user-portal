@@ -181,8 +181,7 @@ class ConnectionManager
                 $serverInfo->ca()->caCert(),
                 $serverInfo->tlsCrypt(),
                 $certInfo,
-                $tcpOnly,
-                OpenVpnClientConfig::STRATEGY_RANDOM
+                $tcpOnly
             );
         }
 

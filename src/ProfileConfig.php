@@ -105,6 +105,10 @@ class ProfileConfig
      */
     public function enableLog(): bool
     {
+        if ('wireguard' === $this->vpnProto()) {
+            throw new ConfigException('"enableLog" is only used for OpenVPN');
+        }
+
         return $this->requireBool('enableLog', false);
     }
 
@@ -134,29 +138,57 @@ class ProfileConfig
     /**
      * OpenVPN only.
      *
-     * @return array<string>
+     * @return array<int>
      */
-    public function vpnProtoPorts(): array
+    public function udpPortList(): array
     {
         if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"vpnProtoPorts" is only used for OpenVPN');
+            throw new ConfigException('"udpPortList" is only used for OpenVPN');
         }
 
-        return $this->requireStringArray('vpnProtoPorts', ['udp/1194', 'tcp/1194']);
+        return $this->requireIntArray('udpPortList', [1194]);
     }
 
     /**
      * OpenVPN only.
      *
-     * @return array<string>
+     * @return array<int>
      */
-    public function exposedVpnProtoPorts(): array
+    public function tcpPortList(): array
     {
         if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"exposedVpnProtoPorts" is only used for OpenVPN');
+            throw new ConfigException('"tcpPortList" is only used for OpenVPN');
         }
 
-        return $this->requireStringArray('exposedVpnProtoPorts', []);
+        return $this->requireIntArray('tcpPortList', [1194]);
+    }
+
+    /**
+     * OpenVPN only.
+     *
+     * @return array<int>
+     */
+    public function exposedUdpPortList(): array
+    {
+        if ('wireguard' === $this->vpnProto()) {
+            throw new ConfigException('"exposedUdpPortList" is only used for OpenVPN');
+        }
+
+        return $this->requireIntArray('exposedUdpPortList', []);
+    }
+
+    /**
+     * OpenVPN only.
+     *
+     * @return array<int>
+     */
+    public function exposedTcpPortList(): array
+    {
+        if ('wireguard' === $this->vpnProto()) {
+            throw new ConfigException('"exposedTcpPortList" is only used for OpenVPN');
+        }
+
+        return $this->requireIntArray('exposedTcpPortList', []);
     }
 
     /**
@@ -164,6 +196,10 @@ class ProfileConfig
      */
     public function blockLan(): bool
     {
+        if ('wireguard' === $this->vpnProto()) {
+            throw new ConfigException('"blockLan" is only used for OpenVPN');
+        }
+
         return $this->requireBool('blockLan', false);
     }
 
