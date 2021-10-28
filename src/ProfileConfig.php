@@ -100,6 +100,9 @@ class ProfileConfig
         return $this->requireBool('clientToClient', false);
     }
 
+    /**
+     * OpenVPN only.
+     */
     public function enableLog(): bool
     {
         return $this->requireBool('enableLog', false);
@@ -156,6 +159,9 @@ class ProfileConfig
         return $this->requireStringArray('exposedVpnProtoPorts', []);
     }
 
+    /**
+     * OpenVPN only.
+     */
     public function blockLan(): bool
     {
         return $this->requireBool('blockLan', false);

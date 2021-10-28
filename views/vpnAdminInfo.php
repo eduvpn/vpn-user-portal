@@ -14,7 +14,7 @@
                 <td>v<?=$this->e($portalVersion); ?></td>
             </tr>
             <tr>
-                <th><?=$this->t('Profiles'); ?></th>
+                <th><?=$this->t('Profile(s)'); ?></th>
                 <td>
                     <ul>
 <?php foreach ($profileConfigList as $profileConfig): ?>
@@ -73,7 +73,7 @@
     </table>
     </details>
 
-    <h2><?=$this->t('Profiles'); ?></h2>
+    <h2><?=$this->t('Profile(s)'); ?></h2>
 <?php foreach ($profileConfigList as $profileConfig): ?>
     <h3 id="<?=$this->e($profileConfig->profileId()); ?>"><?=$this->e($profileConfig->displayName()); ?></h3>
     <table class="tbl">
@@ -96,11 +96,11 @@
     <?php endif; ?>
 
 <?php if ($profileConfig->enableLog()): ?>
-                    <span class="plain"><?=$this->t('Enable Log'); ?></span>
+                    <span class="plain"><?=$this->t('OpenVPN Server Log'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->enableAcl()): ?>
-                    <span class="plain"><?=$this->t('Enable ACL'); ?></span>
+                    <span class="plain"><?=$this->t('ACL'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->blockLan()): ?>
