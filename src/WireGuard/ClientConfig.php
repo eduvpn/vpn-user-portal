@@ -52,7 +52,7 @@ class ClientConfig implements ClientConfigInterface
             $routeList[] = '0.0.0.0/0';
             $routeList[] = '::/0';
         }
-        $routeList = array_merge($routeList, $this->profileConfig->routes());
+        $routeList = array_merge($routeList, $this->profileConfig->tunnelRouteList());
 
         $output = [];
         $output[] = '[Interface]';

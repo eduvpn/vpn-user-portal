@@ -230,7 +230,7 @@ class ServerConfig
             ];
         }
 
-        $routeList = $profileConfig->routes();
+        $routeList = $profileConfig->tunnelRouteList();
         if (0 === \count($routeList)) {
             return [];
         }

@@ -151,11 +151,11 @@
             </tr>
 <?php endif; ?>
 
-<?php if (0 !== count($profileConfig->routes())): ?>
+<?php if (0 !== count($profileConfig->tunnelRouteList())): ?>
             <tr><th><?=$this->t('Route(s)'); ?></th>
             <td>
-<?php foreach ($profileConfig->routes() as $route): ?>
-                    <span class="plain"><code><?=$this->e($route); ?></code></span>
+<?php foreach ($profileConfig->tunnelRouteList() as $tunnelRoute): ?>
+                    <span class="plain"><code><?=$this->e($tunnelRoute); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
