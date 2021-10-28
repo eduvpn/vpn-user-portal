@@ -197,6 +197,28 @@ class Request
     }
 
     /**
+     * @param Closure(array<string>):void $c
+     */
+    public function optionalArrayPostParameter(string $postKey, Closure $c): array
+    {
+        if (!\array_key_exists($postKey, $this->postData)) {
+            return [];
+        }
+        $postValue = $this->postData[$postKey];
+        if (\is_string($postValue)) {
+            $postValue = [$postValue];
+        }
+
+        try {
+            $c($postValue);
+        } catch (RangeException $e) {
+            throw new HttpException(sprintf('invalid "%s" [%s]', $postKey, $e->getMessage()), 400);
+        }
+
+        return $postValue;
+    }
+
+    /**
      * @param Closure(string):void $c
      */
     public function requirePostParameter(string $postKey, Closure $c): string
@@ -261,39 +283,5 @@ class Request
         }
 
         return $this->requireHeader($headerKey);
-    }
-
-    /**
-     * This function supports multiple POST parameter keys with the same name,
-     * something which PHP does not out of the box, it will only expose the
-     * _last_ value through $_POST. This function corrects this and returns the
-     * value as string in case there was only 1 value, or as array if there
-     * were multiple.
-     *
-     * XXX only for POST, otherwise use rawurldecode?!
-     * XXX actually use this to parse query/post parameters.
-     *
-     * @return array<string,array<string>|string>
-     */
-    private static function parseQueryString(string $queryString): array
-    {
-        $parsedParameters = [];
-        $queryParameters = explode('&', $queryString);
-        foreach ($queryParameters as $keyValueString) {
-            [$k, $v] = explode('=', $keyValueString, 2);
-            $k = urldecode($k);
-            $v = urldecode($v);
-            if (!\array_key_exists($k, $parsedParameters)) {
-                $parsedParameters[$k] = $v;
-
-                continue;
-            }
-            if (!\is_array($parsedParameters[$k])) {
-                $parsedParameters[$k] = [$parsedParameters[$k]];
-            }
-            $parsedParameters[$k][] = $v;
-        }
-
-        return $parsedParameters;
     }
 }

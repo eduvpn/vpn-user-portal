@@ -113,6 +113,18 @@ class Validator
     }
 
     /**
+     * @param array<string> $profileIdList
+     *
+     * @throws \RangeException
+     */
+    public static function profileIdList(array $profileIdList): void
+    {
+        foreach ($profileIdList as $profileId) {
+            self::re($profileId, self::REGEXP_PROFILE_ID, __FUNCTION__);
+        }
+    }
+
+    /**
      * @throws \RangeException
      */
     public static function ipAddress(string $ipAddress): void

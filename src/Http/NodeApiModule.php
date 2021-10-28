@@ -47,9 +47,18 @@ class NodeApiModule implements ServiceModuleInterface
         $service->post(
             '/server_config',
             function (UserInfo $userInfo, Request $request): Response {
-                // XXX we may want to restrict the profiles for particular nodes!
+                // XXX catch exceptions
+                $profileConfigList = $this->config->profileConfigList();
+                $profileIdList = $request->optionalArrayPostParameter('profile_id_list', fn (array $a) => Validator::profileIdList($a));
+                if (0 !== \count($profileIdList)) {
+                    $profileConfigList = [];
+                    foreach ($profileIdList as $profileId) {
+                        $profileConfigList[] = $this->config->profileConfig($profileId);
+                    }
+                }
+
                 $serverConfigList = $this->serverConfig->get(
-                    $this->config->profileConfigList(),
+                    $profileConfigList,
                     (int) $request->requirePostParameter('node_number', fn (string $s) => Validator::nodeNumber($s)),
                     'yes' === $request->requirePostParameter('prefer_aes', fn (string $s) => Validator::preferAes($s))
                 );
