@@ -50,13 +50,12 @@ class ServerConfig
         $processConfig = [];
         $profileServerConfig = [];
         for ($processNumber = 0; $processNumber < $processCount; ++$processNumber) {
-            [$proto, $port] = self::getProtoPort($profileConfig->vpnProtoPorts(), $profileConfig->listenIp())[$processNumber];
+            [$proto, $port] = self::getProtoPort($profileConfig->vpnProtoPorts())[$processNumber];
             $processConfig['range'] = $splitRange[$processNumber];
             $processConfig['range6'] = $splitRange6[$processNumber];
             $processConfig['dev'] = sprintf('tun%d', $this->tunDev++);
             $processConfig['proto'] = $proto;
             $processConfig['port'] = $port;
-            $processConfig['local'] = $profileConfig->listenIp();
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
             $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $preferAes);
@@ -65,14 +64,13 @@ class ServerConfig
         return $profileServerConfig;
     }
 
-    private static function getFamilyProto(string $listenAddress, string $proto): string
+    private static function getFamilyProto(string $proto): string
     {
-        $v6 = false !== strpos($listenAddress, ':');
         if ('udp' === $proto) {
-            return $v6 ? 'udp6' : 'udp';
+            return 'udp6';
         }
         if ('tcp' === $proto) {
-            return $v6 ? 'tcp6-server' : 'tcp-server';
+            return 'tcp6-server';
         }
 
         throw new RuntimeException('only "tcp" and "udp" are supported as protocols');
@@ -81,19 +79,19 @@ class ServerConfig
     /**
      * @return array<array{0:string,1:int}>
      */
-    private static function getProtoPort(array $vpnProcesses, string $listenAddress): array
+    private static function getProtoPort(array $vpnProcesses): array
     {
         $convertedPortProto = [];
         foreach ($vpnProcesses as $vpnProcess) {
             [$proto, $port] = explode('/', $vpnProcess);
-            $convertedPortProto[] = [self::getFamilyProto($listenAddress, $proto), (int) $port];
+            $convertedPortProto[] = [self::getFamilyProto($proto), (int) $port];
         }
 
         return $convertedPortProto;
     }
 
     /**
-     * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,local:string,processNumber:int} $processConfig
+     * @param array{range:\LC\Portal\IP,range6:\LC\Portal\IP,dev:string,proto:string,port:int,processNumber:int} $processConfig
      */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes): string
     {
@@ -164,7 +162,6 @@ class ServerConfig
             sprintf('management /run/openvpn-server/%s-%d.sock unix', $profileConfig->profileId(), $processConfig['processNumber']),
             sprintf('setenv PROFILE_ID %s', $profileConfig->profileId()),
             sprintf('proto %s', $processConfig['proto']),
-            sprintf('local %s', $processConfig['local']),
 
             '<ca>',
             $this->ca->caCert()->pemCert(),

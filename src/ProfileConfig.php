@@ -100,11 +100,6 @@ class ProfileConfig
         return $this->requireBool('clientToClient', false);
     }
 
-    public function listenIp(): string
-    {
-        return $this->requireString('listenIp', '::');
-    }
-
     public function enableLog(): bool
     {
         return $this->requireBool('enableLog', false);

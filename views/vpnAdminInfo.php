@@ -133,10 +133,6 @@
 <?php endfor; ?>
             </td></tr>
 
-<?php if ('::' !== $listenIp = $profileConfig->listenIp()): ?>
-            <tr><th><?=$this->t('Listen IP'); ?></th><td><code><?=$this->e($listenIp); ?></code></td></tr>
-<?php endif; ?>
-
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
             <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($dnsDomain); ?></code></td></tr>
 <?php endif; ?>
