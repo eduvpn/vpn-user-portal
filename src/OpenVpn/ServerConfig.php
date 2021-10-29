@@ -251,7 +251,7 @@ class ServerConfig
                 $routeIp = IP::fromIpPrefix($excludeRoute);
                 if (IP::IP_6 === $routeIp->family()) {
                     // IPv6
-                    $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway"', (string) $routeIp);
+                    $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway_ipv6"', (string) $routeIp);
                 } else {
                     // IPv4
                     $routeConfig[] = sprintf('push "route %s %s net_gateway"', $routeIp->address(), $routeIp->netmask());
