@@ -230,21 +230,32 @@ class ServerConfig
             ];
         }
 
-        $routeList = $profileConfig->tunnelRouteList();
-        if (0 === \count($routeList)) {
-            return [];
+        $routeConfig = [];
+        $routeList = $profileConfig->routeList();
+        if (0 !== \count($routeList)) {
+            foreach ($routeList as $route) {
+                $routeIp = IP::fromIpPrefix($route);
+                if (IP::IP_6 === $routeIp->family()) {
+                    // IPv6
+                    $routeConfig[] = sprintf('push "route-ipv6 %s"', (string) $routeIp);
+                } else {
+                    // IPv4
+                    $routeConfig[] = sprintf('push "route %s %s"', $routeIp->address(), $routeIp->netmask());
+                }
+            }
         }
 
-        // there may be some routes specified, push those, and not the default
-        $routeConfig = [];
-        foreach ($routeList as $route) {
-            $routeIp = IP::fromIpPrefix($route);
-            if (IP::IP_6 === $routeIp->family()) {
-                // IPv6
-                $routeConfig[] = sprintf('push "route-ipv6 %s"', (string) $routeIp);
-            } else {
-                // IPv4
-                $routeConfig[] = sprintf('push "route %s %s"', $routeIp->address(), $routeIp->netmask());
+        $excludeRouteList = $profileConfig->excludeRouteList();
+        if (0 !== \count($excludeRouteList)) {
+            foreach ($excludeRouteList as $excludeRoute) {
+                $routeIp = IP::fromIpPrefix($excludeRoute);
+                if (IP::IP_6 === $routeIp->family()) {
+                    // IPv6
+                    $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway"', (string) $routeIp);
+                } else {
+                    // IPv4
+                    $routeConfig[] = sprintf('push "route %s %s net_gateway"', $routeIp->address(), $routeIp->netmask());
+                }
             }
         }
 

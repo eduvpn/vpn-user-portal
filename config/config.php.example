@@ -266,12 +266,18 @@ return [
             //'defaultGateway' => false,
 
             // ** WireGuard & OpenVPN **
-            // IPv4 and IPv6 routes to push to the client, only used when
-            // defaultGateway is false
+            // IPv4 and IPv6 routes to push to the client
             // DEFAULT = []
-            //'routes' => [
+            //'routeList' => [
             //    '192.168.1.0/24',
             //    'fd01:1:1:1::/64',
+            //],
+
+            // ** OpenVPN Only **
+            // IPv4 and IPv6 routes to push to the client to be sent outside of
+            // the VPN, i.e. route all traffic over VPN *except* these prefixes
+            // DEFAULT = []
+            //'excludeRouteList' => [
             //],
 
             // ** WireGuard & OpenVPN **
@@ -316,27 +322,27 @@ return [
 
             // ** OpenVPN Only **
             // UDP ports used by OpenVPN server
-            // together with "tcpPortList" the number of ports MUST be 
+            // together with "tcpPortList" the number of ports MUST be
             // 1,2,4,8,16,32 or 64
             // DEFAULT: [1194]
             //'udpPortList' => [1194],
 
             // ** OpenVPN Only **
             // TCP ports used by OpenVPN server
-            // together with "udpPortList" the number of ports MUST be 
+            // together with "udpPortList" the number of ports MUST be
             // 1,2,4,8,16,32 or 64
             // DEFAULT: [1194]
             //'tcpPortList' => [1194],
 
             // ** OpenVPN Only **
-            // UDP ports used by the VPN client to connect to the OpenVPN 
-            // server. If missing, or empty uses udpPortList       
+            // UDP ports used by the VPN client to connect to the OpenVPN
+            // server. If missing, or empty uses udpPortList
             // DEFAULT: []
             //'exposedUdpPortList' => [],
 
             // ** OpenVPN Only **
-            // TCP ports used by the VPN client to connect to the OpenVPN 
-            // server. If missing, or empty uses tcpPortList       
+            // TCP ports used by the VPN client to connect to the OpenVPN
+            // server. If missing, or empty uses tcpPortList
             // DEFAULT: []
             //'exposedTcpPortList' => [],
 
@@ -382,13 +388,19 @@ return [
 
             //'defaultGateway' => false,
 
-            // IPv4 and IPv6 routes to push to the client, only used when
-            // defaultGateway is false
+            // ** WireGuard & OpenVPN **
+            // IPv4 and IPv6 routes to push to the client
             // DEFAULT = []
-            // ** WireGuard,OpenVPN
-            //'routes' => [
+            //'routeList' => [
             //    '192.168.1.0/24',
             //    'fd01:1:1:1::/64',
+            //],
+
+            // ** OpenVPN Only **
+            // IPv4 and IPv6 routes to push to the client to be sent outside of
+            // the VPN, i.e. route all traffic over VPN *except* these prefixes
+            // DEFAULT = []
+            //'excludeRouteList' => [
             //],
 
             // XXX think about DNS in default scenario, what about "split tunnel"?

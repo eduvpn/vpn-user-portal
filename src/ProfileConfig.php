@@ -82,9 +82,17 @@ class ProfileConfig
     /**
      * @return array<string>
      */
-    public function tunnelRouteList(): array
+    public function routeList(): array
     {
-        return $this->requireStringArray('tunnelRouteList', []);
+        return $this->requireStringArray('routeList', []);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function excludeRouteList(): array
+    {
+        return $this->requireStringArray('excludeRouteList', []);
     }
 
     /**

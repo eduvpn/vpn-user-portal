@@ -151,11 +151,21 @@
             </tr>
 <?php endif; ?>
 
-<?php if (0 !== count($profileConfig->tunnelRouteList())): ?>
+<?php if (0 !== count($profileConfig->routeList())): ?>
             <tr><th><?=$this->t('Route(s)'); ?></th>
             <td>
-<?php foreach ($profileConfig->tunnelRouteList() as $tunnelRoute): ?>
-                    <span class="plain"><code><?=$this->e($tunnelRoute); ?></code></span>
+<?php foreach ($profileConfig->routeList() as $route): ?>
+                    <span class="plain"><code><?=$this->e($route); ?></code></span>
+<?php endforeach; ?>
+            </td>
+            </tr>
+<?php endif; ?>
+
+<?php if (0 !== count($profileConfig->excludeRouteList())): ?>
+            <tr><th><?=$this->t('Excluded Route(s)'); ?></th>
+            <td>
+<?php foreach ($profileConfig->excludeRouteList() as $excludeRoute): ?>
+                    <span class="plain"><code><?=$this->e($excludeRoute); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
