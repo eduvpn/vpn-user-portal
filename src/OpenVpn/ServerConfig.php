@@ -218,19 +218,18 @@ class ServerConfig
      */
     private static function getRoutes(ProfileConfig $profileConfig): array
     {
+        $routeConfig = [];
         if ($profileConfig->defaultGateway()) {
             $redirectFlags = ['def1', 'ipv6'];
             if ($profileConfig->blockLan()) {
                 $redirectFlags[] = 'block-local';
             }
 
-            return [
-                sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags)),
-                'push "route 0.0.0.0 0.0.0.0"',
-            ];
+            $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
+            // XXX try again without 0/0... the horror!
+            //$routeConfig[] = 'push "route 0.0.0.0 0.0.0.0"';
         }
 
-        $routeConfig = [];
         $routeList = $profileConfig->routeList();
         if (0 !== \count($routeList)) {
             foreach ($routeList as $route) {
