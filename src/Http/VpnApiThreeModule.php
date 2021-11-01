@@ -85,7 +85,6 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
                 // XXX catch InputValidationException
-                $vpnProto = $request->requirePostParameter('vpn_proto', fn (string $s) => Validator::vpnProto($s));
                 $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->userPermissionList($accessToken->userId());
@@ -106,6 +105,16 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 }
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
+
+                if (null === $vpnProto = $request->optionalPostParameter('vpn_proto', fn (string $s) => Validator::vpnProto($s))) {
+                    // if OpenVPN is supported, that is the default (for now)
+                    // XXX make this configurable
+                    if ($profileConfig->oSupport()) {
+                        $vpnProto = 'openvpn';
+                    } else {
+                        $vpnProto = 'wireguard';
+                    }
+                }
 
                 // XXX we can make this independent I think?
 
