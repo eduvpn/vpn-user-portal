@@ -269,18 +269,15 @@ try {
         $config,
         $tpl,
         $cookieBackend,
-        $sessionBackend,
         $connectionManager,
         $storage,
         $oauthStorage,
         $serverInfo,
-        $oauthClientDb,
         $sessionExpiry
     );
     $service->addModule($vpnPortalModule);
 
     $adminPortalModule = new AdminPortalModule(
-        $baseDir.'/data',
         $config,
         $tpl,
         $vpnDaemon,

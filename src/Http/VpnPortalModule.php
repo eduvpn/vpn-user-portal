@@ -13,7 +13,6 @@ namespace LC\Portal\Http;
 
 use DateInterval;
 use DateTimeImmutable;
-use fkooman\OAuth\Server\ClientDbInterface;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
@@ -31,25 +30,21 @@ class VpnPortalModule implements ServiceModuleInterface
     private Config $config;
     private TplInterface $tpl;
     private CookieInterface $cookie;
-    private SessionInterface $session;
     private ConnectionManager $connectionManager;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
     private ServerInfo $serverInfo;
-    private ClientDbInterface $clientDb;
     private DateInterval $sessionExpiry;
 
-    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, SessionInterface $session, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
+    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo, DateInterval $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
         $this->cookie = $cookie;
-        $this->session = $session;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
         $this->serverInfo = $serverInfo;
         $this->connectionManager = $connectionManager;
-        $this->clientDb = $clientDb;
         $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = Dt::get();
     }

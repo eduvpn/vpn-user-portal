@@ -26,7 +26,6 @@ use LC\Portal\VpnDaemon;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
-    private string $dataDir;
     private Config $config;
     private TplInterface $tpl;
     private VpnDaemon $vpnDaemon;
@@ -37,9 +36,8 @@ class AdminPortalModule implements ServiceModuleInterface
     private ServerInfo $serverInfo;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $dataDir, Config $config, TplInterface $tpl, VpnDaemon $vpnDaemon, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
+    public function __construct(Config $config, TplInterface $tpl, VpnDaemon $vpnDaemon, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
     {
-        $this->dataDir = $dataDir;
         $this->config = $config;
         $this->tpl = $tpl;
         $this->vpnDaemon = $vpnDaemon;
