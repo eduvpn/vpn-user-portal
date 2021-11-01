@@ -84,7 +84,7 @@
 <?php if ($profileConfig->oSupport()): ?>
         <span class="plain"><?=$this->t('OpenVPN'); ?></span>
 <?php endif; ?>
-<?php if ($profileConfig->oSupport()): ?>
+<?php if ($profileConfig->wSupport()): ?>
         <span class="plain"><?=$this->t('WireGuard'); ?></span>
 <?php endif; ?>
 
