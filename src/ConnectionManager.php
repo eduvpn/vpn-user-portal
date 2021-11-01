@@ -48,7 +48,7 @@ class ConnectionManager
             $profileId = $profileConfig->profileId();
             $connectionList[$profileId] = [];
 
-            if ('openvpn' === $profileConfig->vpnProto()) {
+            if ($profileConfig->oSupport()) {
                 // OpenVPN
                 $oCertListByProfileId = $this->storage->oCertListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
 
@@ -69,26 +69,26 @@ class ConnectionManager
                         ];
                     }
                 }
-
-                continue;
             }
 
-            // WireGuard
-            $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
-            $wPeerList = [];
-            for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-                $wPeerList = array_merge($wPeerList, $this->vpnDaemon->wPeerList($profileConfig->nodeUrl($i), false));
-            }
+            if ($profileConfig->wSupport()) {
+                // WireGuard
+                $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
+                $wPeerList = [];
+                for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+                    $wPeerList = array_merge($wPeerList, $this->vpnDaemon->wPeerList($profileConfig->nodeUrl($i), false));
+                }
 
-            foreach ($wPeerListByProfileId as $peerInfo) {
-                if (\array_key_exists($peerInfo['public_key'], $wPeerList)) {
-                    // found it!
-                    $connectionList[$profileId][] = [
-                        'user_id' => $peerInfo['user_id'],
-                        'connection_id' => $peerInfo['public_key'],
-                        'display_name' => $peerInfo['display_name'],
-                        'ip_list' => [$peerInfo['ip_four'], $peerInfo['ip_six']],
-                    ];
+                foreach ($wPeerListByProfileId as $peerInfo) {
+                    if (\array_key_exists($peerInfo['public_key'], $wPeerList)) {
+                        // found it!
+                        $connectionList[$profileId][] = [
+                            'user_id' => $peerInfo['user_id'],
+                            'connection_id' => $peerInfo['public_key'],
+                            'display_name' => $peerInfo['display_name'],
+                            'ip_list' => [$peerInfo['ip_four'], $peerInfo['ip_six']],
+                        ];
+                    }
                 }
             }
         }
@@ -147,7 +147,7 @@ class ConnectionManager
         }
     }
 
-    public function connect(ServerInfo $serverInfo, string $userId, string $profileId, string $displayName, DateTimeImmutable $expiresAt, bool $tcpOnly, ?string $publicKey, ?string $authKey): ClientConfigInterface
+    public function connect(ServerInfo $serverInfo, string $userId, string $profileId, string $useProto, string $displayName, DateTimeImmutable $expiresAt, bool $tcpOnly, ?string $publicKey, ?string $authKey): ClientConfigInterface
     {
         if (!$this->config->hasProfile($profileId)) {
             throw new ConnectionManagerException('profile "'.$profileId.'" does not exist');
@@ -162,7 +162,9 @@ class ConnectionManager
         // about % in use by querying node?
         $nodeNumber = random_int(0, $profileConfig->nodeCount() - 1);
 
-        if ('openvpn' === $profileConfig->vpnProto()) {
+        // XXX we have to allow the client to *prefer* a protocol, now it will
+        // always return openvpn if openvpn is supported...
+        if ('openvpn' === $useProto && $profileConfig->oSupport()) {
             $commonName = Base64::encode($this->random->get(32));
             $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
             $this->storage->oCertAdd(
@@ -185,31 +187,35 @@ class ConnectionManager
             );
         }
 
-        // WireGuard
-        $privateKey = null;
-        if (null === $publicKey) {
-            $keyPair = KeyPair::generate();
-            $privateKey = $keyPair['secret_key'];
-            $publicKey = $keyPair['public_key'];
+        if ('wireguard' === $useProto && $profileConfig->wSupport()) {
+            // WireGuard
+            $privateKey = null;
+            if (null === $publicKey) {
+                $keyPair = KeyPair::generate();
+                $privateKey = $keyPair['secret_key'];
+                $publicKey = $keyPair['public_key'];
+            }
+
+            // XXX this call can throw a ConnectionManagerException!
+            [$ipFour, $ipSix] = $this->getIpAddress($profileConfig, $nodeNumber);
+
+            // XXX we MUST make sure public_key is unique on this server!!!
+            // the DB enforces this, but maybe a better error could be given?
+            $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
+            $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
+
+            return new WireGuardClientConfig(
+                $nodeNumber,
+                $profileConfig,
+                $privateKey,
+                $ipFour,
+                $ipSix,
+                $serverInfo->wgPublicKey(),
+                $this->config->wgPort()
+            );
         }
 
-        // XXX this call can throw a ConnectionManagerException!
-        [$ipFour, $ipSix] = $this->getIpAddress($profileConfig, $nodeNumber);
-
-        // XXX we MUST make sure public_key is unique on this server!!!
-        // the DB enforces this, but maybe a better error could be given?
-        $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
-        $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
-
-        return new WireGuardClientConfig(
-            $nodeNumber,
-            $profileConfig,
-            $privateKey,
-            $ipFour,
-            $ipSix,
-            $serverInfo->wgPublicKey(),
-            $this->config->wgPort()
-        );
+        throw new ConnectionManagerException(sprintf('unsupported protocol "%s" for profile "%s"', $useProto, $profileId));
     }
 
     public function disconnect(string $userId, string $profileId, string $connectionId): void
@@ -225,15 +231,17 @@ class ConnectionManager
         }
         $profileConfig = $this->config->profileConfig($profileId);
 
-        if ('openvpn' === $profileConfig->vpnProto()) {
+        // XXX we need to figure out whether the user was connected with OpenVPN or WireGuard before choosing the correct disconnect method here!
+        // now it will try both willy nilly
+        if ($profileConfig->oSupport()) {
             $this->storage->oCertDelete($userId, $connectionId);
             $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
-
-            return;
         }
 
-        $this->storage->wPeerRemove($userId, $connectionId);
-        $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId);
+        if ($profileConfig->wSupport()) {
+            $this->storage->wPeerRemove($userId, $connectionId);
+            $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId);
+        }
     }
 
     /**
@@ -244,8 +252,8 @@ class ConnectionManager
         // make a list of all allocated IPv4 addresses (the IPv6 address is
         // based on the IPv4 address)
         $allocatedIpFourList = $this->storage->wgGetAllocatedIpFourAddresses();
-        $ipFourInRangeList = $profileConfig->rangeFour($nodeNumber)->clientIpList();
-        $ipSixInRangeList = $profileConfig->rangeSix($nodeNumber)->clientIpList(\count($ipFourInRangeList));
+        $ipFourInRangeList = $profileConfig->wRangeFour($nodeNumber)->clientIpList();
+        $ipSixInRangeList = $profileConfig->wRangeSix($nodeNumber)->clientIpList(\count($ipFourInRangeList));
         foreach ($ipFourInRangeList as $k => $ipFourInRange) {
             if (!\in_array($ipFourInRange, $allocatedIpFourList, true)) {
                 return [$ipFourInRange, $ipSixInRangeList[$k]];

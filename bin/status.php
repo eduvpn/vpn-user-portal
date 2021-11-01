@@ -23,17 +23,20 @@ use LC\Portal\VpnDaemon;
 
 function getMaxClientLimit(ProfileConfig $profileConfig): int
 {
-    // OpenVPN can have multiple processes, WireGuard has no processes, but
-    // counts as 1...
-    $processCount = 'openvpn' === $profileConfig->vpnProto() ? (count($profileConfig->udpPortList()) + count($profileConfig->tcpPortList())) : 1;
-
-    $maxClientList = 0;
-    // loop over all nodes of this profile
+    $maxClientLimit = 0;
+    // OpenVPN can have multiple processes, that reduces the number of IP
+    // addresses available for VPN clients...
+    $oProcessCount = $profileConfig->oSupport() ? (count($profileConfig->udpPortList()) + count($profileConfig->tcpPortList())) : 0;
     for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-        $maxClientList += ((int) 2 ** (32 - $profileConfig->rangeFour($i)->prefix())) - 3 * $processCount;
+        if ($profileConfig->oSupport()) {
+            $maxClientLimit += ((int) 2 ** (32 - $profileConfig->oRangeFour($i)->prefix())) - 3 * $oProcessCount;
+        }
+        if ($profileConfig->wSupport()) {
+            $maxClientLimit += ((int) 2 ** (32 - $profileConfig->wRangeFour($i)->prefix())) - 3;
+        }
     }
 
-    return $maxClientList;
+    return $maxClientLimit;
 }
 
 function showHelp(array $argv): void

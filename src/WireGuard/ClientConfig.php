@@ -59,7 +59,7 @@ class ClientConfig implements ClientConfigInterface
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
-        $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->rangeFour($this->nodeNumber)->prefix().', '.$this->ipSix.'/'.$this->profileConfig->rangeSix($this->nodeNumber)->prefix();
+        $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->wRangeFour($this->nodeNumber)->prefix().', '.$this->ipSix.'/'.$this->profileConfig->wRangeSix($this->nodeNumber)->prefix();
         if (0 !== \count($this->profileConfig->dnsServerList())) {
             $output[] = 'DNS = '.implode(', ', $this->dns());
         }
@@ -85,12 +85,12 @@ class ClientConfig implements ClientConfigInterface
         $dnsServerList = [];
         foreach ($this->profileConfig->dnsServerList() as $configDnsServer) {
             if ('@GW4@' === $configDnsServer) {
-                $dnsServerList[] = $this->profileConfig->rangeFour($this->nodeNumber)->firstHost();
+                $dnsServerList[] = $this->profileConfig->wRangeFour($this->nodeNumber)->firstHost();
 
                 continue;
             }
             if ('@GW6@' === $configDnsServer) {
-                $dnsServerList[] = $this->profileConfig->rangeSix($this->nodeNumber)->firstHost();
+                $dnsServerList[] = $this->profileConfig->wRangeSix($this->nodeNumber)->firstHost();
 
                 continue;
             }

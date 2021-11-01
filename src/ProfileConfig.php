@@ -29,9 +29,14 @@ class ProfileConfig
         return $this->requireString('profileId');
     }
 
-    public function vpnProto(): string
+    public function oSupport(): bool
     {
-        return $this->requireString('vpnProto');
+        return \in_array('openvpn', $this->requireStringArray('vpnProto', ['openvpn', 'wireguard']), true);
+    }
+
+    public function wSupport(): bool
+    {
+        return \in_array('wireguard', $this->requireStringArray('vpnProto', ['openvpn', 'wireguard']), true);
     }
 
     public function nodeCount(): int
@@ -49,24 +54,44 @@ class ProfileConfig
         return $hostNameList[$nodeNumber];
     }
 
-    public function rangeFour(int $nodeNumber): IP
+    public function oRangeFour(int $nodeNumber): IP
     {
-        $rangeFourList = $this->requireStringOrStringArray('rangeFour');
-        if ($nodeNumber >= \count($rangeFourList)) {
-            throw new ConfigException('"rangeFour" for node "'.$nodeNumber.'" not set');
+        $oRangeFourList = $this->requireStringOrStringArray('oRangeFour');
+        if ($nodeNumber >= \count($oRangeFourList)) {
+            throw new ConfigException('"oRangeFour" for node "'.$nodeNumber.'" not set');
         }
 
-        return IP::fromIpPrefix($rangeFourList[$nodeNumber]);
+        return IP::fromIpPrefix($oRangeFourList[$nodeNumber]);
     }
 
-    public function rangeSix(int $nodeNumber): IP
+    public function oRangeSix(int $nodeNumber): IP
     {
-        $rangeSixList = $this->requireStringOrStringArray('rangeSix');
-        if ($nodeNumber >= \count($rangeSixList)) {
-            throw new ConfigException('"rangeSix" for node "'.$nodeNumber.'" not set');
+        $oRangeSixList = $this->requireStringOrStringArray('oRangeSix');
+        if ($nodeNumber >= \count($oRangeSixList)) {
+            throw new ConfigException('"oRangeSix" for node "'.$nodeNumber.'" not set');
         }
 
-        return IP::fromIpPrefix($rangeSixList[$nodeNumber]);
+        return IP::fromIpPrefix($oRangeSixList[$nodeNumber]);
+    }
+
+    public function wRangeFour(int $nodeNumber): IP
+    {
+        $wRangeFourList = $this->requireStringOrStringArray('wRangeFour');
+        if ($nodeNumber >= \count($wRangeFourList)) {
+            throw new ConfigException('"wRangeFour" for node "'.$nodeNumber.'" not set');
+        }
+
+        return IP::fromIpPrefix($wRangeFourList[$nodeNumber]);
+    }
+
+    public function wRangeSix(int $nodeNumber): IP
+    {
+        $wRangeSixList = $this->requireStringOrStringArray('wRangeSix');
+        if ($nodeNumber >= \count($wRangeSixList)) {
+            throw new ConfigException('"wRangeSix" for node "'.$nodeNumber.'" not set');
+        }
+
+        return IP::fromIpPrefix($wRangeSixList[$nodeNumber]);
     }
 
     public function displayName(): string
@@ -113,10 +138,6 @@ class ProfileConfig
      */
     public function enableLog(): bool
     {
-        if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"enableLog" is only used for OpenVPN');
-        }
-
         return $this->requireBool('enableLog', false);
     }
 
@@ -150,10 +171,6 @@ class ProfileConfig
      */
     public function udpPortList(): array
     {
-        if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"udpPortList" is only used for OpenVPN');
-        }
-
         return $this->requireIntArray('udpPortList', [1194]);
     }
 
@@ -164,10 +181,6 @@ class ProfileConfig
      */
     public function tcpPortList(): array
     {
-        if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"tcpPortList" is only used for OpenVPN');
-        }
-
         return $this->requireIntArray('tcpPortList', [1194]);
     }
 
@@ -178,10 +191,6 @@ class ProfileConfig
      */
     public function exposedUdpPortList(): array
     {
-        if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"exposedUdpPortList" is only used for OpenVPN');
-        }
-
         return $this->requireIntArray('exposedUdpPortList', []);
     }
 
@@ -192,10 +201,6 @@ class ProfileConfig
      */
     public function exposedTcpPortList(): array
     {
-        if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"exposedTcpPortList" is only used for OpenVPN');
-        }
-
         return $this->requireIntArray('exposedTcpPortList', []);
     }
 
@@ -204,10 +209,6 @@ class ProfileConfig
      */
     public function blockLan(): bool
     {
-        if ('wireguard' === $this->vpnProto()) {
-            throw new ConfigException('"blockLan" is only used for OpenVPN');
-        }
-
         return $this->requireBool('blockLan', false);
     }
 

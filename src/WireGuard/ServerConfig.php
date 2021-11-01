@@ -30,12 +30,12 @@ class ServerConfig
         $ipFourList = [];
         $ipSixList = [];
         foreach ($profileConfigList as $profileConfig) {
-            if ('wireguard' !== $profileConfig->vpnProto()) {
+            if (!$profileConfig->wSupport()) {
                 // we only want WireGuard profiles
                 continue;
             }
-            $ipFourList[] = $profileConfig->rangeFour($nodeNumber)->firstHostPrefix();
-            $ipSixList[] = $profileConfig->rangeSix($nodeNumber)->firstHostPrefix();
+            $ipFourList[] = $profileConfig->wRangeFour($nodeNumber)->firstHostPrefix();
+            $ipSixList[] = $profileConfig->wRangeSix($nodeNumber)->firstHostPrefix();
         }
         $ipList = implode(',', array_merge($ipFourList, $ipSixList));
 

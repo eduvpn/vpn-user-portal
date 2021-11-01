@@ -36,7 +36,7 @@ class ServerConfig
 //        ServerConfigCheck::verify($profileConfigList);
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
-            if ('openvpn' === $profileConfig->vpnProto()) {
+            if ($profileConfig->oSupport()) {
                 $serverConfig = array_merge($serverConfig, $this->openVpnServerConfig->getProfile($profileConfig, $nodeNumber, $cpuHasAes));
             }
         }

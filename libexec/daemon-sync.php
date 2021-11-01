@@ -46,8 +46,8 @@ $logger = new SysLogger('vpn-user-portal');
 function determineNodeUrl(ProfileConfig $profileConfig, IP $ipFour): ?string
 {
     for ($i = 0; $i <= $profileConfig->nodeCount(); ++$i) {
-        $rangeFour = $profileConfig->rangeFour($i);
-        if (in_array($ipFour->address(), $rangeFour->clientIpList(), true)) {
+        $wRangeFour = $profileConfig->wRangeFour($i);
+        if (in_array($ipFour->address(), $wRangeFour->clientIpList(), true)) {
             return $profileConfig->nodeUrl($i);
         }
     }
@@ -74,10 +74,10 @@ try {
     $wPeerListInDatabase = [];
     $oCertListInDatabase = [];
     foreach ($config->profileConfigList() as $profileConfig) {
-        if ('wireguard' === $profileConfig->vpnProto()) {
+        if ($profileConfig->wSupport()) {
             $wPeerListInDatabase = array_merge($wPeerListInDatabase, $storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED));
         }
-        if ('openvpn' === $profileConfig->vpnProto()) {
+        if ($profileConfig->oSupport()) {
             $oCertListInDatabase = array_merge($oCertListInDatabase, $storage->oCertListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED));
         }
     }
@@ -89,7 +89,7 @@ try {
     foreach ($config->profileConfigList() as $profileConfig) {
         for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
             $nodeUrl = $profileConfig->nodeUrl($i);
-            if ('wireguard' === $profileConfig->vpnProto()) {
+            if ($profileConfig->wSupport()) {
                 // if the peer does not exist in the database, remove it...
                 foreach ($vpnDaemon->wPeerList($nodeUrl, true) as $publicKey => $wPeerInfo) {
                     if (!array_key_exists($publicKey, $wPeerListInDatabase)) {
@@ -103,7 +103,7 @@ try {
                     $wPeerList[$publicKey] = $wPeerInfo;
                 }
             }
-            if ('openvpn' === $profileConfig->vpnProto()) {
+            if ($profileConfig->oSupport()) {
                 foreach (array_keys($vpnDaemon->oConnectionList($nodeUrl)) as $commonName) {
                     if (!array_key_exists($commonName, $oCertListInDatabase)) {
                         //echo sprintf('**DISCONNECT** [%s]: %s', $nodeUrl, $commonName).PHP_EOL;

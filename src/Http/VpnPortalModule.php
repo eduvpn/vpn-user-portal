@@ -102,6 +102,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('only '.$this->config->maxNumberOfActivePortalConfigurations().' active portal VPN configurations at a time allowed', 403);
                 }
 
+                $vpnProto = $request->requirePostParameter('vpnProto', fn (string $s) => Validator::vpnProto($s));
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));
                 $tcpOnly = 'on' === $request->optionalPostParameter('tcpOnly', fn (string $s) => Validator::onOrOff($s));
                 $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));
@@ -117,19 +118,17 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $profileConfig = $this->config->profileConfig($profileId);
-
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
 
-                switch ($profileConfig->vpnProto()) {
-                    case 'openvpn':
-                        return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt, $tcpOnly);
-
-                    case 'wireguard':
-                        return $this->getWireGuardConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
-
-                    default:
-                        throw new HttpException('unsupported VPN type', 500);
+                if ('openvpn' === $vpnProto && $profileConfig->oSupport()) {
+                    return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt, $tcpOnly);
                 }
+
+                if ('wireguard' === $vpnProto && $profileConfig->wSupport()) {
+                    return $this->getWireGuardConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
+                }
+
+                throw new HttpException(sprintf('profile "%s" does not support protocol "%s"', $profileId, $vpnProto), 400);
             }
         );
 
@@ -216,6 +215,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $this->serverInfo,
             $userId,
             $profileId,
+            'wireguard',
             $displayName,
             $expiresAt,
             false,
@@ -240,6 +240,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $this->serverInfo,
             $userId,
             $profileId,
+            'openvpn',
             $displayName,
             $expiresAt,
             $tcpOnly,

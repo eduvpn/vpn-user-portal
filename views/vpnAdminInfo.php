@@ -81,9 +81,10 @@
             <tr>
                 <th></th>
                 <td>
-<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
+<?php if ($profileConfig->oSupport()): ?>
         <span class="plain"><?=$this->t('OpenVPN'); ?></span>
-<?php else: ?>
+<?php endif; ?>
+<?php if ($profileConfig->oSupport()): ?>
         <span class="plain"><?=$this->t('WireGuard'); ?></span>
 <?php endif; ?>
 
@@ -95,7 +96,7 @@
                     <span class="plain"><?=$this->t('Client-to-client'); ?></span>
     <?php endif; ?>
 
-<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
+<?php if ($profileConfig->oSupport()): ?>
 <?php if ($profileConfig->enableLog()): ?>
                     <span class="plain"><?=$this->t('OpenVPN Server Log'); ?></span>
 <?php endif; ?>
@@ -105,7 +106,7 @@
                     <span class="plain"><?=$this->t('ACL'); ?></span>
 <?php endif; ?>
 
-<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
+<?php if ($profileConfig->oSupport()): ?>
 <?php if ($profileConfig->blockLan()): ?>
                     <span class="plain"><?=$this->t('Block LAN'); ?></span>
 <?php endif; ?>
@@ -121,13 +122,22 @@
 
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e((string) $profileConfig->rangeFour($i)); ?></code></span>
+<?php if ($profileConfig->oSupport()): ?>
+            <span class="plain"><code>(O) <?=$this->e((string) $profileConfig->oRangeFour($i)); ?></code></span>
+<?php endif; ?>
+<?php if ($profileConfig->wSupport()): ?>
+            <span class="plain"><code>(W) <?=$this->e((string) $profileConfig->wRangeFour($i)); ?></code></span>
+<?php endif; ?>
 <?php endfor; ?>
             </td></tr>
-
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e((string) $profileConfig->rangeSix($i)); ?></code></span>
+<?php if ($profileConfig->oSupport()): ?>
+            <span class="plain"><code>(O) <?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
+<?php endif; ?>
+<?php if ($profileConfig->wSupport()): ?>
+            <span class="plain"><code>(W) <?=$this->e((string) $profileConfig->wRangeSix($i)); ?></code></span>
+<?php endif; ?>
 <?php endfor; ?>
             </td></tr>
 
@@ -191,7 +201,7 @@
             </tr>
 <?php endif; ?>
 
-<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
+<?php if ($profileConfig->oSupport()): ?>
 <?php if (0 !== count($profileConfig->udpPortList()) || 0 !== count($profileConfig->tcpPortList())): ?>
             <tr><th><?=$this->t('Ports'); ?></th>
             <td>
@@ -206,7 +216,7 @@
 <?php endif; ?>
 <?php endif; ?>
 
-<?php if ('openvpn' === $profileConfig->vpnProto()): ?>
+<?php if ($profileConfig->oSupport()): ?>
 <?php if (0 !== count($profileConfig->exposedUdpPortList()) || 0 !== count($profileConfig->exposedTcpPortList())): ?>
             <tr><th><?=$this->t('Offered Ports'); ?></th>
             <td>

@@ -169,6 +169,11 @@ class Validator
         self::inSet($preferAes, ['yes', 'no']);
     }
 
+    public static function vpnProto(string $vpnProto): void
+    {
+        self::inSet($vpnProto, ['openvpn', 'wireguard']);
+    }
+
     public static function onOrOff(string $onOrOff): void
     {
         self::inSet($onOrOff, ['on', 'off']);

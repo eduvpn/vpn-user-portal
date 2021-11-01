@@ -50,10 +50,19 @@ class VpnApiThreeModule implements ServiceModuleInterface
                             continue;
                         }
                     }
+
+                    $vpnProtoSupport = [];
+                    if ($profileConfig->oSupport()) {
+                        $vpnProtoSupport[] = 'openvpn';
+                    }
+                    if ($profileConfig->wSupport()) {
+                        $vpnProtoSupport[] = 'wireguard';
+                    }
+
                     $userProfileList[] = [
                         'profile_id' => $profileConfig->profileId(),
                         'display_name' => $profileConfig->displayName(),
-                        'vpn_proto' => $profileConfig->vpnProto(),
+                        'vpn_proto_support' => $vpnProtoSupport,
                         'default_gateway' => $profileConfig->defaultGateway(),
                     ];
                 }
@@ -76,6 +85,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
                 // XXX catch InputValidationException
+                $vpnProto = $request->requirePostParameter('vpn_proto', fn (string $s) => Validator::vpnProto($s));
                 $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->userPermissionList($accessToken->userId());
@@ -99,13 +109,13 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                 // XXX we can make this independent I think?
 
-                if ('openvpn' === $profileConfig->vpnProto()) {
+                if ('openvpn' === $vpnProto && $profileConfig->oSupport()) {
                     $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
-
                     $clientConfig = $this->connectionManager->connect(
                         $this->serverInfo,
                         $accessToken->userId(),
                         $profileConfig->profileId(),
+                        'openvpn',
                         $accessToken->clientId(),
                         $accessToken->authorizationExpiresAt(),
                         $tcpOnly,
@@ -122,25 +132,29 @@ class VpnApiThreeModule implements ServiceModuleInterface
                     );
                 }
 
-                // WireGuard
-                $clientConfig = $this->connectionManager->connect(
-                    $this->serverInfo,
-                    $accessToken->userId(),
-                    $profileConfig->profileId(),
-                    $accessToken->clientId(),
-                    $accessToken->authorizationExpiresAt(),
-                    false,
-                    $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s)),
-                    $accessToken->authKey()
-                );
+                if ('wireguard' === $vpnProto && $profileConfig->wSupport()) {
+                    $clientConfig = $this->connectionManager->connect(
+                        $this->serverInfo,
+                        $accessToken->userId(),
+                        $profileConfig->profileId(),
+                        'wireguard',
+                        $accessToken->clientId(),
+                        $accessToken->authorizationExpiresAt(),
+                        false,
+                        $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s)),
+                        $accessToken->authKey()
+                    );
 
-                return new Response(
-                    $clientConfig->get(),
-                    [
-                        'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                        'Content-Type' => $clientConfig->contentType(),
-                    ]
-                );
+                    return new Response(
+                        $clientConfig->get(),
+                        [
+                            'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                            'Content-Type' => $clientConfig->contentType(),
+                        ]
+                    );
+                }
+
+                return new JsonResponse(['error' => sprintf('profile "%s" does not support protocol "%s"', $profileConfig->profileId(), $vpnProto)], [], 400);
             }
         );
 
