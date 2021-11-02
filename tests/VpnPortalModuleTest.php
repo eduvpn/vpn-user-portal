@@ -41,7 +41,6 @@ class VpnPortalModuleTest extends TestCase
             new Config(['sessionExpiry' => 'P90D']),
             new JsonTpl(),
             $serverClient,
-            new TestSession(),
             $storage,
             new ClientFetcher(new Config(['Api' => []])),
             new DateInterval('P90D')
