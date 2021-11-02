@@ -87,7 +87,6 @@ try {
 
     // api module
     $vpnApiModule = new VpnApiModule(
-        $config,
         $serverClient,
         $sessionExpiry
     );

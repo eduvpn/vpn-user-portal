@@ -574,7 +574,7 @@ class AdminPortalModule implements ServiceModuleInterface
     /**
      * @param float $f
      *
-     * @return array<float,float>
+     * @return array{0:float,1:float}
      */
     private static function getCoordinates($f)
     {

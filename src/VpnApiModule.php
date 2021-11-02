@@ -29,9 +29,6 @@ use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
 {
-    /** @var \LC\Common\Config */
-    private $config;
-
     /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
@@ -41,9 +38,8 @@ class VpnApiModule implements ServiceModuleInterface
     /** @var \DateTime */
     private $dateTime;
 
-    public function __construct(Config $config, ServerClient $serverClient, DateInterval $sessionExpiry)
+    public function __construct(ServerClient $serverClient, DateInterval $sessionExpiry)
     {
-        $this->config = $config;
         $this->serverClient = $serverClient;
         $this->sessionExpiry = $sessionExpiry;
         $this->dateTime = new DateTime();

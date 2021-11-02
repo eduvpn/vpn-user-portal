@@ -21,7 +21,6 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Response;
 use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
-use LC\Common\Http\SessionInterface;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
 use LC\Common\TplInterface;
@@ -37,9 +36,6 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \LC\Common\HttpClient\ServerClient */
     private $serverClient;
 
-    /** @var \LC\Common\Http\SessionInterface */
-    private $session;
-
     /** @var \LC\Portal\Storage */
     private $storage;
 
@@ -52,12 +48,11 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \DateInterval */
     private $sessionExpiry;
 
-    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, SessionInterface $session, Storage $storage, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
+    public function __construct(Config $config, TplInterface $tpl, ServerClient $serverClient, Storage $storage, ClientDbInterface $clientDb, DateInterval $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
         $this->serverClient = $serverClient;
-        $this->session = $session;
         $this->storage = $storage;
         $this->clientDb = $clientDb;
         $this->sessionExpiry = $sessionExpiry;

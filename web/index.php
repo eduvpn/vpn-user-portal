@@ -316,7 +316,6 @@ try {
         $config,
         $tpl,
         $serverClient,
-        $seSession,
         $storage,
         $clientFetcher,
         $sessionExpiry
