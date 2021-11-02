@@ -242,27 +242,40 @@ return [
             //'vpnProto' => ['wireguard'],
 
             // ** WireGuard & OpenVPN **
+            // The VPN protocol the client will use when the client is not
+            // explicit about which protocol to use. 'defaultProto' only
+            // makes sense when both OpenVPN and WireGuard are enabled under
+            // 'vpnProto'
+            // DEFAULT: openvpn
+            //'defaultProto' => 'openvpn',
+            //'defaultProto' => 'wireguard',
+
+            // ** WireGuard & OpenVPN **
             // The name of the profile as shown in the user and admin portals
             // REQUIRED
             'displayName' => 'Default',
 
             // ** OpenVPN **
-            // The IPv4 range of the network that will be assigned to clients
+            // The IPv4 range of the network that will be assigned to OpenVPN
+            // clients
             // REQUIRED (when vpnProto contains "openvpn")
             'oRangeFour' => '10.42.42.0/24',
 
             // ** OpenVPN **
-            // The IPv6 range of the network that will be assigned to clients
+            // The IPv6 range of the network that will be assigned to OpenVPN
+            // clients
             // REQUIRED (when vpnProto contains "openvpn")
             'oRangeSix' => 'fd42::/64',
 
             // ** WireGuard **
-            // The IPv4 range of the network that will be assigned to clients
+            // The IPv4 range of the network that will be assigned to WireGuard
+            // clients
             // REQUIRED (when vpnProto contains "wireguard")
             'wRangeFour' => '10.43.43.0/24',
 
             // ** WireGuard **
-            // The IPv6 range of the network that will be assigned to clients
+            // The IPv6 range of the network that will be assigned to WireGuard
+            // clients
             // REQUIRED (when vpnProto contains "wireguard")
             'wRangeSix' => 'fd43::/64',
 

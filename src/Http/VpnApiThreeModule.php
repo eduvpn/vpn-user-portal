@@ -51,18 +51,18 @@ class VpnApiThreeModule implements ServiceModuleInterface
                         }
                     }
 
-                    $vpnProtoSupport = [];
+                    $vpnProto = [];
                     if ($profileConfig->oSupport()) {
-                        $vpnProtoSupport[] = 'openvpn';
+                        $vpnProto[] = 'openvpn';
                     }
                     if ($profileConfig->wSupport()) {
-                        $vpnProtoSupport[] = 'wireguard';
+                        $vpnProto[] = 'wireguard';
                     }
 
                     $userProfileList[] = [
                         'profile_id' => $profileConfig->profileId(),
                         'display_name' => $profileConfig->displayName(),
-                        'vpn_proto_support' => $vpnProtoSupport,
+                        'vpn_proto' => $vpnProto,
                         'default_gateway' => $profileConfig->defaultGateway(),
                     ];
                 }
@@ -107,13 +107,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
 
                 if (null === $vpnProto = $request->optionalPostParameter('vpn_proto', fn (string $s) => Validator::vpnProto($s))) {
-                    // if OpenVPN is supported, that is the default (for now)
-                    // XXX make this configurable
-                    if ($profileConfig->oSupport()) {
-                        $vpnProto = 'openvpn';
-                    } else {
-                        $vpnProto = 'wireguard';
-                    }
+                    $vpnProto = $profileConfig->defaultProto();
                 }
 
                 // XXX we can make this independent I think?

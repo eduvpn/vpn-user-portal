@@ -39,6 +39,11 @@ class ProfileConfig
         return \in_array('wireguard', $this->requireStringArray('vpnProto', ['openvpn', 'wireguard']), true);
     }
 
+    public function defaultProto(): string
+    {
+        return $this->requireString('defaultProto', 'openvpn');
+    }
+
     public function nodeCount(): int
     {
         return \count($this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']));
