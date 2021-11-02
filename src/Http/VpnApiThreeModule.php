@@ -163,7 +163,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                     );
                 }
 
-                return new JsonResponse(['error' => sprintf('profile "%s" does not support protocol "%s"', $profileConfig->profileId(), $vpnProto)], [], 400);
+                return new JsonResponse(['error' => 'invalid "vpn_proto"'], [], 400);
             }
         );
 
