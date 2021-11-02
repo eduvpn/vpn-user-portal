@@ -31,7 +31,11 @@
 <?php if (null === $nodeInfo): ?>
             <span class="error" title="<?=$this->e($nodeUrl); ?>"><?=$this->t('Offline'); ?><br><small><?=$this->t('N/A'); ?></small></span>
 <?php else: ?>
-            <span class="success" title="<?=$this->e($nodeUrl); ?>"><?=$this->t('Online'); ?><br><small><?=$this->e(implode(', ', $nodeInfo['load_average'])); ?></small></span>
+            <span class="success" title="<?=$this->e($nodeUrl); ?>"><?=$this->t('Online'); ?><br>
+                <small>
+<?=$this->e(sprintf('%d%%', 100 * $nodeInfo['load_average'][0] / $nodeInfo['cpu_count'])); ?>
+                </small>
+            </span>
 <?php endif; ?>
 <?php endforeach; ?>
                 </td>
