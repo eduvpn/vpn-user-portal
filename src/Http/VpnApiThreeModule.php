@@ -51,18 +51,10 @@ class VpnApiThreeModule implements ServiceModuleInterface
                         }
                     }
 
-                    $vpnProto = [];
-                    if ($profileConfig->oSupport()) {
-                        $vpnProto[] = 'openvpn';
-                    }
-                    if ($profileConfig->wSupport()) {
-                        $vpnProto[] = 'wireguard';
-                    }
-
                     $userProfileList[] = [
                         'profile_id' => $profileConfig->profileId(),
                         'display_name' => $profileConfig->displayName(),
-                        'vpn_proto' => $vpnProto,
+                        'vpn_proto' => $profileConfig->vpnProto(),
                         'default_gateway' => $profileConfig->defaultGateway(),
                     ];
                 }

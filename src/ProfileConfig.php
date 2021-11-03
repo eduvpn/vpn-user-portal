@@ -39,6 +39,14 @@ class ProfileConfig
         return \in_array('wireguard', $this->requireStringArray('vpnProto', ['openvpn', 'wireguard']), true);
     }
 
+    /**
+     * @return array<string>
+     */
+    public function vpnProto(): array
+    {
+        return $this->requireStringArray('vpnProto', ['openvpn', 'wireguard']);
+    }
+
     public function defaultProto(): string
     {
         return $this->requireString('defaultProto', 'openvpn');
