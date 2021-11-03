@@ -54,7 +54,8 @@ class VpnApiThreeModule implements ServiceModuleInterface
                     $userProfileList[] = [
                         'profile_id' => $profileConfig->profileId(),
                         'display_name' => $profileConfig->displayName(),
-                        'vpn_proto' => $profileConfig->vpnProto(),
+                        'vpn_proto_list' => $profileConfig->vpnProtoList(),
+                        'vpn_proto_preferred' => $profileConfig->vpnProtoPreferred(),
                         'default_gateway' => $profileConfig->defaultGateway(),
                     ];
                 }
@@ -99,7 +100,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
 
                 if (null === $vpnProto = $request->optionalPostParameter('vpn_proto', fn (string $s) => Validator::vpnProto($s))) {
-                    $vpnProto = $profileConfig->defaultProto();
+                    $vpnProto = $profileConfig->vpnProtoPreferred();
                 }
 
                 // XXX we can make this independent I think?

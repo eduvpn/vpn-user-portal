@@ -42,14 +42,30 @@ class ProfileConfig
     /**
      * @return array<string>
      */
-    public function vpnProto(): array
+    public function vpnProtoList(): array
     {
-        return $this->requireStringArray('vpnProto', ['openvpn', 'wireguard']);
+        return $this->requireStringArray('vpnProtoList', ['openvpn', 'wireguard']);
     }
 
-    public function defaultProto(): string
+    public function vpnProtoPreferred(): string
     {
-        return $this->requireString('defaultProto', 'openvpn');
+        $vpnProtoList = $this->vpnProtoList();
+        if (null !== $vpnProtoPreferred = $this->optionalString('vpnProtoPreferred')) {
+            if (!\in_array($vpnProtoPreferred, $vpnProtoList, true)) {
+                throw new ConfigException('"vpnProtoPreferred" is not listed under "vpnProtoList"');
+            }
+
+            return $vpnProtoPreferred;
+        }
+
+        // if only one protocol is supported, that is the default
+        if (1 === \count($vpnProtoList)) {
+            return $vpnProtoList[0];
+        }
+
+        // default to OpenVPN (for now) if admin did not set
+        // "vpnProtoPreferred" and we support both protocols
+        return 'openvpn';
     }
 
     public function nodeCount(): int
