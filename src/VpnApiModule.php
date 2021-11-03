@@ -86,7 +86,8 @@ class VpnApiModule implements ServiceModuleInterface
                         'profile_id' => $profileId,
                         'default_gateway' => $profileConfig->defaultGateway(),
                         'display_name' => $profileConfig->displayName(),
-                        'vpn_proto' => ['openvpn'],
+                        'vpn_proto_list' => ['openvpn'],
+                        'vpn_proto_preferred' => 'openvpn',
                     ];
                 }
 
