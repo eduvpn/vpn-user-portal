@@ -102,6 +102,16 @@
             </tr>
 <?php endif; ?>
 
+<?php if (0 !== count($profileConfig->excludeRoutes())): ?>
+            <tr><th><?=$this->t('Excluded Route(s)'); ?></th>
+            <td>
+<?php foreach ($profileConfig->excludeRoutes() as $route): ?>
+                    <span class="plain"><code><?=$this->e($route); ?></code></span>
+<?php endforeach; ?>
+            </td>
+            </tr>
+<?php endif; ?>
+
 <?php if (0 !== count($profileConfig->dns())): ?>
             <tr><th><?=$this->t('DNS Server(s)'); ?></th>
             <td>

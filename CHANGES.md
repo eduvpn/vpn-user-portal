@@ -3,6 +3,7 @@
 ## 2.4.0 (...)
 - include and enable [APIv3](https://github.com/eduvpn/documentation/blob/v2/API_V3.md)
 - update German translation
+- show "excluded routes" on the "Info" page
 
 ## 2.3.14 (2021-08-26)
 - **SECURITY**: implement proper input validation for QR code generation 
