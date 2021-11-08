@@ -51,7 +51,7 @@ try {
         new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'))
     );
 
-    $ca = new VpnCa($baseDir.'/data/ca');
+    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
 
     $oauthServer->setAccessTokenExpiry($config->apiConfig()->tokenExpiry());
     $oauthServer->setRefreshTokenExpiry(

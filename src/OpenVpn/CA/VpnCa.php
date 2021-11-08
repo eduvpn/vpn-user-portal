@@ -24,14 +24,15 @@ use RuntimeException;
 
 class VpnCa implements CaInterface
 {
-    private const VPN_CA_PATH = '/usr/bin/vpn-ca';
     protected DateTimeImmutable $dateTime;
     protected RandomInterface $random;
     private string $caDir;
+    private string $vpnCaPath;
 
-    public function __construct(string $caDir)
+    public function __construct(string $caDir, string $vpnCaPath)
     {
         $this->caDir = $caDir;
+        $this->vpnCaPath = $vpnCaPath;
         $this->dateTime = Dt::get();
         $this->random = new Random();
     }
@@ -125,7 +126,7 @@ class VpnCa implements CaInterface
 
     private function execVpnCa(string $cmdArgs): void
     {
-        self::exec(sprintf('CA_DIR=%s CA_KEY_TYPE=EdDSA %s %s', $this->caDir, self::VPN_CA_PATH, $cmdArgs));
+        self::exec(sprintf('CA_DIR=%s CA_KEY_TYPE=EdDSA %s %s', $this->caDir, $this->vpnCaPath, $cmdArgs));
     }
 
     private static function exec(string $execCmd): void

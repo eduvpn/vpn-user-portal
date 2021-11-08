@@ -48,7 +48,7 @@ try {
     $storage->update();
 
     $oauthStorage = new OAuthStorage($db, 'oauth_');
-    $ca = new VpnCa($baseDir.'/data/ca');
+    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
 
     $bearerValidator = new BearerValidator(
         $oauthStorage,
