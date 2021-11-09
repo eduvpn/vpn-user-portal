@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.4.0 (...)
+## 2.4.0 (2021-11-09)
 - include and enable [APIv3](https://github.com/eduvpn/documentation/blob/v2/API_V3.md)
 - update German translation
 - show "excluded routes" on the "Info" page
