@@ -31,12 +31,12 @@ class ProfileConfig
 
     public function oSupport(): bool
     {
-        return \in_array('openvpn', $this->requireStringArray('vpnProto', ['openvpn', 'wireguard']), true);
+        return \in_array('openvpn', $this->requireStringArray('vpnProtoList', ['openvpn', 'wireguard']), true);
     }
 
     public function wSupport(): bool
     {
-        return \in_array('wireguard', $this->requireStringArray('vpnProto', ['openvpn', 'wireguard']), true);
+        return \in_array('wireguard', $this->requireStringArray('vpnProtoList', ['openvpn', 'wireguard']), true);
     }
 
     /**
