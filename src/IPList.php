@@ -46,6 +46,10 @@ class IPList
     public function remove(IP $i): void
     {
         foreach ($this->ipList as $k => $ip) {
+            if ($ip->family() !== $i->family()) {
+                continue;
+            }
+
             if ($i->equals($ip)) {
                 unset($this->ipList[$k]);
 

@@ -13,6 +13,8 @@ namespace LC\Portal\WireGuard;
 
 use LC\Portal\Base64;
 use LC\Portal\ClientConfigInterface;
+use LC\Portal\IP;
+use LC\Portal\IPList;
 use LC\Portal\ProfileConfig;
 use LC\Portal\QrCode;
 
@@ -47,12 +49,19 @@ class ClientConfig implements ClientConfigInterface
 
     public function get(): string
     {
-        $routeList = [];
+        $routeList = new IPList();
         if ($this->profileConfig->defaultGateway()) {
-            $routeList[] = '0.0.0.0/0';
-            $routeList[] = '::/0';
+            $routeList->add(IP::fromIpPrefix('0.0.0.0/0'));
+            $routeList->add(IP::fromIpPrefix('::/0'));
         }
-        $routeList = array_merge($routeList, $this->profileConfig->routeList());
+        // add the (additional) prefixes we want
+        foreach ($this->profileConfig->routeList() as $routeIpPrefix) {
+            $routeList->add(IP::fromIpPrefix($routeIpPrefix));
+        }
+        // remove the prefixes we don't want
+        foreach ($this->profileConfig->excludeRouteList() as $routeIpPrefix) {
+            $routeList->remove(IP::fromIpPrefix($routeIpPrefix));
+        }
 
         $output = [];
         $output[] = '[Interface]';
@@ -66,7 +75,7 @@ class ClientConfig implements ClientConfigInterface
         $output[] = '';
         $output[] = '[Peer]';
         $output[] = 'PublicKey = '.$this->serverPublicKey;
-        $output[] = 'AllowedIPs = '.implode(', ', $routeList);
+        $output[] = 'AllowedIPs = '.implode(', ', $routeList->ls());
         $output[] = 'Endpoint = '.$this->profileConfig->hostName($this->nodeNumber).':'.(string) $this->wgPort;
 
         return implode(PHP_EOL, $output);
