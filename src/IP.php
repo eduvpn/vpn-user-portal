@@ -216,6 +216,11 @@ class IP
         return $hostIpList;
     }
 
+    public function equals(self $i): bool
+    {
+        return $this->address() === $i->address() && $this->prefix() === $i->prefix();
+    }
+
     public function contains(self $i): bool
     {
         // the first address of the range
