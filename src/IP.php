@@ -159,6 +159,26 @@ class IP
     /**
      * @return array<IP>
      */
+    public function splitInHalf(): array
+    {
+        // Used by IPList
+        // XXX can only split networks bigger than /31 and /127
+        $prefixBits = $this->ipPrefix + 1;
+        $netIp = $this->network();
+        $splitRanges = [];
+        // XXX cleanup the for loop?
+        for ($i = 0; $i < 2; ++$i) {
+            $noOfHosts = gmp_pow(2, $this->addressBits() - $prefixBits);
+            $netAddress = gmp_add(gmp_mul($i, $noOfHosts), self::fromAddress($netIp->address()));
+            $splitRanges[] = new self($netAddress, $prefixBits, $this->ipFamily);
+        }
+
+        return $splitRanges;
+    }
+
+    /**
+     * @return array<IP>
+     */
     public function split(int $networkCount): array
     {
         // XXX introduce "maxPrefix" parameter?
