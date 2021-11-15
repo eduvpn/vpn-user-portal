@@ -285,4 +285,27 @@ final class IPTest extends TestCase
             $hostIpList
         );
     }
+
+    public function testContainsTrue(): void
+    {
+        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.5/32')));
+        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.0/24')));
+        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.0/25')));
+        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.0/24')));
+        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.128/25')));
+        static::assertTrue(IP::fromIpPrefix('192.168.5.5/32')->contains(IP::fromIpPrefix('192.168.5.5/32')));
+        static::assertTrue(IP::fromIpPrefix('0.0.0.0/0')->contains(IP::fromIpPrefix('192.168.5.5/32')));
+        static::assertTrue(IP::fromIpPrefix('192.168.0.0/16')->contains(IP::fromIpPrefix('192.168.5.0/24')));
+        static::assertTrue(IP::fromIpPrefix('::/0')->contains(IP::fromIpPrefix('fd42::/64')));
+        static::assertTrue(IP::fromIpPrefix('fd42::/64')->contains(IP::fromIpPrefix('fd42::/64')));
+        static::assertTrue(IP::fromIpPrefix('fd42::/32')->contains(IP::fromIpPrefix('fd42::/64')));
+    }
+
+    public function testContainsFalse(): void
+    {
+        static::assertFalse(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.6.5/32')));
+        static::assertFalse(IP::fromIpPrefix('192.168.5.5/32')->contains(IP::fromIpPrefix('192.168.5.0/24')));
+        static::assertFalse(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.4.0/22')));
+        static::assertFalse(IP::fromIpPrefix('fd42::/64')->contains(IP::fromIpPrefix('fd43::/64')));
+    }
 }

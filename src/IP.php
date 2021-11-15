@@ -137,6 +137,20 @@ class IP
         );
     }
 
+    public function lastHost(): string
+    {
+        return self::toAddress(
+            gmp_add(
+                self::fromAddress($this->network()->address()),
+                gmp_sub(
+                    gmp_pow(2, $this->addressBits() - $this->prefix()),
+                    1
+                )
+            ),
+            $this->addressBits()
+        );
+    }
+
     public function firstHostPrefix(): string
     {
         return $this->firstHost().'/'.$this->prefix();
@@ -200,6 +214,19 @@ class IP
         }
 
         return $hostIpList;
+    }
+
+    public function contains(self $i): bool
+    {
+        // the first address of the range
+        $lowerAddress = self::fromAddress($this->network()->address());
+        // the last address of the range
+        $upperAddress = self::fromAddress($this->network()->lastHost());
+
+        $lowerCompare = gmp_cmp(self::fromAddress($i->network()->address()), $lowerAddress);
+        $upperCompare = gmp_cmp(self::fromAddress($i->network()->lastHost()), $upperAddress);
+
+        return $lowerCompare >= 0 && $upperCompare <= 0;
     }
 
     public function prefix(): int
