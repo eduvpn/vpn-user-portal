@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\OpenVpn;
 
 use LC\Portal\IP;
+use LC\Portal\IPList;
 use LC\Portal\OpenVpn\CA\CaInterface;
 use LC\Portal\OpenVpn\CA\CertInfo;
 use LC\Portal\ProfileConfig;
@@ -218,43 +219,34 @@ class ServerConfig
      */
     private static function getRoutes(ProfileConfig $profileConfig): array
     {
+        $routeList = new IPList();
         $routeConfig = [];
         if ($profileConfig->defaultGateway()) {
+            $routeList->add(IP::fromIpPrefix('0.0.0.0/0'));
+            $routeList->add(IP::fromIpPrefix('::/0'));
+
+            // XXX can the stuff below be removed? we prefer simple route pushes
             $redirectFlags = ['def1', 'ipv6'];
             if ($profileConfig->blockLan()) {
                 $redirectFlags[] = 'block-local';
             }
-
             $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
-            // XXX try again without 0/0... the horror!
-            //$routeConfig[] = 'push "route 0.0.0.0 0.0.0.0"';
         }
-
-        $routeList = $profileConfig->routeList();
-        if (0 !== \count($routeList)) {
-            foreach ($routeList as $route) {
-                $routeIp = IP::fromIpPrefix($route);
-                if (IP::IP_6 === $routeIp->family()) {
-                    // IPv6
-                    $routeConfig[] = sprintf('push "route-ipv6 %s"', (string) $routeIp);
-                } else {
-                    // IPv4
-                    $routeConfig[] = sprintf('push "route %s %s"', $routeIp->address(), $routeIp->netmask());
-                }
-            }
+        // add the (additional) prefixes we want
+        foreach ($profileConfig->routeList() as $routeIpPrefix) {
+            $routeList->add(IP::fromIpPrefix($routeIpPrefix));
         }
-
-        $excludeRouteList = $profileConfig->excludeRouteList();
-        if (0 !== \count($excludeRouteList)) {
-            foreach ($excludeRouteList as $excludeRoute) {
-                $routeIp = IP::fromIpPrefix($excludeRoute);
-                if (IP::IP_6 === $routeIp->family()) {
-                    // IPv6
-                    $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway_ipv6"', (string) $routeIp);
-                } else {
-                    // IPv4
-                    $routeConfig[] = sprintf('push "route %s %s net_gateway"', $routeIp->address(), $routeIp->netmask());
-                }
+        // remove the prefixes we don't want
+        foreach ($profileConfig->excludeRouteList() as $routeIpPrefix) {
+            $routeList->remove(IP::fromIpPrefix($routeIpPrefix));
+        }
+        foreach ($routeList->ls() as $routeIpPrefix) {
+            if (IP::IP_6 === $routeIpPrefix->family()) {
+                // IPv6
+                $routeConfig[] = sprintf('push "route-ipv6 %s"', (string) $routeIpPrefix);
+            } else {
+                // IPv4
+                $routeConfig[] = sprintf('push "route %s %s"', $routeIpPrefix->address(), $routeIpPrefix->netmask());
             }
         }
 
