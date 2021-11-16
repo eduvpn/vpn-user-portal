@@ -243,6 +243,10 @@ class IP
 
     public function contains(self $i): bool
     {
+        if ($this->family() !== $i->family()) {
+            return false;
+        }
+
         // the first address of the range
         $lowerAddress = self::fromAddress($this->network()->address());
         // the last address of the range

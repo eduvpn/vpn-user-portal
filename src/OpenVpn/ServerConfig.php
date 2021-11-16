@@ -225,12 +225,12 @@ class ServerConfig
             $routeList->add(IP::fromIpPrefix('0.0.0.0/0'));
             $routeList->add(IP::fromIpPrefix('::/0'));
 
-            // XXX can the stuff below be removed? we prefer simple route pushes
-            $redirectFlags = ['def1', 'ipv6'];
-            if ($profileConfig->blockLan()) {
-                $redirectFlags[] = 'block-local';
-            }
-            $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
+//            // XXX can the stuff below be removed? we prefer simple route pushes
+//            $redirectFlags = ['def1', 'ipv6'];
+//            if ($profileConfig->blockLan()) {
+//                $redirectFlags[] = 'block-local';
+//            }
+//            $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
         }
         // add the (additional) prefixes we want
         foreach ($profileConfig->routeList() as $routeIpPrefix) {
