@@ -17,6 +17,9 @@ class QrCode
 
     public static function generate(string $qrText): string
     {
+        // XXX throw an exception when it is not possible to generate the QR
+        // code because of too much data for example and handle it properly
+        // in the portal...
         ob_start();
         passthru(
             sprintf(
