@@ -29,14 +29,29 @@ class IPList
         return '['.implode(' ', $this->ipList).']';
     }
 
-    public function add(IP $ip): void
+    public function add(IP $i): void
     {
-        // XXX check for duplicate
-        // XXX check whether this range is already part of any of the existing
-        // ones, then ignore it
-        // XXX check whether any of the existing ones falls in this range and
-        // replace it
-        $this->ipList[] = $ip;
+        // check whether any of the existing prefixes already contain the
+        // prefix to be added...
+        foreach ($this->ipList as $ip) {
+            if ($ip->equals($i)) {
+                return;
+            }
+            if ($ip->contains($i)) {
+                return;
+            }
+        }
+
+        // check whether any of the existing prefixes belong to the prefix to
+        // be added, then remove those
+        foreach ($this->ipList as $k => $ip) {
+            if ($i->contains($ip)) {
+                unset($this->ipList[$k]);
+            }
+        }
+        $this->ipList[] = $i;
+
+        sort($this->ipList);
     }
 
     /**
@@ -59,10 +74,11 @@ class IPList
             if ($ip->contains($i)) {
                 unset($this->ipList[$k]);
                 $this->ipList = array_merge($this->ipList, $ip->splitInHalf());
-                sort($this->ipList);
                 $this->remove($i);
             }
         }
+
+        sort($this->ipList);
     }
 
     /**

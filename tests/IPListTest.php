@@ -44,4 +44,47 @@ final class IPListTest extends TestCase
             (string) $ipList
         );
     }
+
+    public function testAdd(): void
+    {
+        $ipList = new IPList();
+        $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
+        static::assertSame(
+            '[192.168.5.0/24]',
+            (string) $ipList
+        );
+    }
+
+    public function testAddExisting(): void
+    {
+        $ipList = new IPList();
+        $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
+        $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
+        static::assertSame(
+            '[192.168.5.0/24]',
+            (string) $ipList
+        );
+    }
+
+    public function testAddSubPrefixOfExisting(): void
+    {
+        $ipList = new IPList();
+        $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
+        $ipList->add(IP::fromIpPrefix('192.168.5.0/25'));
+        static::assertSame(
+            '[192.168.5.0/24]',
+            (string) $ipList
+        );
+    }
+
+    public function testAddSuperPrefixOfExisting(): void
+    {
+        $ipList = new IPList();
+        $ipList->add(IP::fromIpPrefix('192.168.5.0/25'));
+        $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
+        static::assertSame(
+            '[192.168.5.0/24]',
+            (string) $ipList
+        );
+    }
 }
