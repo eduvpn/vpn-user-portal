@@ -56,7 +56,7 @@ class IPList
 
     /**
      * Remove the specified prefix from the current IP list. Rewrites the
-     * existing ranges to statisfy the removal.
+     * existing ranges to satisfy the removal.
      */
     public function remove(IP $i): void
     {
