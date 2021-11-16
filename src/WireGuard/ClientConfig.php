@@ -68,14 +68,14 @@ class ClientConfig implements ClientConfigInterface
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
-        $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->wRangeFour($this->nodeNumber)->prefix().', '.$this->ipSix.'/'.$this->profileConfig->wRangeSix($this->nodeNumber)->prefix();
+        $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->wRangeFour($this->nodeNumber)->prefix().','.$this->ipSix.'/'.$this->profileConfig->wRangeSix($this->nodeNumber)->prefix();
         if (0 !== \count($this->profileConfig->dnsServerList())) {
-            $output[] = 'DNS = '.implode(', ', $this->dns());
+            $output[] = 'DNS = '.implode(',', $this->dns());
         }
         $output[] = '';
         $output[] = '[Peer]';
         $output[] = 'PublicKey = '.$this->serverPublicKey;
-        $output[] = 'AllowedIPs = '.implode(', ', $routeList->ls());
+        $output[] = 'AllowedIPs = '.implode(',', $routeList->ls());
         $output[] = 'Endpoint = '.$this->profileConfig->hostName($this->nodeNumber).':'.(string) $this->wgPort;
 
         return implode(PHP_EOL, $output);
