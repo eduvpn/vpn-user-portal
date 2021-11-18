@@ -117,6 +117,7 @@ try {
     $authModuleCfg = $config->authModule();
 
     $templateDefaults = [
+        'portalHostname' => gethostname(),
         'enableConfigDownload' => $config->enableConfigDownload(),
         'requestUri' => $request->getUri(),
         'requestRoot' => $request->getRoot(),

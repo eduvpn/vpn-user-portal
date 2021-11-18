@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?=$this->t('VPN Portal'); ?> - <?=$this->e($pageTitle); ?></title>
     <link href="<?=$this->getAssetUrl($requestRoot, 'css/screen.css'); ?>" media="screen" rel="stylesheet">
+    <!-- h: <?=$this->e($portalHostname); ?> -->
 </head>
 <body>
     <header class="page">
