@@ -220,27 +220,25 @@ class ConnectionManager
 
     public function disconnect(string $userId, string $profileId, string $connectionId): void
     {
-        // XXX how do we figure out the nodeNumber? We may need to store this
-        // somehwere, or loop over all nodeUrls...
-        // XXX this MUST be changed to diconnect from the proper node!
-        $nodeNumber = 0;
-
         if (!$this->config->hasProfile($profileId)) {
             // profile does not exist (anymore)
             return;
         }
         $profileConfig = $this->config->profileConfig($profileId);
 
-        // XXX we need to figure out whether the user was connected with OpenVPN or WireGuard before choosing the correct disconnect method here!
-        // now it will try both willy nilly
-        if ($profileConfig->oSupport()) {
-            $this->storage->oCertDelete($userId, $connectionId);
-            $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
-        }
+        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+            // XXX figure out whether the connection is OpenVPN or WireGuard
+            // instead of trying both... it doesn't hurt, but could be more
+            // efficient...
+            if ($profileConfig->oSupport()) {
+                $this->storage->oCertDelete($userId, $connectionId);
+                $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($i), $connectionId);
+            }
 
-        if ($profileConfig->wSupport()) {
-            $this->storage->wPeerRemove($userId, $connectionId);
-            $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId);
+            if ($profileConfig->wSupport()) {
+                $this->storage->wPeerRemove($userId, $connectionId);
+                $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($i), $connectionId);
+            }
         }
     }
 
