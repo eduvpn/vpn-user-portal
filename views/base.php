@@ -3,6 +3,7 @@
 <?php /** @var string $uiLanguage */ ?>
 <?php /** @var string $pageTitle */ ?>
 <?php /** @var string $requestRoot */ ?>
+<?php /** @var string $portalHostname */ ?>
 <!DOCTYPE html>
 
 <html lang="<?=$this->e($uiLanguage); ?>" dir="<?=$this->textDir(); ?>">
