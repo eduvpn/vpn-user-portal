@@ -34,7 +34,8 @@
                     <summary><?=$this->t('Advanced'); ?></summary>
                     <fieldset>
                         <label for="vpnProto"><?=$this->t('Use Protocol'); ?></label>
-                        <select name="vpnProto" id="vpnProto" required>
+                        <select name="vpnProto" id="vpnProto">
+                            <option value="default" selected><?=$this->t('Default'); ?></option>
                             <option value="openvpn"><?=$this->t('OpenVPN'); ?></option>
                             <option value="wireguard"><?=$this->t('WireGuard'); ?></option>
                         </select>

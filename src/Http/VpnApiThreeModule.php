@@ -99,7 +99,8 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
 
-                if (null === $vpnProto = $request->optionalPostParameter('vpn_proto', fn (string $s) => Validator::vpnProto($s))) {
+                $vpnProto = $request->optionalPostParameter('vpn_proto', fn (string $s) => Validator::vpnProto($s));
+                if (null === $vpnProto || 'default' === $vpnProto) {
                     $vpnProto = $profileConfig->preferredProto();
                 }
 

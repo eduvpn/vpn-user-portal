@@ -102,7 +102,6 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('only '.$this->config->maxNumberOfActivePortalConfigurations().' active portal VPN configurations at a time allowed', 403);
                 }
 
-                $vpnProto = $request->requirePostParameter('vpnProto', fn (string $s) => Validator::vpnProto($s));
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));
                 $tcpOnly = 'on' === $request->optionalPostParameter('tcpOnly', fn (string $s) => Validator::onOrOff($s));
                 $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));
@@ -119,6 +118,9 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $profileConfig = $this->config->profileConfig($profileId);
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
+                if ('default' === $vpnProto = $request->requirePostParameter('vpnProto', fn (string $s) => Validator::vpnProto($s))) {
+                    $vpnProto = $profileConfig->preferredProto();
+                }
 
                 if ('openvpn' === $vpnProto && $profileConfig->oSupport()) {
                     return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt, $tcpOnly);
