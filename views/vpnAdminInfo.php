@@ -118,6 +118,17 @@
                 </td>
             </tr>
 
+<?php if ($profileConfig->oSupport() && $profileConfig->wSupport()) : ?>
+            <tr><th><?=$this->t('Preferred Protocol'); ?></th><td>
+<?php if ('openvpn' === $profileConfig->vpnProtoPreferred()): ?>
+                <span class="plain"><?=$this->t('OpenVPN'); ?></span>
+<?php endif; ?>
+<?php if ('wireguard' === $profileConfig->vpnProtoPreferred()): ?>
+        <span class="plain"><?=$this->t('WireGuard'); ?></span>
+<?php endif; ?>
+            </td></tr>
+<?php endif; ?>
+
             <tr><th><?=$this->t('Hostname'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
             <span class="plain"><code><?=$this->e($profileConfig->hostName($i)); ?></code></span>
