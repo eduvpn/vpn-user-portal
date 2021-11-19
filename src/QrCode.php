@@ -11,23 +11,29 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
+use LC\Portal\Exception\QrCodeException;
+
 class QrCode
 {
     private const QR_ENCODE_PATH = '/usr/bin/qrencode';
 
     public static function generate(string $qrText): string
     {
-        // XXX throw an exception when it is not possible to generate the QR
-        // code because of too much data for example and handle it properly
-        // in the portal...
         ob_start();
         passthru(
             sprintf(
                 '%s -m 0 -s 5 -t PNG -o - -- %s',
                 self::QR_ENCODE_PATH,
                 escapeshellarg($qrText)
-            )
+            ),
+            $resultCode
         );
+
+        if (0 !== $resultCode) {
+            ob_end_clean();
+
+            throw new QrCodeException('unable to generate QR code');
+        }
 
         return ob_get_clean();
     }

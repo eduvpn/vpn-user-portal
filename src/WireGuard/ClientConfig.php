@@ -13,6 +13,7 @@ namespace LC\Portal\WireGuard;
 
 use LC\Portal\Base64;
 use LC\Portal\ClientConfigInterface;
+use LC\Portal\Exception\QrCodeException;
 use LC\Portal\IP;
 use LC\Portal\IPList;
 use LC\Portal\ProfileConfig;
@@ -81,9 +82,13 @@ class ClientConfig implements ClientConfigInterface
         return implode(PHP_EOL, $output);
     }
 
-    public function getQr(): string
+    public function getQr(): ?string
     {
-        return Base64::encode(QrCode::generate($this->get()));
+        try {
+            return Base64::encode(QrCode::generate($this->get()));
+        } catch (QrCodeException $e) {
+            return null;
+        }
     }
 
     /**
