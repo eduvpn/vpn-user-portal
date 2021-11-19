@@ -5,7 +5,7 @@
 <?php /** @var \DateTimeImmutable $now */?>
 <?php /** @var bool $showResults */?>
 <?php /** @var string $requestRoot */?>
-<?php /** @var array<array{user_id:string,profile_id:string,common_name:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable,client_lost:bool}> $logEntries */?>
+<?php /** @var array<array{user_id:string,profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable}> $logEntries */?>
 <?php $this->layout('base', ['activeItem' => 'log', 'pageTitle' => $this->t('Log')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Search'); ?></h2>
@@ -47,10 +47,6 @@
                         <td><a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($logEntry['user_id'], 'rawurlencode'); ?>"><?=$this->e($logEntry['user_id']); ?></a></td>
                     </tr>
                     <tr>
-                        <th><?=$this->t('Name'); ?></th>
-                        <td><?=$this->e($logEntry['common_name']); ?></td>
-                    </tr>
-                    <tr>
                         <th><?=$this->t('IPs'); ?></th>
                         <td><ul><li><?=$this->e($logEntry['ip_four']); ?></li><li><?=$this->e($logEntry['ip_six']); ?></li></ul></td>
                     </tr>
@@ -65,16 +61,6 @@
                                 <?=$this->d($logEntry['disconnected_at']); ?>
                             <?php else: ?>
                                 <em><?=$this->t('N/A'); ?></em>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><?=$this->t('Client Lost'); ?></th>
-                        <td>
-                            <?php if ($logEntry['client_lost']): ?>
-                                <span class="plain"><?=$this->t('Yes'); ?></span>
-                            <?php else: ?>
-                                <span class="plain"><?=$this->t('No'); ?></span>
                             <?php endif; ?>
                         </td>
                     </tr>
