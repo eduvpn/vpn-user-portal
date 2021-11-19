@@ -765,7 +765,7 @@ class Storage
                     AND
                         connected_at <= :date_time
                     AND
-                        disconnected_at >= :date_time
+                        (disconnected_at IS NULL OR disconnected_at >= :date_time)
                 SQL
         );
 
