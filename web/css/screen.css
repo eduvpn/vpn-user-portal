@@ -88,7 +88,7 @@ button, input, textarea, select {
 
 pre, code {
   font-size: inherit;
-  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 button, summary {
