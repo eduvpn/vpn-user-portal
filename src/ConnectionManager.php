@@ -203,6 +203,7 @@ class ConnectionManager
             // the DB enforces this, but maybe a better error could be given?
             $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
             $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
+            $this->storage->clientConnect($userId, $profileId, $publicKey, $ipFour, $ipSix, new DateTimeImmutable());
 
             return new WireGuardClientConfig(
                 $nodeNumber,
@@ -230,6 +231,7 @@ class ConnectionManager
             // XXX figure out whether the connection is OpenVPN or WireGuard
             // instead of trying both... it doesn't hurt, but could be more
             // efficient...
+            // XXX storage->clientDisconnect should only be called for wireguard, and only once, not for every node!
             if ($profileConfig->oSupport()) {
                 $this->storage->oCertDelete($userId, $connectionId);
                 $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($i), $connectionId);
@@ -238,6 +240,7 @@ class ConnectionManager
             if ($profileConfig->wSupport()) {
                 $this->storage->wPeerRemove($userId, $connectionId);
                 $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($i), $connectionId);
+                $this->storage->clientDisconnect($userId, $profileId, $connectionId, new DateTimeImmutable());
             }
         }
     }

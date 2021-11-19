@@ -19,7 +19,7 @@ class Storage
     public const INCLUDE_EXPIRED = 10;
     public const EXCLUDE_EXPIRED = 11;
 
-    public const CURRENT_SCHEMA_VERSION = '2021071401';
+    public const CURRENT_SCHEMA_VERSION = '2021111901';
 
     private PDO $db;
 
@@ -643,7 +643,7 @@ class Storage
         return (bool) $stmt->fetchColumn(0);
     }
 
-    public function clientConnect(string $userId, string $profileId, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
+    public function clientConnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -651,6 +651,7 @@ class Storage
                         (
                             user_id,
                             profile_id,
+                            connection_id,
                             ip_four,
                             ip_six,
                             connected_at
@@ -659,6 +660,7 @@ class Storage
                         (
                             :user_id,
                             :profile_id,
+                            :connection_id,
                             :ip_four,
                             :ip_six,
                             :connected_at
@@ -668,13 +670,14 @@ class Storage
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
         $stmt->bindValue(':connected_at', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
-    public function clientDisconnect(string $userId, string $profileId, string $ipFour, string $ipSix, DateTimeImmutable $disconnectedAt): void
+    public function clientDisconnect(string $userId, string $profileId, string $connectionId, DateTimeImmutable $disconnectedAt): void
     {
         // XXX make sure the entry with disconnect_at IS NULL exists, otherwise scream
         $stmt = $this->db->prepare(
@@ -688,9 +691,7 @@ class Storage
                     AND
                         profile_id = :profile_id
                     AND
-                        ip_four = :ip_four
-                    AND
-                        ip_six = :ip_six
+                        connection_id = :connection_id
                     AND
                         disconnected_at IS NULL
                 SQL
@@ -698,8 +699,7 @@ class Storage
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
-        $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
+        $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->bindValue(':disconnected_at', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
