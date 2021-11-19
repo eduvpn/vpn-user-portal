@@ -31,36 +31,36 @@ class ProfileConfig
 
     public function oSupport(): bool
     {
-        return \in_array('openvpn', $this->requireStringArray('vpnProtoList', ['openvpn', 'wireguard']), true);
+        return \in_array('openvpn', $this->protoList(), true);
     }
 
     public function wSupport(): bool
     {
-        return \in_array('wireguard', $this->requireStringArray('vpnProtoList', ['openvpn', 'wireguard']), true);
+        return \in_array('wireguard', $this->protoList(), true);
     }
 
     /**
      * @return array<string>
      */
-    public function vpnProtoList(): array
+    public function protoList(): array
     {
-        return $this->requireStringArray('vpnProtoList', ['openvpn', 'wireguard']);
+        return $this->requireStringArray('protoList', ['openvpn', 'wireguard']);
     }
 
-    public function vpnProtoPreferred(): string
+    public function preferredProto(): string
     {
-        $vpnProtoList = $this->vpnProtoList();
-        if (null !== $vpnProtoPreferred = $this->optionalString('vpnProtoPreferred')) {
-            if (!\in_array($vpnProtoPreferred, $vpnProtoList, true)) {
-                throw new ConfigException('"vpnProtoPreferred" is not listed under "vpnProtoList"');
+        $protoList = $this->protoList();
+        if (null !== $preferredProto = $this->optionalString('preferredProto')) {
+            if (!\in_array($preferredProto, $protoList, true)) {
+                throw new ConfigException('"preferredProto" is not listed under "protoList"');
             }
 
-            return $vpnProtoPreferred;
+            return $preferredProto;
         }
 
         // if only one protocol is supported, that is the default
-        if (1 === \count($vpnProtoList)) {
-            return $vpnProtoList[0];
+        if (1 === \count($protoList)) {
+            return $protoList[0];
         }
 
         // default to OpenVPN (for now) if admin did not set
@@ -157,6 +157,9 @@ class ProfileConfig
         return $this->requireStringArray('dnsServerList', []);
     }
 
+    /**
+     * OpenVPN only.
+     */
     public function clientToClient(): bool
     {
         return $this->requireBool('clientToClient', false);

@@ -120,10 +120,10 @@
 
 <?php if ($profileConfig->oSupport() && $profileConfig->wSupport()) : ?>
             <tr><th><?=$this->t('Preferred Protocol'); ?></th><td>
-<?php if ('openvpn' === $profileConfig->vpnProtoPreferred()): ?>
+<?php if ('openvpn' === $profileConfig->preferredProto()): ?>
                 <span class="plain"><?=$this->t('OpenVPN'); ?></span>
 <?php endif; ?>
-<?php if ('wireguard' === $profileConfig->vpnProtoPreferred()): ?>
+<?php if ('wireguard' === $profileConfig->preferredProto()): ?>
         <span class="plain"><?=$this->t('WireGuard'); ?></span>
 <?php endif; ?>
             </td></tr>
