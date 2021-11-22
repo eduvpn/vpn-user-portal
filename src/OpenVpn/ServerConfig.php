@@ -222,23 +222,21 @@ class ServerConfig
         $routeConfig = [];
         $routeList = new IPList();
         if ($profileConfig->defaultGateway()) {
-            $routeList->add(IP::fromIpPrefix('0.0.0.0/1'));
-            $routeList->add(IP::fromIpPrefix('128.0.0.0/1'));
-            $routeList->add(IP::fromIpPrefix('::/1'));
-            $routeList->add(IP::fromIpPrefix('8000::/1'));
-//            $redirectFlags = ['def1', 'ipv6'];
-//            if ($profileConfig->blockLan()) {
-//                $redirectFlags[] = 'block-local';
-//            }
-//            $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
+            // send all IPv4 and IPv6 traffic over the VPN tunnel
+            $redirectFlags = ['def1', 'ipv6'];
+            if ($profileConfig->blockLan()) {
+                // Block  access to local LAN
+                $redirectFlags[] = 'block-local';
+            }
+            $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
+            // quirk needed for Windows otherwise Windows thinks there is no
+            // Internet connectivity
+            $routeList->add(IP::fromIpPrefix('0.0.0.0/0'));
         }
-        // add the (additional) prefixes we want
+
+        // (additional) prefixes to send over the VPN
         foreach ($profileConfig->routeList() as $routeIpPrefix) {
             $routeList->add(IP::fromIpPrefix($routeIpPrefix));
-        }
-        // remove the prefixes we don't want
-        foreach ($profileConfig->excludeRouteList() as $routeIpPrefix) {
-            $routeList->remove(IP::fromIpPrefix($routeIpPrefix));
         }
         foreach ($routeList->ls() as $routeIpPrefix) {
             if (IP::IP_6 === $routeIpPrefix->family()) {
@@ -247,6 +245,21 @@ class ServerConfig
             } else {
                 // IPv4
                 $routeConfig[] = sprintf('push "route %s %s"', $routeIpPrefix->address(), $routeIpPrefix->netmask());
+            }
+        }
+
+        // prefixes NOT to send over the VPN
+        $excludeRouteList = new IPList();
+        foreach ($profileConfig->excludeRouteList() as $routeIpPrefix) {
+            $excludeRouteList->add(IP::fromIpPrefix($routeIpPrefix));
+        }
+        foreach ($excludeRouteList->ls() as $routeIpPrefix) {
+            if (IP::IP_6 === $routeIpPrefix->family()) {
+                // IPv6
+                $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway_ipv6"', (string) $routeIpPrefix);
+            } else {
+                // IPv4
+                $routeConfig[] = sprintf('push "route %s %s" net_gateway', $routeIpPrefix->address(), $routeIpPrefix->netmask());
             }
         }
 
