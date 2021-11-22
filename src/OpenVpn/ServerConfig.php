@@ -219,13 +219,13 @@ class ServerConfig
      */
     private static function getRoutes(ProfileConfig $profileConfig): array
     {
-        $routeList = new IPList();
         $routeConfig = [];
+        $routeList = new IPList();
         if ($profileConfig->defaultGateway()) {
-            $routeList->add(IP::fromIpPrefix('0.0.0.0/0'));
-            $routeList->add(IP::fromIpPrefix('::/0'));
-
-//            // XXX can the stuff below be removed? we prefer simple route pushes
+            $routeList->add(IP::fromIpPrefix('0.0.0.0/1'));
+            $routeList->add(IP::fromIpPrefix('128.0.0.0/1'));
+            $routeList->add(IP::fromIpPrefix('::/1'));
+            $routeList->add(IP::fromIpPrefix('8000::/1'));
 //            $redirectFlags = ['def1', 'ipv6'];
 //            if ($profileConfig->blockLan()) {
 //                $redirectFlags[] = 'block-local';
