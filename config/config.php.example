@@ -313,8 +313,8 @@ return [
 
             // ** WireGuard & OpenVPN **
             // The base URL to connect to the VPN node
-            // DEFAULT = 'http://127.0.0.1:41194'
-            //'nodeUrl' => 'http://127.0.0.1:41194',
+            // DEFAULT = 'http://localhost:41194'
+            //'nodeUrl' => 'http://localhost:41194',
 
             // ** OpenVPN Only **
             // Block access to local LAN when VPN is active
@@ -332,14 +332,8 @@ return [
             //'enableLog' => false,
 
             // ** WireGuard & OpenVPN **
-            // Whether or not to enable ACLs for controlling who can connect
-            // DEFAULT = false
-            //'enableAcl' => false,
-
-            // ** WireGuard & OpenVPN **
-            // The list of permissions to allow access, requires enableAcl to
-            // be true
-            // DEFAULT  = []
+            // The list of permissions to allow access, if NOT set no ACL!
+            // DEFAULT  = null
             //'aclPermissionList' => [],
 
             // ** OpenVPN Only **
