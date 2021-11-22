@@ -112,10 +112,6 @@
 <?php endif; ?>
 <?php endif; ?>
 
-<?php if ($profileConfig->enableAcl()): ?>
-                    <span class="plain"><?=$this->t('ACL'); ?></span>
-<?php endif; ?>
-
 <?php if ($profileConfig->oSupport()): ?>
 <?php if ($profileConfig->blockLan()): ?>
                     <span class="plain"><?=$this->t('Block LAN'); ?></span>
@@ -212,13 +208,17 @@
             </tr>
 <?php endif; ?>
 
-<?php if (0 !== count($profileConfig->aclPermissionList())): ?>
+<?php if (null !== $aclPermissionList = $profileConfig->aclPermissionList()): ?>
             <tr><th><?=$this->t('ACL Permission List'); ?></th>
             <td>
-<?php foreach ($profileConfig->aclPermissionList() as $aclPermission): ?>
+<?php if (0 === count($aclPermissionList)): ?>
+<span class="warning"><?=$this->t('No Permission(s)'); ?></span>
+<?php else: ?>
+<?php foreach ($aclPermissionList as $aclPermission): ?>
                     <span class="plain"><code><?=$this->e($aclPermission); ?></code></span>
 <?php endforeach; ?>
             </td>
+<?php endif; ?>
             </tr>
 <?php endif; ?>
 

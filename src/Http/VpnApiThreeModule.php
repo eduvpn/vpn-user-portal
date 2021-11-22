@@ -44,9 +44,9 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $userPermissions = $this->storage->userPermissionList($accessToken->userId());
                 $userProfileList = [];
                 foreach ($profileConfigList as $profileConfig) {
-                    if ($profileConfig->enableAcl()) {
+                    if (null !== $aclPermissionList = $profileConfig->aclPermissionList()) {
                         // is the user member of the aclPermissionList?
-                        if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
+                        if (!VpnPortalModule::isMember($aclPermissionList, $userPermissions)) {
                             continue;
                         }
                     }
@@ -83,9 +83,9 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $userPermissions = $this->storage->userPermissionList($accessToken->userId());
                 $availableProfiles = [];
                 foreach ($profileConfigList as $profileConfig) {
-                    if ($profileConfig->enableAcl()) {
+                    if (null !== $aclPermissionList = $profileConfig->aclPermissionList()) {
                         // is the user member of the userPermissions?
-                        if (!VpnPortalModule::isMember($profileConfig->aclPermissionList(), $userPermissions)) {
+                        if (!VpnPortalModule::isMember($aclPermissionList, $userPermissions)) {
                             continue;
                         }
                     }

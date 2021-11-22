@@ -167,10 +167,9 @@ class NodeApiModule implements ServiceModuleInterface
     private function verifyAcl(string $profileId, string $userId): void
     {
         $profileConfig = $this->config->profileConfig($profileId);
-        if ($profileConfig->enableAcl()) {
+        if (null !== $profilePermissionList = $profileConfig->aclPermissionList()) {
             // ACL is enabled for this profile
             $userPermissionList = $this->storage->userPermissionList($userId);
-            $profilePermissionList = $profileConfig->aclPermissionList();
             if (false === self::hasPermission($userPermissionList, $profilePermissionList)) {
                 throw new NodeApiException($userId, sprintf('unable to connect, user permissions are [%s], but requires any of [%s]', implode(',', $userPermissionList), implode(',', $profilePermissionList)));
             }

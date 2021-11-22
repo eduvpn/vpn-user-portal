@@ -173,17 +173,12 @@ class ProfileConfig
         return $this->requireBool('enableLog', false);
     }
 
-    public function enableAcl(): bool
-    {
-        return $this->requireBool('enableAcl', false);
-    }
-
     /**
-     * @return array<string>
+     * @return ?array<string>
      */
-    public function aclPermissionList(): array
+    public function aclPermissionList(): ?array
     {
-        return $this->requireStringArray('aclPermissionList', []);
+        return $this->optionalStringArray('aclPermissionList');
     }
 
     public function nodeUrl(int $nodeNumber): string
