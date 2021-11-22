@@ -188,7 +188,7 @@ class ProfileConfig
 
     public function nodeUrl(int $nodeNumber): string
     {
-        $nodeUrlList = $this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']);
+        $nodeUrlList = $this->requireStringOrStringArray('nodeUrl', ['http://localhost:41194']);
         if ($nodeNumber >= \count($nodeUrlList)) {
             throw new ConfigException('"nodeUrl" for node "'.$nodeNumber.'" not set');
         }
