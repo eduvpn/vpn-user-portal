@@ -271,13 +271,23 @@ class ServerConfig
      */
     private static function getDns(IP $rangeFourIp, IP $rangeSixIp, ProfileConfig $profileConfig): array
     {
+        $dnsServerList = $profileConfig->dnsServerList();
+        // if no DNS servers configured, nothing to do
+        if (0 === \count($dnsServerList)) {
+            return [];
+        }
+
+        // no default gateway and no search domains available, nothing to do
+        if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsDomainSearch())) {
+            return [];
+        }
+
         $dnsEntries = [];
         if ($profileConfig->defaultGateway()) {
             // prevent DNS leakage on Windows when VPN is default gateway
             $dnsEntries[] = 'push "block-outside-dns"';
         }
-        $dnsList = $profileConfig->dnsServerList();
-        foreach ($dnsList as $dnsAddress) {
+        foreach ($profileConfig->dnsServerList() as $dnsAddress) {
             // replace the macros by IP addresses (LOCAL_DNS)
             if ('@GW4@' === $dnsAddress) {
                 $dnsAddress = $rangeFourIp->firstHost();

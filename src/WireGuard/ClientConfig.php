@@ -70,8 +70,12 @@ class ClientConfig implements ClientConfigInterface
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
         $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->wRangeFour($this->nodeNumber)->prefix().','.$this->ipSix.'/'.$this->profileConfig->wRangeSix($this->nodeNumber)->prefix();
-        if (0 !== \count($this->profileConfig->dnsServerList())) {
-            $output[] = 'DNS = '.implode(',', $this->dns());
+
+        // only provide DNS servers when default gateway is set, OR search domain(s) are available
+        if ($this->profileConfig->defaultGateway() || 0 !== \count($this->profileConfig->dnsDomainSearch())) {
+            if (0 !== \count($this->profileConfig->dnsServerList())) {
+                $output[] = 'DNS = '.implode(',', $this->dns());
+            }
         }
         $output[] = '';
         $output[] = '[Peer]';
