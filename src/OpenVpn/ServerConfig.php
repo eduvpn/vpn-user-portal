@@ -200,7 +200,7 @@ class ServerConfig
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
         // DNS
-        $serverConfig = array_merge($serverConfig, self::getDns($rangeFourIp, $rangeSixIp, $profileConfig));
+        $serverConfig = array_merge($serverConfig, self::getDns($profileConfig));
 
         return implode(PHP_EOL, $serverConfig);
     }
@@ -269,7 +269,7 @@ class ServerConfig
     /**
      * @return array<string>
      */
-    private static function getDns(IP $rangeFourIp, IP $rangeSixIp, ProfileConfig $profileConfig): array
+    private static function getDns(ProfileConfig $profileConfig): array
     {
         $dnsServerList = $profileConfig->dnsServerList();
         // if no DNS servers configured, nothing to do
@@ -287,14 +287,7 @@ class ServerConfig
             // prevent DNS leakage on Windows when VPN is default gateway
             $dnsEntries[] = 'push "block-outside-dns"';
         }
-        foreach ($profileConfig->dnsServerList() as $dnsAddress) {
-            // replace the macros by IP addresses (LOCAL_DNS)
-            if ('@GW4@' === $dnsAddress) {
-                $dnsAddress = $rangeFourIp->firstHost();
-            }
-            if ('@GW6@' === $dnsAddress) {
-                $dnsAddress = $rangeSixIp->firstHost();
-            }
+        foreach ($dnsServerList as $dnsAddress) {
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 

@@ -71,11 +71,9 @@ class ClientConfig implements ClientConfigInterface
         }
         $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->wRangeFour($this->nodeNumber)->prefix().','.$this->ipSix.'/'.$this->profileConfig->wRangeSix($this->nodeNumber)->prefix();
 
-        // only provide DNS servers when default gateway is set, OR search domain(s) are available
-        if ($this->profileConfig->defaultGateway() || 0 !== \count($this->profileConfig->dnsDomainSearch())) {
-            if (0 !== \count($this->profileConfig->dnsServerList())) {
-                $output[] = 'DNS = '.implode(',', $this->dns());
-            }
+        $dnsEntries = $this->getDns($this->profileConfig);
+        if (0 !== \count($dnsEntries)) {
+            $output[] = 'DNS = '.implode(',', $dnsEntries);
         }
         $output[] = '';
         $output[] = '[Peer]';
@@ -98,23 +96,25 @@ class ClientConfig implements ClientConfigInterface
     /**
      * @return array<string>
      */
-    private function dns(): array
+    private static function getDns(ProfileConfig $profileConfig): array
     {
-        $dnsServerList = [];
-        foreach ($this->profileConfig->dnsServerList() as $configDnsServer) {
-            if ('@GW4@' === $configDnsServer) {
-                $dnsServerList[] = $this->profileConfig->wRangeFour($this->nodeNumber)->firstHost();
-
-                continue;
-            }
-            if ('@GW6@' === $configDnsServer) {
-                $dnsServerList[] = $this->profileConfig->wRangeSix($this->nodeNumber)->firstHost();
-
-                continue;
-            }
-            $dnsServerList[] = $configDnsServer;
+        $dnsServerList = $profileConfig->dnsServerList();
+        // if no DNS servers configured, nothing to do
+        if (0 === \count($dnsServerList)) {
+            return [];
         }
+
+        // no default gateway and no search domains available, nothing to do
+        if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsDomainSearch())) {
+            return [];
+        }
+
         // add DNS search domains as well, @see wg-quick(8)
-        return array_unique(array_merge($dnsServerList, $this->profileConfig->dnsDomainSearch()));
+        return array_unique(
+            array_merge(
+                $dnsServerList,
+                $profileConfig->dnsDomainSearch()
+            )
+        );
     }
 }
