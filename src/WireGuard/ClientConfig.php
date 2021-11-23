@@ -110,8 +110,13 @@ class ClientConfig implements ClientConfigInterface
             }
             $dnsServerList[] = $configDnsServer;
         }
-
+        // add DNS domains, @see wg-quick(8)
+        if (null !== $dnsDomain = $this->profileConfig->dnsDomain()) {
+            $dnsServerList[] = $dnsDomain;
+        }
         // add DNS search domains, @see wg-quick(8)
-        return array_merge($dnsServerList, $this->profileConfig->dnsDomainSearch());
+        $dnsServerList = array_merge($dnsServerList, $this->profileConfig->dnsDomainSearch());
+
+        return array_unique($dnsServerList);
     }
 }
