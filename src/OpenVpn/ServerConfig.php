@@ -43,11 +43,11 @@ class ServerConfig
 
         // make sure the number of OpenVPN server processes is a factor of two
         // so we can easily split the assigned IP space
-        $processCount = \count($profileConfig->udpPortList()) + \count($profileConfig->tcpPortList());
+        $processCount = \count($profileConfig->oUdpPortList()) + \count($profileConfig->oTcpPortList());
         $allowedProcessCount = [1, 2, 4, 8, 16, 32, 64];
         if (!\in_array($processCount, $allowedProcessCount, true)) {
             // XXX introduce ServerConfigException?
-            throw new RuntimeException('"udpPortList" and "tcpPortList" together must contain 1,2,4,8,16,32 or 64 entries');
+            throw new RuntimeException('"oUdpPortList" and "oTcpPortList" together must contain 1,2,4,8,16,32 or 64 entries');
         }
         $splitRangeFour = $profileConfig->oRangeFour($nodeNumber)->split($processCount);
         $splitRangeSix = $profileConfig->oRangeSix($nodeNumber)->split($processCount);
@@ -56,7 +56,7 @@ class ServerConfig
 
         // XXX what follows is ugly! we should be able to do better! for one make getProcess static
         $processNumber = 0;
-        foreach ($profileConfig->udpPortList() as $udpPort) {
+        foreach ($profileConfig->oUdpPortList() as $udpPort) {
             $processConfig['rangeFour'] = $splitRangeFour[$processNumber];
             $processConfig['rangeSix'] = $splitRangeSix[$processNumber];
             $processConfig['tunDev'] = $this->tunDev;
@@ -69,7 +69,7 @@ class ServerConfig
             ++$this->tunDev;
         }
 
-        foreach ($profileConfig->tcpPortList() as $tcpPort) {
+        foreach ($profileConfig->oTcpPortList() as $tcpPort) {
             $processConfig['rangeFour'] = $splitRangeFour[$processNumber];
             $processConfig['rangeSix'] = $splitRangeSix[$processNumber];
             $processConfig['tunDev'] = $this->tunDev;

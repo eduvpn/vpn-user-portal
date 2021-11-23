@@ -48,25 +48,25 @@ class ClientConfig implements ClientConfigInterface
      */
     public function get(): string
     {
-        $udpPortList = $this->profileConfig->udpPortList();
-        $tcpPortList = $this->profileConfig->tcpPortList();
-        if (0 !== \count($this->profileConfig->exposedUdpPortList())) {
-            $udpPortList = $this->profileConfig->exposedUdpPortList();
+        $oUdpPortList = $this->profileConfig->oUdpPortList();
+        $oTcpPortList = $this->profileConfig->oTcpPortList();
+        if (0 !== \count($this->profileConfig->oExposedUdpPortList())) {
+            $oUdpPortList = $this->profileConfig->oExposedUdpPortList();
         }
-        if (0 !== \count($this->profileConfig->exposedTcpPortList())) {
-            $tcpPortList = $this->profileConfig->exposedTcpPortList();
+        if (0 !== \count($this->profileConfig->oExposedTcpPortList())) {
+            $oTcpPortList = $this->profileConfig->oExposedTcpPortList();
         }
 
-        $udpPortList = self::filterPortList($udpPortList, [53, 443]);
-        $tcpPortList = self::filterPortList($tcpPortList, [80, 443]);
+        $oUdpPortList = self::filterPortList($oUdpPortList, [53, 443]);
+        $oTcpPortList = self::filterPortList($oTcpPortList, [80, 443]);
 
         // make sure we have _something_ to connect to
-        if (0 === \count($udpPortList) && 0 === \count($tcpPortList)) {
+        if (0 === \count($oUdpPortList) && 0 === \count($oTcpPortList)) {
             throw new ClientConfigException('no UDP/TCP port available');
         }
 
         // make sure we have a TCP port to connect to when "tcp only"
-        if ($this->tcpOnly && 0 === \count($tcpPortList)) {
+        if ($this->tcpOnly && 0 === \count($oTcpPortList)) {
             throw new ClientConfigException('no TCP port available');
         }
 
@@ -114,12 +114,12 @@ class ClientConfig implements ClientConfigInterface
         ];
 
         // UDP
-        foreach ($udpPortList as $udpPort) {
+        foreach ($oUdpPortList as $udpPort) {
             $clientConfig[] = sprintf('remote %s %d udp', $this->profileConfig->hostName($this->nodeNumber), $udpPort);
         }
 
         // TCP
-        foreach ($tcpPortList as $tcpPort) {
+        foreach ($oTcpPortList as $tcpPort) {
             $clientConfig[] = sprintf('remote %s %d tcp', $this->profileConfig->hostName($this->nodeNumber), $tcpPort);
         }
 

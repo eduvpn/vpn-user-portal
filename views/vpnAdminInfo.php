@@ -223,13 +223,13 @@
 <?php endif; ?>
 
 <?php if ($profileConfig->oSupport()): ?>
-<?php if (0 !== count($profileConfig->udpPortList()) || 0 !== count($profileConfig->tcpPortList())): ?>
+<?php if (0 !== count($profileConfig->oUdpPortList()) || 0 !== count($profileConfig->oTcpPortList())): ?>
             <tr><th><?=$this->t('Ports'); ?></th>
             <td>
-<?php foreach ($profileConfig->udpPortList() as $udpPort): ?>
+<?php foreach ($profileConfig->oUdpPortList() as $udpPort): ?>
                     <span class="plain"><code><?=$this->e(sprintf('udp/%s', $udpPort)); ?></code></span>
 <?php endforeach; ?>
-<?php foreach ($profileConfig->tcpPortList() as $tcpPort): ?>
+<?php foreach ($profileConfig->oTcpPortList() as $tcpPort): ?>
                     <span class="plain"><code><?=$this->e(sprintf('tcp/%s', $tcpPort)); ?></code></span>
 <?php endforeach; ?>
             </td>
@@ -238,14 +238,14 @@
 <?php endif; ?>
 
 <?php if ($profileConfig->oSupport()): ?>
-<?php if (0 !== count($profileConfig->exposedUdpPortList()) || 0 !== count($profileConfig->exposedTcpPortList())): ?>
+<?php if (0 !== count($profileConfig->oExposedUdpPortList()) || 0 !== count($profileConfig->oExposedTcpPortList())): ?>
             <tr><th><?=$this->t('Offered Ports'); ?></th>
             <td>
-<?php foreach ($profileConfig->exposedUdpPortList() as $exposedUdpPort): ?>
-                    <span class="plain"><code><?=$this->e(sprintf('udp/%s', $exposedUdpPort)); ?></code></span>
+<?php foreach ($profileConfig->oExposedUdpPortList() as $oExposedUdpPort): ?>
+                    <span class="plain"><code><?=$this->e(sprintf('udp/%s', $oExposedUdpPort)); ?></code></span>
 <?php endforeach; ?>
-<?php foreach ($profileConfig->exposedTcpPortList() as $exposedTcpPort): ?>
-                    <span class="plain"><code><?=$this->e(sprintf('tcp/%s', $exposedTcpPort)); ?></code></span>
+<?php foreach ($profileConfig->oExposedTcpPortList() as $oExposedTcpPort): ?>
+                    <span class="plain"><code><?=$this->e(sprintf('tcp/%s', $oExposedTcpPort)); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>

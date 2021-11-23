@@ -196,9 +196,9 @@ class ProfileConfig
      *
      * @return array<int>
      */
-    public function udpPortList(): array
+    public function oUdpPortList(): array
     {
-        return $this->requireIntArray('udpPortList', [1194]);
+        return $this->requireIntArray('oUdpPortList', [1194]);
     }
 
     /**
@@ -206,9 +206,9 @@ class ProfileConfig
      *
      * @return array<int>
      */
-    public function tcpPortList(): array
+    public function oTcpPortList(): array
     {
-        return $this->requireIntArray('tcpPortList', [1194]);
+        return $this->requireIntArray('oTcpPortList', [1194]);
     }
 
     /**
@@ -216,9 +216,9 @@ class ProfileConfig
      *
      * @return array<int>
      */
-    public function exposedUdpPortList(): array
+    public function oExposedUdpPortList(): array
     {
-        return $this->requireIntArray('exposedUdpPortList', []);
+        return $this->requireIntArray('oExposedUdpPortList', []);
     }
 
     /**
@@ -226,9 +226,9 @@ class ProfileConfig
      *
      * @return array<int>
      */
-    public function exposedTcpPortList(): array
+    public function oExposedTcpPortList(): array
     {
-        return $this->requireIntArray('exposedTcpPortList', []);
+        return $this->requireIntArray('oExposedTcpPortList', []);
     }
 
     /**

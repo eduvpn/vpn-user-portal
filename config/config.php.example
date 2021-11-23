@@ -341,26 +341,26 @@ return [
             // together with "tcpPortList" the number of ports MUST be
             // 1,2,4,8,16,32 or 64
             // DEFAULT: [1194]
-            //'udpPortList' => [1194],
+            //'oUdpPortList' => [1194],
 
             // ** OpenVPN Only **
             // TCP ports used by OpenVPN server
             // together with "udpPortList" the number of ports MUST be
             // 1,2,4,8,16,32 or 64
             // DEFAULT: [1194]
-            //'tcpPortList' => [1194],
+            //'oTcpPortList' => [1194],
 
             // ** OpenVPN Only **
             // UDP ports used by the VPN client to connect to the OpenVPN
             // server. If missing, or empty uses udpPortList
             // DEFAULT: []
-            //'exposedUdpPortList' => [],
+            //'oExposedUdpPortList' => [],
 
             // ** OpenVPN Only **
             // TCP ports used by the VPN client to connect to the OpenVPN
             // server. If missing, or empty uses tcpPortList
             // DEFAULT: []
-            //'exposedTcpPortList' => [],
+            //'oExposedTcpPortList' => [],
 
             // ** OpenVPN Only **
             // DEFAULT = null

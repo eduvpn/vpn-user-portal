@@ -26,7 +26,7 @@ function getMaxClientLimit(ProfileConfig $profileConfig): int
     $maxClientLimit = 0;
     // OpenVPN can have multiple processes, that reduces the number of IP
     // addresses available for VPN clients...
-    $oProcessCount = $profileConfig->oSupport() ? (count($profileConfig->udpPortList()) + count($profileConfig->tcpPortList())) : 0;
+    $oProcessCount = $profileConfig->oSupport() ? (count($profileConfig->oUdpPortList()) + count($profileConfig->oTcpPortList())) : 0;
     for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
         if ($profileConfig->oSupport()) {
             $maxClientLimit += ((int) 2 ** (32 - $profileConfig->oRangeFour($i)->prefix())) - 3 * $oProcessCount;
