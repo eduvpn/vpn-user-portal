@@ -245,10 +245,17 @@ class ProfileConfig
     }
 
     /**
+     * Additional DNS search domains. Will include "dnsDomain" as well, if set.
+     *
      * @return array<string>
      */
     public function dnsDomainSearch(): array
     {
-        return $this->requireStringArray('dnsDomainSearch', []);
+        $dnsDomainSearch = $this->requireStringArray('dnsDomainSearch', []);
+        if (null !== $dnsDomain = $this->dnsDomain()) {
+            $dnsDomainSearch[] = $dnsDomain;
+        }
+
+        return array_unique($dnsDomainSearch);
     }
 }
