@@ -288,13 +288,14 @@ class ServerConfig
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
-        // push DOMAIN
+        // push DOMAIN and DOMAIN-SEARCH
+        $dnsDomainSearchList = $profileConfig->dnsDomainSearch();
         if (null !== $dnsDomain = $profileConfig->dnsDomain()) {
             $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsDomain);
+            $dnsDomainSearchList[] = $dnsDomain;
         }
-        // push DOMAIN-SEARCH
-        $dnsDomainSearchList = $profileConfig->dnsDomainSearch();
-        foreach ($dnsDomainSearchList as $dnsDomainSearch) {
+        // push DOMAIN-SEARCH, rmeove duplicates
+        foreach (array_unique($dnsDomainSearchList) as $dnsDomainSearch) {
             $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsDomainSearch);
         }
 
