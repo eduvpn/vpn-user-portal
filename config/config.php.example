@@ -235,16 +235,9 @@ return [
     'vpnProfiles' => [
         'default' => [
             // ** WireGuard & OpenVPN **
-            // The VPN protocol supported by the profile
-            // DEFAULT: ['openvpn', 'wireguard']
-            //'protoList' => ['openvpn', 'wireguard'],
-            //'protoList' => ['openvpn'],
-            //'protoList' => ['wireguard'],
-
-            // ** WireGuard & OpenVPN **
-            // The preferred VPN protocol the client SHOULD use if possible,
-            // only makes sense if >1 protocol is specified under protoList
-            // DEFAULT: openvpn if >1 protocol is specified
+            // The preferred VPN protocol.
+            // Only makes sense if both OpenVPN and WireGuard are enabled.
+            // DEFAULT: openvpn if both OpenVPN and WireGuard are enabled.
             //'preferredProto' => 'openvpn',
             //'preferredProto' => 'wireguard',
 

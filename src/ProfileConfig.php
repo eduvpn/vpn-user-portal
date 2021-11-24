@@ -29,22 +29,30 @@ class ProfileConfig
         return $this->requireString('profileId');
     }
 
-    public function oSupport(): bool
-    {
-        return \in_array('openvpn', $this->protoList(), true);
-    }
-
-    public function wSupport(): bool
-    {
-        return \in_array('wireguard', $this->protoList(), true);
-    }
-
     /**
      * @return array<string>
      */
     public function protoList(): array
     {
-        return $this->requireStringArray('protoList', ['openvpn', 'wireguard']);
+        $protoList = [];
+        if ($this->oSupport()) {
+            $protoList[] = 'openvpn';
+        }
+        if ($this->wSupport()) {
+            $protoList[] = 'wireguard';
+        }
+
+        return $protoList;
+    }
+
+    public function oSupport(): bool
+    {
+        return null !== $this->optionalStringOrStringArray('oRangeFour') && null !== $this->optionalStringOrStringArray('oRangeSix');
+    }
+
+    public function wSupport(): bool
+    {
+        return null !== $this->optionalStringOrStringArray('wRangeFour') && null !== $this->optionalStringOrStringArray('wRangeSix');
     }
 
     public function preferredProto(): string
@@ -52,7 +60,7 @@ class ProfileConfig
         $protoList = $this->protoList();
         if (null !== $preferredProto = $this->optionalString('preferredProto')) {
             if (!\in_array($preferredProto, $protoList, true)) {
-                throw new ConfigException('"preferredProto" is not listed under "protoList"');
+                throw new ConfigException('profile does not support "preferredProto"');
             }
 
             return $preferredProto;
