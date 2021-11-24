@@ -103,7 +103,7 @@ return [
     'Results' => 'Resultaten',
     'Revoke' => 'Intrekken',
     'Route(s)' => 'Route(s)',
-    'Scan this QR code with your mobile device.' => 'Scan deze QR-code met je mobiele',
+    'Scan this QR code with your mobile device.' => 'Scan deze QR-code met je mobiele apparaat.',
     'Search' => 'Zoeken',
     'Select a profile and choose a name, e.g. "Phone".' => 'Selecteer een profiel en kies een naam, bijvoorbeeld "Telefoon"',
     'Server' => 'Server',
