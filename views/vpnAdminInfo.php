@@ -92,10 +92,10 @@
                 <th></th>
                 <td>
 <?php if ($profileConfig->oSupport()): ?>
-        <span class="plain"><?=$this->t('OpenVPN'); ?></span>
+        <span class="plain openvpn"><?=$this->t('OpenVPN'); ?></span>
 <?php endif; ?>
 <?php if ($profileConfig->wSupport()): ?>
-        <span class="plain"><?=$this->t('WireGuard'); ?></span>
+        <span class="plain wireguard"><?=$this->t('WireGuard'); ?></span>
 <?php endif; ?>
 
 <?php if ($profileConfig->defaultGateway()): ?>
@@ -123,10 +123,10 @@
 <?php if ($profileConfig->oSupport() && $profileConfig->wSupport()) : ?>
             <tr><th><?=$this->t('Preferred Protocol'); ?></th><td>
 <?php if ('openvpn' === $profileConfig->preferredProto()): ?>
-                <span class="plain"><?=$this->t('OpenVPN'); ?></span>
+                <span class="plain openvpn"><?=$this->t('OpenVPN'); ?></span>
 <?php endif; ?>
 <?php if ('wireguard' === $profileConfig->preferredProto()): ?>
-        <span class="plain"><?=$this->t('WireGuard'); ?></span>
+        <span class="plain wireguard"><?=$this->t('WireGuard'); ?></span>
 <?php endif; ?>
             </td></tr>
 <?php endif; ?>
@@ -140,20 +140,20 @@
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
 <?php if ($profileConfig->oSupport()): ?>
-            <span class="plain"><code>(O) <?=$this->e((string) $profileConfig->oRangeFour($i)); ?></code></span>
+            <span class="plain openvpn"><code><?=$this->e((string) $profileConfig->oRangeFour($i)); ?></code></span>
 <?php endif; ?>
 <?php if ($profileConfig->wSupport()): ?>
-            <span class="plain"><code>(W) <?=$this->e((string) $profileConfig->wRangeFour($i)); ?></code></span>
+            <span class="plain wireguard"><code><?=$this->e((string) $profileConfig->wRangeFour($i)); ?></code></span>
 <?php endif; ?>
 <?php endfor; ?>
             </td></tr>
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
 <?php if ($profileConfig->oSupport()): ?>
-            <span class="plain"><code>(O) <?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
+            <span class="plain openvpn"><code><?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
 <?php endif; ?>
 <?php if ($profileConfig->wSupport()): ?>
-            <span class="plain"><code>(W) <?=$this->e((string) $profileConfig->wRangeSix($i)); ?></code></span>
+            <span class="plain wireguard"><code><?=$this->e((string) $profileConfig->wRangeSix($i)); ?></code></span>
 <?php endif; ?>
 <?php endfor; ?>
             </td></tr>

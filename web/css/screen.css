@@ -359,6 +359,16 @@ span.warning {
   background-color: #ff9900;
 }
 
+span.openvpn {
+  background-color: #ed7f22;
+  color: #fff;
+}
+
+span.wireguard {
+  background-color: #88171a;
+  color: white;
+}
+
 p.warning {
   border: 1px solid #ff9900;
   color: #ff9900;
