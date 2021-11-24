@@ -135,11 +135,6 @@ try {
     $service->addBeforeHook(new CsrfProtectionHook());
 
     switch ($authModuleCfg) {
-        case 'PhpSamlSpAuthModule':
-            $authModule = new PhpSamlSpAuthModule($config->s('PhpSamlSpAuthModule'));
-
-            break;
-
         case 'DbAuthModule':
             $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
@@ -161,21 +156,28 @@ try {
 
             break;
 
-        case 'MellonAuthModule':
-            $authModule = new MellonAuthModule($config->mellonAuthConfig());
-
-            break;
-
-        case 'ShibAuthModule':
-            $authModule = new ShibAuthModule(
-                $config->s('ShibAuthModule')->requireString('userIdAttribute'),
-                $config->s('ShibAuthModule')->requireStringArray('permissionAttributeList', [])
-            );
-
-            break;
-
         case 'ClientCertAuthModule':
             $authModule = new ClientCertAuthModule();
+
+            break;
+
+        case 'LdapAuthModule':
+            // XXX move ldapClient to LdapCredentialValidator
+            $ldapClient = new LdapClient(
+                $config->ldapAuthConfig()->ldapUri()
+            );
+            $authModule = new UserPassAuthModule($sessionBackend, $tpl);
+            $service->addModule(
+                new UserPassModule(
+                    new LdapCredentialValidator(
+                        $config->ldapAuthConfig(),
+                        $logger,
+                        $ldapClient
+                    ),
+                    $sessionBackend,
+                    $tpl
+                )
+            );
 
             break;
 
@@ -197,23 +199,21 @@ try {
 
             break;
 
-        case 'LdapAuthModule':
-            // XXX move ldapClient to LdapCredentialValidator
-            $ldapClient = new LdapClient(
-                $config->ldapAuthConfig()->ldapUri()
+        case 'ShibAuthModule':
+            $authModule = new ShibAuthModule(
+                $config->s('ShibAuthModule')->requireString('userIdAttribute'),
+                $config->s('ShibAuthModule')->requireStringArray('permissionAttributeList', [])
             );
-            $authModule = new UserPassAuthModule($sessionBackend, $tpl);
-            $service->addModule(
-                new UserPassModule(
-                    new LdapCredentialValidator(
-                        $config->ldapAuthConfig(),
-                        $logger,
-                        $ldapClient
-                    ),
-                    $sessionBackend,
-                    $tpl
-                )
-            );
+
+            break;
+
+        case 'MellonAuthModule':
+            $authModule = new MellonAuthModule($config->mellonAuthConfig());
+
+            break;
+
+        case 'PhpSamlSpAuthModule':
+            $authModule = new PhpSamlSpAuthModule($config->s('PhpSamlSpAuthModule'));
 
             break;
 

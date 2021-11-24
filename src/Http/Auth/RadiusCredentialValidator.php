@@ -48,6 +48,7 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
 
         $radiusAuth = radius_auth_open();
 
+        // XXX rename the radius server keys to 'h' / 'p' / 'secret' or use URL notation, e.g. secret@host:port
         foreach ($this->serverList as $radiusServer) {
             if (false === radius_add_server(
                 $radiusAuth,
