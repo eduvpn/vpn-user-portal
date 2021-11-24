@@ -158,11 +158,13 @@
 <?php endfor; ?>
             </td></tr>
 
+<?php if (1 !== $profileConfig->nodeCount() || 'http://localhost:41194' !== $profileConfig->nodeUrl(0)): ?>
             <tr><th><?=$this->t('Node URL'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
             <span class="plain"><code><?=$this->e($profileConfig->nodeUrl($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
+<?php endif; ?>
 
 <?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
             <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($dnsDomain); ?></code></td></tr>
