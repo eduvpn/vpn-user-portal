@@ -135,15 +135,6 @@ try {
     $service->addBeforeHook(new CsrfProtectionHook());
 
     switch ($authModuleCfg) {
-        case 'BasicAuthModule':
-            $authModule = new LC\Portal\Http\Auth\BasicAuthModule(
-                [
-                    'foo' => 'bar',
-                ]
-            );
-
-            break;
-
         case 'PhpSamlSpAuthModule':
             $authModule = new PhpSamlSpAuthModule($config->s('PhpSamlSpAuthModule'));
 
