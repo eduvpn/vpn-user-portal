@@ -3,21 +3,18 @@
 <?php /** @var \LC\Portal\WireGuard\ClientConfig $wireGuardClientConfig */ ?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
-    <h3><?= $this->t('WireGuard Configuration'); ?></h3>
+    <h2><?= $this->t('WireGuard Configuration'); ?></h2>
+<?php if (null !== $qrCode = $wireGuardClientConfig->getQr()): ?>
     <p>
-<?= $this->t('On your mobile device, you can scan the QR code with the WireGuard application. On your desktop or laptop computer you can paste the file in the WireGuard application.'); ?>
+<?=$this->t('Scan this QR code with your mobile device.'); ?>
     </p>
-    <h3><?= $this->t('QR'); ?></h3>
-<?php if (null !== $qrCode = $wireGuardClientConfig->getQr()):?>
     <p>
         <img src="data:image/png;base64,<?=$this->e($qrCode); ?>">
     </p>
-<?php else: ?>
-    <p class="warning">
-        <?=$this->t('We were unable to generate a QR code, you can use the configuration file below.'); ?>
-    </p>
 <?php endif; ?>
-    <h3><?= $this->t('File'); ?></h3>
+    <p>
+<?=$this->t('Import or copy/paste this configuration to your WireGuard application.'); ?>
+    </p>
     <blockquote>
         <pre><?= $this->e($wireGuardClientConfig->get()); ?></pre>
     </blockquote>
