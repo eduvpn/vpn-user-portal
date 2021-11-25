@@ -63,22 +63,6 @@ try {
     $request = Request::createFromGlobals();
     FileIO::createDir($baseDir.'/data', 0700);
     $config = Config::fromFile($baseDir.'/config/config.php');
-
-    $templateDirs = [
-        $baseDir.'/views',
-        $baseDir.'/config/views',
-    ];
-    $translationDirs = [
-        $baseDir.'/locale',
-        $baseDir.'/config/locale',
-    ];
-    if (null !== $styleName = $config->styleName()) {
-        $templateDirs[] = $baseDir.'/views/'.$styleName;
-        $templateDirs[] = $baseDir.'/config/views/'.$styleName;
-        $translationDirs[] = $baseDir.'/locale/'.$styleName;
-        $translationDirs[] = $baseDir.'/config/locale/'.$styleName;
-    }
-
     $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
 
     $sessionExpiry = Expiry::calculate(
@@ -110,6 +94,9 @@ try {
     if (null === $uiLanguage = $request->getCookie('L')) {
         $uiLanguage = $config->defaultLanguage();
     }
+
+    // XXX update Tpl to only take basedir,stylename and uilanguage params?
+    [$templateDirs, $translationDirs] = Tpl::getDirs($baseDir, $config->styleName());
     $tpl = new Tpl($templateDirs, $translationDirs, $baseDir.'/web', $uiLanguage);
 
     // Authentication
