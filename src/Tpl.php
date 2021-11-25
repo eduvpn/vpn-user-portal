@@ -231,13 +231,18 @@ class Tpl implements TplInterface
         return $this->sectionList[$sectionName];
     }
 
+    public static function escape(string $v): string
+    {
+        return htmlentities($v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
+
     public function e(string $v, ?string $cb = null): string
     {
         if (null !== $cb) {
             $v = $this->batch($v, $cb);
         }
 
-        return htmlentities($v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        return self::escape($v);
     }
 
     /**

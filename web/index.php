@@ -58,6 +58,7 @@ use LC\Portal\VpnDaemon;
 use LC\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
+$tpl = null;
 
 try {
     $request = Request::createFromGlobals();
@@ -283,9 +284,16 @@ try {
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
-    // XXX getTraceAsString is most likely not secure to just return as HTML!
-//    $response = new HtmlResponse($e->getMessage().$e->getTraceAsString(), [], 500);
-    // XXX we MUST escape whatever we return as HTML!
-    $response = new HtmlResponse(htmlentities($e->getMessage()), [], 500);
+    $htmlBody = Tpl::escape('ERROR: '.$e->getMessage());
+    if (null !== $tpl) {
+        $htmlBody = $tpl->render(
+            'errorPage',
+            [
+                'message' => $e->getMessage(),
+                'code' => 500,
+            ]
+        );
+    }
+    $response = new HtmlResponse($htmlBody, [], 500);
     $response->send();
 }
