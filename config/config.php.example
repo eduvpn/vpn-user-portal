@@ -1,12 +1,5 @@
 <?php
 
-/*
- * eduVPN - End-user friendly VPN.
- *
- * Copyright: 2016-2021, The Commons Conservancy eduVPN Programme
- * SPDX-License-Identifier: AGPL-3.0+
- */
-
 return [
     // Choose the Portal Template to be used (must be installed)
     // OPTIONAL, DEFAULT = null
@@ -161,70 +154,63 @@ return [
     //    //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
     //],
 
-    // the permission required to be able to access the "admin" portion of
-    // the portal, see "permissionAttributeList" in the authentication
-    // configuration sections
+    // List of permissions a user can have that makes them admin
+    // OPTIONAL, DEFAULT = []
     //'adminPermissionList' => ['http://eduvpn.org/role/admin'],
 
+    // List of user IDs that are made admin
+    // OPTIONAL, DEFAULT = []
     // list of userIds that have access to the admin
-    //    'adminUserIdList' => ['admin'],
+    //'adminUserIdList' => ['admin'],
 
-    // the default language of the UI
-    // DEFAULT: 'en-US'
-    //'defaultLanguage' => 'en-US',
-
-    // Hide the user's permissions obtained through the authentication backend
-    // on the "Account" page
-    // DEFAULT: false
-    //'showPermissions' => false,
-
-    // the supported UI languages
-    // DEFAULT: ['en-US']
+    // The languages supported by the Portal UI
+    // OPTIONAL, DEFAULT = ['en-US']
     //'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'ro-RO', 'uk-UA'],
 
-    //    'Api' => [
-    //        // expiry of OAuth access_token
-    //        // DEFAULT: PT1H (1 hour)
-    //        //'tokenExpiry' => 'PT1H',
+    // The default language of the Portal UI
+    // OPTIONAL, DEFAULT = 'en-US'
+    //'defaultLanguage' => 'en-US',
 
-    //        // limit the number of active OAuth clients per user
-    //        // DEFAULT: 5
-    //        //'maxNumberOfAuthorizedClients' => 5,
-    //    ],
+    // Show the user's "raw" permissions on the "Account" page
+    // OPTIONAL, DEFAULT = false
+    //'showPermissions' => false,
 
-    //    'Session' => [
-    //        // Whether to use memcached for sessions
-    //        // DEFAULT: false
-    //        'useMemcached' => false,
-
-    //        // list of memcached servers host:port
-    //        // DEFAULT: []
-    //        'memcachedServerList' => [
-    //            'localhost:11211',
-    //        ],
-    //    ],
-
-    // how/what to log the connect/disconnect events to syslog
-    // EVENT_TYPE = {CONNECT,DISCONNECT}
-    // DEFAULT: '{{TYPE}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]'
-    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]',
-    // also log the client's originating IP
-    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{ORIGINATING_IP}} => {{IP_FOUR}},{{IP_SIX}}]',
-
-    // Allow disabling manual configuration downloads from the portal.
-    // DEFAULT: true
-    //    'enableConfigDownload' => true,
-    //    'enableConfigDownload' => false,
+    // Allow manual configuration download through Portal
+    // OPTIONAL, DEFAULT = true
+    //'enableConfigDownload' => true,
 
     // Limit the number of active VPN configurations downloaded through the
-    // portal
-    // DEFAULT: 5
+    // Portal
+    // OPTIONAL, DEFAULT = 5
     //'maxNumberOfActivePortalConfigurations' => 5,
 
-    // DEFAULT: 51820
-    // OPTIONAL
-    //'wgPort' => 51820,    // listen on UDP/51820 (default WireGuard)
-    //'wgPort' => 443,      // listen on UDP/443
+    // Determine what to log to "syslog"
+    // OPTIONAL, DEFAULT = {{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]
+    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]',
+    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{ORIGINATING_IP}} => {{IP_FOUR}},{{IP_SIX}}]',
+
+    // The UDP port used by WireGuard
+    // OPTIONAL, DEFAULT = 51820
+    //'wgPort' => 51820,
+    //'wgPort' => 443,
+
+    //'Api' => [
+    //    // Limit the number of active OAuth clients per user
+    //    // OPTIONAL, DEFAULT = 5
+    //    //'maxNumberOfAuthorizedClients' => 5,
+    //],
+
+    //'Session' => [
+    //    // Whether to use memcached for sessions
+    //    // OPTIONAL, DEFAULT = false
+    //    //'useMemcached' => false,
+    //
+    //    // List of memcached servers host:port
+    //    // OPTIONAL, DEFAULT = []
+    //    //'memcachedServerList' => [
+    //    //    'localhost:11211',
+    //    //],
+    //],
 
     // List of VPN profiles
     'vpnProfiles' => [
