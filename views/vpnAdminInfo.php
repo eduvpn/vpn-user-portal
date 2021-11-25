@@ -257,7 +257,7 @@
 
 <?php if (array_key_exists($profileConfig->profileId(), $problemList) && 0 !== count($problemList[$profileConfig->profileId()])): ?>
             <tr>
-                <th><?=$this->t('Problems'); ?></th>
+                <th><?=$this->t('Issues'); ?></th>
                 <td>
                     <ul>
 <?php foreach ($problemList[$profileConfig->profileId()] as $p):?>
