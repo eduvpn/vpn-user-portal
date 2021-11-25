@@ -25,11 +25,13 @@ class LdapCredentialValidator implements CredentialValidatorInterface
 
     private LdapClient $ldapClient;
 
-    public function __construct(LdapAuthConfig $ldapAuthConfig, LoggerInterface $logger, LdapClient $ldapClient)
+    public function __construct(LdapAuthConfig $ldapAuthConfig, LoggerInterface $logger)
     {
         $this->ldapAuthConfig = $ldapAuthConfig;
         $this->logger = $logger;
-        $this->ldapClient = $ldapClient;
+        $this->ldapClient = new LdapClient(
+            $ldapAuthConfig->ldapUri()
+        );
     }
 
     /**

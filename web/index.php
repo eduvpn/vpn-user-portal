@@ -46,7 +46,6 @@ use LC\Portal\Http\UpdateUserInfoHook;
 use LC\Portal\Http\UserPassModule;
 use LC\Portal\Http\VpnPortalModule;
 use LC\Portal\HttpClient\CurlHttpClient;
-use LC\Portal\LdapClient;
 use LC\Portal\OAuth\ClientDb;
 use LC\Portal\OAuth\VpnOAuthServer;
 use LC\Portal\OpenVpn\CA\VpnCa;
@@ -162,17 +161,12 @@ try {
             break;
 
         case 'LdapAuthModule':
-            // XXX move ldapClient to LdapCredentialValidator
-            $ldapClient = new LdapClient(
-                $config->ldapAuthConfig()->ldapUri()
-            );
             $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
                 new UserPassModule(
                     new LdapCredentialValidator(
                         $config->ldapAuthConfig(),
-                        $logger,
-                        $ldapClient
+                        $logger
                     ),
                     $sessionBackend,
                     $tpl
