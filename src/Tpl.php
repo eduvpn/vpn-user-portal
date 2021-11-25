@@ -43,42 +43,12 @@ class Tpl implements TplInterface
     /** @var array<string,callable> */
     private array $callbackList = [];
 
-    /**
-     * @param array<string> $templateFolderList
-     * @param array<string> $translationFolderList
-     */
-    public function __construct(array $templateFolderList, array $translationFolderList, string $assetDir, string $uiLanguage)
+    public function __construct(string $baseDir, ?string $styleName, string $uiLanguage)
     {
-        $this->templateFolderList = $templateFolderList;
-        $this->translationFolderList = $translationFolderList;
-        $this->assetDir = $assetDir;
-        if (!\array_key_exists($uiLanguage, self::supportedLanguages())) {
-            throw new TplException(sprintf('unsupported UI language "%s"', $uiLanguage));
-        }
+        $this->templateFolderList = self::templateFolderList($baseDir, $styleName);
+        $this->translationFolderList = self::translationFolderList($baseDir, $styleName);
         $this->uiLanguage = $uiLanguage;
-    }
-
-    /**
-     * @return array{0:array<string>,1:array<string>}
-     */
-    public static function getDirs(string $baseDir, ?string $styleName): array
-    {
-        $templateDirs = [
-            $baseDir.'/views',
-            $baseDir.'/config/views',
-        ];
-        $translationDirs = [
-            $baseDir.'/locale',
-            $baseDir.'/config/locale',
-        ];
-        if (null !== $styleName) {
-            $templateDirs[] = $baseDir.'/views/'.$styleName;
-            $templateDirs[] = $baseDir.'/config/views/'.$styleName;
-            $translationDirs[] = $baseDir.'/locale/'.$styleName;
-            $translationDirs[] = $baseDir.'/config/locale/'.$styleName;
-        }
-
-        return [$templateDirs, $translationDirs];
+        $this->assetDir = $baseDir.'/web';
     }
 
     /**
@@ -385,5 +355,39 @@ class Tpl implements TplInterface
         }
 
         return 'ltr';
+    }
+
+    /**
+     * @return array<string>
+     */
+    private static function templateFolderList(string $baseDir, ?string $styleName): array
+    {
+        $templateDirs = [
+            $baseDir.'/views',
+            $baseDir.'/config/views',
+        ];
+        if (null !== $styleName) {
+            $templateDirs[] = $baseDir.'/views/'.$styleName;
+            $templateDirs[] = $baseDir.'/config/views/'.$styleName;
+        }
+
+        return $templateDirs;
+    }
+
+    /**
+     * @return array<string>
+     */
+    private static function translationFolderList(string $baseDir, ?string $styleName): array
+    {
+        $translationDirs = [
+            $baseDir.'/locale',
+            $baseDir.'/config/locale',
+        ];
+        if (null !== $styleName) {
+            $translationDirs[] = $baseDir.'/locale/'.$styleName;
+            $translationDirs[] = $baseDir.'/config/locale/'.$styleName;
+        }
+
+        return $translationDirs;
     }
 }

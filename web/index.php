@@ -61,11 +61,17 @@ $logger = new SysLogger('vpn-user-portal');
 $tpl = null;
 
 try {
-    $request = Request::createFromGlobals();
-    FileIO::createDir($baseDir.'/data', 0700);
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
+    $request = Request::createFromGlobals();
 
+    // determine perferred UI language
+    if (null === $uiLanguage = $request->getCookie('L')) {
+        $uiLanguage = $config->defaultLanguage();
+    }
+    $tpl = new Tpl($baseDir, $config->styleName(), $uiLanguage);
+
+    FileIO::createDir($baseDir.'/data', 0700);
+    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
     $sessionExpiry = Expiry::calculate(
         $config->sessionExpiry(),
         $ca->caCert()->validTo()
@@ -90,15 +96,6 @@ try {
     }
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
     $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config->sessionConfig());
-
-    // determine whether or not we want to use another language for the UI
-    if (null === $uiLanguage = $request->getCookie('L')) {
-        $uiLanguage = $config->defaultLanguage();
-    }
-
-    // XXX update Tpl to only take basedir,stylename and uilanguage params?
-    [$templateDirs, $translationDirs] = Tpl::getDirs($baseDir, $config->styleName());
-    $tpl = new Tpl($templateDirs, $translationDirs, $baseDir.'/web', $uiLanguage);
 
     // Authentication
     $authModuleCfg = $config->authModule();
