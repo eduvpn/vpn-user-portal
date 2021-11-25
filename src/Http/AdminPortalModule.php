@@ -14,6 +14,7 @@ namespace LC\Portal\Http;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use LC\Portal\Config;
+use LC\Portal\ConfigCheck;
 use LC\Portal\ConnectionManager;
 use LC\Portal\Dt;
 use LC\Portal\Http\Exception\HttpException;
@@ -99,6 +100,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'nodeInfoList' => $nodeInfoList,
                             'profileConfigList' => $this->config->profileConfigList(),
                             'serverInfo' => $this->serverInfo,
+                            'configCheck' => ConfigCheck::verify($this->config),
                         ]
                     )
                 );
