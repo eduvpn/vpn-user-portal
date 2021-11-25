@@ -4,7 +4,7 @@
 <?php /** @var array<\LC\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<string,null|array{load_average:array<float>,cpu_count:int}> $nodeInfoList */?>
 <?php /** @var string $portalVersion */?>
-<?php /** @var array<string> $configCheck */?>
+<?php /** @var array<string,array<string>> $problemList */?>
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Server'); ?></h2>
@@ -83,24 +83,6 @@
         </tbody>
     </table>
     </details>
-
-<?php if (0 !== count($configCheck)): ?>
-    <h2><?=$this->t('Configuration Issues'); ?></h2>
-    <table class="tbl">
-        <thead>
-            <tr>
-                <th>Notice</th>
-            </tr>
-        </thead>
-        <tbody>
-<?php foreach ($configCheck as $configNotice): ?>
-            <tr>
-                <td><?=$this->e($configNotice); ?></td>
-            </tr>
-<?php endforeach; ?>
-        </tbody>
-    </table>
-<?php endif; ?>
 
     <h2><?=$this->t('Profile(s)'); ?></h2>
 <?php foreach ($profileConfigList as $profileConfig): ?>
@@ -272,6 +254,21 @@
             </tr>
 <?php endif; ?>
 <?php endif; ?>
+
+<?php if (array_key_exists($profileConfig->profileId(), $problemList) && 0 !== count($problemList[$profileConfig->profileId()])): ?>
+            <tr>
+                <th><?=$this->t('Problems'); ?></th>
+                <td>
+                    <ul>
+<?php foreach ($problemList[$profileConfig->profileId()] as $p):?>
+                        <li><?=$this->e($p); ?></li>
+<?php endforeach; ?>
+                    </ul>
+                </td>
+            </tr>
+<?php endif; ?>
+
+
         </tbody>
     </table>
 <?php endforeach; ?>

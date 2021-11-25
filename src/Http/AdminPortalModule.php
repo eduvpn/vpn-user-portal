@@ -100,7 +100,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'nodeInfoList' => $nodeInfoList,
                             'profileConfigList' => $this->config->profileConfigList(),
                             'serverInfo' => $this->serverInfo,
-                            'configCheck' => ConfigCheck::verify($this->config),
+                            'problemList' => ConfigCheck::verify($this->config),
                         ]
                     )
                 );

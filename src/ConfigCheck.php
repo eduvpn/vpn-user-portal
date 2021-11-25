@@ -14,39 +14,43 @@ namespace LC\Portal;
 class ConfigCheck
 {
     /**
-     * @return array<string>
+     * @return array<string,array<string>>
      */
     public static function verify(Config $config): array
     {
-        $listOfProblems = [];
+        $problemList = [];
         $usedRangeList = [];
 
         foreach ($config->profileConfigList() as $profileConfig) {
-            self::verifyDefaultGatewayHasDnsServerList($profileConfig, $listOfProblems);
-            self::verifyRangeOverlap($profileConfig, $listOfProblems, $usedRangeList);
+            $profileProblemList = [];
+
+            self::verifyDefaultGatewayHasDnsServerList($profileConfig, $profileProblemList);
+            self::verifyRangeOverlap($profileConfig, $usedRangeList, $profileProblemList);
+
+            $problemList[$profileConfig->profileId()] = $profileProblemList;
         }
 
         // check OpenVPN port overlap (per node)
         // make sure IP space is big enough for OpenVPN/WireGuard
 
-        return $listOfProblems;
+        return $problemList;
     }
 
     /**
-     * @param array<string> $listOfProblems
+     * @param array<string> $profileProblemList
      */
-    private static function verifyDefaultGatewayHasDnsServerList(ProfileConfig $profileConfig, array &$listOfProblems): void
+    private static function verifyDefaultGatewayHasDnsServerList(ProfileConfig $profileConfig, array &$profileProblemList): void
     {
         if ($profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsServerList())) {
-            $listOfProblems[] = sprintf('[%s]: default gateway enabled, but no DNS servers configured', $profileConfig->profileId());
+            $profileProblemList[] = 'default gateway enabled, but no DNS servers configured';
         }
     }
 
     /**
-     * @param array<string> $listOfProblems
      * @param array<IP>     $usedRangeList
+     * @param array<string> $profileProblemList
      */
-    private static function verifyRangeOverlap(ProfileConfig $profileConfig, array &$listOfProblems, array &$usedRangeList): void
+    private static function verifyRangeOverlap(ProfileConfig $profileConfig, array &$usedRangeList, array &$profileProblemList): void
     {
         // perhaps we can also log the profile to usedRangeList so it is easier
         // to find offending ranges, but string search in config file should
@@ -66,7 +70,7 @@ class ConfigCheck
         foreach ($profileRangeList as $profileRange) {
             foreach ($usedRangeList as $usedRange) {
                 if ($profileRange->contains($usedRange) || $usedRange->contains($profileRange)) {
-                    $listOfProblems[] = sprintf('[%s]: range "%s" overlaps with range "%s"', $profileConfig->profileId(), (string) $profileRange, (string) $usedRange);
+                    $profileProblemList[] = sprintf('range "%s" overlaps with range "%s"', (string) $profileRange, (string) $usedRange);
                 }
             }
             $usedRangeList[] = $profileRange;
