@@ -103,11 +103,8 @@ return [
     // ** RADIUS **
     //'RadiusAuthModule' => [
     //    'serverList' => [
-    //        [
-    //            'host' => 'radius.example.org',
-    //            'secret' => 'testing123',
-    //            'port' => 1812,
-    //        ],
+    //        // Format: HOST:PORT:SECRET
+    //        'radius.example.org:1812:testing123',
     //    ],
     //    'addRealm' => 'example.org',
     //    'nasIdentifier' => 'vpn.example.org',

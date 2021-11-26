@@ -47,14 +47,13 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
         }
 
         $radiusAuth = radius_auth_open();
-
-        // XXX rename the radius server keys to 'h' / 'p' / 'secret' or use URL notation, e.g. secret@host:port
         foreach ($this->serverList as $radiusServer) {
+            [$radiusHost, $radiusPort, $radiusSecret] = explode(':', $radiusServer, 3);
             if (false === radius_add_server(
                 $radiusAuth,
-                $radiusServer['host'],
-                \array_key_exists('port', $radiusServer) ? $radiusServer['port'] : 1812,
-                $radiusServer['secret'],
+                $radiusHost,
+                (int) $radiusPort,
+                $radiusSecret,
                 5,  // timeout
                 3   // max_tries
             )) {
