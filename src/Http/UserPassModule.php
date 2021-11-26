@@ -71,6 +71,7 @@ class UserPassModule implements ServiceModuleInterface
         );
     }
 
+    // XXX should not return bool, but exception
     private static function validateRedirectTo(Request $request, string $redirectTo): bool
     {
         // XXX improve this, take idea from php-saml-sp
