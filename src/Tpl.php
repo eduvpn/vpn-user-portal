@@ -43,22 +43,24 @@ class Tpl implements TplInterface
     /** @var array<string,callable> */
     private array $callbackList = [];
 
-    public function __construct(string $baseDir, ?string $styleName, string $uiLanguage)
+    /**
+     * @param array<string,mixed> $templateVariables
+     */
+    public function __construct(string $baseDir, ?string $styleName, string $uiLanguage, array $templateVariables = [])
     {
         $this->templateFolderList = self::templateFolderList($baseDir, $styleName);
         $this->translationFolderList = self::translationFolderList($baseDir, $styleName);
         $this->uiLanguage = $uiLanguage;
         $this->assetDir = $baseDir.'/web';
+        $this->templateVariables = $templateVariables;
     }
 
     /**
-     * XXX rename to something better.
-     *
-     * @param array<string,mixed> $templateVariables
+     * @param mixed $v
      */
-    public function addDefault(array $templateVariables): void
+    public function addDefault(string $k, $v): void
     {
-        $this->templateVariables = array_merge($this->templateVariables, $templateVariables);
+        $this->templateVariables[$k] = $v;
     }
 
     public function addCallback(string $callbackName, callable $cb): void

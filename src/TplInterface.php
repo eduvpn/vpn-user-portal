@@ -14,9 +14,9 @@ namespace LC\Portal;
 interface TplInterface
 {
     /**
-     * @param array<string,mixed> $templateVariables
+     * @param mixed $v
      */
-    public function addDefault(array $templateVariables): void;
+    public function addDefault(string $k, $v): void;
 
     /**
      * @param array<string,mixed> $templateVariables

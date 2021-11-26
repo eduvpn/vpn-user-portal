@@ -68,8 +68,10 @@ try {
     if (null === $uiLanguage = $request->getCookie('L')) {
         $uiLanguage = $config->defaultLanguage();
     }
-    $tpl = new Tpl($baseDir, $config->styleName(), $uiLanguage);
-    $tpl->addDefault(
+    $tpl = new Tpl(
+        $baseDir,
+        $config->styleName(),
+        $uiLanguage,
         [
             'portalHostname' => gethostname(),
             'enableConfigDownload' => $config->enableConfigDownload(),
