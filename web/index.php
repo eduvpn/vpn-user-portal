@@ -69,6 +69,22 @@ try {
         $uiLanguage = $config->defaultLanguage();
     }
     $tpl = new Tpl($baseDir, $config->styleName(), $uiLanguage);
+    $tpl->addDefault(
+        [
+            'portalHostname' => gethostname(),
+            'enableConfigDownload' => $config->enableConfigDownload(),
+            'requestUri' => $request->getUri(),
+            'requestRoot' => $request->getRoot(),
+            'requestRootUri' => $request->getRootUri(),
+            // XXX proper config option
+            'enabledLanguages' => $config->requireStringArray('enabledLanguages', ['en-US']),
+            'portalVersion' => trim(FileIO::readFile($baseDir.'/VERSION')),
+            'isAdmin' => false,
+            'uiLanguage' => $uiLanguage,
+            '_show_logout_button' => true,
+            'authModule' => $config->authModule(),
+        ]
+    );
 
     FileIO::createDir($baseDir.'/data', 0700);
     $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
@@ -97,28 +113,10 @@ try {
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
     $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config->sessionConfig());
 
-    // Authentication
-    $authModuleCfg = $config->authModule();
-
-    $templateDefaults = [
-        'portalHostname' => gethostname(),
-        'enableConfigDownload' => $config->enableConfigDownload(),
-        'requestUri' => $request->getUri(),
-        'requestRoot' => $request->getRoot(),
-        'requestRootUri' => $request->getRootUri(),
-        'enabledLanguages' => $config->requireStringArray('enabledLanguages', ['en-US']),
-        'portalVersion' => trim(FileIO::readFile($baseDir.'/VERSION')),
-        'isAdmin' => false,
-        'uiLanguage' => $uiLanguage,
-        '_show_logout_button' => true,
-    ];
-
-    $tpl->addDefault($templateDefaults);
-
     $service = new Service();
     $service->addBeforeHook(new CsrfProtectionHook());
 
-    switch ($authModuleCfg) {
+    switch ($config->authModule()) {
         case 'DbAuthModule':
             $authModule = new UserPassAuthModule($sessionBackend, $tpl);
             $service->addModule(
@@ -198,7 +196,6 @@ try {
     }
 
     $service->setAuthModule($authModule);
-    $tpl->addDefault(['authModule' => $authModuleCfg]);
 
     if (null !== $accessPermissionList = $config->optionalStringArray('accessPermissionList')) {
         // hasAccess
