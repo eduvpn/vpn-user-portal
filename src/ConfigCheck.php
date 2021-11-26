@@ -18,7 +18,7 @@ class ConfigCheck
      */
     public static function verify(Config $config): array
     {
-        $problemList = [];
+        $issueList = [];
         $usedRangeList = [];
 
         foreach ($config->profileConfigList() as $profileConfig) {
@@ -27,13 +27,13 @@ class ConfigCheck
             self::verifyDefaultGatewayHasDnsServerList($profileConfig, $profileProblemList);
             self::verifyRangeOverlap($profileConfig, $usedRangeList, $profileProblemList);
 
-            $problemList[$profileConfig->profileId()] = $profileProblemList;
+            $issueList[$profileConfig->profileId()] = $profileProblemList;
         }
 
         // check OpenVPN port overlap (per node)
         // make sure IP space is big enough for OpenVPN/WireGuard
 
-        return $problemList;
+        return $issueList;
     }
 
     /**
