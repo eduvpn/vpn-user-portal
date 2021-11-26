@@ -166,10 +166,7 @@ try {
                 new UserPassModule(
                     new RadiusCredentialValidator(
                         $logger,
-                        $config->s('RadiusAuthModule')->requireStringArray('serverList'),
-                        $config->s('RadiusAuthModule')->optionalString('addRealm'),
-                        $config->s('RadiusAuthModule')->optionalString('nasIdentifier'),
-                        $config->s('RadiusAuthModule')->optionalInt('permissionAttribute'),
+                        $config->radiusAuthConfig()
                     ),
                     $sessionBackend,
                     $tpl

@@ -158,6 +158,11 @@ class Config
         return new MellonAuthConfig($this->s('MellonAuthModule')->toArray());
     }
 
+    public function radiusAuthConfig(): RadiusAuthConfig
+    {
+        return new RadiusAuthConfig($this->s('RadiusAuthModule')->toArray());
+    }
+
     public function ldapAuthConfig(): LdapAuthConfig
     {
         return new LdapAuthConfig($this->s('LdapAuthModule')->toArray());

@@ -14,26 +14,21 @@ namespace LC\Portal\Http\Auth;
 use LC\Portal\Http\Auth\Exception\RadiusException;
 use LC\Portal\Http\UserInfo;
 use LC\Portal\LoggerInterface;
+use LC\Portal\RadiusAuthConfig;
 use RuntimeException;
 
 class RadiusCredentialValidator implements CredentialValidatorInterface
 {
     private LoggerInterface $logger;
-    private array $serverList;
-    private ?string $radiusRealm;
-    private ?string $nasIdentifier;
-    private ?int $permissionAttribute;
+    private RadiusAuthConfig $radiusAuthConfig;
 
-    public function __construct(LoggerInterface $logger, array $serverList, ?string $radiusRealm, ?string $nasIdentifier, ?int $permissionAttribute)
+    public function __construct(LoggerInterface $logger, RadiusAuthConfig $radiusAuthConfig)
     {
         if (false === \extension_loaded('radius')) {
             throw new RuntimeException('"radius" PHP extension not available');
         }
         $this->logger = $logger;
-        $this->serverList = $serverList;
-        $this->radiusRealm = $radiusRealm;
-        $this->nasIdentifier = $nasIdentifier;
-        $this->permissionAttribute = $permissionAttribute;
+        $this->radiusAuthConfig = $radiusAuthConfig;
     }
 
     /**
@@ -42,12 +37,12 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
     public function isValid(string $authUser, string $authPass)
     {
         // add realm when requested
-        if (null !== $this->radiusRealm) {
-            $authUser = sprintf('%s@%s', $authUser, $this->radiusRealm);
+        if (null !== $radiusRealm = $this->radiusAuthConfig->radiusRealm()) {
+            $authUser = sprintf('%s@%s', $authUser, $radiusRealm);
         }
 
         $radiusAuth = radius_auth_open();
-        foreach ($this->serverList as $radiusServer) {
+        foreach ($this->radiusAuthConfig->serverList() as $radiusServer) {
             [$radiusHost, $radiusPort, $radiusSecret] = explode(':', $radiusServer, 3);
             if (false === radius_add_server(
                 $radiusAuth,
@@ -73,8 +68,8 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
 
         radius_put_attr($radiusAuth, RADIUS_USER_NAME, $authUser);
         radius_put_attr($radiusAuth, RADIUS_USER_PASSWORD, $authPass);
-        if (null !== $this->nasIdentifier) {
-            radius_put_attr($radiusAuth, RADIUS_NAS_IDENTIFIER, $this->nasIdentifier);
+        if (null !== $nasIdentifier = $this->radiusAuthConfig->nasIdentifier()) {
+            radius_put_attr($radiusAuth, RADIUS_NAS_IDENTIFIER, $nasIdentifier);
         }
 
         $radiusResponse = radius_send_request($radiusAuth);
@@ -91,13 +86,13 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
         }
 
         $permissionList = [];
-        if (null !== $this->permissionAttribute) {
+        if (null !== $permissionAttribute = $this->radiusAuthConfig->permissionAttribute()) {
             // find the authorization attribute and use its value
             while ($radiusAttribute = radius_get_attr($radiusAuth)) {
                 if (!\is_array($radiusAttribute)) {
                     continue;
                 }
-                if ($this->permissionAttribute !== $radiusAttribute['attr']) {
+                if ($permissionAttribute !== $radiusAttribute['attr']) {
                     continue;
                 }
                 $permissionList[] = $radiusAttribute['data'];
