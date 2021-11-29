@@ -120,7 +120,7 @@ try {
 
     $connectionManager = new ConnectionManager(
         $config,
-        new VpnDaemon(new CurlHttpClient(), $logger),
+        new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger),
         $storage
     );
 

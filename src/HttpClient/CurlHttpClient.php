@@ -17,6 +17,13 @@ use RuntimeException;
 
 class CurlHttpClient implements HttpClientInterface
 {
+    private ?string $certPath;
+
+    public function __construct(?string $certPath)
+    {
+        $this->certPath = $certPath;
+    }
+
     public function send(HttpClientRequest $httpClientRequest): HttpClientResponse
     {
         if (false === $curlChannel = curl_init()) {
@@ -30,6 +37,10 @@ class CurlHttpClient implements HttpClientInterface
             CURLOPT_HEADER => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_3,
+            CURLOPT_CAINFO => null !== $this->certPath ? $this->certPath.'/ca.crt' : null,
+            CURLOPT_SSLCERT => null !== $this->certPath ? $this->certPath.'/vpn-daemon-client.crt' : null,
+            CURLOPT_SSLKEY => null !== $this->certPath ? $this->certPath.'/vpn-daemon-client.key' : null,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 15,
             CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,

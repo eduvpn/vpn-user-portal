@@ -67,7 +67,7 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $vpnDaemon = new VpnDaemon(new CurlHttpClient(), $logger);
+    $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger);
 
     // Obtain a list of all WireGuard/OpenVPN peers/clients that we have in the
     // database

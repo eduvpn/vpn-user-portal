@@ -228,7 +228,7 @@ try {
         $oauthSigner->publicKey()
     );
 
-    $vpnDaemon = new VpnDaemon(new CurlHttpClient(), $logger);
+    $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger);
     $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage);
 
     // portal module
