@@ -38,7 +38,11 @@
 <?php else: ?>
     <span class="success" title="<?=$this->e($nodeUrl); ?>">
 <?php endif; ?>
-            <?=$this->t('Online'); ?><br>
+            <?=$this->t('Online'); ?>
+<?php if (0 === strpos($nodeUrl, 'https://')): ?>
+🔒
+<?php endif; ?>
+                <br>
                 <small>
 <?=$this->e(sprintf('%d%%', $loadPct)); ?>
                 </small>
