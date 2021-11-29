@@ -177,7 +177,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "c2791caeb80affeb28c0e6132004b5033e46f557"
+                "reference": "ca362c6a32ffeac9f9cd73d42f6f794d0de686f5"
             },
             "require": {
                 "ext-curl": "*",
@@ -188,13 +188,14 @@
                 "ext-libxml": "*",
                 "ext-openssl": "*",
                 "ext-pcre": "*",
-                "ext-session": "*",
                 "ext-sodium": "*",
                 "ext-spl": "*",
                 "ext-zlib": "*",
-                "php": ">=7.3"
+                "fkooman/secookie": "6.x-dev",
+                "php": ">=7.4"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2",
                 "phpunit/phpunit": "^9"
             },
             "type": "project",
@@ -222,7 +223,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2021-05-03T18:57:08+00:00"
+            "time": "2021-11-27T11:16:47+00:00"
         },
         {
             "name": "myclabs/deep-copy",
