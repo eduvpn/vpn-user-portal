@@ -105,7 +105,7 @@ class ClientConfig implements ClientConfigInterface
         }
 
         // no default gateway and no search domains available, nothing to do
-        if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsDomainSearch())) {
+        if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsSearchDomainList())) {
             return [];
         }
 
@@ -113,7 +113,7 @@ class ClientConfig implements ClientConfigInterface
         return array_unique(
             array_merge(
                 $dnsServerList,
-                $profileConfig->dnsDomainSearch()
+                $profileConfig->dnsSearchDomainList()
             )
         );
     }

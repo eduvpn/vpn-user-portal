@@ -172,7 +172,7 @@ class ServerConfig
             '</tls-crypt>',
         ];
 
-        if (!$profileConfig->enableLog()) {
+        if (!$profileConfig->oEnableLog()) {
             $serverConfig[] = 'log /dev/null';
         }
 
@@ -189,7 +189,7 @@ class ServerConfig
             $serverConfig[] = 'push "explicit-exit-notify 1"';
         }
 
-        if ($profileConfig->clientToClient()) {
+        if ($profileConfig->oClientToClient()) {
             // XXX document that the administrator may need to push the range
             // and range6 routes as well when not in full-tunnel when wanting
             // to reach other clients on other OpenVPN processes
@@ -224,7 +224,7 @@ class ServerConfig
         if ($profileConfig->defaultGateway()) {
             // send all IPv4 and IPv6 traffic over the VPN tunnel
             $redirectFlags = ['def1', 'ipv6'];
-            if ($profileConfig->blockLan()) {
+            if ($profileConfig->oBlockLan()) {
                 // Block  access to local LAN
                 $redirectFlags[] = 'block-local';
             }
@@ -277,8 +277,9 @@ class ServerConfig
             return [];
         }
 
+        // XXX also consider oDnsDomain for the search list! as it is an openvpn-only option...
         // no default gateway and no search domains available, nothing to do
-        if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsDomainSearch())) {
+        if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsSearchDomainList())) {
             return [];
         }
 
@@ -292,12 +293,12 @@ class ServerConfig
         }
 
         // push DOMAIN
-        if (null !== $dnsDomain = $profileConfig->dnsDomain()) {
+        if (null !== $dnsDomain = $profileConfig->oDnsDomain()) {
             $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsDomain);
         }
         // push DOMAIN-SEARCH,
-        foreach ($profileConfig->dnsDomainSearch() as $dnsDomainSearch) {
-            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsDomainSearch);
+        foreach ($profileConfig->dnsSearchDomainList() as $dnsSearchDomain) {
+            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsSearchDomain);
         }
 
         return $dnsEntries;

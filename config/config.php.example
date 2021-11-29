@@ -225,18 +225,13 @@ return [
             // REQUIRED
             'hostName' => 'vpn.example',
 
-            // The preferred VPN protocol (if both OpenVPN and WireGuard are
-            // supported)
-            // OPTIONAL, DEFAULT = openvpn
-            //'preferredProto' => 'wireguard',
-
             // Route all client traffic over the VPN
             // OPTIONAL, DEFAULT = true
             //'defaultGateway' => false,
 
             // Provide DNS server(s) to the VPN client
-            // *Only* used when defaultGateway is true or dnsDomain /
-            // dnsDomainSearch are specified
+            // *Only* used when defaultGateway is true or oDnsDomain /
+            // dnsSearchDomainList are specified
             // DEFAULT  = []
             'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
 
@@ -259,13 +254,18 @@ return [
             // OPTIONAL, DEFAULT = null
             //'aclPermissionList' => [],
 
-            // ** WireGuard & OpenVPN **
-            // DEFAULT = []
-            //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
+            // List of domains
+            // OPTIONAL, DEFAULT = []
+            //'dnsSearchDomainList' => ['a.example.org', 'b.example.org'],
 
             // The URL for connecting to the "node"
             // OPTIONAL, DEFAULT = 'http://localhost:41194'
             //'nodeUrl' => 'http://localhost:41194',
+
+            // The preferred VPN protocol (if both OpenVPN and WireGuard are
+            // supported)
+            // OPTIONAL, DEFAULT = openvpn
+            //'preferredProto' => 'wireguard',
 
             // ****************************************************************
             // * WireGuard                                                    *
@@ -295,9 +295,6 @@ return [
             // REQUIRED (for OpenVPN support)
             'oRangeSix' => 'fd42::/64',
 
-            // DEFAULT = null
-            //'dnsDomain' => 'example.org',
-
             // UDP ports used by OpenVPN server
             // together with "tcpPortList" the number of ports MUST be
             // 1,2,4,8,16,32 or 64
@@ -320,17 +317,20 @@ return [
             // DEFAULT: []
             //'oExposedTcpPortList' => [],
 
+            // DEFAULT = null
+            //'oDnsDomain' => 'example.org',
+
             // Block access to local LAN when VPN is active
             // OpenVPN Only, OPTIONAL, DEFAULT = false
-            //'blockLan' => true,
+            //'oBlockLan' => true,
 
             // Allow traffic between VPN clients
             // OpenVPN Only, OPTIONAL, DEFAULT = false
-            //'clientToClient' => true,
+            //'oClientToClient' => true,
 
             // Enable OpenVPN server logging
             // OpenVPN Only, OPTIONAL, DEFAULT = false
-            //'enableLog' => true,
+            //'oEnableLog' => true,
         ],
     ],
 ];

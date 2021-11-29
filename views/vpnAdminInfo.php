@@ -103,18 +103,18 @@
                     <span class="plain"><?=$this->t('Default Gateway'); ?></span>
 <?php endif; ?>
 
-<?php if ($profileConfig->clientToClient()): ?>
+<?php if ($profileConfig->oClientToClient()): ?>
                     <span class="plain"><?=$this->t('Client-to-client'); ?></span>
     <?php endif; ?>
 
 <?php if ($profileConfig->oSupport()): ?>
-<?php if ($profileConfig->enableLog()): ?>
+<?php if ($profileConfig->oEnableLog()): ?>
                     <span class="plain"><?=$this->t('OpenVPN Server Log'); ?></span>
 <?php endif; ?>
 <?php endif; ?>
 
 <?php if ($profileConfig->oSupport()): ?>
-<?php if ($profileConfig->blockLan()): ?>
+<?php if ($profileConfig->oBlockLan()): ?>
                     <span class="plain"><?=$this->t('Block LAN'); ?></span>
 <?php endif; ?>
 <?php endif; ?>
@@ -167,15 +167,15 @@
             </td></tr>
 <?php endif; ?>
 
-<?php if (null !== $dnsDomain = $profileConfig->dnsDomain()): ?>
-            <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($dnsDomain); ?></code></td></tr>
+<?php if (null !== $oDnsDomain = $profileConfig->oDnsDomain()): ?>
+            <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($oDnsDomain); ?></code></td></tr>
 <?php endif; ?>
 
-<?php if (0 !== count($profileConfig->dnsDomainSearch())): ?>
+<?php if (0 !== count($profileConfig->dnsSearchDomainList())): ?>
             <tr><th><?=$this->t('DNS Search Domain(s)'); ?></th>
             <td>
-<?php foreach ($profileConfig->dnsDomainSearch() as $dnsDomain): ?>
-                <span class="plain"><code><?=$this->e($dnsDomain); ?></code></span>
+<?php foreach ($profileConfig->dnsSearchDomainList() as $dnsSearchDomain): ?>
+                <span class="plain"><code><?=$this->e($dnsSearchDomain); ?></code></span>
 <?php endforeach; ?>
             </td>
             </tr>
