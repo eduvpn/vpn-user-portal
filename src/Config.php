@@ -102,23 +102,24 @@ class Config
 
     public function hasProfile(string $profileId): bool
     {
-        return null !== $this->s('vpnProfiles')->optionalArray($profileId);
+        foreach ($this->profileConfigList() as $profileConfig) {
+            if ($profileId === $profileConfig->profileId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function profileConfig(string $profileId): ProfileConfig
     {
-        if (null === $profileData = $this->s('vpnProfiles')->optionalArray($profileId)) {
-            throw new ConfigException('profile "'.$profileId.'" does not exist');
+        foreach ($this->profileConfigList() as $profileConfig) {
+            if ($profileId === $profileConfig->profileId()) {
+                return $profileConfig;
+            }
         }
 
-        return new ProfileConfig(
-            array_merge(
-                [
-                    'profileId' => $profileId,
-                ],
-                $profileData
-            )
-        );
+        throw new ConfigException('profile "'.$profileId.'" does not exist');
     }
 
     /**
@@ -127,15 +128,8 @@ class Config
     public function profileConfigList(): array
     {
         $profileConfigList = [];
-        foreach ($this->s('vpnProfiles')->toArray() as $profileId => $profileData) {
-            $profileConfigList[] = new ProfileConfig(
-                array_merge(
-                    [
-                        'profileId' => $profileId,
-                    ],
-                    $profileData
-                )
-            );
+        foreach ($this->s('vpnProfiles')->toArray() as $profileData) {
+            $profileConfigList[] = new ProfileConfig($profileData);
         }
 
         return $profileConfigList;

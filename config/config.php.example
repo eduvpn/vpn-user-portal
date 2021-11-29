@@ -211,135 +211,126 @@ return [
 
     // List of VPN profiles
     'vpnProfiles' => [
-        'default' => [
-            // ** WireGuard & OpenVPN **
-            // The preferred VPN protocol.
-            // Only makes sense if both OpenVPN and WireGuard are enabled.
-            // DEFAULT: openvpn if both OpenVPN and WireGuard are enabled.
-            //'preferredProto' => 'openvpn',
-            //'preferredProto' => 'wireguard',
+        [
+            // Unique identifier for this profile.
+            // REQUIRED
+            'profileId' => 'default',
 
             // ** WireGuard & OpenVPN **
             // The name of the profile as shown in the user and admin portals
             // REQUIRED
             'displayName' => 'Default',
 
-            // ** OpenVPN **
-            // The IPv4 range of the network that will be assigned to OpenVPN
-            // clients
-            // REQUIRED (when vpnProto contains "openvpn")
-            'oRangeFour' => '10.42.42.0/24',
-
-            // ** OpenVPN **
-            // The IPv6 range of the network that will be assigned to OpenVPN
-            // clients
-            // REQUIRED (when vpnProto contains "openvpn")
-            'oRangeSix' => 'fd42::/64',
-
-            // ** WireGuard **
-            // The IPv4 range of the network that will be assigned to WireGuard
-            // clients
-            // REQUIRED (when vpnProto contains "wireguard")
-            'wRangeFour' => '10.43.43.0/24',
-
-            // ** WireGuard **
-            // The IPv6 range of the network that will be assigned to WireGuard
-            // clients
-            // REQUIRED (when vpnProto contains "wireguard")
-            'wRangeSix' => 'fd43::/64',
-
-            // ** WireGuard & OpenVPN **
             // The hostname the VPN client(s) will connect to
             // REQUIRED
             'hostName' => 'vpn.example',
 
-            // ** WireGuard & OpenVPN **
-            // Whether or not to route all traffic from the client over the VPN
-            // DEFAULT = true
+            // The preferred VPN protocol (if both OpenVPN and WireGuard are
+            // supported)
+            // OPTIONAL, DEFAULT = openvpn
+            //'preferredProto' => 'wireguard',
+
+            // Route all client traffic over the VPN
+            // OPTIONAL, DEFAULT = true
             //'defaultGateway' => false,
 
-            // ** WireGuard & OpenVPN **
-            // IPv4 and IPv6 routes to push to the client
-            // DEFAULT = []
-            //'routeList' => [
-            //    '192.168.1.0/24',
-            //    'fd01:1:1:1::/64',
-            //],
-
-            // ** OpenVPN Only **
-            // IPv4 and IPv6 routes to push to the client to be sent outside of
-            // the VPN, i.e. route all traffic over VPN *except* these prefixes
-            // DEFAULT = []
-            //'excludeRouteList' => [
-            //],
-
-            // ** WireGuard & OpenVPN **
-            // XXX think about DNS in default scenario, what about "split tunnel"?
-            // IPv4 and IPv6 address of DNS server(s) to push to the client
-            // default could be Quad9 when defaultGateway = true (default) and
-            // default could be [] when defaultGateway = true, might be confusing?!
+            // Provide DNS server(s) to the VPN client
+            // *Only* used when defaultGateway is true or dnsDomain /
+            // dnsDomainSearch are specified
             // DEFAULT  = []
-            // Quad9 (https://www.quad9.net)
             'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
 
-            // ** WireGuard & OpenVPN **
-            // The base URL to connect to the VPN node
-            // DEFAULT = 'http://localhost:41194'
-            //'nodeUrl' => 'http://localhost:41194',
+            // Route client traffic for selected prefixes over the VPN
+            // OPTIONAL, DEFAULT = []
+            //'routeList' => [
+            //    '192.168.1.0/24',
+            //    'fd11::/64',
+            //],
 
-            // ** OpenVPN Only **
-            // Block access to local LAN when VPN is active
-            // DEFAULT = false
-            //'blockLan' => false,
+            // Do NOT route client traffic for selected prefixes over the VPN
+            // OPTIONAL, DEFAULT = []
+            //'excludeRouteList' => [
+            //    '192.168.1.5/32',
+            //    'fd11::11/128',
+            //],
 
-            // ** OpenVPN Only **
-            // Whether or not to allow client-to-client traffic
-            // DEFAULT = false
-            //'clientToClient' => false,
-
-            // ** OpenVPN Only **
-            // Whether or not to enable OpenVPN logging
-            // DEFAULT = false
-            //'enableLog' => false,
-
-            // ** WireGuard & OpenVPN **
-            // The list of permissions to allow access, if NOT set no ACL!
-            // DEFAULT  = null
+            // Restrict access to this profile to accounts with the listed
+            // Permissions. If NOT set, no restrictions!
+            // OPTIONAL, DEFAULT = null
             //'aclPermissionList' => [],
 
-            // ** OpenVPN Only **
+            // ** WireGuard & OpenVPN **
+            // DEFAULT = []
+            //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
+
+            // The URL for connecting to the "node"
+            // OPTIONAL, DEFAULT = 'http://localhost:41194'
+            //'nodeUrl' => 'http://localhost:41194',
+
+            // ****************************************************************
+            // * WireGuard                                                    *
+            // ****************************************************************
+
+            // The IPv4 range of the network that will be assigned to WireGuard
+            // clients
+            // REQUIRED (for WireGuard support)
+            'wRangeFour' => '10.43.43.0/24',
+
+            // The IPv6 range of the network that will be assigned to WireGuard
+            // clients
+            // REQUIRED (for WireGuard support)
+            'wRangeSix' => 'fd43::/64',
+
+            // ****************************************************************
+            // * OpenVPN                                                      *
+            // ****************************************************************
+
+            // The IPv4 range of the network that will be assigned to OpenVPN
+            // clients
+            // REQUIRED (for OpenVPN support)
+            'oRangeFour' => '10.42.42.0/24',
+
+            // The IPv6 range of the network that will be assigned to OpenVPN
+            // clients
+            // REQUIRED (for OpenVPN support)
+            'oRangeSix' => 'fd42::/64',
+
+            // DEFAULT = null
+            //'dnsDomain' => 'example.org',
+
             // UDP ports used by OpenVPN server
             // together with "tcpPortList" the number of ports MUST be
             // 1,2,4,8,16,32 or 64
             // DEFAULT: [1194]
             //'oUdpPortList' => [1194],
 
-            // ** OpenVPN Only **
             // TCP ports used by OpenVPN server
             // together with "udpPortList" the number of ports MUST be
             // 1,2,4,8,16,32 or 64
             // DEFAULT: [1194]
             //'oTcpPortList' => [1194],
 
-            // ** OpenVPN Only **
             // UDP ports used by the VPN client to connect to the OpenVPN
             // server. If missing, or empty uses udpPortList
             // DEFAULT: []
             //'oExposedUdpPortList' => [],
 
-            // ** OpenVPN Only **
             // TCP ports used by the VPN client to connect to the OpenVPN
             // server. If missing, or empty uses tcpPortList
             // DEFAULT: []
             //'oExposedTcpPortList' => [],
 
-            // ** OpenVPN Only **
-            // DEFAULT = null
-            //'dnsDomain' => 'example.org',
+            // Block access to local LAN when VPN is active
+            // OpenVPN Only, OPTIONAL, DEFAULT = false
+            //'blockLan' => true,
 
-            // ** WireGuard & OpenVPN **
-            // DEFAULT = []
-            //'dnsDomainSearch' => ['a.example.org', 'b.example.org'],
+            // Allow traffic between VPN clients
+            // OpenVPN Only, OPTIONAL, DEFAULT = false
+            //'clientToClient' => true,
+
+            // Enable OpenVPN server logging
+            // OpenVPN Only, OPTIONAL, DEFAULT = false
+            //'enableLog' => true,
         ],
     ],
 ];
