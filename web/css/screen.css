@@ -247,6 +247,12 @@ fieldset {
   padding: 0;
 }
 
+table.tbl table {
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 0.5em;
+}
+
 table.tbl {
   width: 100%;
   border: 1px solid #ededed;

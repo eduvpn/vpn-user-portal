@@ -179,24 +179,10 @@
             </tr>
 <?php endif; ?>
 
-<?php if (array_key_exists($profileConfig->profileId(), $problemList) && 0 !== count($problemList[$profileConfig->profileId()])): ?>
-            <tr>
-                <th><?=$this->t('Issues'); ?></th>
-                <td>
-                    <ul>
-<?php foreach ($problemList[$profileConfig->profileId()] as $p):?>
-                        <li><?=$this->e($p); ?></li>
-<?php endforeach; ?>
-                    </ul>
-                </td>
-            </tr>
-<?php endif; ?>
-        </tbody>
-    </table>
-
 <?php if ($profileConfig->oSupport()):?>
-    <h4>OpenVPN</h4>
-    <table class="tbl">
+        <tr><th><?=$this->t('OpenVPN'); ?></th>
+        <td>
+    <table>
         <tbody>
 <?php if ($profileConfig->oClientToClient() || $profileConfig->oEnableLog() || $profileConfig->oBlockLan()):?>
             <tr>
@@ -256,11 +242,15 @@
 <?php endif; ?>
         </tbody>
     </table>
+        </td>
+        </tr>
 <?php endif; ?>
 
+
 <?php if ($profileConfig->wSupport()):?>
-<h4>WireGuard</h4>
-    <table class="tbl">
+        <tr><th><?=$this->t('WireGuard'); ?></th>
+        <td>
+    <table>
         <tbody>
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
@@ -275,7 +265,23 @@
 
         </tbody>
     </table>
+        </td>
+        <tr>
 <?php endif; ?>
 
+<?php if (array_key_exists($profileConfig->profileId(), $problemList) && 0 !== count($problemList[$profileConfig->profileId()])): ?>
+            <tr>
+                <th><?=$this->t('Issues'); ?></th>
+                <td>
+                    <ul>
+<?php foreach ($problemList[$profileConfig->profileId()] as $p):?>
+                        <li><?=$this->e($p); ?></li>
+<?php endforeach; ?>
+                    </ul>
+                </td>
+            </tr>
+<?php endif; ?>
+        </tbody>
+    </table>
 <?php endforeach; ?>
 <?php $this->stop('content'); ?>
