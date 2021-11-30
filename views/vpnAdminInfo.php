@@ -2,7 +2,7 @@
 <?php /** @var \LC\Portal\Tpl $this */?>
 <?php /** @var \LC\Portal\ServerInfo $serverInfo */?>
 <?php /** @var array<\LC\Portal\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<string,null|array{load_average:array<float>,cpu_count:int}> $nodeInfoList */?>
+<?php /** @var array<string,null|array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int}> $nodeInfoList */?>
 <?php /** @var string $portalVersion */?>
 <?php /** @var array<string,array<string>> $problemList */?>
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
@@ -32,11 +32,10 @@
 <?php if (null === $nodeInfo): ?>
             <span class="error" title="<?=$this->e($nodeUrl); ?>"><?=$this->t('Offline'); ?><br><small><?=$this->t('N/A'); ?></small></span>
 <?php else: ?>
-<?php $loadPct = 100 * $nodeInfo['load_average'][0] / $nodeInfo['cpu_count']; ?>
-<?php if ($loadPct >= 75): ?>
-    <span class="warning" title="<?=$this->e($nodeUrl); ?>">
+<?php if ($nodeInfo['rel_load_average'][0] >= 75): ?>
+            <span class="warning" title="<?=$this->e($nodeUrl); ?> [<?=implode(', ', $nodeInfo['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['cpu_count']); ?>">
 <?php else: ?>
-    <span class="success" title="<?=$this->e($nodeUrl); ?>">
+            <span class="success" title="<?=$this->e($nodeUrl); ?> [<?=implode(', ', $nodeInfo['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['cpu_count']); ?>">
 <?php endif; ?>
             <?=$this->t('Online'); ?>
 <?php if (0 === strpos($nodeUrl, 'https://')): ?>
@@ -44,7 +43,7 @@
 <?php endif; ?>
                 <br>
                 <small>
-<?=$this->e(sprintf('%d%%', $loadPct)); ?>
+<?=$this->e(sprintf('%d%%', $nodeInfo['rel_load_average'][0])); ?>
                 </small>
             </span>
 <?php endif; ?>
