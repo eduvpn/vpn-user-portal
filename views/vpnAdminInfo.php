@@ -95,31 +95,8 @@
             <tr>
                 <th></th>
                 <td>
-<?php if ($profileConfig->oSupport()): ?>
-        <span class="plain openvpn"><?=$this->t('OpenVPN'); ?></span>
-<?php endif; ?>
-<?php if ($profileConfig->wSupport()): ?>
-        <span class="plain wireguard"><?=$this->t('WireGuard'); ?></span>
-<?php endif; ?>
-
 <?php if ($profileConfig->defaultGateway()): ?>
                     <span class="plain"><?=$this->t('Default Gateway'); ?></span>
-<?php endif; ?>
-
-<?php if ($profileConfig->oClientToClient()): ?>
-                    <span class="plain"><?=$this->t('Client-to-client'); ?></span>
-    <?php endif; ?>
-
-<?php if ($profileConfig->oSupport()): ?>
-<?php if ($profileConfig->oEnableLog()): ?>
-                    <span class="plain"><?=$this->t('OpenVPN Server Log'); ?></span>
-<?php endif; ?>
-<?php endif; ?>
-
-<?php if ($profileConfig->oSupport()): ?>
-<?php if ($profileConfig->oBlockLan()): ?>
-                    <span class="plain"><?=$this->t('Block LAN'); ?></span>
-<?php endif; ?>
 <?php endif; ?>
                 </td>
             </tr>
@@ -140,38 +117,12 @@
             <span class="plain"><code><?=$this->e($profileConfig->hostName($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
-
-            <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-<?php if ($profileConfig->oSupport()): ?>
-            <span class="plain openvpn"><code><?=$this->e((string) $profileConfig->oRangeFour($i)); ?></code></span>
-<?php endif; ?>
-<?php if ($profileConfig->wSupport()): ?>
-            <span class="plain wireguard"><code><?=$this->e((string) $profileConfig->wRangeFour($i)); ?></code></span>
-<?php endif; ?>
-<?php endfor; ?>
-            </td></tr>
-            <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-<?php if ($profileConfig->oSupport()): ?>
-            <span class="plain openvpn"><code><?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
-<?php endif; ?>
-<?php if ($profileConfig->wSupport()): ?>
-            <span class="plain wireguard"><code><?=$this->e((string) $profileConfig->wRangeSix($i)); ?></code></span>
-<?php endif; ?>
-<?php endfor; ?>
-            </td></tr>
-
 <?php if (1 !== $profileConfig->nodeCount() || 'http://localhost:41194' !== $profileConfig->nodeUrl(0)): ?>
             <tr><th><?=$this->t('Node URL'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
             <span class="plain"><code><?=$this->e($profileConfig->nodeUrl($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
-<?php endif; ?>
-
-<?php if (null !== $oDnsDomain = $profileConfig->oDnsDomain()): ?>
-            <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($oDnsDomain); ?></code></td></tr>
 <?php endif; ?>
 
 <?php if (0 !== count($profileConfig->dnsSearchDomainList())): ?>
@@ -228,36 +179,6 @@
             </tr>
 <?php endif; ?>
 
-<?php if ($profileConfig->oSupport()): ?>
-<?php if (0 !== count($profileConfig->oUdpPortList()) || 0 !== count($profileConfig->oTcpPortList())): ?>
-            <tr><th><?=$this->t('Ports'); ?></th>
-            <td>
-<?php foreach ($profileConfig->oUdpPortList() as $udpPort): ?>
-                    <span class="plain"><code><?=$this->e(sprintf('udp/%s', $udpPort)); ?></code></span>
-<?php endforeach; ?>
-<?php foreach ($profileConfig->oTcpPortList() as $tcpPort): ?>
-                    <span class="plain"><code><?=$this->e(sprintf('tcp/%s', $tcpPort)); ?></code></span>
-<?php endforeach; ?>
-            </td>
-            </tr>
-<?php endif; ?>
-<?php endif; ?>
-
-<?php if ($profileConfig->oSupport()): ?>
-<?php if (0 !== count($profileConfig->oExposedUdpPortList()) || 0 !== count($profileConfig->oExposedTcpPortList())): ?>
-            <tr><th><?=$this->t('Offered Ports'); ?></th>
-            <td>
-<?php foreach ($profileConfig->oExposedUdpPortList() as $oExposedUdpPort): ?>
-                    <span class="plain"><code><?=$this->e(sprintf('udp/%s', $oExposedUdpPort)); ?></code></span>
-<?php endforeach; ?>
-<?php foreach ($profileConfig->oExposedTcpPortList() as $oExposedTcpPort): ?>
-                    <span class="plain"><code><?=$this->e(sprintf('tcp/%s', $oExposedTcpPort)); ?></code></span>
-<?php endforeach; ?>
-            </td>
-            </tr>
-<?php endif; ?>
-<?php endif; ?>
-
 <?php if (array_key_exists($profileConfig->profileId(), $problemList) && 0 !== count($problemList[$profileConfig->profileId()])): ?>
             <tr>
                 <th><?=$this->t('Issues'); ?></th>
@@ -270,9 +191,91 @@
                 </td>
             </tr>
 <?php endif; ?>
+        </tbody>
+    </table>
 
+<?php if ($profileConfig->oSupport()):?>
+    <h4>OpenVPN</h4>
+    <table class="tbl">
+        <tbody>
+<?php if ($profileConfig->oClientToClient() || $profileConfig->oEnableLog() || $profileConfig->oBlockLan()):?>
+            <tr>
+                <th></th>
+                <td>
+<?php if ($profileConfig->oClientToClient()): ?>
+                    <span class="plain"><?=$this->t('Client-to-client'); ?></span>
+<?php endif; ?>
+
+<?php if ($profileConfig->oEnableLog()): ?>
+                    <span class="plain"><?=$this->t('OpenVPN Server Log'); ?></span>
+<?php endif; ?>
+
+<?php if ($profileConfig->oBlockLan()): ?>
+                    <span class="plain"><?=$this->t('Block LAN'); ?></span>
+<?php endif; ?>
+                </td>
+            </tr>
+<?php endif; ?>
+            <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
+<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
+            <span class="plain openvpn"><code><?=$this->e((string) $profileConfig->oRangeFour($i)); ?></code></span>
+<?php endfor; ?>
+            </td></tr>
+            <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
+<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
+            <span class="plain openvpn"><code><?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
+<?php endfor; ?>
+            </td></tr>
+<?php if (null !== $oDnsDomain = $profileConfig->oDnsDomain()): ?>
+            <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($oDnsDomain); ?></code></td></tr>
+<?php endif; ?>
+<?php if (0 !== count($profileConfig->oUdpPortList()) || 0 !== count($profileConfig->oTcpPortList())): ?>
+            <tr><th><?=$this->t('Ports'); ?></th>
+            <td>
+<?php foreach ($profileConfig->oUdpPortList() as $udpPort): ?>
+                    <span class="plain"><code><?=$this->e(sprintf('udp/%s', $udpPort)); ?></code></span>
+<?php endforeach; ?>
+<?php foreach ($profileConfig->oTcpPortList() as $tcpPort): ?>
+                    <span class="plain"><code><?=$this->e(sprintf('tcp/%s', $tcpPort)); ?></code></span>
+<?php endforeach; ?>
+            </td>
+            </tr>
+<?php endif; ?>
+
+<?php if (0 !== count($profileConfig->oExposedUdpPortList()) || 0 !== count($profileConfig->oExposedTcpPortList())): ?>
+            <tr><th><?=$this->t('Offered Ports'); ?></th>
+            <td>
+<?php foreach ($profileConfig->oExposedUdpPortList() as $oExposedUdpPort): ?>
+                    <span class="plain"><code><?=$this->e(sprintf('udp/%s', $oExposedUdpPort)); ?></code></span>
+<?php endforeach; ?>
+<?php foreach ($profileConfig->oExposedTcpPortList() as $oExposedTcpPort): ?>
+                    <span class="plain"><code><?=$this->e(sprintf('tcp/%s', $oExposedTcpPort)); ?></code></span>
+<?php endforeach; ?>
+            </td>
+            </tr>
+<?php endif; ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<?php if ($profileConfig->wSupport()):?>
+<h4>WireGuard</h4>
+    <table class="tbl">
+        <tbody>
+            <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
+<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
+            <span class="plain wireguard"><code><?=$this->e((string) $profileConfig->wRangeFour($i)); ?></code></span>
+<?php endfor; ?>
+            </td></tr>
+            <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
+<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
+            <span class="plain wireguard"><code><?=$this->e((string) $profileConfig->wRangeSix($i)); ?></code></span>
+<?php endfor; ?>
+            </td></tr>
 
         </tbody>
     </table>
+<?php endif; ?>
+
 <?php endforeach; ?>
 <?php $this->stop('content'); ?>
