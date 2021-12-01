@@ -247,12 +247,6 @@ fieldset {
   padding: 0;
 }
 
-table.tbl table {
-  width: 100%;
-  border: 1px solid #eee;
-  border-radius: 0.5em;
-}
-
 table.tbl {
   width: 100%;
   border: 1px solid #ededed;
@@ -268,6 +262,24 @@ ul li, ol li {
 table.tbl th {
   text-align: start;
   vertical-align: top;
+}
+
+table.tbl th.wireguard {
+  color: #88171a;
+  text-align: center;
+  border-bottom: 1px solid #88171a;
+}
+
+table.tbl th.openvpn {
+  color: #ed7f22;
+  text-align: center;
+  border-bottom: 1px solid #ed7f22;
+}
+
+table.tbl th.issues {
+  color: #ff9900;
+  text-align: center;
+  border-bottom: 1px solid #ff9900;
 }
 
 table.tbl td.text-right {

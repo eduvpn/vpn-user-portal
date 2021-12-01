@@ -180,10 +180,7 @@
 <?php endif; ?>
 
 <?php if ($profileConfig->oSupport()):?>
-        <tr><th><?=$this->t('OpenVPN'); ?></th>
-        <td>
-    <table>
-        <tbody>
+        <tr><th colspan="2" class="openvpn"><?=$this->t('OpenVPN'); ?></th></tr>
 <?php if ($profileConfig->oClientToClient() || $profileConfig->oEnableLog() || $profileConfig->oBlockLan()):?>
             <tr>
                 <th></th>
@@ -204,12 +201,12 @@
 <?php endif; ?>
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain openvpn"><code><?=$this->e((string) $profileConfig->oRangeFour($i)); ?></code></span>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->oRangeFour($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain openvpn"><code><?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
 <?php if (null !== $oDnsDomain = $profileConfig->oDnsDomain()): ?>
@@ -240,44 +237,32 @@
             </td>
             </tr>
 <?php endif; ?>
-        </tbody>
-    </table>
-        </td>
-        </tr>
 <?php endif; ?>
 
-
 <?php if ($profileConfig->wSupport()):?>
-        <tr><th><?=$this->t('WireGuard'); ?></th>
-        <td>
-    <table>
-        <tbody>
+        <tr><th colspan="2" class="wireguard"><?=$this->t('WireGuard'); ?></th>
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain wireguard"><code><?=$this->e((string) $profileConfig->wRangeFour($i)); ?></code></span>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->wRangeFour($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
 <?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain wireguard"><code><?=$this->e((string) $profileConfig->wRangeSix($i)); ?></code></span>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->wRangeSix($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
-
-        </tbody>
-    </table>
-        </td>
-        <tr>
 <?php endif; ?>
 
 <?php if (array_key_exists($profileConfig->profileId(), $problemList) && 0 !== count($problemList[$profileConfig->profileId()])): ?>
             <tr>
-                <th><?=$this->t('Issues'); ?></th>
+                <th colspan="2" class="issues"><?=$this->t('Issues'); ?></th>
+            </tr>
+            <tr>
+                <th></th>
                 <td>
-                    <ul>
 <?php foreach ($problemList[$profileConfig->profileId()] as $p):?>
-                        <li><?=$this->e($p); ?></li>
+                        <span class="warning"><?=$this->e($p); ?></span>
 <?php endforeach; ?>
-                    </ul>
                 </td>
             </tr>
 <?php endif; ?>
