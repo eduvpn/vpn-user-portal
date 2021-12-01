@@ -41,6 +41,36 @@ final class IPTest extends TestCase
         static::assertSame('ffff:ffff:ffff:ffff::', $ip->netmask());
     }
 
+    public function testNetwork(): void
+    {
+        $ip = IP::fromIpPrefix('8.8.8.8/0');
+        static::assertSame('0.0.0.0/0', (string) $ip->network());
+
+        $ip = IP::fromIpPrefix('192.168.1.5/24');
+        static::assertSame('192.168.1.0/24', (string) $ip->network());
+
+        $ip = IP::fromIpPrefix('192.168.1.5/32');
+        static::assertSame('192.168.1.5/32', (string) $ip->network());
+
+        $ip = IP::fromIpPrefix('fd00::1:2:3:4/64');
+        static::assertSame('fd00::/64', (string) $ip->network());
+
+        $ip = IP::fromIpPrefix('fd00::1234:1:2:3:4/64');
+        static::assertSame('fd00:0:0:1234::/64', (string) $ip->network());
+
+        $ip = IP::fromIpPrefix('fd00::1234:1:2:3:4/128');
+        static::assertSame('fd00::1234:1:2:3:4/128', (string) $ip->network());
+
+        $ip = IP::fromIpPrefix('fd00::1234:1:2:3:ffff/124');
+        static::assertSame('fd00::1234:1:2:3:fff0/124', (string) $ip->network());
+
+        $ip = IP::fromIpPrefix('fd00::1234:1:2:3:ffff/127');
+        static::assertSame('fd00::1234:1:2:3:fffe/127', (string) $ip->network());
+
+        $ip = IP::fromIpPrefix('2001:1234:1234:1234:1234:1234:1234:1234/0');
+        static::assertSame('::/0', (string) $ip->network());
+    }
+
     public function testIPv4Two(): void
     {
         $ip = IP::fromIpPrefix('192.168.1.0/24');
