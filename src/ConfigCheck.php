@@ -26,14 +26,57 @@ class ConfigCheck
 
             self::verifyDefaultGatewayHasDnsServerList($profileConfig, $profileProblemList);
             self::verifyRangeOverlap($profileConfig, $usedRangeList, $profileProblemList);
+            self::verifyRoutesAndExcludeRoutesAreNormalized($profileConfig, $profileProblemList);
+            self::verifyDnsRouteIsPushedWhenNotDefaultGateway($profileConfig, $profileProblemList);
 
             $issueList[$profileConfig->profileId()] = $profileProblemList;
         }
 
         // check OpenVPN port overlap (per node)
         // make sure IP space is big enough for OpenVPN/WireGuard
+        // verify that when DNS servers are pushed to VPN client that they are also routed over the VPN
 
         return $issueList;
+    }
+
+    private static function verifyRoutesAndExcludeRoutesAreNormalized(ProfileConfig $profileConfig, array &$profileProblemList): void
+    {
+        foreach ($profileConfig->routeList() as $routeIpPrefix) {
+            $ip = IP::fromIpPrefix($routeIpPrefix);
+            if (!$ip->equals($ip->network())) {
+                $profileProblemList[] = sprintf('route "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
+            }
+        }
+
+        foreach ($profileConfig->excludeRouteList() as $routeIpPrefix) {
+            $ip = IP::fromIpPrefix($routeIpPrefix);
+            if (!$ip->equals($ip->network())) {
+                $profileProblemList[] = sprintf('excluded route "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
+            }
+        }
+    }
+
+    private static function verifyDnsRouteIsPushedWhenNotDefaultGateway(ProfileConfig $profileConfig, array &$profileProblemList): void
+    {
+        if ($profileConfig->defaultGateway()) {
+            return;
+        }
+
+        if (0 === \count($profileConfig->dnsServerList())) {
+            return;
+        }
+
+        foreach ($profileConfig->dnsServerList() as $dnsServer) {
+            $dnsServerIp = IP::fromIp($dnsServer);
+            foreach ($profileConfig->routeList() as $routeIpPrefix) {
+                $routeIp = IP::fromIpPrefix($routeIpPrefix);
+                if ($routeIp->contains($dnsServerIp)) {
+                    continue;
+                }
+
+                $profileProblemList[] = sprintf('traffic to DNS server "%s" not routed over VPN', $dnsServerIp->address());
+            }
+        }
     }
 
     /**
