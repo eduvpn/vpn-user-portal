@@ -204,12 +204,12 @@ class ProfileConfig
 
     public function oClientToClient(): bool
     {
-        return $this->requireBool('clientToClient', false);
+        return $this->requireBool('oClientToClient', false);
     }
 
     public function oEnableLog(): bool
     {
-        return $this->requireBool('enableLog', false);
+        return $this->requireBool('oEnableLog', false);
     }
 
     /**
