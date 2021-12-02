@@ -14,7 +14,7 @@ namespace LC\Portal\WireGuard;
 use LC\Portal\Base64;
 use LC\Portal\ClientConfigInterface;
 use LC\Portal\Exception\QrCodeException;
-use LC\Portal\IP;
+use LC\Portal\Ip;
 use LC\Portal\IpNetList;
 use LC\Portal\ProfileConfig;
 use LC\Portal\QrCode;
@@ -52,16 +52,16 @@ class ClientConfig implements ClientConfigInterface
     {
         $routeList = new IpNetList();
         if ($this->profileConfig->defaultGateway()) {
-            $routeList->add(IP::fromIpPrefix('0.0.0.0/0'));
-            $routeList->add(IP::fromIpPrefix('::/0'));
+            $routeList->add(Ip::fromIpPrefix('0.0.0.0/0'));
+            $routeList->add(Ip::fromIpPrefix('::/0'));
         }
         // add the (additional) prefixes we want
         foreach ($this->profileConfig->routeList() as $routeIpPrefix) {
-            $routeList->add(IP::fromIpPrefix($routeIpPrefix));
+            $routeList->add(Ip::fromIpPrefix($routeIpPrefix));
         }
         // remove the prefixes we don't want
         foreach ($this->profileConfig->excludeRouteList() as $routeIpPrefix) {
-            $routeList->remove(IP::fromIpPrefix($routeIpPrefix));
+            $routeList->remove(Ip::fromIpPrefix($routeIpPrefix));
         }
 
         $output = [];

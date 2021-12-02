@@ -18,7 +18,7 @@ use LC\Portal\Exception\IPException;
  * This class would be a lot simpler if only IPv4 existed with 32 bit
  * addresses.
  */
-class IP
+class Ip
 {
     public const IP_4 = 4;
     public const IP_6 = 6;
@@ -157,7 +157,7 @@ class IP
     }
 
     /**
-     * @return array<IP>
+     * @return array<Ip>
      */
     public function splitInHalf(): array
     {
@@ -177,7 +177,7 @@ class IP
     }
 
     /**
-     * @return array<IP>
+     * @return array<Ip>
      */
     public function split(int $networkCount): array
     {

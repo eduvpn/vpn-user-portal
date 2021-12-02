@@ -11,18 +11,18 @@ declare(strict_types=1);
 
 namespace LC\Portal\Tests;
 
-use LC\Portal\IP;
+use LC\Portal\Ip;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  * @coversNothing
  */
-final class IPTest extends TestCase
+final class IpTest extends TestCase
 {
     public function testIPv4One(): void
     {
-        $ip = IP::fromIpPrefix('192.168.1.0/24');
+        $ip = Ip::fromIpPrefix('192.168.1.0/24');
         $splitRange = $ip->split(1);
         static::assertCount(1, $splitRange);
         static::assertSame('192.168.1.0/24', (string) $splitRange[0]);
@@ -30,56 +30,56 @@ final class IPTest extends TestCase
 
     public function testNetmask(): void
     {
-        $ip = IP::fromIpPrefix('192.168.1.0/24');
+        $ip = Ip::fromIpPrefix('192.168.1.0/24');
         static::assertSame('255.255.255.0', $ip->netmask());
-        $ip = IP::fromIpPrefix('10.0.0.0/8');
+        $ip = Ip::fromIpPrefix('10.0.0.0/8');
         static::assertSame('255.0.0.0', $ip->netmask());
-        $ip = IP::fromIpPrefix('10.0.0.128/25');
+        $ip = Ip::fromIpPrefix('10.0.0.128/25');
         static::assertSame('255.255.255.128', $ip->netmask());
         // it makes no sense for IPv6, but still fun :-P
-        $ip = IP::fromIpPrefix('fd00::/64');
+        $ip = Ip::fromIpPrefix('fd00::/64');
         static::assertSame('ffff:ffff:ffff:ffff::', $ip->netmask());
     }
 
     public function testNetwork(): void
     {
-        $ip = IP::fromIpPrefix('8.8.8.8/0');
+        $ip = Ip::fromIpPrefix('8.8.8.8/0');
         static::assertSame('0.0.0.0/0', (string) $ip->network());
 
-        $ip = IP::fromIpPrefix('192.168.1.5/24');
+        $ip = Ip::fromIpPrefix('192.168.1.5/24');
         static::assertSame('192.168.1.0/24', (string) $ip->network());
 
-        $ip = IP::fromIpPrefix('192.168.1.5/32');
+        $ip = Ip::fromIpPrefix('192.168.1.5/32');
         static::assertSame('192.168.1.5/32', (string) $ip->network());
 
-        $ip = IP::fromIpPrefix('fd00::1:2:3:4/64');
+        $ip = Ip::fromIpPrefix('fd00::1:2:3:4/64');
         static::assertSame('fd00::/64', (string) $ip->network());
 
-        $ip = IP::fromIpPrefix('fd00::1234:1:2:3:4/64');
+        $ip = Ip::fromIpPrefix('fd00::1234:1:2:3:4/64');
         static::assertSame('fd00:0:0:1234::/64', (string) $ip->network());
 
-        $ip = IP::fromIpPrefix('fd00::1234:1:2:3:4/128');
+        $ip = Ip::fromIpPrefix('fd00::1234:1:2:3:4/128');
         static::assertSame('fd00::1234:1:2:3:4/128', (string) $ip->network());
 
-        $ip = IP::fromIpPrefix('fd00::1234:1:2:3:ffff/124');
+        $ip = Ip::fromIpPrefix('fd00::1234:1:2:3:ffff/124');
         static::assertSame('fd00::1234:1:2:3:fff0/124', (string) $ip->network());
 
-        $ip = IP::fromIpPrefix('fd00::1234:1:2:3:ffff/127');
+        $ip = Ip::fromIpPrefix('fd00::1234:1:2:3:ffff/127');
         static::assertSame('fd00::1234:1:2:3:fffe/127', (string) $ip->network());
 
-        $ip = IP::fromIpPrefix('2001:1234:1234:1234:1234:1234:1234:1234/0');
+        $ip = Ip::fromIpPrefix('2001:1234:1234:1234:1234:1234:1234:1234/0');
         static::assertSame('::/0', (string) $ip->network());
     }
 
     public function testIPv4Two(): void
     {
-        $ip = IP::fromIpPrefix('192.168.1.0/24');
+        $ip = Ip::fromIpPrefix('192.168.1.0/24');
         $splitRange = $ip->split(2);
         static::assertCount(2, $splitRange);
         static::assertSame('192.168.1.0/25', (string) $splitRange[0]);
         static::assertSame('192.168.1.128/25', (string) $splitRange[1]);
 
-        $ip = IP::fromIpPrefix('0.0.0.0/0');
+        $ip = Ip::fromIpPrefix('0.0.0.0/0');
         $splitRange = $ip->split(2);
         static::assertCount(2, $splitRange);
         static::assertSame('0.0.0.0/1', (string) $splitRange[0]);
@@ -88,7 +88,7 @@ final class IPTest extends TestCase
 
     public function testIPv4Four(): void
     {
-        $ip = IP::fromIpPrefix('192.168.1.0/24');
+        $ip = Ip::fromIpPrefix('192.168.1.0/24');
         $splitRange = $ip->split(4);
         static::assertCount(4, $splitRange);
         static::assertSame('192.168.1.0/26', (string) $splitRange[0]);
@@ -99,7 +99,7 @@ final class IPTest extends TestCase
 
     public function testIPv4ThirtyTwo(): void
     {
-        $ip = IP::fromIpPrefix('10.0.0.0/8');
+        $ip = Ip::fromIpPrefix('10.0.0.0/8');
         $splitRange = $ip->split(32);
         static::assertCount(32, $splitRange);
         static::assertSame('10.0.0.0/13', (string) $splitRange[0]);
@@ -138,7 +138,7 @@ final class IPTest extends TestCase
 
     public function testIPv6One(): void
     {
-        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
+        $ip = Ip::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(1);
         static::assertCount(1, $splitRange);
         static::assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -146,7 +146,7 @@ final class IPTest extends TestCase
 
     public function testIPv6OneWithMinSpace(): void
     {
-        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/112');
+        $ip = Ip::fromIpPrefix('1111:2222:3333:4444::/112');
         $splitRange = $ip->split(1);
         static::assertCount(1, $splitRange);
         static::assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -154,7 +154,7 @@ final class IPTest extends TestCase
 
     public function testIPv6Two(): void
     {
-        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
+        $ip = Ip::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(2);
         static::assertCount(2, $splitRange);
         static::assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -163,7 +163,7 @@ final class IPTest extends TestCase
 
     public function testIPv6Four(): void
     {
-        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
+        $ip = Ip::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(4);
         static::assertCount(4, $splitRange);
         static::assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -174,7 +174,7 @@ final class IPTest extends TestCase
 
     public function testIPv6ThirtyTwo(): void
     {
-        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
+        $ip = Ip::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(32);
         static::assertCount(32, $splitRange);
         static::assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -213,7 +213,7 @@ final class IPTest extends TestCase
 
     public function testGetFirstHost(): void
     {
-        $ip = IP::fromIpPrefix('192.168.1.0/24');
+        $ip = Ip::fromIpPrefix('192.168.1.0/24');
         $splitRange = $ip->split(4);
         static::assertCount(4, $splitRange);
         static::assertSame('192.168.1.0/26', (string) $splitRange[0]);
@@ -225,13 +225,13 @@ final class IPTest extends TestCase
         static::assertSame('192.168.1.192/26', (string) $splitRange[3]);
         static::assertSame('192.168.1.193', $splitRange[3]->firstHost());
 
-        $ip = IP::fromIpPrefix('192.168.1.5/24');
+        $ip = Ip::fromIpPrefix('192.168.1.5/24');
         static::assertSame('192.168.1.1', $ip->firstHost());
     }
 
     public function testGetFirstHost6(): void
     {
-        $ip = IP::fromIpPrefix('1111:2222:3333:4444::/64');
+        $ip = Ip::fromIpPrefix('1111:2222:3333:4444::/64');
         $splitRange = $ip->split(4);
         static::assertCount(4, $splitRange);
         static::assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -243,13 +243,13 @@ final class IPTest extends TestCase
         static::assertSame('1111:2222:3333:4444::3:0/112', (string) $splitRange[3]);
         static::assertSame('1111:2222:3333:4444::3:1', $splitRange[3]->firstHost());
 
-        $ip = IP::fromIpPrefix('1111:2222:3333:4444::5/64');
+        $ip = Ip::fromIpPrefix('1111:2222:3333:4444::5/64');
         static::assertSame('1111:2222:3333:4444::1', $ip->firstHost());
     }
 
     public function testIPv4NonFirstTwo(): void
     {
-        $ip = IP::fromIpPrefix('192.168.1.128/24');
+        $ip = Ip::fromIpPrefix('192.168.1.128/24');
         $splitRange = $ip->split(2);
         static::assertCount(2, $splitRange);
         static::assertSame('192.168.1.0/25', (string) $splitRange[0]);
@@ -258,7 +258,7 @@ final class IPTest extends TestCase
 
     public function testIPv6NonFirstTwo(): void
     {
-        $ip = IP::fromIpPrefix('1111:2222:3333:4444::ffff/64');
+        $ip = Ip::fromIpPrefix('1111:2222:3333:4444::ffff/64');
         $splitRange = $ip->split(2);
         static::assertCount(2, $splitRange);
         static::assertSame('1111:2222:3333:4444::/112', (string) $splitRange[0]);
@@ -267,7 +267,7 @@ final class IPTest extends TestCase
 
     public function testHostIpListFour(): void
     {
-        $ip = IP::fromIpPrefix('10.42.42.0/29');
+        $ip = Ip::fromIpPrefix('10.42.42.0/29');
         $hostIpList = $ip->clientIpList();
         static::assertCount(5, $hostIpList);
         static::assertSame(
@@ -284,7 +284,7 @@ final class IPTest extends TestCase
 
     public function testHostIpListFourNonNull(): void
     {
-        $ip = IP::fromIpPrefix('10.42.42.8/29');
+        $ip = Ip::fromIpPrefix('10.42.42.8/29');
         $hostIpList = $ip->clientIpList();
         static::assertCount(5, $hostIpList);
         static::assertSame(
@@ -301,7 +301,7 @@ final class IPTest extends TestCase
 
     public function testHostIpListSix(): void
     {
-        $ip = IP::fromIpPrefix('fd42::/64');
+        $ip = Ip::fromIpPrefix('fd42::/64');
         $hostIpList = $ip->clientIpList(5);
         static::assertCount(5, $hostIpList);
         static::assertSame(
@@ -318,24 +318,24 @@ final class IPTest extends TestCase
 
     public function testContainsTrue(): void
     {
-        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.5/32')));
-        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.0/24')));
-        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.0/25')));
-        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.0/24')));
-        static::assertTrue(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.5.128/25')));
-        static::assertTrue(IP::fromIpPrefix('192.168.5.5/32')->contains(IP::fromIpPrefix('192.168.5.5/32')));
-        static::assertTrue(IP::fromIpPrefix('0.0.0.0/0')->contains(IP::fromIpPrefix('192.168.5.5/32')));
-        static::assertTrue(IP::fromIpPrefix('192.168.0.0/16')->contains(IP::fromIpPrefix('192.168.5.0/24')));
-        static::assertTrue(IP::fromIpPrefix('::/0')->contains(IP::fromIpPrefix('fd42::/64')));
-        static::assertTrue(IP::fromIpPrefix('fd42::/64')->contains(IP::fromIpPrefix('fd42::/64')));
-        static::assertTrue(IP::fromIpPrefix('fd42::/32')->contains(IP::fromIpPrefix('fd42::/64')));
+        static::assertTrue(Ip::fromIpPrefix('192.168.5.0/24')->contains(Ip::fromIpPrefix('192.168.5.5/32')));
+        static::assertTrue(Ip::fromIpPrefix('192.168.5.0/24')->contains(Ip::fromIpPrefix('192.168.5.0/24')));
+        static::assertTrue(Ip::fromIpPrefix('192.168.5.0/24')->contains(Ip::fromIpPrefix('192.168.5.0/25')));
+        static::assertTrue(Ip::fromIpPrefix('192.168.5.0/24')->contains(Ip::fromIpPrefix('192.168.5.0/24')));
+        static::assertTrue(Ip::fromIpPrefix('192.168.5.0/24')->contains(Ip::fromIpPrefix('192.168.5.128/25')));
+        static::assertTrue(Ip::fromIpPrefix('192.168.5.5/32')->contains(Ip::fromIpPrefix('192.168.5.5/32')));
+        static::assertTrue(Ip::fromIpPrefix('0.0.0.0/0')->contains(Ip::fromIpPrefix('192.168.5.5/32')));
+        static::assertTrue(Ip::fromIpPrefix('192.168.0.0/16')->contains(Ip::fromIpPrefix('192.168.5.0/24')));
+        static::assertTrue(Ip::fromIpPrefix('::/0')->contains(Ip::fromIpPrefix('fd42::/64')));
+        static::assertTrue(Ip::fromIpPrefix('fd42::/64')->contains(Ip::fromIpPrefix('fd42::/64')));
+        static::assertTrue(Ip::fromIpPrefix('fd42::/32')->contains(Ip::fromIpPrefix('fd42::/64')));
     }
 
     public function testContainsFalse(): void
     {
-        static::assertFalse(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.6.5/32')));
-        static::assertFalse(IP::fromIpPrefix('192.168.5.5/32')->contains(IP::fromIpPrefix('192.168.5.0/24')));
-        static::assertFalse(IP::fromIpPrefix('192.168.5.0/24')->contains(IP::fromIpPrefix('192.168.4.0/22')));
-        static::assertFalse(IP::fromIpPrefix('fd42::/64')->contains(IP::fromIpPrefix('fd43::/64')));
+        static::assertFalse(Ip::fromIpPrefix('192.168.5.0/24')->contains(Ip::fromIpPrefix('192.168.6.5/32')));
+        static::assertFalse(Ip::fromIpPrefix('192.168.5.5/32')->contains(Ip::fromIpPrefix('192.168.5.0/24')));
+        static::assertFalse(Ip::fromIpPrefix('192.168.5.0/24')->contains(Ip::fromIpPrefix('192.168.4.0/22')));
+        static::assertFalse(Ip::fromIpPrefix('fd42::/64')->contains(Ip::fromIpPrefix('fd43::/64')));
     }
 }

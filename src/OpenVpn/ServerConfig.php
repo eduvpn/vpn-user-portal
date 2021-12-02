@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal\OpenVpn;
 
-use LC\Portal\IP;
+use LC\Portal\Ip;
 use LC\Portal\IpNetList;
 use LC\Portal\OpenVpn\CA\CaInterface;
 use LC\Portal\OpenVpn\CA\CertInfo;
@@ -86,7 +86,7 @@ class ServerConfig
     }
 
     /**
-     * @param array{rangeFour:\LC\Portal\IP,rangeSix:\LC\Portal\IP,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
+     * @param array{rangeFour:\LC\Portal\Ip,rangeSix:\LC\Portal\Ip,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
      */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes): string
     {
@@ -231,15 +231,15 @@ class ServerConfig
             $routeConfig[] = sprintf('push "redirect-gateway %s"', implode(' ', $redirectFlags));
             // quirk needed for Windows otherwise Windows thinks there is no
             // Internet connectivity
-            $routeList->add(IP::fromIpPrefix('0.0.0.0/0'));
+            $routeList->add(Ip::fromIpPrefix('0.0.0.0/0'));
         }
 
         // (additional) prefixes to send over the VPN
         foreach ($profileConfig->routeList() as $routeIpPrefix) {
-            $routeList->add(IP::fromIpPrefix($routeIpPrefix));
+            $routeList->add(Ip::fromIpPrefix($routeIpPrefix));
         }
         foreach ($routeList->ls() as $routeIpPrefix) {
-            if (IP::IP_6 === $routeIpPrefix->family()) {
+            if (Ip::IP_6 === $routeIpPrefix->family()) {
                 // IPv6
                 $routeConfig[] = sprintf('push "route-ipv6 %s"', (string) $routeIpPrefix);
             } else {
@@ -251,10 +251,10 @@ class ServerConfig
         // prefixes NOT to send over the VPN
         $excludeRouteList = new IpNetList();
         foreach ($profileConfig->excludeRouteList() as $routeIpPrefix) {
-            $excludeRouteList->add(IP::fromIpPrefix($routeIpPrefix));
+            $excludeRouteList->add(Ip::fromIpPrefix($routeIpPrefix));
         }
         foreach ($excludeRouteList->ls() as $routeIpPrefix) {
-            if (IP::IP_6 === $routeIpPrefix->family()) {
+            if (Ip::IP_6 === $routeIpPrefix->family()) {
                 // IPv6
                 $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway_ipv6"', (string) $routeIpPrefix);
             } else {

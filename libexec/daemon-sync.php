@@ -14,7 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use LC\Portal\Config;
 use LC\Portal\HttpClient\CurlHttpClient;
-use LC\Portal\IP;
+use LC\Portal\Ip;
 use LC\Portal\ProfileConfig;
 use LC\Portal\Storage;
 use LC\Portal\SysLogger;
@@ -43,7 +43,7 @@ $logger = new SysLogger('vpn-user-portal');
  * is super inefficient!
  * XXX clean this up!
  */
-function determineNodeUrl(ProfileConfig $profileConfig, IP $ipFour): ?string
+function determineNodeUrl(ProfileConfig $profileConfig, Ip $ipFour): ?string
 {
     for ($i = 0; $i <= $profileConfig->nodeCount(); ++$i) {
         $wRangeFour = $profileConfig->wRangeFour($i);
@@ -127,7 +127,7 @@ try {
         $profileId = $peerInfo['profile_id'];
         $ipFour = $peerInfo['ip_four'];
         $ipSix = $peerInfo['ip_six'];
-        if (null === $nodeUrl = determineNodeUrl($config->profileConfig($profileId), IP::fromIp($ipFour))) {
+        if (null === $nodeUrl = determineNodeUrl($config->profileConfig($profileId), Ip::fromIp($ipFour))) {
             continue;
         }
         //echo sprintf('**ADD** [%s]: %s (%s,%s)', $nodeUrl, $publicKey, $ipFour, $ipSix).PHP_EOL;

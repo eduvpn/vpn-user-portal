@@ -13,11 +13,11 @@ namespace LC\Portal;
 
 class IpNetList
 {
-    /** @var array<\LC\Portal\IP> */
+    /** @var array<\LC\Portal\Ip> */
     private array $ipList;
 
     /**
-     * @param array<\LC\Portal\IP> $ipList
+     * @param array<\LC\Portal\Ip> $ipList
      */
     public function __construct(array $ipList = [])
     {
@@ -29,7 +29,7 @@ class IpNetList
         return '['.implode(' ', $this->ipList).']';
     }
 
-    public function add(IP $i): void
+    public function add(Ip $i): void
     {
         // normalize IP
         $i = $i->network();
@@ -61,7 +61,7 @@ class IpNetList
      * Remove the specified prefix from the current IP list. Rewrites the
      * existing ranges to satisfy the removal.
      */
-    public function remove(IP $i): void
+    public function remove(Ip $i): void
     {
         // normalize IP
         $i = $i->network();
@@ -88,7 +88,7 @@ class IpNetList
     }
 
     /**
-     * @return array<\LC\Portal\IP>
+     * @return array<\LC\Portal\Ip>
      */
     public function ls(): array
     {
