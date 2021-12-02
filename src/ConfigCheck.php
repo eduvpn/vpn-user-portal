@@ -20,6 +20,8 @@ class ConfigCheck
     {
         $issueList = [];
         $usedRangeList = [];
+        $usedUdpPortList = [];
+        $usedTcpPortList = [];
 
         foreach ($config->profileConfigList() as $profileConfig) {
             $profileProblemList = [];
@@ -29,6 +31,7 @@ class ConfigCheck
             self::verifyRoutesAndExcludeRoutesAreNormalized($profileConfig, $profileProblemList);
             self::verifyDnsRouteIsPushedWhenNotDefaultGateway($profileConfig, $profileProblemList);
             self::verifyNonLocalNodeUrlHasTls($profileConfig, $profileProblemList);
+            self::verifyUniqueOpenVpnPortsPerNode($profileConfig, $usedUdpPortList, $usedTcpPortList, $profileProblemList);
 
             $issueList[$profileConfig->profileId()] = $profileProblemList;
         }
@@ -37,6 +40,39 @@ class ConfigCheck
         // make sure IP space is big enough for OpenVPN/WireGuard
 
         return $issueList;
+    }
+
+    private static function verifyUniqueOpenVpnPortsPerNode(ProfileConfig $profileConfig, array &$usedUdpPortList, array &$usedTcpPortList, array &$profileProblemList): void
+    {
+        // collect all ports per unique nodeUrl and report duplicate ones
+        $udpPortList = $profileConfig->oUdpPortList();
+        $tcpPortList = $profileConfig->oTcpPortList();
+        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+            $nodeUrl = $profileConfig->nodeUrl($i);
+            if (!\array_key_exists($nodeUrl, $usedUdpPortList)) {
+                $usedUdpPortList[$nodeUrl] = [];
+            }
+            if (!\array_key_exists($nodeUrl, $usedTcpPortList)) {
+                $usedTcpPortList[$nodeUrl] = [];
+            }
+
+            foreach ($udpPortList as $udpPort) {
+                if (\in_array($udpPort, $usedUdpPortList[$nodeUrl], true)) {
+                    $profileProblemList[] = sprintf('node "%s" already uses UDP port "%d"', $nodeUrl, $udpPort);
+
+                    continue;
+                }
+                $usedUdpPortList[$nodeUrl][] = $udpPort;
+            }
+            foreach ($tcpPortList as $tcpPort) {
+                if (\in_array($tcpPort, $usedTcpPortList[$nodeUrl], true)) {
+                    $profileProblemList[] = sprintf('node "%s" already uses TCP port "%d"', $nodeUrl, $tcpPort);
+
+                    continue;
+                }
+                $usedTcpPortList[$nodeUrl][] = $tcpPort;
+            }
+        }
     }
 
     private static function verifyNonLocalNodeUrlHasTls(ProfileConfig $profileConfig, array &$profileProblemList): void
@@ -59,14 +95,14 @@ class ConfigCheck
     private static function verifyRoutesAndExcludeRoutesAreNormalized(ProfileConfig $profileConfig, array &$profileProblemList): void
     {
         foreach ($profileConfig->routeList() as $routeIpPrefix) {
-            $ip = IP::fromIpPrefix($routeIpPrefix);
+            $ip = Ip::fromIpPrefix($routeIpPrefix);
             if (!$ip->equals($ip->network())) {
                 $profileProblemList[] = sprintf('route "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
             }
         }
 
         foreach ($profileConfig->excludeRouteList() as $routeIpPrefix) {
-            $ip = IP::fromIpPrefix($routeIpPrefix);
+            $ip = Ip::fromIpPrefix($routeIpPrefix);
             if (!$ip->equals($ip->network())) {
                 $profileProblemList[] = sprintf('excluded route "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
             }
@@ -84,9 +120,9 @@ class ConfigCheck
         }
 
         foreach ($profileConfig->dnsServerList() as $dnsServer) {
-            $dnsServerIp = IP::fromIp($dnsServer);
+            $dnsServerIp = Ip::fromIp($dnsServer);
             foreach ($profileConfig->routeList() as $routeIpPrefix) {
-                $routeIp = IP::fromIpPrefix($routeIpPrefix);
+                $routeIp = Ip::fromIpPrefix($routeIpPrefix);
                 if ($routeIp->contains($dnsServerIp)) {
                     continue;
                 }
@@ -107,7 +143,7 @@ class ConfigCheck
     }
 
     /**
-     * @param array<IP>     $usedRangeList
+     * @param array<Ip>     $usedRangeList
      * @param array<string> $profileProblemList
      */
     private static function verifyRangeOverlap(ProfileConfig $profileConfig, array &$usedRangeList, array &$profileProblemList): void

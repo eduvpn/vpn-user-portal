@@ -120,44 +120,44 @@ class ProfileConfig
         return 'openvpn';
     }
 
-    public function wRangeFour(int $nodeNumber): IP
+    public function wRangeFour(int $nodeNumber): Ip
     {
         $wRangeFourList = $this->requireStringOrStringArray('wRangeFour');
         if ($nodeNumber >= \count($wRangeFourList)) {
             throw new ConfigException('"wRangeFour" for node "'.$nodeNumber.'" not set');
         }
 
-        return IP::fromIpPrefix($wRangeFourList[$nodeNumber]);
+        return Ip::fromIpPrefix($wRangeFourList[$nodeNumber]);
     }
 
-    public function wRangeSix(int $nodeNumber): IP
+    public function wRangeSix(int $nodeNumber): Ip
     {
         $wRangeSixList = $this->requireStringOrStringArray('wRangeSix');
         if ($nodeNumber >= \count($wRangeSixList)) {
             throw new ConfigException('"wRangeSix" for node "'.$nodeNumber.'" not set');
         }
 
-        return IP::fromIpPrefix($wRangeSixList[$nodeNumber]);
+        return Ip::fromIpPrefix($wRangeSixList[$nodeNumber]);
     }
 
-    public function oRangeFour(int $nodeNumber): IP
+    public function oRangeFour(int $nodeNumber): Ip
     {
         $oRangeFourList = $this->requireStringOrStringArray('oRangeFour');
         if ($nodeNumber >= \count($oRangeFourList)) {
             throw new ConfigException('"oRangeFour" for node "'.$nodeNumber.'" not set');
         }
 
-        return IP::fromIpPrefix($oRangeFourList[$nodeNumber]);
+        return Ip::fromIpPrefix($oRangeFourList[$nodeNumber]);
     }
 
-    public function oRangeSix(int $nodeNumber): IP
+    public function oRangeSix(int $nodeNumber): Ip
     {
         $oRangeSixList = $this->requireStringOrStringArray('oRangeSix');
         if ($nodeNumber >= \count($oRangeSixList)) {
             throw new ConfigException('"oRangeSix" for node "'.$nodeNumber.'" not set');
         }
 
-        return IP::fromIpPrefix($oRangeSixList[$nodeNumber]);
+        return Ip::fromIpPrefix($oRangeSixList[$nodeNumber]);
     }
 
     /**
