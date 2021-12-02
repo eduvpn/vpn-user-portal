@@ -44,6 +44,10 @@ class ConfigCheck
 
     private static function verifyUniqueOpenVpnPortsPerNode(ProfileConfig $profileConfig, array &$usedUdpPortList, array &$usedTcpPortList, array &$profileProblemList): void
     {
+        if (!$profileConfig->oSupport()) {
+            return;
+        }
+
         // collect all ports per unique nodeUrl and report duplicate ones
         $udpPortList = $profileConfig->oUdpPortList();
         $tcpPortList = $profileConfig->oTcpPortList();
