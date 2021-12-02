@@ -15,7 +15,7 @@ use LC\Portal\Base64;
 use LC\Portal\ClientConfigInterface;
 use LC\Portal\Exception\QrCodeException;
 use LC\Portal\IP;
-use LC\Portal\IPList;
+use LC\Portal\IpNetList;
 use LC\Portal\ProfileConfig;
 use LC\Portal\QrCode;
 
@@ -50,7 +50,7 @@ class ClientConfig implements ClientConfigInterface
 
     public function get(): string
     {
-        $routeList = new IPList();
+        $routeList = new IpNetList();
         if ($this->profileConfig->defaultGateway()) {
             $routeList->add(IP::fromIpPrefix('0.0.0.0/0'));
             $routeList->add(IP::fromIpPrefix('::/0'));

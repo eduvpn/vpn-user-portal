@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal\OpenVpn;
 
 use LC\Portal\IP;
-use LC\Portal\IPList;
+use LC\Portal\IpNetList;
 use LC\Portal\OpenVpn\CA\CaInterface;
 use LC\Portal\OpenVpn\CA\CertInfo;
 use LC\Portal\ProfileConfig;
@@ -220,7 +220,7 @@ class ServerConfig
     private static function getRoutes(ProfileConfig $profileConfig): array
     {
         $routeConfig = [];
-        $routeList = new IPList();
+        $routeList = new IpNetList();
         if ($profileConfig->defaultGateway()) {
             // send all IPv4 and IPv6 traffic over the VPN tunnel
             $redirectFlags = ['def1', 'ipv6'];
@@ -249,7 +249,7 @@ class ServerConfig
         }
 
         // prefixes NOT to send over the VPN
-        $excludeRouteList = new IPList();
+        $excludeRouteList = new IpNetList();
         foreach ($profileConfig->excludeRouteList() as $routeIpPrefix) {
             $excludeRouteList->add(IP::fromIpPrefix($routeIpPrefix));
         }

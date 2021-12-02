@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-class IPList
+class IpNetList
 {
     /** @var array<\LC\Portal\IP> */
     private array $ipList;
@@ -31,6 +31,9 @@ class IPList
 
     public function add(IP $i): void
     {
+        // normalize IP
+        $i = $i->network();
+
         // check whether any of the existing prefixes already contain the
         // prefix to be added...
         foreach ($this->ipList as $ip) {
@@ -60,6 +63,9 @@ class IPList
      */
     public function remove(IP $i): void
     {
+        // normalize IP
+        $i = $i->network();
+
         foreach ($this->ipList as $k => $ip) {
             if ($ip->family() !== $i->family()) {
                 continue;

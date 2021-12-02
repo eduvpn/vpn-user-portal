@@ -161,7 +161,7 @@ class IP
      */
     public function splitInHalf(): array
     {
-        // Used by IPList
+        // Used by IpNetList
         // XXX can only split networks bigger than /31 and /127
         $prefixBits = $this->ipPrefix + 1;
         $netIp = $this->network();

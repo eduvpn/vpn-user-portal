@@ -12,18 +12,18 @@ declare(strict_types=1);
 namespace LC\Portal\Tests;
 
 use LC\Portal\IP;
-use LC\Portal\IPList;
+use LC\Portal\IpNetList;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  * @coversNothing
  */
-final class IPListTest extends TestCase
+final class IpNetListTest extends TestCase
 {
     public function testSingle(): void
     {
-        $ipList = new IPList([IP::fromIpPrefix('0.0.0.0/0')]);
+        $ipList = new IpNetList([IP::fromIpPrefix('0.0.0.0/0')]);
         $ipList->remove(IP::fromIpPrefix('192.168.5.0/24'));
 
         static::assertSame(
@@ -34,7 +34,7 @@ final class IPListTest extends TestCase
 
     public function testMultiple(): void
     {
-        $ipList = new IPList([IP::fromIpPrefix('0.0.0.0/0')]);
+        $ipList = new IpNetList([IP::fromIpPrefix('0.0.0.0/0')]);
         $ipList->remove(IP::fromIpPrefix('192.168.5.0/24'));
         $ipList->remove(IP::fromIpPrefix('10.5.0.0/16'));
         $ipList->remove(IP::fromIpPrefix('8.8.8.8/32'));
@@ -47,7 +47,7 @@ final class IPListTest extends TestCase
 
     public function testAdd(): void
     {
-        $ipList = new IPList();
+        $ipList = new IpNetList();
         $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
         static::assertSame(
             '[192.168.5.0/24]',
@@ -57,7 +57,7 @@ final class IPListTest extends TestCase
 
     public function testAddExisting(): void
     {
-        $ipList = new IPList();
+        $ipList = new IpNetList();
         $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
         $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
         static::assertSame(
@@ -66,9 +66,30 @@ final class IPListTest extends TestCase
         );
     }
 
+    public function testAddNonNormalized(): void
+    {
+        $ipList = new IpNetList();
+        $ipList->add(IP::fromIpPrefix('192.168.5.5/24'));
+        static::assertSame(
+            '[192.168.5.0/24]',
+            (string) $ipList
+        );
+    }
+
+    public function testAddExistingSameNet(): void
+    {
+        $ipList = new IpNetList();
+        $ipList->add(IP::fromIpPrefix('192.168.5.4/24'));
+        $ipList->add(IP::fromIpPrefix('192.168.5.5/24'));
+        static::assertSame(
+            '[192.168.5.0/24]',
+            (string) $ipList
+        );
+    }
+
     public function testAddSubPrefixOfExisting(): void
     {
-        $ipList = new IPList();
+        $ipList = new IpNetList();
         $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
         $ipList->add(IP::fromIpPrefix('192.168.5.0/25'));
         static::assertSame(
@@ -79,7 +100,7 @@ final class IPListTest extends TestCase
 
     public function testAddSuperPrefixOfExisting(): void
     {
-        $ipList = new IPList();
+        $ipList = new IpNetList();
         $ipList->add(IP::fromIpPrefix('192.168.5.0/25'));
         $ipList->add(IP::fromIpPrefix('192.168.5.0/24'));
         static::assertSame(
