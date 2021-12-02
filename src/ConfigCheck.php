@@ -28,15 +28,32 @@ class ConfigCheck
             self::verifyRangeOverlap($profileConfig, $usedRangeList, $profileProblemList);
             self::verifyRoutesAndExcludeRoutesAreNormalized($profileConfig, $profileProblemList);
             self::verifyDnsRouteIsPushedWhenNotDefaultGateway($profileConfig, $profileProblemList);
+            self::verifyNonLocalNodeUrlHasTls($profileConfig, $profileProblemList);
 
             $issueList[$profileConfig->profileId()] = $profileProblemList;
         }
 
         // check OpenVPN port overlap (per node)
         // make sure IP space is big enough for OpenVPN/WireGuard
-        // verify that when DNS servers are pushed to VPN client that they are also routed over the VPN
 
         return $issueList;
+    }
+
+    private static function verifyNonLocalNodeUrlHasTls(ProfileConfig $profileConfig, array &$profileProblemList): void
+    {
+        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+            $nodeUrl = $profileConfig->nodeUrl($i);
+            $nodeUrlScheme = parse_url($nodeUrl, PHP_URL_SCHEME);
+            if ('https' === $nodeUrlScheme) {
+                return;
+            }
+            $nodeUrlHost = parse_url($nodeUrl, PHP_URL_HOST);
+            if (\in_array($nodeUrlHost, ['localhost', '127.0.0.1', '::1'], true)) {
+                return;
+            }
+
+            $profileProblemList[] = 'node URL "%s" is not using https';
+        }
     }
 
     private static function verifyRoutesAndExcludeRoutesAreNormalized(ProfileConfig $profileConfig, array &$profileProblemList): void
