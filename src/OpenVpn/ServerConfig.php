@@ -141,7 +141,7 @@ class ServerConfig
             // the next available OpenVPN process...
             // @see https://community.openvpn.net/openvpn/ticket/1347
             // @see https://community.openvpn.net/openvpn/ticket/1348
-            sprintf('max-clients %d', $rangeFourIp->numberOfHosts() - 2),
+            sprintf('max-clients %d', $rangeFourIp->numberOfHostsFour() - 2),
             // technically we do NOT need "keepalive" (ping/ping-restart) on
             // TCP, but it seems we do need it to avoid clients disconnecting
             // after 2 minutes of inactivity when the first (previous?) remote

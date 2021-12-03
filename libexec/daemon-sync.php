@@ -47,7 +47,7 @@ function determineNodeUrl(ProfileConfig $profileConfig, Ip $ipFour): ?string
 {
     for ($i = 0; $i <= $profileConfig->nodeCount(); ++$i) {
         $wRangeFour = $profileConfig->wRangeFour($i);
-        if (in_array($ipFour->address(), $wRangeFour->clientIpList(), true)) {
+        if (in_array($ipFour->address(), $wRangeFour->clientIpListFour(), true)) {
             return $profileConfig->nodeUrl($i);
         }
     }

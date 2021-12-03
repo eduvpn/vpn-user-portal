@@ -16,7 +16,7 @@ use LC\Portal\Exception\IpException;
 
 /**
  * This class would be a lot simpler if only IPv4 existed with 32 bit
- * addresses.
+ * addresses :-).
  */
 class Ip
 {
@@ -97,22 +97,15 @@ class Ip
 
     /**
      * Get the number of available IP addresses in the network represented by
-     * the IP range specified in this object. Works only with IPv4 because we
-     * want an "int" as the return type.
+     * the IP range specified in this object.
      */
-    public function numberOfHosts(): int
+    public function numberOfHostsFour(): int
     {
-        if (self::IP_4 === $this->ipFamily) {
-            // IPv4
-            return (int) 2 ** (32 - $this->ipPrefix) - 2;
+        if (self::IP_4 !== $this->ipFamily) {
+            throw new IpException('IPv4 only');
         }
 
-        // IPv6
-        if (0 === $intVal = gmp_intval(gmp_pow(2, (128 - $this->ipPrefix)))) {
-            throw new IpException('too many hosts to fit in "int"');
-        }
-
-        return $intVal;
+        return 2 ** (32 - $this->ipPrefix) - 2;
     }
 
     /**
@@ -192,6 +185,7 @@ class Ip
      */
     public function split(int $networkCount): array
     {
+        // XXX what if we split in three?!
         // XXX introduce "maxPrefix" parameter?
         if (2 ** ($this->addressBits() - $this->ipPrefix - 2) < $networkCount) {
             throw new IpException('network too small to split in this many networks');
@@ -219,18 +213,49 @@ class Ip
     /**
      * @return array<string>
      */
-    public function clientIpList(?int $maxNoOfHosts = null): array
+    public function clientIpListFour(): array
     {
-        // XXX use this code also to generate DNS (reverse)
-        if (null === $maxNoOfHosts) {
-            $maxNoOfHosts = $this->numberOfHosts() - 1;
+        if (self::IP_4 !== $this->ipFamily) {
+            throw new IpException('IPv4 only');
         }
 
-        if (self::IP_4 === $this->ipFamily && 31 <= $this->ipPrefix) {
-            throw new IpException('network not big enough');
+        if (31 <= $this->ipPrefix) {
+            throw new IpException('network not big enough to create a list of client IPs');
         }
-        if (self::IP_6 === $this->ipFamily && 127 <= $this->ipPrefix) {
-            throw new IpException('network not big enough');
+
+        $maxNoOfHosts = 2 ** (32 - $this->ipPrefix) - 3;
+        $hostIpList = [];
+        for ($i = 0; $i < $maxNoOfHosts; ++$i) {
+            $hostIpList[] = self::toAddress(
+                gmp_add(
+                    self::fromAddress($this->network()->address()),
+                    2 + $i
+                ),
+                $this->addressBits()
+            );
+        }
+
+        return $hostIpList;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function clientIpListSix(int $maxNoOfHosts): array
+    {
+        if (self::IP_6 !== $this->ipFamily) {
+            throw new IpException('IPv6 only');
+        }
+
+        if (127 <= $this->ipPrefix) {
+            throw new IpException('network not big enough to create a list of client IPs');
+        }
+
+        // make sure we do not specify a "maxNumberOfHosts" that is bigger
+        // than the prefix we have
+        $prefixMaxNoOfHosts = gmp_sub(gmp_pow(2, (128 - $this->ipPrefix)), 3);
+        if (gmp_cmp($maxNoOfHosts, $prefixMaxNoOfHosts) > 0) {
+            throw new IpException(sprintf('prefix "/%d" does not contain "%d" hosts', $this->ipPrefix, $maxNoOfHosts));
         }
 
         $hostIpList = [];

@@ -253,8 +253,8 @@ class ConnectionManager
         // make a list of all allocated IPv4 addresses (the IPv6 address is
         // based on the IPv4 address)
         $allocatedIpFourList = $this->storage->wgGetAllocatedIpFourAddresses();
-        $ipFourInRangeList = $profileConfig->wRangeFour($nodeNumber)->clientIpList();
-        $ipSixInRangeList = $profileConfig->wRangeSix($nodeNumber)->clientIpList(\count($ipFourInRangeList));
+        $ipFourInRangeList = $profileConfig->wRangeFour($nodeNumber)->clientIpListFour();
+        $ipSixInRangeList = $profileConfig->wRangeSix($nodeNumber)->clientIpListSix(\count($ipFourInRangeList));
         foreach ($ipFourInRangeList as $k => $ipFourInRange) {
             if (!\in_array($ipFourInRange, $allocatedIpFourList, true)) {
                 return [$ipFourInRange, $ipSixInRangeList[$k]];

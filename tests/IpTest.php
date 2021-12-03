@@ -269,8 +269,8 @@ final class IpTest extends TestCase
     public function testHostIpListFour(): void
     {
         $ip = Ip::fromIpPrefix('10.42.42.0/29');
-        $hostIpList = $ip->clientIpList();
-        static::assertCount(5, $hostIpList);
+        $hostIpList = $ip->clientIpListFour();
+//        static::assertCount(5, $hostIpList);
         static::assertSame(
             [
                 '10.42.42.2',
@@ -286,7 +286,7 @@ final class IpTest extends TestCase
     public function testHostIpListFourNonNull(): void
     {
         $ip = Ip::fromIpPrefix('10.42.42.8/29');
-        $hostIpList = $ip->clientIpList();
+        $hostIpList = $ip->clientIpListFour();
         static::assertCount(5, $hostIpList);
         static::assertSame(
             [
@@ -303,7 +303,7 @@ final class IpTest extends TestCase
     public function testHostIpListSix(): void
     {
         $ip = Ip::fromIpPrefix('fd42::/64');
-        $hostIpList = $ip->clientIpList(5);
+        $hostIpList = $ip->clientIpListSix(5);
         static::assertCount(5, $hostIpList);
         static::assertSame(
             [
@@ -315,6 +315,13 @@ final class IpTest extends TestCase
             ],
             $hostIpList
         );
+    }
+
+    public function testHostIpListSixOverLimit(): void
+    {
+        static::expectException(IpException::class);
+        static::expectExceptionMessage('prefix "/124" does not contain "20" hosts');
+        Ip::fromIpPrefix('fd42::/124')->clientIpListSix(20);
     }
 
     public function testContainsTrue(): void
@@ -368,15 +375,15 @@ final class IpTest extends TestCase
 
     public function testUnsplittableIpFour(): void
     {
-        $this->expectException(IpException::class);
-        $this->expectExceptionMessage('can not split prefix "/32"');
+        static::expectException(IpException::class);
+        static::expectExceptionMessage('can not split prefix "/32"');
         $splitIp = Ip::fromIpPrefix('192.168.5.5/32')->splitInHalf();
     }
 
     public function testUnsplittableIpSix(): void
     {
-        $this->expectException(IpException::class);
-        $this->expectExceptionMessage('can not split prefix "/128"');
+        static::expectException(IpException::class);
+        static::expectExceptionMessage('can not split prefix "/128"');
         $splitIp = Ip::fromIpPrefix('fd99::1/128')->splitInHalf();
     }
 }
