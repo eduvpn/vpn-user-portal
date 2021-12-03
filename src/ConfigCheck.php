@@ -49,7 +49,7 @@ class ConfigCheck
         }
 
         if (0 !== \count($profileConfig->routeList())) {
-            $profileProblemList[] = '"defaultGateway" is true, expecting "routeList" to be empty';
+            $profileProblemList[] = '"defaultGateway" is "true", expecting "routeList" to be empty';
         }
     }
 
@@ -73,7 +73,7 @@ class ConfigCheck
 
             foreach ($udpPortList as $udpPort) {
                 if (\in_array($udpPort, $usedUdpPortList[$nodeUrl], true)) {
-                    $profileProblemList[] = sprintf('node "%s" already uses UDP port "%d"', $nodeUrl, $udpPort);
+                    $profileProblemList[] = sprintf('Node "%s" already uses UDP port "%d"', $nodeUrl, $udpPort);
 
                     continue;
                 }
@@ -81,7 +81,7 @@ class ConfigCheck
             }
             foreach ($tcpPortList as $tcpPort) {
                 if (\in_array($tcpPort, $usedTcpPortList[$nodeUrl], true)) {
-                    $profileProblemList[] = sprintf('node "%s" already uses TCP port "%d"', $nodeUrl, $tcpPort);
+                    $profileProblemList[] = sprintf('Node "%s" already uses TCP port "%d"', $nodeUrl, $tcpPort);
 
                     continue;
                 }
@@ -103,7 +103,7 @@ class ConfigCheck
                 return;
             }
 
-            $profileProblemList[] = 'node URL "%s" is not using https';
+            $profileProblemList[] = 'Node URL "%s" is not using https';
         }
     }
 
@@ -112,14 +112,14 @@ class ConfigCheck
         foreach ($profileConfig->routeList() as $routeIpPrefix) {
             $ip = Ip::fromIpPrefix($routeIpPrefix);
             if (!$ip->equals($ip->network())) {
-                $profileProblemList[] = sprintf('route "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
+                $profileProblemList[] = sprintf('"routeList" entry "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
             }
         }
 
         foreach ($profileConfig->excludeRouteList() as $routeIpPrefix) {
             $ip = Ip::fromIpPrefix($routeIpPrefix);
             if (!$ip->equals($ip->network())) {
-                $profileProblemList[] = sprintf('excluded route "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
+                $profileProblemList[] = sprintf('"excludeRouteList" entry "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
             }
         }
     }
@@ -142,7 +142,7 @@ class ConfigCheck
                     continue;
                 }
 
-                $profileProblemList[] = sprintf('traffic to DNS server "%s" not routed over VPN', $dnsServerIp->address());
+                $profileProblemList[] = sprintf('Traffic to DNS server "%s" will not be routed over VPN', $dnsServerIp->address());
             }
         }
     }
@@ -153,7 +153,7 @@ class ConfigCheck
     private static function verifyDefaultGatewayHasDnsServerList(ProfileConfig $profileConfig, array &$profileProblemList): void
     {
         if ($profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsServerList())) {
-            $profileProblemList[] = 'default gateway enabled, but no DNS servers configured';
+            $profileProblemList[] = '"defaultGateway" is "true", but "dnsServerList" is empty';
         }
     }
 
@@ -181,7 +181,7 @@ class ConfigCheck
         foreach ($profileRangeList as $profileRange) {
             foreach ($usedRangeList as $usedRange) {
                 if ($profileRange->contains($usedRange) || $usedRange->contains($profileRange)) {
-                    $profileProblemList[] = sprintf('range "%s" overlaps with range "%s"', (string) $profileRange, (string) $usedRange);
+                    $profileProblemList[] = sprintf('Prefix "%s" is equal to, or overlaps prefix "%s"', (string) $profileRange, (string) $usedRange);
                 }
             }
             $usedRangeList[] = $profileRange;
