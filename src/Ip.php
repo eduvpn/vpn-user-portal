@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace LC\Portal;
 
 use GMP;
-use LC\Portal\Exception\IPException;
+use LC\Portal\Exception\IpException;
 
 /**
  * This class would be a lot simpler if only IPv4 existed with 32 bit
@@ -109,7 +109,7 @@ class Ip
 
         // IPv6
         if (0 === $intVal = gmp_intval(gmp_pow(2, (128 - $this->ipPrefix)))) {
-            throw new IPException('too many hosts to fit in "int"');
+            throw new IpException('too many hosts to fit in "int"');
         }
 
         return $intVal;
@@ -122,10 +122,10 @@ class Ip
     public function firstHost(): string
     {
         if (self::IP_4 === $this->ipFamily && 31 <= $this->ipPrefix) {
-            throw new IPException('network not big enough');
+            throw new IpException('network not big enough');
         }
         if (self::IP_6 === $this->ipFamily && 127 <= $this->ipPrefix) {
-            throw new IPException('network not big enough');
+            throw new IpException('network not big enough');
         }
 
         return self::toAddress(
@@ -183,7 +183,7 @@ class Ip
     {
         // XXX introduce "maxPrefix" parameter?
         if (2 ** ($this->addressBits() - $this->ipPrefix - 2) < $networkCount) {
-            throw new IPException('network too small to split in this many networks');
+            throw new IpException('network too small to split in this many networks');
         }
 
         $requiredBits = (int) log($networkCount, 2);
@@ -191,7 +191,7 @@ class Ip
         if (self::IP_6 === $this->ipFamily) {
             $minPrefix = 112 - $requiredBits;
             if ($minPrefix < $this->ipPrefix) {
-                throw new IPException('network too small, must be >= /'.$minPrefix);
+                throw new IpException('network too small, must be >= /'.$minPrefix);
             }
         }
         $netIp = $this->network();
@@ -216,10 +216,10 @@ class Ip
         }
 
         if (self::IP_4 === $this->ipFamily && 31 <= $this->ipPrefix) {
-            throw new IPException('network not big enough');
+            throw new IpException('network not big enough');
         }
         if (self::IP_6 === $this->ipFamily && 127 <= $this->ipPrefix) {
-            throw new IPException('network not big enough');
+            throw new IpException('network not big enough');
         }
 
         $hostIpList = [];
@@ -276,13 +276,13 @@ class Ip
     private static function fromIpFour(string $ipAddress, ?int $ipPrefix = null): self
     {
         if (false === filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            throw new IPException('invalid IPv4 address');
+            throw new IpException('invalid IPv4 address');
         }
         if (null === $ipPrefix) {
             $ipPrefix = 32;
         }
         if ($ipPrefix < 0 || $ipPrefix > 32) {
-            throw new IPException('invalid IPv4 prefix');
+            throw new IpException('invalid IPv4 prefix');
         }
 
         return new self(self::fromAddress($ipAddress), $ipPrefix, self::IP_4);
@@ -291,13 +291,13 @@ class Ip
     private static function fromIpSix(string $ipAddress, ?int $ipPrefix = null): self
     {
         if (false === filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            throw new IPException('invalid IPv6 address');
+            throw new IpException('invalid IPv6 address');
         }
         if (null === $ipPrefix) {
             $ipPrefix = 128;
         }
         if ($ipPrefix < 0 || $ipPrefix > 128) {
-            throw new IPException('invalid IPv6 prefix');
+            throw new IpException('invalid IPv6 prefix');
         }
 
         return new self(self::fromAddress($ipAddress), $ipPrefix, self::IP_6);

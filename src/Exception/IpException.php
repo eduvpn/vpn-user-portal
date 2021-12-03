@@ -13,6 +13,6 @@ namespace LC\Portal\Exception;
 
 use Exception;
 
-class IPException extends Exception
+class IpException extends Exception
 {
 }
