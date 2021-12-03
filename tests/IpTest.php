@@ -270,7 +270,7 @@ final class IpTest extends TestCase
     {
         $ip = Ip::fromIpPrefix('10.42.42.0/29');
         $hostIpList = $ip->clientIpListFour();
-//        static::assertCount(5, $hostIpList);
+        static::assertCount(5, $hostIpList);
         static::assertSame(
             [
                 '10.42.42.2',
@@ -278,6 +278,16 @@ final class IpTest extends TestCase
                 '10.42.42.4',
                 '10.42.42.5',
                 '10.42.42.6',
+            ],
+            $hostIpList
+        );
+
+        $ip = Ip::fromIpPrefix('10.42.42.0/30');
+        $hostIpList = $ip->clientIpListFour();
+        static::assertCount(1, $hostIpList);
+        static::assertSame(
+            [
+                '10.42.42.2',
             ],
             $hostIpList
         );
@@ -312,6 +322,16 @@ final class IpTest extends TestCase
                 'fd42::4',
                 'fd42::5',
                 'fd42::6',
+            ],
+            $hostIpList
+        );
+
+        $ip = Ip::fromIpPrefix('fd42::/126');
+        $hostIpList = $ip->clientIpListSix(1);
+        static::assertCount(1, $hostIpList);
+        static::assertSame(
+            [
+                'fd42::2',
             ],
             $hostIpList
         );
