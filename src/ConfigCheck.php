@@ -32,14 +32,25 @@ class ConfigCheck
             self::verifyDnsRouteIsPushedWhenNotDefaultGateway($profileConfig, $profileProblemList);
             self::verifyNonLocalNodeUrlHasTls($profileConfig, $profileProblemList);
             self::verifyUniqueOpenVpnPortsPerNode($profileConfig, $usedUdpPortList, $usedTcpPortList, $profileProblemList);
+            self::verifyRouteListIsEmptyWithDefaultGateway($profileConfig, $profileProblemList);
 
             $issueList[$profileConfig->profileId()] = $profileProblemList;
         }
 
-        // check OpenVPN port overlap (per node)
         // make sure IP space is big enough for OpenVPN/WireGuard
 
         return $issueList;
+    }
+
+    private static function verifyRouteListIsEmptyWithDefaultGateway(ProfileConfig $profileConfig, array &$profileProblemList): void
+    {
+        if (!$profileConfig->defaultGateway()) {
+            return;
+        }
+
+        if (0 !== \count($profileConfig->routeList())) {
+            $profileProblemList[] = '"defaultGateway" is true, expecting "routeList" to be empty';
+        }
     }
 
     private static function verifyUniqueOpenVpnPortsPerNode(ProfileConfig $profileConfig, array &$usedUdpPortList, array &$usedTcpPortList, array &$profileProblemList): void
