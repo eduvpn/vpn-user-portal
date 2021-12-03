@@ -157,23 +157,34 @@ class Ip
     }
 
     /**
-     * @return array<Ip>
+     * @return array{0:Ip,1:Ip}
      */
     public function splitInHalf(): array
     {
-        // Used by IpNetList
-        // XXX can only split networks bigger than /31 and /127
-        $prefixBits = $this->ipPrefix + 1;
-        $netIp = $this->network();
-        $splitRanges = [];
-        // XXX cleanup the for loop?
-        for ($i = 0; $i < 2; ++$i) {
-            $noOfHosts = gmp_pow(2, $this->addressBits() - $prefixBits);
-            $netAddress = gmp_add(gmp_mul($i, $noOfHosts), self::fromAddress($netIp->address()));
-            $splitRanges[] = new self($netAddress, $prefixBits, $this->ipFamily);
+        if (self::IP_4 === $this->ipFamily && $this->ipPrefix > 31) {
+            throw new IpException(sprintf('can not split prefix "/%d"', $this->ipPrefix));
         }
 
-        return $splitRanges;
+        if (self::IP_6 === $this->ipFamily && $this->ipPrefix > 127) {
+            throw new IpException(sprintf('can not split prefix "/%d"', $this->ipPrefix));
+        }
+
+        $prefixBits = $this->ipPrefix + 1;
+        $netIp = $this->network();
+        $noOfHosts = gmp_pow(2, $this->addressBits() - $prefixBits);
+
+        return [
+            new self(
+                self::fromAddress($netIp->address()),
+                $prefixBits,
+                $this->ipFamily
+            ),
+            new self(
+                gmp_add($noOfHosts, self::fromAddress($netIp->address())),
+                $prefixBits,
+                $this->ipFamily
+            ),
+        ];
     }
 
     /**
