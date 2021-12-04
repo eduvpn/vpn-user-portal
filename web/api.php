@@ -14,7 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\OAuth\Server\Signer\EdDSA;
+use fkooman\OAuth\Server\Signer;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
 use LC\Portal\FileIO;
@@ -50,15 +50,15 @@ try {
     $oauthStorage = new OAuthStorage($db, 'oauth_');
     $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
 
+    $oauthSigner = new Signer(FileIO::readFile($baseDir.'/config/oauth.key'));
     $bearerValidator = new BearerValidator(
         $oauthStorage,
         new ClientDb(),
-        new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key')),
+        $oauthSigner
     );
     $service = new ApiService($bearerValidator);
 
     $wireGuardServerConfig = new WireGuardServerConfig(FileIO::readFile($baseDir.'/config/wireguard.secret.key'), $config->wgPort());
-    $oauthSigner = new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'));
     $serverInfo = new ServerInfo(
         $ca,
         new TlsCrypt($baseDir.'/data'),

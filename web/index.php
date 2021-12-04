@@ -13,7 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\OAuth\Server\Signer\EdDSA;
+use fkooman\OAuth\Server\Signer;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\CookieOptions;
 use LC\Portal\Config;
@@ -218,7 +218,7 @@ try {
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($db, 'oauth_');
     $wireGuardServerConfig = new WireGuardServerConfig(FileIO::readFile($baseDir.'/config/wireguard.secret.key'), $config->wgPort());
-    $oauthSigner = new EdDSA(FileIO::readFile($baseDir.'/config/oauth.key'));
+    $oauthSigner = new Signer(FileIO::readFile($baseDir.'/config/oauth.key'));
     $tlsCrypt = new TlsCrypt($baseDir.'/data');
     $serverInfo = new ServerInfo(
         $ca,

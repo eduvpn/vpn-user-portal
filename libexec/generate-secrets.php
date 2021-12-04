@@ -12,7 +12,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\OAuth\Server\Signer\EdDSA;
+use fkooman\OAuth\Server\Signer;
 use LC\Portal\FileIO;
 use LC\Portal\WireGuard\KeyPair;
 
@@ -20,7 +20,7 @@ try {
     // OAuth key
     $apiKeyFile = $baseDir.'/config/oauth.key';
     if (!FileIO::exists($apiKeyFile)) {
-        FileIO::writeFile($apiKeyFile, EdDSA::generateKey(), 0444);
+        FileIO::writeFile($apiKeyFile, Signer::generateKey(), 0444);
     }
 
     // Node Key
