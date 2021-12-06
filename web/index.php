@@ -218,14 +218,15 @@ try {
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($db, 'oauth_');
     $wireGuardServerConfig = new WireGuardServerConfig(FileIO::readFile($baseDir.'/config/wireguard.secret.key'), $config->wgPort());
-    $oauthSigner = new Signer(FileIO::readFile($baseDir.'/config/oauth.key'));
+    $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
+    $oauthSigner = new Signer($oauthKey);
     $tlsCrypt = new TlsCrypt($baseDir.'/data');
     $serverInfo = new ServerInfo(
         $ca,
         $tlsCrypt,
         FileIO::readFile($baseDir.'/config/wireguard.public.key'),
         $config->wgPort(),
-        $oauthSigner->publicKey()
+        Signer::publicKey($oauthKey)
     );
 
     $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger);

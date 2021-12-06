@@ -50,7 +50,8 @@ try {
     $oauthStorage = new OAuthStorage($db, 'oauth_');
     $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
 
-    $oauthSigner = new Signer(FileIO::readFile($baseDir.'/config/oauth.key'));
+    $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
+    $oauthSigner = new Signer($oauthKey);
     $bearerValidator = new BearerValidator(
         $oauthStorage,
         new ClientDb(),
@@ -64,7 +65,7 @@ try {
         new TlsCrypt($baseDir.'/data'),
         FileIO::readFile($baseDir.'/config/wireguard.public.key'),
         $config->wgPort(),
-        $oauthSigner->publicKey()
+        Signer::publicKey($oauthKey)
     );
 
     $service->addModule(
