@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace LC\Portal;
 
-use fkooman\OAuth\Server\PublicKey;
 use LC\Portal\OpenVpn\CA\CaInterface;
 use LC\Portal\OpenVpn\TlsCrypt;
 
@@ -21,9 +20,9 @@ class ServerInfo
     private TlsCrypt $tlsCrypt;
     private string $wgPublicKey;
     private int $wgPort;
-    private PublicKey $oauthPublicKey;
+    private string $oauthPublicKey;
 
-    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, string $wgPublicKey, int $wgPort, PublicKey $oauthPublicKey)
+    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, string $wgPublicKey, int $wgPort, string $oauthPublicKey)
     {
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
@@ -54,7 +53,6 @@ class ServerInfo
 
     public function oauthPublicKey(): string
     {
-        // XXX we can return PublicKey here as well
-        return $this->oauthPublicKey->export();
+        return $this->oauthPublicKey;
     }
 }

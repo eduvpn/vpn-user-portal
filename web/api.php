@@ -14,7 +14,6 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use fkooman\OAuth\Server\SecretKey;
 use fkooman\OAuth\Server\Signer;
 use LC\Portal\Config;
 use LC\Portal\ConnectionManager;
@@ -51,8 +50,8 @@ try {
     $oauthStorage = new OAuthStorage($db, 'oauth_');
     $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
 
-    $secretKey = new SecretKey(FileIO::readFile($baseDir.'/config/oauth.key'));
-    $oauthSigner = new Signer($secretKey);
+    $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
+    $oauthSigner = new Signer($oauthKey);
     $bearerValidator = new BearerValidator(
         $oauthStorage,
         new ClientDb(),
@@ -66,7 +65,7 @@ try {
         new TlsCrypt($baseDir.'/data'),
         FileIO::readFile($baseDir.'/config/wireguard.public.key'),
         $config->wgPort(),
-        $secretKey->publicKey()
+        Signer::publicKeyFromSecretKey($oauthKey)
     );
 
     $service->addModule(
