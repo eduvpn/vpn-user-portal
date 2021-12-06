@@ -226,7 +226,7 @@ try {
         $tlsCrypt,
         FileIO::readFile($baseDir.'/config/wireguard.public.key'),
         $config->wgPort(),
-        Signer::publicKey($oauthKey)
+        Signer::publicKeyFromSecretKey($oauthKey)
     );
 
     $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger);

@@ -65,7 +65,7 @@ try {
         new TlsCrypt($baseDir.'/data'),
         FileIO::readFile($baseDir.'/config/wireguard.public.key'),
         $config->wgPort(),
-        Signer::publicKey($oauthKey)
+        Signer::publicKeyFromSecretKey($oauthKey)
     );
 
     $service->addModule(
