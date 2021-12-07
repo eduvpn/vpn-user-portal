@@ -15,6 +15,7 @@ $baseDir = dirname(__DIR__);
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
 use LC\Portal\Config;
+use LC\Portal\Dt;
 use LC\Portal\Expiry;
 use LC\Portal\FileIO;
 use LC\Portal\Http\JsonResponse;
@@ -56,8 +57,9 @@ try {
     $oauthServer->setAccessTokenExpiry($config->apiConfig()->tokenExpiry());
     $oauthServer->setRefreshTokenExpiry(
         Expiry::calculate(
-            $config->sessionExpiry(),
-            $ca->caCert()->validTo()
+            Dt::get(),
+            $ca->caCert()->validTo(),
+            $config->sessionExpiry()
         )
     );
 

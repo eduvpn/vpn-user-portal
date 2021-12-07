@@ -88,14 +88,15 @@ try {
         ]
     );
 
+    $dateTime = Dt::get();
     FileIO::createDir($baseDir.'/data', 0700);
     $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
     $sessionExpiry = Expiry::calculate(
-        $config->sessionExpiry(),
-        $ca->caCert()->validTo()
+        $dateTime,
+        $ca->caCert()->validTo(),
+        $config->sessionExpiry()
     );
 
-    $dateTime = Dt::get();
     if ($dateTime->add(new DateInterval('PT30M')) >= $dateTime->add($sessionExpiry)) {
         throw new RuntimeException('sessionExpiry MUST be > PT30M');
     }
