@@ -37,6 +37,6 @@ class ApiConfig
      */
     public function maxNumberOfAuthorizedClients(): int
     {
-        return $this->requireInt('maxNumberOfAuthorizedClients', 5);
+        return $this->requireInt('maxNumberOfAuthorizedClients', 15);
     }
 }

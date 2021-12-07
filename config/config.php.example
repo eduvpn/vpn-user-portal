@@ -193,8 +193,8 @@ return [
 
     //'Api' => [
     //    // Limit the number of active OAuth clients per user
-    //    // OPTIONAL, DEFAULT = 5
-    //    //'maxNumberOfAuthorizedClients' => 5,
+    //    // OPTIONAL, DEFAULT = 15
+    //    //'maxNumberOfAuthorizedClients' => 15,
     //],
 
     //'Session' => [
