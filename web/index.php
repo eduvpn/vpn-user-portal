@@ -114,6 +114,7 @@ try {
         $cookieOptions = $cookieOptions->withoutSecure();
     }
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
+    // XXX when MemcachedSessionStorage does throw an exception, it doesn't properly bubble up! Why not?!
     $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config);
 
     $service = new Service();
