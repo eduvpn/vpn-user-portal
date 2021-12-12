@@ -47,7 +47,7 @@ class Config
 
     public function memcacheSessionConfig(): MemcacheSessionConfig
     {
-        return new MemcacheSessionConfig($this->s('MemcacheSessionAuth')->toArray());
+        return new MemcacheSessionConfig($this->s('MemcacheSessionModule')->toArray());
     }
 
     public function vpnCaPath(): string

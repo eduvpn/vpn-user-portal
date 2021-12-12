@@ -27,6 +27,6 @@ class MemcacheSessionConfig
      */
     public function serverList(): array
     {
-        return $this->requireStringArray('serverList', []);
+        return $this->requireStringArray('serverList');
     }
 }
