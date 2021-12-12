@@ -9,10 +9,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace Vpn\Portal;
 
 use GMP;
-use LC\Portal\Exception\IpException;
+use Vpn\Portal\Exception\IpException;
 
 /**
  * This class would be a lot simpler if only IPv4 existed with 32 bit

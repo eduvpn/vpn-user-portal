@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http\Auth;
+namespace Vpn\Portal\Http\Auth;
 
-use LC\Portal\Binary;
-use LC\Portal\Http\JsonResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\UserInfo;
+use Vpn\Portal\Binary;
+use Vpn\Portal\Http\JsonResponse;
+use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\Response;
+use Vpn\Portal\Http\UserInfo;
 
 class NodeAuthModule extends AbstractAuthModule
 {

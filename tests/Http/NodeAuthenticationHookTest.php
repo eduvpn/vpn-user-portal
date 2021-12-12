@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests\Http;
+namespace Vpn\Portal\Tests\Http;
 
-use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\NodeAuthenticationHook;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Http\NodeAuthenticationHook;
 
 /**
  * @internal

@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */ ?>
+<?php /** @var \Vpn\Portal\Tpl $this */ ?>
 <?php /** @var int $code */ ?>
 <?php /** @var string $message */ ?>
 <?php $this->layout('base', ['pageTitle' => $this->t('Error')]); ?>

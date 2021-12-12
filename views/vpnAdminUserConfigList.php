@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<array{profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable}> $userConnectionLogEntries */ ?>
 <?php /** @var string $userId */?>
 <?php /** @var bool $isDisabled */?>

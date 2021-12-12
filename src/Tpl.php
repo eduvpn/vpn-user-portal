@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace Vpn\Portal;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use LC\Portal\Exception\TplException;
-use LC\Portal\OAuth\ClientDb;
 use RangeException;
+use Vpn\Portal\Exception\TplException;
+use Vpn\Portal\OAuth\ClientDb;
 
 class Tpl implements TplInterface
 {

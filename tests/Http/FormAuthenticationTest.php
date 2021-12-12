@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests\Http;
+namespace Vpn\Portal\Tests\Http;
 
-use LC\Portal\Http\FormAuthentication;
-use LC\Portal\Http\Service;
-use LC\Portal\Http\SimpleAuth;
-use LC\Portal\Tests\TestTpl;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\Http\FormAuthentication;
+use Vpn\Portal\Http\Service;
+use Vpn\Portal\Http\SimpleAuth;
+use Vpn\Portal\Tests\TestTpl;
 
 /**
  * @internal

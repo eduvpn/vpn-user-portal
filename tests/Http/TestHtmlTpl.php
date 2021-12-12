@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests\Http;
+namespace Vpn\Portal\Tests\Http;
 
-use LC\Portal\TplInterface;
+use Vpn\Portal\TplInterface;
 
 class TestHtmlTpl implements TplInterface
 {

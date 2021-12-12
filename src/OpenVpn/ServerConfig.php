@@ -9,14 +9,14 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\OpenVpn;
+namespace Vpn\Portal\OpenVpn;
 
-use LC\Portal\Ip;
-use LC\Portal\IpNetList;
-use LC\Portal\OpenVpn\CA\CaInterface;
-use LC\Portal\OpenVpn\CA\CertInfo;
-use LC\Portal\ProfileConfig;
 use RuntimeException;
+use Vpn\Portal\Ip;
+use Vpn\Portal\IpNetList;
+use Vpn\Portal\OpenVpn\CA\CaInterface;
+use Vpn\Portal\OpenVpn\CA\CertInfo;
+use Vpn\Portal\ProfileConfig;
 
 class ServerConfig
 {
@@ -86,7 +86,7 @@ class ServerConfig
     }
 
     /**
-     * @param array{rangeFour:\LC\Portal\Ip,rangeSix:\LC\Portal\Ip,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
+     * @param array{rangeFour:\Vpn\Portal\Ip,rangeSix:\Vpn\Portal\Ip,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
      */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes): string
     {

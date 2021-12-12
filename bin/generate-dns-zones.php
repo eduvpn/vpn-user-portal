@@ -12,8 +12,8 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Portal\Binary;
-use LC\Portal\Config;
+use Vpn\Portal\Binary;
+use Vpn\Portal\Config;
 
 /*
  * We want to generate forward and reverse DNS zones for all VPN profiles. But

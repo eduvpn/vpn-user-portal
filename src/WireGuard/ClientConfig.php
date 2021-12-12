@@ -9,15 +9,15 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\WireGuard;
+namespace Vpn\Portal\WireGuard;
 
-use LC\Portal\Base64;
-use LC\Portal\ClientConfigInterface;
-use LC\Portal\Exception\QrCodeException;
-use LC\Portal\Ip;
-use LC\Portal\IpNetList;
-use LC\Portal\ProfileConfig;
-use LC\Portal\QrCode;
+use Vpn\Portal\Base64;
+use Vpn\Portal\ClientConfigInterface;
+use Vpn\Portal\Exception\QrCodeException;
+use Vpn\Portal\Ip;
+use Vpn\Portal\IpNetList;
+use Vpn\Portal\ProfileConfig;
+use Vpn\Portal\QrCode;
 
 /**
  * Represent a WireGuard client configuration file.

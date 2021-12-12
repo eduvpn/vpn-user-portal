@@ -9,7 +9,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\WireGuard;
+namespace Vpn\Portal\WireGuard;
 
 class ServerConfig
 {
@@ -23,7 +23,7 @@ class ServerConfig
     }
 
     /**
-     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
+     * @param array<\Vpn\Portal\ProfileConfig> $profileConfigList
      */
     public function get(array $profileConfigList, int $nodeNumber): ?string
     {

@@ -9,10 +9,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace Vpn\Portal;
 
-use LC\Portal\OpenVpn\CA\CaInterface;
-use LC\Portal\OpenVpn\TlsCrypt;
+use Vpn\Portal\OpenVpn\CA\CaInterface;
+use Vpn\Portal\OpenVpn\TlsCrypt;
 
 class ServerInfo
 {

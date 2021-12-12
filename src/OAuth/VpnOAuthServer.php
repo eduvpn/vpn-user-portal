@@ -9,7 +9,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\OAuth;
+namespace Vpn\Portal\OAuth;
 
 use DateInterval;
 use fkooman\OAuth\Server\ClientDbInterface;

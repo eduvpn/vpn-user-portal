@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var ?\DateTimeImmutable $date_time */?>
 <?php /** @var ?string $ip_address */?>
 <?php /** @var \DateTimeImmutable $now */?>

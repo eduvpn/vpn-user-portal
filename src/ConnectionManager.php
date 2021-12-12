@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace Vpn\Portal;
 
 use DateTimeImmutable;
-use LC\Portal\Exception\ConnectionManagerException;
-use LC\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
-use LC\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
-use LC\Portal\WireGuard\KeyPair;
+use Vpn\Portal\Exception\ConnectionManagerException;
+use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
+use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
+use Vpn\Portal\WireGuard\KeyPair;
 
 /**
  * List, add and remove connections.

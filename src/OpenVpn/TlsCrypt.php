@@ -9,10 +9,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\OpenVpn;
+namespace Vpn\Portal\OpenVpn;
 
-use LC\Portal\FileIO;
-use LC\Portal\Validator;
+use Vpn\Portal\FileIO;
+use Vpn\Portal\Validator;
 
 class TlsCrypt
 {

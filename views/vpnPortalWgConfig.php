@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */ ?>
-<?php /** @var \LC\Portal\WireGuard\ClientConfig $wireGuardClientConfig */ ?>
+<?php /** @var \Vpn\Portal\Tpl $this */ ?>
+<?php /** @var \Vpn\Portal\WireGuard\ClientConfig $wireGuardClientConfig */ ?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
     <h2><?= $this->t('WireGuard Configuration'); ?></h2>

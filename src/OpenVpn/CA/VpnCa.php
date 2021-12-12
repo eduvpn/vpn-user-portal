@@ -9,18 +9,18 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\OpenVpn\CA;
+namespace Vpn\Portal\OpenVpn\CA;
 
 use DateInterval;
 use DateTimeImmutable;
-use LC\Portal\Dt;
-use LC\Portal\FileIO;
-use LC\Portal\Hex;
-use LC\Portal\OpenVpn\CA\Exception\CaException;
-use LC\Portal\Random;
-use LC\Portal\RandomInterface;
-use LC\Portal\Validator;
 use RuntimeException;
+use Vpn\Portal\Dt;
+use Vpn\Portal\FileIO;
+use Vpn\Portal\Hex;
+use Vpn\Portal\OpenVpn\CA\Exception\CaException;
+use Vpn\Portal\Random;
+use Vpn\Portal\RandomInterface;
+use Vpn\Portal\Validator;
 
 class VpnCa implements CaInterface
 {

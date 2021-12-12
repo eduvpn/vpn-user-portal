@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<array{user_id:string,permission_list:array<string>,is_disabled:bool}> $userList */?>
 <?php /** @var string $requestRoot */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>

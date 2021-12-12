@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http\Auth;
+namespace Vpn\Portal\Http\Auth;
 
-use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\UserInfo;
+use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\UserInfo;
 
 class ClientCertAuthModule extends AbstractAuthModule
 {

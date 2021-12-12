@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>> $profileConnectionList */?>
 <?php /** @var array<string,string> $idNameMapping */?>
 <?php /** @var string $requestRoot */?>

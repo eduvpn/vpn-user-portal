@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace Vpn\Portal\Tests;
 
 use DateInterval;
 use DateTime;
-use LC\Portal\HttpClient\HttpClientInterface;
-use LC\Portal\HttpClient\HttpClientResponse;
 use RuntimeException;
+use Vpn\Portal\HttpClient\HttpClientInterface;
+use Vpn\Portal\HttpClient\HttpClientResponse;
 
 class TestHttpClient implements HttpClientInterface
 {
@@ -24,7 +24,7 @@ class TestHttpClient implements HttpClientInterface
      * @param array<string,string> $queryParameters
      * @param array<string>        $requestHeaders
      *
-     * @return \LC\Portal\HttpClient\HttpClientResponse
+     * @return \Vpn\Portal\HttpClient\HttpClientResponse
      */
     public function get($requestUrl, array $queryParameters, array $requestHeaders = [])
     {
@@ -160,7 +160,7 @@ class TestHttpClient implements HttpClientInterface
      * @param mixed  $responseData
      * @param int    $statusCode
      *
-     * @return \LC\Portal\HttpClient\HttpClientResponse
+     * @return \Vpn\Portal\HttpClient\HttpClientResponse
      */
     private static function wrap($key, $responseData, $statusCode = 200)
     {
@@ -183,7 +183,7 @@ class TestHttpClient implements HttpClientInterface
      * @param string $errorMessage
      * @param int    $statusCode
      *
-     * @return \LC\Portal\HttpClient\HttpClientResponse
+     * @return \Vpn\Portal\HttpClient\HttpClientResponse
      */
     private static function wrapError($key, $errorMessage, $statusCode = 200)
     {

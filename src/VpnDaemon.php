@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace Vpn\Portal;
 
-use LC\Portal\HttpClient\Exception\HttpClientException;
-use LC\Portal\HttpClient\HttpClientInterface;
-use LC\Portal\HttpClient\HttpClientRequest;
+use Vpn\Portal\HttpClient\Exception\HttpClientException;
+use Vpn\Portal\HttpClient\HttpClientInterface;
+use Vpn\Portal\HttpClient\HttpClientRequest;
 
 /**
  * Class interfacing with vpn-daemon and preparing the response data to be

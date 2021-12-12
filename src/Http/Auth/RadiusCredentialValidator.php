@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http\Auth;
+namespace Vpn\Portal\Http\Auth;
 
-use LC\Portal\Http\Auth\Exception\RadiusException;
-use LC\Portal\Http\UserInfo;
-use LC\Portal\LoggerInterface;
-use LC\Portal\RadiusAuthConfig;
 use RuntimeException;
+use Vpn\Portal\Http\Auth\Exception\RadiusException;
+use Vpn\Portal\Http\UserInfo;
+use Vpn\Portal\LoggerInterface;
+use Vpn\Portal\RadiusAuthConfig;
 
 class RadiusCredentialValidator implements CredentialValidatorInterface
 {
@@ -32,7 +32,7 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
     }
 
     /**
-     * @return false|\LC\Portal\Http\UserInfo
+     * @return false|\Vpn\Portal\Http\UserInfo
      */
     public function isValid(string $authUser, string $authPass)
     {

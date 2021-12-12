@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace Vpn\Portal\Tests;
 
-use LC\Portal\Config;
+use Vpn\Portal\Config;
 
 class MyConfig extends Config
 {

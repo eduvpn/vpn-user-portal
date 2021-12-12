@@ -9,10 +9,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
-use LC\Portal\FileIO;
-use LC\Portal\Json;
+use Vpn\Portal\FileIO;
+use Vpn\Portal\Json;
 
 /**
  * XXX not used at the moment!

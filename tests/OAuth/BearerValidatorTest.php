@@ -9,18 +9,18 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\OAuth\Tests;
+namespace Vpn\Portal\OAuth\Tests;
 
 use DateInterval;
 use DateTime;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\OAuthServer;
-use LC\Portal\OAuth\BearerValidator;
-use LC\Portal\OAuth\ClientDb;
-use LC\Portal\OAuth\PublicSigner;
-use LC\Portal\Storage;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\OAuth\BearerValidator;
+use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OAuth\PublicSigner;
+use Vpn\Portal\Storage;
 
 /**
  * @internal
@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class BearerValidatorTest extends TestCase
 {
-    /** @var \LC\Portal\OAuth\BearerValidator */
+    /** @var \Vpn\Portal\OAuth\BearerValidator */
     private $bearerValidator;
 
     /** @var \fkooman\Jwt\Keys\EdDSA\SecretKey */

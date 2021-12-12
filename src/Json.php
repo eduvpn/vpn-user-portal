@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace Vpn\Portal;
 
-use LC\Portal\Exception\JsonException;
+use Vpn\Portal\Exception\JsonException;
 
 class Json
 {

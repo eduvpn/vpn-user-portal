@@ -12,9 +12,9 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Portal\FileIO;
-use LC\Portal\Http\JsonResponse;
-use LC\Portal\Http\Request;
+use Vpn\Portal\FileIO;
+use Vpn\Portal\Http\JsonResponse;
+use Vpn\Portal\Http\Request;
 
 try {
     $request = Request::createFromGlobals();

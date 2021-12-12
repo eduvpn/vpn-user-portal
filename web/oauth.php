@@ -14,19 +14,19 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
-use LC\Portal\Config;
-use LC\Portal\Dt;
-use LC\Portal\Expiry;
-use LC\Portal\FileIO;
-use LC\Portal\Http\JsonResponse;
-use LC\Portal\Http\OAuthTokenModule;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
-use LC\Portal\OAuth\ClientDb;
-use LC\Portal\OAuth\VpnOAuthServer;
-use LC\Portal\OpenVpn\CA\VpnCa;
-use LC\Portal\Storage;
-use LC\Portal\SysLogger;
+use Vpn\Portal\Config;
+use Vpn\Portal\Dt;
+use Vpn\Portal\Expiry;
+use Vpn\Portal\FileIO;
+use Vpn\Portal\Http\JsonResponse;
+use Vpn\Portal\Http\OAuthTokenModule;
+use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\Service;
+use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OAuth\VpnOAuthServer;
+use Vpn\Portal\OpenVpn\CA\VpnCa;
+use Vpn\Portal\Storage;
+use Vpn\Portal\SysLogger;
 
 $logger = new SysLogger('vpn-user-portal');
 

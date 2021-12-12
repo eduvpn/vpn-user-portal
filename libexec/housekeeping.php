@@ -12,9 +12,9 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Portal\Config;
-use LC\Portal\Dt;
-use LC\Portal\Storage;
+use Vpn\Portal\Config;
+use Vpn\Portal\Dt;
+use Vpn\Portal\Storage;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');

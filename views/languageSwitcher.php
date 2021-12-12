@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<string> $enabledLanguages */?>
 <?php /** @var string $requestRoot */?>
 <?php if (1 < count($enabledLanguages)): ?>

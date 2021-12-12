@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace Vpn\Portal\Tests;
 
 use DateInterval;
 use DateTimeImmutable;
-use LC\Portal\Dt;
-use LC\Portal\Expiry;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\Dt;
+use Vpn\Portal\Expiry;
 
 /**
  * @internal

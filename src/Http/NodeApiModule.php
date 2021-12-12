@@ -9,17 +9,17 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
-use LC\Portal\Base64;
-use LC\Portal\Config;
-use LC\Portal\Dt;
-use LC\Portal\Exception\NodeApiException;
-use LC\Portal\LoggerInterface;
-use LC\Portal\ServerConfig;
-use LC\Portal\Storage;
-use LC\Portal\Validator;
+use Vpn\Portal\Base64;
+use Vpn\Portal\Config;
+use Vpn\Portal\Dt;
+use Vpn\Portal\Exception\NodeApiException;
+use Vpn\Portal\LoggerInterface;
+use Vpn\Portal\ServerConfig;
+use Vpn\Portal\Storage;
+use Vpn\Portal\Validator;
 
 class NodeApiModule implements ServiceModuleInterface
 {

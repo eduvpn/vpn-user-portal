@@ -9,21 +9,21 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace Vpn\Portal\Tests;
 
 use DateTimeImmutable;
-use LC\Portal\Config;
-use LC\Portal\Http\NullAuthenticationHook;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
-use LC\Portal\OAuth\ClientDb;
-use LC\Portal\OpenVpn\DaemonSocket;
-use LC\Portal\OpenVpn\DaemonWrapper;
-use LC\Portal\Storage;
-use LC\Portal\TlsCrypt;
-use LC\Portal\VpnPortalModule;
 use PDO;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\Config;
+use Vpn\Portal\Http\NullAuthenticationHook;
+use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\Service;
+use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OpenVpn\DaemonSocket;
+use Vpn\Portal\OpenVpn\DaemonWrapper;
+use Vpn\Portal\Storage;
+use Vpn\Portal\TlsCrypt;
+use Vpn\Portal\VpnPortalModule;
 
 /**
  * @internal
@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class VpnPortalModuleTest extends TestCase
 {
-    /** @var \LC\Portal\Http\Service */
+    /** @var \Vpn\Portal\Http\Service */
     private $service;
 
     protected function setUp(): void
@@ -161,7 +161,7 @@ final class VpnPortalModuleTest extends TestCase
      * @param array<string,string> $postData
      * @param bool                 $returnResponseObj
      *
-     * @return array|\LC\Portal\Http\Response
+     * @return array|\Vpn\Portal\Http\Response
      */
     private function makeRequest($requestMethod, $pathInfo, array $getData = [], array $postData = [], $returnResponseObj = false)
     {

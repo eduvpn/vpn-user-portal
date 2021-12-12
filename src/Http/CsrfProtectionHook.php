@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
-use LC\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Http\Exception\HttpException;
 
 /**
  * XXX look at php-saml-sp for better CSRF protection.

@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
-use LC\Portal\TplInterface;
+use Vpn\Portal\TplInterface;
 
 /**
  * Determines whether the current user is an "Admin", i.e. has extra

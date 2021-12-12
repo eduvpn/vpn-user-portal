@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var string $uiLanguage */ ?>
 <?php /** @var string $pageTitle */ ?>
 <?php /** @var string $requestRoot */ ?>

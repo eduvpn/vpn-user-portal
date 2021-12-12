@@ -9,21 +9,21 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use LC\Portal\Config;
-use LC\Portal\ConfigCheck;
-use LC\Portal\ConnectionManager;
-use LC\Portal\Dt;
-use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\LoggerInterface;
-use LC\Portal\ServerInfo;
-use LC\Portal\Storage;
-use LC\Portal\TplInterface;
-use LC\Portal\Validator;
-use LC\Portal\VpnDaemon;
+use Vpn\Portal\Config;
+use Vpn\Portal\ConfigCheck;
+use Vpn\Portal\ConnectionManager;
+use Vpn\Portal\Dt;
+use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\LoggerInterface;
+use Vpn\Portal\ServerInfo;
+use Vpn\Portal\Storage;
+use Vpn\Portal\TplInterface;
+use Vpn\Portal\Validator;
+use Vpn\Portal\VpnDaemon;
 
 class AdminPortalModule implements ServiceModuleInterface
 {

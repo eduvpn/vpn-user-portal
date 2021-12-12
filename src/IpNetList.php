@@ -9,15 +9,15 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal;
+namespace Vpn\Portal;
 
 class IpNetList
 {
-    /** @var array<\LC\Portal\Ip> */
+    /** @var array<\Vpn\Portal\Ip> */
     private array $ipList;
 
     /**
-     * @param array<\LC\Portal\Ip> $ipList
+     * @param array<\Vpn\Portal\Ip> $ipList
      */
     public function __construct(array $ipList = [])
     {
@@ -88,7 +88,7 @@ class IpNetList
     }
 
     /**
-     * @return array<\LC\Portal\Ip>
+     * @return array<\Vpn\Portal\Ip>
      */
     public function ls(): array
     {

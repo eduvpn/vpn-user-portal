@@ -9,14 +9,14 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\Http\Response as OAuthResponse;
 use fkooman\OAuth\Server\OAuthServer;
-use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Storage;
-use LC\Portal\TplInterface;
+use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Storage;
+use Vpn\Portal\TplInterface;
 
 class OAuthModule implements ServiceModuleInterface
 {

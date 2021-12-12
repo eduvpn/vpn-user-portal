@@ -12,20 +12,20 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Portal\Config;
-use LC\Portal\FileIO;
-use LC\Portal\Http\Auth\NodeAuthModule;
-use LC\Portal\Http\JsonResponse;
-use LC\Portal\Http\NodeApiModule;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Service;
-use LC\Portal\OpenVpn\CA\VpnCa;
-use LC\Portal\OpenVpn\ServerConfig as OpenVpnServerConfig;
-use LC\Portal\OpenVpn\TlsCrypt;
-use LC\Portal\ServerConfig;
-use LC\Portal\Storage;
-use LC\Portal\SysLogger;
-use LC\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
+use Vpn\Portal\Config;
+use Vpn\Portal\FileIO;
+use Vpn\Portal\Http\Auth\NodeAuthModule;
+use Vpn\Portal\Http\JsonResponse;
+use Vpn\Portal\Http\NodeApiModule;
+use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\Service;
+use Vpn\Portal\OpenVpn\CA\VpnCa;
+use Vpn\Portal\OpenVpn\ServerConfig as OpenVpnServerConfig;
+use Vpn\Portal\OpenVpn\TlsCrypt;
+use Vpn\Portal\ServerConfig;
+use Vpn\Portal\Storage;
+use Vpn\Portal\SysLogger;
+use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');

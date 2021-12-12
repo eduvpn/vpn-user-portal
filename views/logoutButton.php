@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var string $requestRoot */?>
 <?php /** @var bool $_show_logout_button */?>
 <?php if ($_show_logout_button): ?>

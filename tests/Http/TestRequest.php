@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests\Http;
+namespace Vpn\Portal\Tests\Http;
 
-use LC\Portal\Http\Request;
+use Vpn\Portal\Http\Request;
 
 class TestRequest extends Request
 {

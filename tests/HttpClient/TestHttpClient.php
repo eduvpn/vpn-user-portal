@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests\HttpClient;
+namespace Vpn\Portal\Tests\HttpClient;
 
-use LC\Portal\HttpClient\HttpClientInterface;
-use LC\Portal\HttpClient\HttpClientResponse;
 use RuntimeException;
+use Vpn\Portal\HttpClient\HttpClientInterface;
+use Vpn\Portal\HttpClient\HttpClientResponse;
 
 class TestHttpClient implements HttpClientInterface
 {

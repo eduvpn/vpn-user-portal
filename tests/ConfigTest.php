@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace Vpn\Portal\Tests;
 
-use LC\Portal\Config;
-use LC\Portal\Exception\ConfigException;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\Config;
+use Vpn\Portal\Exception\ConfigException;
 
 /**
  * @internal

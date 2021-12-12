@@ -9,12 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests\Http;
+namespace Vpn\Portal\Tests\Http;
 
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\Service;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\Response;
+use Vpn\Portal\Http\Service;
 
 /**
  * @internal
@@ -34,7 +34,7 @@ final class ServiceTest extends TestCase
         $service->get(
             '/foo',
         /**
-         * @return \LC\Portal\Http\Response
+         * @return \Vpn\Portal\Http\Response
          */
         function (Request $request) {
             $response = new Response(201, 'application/json');
@@ -45,7 +45,7 @@ final class ServiceTest extends TestCase
         );
         $service->post(
             '/bar',
-        // @return \LC\Portal\Http\Response
+        // @return \Vpn\Portal\Http\Response
         fn (Request $request) => new Response()
         );
         $response = $service->run($request);
@@ -66,7 +66,7 @@ final class ServiceTest extends TestCase
         $service->get(
             '/foo',
         /**
-         * @return \LC\Portal\Http\Response
+         * @return \Vpn\Portal\Http\Response
          */
         function (Request $request) {
             $response = new Response(201, 'application/json');
@@ -93,12 +93,12 @@ final class ServiceTest extends TestCase
         $service = new Service();
         $service->get(
             '/foo',
-            // @return \LC\Portal\Http\Response
+            // @return \Vpn\Portal\Http\Response
             fn (Request $request) => new Response()
         );
         $service->post(
             '/foo',
-            // @return \LC\Portal\Http\Response
+            // @return \Vpn\Portal\Http\Response
             fn (Request $request) => new Response()
         );
         $response = $service->run($request);
@@ -119,12 +119,12 @@ final class ServiceTest extends TestCase
         $service = new Service();
         $service->get(
             '/foo',
-            // @return \LC\Portal\Http\Response
+            // @return \Vpn\Portal\Http\Response
             fn (Request $request) => new Response()
         );
         $service->post(
             '/foo',
-            // @return \LC\Portal\Http\Response
+            // @return \Vpn\Portal\Http\Response
             fn (Request $request) => new Response()
         );
         $response = $service->run($request);
@@ -150,7 +150,7 @@ final class ServiceTest extends TestCase
         $service->get(
             '/foo',
         /**
-         * @return \LC\Portal\Http\Response
+         * @return \Vpn\Portal\Http\Response
          */
         function (Request $request, array $hookData) {
             $response = new Response();
@@ -174,14 +174,14 @@ final class ServiceTest extends TestCase
         );
         $service = new Service();
         $callbackHook = new CallbackHook(
-            // @return \LC\Portal\Http\Response
+            // @return \Vpn\Portal\Http\Response
             fn (Request $request) => new Response(201)
         );
         $service->addBeforeHook('test', $callbackHook);
 
         $service->get(
             '/foo',
-        // @return \LC\Portal\Http\Response
+        // @return \Vpn\Portal\Http\Response
         fn (Request $request, array $hookData) => new Response()
         );
         $response = $service->run($request);
@@ -209,7 +209,7 @@ final class ServiceTest extends TestCase
             'test2',
             new CallbackHook(
                 /**
-                 * @return \LC\Portal\Http\Response
+                 * @return \Vpn\Portal\Http\Response
                  */
                 function (Request $request, array $hookData) {
                     $response = new Response();
@@ -235,7 +235,7 @@ final class ServiceTest extends TestCase
         $service = new Service();
         $service->get(
             '/foo',
-        // @return \LC\Portal\Http\Response
+        // @return \Vpn\Portal\Http\Response
         fn (Request $request) => new Response(200)
         );
         $response = $service->run($request);
@@ -255,7 +255,7 @@ final class ServiceTest extends TestCase
         $service = new Service(new TestHtmlTpl());
         $service->get(
             '/foo',
-        // @return \LC\Portal\Http\Response
+        // @return \Vpn\Portal\Http\Response
         fn (Request $request) => new Response(200)
         );
         $response = $service->run($request);

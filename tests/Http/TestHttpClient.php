@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests\Http;
+namespace Vpn\Portal\Tests\Http;
 
-use LC\Portal\HttpClient\HttpClientInterface;
-use LC\Portal\HttpClient\HttpClientResponse;
 use RuntimeException;
+use Vpn\Portal\HttpClient\HttpClientInterface;
+use Vpn\Portal\HttpClient\HttpClientResponse;
 
 class TestHttpClient implements HttpClientInterface
 {
@@ -22,7 +22,7 @@ class TestHttpClient implements HttpClientInterface
      * @param array<string,string> $queryParameters
      * @param array<string>        $requestHeaders
      *
-     * @return \LC\Portal\HttpClient\HttpClientResponse
+     * @return \Vpn\Portal\HttpClient\HttpClientResponse
      */
     public function get($requestUrl, array $queryParameters, array $requestHeaders = [])
     {
@@ -48,7 +48,7 @@ class TestHttpClient implements HttpClientInterface
      * @param array<string,string> $postData
      * @param array<string>        $requestHeaders
      *
-     * @return \LC\Portal\HttpClient\HttpClientResponse
+     * @return \Vpn\Portal\HttpClient\HttpClientResponse
      */
     public function post($requestUrl, array $queryParameters, array $postData, array $requestHeaders = [])
     {

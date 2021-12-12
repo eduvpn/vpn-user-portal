@@ -13,8 +13,8 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\Signer;
-use LC\Portal\FileIO;
-use LC\Portal\WireGuard\KeyPair;
+use Vpn\Portal\FileIO;
+use Vpn\Portal\WireGuard\KeyPair;
 
 try {
     // OAuth key

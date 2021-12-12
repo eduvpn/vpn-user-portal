@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-<?php /** @var \LC\Portal\Tpl $this */?>
+<?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var bool $_form_auth_invalid_credentials */?>
 <?php /** @var string $requestRoot */?>
 <?php /** @var string $_form_auth_invalid_credentials_user */?>

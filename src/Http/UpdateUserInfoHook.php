@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
-use LC\Portal\Storage;
+use Vpn\Portal\Storage;
 
 /**
  * Create a user in the users table if the user does not yet exists, or

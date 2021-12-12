@@ -9,12 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
-use LC\Portal\Http\Auth\CredentialValidatorInterface;
-use LC\Portal\Json;
-use LC\Portal\TplInterface;
-use LC\Portal\Validator;
+use Vpn\Portal\Http\Auth\CredentialValidatorInterface;
+use Vpn\Portal\Json;
+use Vpn\Portal\TplInterface;
+use Vpn\Portal\Validator;
 
 class UserPassModule implements ServiceModuleInterface
 {

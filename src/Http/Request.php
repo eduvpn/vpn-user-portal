@@ -9,12 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use Closure;
-use LC\Portal\Binary;
-use LC\Portal\Http\Exception\HttpException;
 use RangeException;
+use Vpn\Portal\Binary;
+use Vpn\Portal\Http\Exception\HttpException;
 
 class Request
 {

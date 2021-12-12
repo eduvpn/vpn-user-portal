@@ -9,11 +9,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\OAuthException;
-use LC\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Http\Exception\HttpException;
 
 class ApiService implements ServiceInterface
 {

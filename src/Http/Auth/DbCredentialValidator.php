@@ -9,10 +9,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http\Auth;
+namespace Vpn\Portal\Http\Auth;
 
-use LC\Portal\Http\UserInfo;
-use LC\Portal\Storage;
+use Vpn\Portal\Http\UserInfo;
+use Vpn\Portal\Storage;
 
 class DbCredentialValidator implements CredentialValidatorInterface
 {
@@ -24,7 +24,7 @@ class DbCredentialValidator implements CredentialValidatorInterface
     }
 
     /**
-     * @return false|\LC\Portal\Http\UserInfo
+     * @return false|\Vpn\Portal\Http\UserInfo
      */
     public function isValid(string $authUser, string $authPass)
     {

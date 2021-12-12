@@ -9,12 +9,12 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Tests;
+namespace Vpn\Portal\Tests;
 
-use LC\Portal\Migration;
 use PDO;
 use PDOException;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\Migration;
 
 /**
  * @internal

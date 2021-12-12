@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
-use LC\Portal\Http\Auth\DbCredentialValidator;
-use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Storage;
-use LC\Portal\TplInterface;
-use LC\Portal\Validator;
+use Vpn\Portal\Http\Auth\DbCredentialValidator;
+use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Storage;
+use Vpn\Portal\TplInterface;
+use Vpn\Portal\Validator;
 
 class PasswdModule implements ServiceModuleInterface
 {

@@ -2,23 +2,23 @@
     "authors": [
         {
             "email": "fkooman@tuxed.net",
-            "name": "Fran\u00e7ois Kooman",
+            "name": "François Kooman",
             "role": "Developer"
         }
     ],
     "autoload": {
         "psr-4": {
-            "LC\\Portal\\": "src/"
+            "Vpn\\Portal\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "LC\\Portal\\Tests\\": "tests/"
+            "Vpn\\Portal\\Tests\\": "tests/"
         }
     },
-    "description": "User and admin portal for Let's Connect! and eduVPN",
+    "description": "VPN Portal",
     "license": "AGPL-3.0-or-later",
-    "name": "lc/vpn-user-portal",
+    "name": "vpn/portal",
     "prefer-stable": true,
     "repositories": [
         {
@@ -37,16 +37,16 @@
     "require": {
         "ext-curl": "*",
         "ext-date": "*",
-        "ext-hash": "*",
         "ext-gmp": "*",
+        "ext-hash": "*",
         "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-sodium": "*",
         "ext-spl": "*",
         "ext-sqlite3": "*",
-        "fkooman/secookie": "6.x-dev",
         "fkooman/oauth2-server": "7.x-dev",
+        "fkooman/secookie": "6.x-dev",
         "php": ">=7.4"
     },
     "require-dev": {
@@ -56,10 +56,10 @@
     },
     "suggest": {
         "ext-ldap": "Support LDAP user authentication",
-        "ext-radius": "Support RADIUS user authentication",
+        "ext-memcached": "Support for memcache session storage",
         "ext-mysqlnd": "Support MySQL/MariaDB",
         "ext-pgsql": "Support PostgreSQL",
-        "ext-memcached": "Support for memcache session storage"
+        "ext-radius": "Support RADIUS user authentication"
     },
     "support": {
         "email": "eduvpn-support@lists.geant.org",

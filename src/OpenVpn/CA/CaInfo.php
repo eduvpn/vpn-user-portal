@@ -9,10 +9,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\OpenVpn\CA;
+namespace Vpn\Portal\OpenVpn\CA;
 
 use DateTimeImmutable;
-use LC\Portal\Dt;
+use Vpn\Portal\Dt;
 
 class CaInfo
 {

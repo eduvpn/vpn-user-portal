@@ -9,7 +9,7 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\OAuthServer;

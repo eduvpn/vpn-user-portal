@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use fkooman\SeCookie\CookieOptions;
 use fkooman\SeCookie\MemcachedSessionStorage;
 use fkooman\SeCookie\Session;
 use fkooman\SeCookie\SessionOptions;
-use LC\Portal\Config;
+use Vpn\Portal\Config;
 
 class SeSession implements SessionInterface
 {

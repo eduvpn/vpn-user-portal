@@ -9,16 +9,16 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http\Auth;
+namespace Vpn\Portal\Http\Auth;
 
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
-use LC\Portal\Config;
-use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\Http\RedirectResponse;
-use LC\Portal\Http\Request;
-use LC\Portal\Http\Response;
-use LC\Portal\Http\UserInfo;
+use Vpn\Portal\Config;
+use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Http\RedirectResponse;
+use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\Response;
+use Vpn\Portal\Http\UserInfo;
 
 class PhpSamlSpAuthModule extends AbstractAuthModule
 {

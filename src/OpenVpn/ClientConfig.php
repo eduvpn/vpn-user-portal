@@ -9,13 +9,13 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\OpenVpn;
+namespace Vpn\Portal\OpenVpn;
 
-use LC\Portal\ClientConfigInterface;
-use LC\Portal\OpenVpn\CA\CaInfo;
-use LC\Portal\OpenVpn\CA\CertInfo;
-use LC\Portal\OpenVpn\Exception\ClientConfigException;
-use LC\Portal\ProfileConfig;
+use Vpn\Portal\ClientConfigInterface;
+use Vpn\Portal\OpenVpn\CA\CaInfo;
+use Vpn\Portal\OpenVpn\CA\CertInfo;
+use Vpn\Portal\OpenVpn\Exception\ClientConfigException;
+use Vpn\Portal\ProfileConfig;
 
 class ClientConfig implements ClientConfigInterface
 {
@@ -44,7 +44,7 @@ class ClientConfig implements ClientConfigInterface
     /**
      * XXX should this thing throw clientconfigexception? or the constructor?
      *
-     * @throws \LC\Portal\OpenVpn\Exception\ClientConfigException
+     * @throws \Vpn\Portal\OpenVpn\Exception\ClientConfigException
      */
     public function get(): string
     {

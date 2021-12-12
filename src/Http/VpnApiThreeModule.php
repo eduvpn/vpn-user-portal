@@ -9,15 +9,15 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
-use LC\Portal\Config;
-use LC\Portal\ConnectionManager;
-use LC\Portal\ServerInfo;
-use LC\Portal\Storage;
-use LC\Portal\Validator;
+use Vpn\Portal\Config;
+use Vpn\Portal\ConnectionManager;
+use Vpn\Portal\ServerInfo;
+use Vpn\Portal\Storage;
+use Vpn\Portal\Validator;
 
 class VpnApiThreeModule implements ServiceModuleInterface
 {

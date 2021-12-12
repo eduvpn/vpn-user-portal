@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\WireGuard;
+namespace Vpn\Portal\WireGuard;
 
-use LC\Portal\Base64;
+use Vpn\Portal\Base64;
 
 /**
  * Generate a keypair using libsodium functions. The output of "public_key" is

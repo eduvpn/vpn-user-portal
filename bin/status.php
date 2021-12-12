@@ -12,14 +12,14 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use LC\Portal\Config;
-use LC\Portal\ConnectionManager;
-use LC\Portal\HttpClient\CurlHttpClient;
-use LC\Portal\Json;
-use LC\Portal\ProfileConfig;
-use LC\Portal\Storage;
-use LC\Portal\SysLogger;
-use LC\Portal\VpnDaemon;
+use Vpn\Portal\Config;
+use Vpn\Portal\ConnectionManager;
+use Vpn\Portal\HttpClient\CurlHttpClient;
+use Vpn\Portal\Json;
+use Vpn\Portal\ProfileConfig;
+use Vpn\Portal\Storage;
+use Vpn\Portal\SysLogger;
+use Vpn\Portal\VpnDaemon;
 
 function getMaxClientLimit(ProfileConfig $profileConfig): int
 {

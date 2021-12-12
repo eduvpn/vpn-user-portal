@@ -9,20 +9,20 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace LC\Portal\Http;
+namespace Vpn\Portal\Http;
 
 use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use LC\Portal\Config;
-use LC\Portal\ConnectionManager;
-use LC\Portal\Dt;
-use LC\Portal\Http\Exception\HttpException;
-use LC\Portal\ServerInfo;
-use LC\Portal\Storage;
-use LC\Portal\Tpl;
-use LC\Portal\TplInterface;
-use LC\Portal\Validator;
+use Vpn\Portal\Config;
+use Vpn\Portal\ConnectionManager;
+use Vpn\Portal\Dt;
+use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\ServerInfo;
+use Vpn\Portal\Storage;
+use Vpn\Portal\Tpl;
+use Vpn\Portal\TplInterface;
+use Vpn\Portal\Validator;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -268,9 +268,9 @@ class VpnPortalModule implements ServiceModuleInterface
      * Filter the list of profiles by checking if the profile should be shown,
      * and that the user has the required permissions in case ACLs are enabled.
      *
-     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
+     * @param array<\Vpn\Portal\ProfileConfig> $profileConfigList
      *
-     * @return array<\LC\Portal\ProfileConfig>
+     * @return array<\Vpn\Portal\ProfileConfig>
      */
     private static function filterProfileList(array $profileConfigList, array $userPermissions): array
     {
@@ -290,7 +290,7 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param array<\LC\Portal\ProfileConfig> $profileConfigList
+     * @param array<\Vpn\Portal\ProfileConfig> $profileConfigList
      */
     private static function isAllowedProfile(array $profileConfigList, string $profileId): bool
     {
@@ -304,7 +304,7 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param array<string,\LC\Portal\ProfileConfig> $profileConfigList
+     * @param array<string,\Vpn\Portal\ProfileConfig> $profileConfigList
      *
      * @return array<array{profile_id:string,display_name:string,profile_display_name:string,expires_at:\DateTimeImmutable,public_key:?string,common_name:?string}>
      */
