@@ -197,16 +197,16 @@ return [
     //    //'maxNumberOfAuthorizedClients' => 15,
     //],
 
-    //'Session' => [
-    //    // Whether to use memcached for sessions
-    //    // OPTIONAL, DEFAULT = false
-    //    //'useMemcached' => false,
-    //
+    // OPTIONAL, DEFAULT = 'FileSessionModule'
+    //'sessionModule' => 'FileSessionModule',
+    //'sessionModule' => 'MemcacheSessionModule',
+
+    //'MemcacheSessionModule' => [
     //    // List of memcached servers host:port
     //    // OPTIONAL, DEFAULT = []
-    //    //'memcachedServerList' => [
-    //    //    'localhost:11211',
-    //    //],
+    //    'serverList' => [
+    //        'localhost:11211'
+    //    ]
     //],
 
     // List of VPN profiles

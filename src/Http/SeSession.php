@@ -15,27 +15,17 @@ use fkooman\SeCookie\CookieOptions;
 use fkooman\SeCookie\MemcachedSessionStorage;
 use fkooman\SeCookie\Session;
 use fkooman\SeCookie\SessionOptions;
-use LC\Portal\SessionConfig;
-use Memcached;
-use RuntimeException;
+use LC\Portal\Config;
 
 class SeSession implements SessionInterface
 {
     private Session $session;
 
-    public function __construct(CookieOptions $cookieOptions, SessionConfig $sessionConfig)
+    public function __construct(CookieOptions $cookieOptions, Config $config)
     {
-        // default session storage is "FileSessionStorage"
         $sessionStorage = null;
-        if ($sessionConfig->useMemcached()) {
-            if (!\extension_loaded('memcached')) {
-                throw new RuntimeException('"memcached" PHP extension not available');
-            }
-            $m = new Memcached();
-            foreach ($sessionConfig->memcachedServerList() as $memCachedServer) {
-                $m->addServer($memCachedServer['h'], $memCachedServer['p']);
-            }
-            $sessionStorage = new MemcachedSessionStorage($m);
+        if ('MemcacheSessionModule' === $config->sessionModule()) {
+            $sessionStorage = new MemcachedSessionStorage($config->memcacheSessionConfig()->serverList());
         }
         $this->session = new Session(
             SessionOptions::init(),

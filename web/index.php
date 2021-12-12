@@ -114,7 +114,7 @@ try {
         $cookieOptions = $cookieOptions->withoutSecure();
     }
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
-    $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config->sessionConfig());
+    $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config);
 
     $service = new Service();
     $service->addBeforeHook(new CsrfProtectionHook());

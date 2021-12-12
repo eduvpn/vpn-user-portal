@@ -45,9 +45,9 @@ class Config
         return new ApiConfig($this->s('Api')->toArray());
     }
 
-    public function sessionConfig(): SessionConfig
+    public function memcacheSessionConfig(): MemcacheSessionConfig
     {
-        return new SessionConfig($this->s('Session')->toArray());
+        return new MemcacheSessionConfig($this->s('MemcacheSessionAuth')->toArray());
     }
 
     public function vpnCaPath(): string
@@ -64,6 +64,11 @@ class Config
     public function enableConfigDownload(): bool
     {
         return $this->requireBool('enableConfigDownload', true);
+    }
+
+    public function sessionModule(): string
+    {
+        return $this->requireString('sessionModule', 'FileSessionModule');
     }
 
     /**
