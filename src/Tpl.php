@@ -359,6 +359,15 @@ class Tpl implements TplInterface
         return 'ltr';
     }
 
+    public function reset(): void
+    {
+        ob_clean();
+        $this->activeSectionName = null;
+        $this->sectionList = [];
+        $this->layoutList = [];
+        $this->callbackList = [];
+    }
+
     /**
      * @return array<string>
      */

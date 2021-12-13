@@ -282,6 +282,7 @@ try {
     $logger->error($e->getMessage());
     $htmlBody = Tpl::escape('ERROR: '.$e->getMessage());
     if (null !== $tpl) {
+        $tpl->reset();
         $htmlBody = $tpl->render(
             'errorPage',
             [
