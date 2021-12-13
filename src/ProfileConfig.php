@@ -192,11 +192,6 @@ class ProfileConfig
         return $this->requireIntArray('oExposedTcpPortList', []);
     }
 
-    public function oDnsDomain(): ?string
-    {
-        return $this->optionalString('oDnsDomain');
-    }
-
     public function oBlockLan(): bool
     {
         return $this->requireBool('oBlockLan', false);

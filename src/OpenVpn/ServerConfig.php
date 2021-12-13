@@ -277,7 +277,6 @@ class ServerConfig
             return [];
         }
 
-        // XXX also consider oDnsDomain for the search list! as it is an openvpn-only option...
         // no default gateway and no search domains available, nothing to do
         if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsSearchDomainList())) {
             return [];
@@ -292,10 +291,7 @@ class ServerConfig
             $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
         }
 
-        // push DOMAIN
-        if (null !== $dnsDomain = $profileConfig->oDnsDomain()) {
-            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN %s"', $dnsDomain);
-        }
+        // XXX if default gateway, search domains make no sense
         // push DOMAIN-SEARCH,
         foreach ($profileConfig->dnsSearchDomainList() as $dnsSearchDomain) {
             $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsSearchDomain);

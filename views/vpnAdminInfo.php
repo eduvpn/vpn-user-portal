@@ -209,9 +209,6 @@
             <span class="plain"><code><?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
 <?php endfor; ?>
             </td></tr>
-<?php if (null !== $oDnsDomain = $profileConfig->oDnsDomain()): ?>
-            <tr><th><?=$this->t('DNS Domain'); ?></th><td><code><?=$this->e($oDnsDomain); ?></code></td></tr>
-<?php endif; ?>
 <?php if (0 !== count($profileConfig->oUdpPortList()) || 0 !== count($profileConfig->oTcpPortList())): ?>
             <tr><th><?=$this->t('Ports'); ?></th>
             <td>

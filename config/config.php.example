@@ -230,8 +230,8 @@ return [
             //'defaultGateway' => false,
 
             // Provide DNS server(s) to the VPN client
-            // *Only* used when defaultGateway is true or oDnsDomain /
-            // dnsSearchDomainList are specified
+            // *Only* used when defaultGateway is true or dnsSearchDomainList 
+            // are specified
             // DEFAULT  = []
             'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
 
@@ -316,9 +316,6 @@ return [
             // server. If missing, or empty uses tcpPortList
             // DEFAULT: []
             //'oExposedTcpPortList' => [],
-
-            // DEFAULT = null
-            //'oDnsDomain' => 'example.org',
 
             // Block access to local LAN when VPN is active
             // OpenVPN Only, OPTIONAL, DEFAULT = false
