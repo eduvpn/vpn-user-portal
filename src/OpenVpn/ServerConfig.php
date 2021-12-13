@@ -272,29 +272,28 @@ class ServerConfig
     private static function getDns(ProfileConfig $profileConfig): array
     {
         $dnsServerList = $profileConfig->dnsServerList();
-        // if no DNS servers configured, nothing to do
-        if (0 === \count($dnsServerList)) {
-            return [];
-        }
-
-        // no default gateway and no search domains available, nothing to do
-        if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsSearchDomainList())) {
-            return [];
-        }
 
         $dnsEntries = [];
-        if ($profileConfig->defaultGateway()) {
-            // prevent DNS leakage on Windows when VPN is default gateway
-            $dnsEntries[] = 'push "block-outside-dns"';
-        }
-        foreach ($dnsServerList as $dnsAddress) {
-            $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
+        if ($profileConfig->defaultGateway() || 0 !== \count($profileConfig->dnsSearchDomainList())) {
+            // push DNS servers when default gateway is set, or there are some
+            // search domains specified
+            foreach ($dnsServerList as $dnsAddress) {
+                $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
+            }
         }
 
-        // XXX if default gateway, search domains make no sense
-        // push DOMAIN-SEARCH,
-        foreach ($profileConfig->dnsSearchDomainList() as $dnsSearchDomain) {
-            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsSearchDomain);
+        if ($profileConfig->defaultGateway() && 0 !== \count($dnsServerList)) {
+            // prevent DNS leakage on Windows when VPN is default gateway and
+            // VPN has DNS servers
+            $dnsEntries[] = 'push "block-outside-dns"';
+        }
+
+        if (!$profileConfig->defaultGateway() && 0 !== \count($dnsServerList)) {
+            // provide connection specific DNS domains to use for querying
+            // the DNS server when default gateway is not true
+            foreach ($profileConfig->dnsSearchDomainList() as $dnsSearchDomain) {
+                $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsSearchDomain);
+            }
         }
 
         return $dnsEntries;
