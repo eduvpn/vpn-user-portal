@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\WireGuard;
 
-use Vpn\Portal\Base64;
 use Vpn\Portal\ClientConfigInterface;
 use Vpn\Portal\Exception\QrCodeException;
 use Vpn\Portal\Ip;
@@ -87,7 +86,7 @@ class ClientConfig implements ClientConfigInterface
     public function getQr(): ?string
     {
         try {
-            return Base64::encode(QrCode::generate($this->get()));
+            return QrCode::generate($this->get());
         } catch (QrCodeException $e) {
             return null;
         }

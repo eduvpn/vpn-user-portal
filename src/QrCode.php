@@ -22,7 +22,7 @@ class QrCode
         ob_start();
         passthru(
             sprintf(
-                '%s -m 0 -s 5 -t PNG -o - -- %s',
+                '%s -m 0 -s 4 --inline -t SVG -o - -- %s',
                 self::QR_ENCODE_PATH,
                 escapeshellarg($qrText)
             ),

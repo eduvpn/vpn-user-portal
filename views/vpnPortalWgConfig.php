@@ -8,9 +8,7 @@
     <p>
 <?=$this->t('Scan this QR code with your mobile device.'); ?>
     </p>
-    <p>
-        <img src="data:image/png;base64,<?=$this->e($qrCode); ?>">
-    </p>
+<?=$qrCode; ?>
 <?php endif; ?>
     <p>
 <?=$this->t('Import or copy/paste this configuration to your WireGuard application.'); ?>
