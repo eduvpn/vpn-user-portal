@@ -99,22 +99,20 @@ class ClientConfig implements ClientConfigInterface
     private static function getDns(ProfileConfig $profileConfig): array
     {
         $dnsServerList = $profileConfig->dnsServerList();
-        // if no DNS servers configured, nothing to do
-        if (0 === \count($dnsServerList)) {
-            return [];
+        $dnsEntries = [];
+
+        // push DNS servers when default gateway is set, or there are some
+        // search domains specified
+        if ($profileConfig->defaultGateway() || 0 !== \count($profileConfig->dnsSearchDomainList())) {
+            $dnsEntries = array_merge($dnsEntries, $dnsServerList);
         }
 
-        // no default gateway and no search domains available, nothing to do
-        if (!$profileConfig->defaultGateway() && 0 === \count($profileConfig->dnsSearchDomainList())) {
-            return [];
+        // provide connection specific DNS domains to use for querying
+        // the DNS server when default gateway is not true
+        if (!$profileConfig->defaultGateway() && 0 !== \count($dnsServerList)) {
+            $dnsEntries = array_merge($dnsEntries, $profileConfig->dnsSearchDomainList());
         }
 
-        // add DNS search domains as well, @see wg-quick(8)
-        return array_unique(
-            array_merge(
-                $dnsServerList,
-                $profileConfig->dnsSearchDomainList()
-            )
-        );
+        return $dnsEntries;
     }
 }

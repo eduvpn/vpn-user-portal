@@ -274,23 +274,24 @@ class ServerConfig
         $dnsServerList = $profileConfig->dnsServerList();
 
         $dnsEntries = [];
+
+        // push DNS servers when default gateway is set, or there are some
+        // search domains specified
         if ($profileConfig->defaultGateway() || 0 !== \count($profileConfig->dnsSearchDomainList())) {
-            // push DNS servers when default gateway is set, or there are some
-            // search domains specified
             foreach ($dnsServerList as $dnsAddress) {
                 $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
             }
         }
 
+        // prevent DNS leakage on Windows when VPN is default gateway and
+        // VPN has DNS servers
         if ($profileConfig->defaultGateway() && 0 !== \count($dnsServerList)) {
-            // prevent DNS leakage on Windows when VPN is default gateway and
-            // VPN has DNS servers
             $dnsEntries[] = 'push "block-outside-dns"';
         }
 
+        // provide connection specific DNS domains to use for querying
+        // the DNS server when default gateway is not true
         if (!$profileConfig->defaultGateway() && 0 !== \count($dnsServerList)) {
-            // provide connection specific DNS domains to use for querying
-            // the DNS server when default gateway is not true
             foreach ($profileConfig->dnsSearchDomainList() as $dnsSearchDomain) {
                 $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsSearchDomain);
             }
