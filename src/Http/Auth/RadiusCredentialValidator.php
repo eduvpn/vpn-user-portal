@@ -17,6 +17,9 @@ use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\LoggerInterface;
 use Vpn\Portal\RadiusAuthConfig;
 
+/**
+ * @psalm-suppress UndefinedConstant
+ */
 class RadiusCredentialValidator implements CredentialValidatorInterface
 {
     private LoggerInterface $logger;
