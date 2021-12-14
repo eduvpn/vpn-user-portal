@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http;
 
 use fkooman\SeCookie\CookieOptions;
-use fkooman\SeCookie\MemcachedSessionStorage;
+use fkooman\SeCookie\MemcacheSessionStorage;
 use fkooman\SeCookie\Session;
 use fkooman\SeCookie\SessionOptions;
 use Vpn\Portal\Config;
@@ -25,7 +25,7 @@ class SeSession implements SessionInterface
     {
         $sessionStorage = null;
         if ('MemcacheSessionModule' === $config->sessionModule()) {
-            $sessionStorage = new MemcachedSessionStorage($config->memcacheSessionConfig()->serverList());
+            $sessionStorage = new MemcacheSessionStorage($config->memcacheSessionConfig()->serverList());
         }
         $this->session = new Session(
             SessionOptions::init(),
