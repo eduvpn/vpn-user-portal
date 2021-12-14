@@ -62,7 +62,6 @@ class UserPassModule implements ServiceModuleInterface
                 }
 
                 $permissionList = $userInfo->permissionList();
-                $this->session->regenerate();
                 $this->session->set('_form_auth_user', $userInfo->userId());
                 $this->session->set('_form_auth_permission_list', Json::encode($userInfo->permissionList()));
 

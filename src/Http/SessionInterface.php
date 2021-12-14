@@ -13,8 +13,6 @@ namespace Vpn\Portal\Http;
 
 interface SessionInterface
 {
-    public function regenerate(): void;
-
     public function get(string $sessionKey): ?string;
 
     public function set(string $sessionKey, string $sessionValue): void;

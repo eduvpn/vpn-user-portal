@@ -35,11 +35,6 @@ class SeSession implements SessionInterface
         $this->session->start();
     }
 
-    public function regenerate(): void
-    {
-        $this->session->regenerate();
-    }
-
     public function get(string $sessionKey): ?string
     {
         return $this->session->get($sessionKey);
