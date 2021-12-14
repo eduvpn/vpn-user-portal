@@ -85,6 +85,14 @@ class Config
         return $this->requireString('defaultLanguage', 'en-US');
     }
 
+    /**
+     * @return array<string>
+     */
+    public function enabledLanguages(): array
+    {
+        return $this->requireStringArray('enabledLanguages', ['en-US']);
+    }
+
     public function styleName(): ?string
     {
         return $this->optionalString('styleName');

@@ -58,6 +58,7 @@ use Vpn\Portal\VpnDaemon;
 use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 $logger = new SysLogger('vpn-user-portal');
+/** @var ?Vpn\Portal\Tpl $tpl */
 $tpl = null;
 
 try {
@@ -78,8 +79,7 @@ try {
             'requestUri' => $request->getUri(),
             'requestRoot' => $request->getRoot(),
             'requestRootUri' => $request->getRootUri(),
-            // XXX proper config option
-            'enabledLanguages' => $config->requireStringArray('enabledLanguages', ['en-US']),
+            'enabledLanguages' => $config->enabledLanguages(),
             'portalVersion' => trim(FileIO::readFile($baseDir.'/VERSION')),
             'isAdmin' => false,
             'uiLanguage' => $uiLanguage,
@@ -114,7 +114,6 @@ try {
         $cookieOptions = $cookieOptions->withoutSecure();
     }
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
-    // XXX when MemcachedSessionStorage does throw an exception, it doesn't properly bubble up! Why not?!
     $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config);
 
     $service = new Service();
