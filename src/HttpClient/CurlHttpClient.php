@@ -19,7 +19,7 @@ class CurlHttpClient implements HttpClientInterface
 {
     private ?string $certPath;
 
-    public function __construct(?string $certPath)
+    public function __construct(?string $certPath = null)
     {
         $this->certPath = $certPath;
     }
@@ -37,14 +37,9 @@ class CurlHttpClient implements HttpClientInterface
             CURLOPT_HEADER => false,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => false,
-
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_3,
-            CURLOPT_CAINFO => null !== $this->certPath ? $this->certPath.'/ca.crt' : null,
-            CURLOPT_SSLCERT => null !== $this->certPath ? $this->certPath.'/vpn-daemon-client.crt' : null,
-            CURLOPT_SSLKEY => null !== $this->certPath ? $this->certPath.'/vpn-daemon-client.key' : null,
-
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 15,
             CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
@@ -58,6 +53,17 @@ class CurlHttpClient implements HttpClientInterface
                 return Binary::safeStrlen($headerLine);
             },
         ];
+
+        if (null !== $this->certPath) {
+            $curlOptions = array_merge(
+                $curlOptions,
+                [
+                    CURLOPT_CAINFO => $this->certPath.'/ca.crt',
+                    CURLOPT_SSLCERT => $this->certPath.'/vpn-daemon-client.crt',
+                    CURLOPT_SSLKEY => $this->certPath.'/vpn-daemon-client.key',
+                ]
+            );
+        }
 
         if ('POST' === $httpClientRequest->requestMethod()) {
             $curlOptions[CURLOPT_POSTFIELDS] = $httpClientRequest->postParameters();
