@@ -22,13 +22,11 @@ use RangeException;
 class Validator
 {
     private const REGEXP_USER_ID = '/^.+$/';
-    /** @see https://lore.kernel.org/wireguard/X+UkseUOEY1sVDEe@zx2c4.com/ */
-    private const REGEXP_COMMON_NAME = '/^[A-Za-z0-9+/]{42}[A|E|I|M|Q|U|Y|c|g|k|o|s|w|4|8|0]=$/';
     private const REGEXP_USER_AUTH_PASS = '/^.+$/';
     private const REGEXP_USER_PASS = '/^.{8,}$/';
     private const REGEXP_DISPLAY_NAME = '/^.+$/';
     /** @see https://lore.kernel.org/wireguard/X+UkseUOEY1sVDEe@zx2c4.com/ */
-    private const REGEXP_PUBLIC_KEY = '/^[A-Za-z0-9+/]{42}[A|E|I|M|Q|U|Y|c|g|k|o|s|w|4|8|0]=$/';
+    private const REGEXP_CONNECTION_ID = '/^[A-Za-z0-9+/]{42}[A|E|I|M|Q|U|Y|c|g|k|o|s|w|4|8|0]=$/';
     private const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
     private const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';
     private const REGEXP_SERVER_NAME = '/^[a-zA-Z0-9-.]+$/';
@@ -52,14 +50,6 @@ class Validator
     /**
      * @throws \RangeException
      */
-    public static function publicKey(string $publicKey): void
-    {
-        self::re($publicKey, self::REGEXP_PUBLIC_KEY, __FUNCTION__);
-    }
-
-    /**
-     * @throws \RangeException
-     */
     public static function userId(string $userId): void
     {
         self::re($userId, self::REGEXP_USER_ID, __FUNCTION__);
@@ -78,8 +68,28 @@ class Validator
      */
     public static function connectionId(string $connectionId): void
     {
-        // XXX improve this! or better, get rid of it?
-        self::re($connectionId, self::REGEXP_PUBLIC_KEY, __FUNCTION__);
+        self::re($connectionId, self::REGEXP_CONNECTION_ID, __FUNCTION__);
+    }
+
+    /**
+     * Validate WireGuard Public Key, a Base64 coded 32 byte string.
+     *
+     * @throws \RangeException
+     */
+    public static function publicKey(string $publicKey): void
+    {
+        self::connectionId($publicKey);
+    }
+
+    /**
+     * Validate OpenVPN X.509 certificate "Common Name", a Base64 encoded 32
+     * bytes random string.
+     *
+     * @throws \RangeException
+     */
+    public static function commonName(string $commonName): void
+    {
+        self::connectionId($commonName);
     }
 
     /**
@@ -88,14 +98,6 @@ class Validator
     public static function userAuthPass(string $userAuthPass): void
     {
         self::re($userAuthPass, self::REGEXP_USER_AUTH_PASS, __FUNCTION__);
-    }
-
-    /**
-     * @throws \RangeException
-     */
-    public static function commonName(string $commonName): void
-    {
-        self::re($commonName, self::REGEXP_COMMON_NAME, __FUNCTION__);
     }
 
     /**
