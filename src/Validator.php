@@ -26,7 +26,7 @@ class Validator
     private const REGEXP_USER_PASS = '/^.{8,}$/';
     private const REGEXP_DISPLAY_NAME = '/^.+$/';
     /** @see https://lore.kernel.org/wireguard/X+UkseUOEY1sVDEe@zx2c4.com/ */
-    private const REGEXP_CONNECTION_ID = '/^[A-Za-z0-9+/]{42}[A|E|I|M|Q|U|Y|c|g|k|o|s|w|4|8|0]=$/';
+    private const REGEXP_CONNECTION_ID = '/^[A-Za-z0-9+\\/]{42}[A|E|I|M|Q|U|Y|c|g|k|o|s|w|4|8|0]=$/';
     private const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
     private const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';
     private const REGEXP_SERVER_NAME = '/^[a-zA-Z0-9-.]+$/';
@@ -78,7 +78,7 @@ class Validator
      */
     public static function publicKey(string $publicKey): void
     {
-        self::connectionId($publicKey);
+        self::re($publicKey, self::REGEXP_CONNECTION_ID, __FUNCTION__);
     }
 
     /**
@@ -89,7 +89,7 @@ class Validator
      */
     public static function commonName(string $commonName): void
     {
-        self::connectionId($commonName);
+        self::re($commonName, self::REGEXP_CONNECTION_ID, __FUNCTION__);
     }
 
     /**
@@ -215,7 +215,7 @@ class Validator
     {
         if (1 !== preg_match($regExp, $inputStr)) {
             // XXX we MUST NOT show inputStr here in case it is password!
-            throw new RangeException('invalid/insufficient characters in "'.$errorKey.'" ['.$inputStr.']');
+            throw new RangeException('invalid value for "'.$errorKey.'"');
         }
     }
 }
