@@ -14,6 +14,7 @@ namespace Vpn\Portal;
 use DateTimeImmutable;
 use PDO;
 
+// XXX convert all queries to heredoc
 class Storage
 {
     public const INCLUDE_EXPIRED = 10;

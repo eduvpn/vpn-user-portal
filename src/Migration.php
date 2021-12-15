@@ -191,6 +191,8 @@ class Migration
 
     private function createVersionTable(string $schemaVersion): void
     {
+        // XXX use prepare to specify schema version, even though we have a
+        // strict regexp check
         $this->dbh->exec('CREATE TABLE version (current_version TEXT NOT NULL)');
         $this->dbh->exec(sprintf("INSERT INTO version (current_version) VALUES('%s')", $schemaVersion));
     }
