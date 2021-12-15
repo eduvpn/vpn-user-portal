@@ -22,6 +22,7 @@ class CsrfProtectionHook extends AbstractHook implements BeforeHookInterface
     {
         if (!$request->isBrowser()) {
             // not a browser, no CSRF protected needed
+            // XXX is this actually true? What about XmlHttpRequest?
             return null;
         }
 
