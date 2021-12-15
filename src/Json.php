@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Portal;
 
-use Vpn\Portal\Exception\JsonException;
-
 class Json
 {
     /**
@@ -20,26 +18,11 @@ class Json
      */
     public static function encode($jsonData): string
     {
-        $jsonString = json_encode($jsonData, JSON_UNESCAPED_SLASHES);
-        // 5.5.0 	The return value on failure was changed from null string to FALSE.
-        if (false === $jsonString || 'null' === $jsonString) {
-            throw new JsonException('unable to encode JSON');
-        }
-
-        return $jsonString;
+        return json_encode($jsonData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES, 32);
     }
 
     public static function decode(string $jsonString): array
     {
-        $jsonData = json_decode($jsonString, true);
-        if (null === $jsonData && JSON_ERROR_NONE !== json_last_error()) {
-            throw new JsonException('unable to parse/decode JSON');
-        }
-
-        if (!\is_array($jsonData)) {
-            throw new JsonException(sprintf('expected JSON object, got "%s"', \gettype($jsonData)));
-        }
-
-        return $jsonData;
+        return json_decode($jsonString, true, 32, JSON_THROW_ON_ERROR);
     }
 }
