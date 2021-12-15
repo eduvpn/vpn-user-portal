@@ -68,7 +68,7 @@ class NodeApiModule implements ServiceModuleInterface
                 }
 
                 /// XXX content type?
-                return new Response(implode("\r\n", $bodyLines));
+                return new Response(implode("\n", $bodyLines));
             }
         );
 
