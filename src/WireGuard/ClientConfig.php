@@ -80,7 +80,7 @@ class ClientConfig implements ClientConfigInterface
         $output[] = 'AllowedIPs = '.implode(',', $routeList->ls());
         $output[] = 'Endpoint = '.$this->profileConfig->hostName($this->nodeNumber).':'.(string) $this->wgPort;
 
-        return implode(PHP_EOL, $output);
+        return implode("\n", $output);
     }
 
     public function getQr(): ?string
