@@ -89,7 +89,7 @@ try {
     );
 
     $dateTime = Dt::get();
-    FileIO::createDir($baseDir.'/data', 0700);
+    FileIO::createDir($baseDir.'/data');
     $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
     $sessionExpiry = Expiry::calculate(
         $dateTime,

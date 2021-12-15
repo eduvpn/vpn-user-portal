@@ -32,7 +32,7 @@ $logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = Request::createFromGlobals();
-    FileIO::createDir($baseDir.'/data', 0700);
+    FileIO::createDir($baseDir.'/data');
 
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();

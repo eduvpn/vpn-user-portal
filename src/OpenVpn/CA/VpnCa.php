@@ -89,7 +89,7 @@ class VpnCa implements CaInterface
 
         if (!FileIO::exists($this->caDir)) {
             // we do not have the CA dir, create it
-            FileIO::createDir($this->caDir, 0700);
+            FileIO::createDir($this->caDir);
         }
 
         $this->execVpnCa(

@@ -58,10 +58,10 @@ class FileIO
         }
     }
 
-    public static function createDir(string $dirPath, int $mode = 0711): void
+    public static function createDir(string $dirPath): void
     {
         if (false === file_exists($dirPath)) {
-            if (false === mkdir($dirPath, $mode, true)) {
+            if (false === mkdir($dirPath, 0700, true)) {
                 throw new RuntimeException(sprintf('unable to create directory "%s"', $dirPath));
             }
         }
