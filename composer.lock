@@ -62,7 +62,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-secookie",
-                "reference": "98561019a3dc313348a370b259096e3d978926a2"
+                "reference": "bfb965ab8325f8c90e74d8b922469540f22d541a"
             },
             "require": {
                 "ext-date": "*",
@@ -98,7 +98,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-secookie"
             },
-            "time": "2021-12-14T18:41:06+00:00"
+            "time": "2021-12-15T12:08:21+00:00"
         }
     ],
     "packages-dev": [
@@ -177,7 +177,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "ca362c6a32ffeac9f9cd73d42f6f794d0de686f5"
+                "reference": "75a76bd82112e6501217eda204ae3f49d7b364a6"
             },
             "require": {
                 "ext-curl": "*",
@@ -223,7 +223,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2021-11-27T11:16:47+00:00"
+            "time": "2021-12-14T19:08:05+00:00"
         },
         {
             "name": "myclabs/deep-copy",
