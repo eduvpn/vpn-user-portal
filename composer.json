@@ -58,8 +58,8 @@
     },
     "suggest": {
         "ext-ldap": "Support LDAP Authentication",
-        "ext-mysqlnd": "Support MySQL/MariaDB",
-        "ext-pgsql": "Support PostgreSQL",
+        "ext-pdo_mysql": "Support MySQL/MariaDB",
+        "ext-pdo_pgsql": "Support PostgreSQL",
         "ext-radius": "Support RADIUS Authentication"
     },
     "support": {
