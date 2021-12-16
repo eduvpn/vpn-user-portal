@@ -55,14 +55,10 @@ class CurlHttpClient implements HttpClientInterface
         ];
 
         if (null !== $this->certPath) {
-            $curlOptions = array_merge(
-                $curlOptions,
-                [
-                    CURLOPT_CAINFO => $this->certPath.'/ca.crt',
-                    CURLOPT_SSLCERT => $this->certPath.'/vpn-daemon-client.crt',
-                    CURLOPT_SSLKEY => $this->certPath.'/vpn-daemon-client.key',
-                ]
-            );
+            // configure for TLS client certificate authentication
+            $curlOptions[CURLOPT_CAINFO] = $this->certPath.'/ca.crt';
+            $curlOptions[CURLOPT_SSLCERT] = $this->certPath.'/vpn-daemon-client.crt';
+            $curlOptions[CURLOPT_SSLKEY] = $this->certPath.'/vpn-daemon-client.key';
         }
 
         if ('POST' === $httpClientRequest->requestMethod()) {
