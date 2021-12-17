@@ -49,11 +49,11 @@
         "ext-sodium": "*",
         "ext-spl": "*",
         "fkooman/oauth2-server": "7.x-dev",
-        "fkooman/secookie": "6.x-dev",
+        "fkooman/secookie": "dev-main",
         "php": ">=7.4"
     },
     "require-dev": {
-        "fkooman/saml-sp": "2.x-dev",
+        "fkooman/saml-sp": "dev-main",
         "phpunit/phpunit": "^9"
     },
     "suggest": {
