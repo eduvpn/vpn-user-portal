@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6917dc401bde984dc8cc4e7536b576da",
+    "content-hash": "ae4fd078b3dc259f542ca28d61c8d412",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
-            "version": "v7.x-dev",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "7220f9248ba2611df9a40087e6a8646d263f426f"
+                "reference": "659c3a93d71e7c8ac77234d9c367baec661d430b"
             },
             "require": {
                 "ext-date": "*",
@@ -29,6 +29,7 @@
                 "ext-pdo_sqlite": "*",
                 "phpunit/phpunit": "^9"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -54,7 +55,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2021-12-16T11:30:29+00:00"
+            "time": "2021-12-17T20:57:11+00:00"
         },
         {
             "name": "fkooman/secookie",

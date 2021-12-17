@@ -48,7 +48,7 @@
         "ext-pdo_sqlite": "*",
         "ext-sodium": "*",
         "ext-spl": "*",
-        "fkooman/oauth2-server": "7.x-dev",
+        "fkooman/oauth2-server": "dev-main",
         "fkooman/secookie": "dev-main",
         "php": ">=7.4"
     },
