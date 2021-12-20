@@ -227,6 +227,12 @@ class ConnectionManager
     {
         if (!$this->config->hasProfile($profileId)) {
             // profile does not exist (anymore)
+            // try to delete them anyway if we are not prevented...
+            if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
+                $this->storage->oCertDelete($userId, $connectionId);
+                $this->storage->wPeerRemove($userId, $connectionId);
+            }
+
             return;
         }
         $profileConfig = $this->config->profileConfig($profileId);
