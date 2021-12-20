@@ -2,7 +2,8 @@
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var \DateTimeImmutable $expiryDate */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<array{profile_id:string,display_name:string,profile_display_name:string,expires_at:\DateTimeImmutable,public_key:?string,common_name:?string}> $configList */?>
+<?php /** @var array<string,string> $idNameMapping */?>
+<?php /** @var array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,public_key?:string,common_name?:string}> $configList */?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('New'); ?></h2>
@@ -58,16 +59,22 @@
             <tbody>
 <?php foreach ($configList as $configItem): ?>
                 <tr>
-                    <td><span title="<?=$this->e($configItem['profile_id']); ?>"><?=$this->e($configItem['profile_display_name']); ?></span></td>
+                    <td><span title="<?=$this->e($configItem['profile_id']); ?>">
+<?php if (array_key_exists($configItem['profile_id'], $idNameMapping)): ?>
+                    <?=$this->e($idNameMapping[$configItem['profile_id']]); ?>
+<?php else: ?>
+                    <?=$this->e($configItem['profile_id']); ?>
+<?php endif; ?>
+                    </span></td>
                     <td><span title="<?=$this->e($configItem['display_name']); ?>"><?=$this->etr($configItem['display_name'], 25); ?></span></td>
                     <td><?=$this->d($configItem['expires_at']); ?></td>
                     <td class="text-right">
                         <form class="frm" method="post" action="deleteConfig">
                             <input type="hidden" name="profileId" value="<?=$this->e($configItem['profile_id']); ?>">
-<?php if (null !== $configItem['common_name']): ?>
+<?php if (array_key_exists('common_name', $configItem)): ?>
                             <input type="hidden" name="connectionId" value="<?=$this->e($configItem['common_name']); ?>">
 <?php endif; ?>
-<?php if (null !== $configItem['public_key']): ?>
+<?php if (array_key_exists('public_key', $configItem)): ?>
                             <input type="hidden" name="connectionId" value="<?=$this->e($configItem['public_key']); ?>">
 <?php endif; ?>
                             <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>

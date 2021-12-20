@@ -78,13 +78,19 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileConfigList = $this->config->profileConfigList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
+                $idNameMapping = [];
+                foreach ($profileConfigList as $profileConfig) {
+                    $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
+                            'idNameMapping' => $idNameMapping,
                             'profileConfigList' => $visibleProfileList,
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
-                            'configList' => $this->filterConfigList($visibleProfileList, $userInfo->userId()),
+                            'configList' => $this->filterConfigList($userInfo->userId()),
                         ]
                     )
                 );
@@ -304,30 +310,23 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param array<string,\Vpn\Portal\ProfileConfig> $profileConfigList
-     *
-     * @return array<array{profile_id:string,display_name:string,profile_display_name:string,expires_at:\DateTimeImmutable,public_key:?string,common_name:?string}>
+     * @return array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,public_key?:string,common_name?:string}>
      */
-    private function filterConfigList(array $profileConfigList, string $userId): array
+    private function filterConfigList(string $userId): array
     {
-        $configList = $this->storage->oCertListByUserId($userId);
-        $configList = array_merge($configList, $this->storage->wPeerListByUserId($userId));
+        $configList = array_merge(
+            $this->storage->oCertListByUserId($userId),
+            $this->storage->wPeerListByUserId($userId)
+        );
 
         $filteredConfigList = [];
         foreach ($configList as $c) {
             if (null !== $c['auth_key']) {
+                // we do not list configurations obtained through OAuth API
+                // here, only manual downloads
                 continue;
             }
-            $profileId = $c['profile_id'];
-
-            $filteredConfigList[] = [
-                'profile_id' => $profileId,
-                'profile_display_name' => \array_key_exists($profileId, $profileConfigList) ? $profileConfigList[$profileId]->displayName() : $profileId,
-                'display_name' => $c['display_name'],
-                'expires_at' => $c['expires_at'],
-                'public_key' => $c['public_key'] ?? null,
-                'common_name' => $c['common_name'] ?? null,
-            ];
+            $filteredConfigList[] = $c;
         }
 
         return $filteredConfigList;
