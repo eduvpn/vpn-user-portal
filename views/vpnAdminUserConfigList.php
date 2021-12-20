@@ -6,7 +6,7 @@
 <?php /** @var bool $isSelf */?>
 <?php /** @var array<string,string> $idNameMapping */?>
 <?php /** @var array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}> $userMessages */?>
-<?php /** @var array<array{profile_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}> $clientCertificateList */?>
+<?php /** @var array<array{profile_id:string,common_name?:string,public_key?:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}> $configList */ ?>
 <?php /** @var string $requestRoot */?>
 <?php /** @var string $authModule */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
@@ -51,22 +51,36 @@
     </details>
 <?php endif; ?>
 
-    <h2><?=$this->t('Certificates'); ?></h2>
+    <h2><?=$this->t('Configurations'); ?></h2>
 
-    <?php if (0 === count($clientCertificateList)): ?>
+    <?php if (0 === count($configList)): ?>
         <p class="plain">
-            <?=$this->t('This user does not have any active certificates.'); ?>
+            <?=$this->t('This user does not have any active configurations.'); ?>
         </p>
     <?php else: ?>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?></th></tr>
+                <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?></th></tr>
             </thead>
             <tbody>
-            <?php foreach ($clientCertificateList as $clientCertificate): ?>
+            <?php foreach ($configList as $configEntry): ?>
                 <tr>
-                    <td><span title="<?=$this->e($clientCertificate['display_name']); ?>"><?=$this->etr($clientCertificate['display_name'], 25); ?></span></td>
-                    <td><?=$this->d($clientCertificate['expires_at']); ?></td>
+                    <td>
+                        <span title="<?=$this->e($configEntry['profile_id']); ?>">
+<?php if (array_key_exists($configEntry['profile_id'], $idNameMapping)): ?>
+                    <?=$this->e($idNameMapping[$configEntry['profile_id']]); ?>
+<?php else: ?>
+                    <?=$this->e($configEntry['profile_id']); ?>
+<?php endif; ?>
+                        </span>
+                    </td>
+<?php if (array_key_exists('common_name', $configEntry)): ?>
+                    <td><span title="<?=$this->e($configEntry['common_name']); ?>"><?=$this->etr($configEntry['display_name'], 25); ?></span></td>
+<?php endif; ?>
+<?php if (array_key_exists('public_key', $configEntry)): ?>
+                    <td><span title="<?=$this->e($configEntry['public_key']); ?>"><?=$this->etr($configEntry['display_name'], 25); ?></span></td>
+<?php endif; ?>
+                    <td><?=$this->d($configEntry['expires_at']); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

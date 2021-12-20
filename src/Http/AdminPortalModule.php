@@ -135,11 +135,10 @@ class AdminPortalModule implements ServiceModuleInterface
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
-
-                $clientCertificateList = $this->storage->oCertListByUserId($userId);
-                // XXX add WG as well
+                $configList = array_merge($this->storage->oCertListByUserId($userId), $this->storage->wPeerListByUserId($userId));
                 $userMessages = $this->storage->userLog($userId);
                 $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
+
                 // get the fancy profile name
                 $profileConfigList = $this->config->profileConfigList();
                 $idNameMapping = [];
@@ -153,7 +152,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         [
                             'userId' => $userId,
                             'userMessages' => $userMessages,
-                            'clientCertificateList' => $clientCertificateList,
+                            'configList' => $configList,
                             'isDisabled' => $this->storage->userIsDisabled($userId),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
                             'userConnectionLogEntries' => $userConnectionLogEntries,
