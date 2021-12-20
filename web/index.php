@@ -262,10 +262,10 @@ try {
     $oauthServer = new VpnOAuthServer(
         $oauthStorage,
         $oauthClientDb,
-        $oauthSigner
+        $oauthSigner,
+        $sessionExpiry,
+        $config->apiConfig()->tokenExpiry()
     );
-    $oauthServer->setAccessTokenExpiry($config->apiConfig()->tokenExpiry());
-    $oauthServer->setRefreshTokenExpiry($sessionExpiry);
 
     $oauthModule = new OAuthModule(
         $storage,

@@ -45,22 +45,21 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
+    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
+
+    $sessionExpiry = Expiry::calculate(
+        Dt::get(),
+        $ca->caCert()->validTo(),
+        $config->sessionExpiry()
+    );
+
     // OAuth module
     $oauthServer = new VpnOAuthServer(
         new OAuthStorage($db, 'oauth_'),
         new ClientDb(),
-        new Signer(FileIO::readFile($baseDir.'/config/oauth.key'))
-    );
-
-    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
-
-    $oauthServer->setAccessTokenExpiry($config->apiConfig()->tokenExpiry());
-    $oauthServer->setRefreshTokenExpiry(
-        Expiry::calculate(
-            Dt::get(),
-            $ca->caCert()->validTo(),
-            $config->sessionExpiry()
-        )
+        new Signer(FileIO::readFile($baseDir.'/config/oauth.key')),
+        $sessionExpiry,
+        $config->apiConfig()->tokenExpiry()
     );
 
     $oauthModule = new OAuthTokenModule(
