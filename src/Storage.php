@@ -16,8 +16,9 @@ use PDO;
 
 class Storage
 {
-    public const INCLUDE_EXPIRED = 10;
-    public const EXCLUDE_EXPIRED = 11;
+    public const INCLUDE_EXPIRED = 1;
+    public const EXCLUDE_EXPIRED = 2;
+    public const EXCLUDE_DISABLED_USER = 4;
 
     public const CURRENT_SCHEMA_VERSION = '2021111901';
 
@@ -190,31 +191,42 @@ class Storage
         $stmt = $this->db->prepare(
             <<< 'SQL'
                 SELECT
-                    user_id,
+                    u.user_id,
                     profile_id,
                     display_name,
                     public_key,
                     ip_four,
                     ip_six,
                     expires_at,
-                    auth_key
+                    auth_key,
+                    u.is_disabled AS user_is_disabled
                 FROM
-                    wg_peers
+                    wg_peers w,
+                    users u
                 WHERE
                     profile_id = :profile_id
+                AND
+                    u.user_id = w.user_id
                 SQL
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->execute();
         $peerList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $publicKey = (string) $resultRow['public_key'];
             $expiresAt = Dt::get($resultRow['expires_at']);
-            if (self::EXCLUDE_EXPIRED === $returnSet) {
+            if (self::EXCLUDE_EXPIRED & $returnSet) {
+                // exclude disabled configurations
                 if ($expiresAt <= Dt::get()) {
                     continue;
                 }
             }
+            if (self::EXCLUDE_DISABLED_USER & $returnSet) {
+                // exclude peer configurations for disabled users
+                if (1 === (int) $resultRow['user_is_disabled']) {
+                    continue;
+                }
+            }
+            $publicKey = (string) $resultRow['public_key'];
             $peerList[$publicKey] = [
                 'user_id' => (string) $resultRow['user_id'],
                 'profile_id' => (string) $resultRow['profile_id'],
@@ -557,6 +569,9 @@ class Storage
     }
 
     /**
+     * XXX where is the is_disabled used here? on connect in NodeApiModule I guess?
+     * document this!
+     *
      * @return ?array{user_id:string,user_is_disabled:bool}
      */
     public function oUserInfoByCommonName(string $commonName): ?array

@@ -75,7 +75,7 @@ try {
     $oCertListInDatabase = [];
     foreach ($config->profileConfigList() as $profileConfig) {
         if ($profileConfig->wSupport()) {
-            $wPeerListInDatabase = array_merge($wPeerListInDatabase, $storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED));
+            $wPeerListInDatabase = array_merge($wPeerListInDatabase, $storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED | Storage::EXCLUDE_DISABLED_USER));
         }
         if ($profileConfig->oSupport()) {
             $oCertListInDatabase = array_merge($oCertListInDatabase, $storage->oCertListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED));

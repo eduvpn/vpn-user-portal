@@ -178,8 +178,18 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->oauthStorage->deleteAuthorization($clientAuthorization->authKey());
                 }
 
-                // XXX mark all non-OAuth configurations as disabled and
-                // disconnect them if necessary
+                // disconnect all connections from manually downloaded VPN
+                // configurations
+                //
+                // OpenVPN: connection will be terminated, and with OpenVPN a
+                // check whether the user is disabled is performed before
+                // allowing a connection
+                //
+                // WireGuard: connection will be terminated, i.e. removed from
+                // daemons, and the peer configuration of disabled users will
+                // NOT be synced with daemon-sync
+                $this->connectionManager->disconnectByUserId($userId);
+
                 return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }
         );
@@ -193,7 +203,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->storage->userEnable($userId);
                 $this->storage->userLogAdd($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
 
-                // XXX unmark all non-OAuth configuratoins as enabled again
+                // XXX add dopcumentation that says that wireguard configs will be synced again within 5 minutes
                 return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }
         );
