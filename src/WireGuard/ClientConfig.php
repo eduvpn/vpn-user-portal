@@ -12,9 +12,11 @@ declare(strict_types=1);
 namespace Vpn\Portal\WireGuard;
 
 use Vpn\Portal\ClientConfigInterface;
+use Vpn\Portal\Exception\QrCodeException;
 use Vpn\Portal\Ip;
 use Vpn\Portal\IpNetList;
 use Vpn\Portal\ProfileConfig;
+use Vpn\Portal\QrCode;
 
 /**
  * Represent a WireGuard client configuration file.
@@ -79,6 +81,15 @@ class ClientConfig implements ClientConfigInterface
         $output[] = 'Endpoint = '.$this->profileConfig->hostName($this->nodeNumber).':'.(string) $this->wgPort;
 
         return implode("\n", $output);
+    }
+
+    public function getQr(): ?string
+    {
+        try {
+            return QrCode::generate($this->get());
+        } catch (QrCodeException $e) {
+            return null;
+        }
     }
 
     /**

@@ -4,8 +4,14 @@
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
     <h2><?= $this->t('WireGuard Configuration'); ?></h2>
+<?php if (null !== $qrCode = $wireGuardClientConfig->getQr()): ?>
     <p>
-<?= $this->t('Import or copy/paste this configuration to your WireGuard application.'); ?>
+<?=$this->t('Scan this QR code with your mobile device.'); ?>
+    </p>
+<?=$qrCode; ?>
+<?php endif; ?>
+    <p>
+<?=$this->t('Import or copy/paste this configuration to your WireGuard application.'); ?>
     </p>
     <blockquote>
         <pre><?= $this->e($wireGuardClientConfig->get()); ?></pre>
