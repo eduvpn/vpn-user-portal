@@ -600,8 +600,6 @@ class Storage
         return [
             'user_id' => (string) $resultRow['user_id'],
             'user_is_disabled' => (bool) $resultRow['user_is_disabled'],
-            'display_name' => (string) $resultRow['display_name'],
-            'expires_at' => Dt::get((string) $resultRow['expires_at']),
         ];
     }
 
