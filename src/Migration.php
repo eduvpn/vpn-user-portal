@@ -111,8 +111,7 @@ class Migration
     {
         try {
             $sth = $this->dbh->query('SELECT current_version FROM version');
-            $currentVersion = $sth->fetchColumn(0);
-            $sth->closeCursor();
+            $currentVersion = $sth->fetchColumn();
             if (!\is_string($currentVersion)) {
                 throw new MigrationException('unable to retrieve current version');
             }
