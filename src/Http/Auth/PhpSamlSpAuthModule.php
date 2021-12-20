@@ -13,20 +13,19 @@ namespace Vpn\Portal\Http\Auth;
 
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
-use Vpn\Portal\Config;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\Http\RedirectResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
+use Vpn\Portal\PhpSamlSpAuthConfig;
 
 class PhpSamlSpAuthModule extends AbstractAuthModule
 {
-    private Config $config;
-
+    private PhpSamlSpAuthConfig $config;
     private SamlAuth $samlAuth;
 
-    public function __construct(Config $config)
+    public function __construct(PhpSamlSpAuthConfig $config)
     {
         $this->config = $config;
         $this->samlAuth = new SamlAuth();
@@ -42,7 +41,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
         $samlAssertion = $this->samlAuth->getAssertion($authOptions);
         // XXX verify AuthnContextClassRef?!
         $samlAttributes = $samlAssertion->getAttributes();
-        $userIdAttribute = $this->config->requireString('userIdAttribute');
+        $userIdAttribute = $this->config->userIdAttribute();
         if (!\array_key_exists($userIdAttribute, $samlAttributes)) {
             throw new HttpException(sprintf('missing SAML user_id attribute "%s"', $userIdAttribute), 500);
         }
@@ -74,7 +73,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
     private function getAuthOptions(): AuthOptions
     {
         $authOptions = new AuthOptions();
-        if (null !== $authnContext = $this->config->optionalStringArray('authnContext')) {
+        if (null !== $authnContext = $this->config->authnContext()) {
             $authOptions->withAuthnContextClassRef($authnContext);
         }
 
@@ -89,7 +88,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
     private function getPermissionList(array $samlAttributes): array
     {
         $permissionList = [];
-        foreach ($this->config->requireStringArray('permissionAttributeList', []) as $permissionAttribute) {
+        foreach ($this->config->permissionAttributeList() as $permissionAttribute) {
             if (\array_key_exists($permissionAttribute, $samlAttributes)) {
                 $permissionList = array_merge($permissionList, $samlAttributes[$permissionAttribute]);
             }

@@ -15,31 +15,28 @@ use Vpn\Portal\Http\RedirectResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
+use Vpn\Portal\ShibAuthConfig;
 
 class ShibAuthModule extends AbstractAuthModule
 {
-    private string $userIdAttribute;
+    private ShibAuthConfig $config;
 
-    /** @var array<string> */
-    private array $permissionAttributeList;
-
-    public function __construct(string $userIdAttribute, array $permissionAttributeList)
+    public function __construct(ShibAuthConfig $config)
     {
-        $this->userIdAttribute = $userIdAttribute;
-        $this->permissionAttributeList = $permissionAttributeList;
+        $this->config = $config;
     }
 
     public function userInfo(Request $request): ?UserInfo
     {
         $permissionList = [];
-        foreach ($this->permissionAttributeList as $permissionAttribute) {
+        foreach ($this->config->permissionAttributeList() as $permissionAttribute) {
             if (null !== $permissionAttributeValue = $request->optionalHeader($permissionAttribute)) {
                 $permissionList = array_merge($permissionList, explode(';', $permissionAttributeValue));
             }
         }
 
         return new UserInfo(
-            $request->requireHeader($this->userIdAttribute),
+            $request->requireHeader($this->config->userIdAttribute()),
             $permissionList
         );
     }

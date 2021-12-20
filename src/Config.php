@@ -86,6 +86,30 @@ class Config
     }
 
     /**
+     * @return ?array<string>
+     */
+    public function accessPermissionList(): ?array
+    {
+        return $this->optionalStringArray('accessPermissionList');
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function adminUserIdList(): array
+    {
+        return $this->requireStringArray('adminUserIdList', []);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function adminPermissionList(): array
+    {
+        return $this->requireStringArray('adminPermissionList', []);
+    }
+
+    /**
      * @return array<string>
      */
     public function enabledLanguages(): array
@@ -163,6 +187,16 @@ class Config
     public function mellonAuthConfig(): MellonAuthConfig
     {
         return new MellonAuthConfig($this->s('MellonAuthModule')->toArray());
+    }
+
+    public function phpSamlSpAuthConfig(): PhpSamlSpAuthConfig
+    {
+        return new PhpSamlSpAuthConfig($this->s('PhpSamlSpAuthModule')->toArray());
+    }
+
+    public function shibAuthConfig(): ShibAuthConfig
+    {
+        return new ShibAuthConfig($this->s('ShibAuthModule')->toArray());
     }
 
     public function radiusAuthConfig(): RadiusAuthConfig

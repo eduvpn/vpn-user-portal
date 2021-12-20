@@ -177,10 +177,7 @@ try {
             break;
 
         case 'ShibAuthModule':
-            $authModule = new ShibAuthModule(
-                $config->s('ShibAuthModule')->requireString('userIdAttribute'),
-                $config->s('ShibAuthModule')->requireStringArray('permissionAttributeList', [])
-            );
+            $authModule = new ShibAuthModule($config->shibAuthConfig());
 
             break;
 
@@ -190,7 +187,7 @@ try {
             break;
 
         case 'PhpSamlSpAuthModule':
-            $authModule = new PhpSamlSpAuthModule($config->s('PhpSamlSpAuthModule'));
+            $authModule = new PhpSamlSpAuthModule($config->phpSamlSpAuthConfig());
 
             break;
 
@@ -200,7 +197,7 @@ try {
 
     $service->setAuthModule($authModule);
 
-    if (null !== $accessPermissionList = $config->optionalStringArray('accessPermissionList')) {
+    if (null !== $accessPermissionList = $config->accessPermissionList()) {
         // hasAccess
         $service->addBeforeHook(new AccessHook($accessPermissionList));
     }
@@ -210,8 +207,8 @@ try {
 
     // isAdmin
     $adminHook = new AdminHook(
-        $config->requireStringArray('adminPermissionList', []),
-        $config->requireStringArray('adminUserIdList', []),
+        $config->adminPermissionList(),
+        $config->adminUserIdList(),
         $tpl
     );
 

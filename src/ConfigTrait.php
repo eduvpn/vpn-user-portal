@@ -13,17 +13,14 @@ namespace Vpn\Portal;
 
 use Vpn\Portal\Exception\ConfigException;
 
-/**
- * XXX make all methods private.
- */
 trait ConfigTrait
 {
-    public function s(string $k): self
+    private function s(string $k): self
     {
         return new self($this->requireArray($k, []));
     }
 
-    public function optionalString(string $k): ?string
+    private function optionalString(string $k): ?string
     {
         if (!\array_key_exists($k, $this->configData)) {
             return null;
@@ -35,7 +32,7 @@ trait ConfigTrait
         return $this->configData[$k];
     }
 
-    public function requireString(string $k, ?string $d = null): string
+    private function requireString(string $k, ?string $d = null): string
     {
         if (null === $v = $this->optionalString($k)) {
             if (null !== $d) {
@@ -48,7 +45,7 @@ trait ConfigTrait
         return $v;
     }
 
-    public function optionalInt(string $k): ?int
+    private function optionalInt(string $k): ?int
     {
         if (!\array_key_exists($k, $this->configData)) {
             return null;
@@ -60,7 +57,7 @@ trait ConfigTrait
         return $this->configData[$k];
     }
 
-    public function requireInt(string $k, ?int $d = null): int
+    private function requireInt(string $k, ?int $d = null): int
     {
         if (null === $v = $this->optionalInt($k)) {
             if (null !== $d) {
@@ -73,7 +70,7 @@ trait ConfigTrait
         return $v;
     }
 
-    public function optionalBool(string $k): ?bool
+    private function optionalBool(string $k): ?bool
     {
         if (!\array_key_exists($k, $this->configData)) {
             return null;
@@ -85,7 +82,7 @@ trait ConfigTrait
         return $this->configData[$k];
     }
 
-    public function requireBool(string $k, ?bool $d = null): bool
+    private function requireBool(string $k, ?bool $d = null): bool
     {
         if (null === $v = $this->optionalBool($k)) {
             if (null !== $d) {
@@ -98,7 +95,7 @@ trait ConfigTrait
         return $v;
     }
 
-    public function optionalArray(string $k): ?array
+    private function optionalArray(string $k): ?array
     {
         if (!\array_key_exists($k, $this->configData)) {
             return null;
@@ -110,7 +107,7 @@ trait ConfigTrait
         return $this->configData[$k];
     }
 
-    public function requireArray(string $k, ?array $d = null): array
+    private function requireArray(string $k, ?array $d = null): array
     {
         if (null === $v = $this->optionalArray($k)) {
             if (null !== $d) {
@@ -126,7 +123,7 @@ trait ConfigTrait
     /**
      * @return array<int>
      */
-    public function optionalIntArray(string $k): ?array
+    private function optionalIntArray(string $k): ?array
     {
         if (!\array_key_exists($k, $this->configData)) {
             return null;
@@ -145,7 +142,7 @@ trait ConfigTrait
     /**
      * @return array<int>
      */
-    public function requireIntArray(string $k, ?array $d = null): array
+    private function requireIntArray(string $k, ?array $d = null): array
     {
         if (null === $v = $this->optionalIntArray($k)) {
             if (null !== $d) {
@@ -161,7 +158,7 @@ trait ConfigTrait
     /**
      * @return array<string>
      */
-    public function optionalStringArray(string $k): ?array
+    private function optionalStringArray(string $k): ?array
     {
         if (!\array_key_exists($k, $this->configData)) {
             return null;
@@ -180,7 +177,7 @@ trait ConfigTrait
     /**
      * @return array<string>
      */
-    public function requireStringArray(string $k, ?array $d = null): array
+    private function requireStringArray(string $k, ?array $d = null): array
     {
         if (null === $v = $this->optionalStringArray($k)) {
             if (null !== $d) {
@@ -196,7 +193,7 @@ trait ConfigTrait
     /**
      * @return array<string>
      */
-    public function requireStringOrStringArray(string $k, ?array $d = null): array
+    private function requireStringOrStringArray(string $k, ?array $d = null): array
     {
         if (null === $v = $this->optionalStringOrStringArray($k)) {
             if (null !== $d) {
@@ -212,7 +209,7 @@ trait ConfigTrait
     /**
      * @return array<string>
      */
-    public function optionalStringOrStringArray(string $k): ?array
+    private function optionalStringOrStringArray(string $k): ?array
     {
         if (!\array_key_exists($k, $this->configData)) {
             return null;
@@ -222,7 +219,7 @@ trait ConfigTrait
         return $this->requireStringArray($k);
     }
 
-    protected function toArray(): array
+    private function toArray(): array
     {
         return $this->configData;
     }
