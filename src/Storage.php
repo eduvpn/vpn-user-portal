@@ -14,7 +14,6 @@ namespace Vpn\Portal;
 use DateTimeImmutable;
 use PDO;
 
-// XXX convert all queries to heredoc
 class Storage
 {
     public const INCLUDE_EXPIRED = 10;
@@ -39,26 +38,30 @@ class Storage
     public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?string $authKey): void
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO wg_peers (
-                user_id,
-                profile_id,
-                display_name,
-                public_key,
-                ip_four,
-                ip_six,
-                expires_at,
-                auth_key
-             )
-             VALUES(
-                :user_id,
-                :profile_id,
-                :display_name,
-                :public_key,
-                :ip_four,
-                :ip_six,
-                :expires_at,
-                :auth_key
-             )'
+            <<< 'SQL'
+                INSERT
+                INTO
+                    wg_peers (
+                        user_id,
+                        profile_id,
+                        display_name,
+                        public_key,
+                        ip_four,
+                        ip_six,
+                        expires_at,
+                        auth_key
+                    )
+                    VALUES(
+                        :user_id,
+                        :profile_id,
+                        :display_name,
+                        :public_key,
+                        :ip_four,
+                        :ip_six,
+                        :expires_at,
+                        :auth_key
+                    )
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -75,12 +78,15 @@ class Storage
     public function wPeerRemove(string $userId, string $publicKey): void
     {
         $stmt = $this->db->prepare(
-            'DELETE FROM
-                wg_peers
-             WHERE
-                user_id = :user_id
-             AND
-                public_key = :public_key'
+            <<< 'SQL'
+                DELETE
+                FROM
+                    wg_peers
+                WHERE
+                    user_id = :user_id
+                AND
+                    public_key = :public_key
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -94,9 +100,12 @@ class Storage
     public function wgGetAllocatedIpFourAddresses(): array
     {
         $stmt = $this->db->prepare(
-            'SELECT
-                ip_four
-             FROM wg_peers'
+            <<< 'SQL'
+                SELECT
+                    ip_four
+                FROM
+                    wg_peers
+                SQL
         );
         $stmt->execute();
 
@@ -109,17 +118,20 @@ class Storage
     public function wPeerListByUserId(string $userId): array
     {
         $stmt = $this->db->prepare(
-            'SELECT
-                profile_id,
-                display_name,
-                public_key,
-                expires_at,
-                auth_key
-             FROM wg_peers
-             WHERE
-                user_id = :user_id
-             ORDER BY
-                expires_at DESC'
+            <<< 'SQL'
+                SELECT
+                    profile_id,
+                    display_name,
+                    public_key,
+                    expires_at,
+                    auth_key
+                FROM
+                    wg_peers
+                WHERE
+                    user_id = :user_id
+                ORDER BY
+                    expires_at DESC
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -145,14 +157,16 @@ class Storage
     public function wPeerListByAuthKey(string $authKey): array
     {
         $stmt = $this->db->prepare(
-            'SELECT
-                user_id,
-                profile_id,
-                public_key
-             FROM
-                wg_peers
-             WHERE
-                auth_key = :auth_key'
+            <<< 'SQL'
+                SELECT
+                    user_id,
+                    profile_id,
+                    public_key
+                FROM
+                    wg_peers
+                WHERE
+                    auth_key = :auth_key
+                SQL
         );
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
@@ -174,19 +188,21 @@ class Storage
     public function wPeerListByProfileId(string $profileId, int $returnSet): array
     {
         $stmt = $this->db->prepare(
-            'SELECT
-                user_id,
-                profile_id,
-                display_name,
-                public_key,
-                ip_four,
-                ip_six,
-                expires_at,
-                auth_key
-             FROM
-                wg_peers
-             WHERE
-                profile_id = :profile_id'
+            <<< 'SQL'
+                SELECT
+                    user_id,
+                    profile_id,
+                    display_name,
+                    public_key,
+                    ip_four,
+                    ip_six,
+                    expires_at,
+                    auth_key
+                FROM
+                    wg_peers
+                WHERE
+                    profile_id = :profile_id
+                SQL
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->execute();
@@ -217,11 +233,14 @@ class Storage
     public function localUserExists(string $authUser): bool
     {
         $stmt = $this->db->prepare(
-            'SELECT
-                COUNT(user_id)
-             FROM local_users
-             WHERE
-                user_id = :user_id'
+            <<< 'SQL'
+                SELECT
+                    COUNT(user_id)
+                FROM
+                    local_users
+                WHERE
+                    user_id = :user_id
+                SQL
         );
 
         $stmt->bindValue(':user_id', $authUser, PDO::PARAM_STR);
@@ -239,10 +258,20 @@ class Storage
         }
 
         $stmt = $this->db->prepare(
-            'INSERT INTO
-                local_users (user_id, password_hash, created_at)
-            VALUES
-                (:user_id, :password_hash, :created_at)'
+            <<< 'SQL'
+                INSERT
+                INTO
+                    local_users (
+                        user_id,
+                        password_hash,
+                        created_at
+                    )
+                    VALUES (
+                        :user_id,
+                        :password_hash,
+                        :created_at
+                    )
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -268,12 +297,14 @@ class Storage
     public function localUserUpdatePassword(string $userId, string $passwordHash): void
     {
         $stmt = $this->db->prepare(
-            'UPDATE
-                local_users
-             SET
-                password_hash = :password_hash
-             WHERE
-                user_id = :user_id'
+            <<< 'SQL'
+                UPDATE
+                    local_users
+                SET
+                    password_hash = :password_hash
+                WHERE
+                    user_id = :user_id
+                SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
@@ -284,11 +315,14 @@ class Storage
     public function localUserPasswordHash(string $authUser): ?string
     {
         $stmt = $this->db->prepare(
-            'SELECT
-                password_hash
-             FROM local_users
-             WHERE
-                user_id = :user_id'
+            <<< 'SQL'
+                SELECT
+                    password_hash
+                FROM
+                    local_users
+                WHERE
+                    user_id = :user_id
+                SQL
         );
 
         $stmt->bindValue(':user_id', $authUser, PDO::PARAM_STR);
