@@ -22,6 +22,8 @@ use Vpn\Portal\WireGuard\KeyPair;
  */
 class ConnectionManager
 {
+    public const DO_NOT_DELETE = 1;
+
     protected RandomInterface $random;
     private Config $config;
     private Storage $storage;
@@ -126,14 +128,15 @@ class ConnectionManager
         }
     }
 
-    public function disconnectByUserId(string $userId): void
+    public function disconnectByUserId(string $userId, int $optionFlags = 0): void
     {
         // OpenVPN
         foreach ($this->storage->oCertListByUserId($userId) as $oCertInfo) {
             $this->disconnect(
                 $userId,
                 $oCertInfo['profile_id'],
-                $oCertInfo['common_name']
+                $oCertInfo['common_name'],
+                $optionFlags
             );
         }
 
@@ -142,7 +145,8 @@ class ConnectionManager
             $this->disconnect(
                 $userId,
                 $wPeerInfo['profile_id'],
-                $wPeerInfo['public_key']
+                $wPeerInfo['public_key'],
+                $optionFlags
             );
         }
     }
@@ -219,7 +223,7 @@ class ConnectionManager
         throw new ConnectionManagerException(sprintf('unsupported protocol "%s" for profile "%s"', $useProto, $profileId));
     }
 
-    public function disconnect(string $userId, string $profileId, string $connectionId): void
+    public function disconnect(string $userId, string $profileId, string $connectionId, int $optionFlags = 0): void
     {
         if (!$this->config->hasProfile($profileId)) {
             // profile does not exist (anymore)
@@ -233,12 +237,16 @@ class ConnectionManager
             // efficient...
             // XXX storage->clientDisconnect should only be called for wireguard, and only once, not for every node!
             if ($profileConfig->oSupport()) {
-                $this->storage->oCertDelete($userId, $connectionId);
+                if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
+                    $this->storage->oCertDelete($userId, $connectionId);
+                }
                 $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($i), $connectionId);
             }
 
             if ($profileConfig->wSupport()) {
-                $this->storage->wPeerRemove($userId, $connectionId);
+                if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
+                    $this->storage->wPeerRemove($userId, $connectionId);
+                }
                 $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($i), $connectionId);
                 $this->storage->clientDisconnect($userId, $profileId, $connectionId, new DateTimeImmutable());
             }

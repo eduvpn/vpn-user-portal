@@ -188,7 +188,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 // WireGuard: connection will be terminated, i.e. removed from
                 // daemons, and the peer configuration of disabled users will
                 // NOT be synced with daemon-sync
-                $this->connectionManager->disconnectByUserId($userId);
+                $this->connectionManager->disconnectByUserId($userId, ConnectionManager::DO_NOT_DELETE);
 
                 return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }
