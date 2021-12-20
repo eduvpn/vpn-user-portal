@@ -200,10 +200,12 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
                 $userId = self::validateUser($request, $userInfo);
 
+                // enabling the account will again allow the authorization of
+                // OAuth clients, allow OpenVPN connections again and sync the
+                // WireGuard peer configurations to the daemon(s)
                 $this->storage->userEnable($userId);
                 $this->storage->userLogAdd($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
 
-                // XXX add dopcumentation that says that wireguard configs will be synced again within 5 minutes
                 return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }
         );
