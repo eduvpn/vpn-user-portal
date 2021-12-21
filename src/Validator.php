@@ -197,6 +197,13 @@ class Validator
         }
     }
 
+    public static function languageCode(string $languageCode): void
+    {
+        if (!\array_key_exists($languageCode, Tpl::supportedLanguages())) {
+            throw new RangeException('invalid language code');
+        }
+    }
+
     public static function matchesOrigin(string $httpOrigin, string $urlToMatch): void
     {
         $urlScheme = parse_url($urlToMatch, PHP_URL_SCHEME);

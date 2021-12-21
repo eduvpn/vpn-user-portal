@@ -54,6 +54,7 @@ use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
 use Vpn\Portal\Tpl;
+use Vpn\Portal\Validator;
 use Vpn\Portal\VpnDaemon;
 use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
@@ -66,7 +67,7 @@ try {
     $request = Request::createFromGlobals();
 
     // determine perferred UI language
-    if (null === $uiLanguage = $request->getCookie('L')) {
+    if (null === $uiLanguage = $request->getCookie('L', fn (string $s) => Validator::languageCode($s))) {
         $uiLanguage = $config->defaultLanguage();
     }
     $tpl = new Tpl(

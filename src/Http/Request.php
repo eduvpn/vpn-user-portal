@@ -256,14 +256,23 @@ class Request
         return $this->requirePostParameter($postKey, $c);
     }
 
-    // XXX introduce validator function as well?!
-    public function getCookie(string $cookieKey): ?string
+    /**
+     * @param Closure(string):void $c
+     */
+    public function getCookie(string $cookieKey, Closure $c): ?string
     {
         if (!\array_key_exists($cookieKey, $this->cookieData)) {
             return null;
         }
 
-        return $this->cookieData[$cookieKey];
+        try {
+            $c($this->cookieData[$cookieKey]);
+
+            return $this->cookieData[$cookieKey];
+        } catch (RangeException $e) {
+            // when a cookie value is malformed, we consider it not set at all
+            return null;
+        }
     }
 
     // XXX introduce validator function as well?!
