@@ -355,7 +355,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,permission_list:array<string>,is_disabled:bool}>
+     * @return array<array{user_id:string,last_seen:\DateTimeImmutable,permission_list:array<string>,is_disabled:bool}>
      */
     public function userList(): array
     {
@@ -363,10 +363,13 @@ class Storage
             <<< 'SQL'
                     SELECT
                         user_id,
+                        last_seen,
                         permission_list,
                         is_disabled
                     FROM
                         users
+                    ORDER BY
+                        user_id
                 SQL
         );
         $stmt->execute();
@@ -375,6 +378,7 @@ class Storage
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $userList[] = [
                 'user_id' => (string) $resultRow['user_id'],
+                'last_seen' => Dt::get($resultRow['last_seen']),
                 'permission_list' => self::stringToPermissionList((string) $resultRow['permission_list']),
                 'is_disabled' => (bool) $resultRow['is_disabled'],
             ];
