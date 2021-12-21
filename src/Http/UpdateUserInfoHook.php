@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
+use DateTimeImmutable;
+use Vpn\Portal\Dt;
 use Vpn\Portal\Storage;
 
 /**
@@ -20,6 +22,7 @@ use Vpn\Portal\Storage;
  */
 class UpdateUserInfoHook extends AbstractHook implements HookInterface
 {
+    protected DateTimeImmutable $dateTime;
     private SessionInterface $session;
     private Storage $storage;
     private AuthModuleInterface $authModule;
@@ -29,6 +32,7 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
         $this->session = $session;
         $this->storage = $storage;
         $this->authModule = $authModule;
+        $this->dateTime = Dt::get();
     }
 
     public function afterAuth(UserInfo $userInfo, Request $request): ?Response
@@ -51,16 +55,14 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
 
         if (false === $this->storage->userExists($userInfo->userId())) {
             // user does not yet exist in the database, create it
-            $this->storage->userAdd($userInfo->userId(), $userInfo->permissionList());
+            $this->storage->userAdd($userInfo->userId(), $this->dateTime, $userInfo->permissionList());
             $this->session->set('_user_info_already_updated', 'yes');
 
             return null;
         }
 
-        // update permissionList
-        // XXX we should implement "last seen" here also so we can delete old user accounts
-        // (that are not disabled. Or does all user data gets deleted anyway?)
-        $this->storage->userUpdate($userInfo->userId(), $userInfo->permissionList());
+        // update last seen & permissionList
+        $this->storage->userUpdate($userInfo->userId(), $this->dateTime, $userInfo->permissionList());
         $this->session->set('_user_info_already_updated', 'yes');
 
         return null;

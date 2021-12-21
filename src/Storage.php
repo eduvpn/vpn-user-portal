@@ -20,7 +20,7 @@ class Storage
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
 
-    public const CURRENT_SCHEMA_VERSION = '2021111901';
+    public const CURRENT_SCHEMA_VERSION = '2021122101';
 
     private PDO $db;
 
@@ -421,19 +421,21 @@ class Storage
     /**
      * @param array<string> $permissionList
      */
-    public function userUpdate(string $userId, array $permissionList): void
+    public function userUpdate(string $userId, DateTimeImmutable $lastSeen, array $permissionList): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     UPDATE
                         users
                     SET
+                        last_seen = :last_seen,
                         permission_list = :permission_list
                     WHERE
                         user_id = :user_id
                 SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
 
         $stmt->execute();
@@ -985,24 +987,27 @@ class Storage
     /**
      * @param array<string> $permissionList
      */
-    public function userAdd(string $userId, array $permissionList): void
+    public function userAdd(string $userId, DateTimeImmutable $lastSeen, array $permissionList): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     INSERT INTO
                         users (
                             user_id,
+                            last_seen,
                             permission_list,
                             is_disabled
                         )
                     VALUES (
                         :user_id,
+                        :last_seen,
                         :permission_list,
                         :is_disabled
                     )
                 SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
         $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
         $stmt->execute();
