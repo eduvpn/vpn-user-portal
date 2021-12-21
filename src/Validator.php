@@ -197,6 +197,35 @@ class Validator
         }
     }
 
+    public static function matchesOrigin(string $httpOrigin, string $urlToMatch): void
+    {
+        $urlScheme = parse_url($urlToMatch, PHP_URL_SCHEME);
+        if ('https' !== $urlScheme && 'http' !== $urlScheme) {
+            // only https/http is supported
+            throw new RangeException('URL must match "Origin"');
+        }
+        if (null !== parse_url($urlToMatch, PHP_URL_USER)) {
+            // URL MUST NOT contain authentication information (DEC-01-001 WP1)
+            // before PHP 7.4.14 & 7.3.26 there was a bug that invalid userinfo
+            // appeared as PHP_URL_USER instead of as part of the hostname,
+            // @see https://bugs.php.net/bug.php?id=77423
+            throw new RangeException('URL must match "Origin"');
+        }
+        $urlHost = parse_url($urlToMatch, PHP_URL_HOST);
+        if (!\is_string($urlHost)) {
+            // not a valid host
+            throw new RangeException('URL must match "Origin"');
+        }
+        $constructedUrl = $urlScheme.'://'.$urlHost;
+        if (null !== $urlPort = parse_url($urlToMatch, PHP_URL_PORT)) {
+            $constructedUrl .= ':'.(string) $urlPort;
+        }
+
+        if ($httpOrigin !== $constructedUrl) {
+            throw new RangeException('URL must match "Origin"');
+        }
+    }
+
     /**
      * @param array<string> $setHaystack
      */

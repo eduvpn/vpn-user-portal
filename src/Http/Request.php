@@ -119,6 +119,11 @@ class Request
         return $this->requireHeader('SERVER_NAME');
     }
 
+    public function getOrigin(): string
+    {
+        return sprintf('%s://%s', $this->getScheme(), $this->getAuthority());
+    }
+
     public function isBrowser(): bool
     {
         if (null === $httpAccept = $this->optionalHeader('HTTP_ACCEPT')) {

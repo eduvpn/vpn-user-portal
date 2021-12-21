@@ -41,10 +41,7 @@ class UserPassModule implements ServiceModuleInterface
 
                 $authUser = $request->requirePostParameter('userName', fn (string $s) => Validator::userId($s));
                 $authPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::userAuthPass($s));
-                // XXX better redirect validator in Validator class!
-                $redirectTo = $request->requirePostParameter('_form_auth_redirect_to', fn (string $s) => self::validateRedirectTo($request, $s));
-
-                self::validateRedirectTo($request, $redirectTo);
+                $redirectTo = $request->requirePostParameter('_form_auth_redirect_to', fn (string $s) => Validator::matchesOrigin($request->getOrigin(), $s));
 
                 if (false === $userInfo = $this->credentialValidator->isValid($authUser, $authPass)) {
                     // invalid authentication
@@ -68,24 +65,5 @@ class UserPassModule implements ServiceModuleInterface
                 return new RedirectResponse($redirectTo, 302);
             }
         );
-    }
-
-    // XXX should not return bool, but exception
-    private static function validateRedirectTo(Request $request, string $redirectTo): bool
-    {
-        // XXX improve this, take idea from php-saml-sp
-        if (false === filter_var($redirectTo, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
-            return false;
-        }
-        // extract the "host" part of the URL
-        $redirectToHost = parse_url($redirectTo, PHP_URL_HOST);
-        if (!\is_string($redirectToHost)) {
-            return false;
-        }
-        if ($request->getServerName() !== $redirectToHost) {
-            return false;
-        }
-
-        return true;
     }
 }
