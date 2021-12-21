@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae4fd078b3dc259f542ca28d61c8d412",
+    "content-hash": "57ce7902263a3b9f54f3bc7590e4332f",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
@@ -59,11 +59,11 @@
         },
         {
             "name": "fkooman/secookie",
-            "version": "dev-main",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-secookie",
-                "reference": "fccdfd3327c1cbb7c0fe5eac8a65c8a593b8fd55"
+                "reference": "8b62776b337647021225c09710bd5333473128d8"
             },
             "require": {
                 "ext-date": "*",
@@ -76,7 +76,6 @@
                 "ext-pdo_sqlite": "*",
                 "phpunit/phpunit": "^9"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -102,7 +101,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-secookie"
             },
-            "time": "2021-12-21T10:40:05+00:00"
+            "time": "2021-12-21T16:38:08+00:00"
         }
     ],
     "packages-dev": [
@@ -181,7 +180,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "ece514a1ff3a67aa40b6fd74eba401d5dc70b332"
+                "reference": "a0d6d36ea2a4341eac26dbc01d6cd84a18b3dfe2"
             },
             "require": {
                 "ext-curl": "*",
@@ -195,7 +194,7 @@
                 "ext-sodium": "*",
                 "ext-spl": "*",
                 "ext-zlib": "*",
-                "fkooman/secookie": "dev-main",
+                "fkooman/secookie": "^6",
                 "php": ">=7.4"
             },
             "require-dev": {
@@ -228,7 +227,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2021-12-17T20:36:54+00:00"
+            "time": "2021-12-21T16:41:24+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2259,7 +2258,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "fkooman/oauth2-server": 20,
-        "fkooman/secookie": 20,
         "fkooman/saml-sp": 20
     },
     "prefer-stable": true,
