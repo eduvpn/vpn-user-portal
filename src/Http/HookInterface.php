@@ -11,8 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
-/** XXX rename to HookInterface? */
-interface BeforeHookInterface
+interface HookInterface
 {
     public function beforeAuth(Request $request): ?Response;
 

@@ -18,7 +18,7 @@ use Vpn\Portal\Storage;
  * This hook is used to check if a user is disabled before allowing any other
  * actions except login.
  */
-class DisabledUserHook extends AbstractHook implements BeforeHookInterface
+class DisabledUserHook extends AbstractHook implements HookInterface
 {
     private Storage $storage;
 

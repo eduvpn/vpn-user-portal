@@ -17,7 +17,7 @@ use Vpn\Portal\Validator;
 /**
  * Protect against *Cross Site Request Forgery* (CSRF) for "POST" requests.
  */
-class CsrfProtectionHook extends AbstractHook implements BeforeHookInterface
+class CsrfProtectionHook extends AbstractHook implements HookInterface
 {
     public function beforeAuth(Request $request): ?Response
     {

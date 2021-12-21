@@ -20,7 +20,7 @@ use Vpn\Portal\TplInterface;
  * It also augments the template engine with a boolean indicating whether the
  * user is "Admin", to show the admin portal options.
  */
-class AdminHook extends AbstractHook implements BeforeHookInterface
+class AdminHook extends AbstractHook implements HookInterface
 {
     /** @var array<string> */
     private array $adminPermissionList;

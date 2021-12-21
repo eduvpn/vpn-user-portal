@@ -19,7 +19,7 @@ class Service implements ServiceInterface
 
     private array $routeList = [];
 
-    /** @var array<BeforeHookInterface> */
+    /** @var array<HookInterface> */
     private array $beforeHookList = [];
 
     /** @var array<string,array<string>> */
@@ -33,7 +33,7 @@ class Service implements ServiceInterface
         $this->authModule = $authModule;
     }
 
-    public function addBeforeHook(BeforeHookInterface $beforeHook): void
+    public function addBeforeHook(HookInterface $beforeHook): void
     {
         $this->beforeHookList[] = $beforeHook;
     }

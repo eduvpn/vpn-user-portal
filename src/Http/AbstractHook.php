@@ -16,7 +16,7 @@ namespace Vpn\Portal\Http;
  * they don't use. Typically a hook runs either *before* or *after*
  * authentication.
  */
-class AbstractHook implements BeforeHookInterface
+class AbstractHook implements HookInterface
 {
     public function beforeAuth(Request $request): ?Response
     {

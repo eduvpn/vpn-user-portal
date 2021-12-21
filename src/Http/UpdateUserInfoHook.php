@@ -18,7 +18,7 @@ use Vpn\Portal\Storage;
  * update the stored user info in case the user *does* exist. Only once
  * per session.
  */
-class UpdateUserInfoHook extends AbstractHook implements BeforeHookInterface
+class UpdateUserInfoHook extends AbstractHook implements HookInterface
 {
     private SessionInterface $session;
     private Storage $storage;

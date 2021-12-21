@@ -16,7 +16,7 @@ use Vpn\Portal\Http\Exception\HttpException;
 /**
  * This hook is used to check if a user is allowed to access the portal/API.
  */
-class AccessHook extends AbstractHook implements BeforeHookInterface
+class AccessHook extends AbstractHook implements HookInterface
 {
     /** @var array<string> */
     private array $accessPermissionList;
