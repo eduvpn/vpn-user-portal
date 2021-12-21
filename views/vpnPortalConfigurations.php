@@ -3,7 +3,7 @@
 <?php /** @var \DateTimeImmutable $expiryDate */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<string,string> $idNameMapping */?>
-<?php /** @var array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,public_key?:string,common_name?:string}> $configList */?>
+<?php /** @var array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}> $configList */?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('New'); ?></h2>
@@ -71,12 +71,7 @@
                     <td class="text-right">
                         <form class="frm" method="post" action="deleteConfig">
                             <input type="hidden" name="profileId" value="<?=$this->e($configItem['profile_id']); ?>">
-<?php if (array_key_exists('common_name', $configItem)): ?>
-                            <input type="hidden" name="connectionId" value="<?=$this->e($configItem['common_name']); ?>">
-<?php endif; ?>
-<?php if (array_key_exists('public_key', $configItem)): ?>
-                            <input type="hidden" name="connectionId" value="<?=$this->e($configItem['public_key']); ?>">
-<?php endif; ?>
+                            <input type="hidden" name="connectionId" value="<?=$this->e($configItem['connection_id']); ?>">
                             <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>
                         </form>
                     </td>

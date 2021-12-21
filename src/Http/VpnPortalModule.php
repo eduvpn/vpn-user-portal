@@ -310,25 +310,35 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @return array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,public_key?:string,common_name?:string}>
+     * @return array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}>
      */
     private function filterConfigList(string $userId): array
     {
-        $configList = array_merge(
-            $this->storage->oCertListByUserId($userId),
-            $this->storage->wPeerListByUserId($userId)
-        );
-
-        $filteredConfigList = [];
-        foreach ($configList as $c) {
-            if (null !== $c['auth_key']) {
-                // we do not list configurations obtained through OAuth API
-                // here, only manual downloads
+        $configList = [];
+        foreach ($this->storage->oCertListByUserId($userId) as $oCert) {
+            if (null !== $oCert['auth_key']) {
                 continue;
             }
-            $filteredConfigList[] = $c;
+            $configList[] = array_merge(
+                $oCert,
+                [
+                    'connection_id' => $oCert['common_name'],
+                ]
+            );
         }
 
-        return $filteredConfigList;
+        foreach ($this->storage->wPeerListByUserId($userId) as $wPeer) {
+            if (null !== $wPeer['auth_key']) {
+                continue;
+            }
+            $configList[] = array_merge(
+                $wPeer,
+                [
+                    'connection_id' => $wPeer['public_key'],
+                ]
+            );
+        }
+
+        return $configList;
     }
 }
