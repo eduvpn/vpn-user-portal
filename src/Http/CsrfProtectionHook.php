@@ -12,9 +12,10 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http;
 
 use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Validator;
 
 /**
- * XXX look at php-saml-sp for better CSRF protection.
+ * Protect against *Cross Site Request Forgery* (CSRF) for "POST" requests.
  */
 class CsrfProtectionHook extends AbstractHook implements BeforeHookInterface
 {
@@ -22,44 +23,25 @@ class CsrfProtectionHook extends AbstractHook implements BeforeHookInterface
     {
         if (!$request->isBrowser()) {
             // not a browser, no CSRF protected needed
-            // XXX is this actually true? What about XmlHttpRequest?
             return null;
         }
 
-        // safe methods
+        // ignore GET, HEAD, OPTIONS as they have no side-effects...
         if (\in_array($request->getRequestMethod(), ['GET', 'HEAD', 'OPTIONS'], true)) {
             return null;
         }
 
-        $uriAuthority = $request->getScheme().'://'.$request->getAuthority();
-
-        if (null !== $httpOrigin = $request->optionalHeader('HTTP_ORIGIN')) {
-            $this->verifyOrigin($uriAuthority, $httpOrigin);
+        if (null !== $originHeader = $request->optionalHeader('HTTP_ORIGIN')) {
+            Validator::matchesOrigin($request->getOrigin(), $originHeader);
 
             return null;
         }
-        if (null !== $httpReferrer = $request->optionalHeader('HTTP_REFERER')) {
-            $this->verifyReferrer($uriAuthority, $httpReferrer);
+        if (null !== $referrerHeader = $request->optionalHeader('HTTP_REFERER')) {
+            Validator::matchesOrigin($request->getOrigin(), $referrerHeader);
 
             return null;
         }
 
-        throw new HttpException('CSRF protection failed, no HTTP_ORIGIN or HTTP_REFERER', 400);
-    }
-
-    private function verifyOrigin(string $uriAuthority, string $httpOrigin): void
-    {
-        // the HTTP_ORIGIN MUST be equal to uriAuthority
-        if ($uriAuthority !== $httpOrigin) {
-            throw new HttpException('CSRF protection failed: unexpected HTTP_ORIGIN', 400);
-        }
-    }
-
-    private function verifyReferrer(string $uriAuthority, string $httpReferrer): void
-    {
-        // the HTTP_REFERER MUST start with uriAuthority
-        if (0 !== strpos($httpReferrer, sprintf('%s/', $uriAuthority))) {
-            throw new HttpException('CSRF protection failed: unexpected HTTP_REFERER', 400);
-        }
+        throw new HttpException('CSRF protection failed, no HTTP_ORIGIN or HTTP_REFERER header', 400);
     }
 }
