@@ -947,29 +947,38 @@ class Storage
     }
 
     /**
-     * Get the number of active WireGuard and OpenVPN configurations for a
-     * particular user *NOT* issued to an OAuth client.
+     * Get the number of non-expired WireGuard and OpenVPN configurations for a
+     * particular user.
      */
-    public function numberOfActivePortalConfigurations(string $userId): int
+    public function numberOfActivePortalConfigurations(string $userId, DateTimeImmutable $dateTime): int
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                         SELECT SUM(c)
                         FROM (
-                            SELECT COUNT(public_key) AS c
-                            FROM wg_peers
-                            WHERE user_id = :user_id
-                            AND auth_key IS NULL
+                            SELECT
+                                COUNT(public_key) AS c
+                            FROM
+                                wg_peers
+                            WHERE
+                                user_id = :user_id
+                            AND
+                                expires_at > :date_time
                         UNION ALL
-                            SELECT COUNT(common_name) AS c
-                            FROM certificates
-                            WHERE user_id = :user_id
-                            AND auth_key IS NULL
+                            SELECT
+                                COUNT(common_name) AS c
+                            FROM
+                                certificates
+                            WHERE
+                                user_id = :user_id
+                            AND
+                                expires_at > :date_time
                         ) AS c
                 SQL
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
 
         return (int) $stmt->fetchColumn();

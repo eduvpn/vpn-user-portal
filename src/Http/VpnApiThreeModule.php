@@ -104,6 +104,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                     $vpnProto = $profileConfig->preferredProto();
                 }
 
+                // XXX make sure we don't exceed the max. number of allowed configurations per user
                 // XXX we can make this independent I think?
 
                 if ('openvpn' === $vpnProto && $profileConfig->oSupport()) {
