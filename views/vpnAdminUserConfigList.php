@@ -4,7 +4,7 @@
 <?php /** @var string $userId */?>
 <?php /** @var bool $isDisabled */?>
 <?php /** @var bool $isSelf */?>
-<?php /** @var array<string,string> $idNameMapping */?>
+<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}> $userMessages */?>
 <?php /** @var array<array{profile_id:string,common_name?:string,public_key?:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}> $configList */ ?>
 <?php /** @var string $requestRoot */?>
@@ -66,13 +66,7 @@
             <?php foreach ($configList as $configEntry): ?>
                 <tr>
                     <td>
-                        <span title="<?=$this->e($configEntry['profile_id']); ?>">
-<?php if (array_key_exists($configEntry['profile_id'], $idNameMapping)): ?>
-                    <?=$this->e($idNameMapping[$configEntry['profile_id']]); ?>
-<?php else: ?>
-                    <?=$this->e($configEntry['profile_id']); ?>
-<?php endif; ?>
-                        </span>
+                        <span title="<?=$this->e($configEntry['profile_id']); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $configEntry['profile_id']); ?></span>
                     </td>
 <?php if (array_key_exists('common_name', $configEntry)): ?>
                     <td><span title="<?=$this->e($configEntry['common_name']); ?>"><?=$this->etr($configEntry['display_name'], 25); ?></span></td>
@@ -105,12 +99,7 @@
         <tbody>
 <?php foreach ($userConnectionLogEntries as $logEntry): ?>
             <tr>
-                <td title="<?=$this->e($logEntry['profile_id']); ?>">
-<?php if (array_key_exists($logEntry['profile_id'], $idNameMapping)): ?>
-                    <?=$this->e($idNameMapping[$logEntry['profile_id']]); ?>
-<?php else: ?>
-                    <?=$this->e($logEntry['profile_id']); ?>
-<?php endif; ?>
+                <td title="<?=$this->e($logEntry['profile_id']); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $logEntry['profile_id']); ?></td>
                 <td title="IPv4: <?=$this->e($logEntry['ip_four']); ?>, IPv6: <?=$this->e($logEntry['ip_six']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
                 <td>
 <?php if (null === $logEntry['disconnected_at']): ?>

@@ -57,19 +57,11 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                // get the fancy profile name
-                $profileConfigList = $this->config->profileConfigList();
-
-                $idNameMapping = [];
-                foreach ($profileConfigList as $profileConfig) {
-                    $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
-                }
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminConnections',
                         [
-                            'idNameMapping' => $idNameMapping,
+                            'profileConfigList' => $this->config->profileConfigList(),
                             'profileConnectionList' => $this->connectionManager->get(),
                         ]
                     )
@@ -135,16 +127,10 @@ class AdminPortalModule implements ServiceModuleInterface
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
+                // XXX use same means as in VpnPortal with the filter to use connection_id instead!
                 $configList = array_merge($this->storage->oCertListByUserId($userId), $this->storage->wPeerListByUserId($userId));
                 $userMessages = $this->storage->userLog($userId);
                 $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
-
-                // get the fancy profile name
-                $profileConfigList = $this->config->profileConfigList();
-                $idNameMapping = [];
-                foreach ($profileConfigList as $profileConfig) {
-                    $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
-                }
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -152,11 +138,11 @@ class AdminPortalModule implements ServiceModuleInterface
                         [
                             'userId' => $userId,
                             'userMessages' => $userMessages,
+                            'profileConfigList' => $this->config->profileConfigList(),
                             'configList' => $configList,
                             'isDisabled' => $this->storage->userIsDisabled($userId),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
                             'userConnectionLogEntries' => $userConnectionLogEntries,
-                            'idNameMapping' => $idNameMapping,
                         ]
                     )
                 );

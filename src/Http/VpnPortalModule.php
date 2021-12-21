@@ -78,16 +78,10 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileConfigList = $this->config->profileConfigList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
-                $idNameMapping = [];
-                foreach ($profileConfigList as $profileConfig) {
-                    $idNameMapping[$profileConfig->profileId()] = $profileConfig->displayName();
-                }
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalConfigurations',
                         [
-                            'idNameMapping' => $idNameMapping,
                             'profileConfigList' => $visibleProfileList,
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'configList' => $this->filterConfigList($userInfo->userId()),

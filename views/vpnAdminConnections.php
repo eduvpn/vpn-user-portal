@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>> $profileConnectionList */?>
-<?php /** @var array<string,string> $idNameMapping */?>
+<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var string $requestRoot */?>
 
 <?php $this->layout('base', ['activeItem' => 'connections', 'pageTitle' => $this->t('Connections')]); ?>
@@ -16,14 +16,14 @@
         <tbody>
     <?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
         <tr>
-            <td><a title="<?=$this->e($profileId); ?>" href="#<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></a></td>
+            <td><a title="<?=$this->e($profileId); ?>" href="#<?=$this->e($profileId); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $profileId); ?></a></td>
             <td><?=count($connectionList); ?></td>
         </tr>
     <?php endforeach; ?>
         </tbody>
     </table>
 <?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
-        <h2 id="<?=$this->e($profileId); ?>"><?=$this->e($idNameMapping[$profileId]); ?></h2>
+        <h2 id="<?=$this->e($profileId); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $profileId); ?></h2>
         <?php if (0 === count($connectionList)): ?>
             <p class="plain"><?=$this->t('No clients connected.'); ?></p>
         <?php else: ?>

@@ -2,7 +2,6 @@
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var \DateTimeImmutable $expiryDate */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<string,string> $idNameMapping */?>
 <?php /** @var array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}> $configList */?>
 <?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
 <?php $this->start('content'); ?>
@@ -59,13 +58,9 @@
             <tbody>
 <?php foreach ($configList as $configItem): ?>
                 <tr>
-                    <td><span title="<?=$this->e($configItem['profile_id']); ?>">
-<?php if (array_key_exists($configItem['profile_id'], $idNameMapping)): ?>
-                    <?=$this->e($idNameMapping[$configItem['profile_id']]); ?>
-<?php else: ?>
-                    <?=$this->e($configItem['profile_id']); ?>
-<?php endif; ?>
-                    </span></td>
+                    <td>
+                        <span title="<?=$this->e($configItem['profile_id']); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $configItem['profile_id']); ?></span>
+                    </td>
                     <td><span title="<?=$this->e($configItem['display_name']); ?>"><?=$this->etr($configItem['display_name'], 25); ?></span></td>
                     <td><?=$this->d($configItem['expires_at']); ?></td>
                     <td class="text-right">
