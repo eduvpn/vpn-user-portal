@@ -31,14 +31,4 @@ class ApiConfig
     {
         return new DateInterval($this->requireString('tokenExpiry', 'PT1H'));
     }
-
-    /**
-     * Maximum number of OAuth client authorizations (per user).
-     */
-    public function maxNumberOfAuthorizedClients(): int
-    {
-        // XXX maybe this is not good, at least not until it is very easy to
-        // immediately revoke a client from the error page...
-        return $this->requireInt('maxNumberOfAuthorizedClients', 15);
-    }
 }

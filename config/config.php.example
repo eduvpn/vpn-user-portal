@@ -178,8 +178,8 @@ return [
 
     // Limit the number of active VPN configurations downloaded through the
     // Portal
-    // OPTIONAL, DEFAULT = 5
-    //'maxNumberOfActivePortalConfigurations' => 5,
+    // OPTIONAL, DEFAULT = 10
+    //'maxNumberOfActivePortalConfigurations' => 10,
 
     // Determine what to log to "syslog"
     // OPTIONAL, DEFAULT = {{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]
@@ -190,12 +190,6 @@ return [
     // OPTIONAL, DEFAULT = 51820
     //'wgPort' => 51820,
     //'wgPort' => 443,
-
-    //'Api' => [
-    //    // Limit the number of active OAuth clients per user
-    //    // OPTIONAL, DEFAULT = 15
-    //    //'maxNumberOfAuthorizedClients' => 15,
-    //],
 
     // OPTIONAL, DEFAULT = 'FileSessionModule'
     //'sessionModule' => 'FileSessionModule',

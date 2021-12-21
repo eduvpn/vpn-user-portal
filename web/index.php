@@ -268,8 +268,7 @@ try {
     $oauthModule = new OAuthModule(
         $storage,
         $oauthServer,
-        $tpl,
-        $config->apiConfig()->maxNumberOfAuthorizedClients()
+        $tpl
     );
     $service->addModule($oauthModule);
     $service->addModule(new LogoutModule($authModule, $sessionBackend));
