@@ -16,6 +16,10 @@ use Vpn\Portal\Config;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Storage;
 
+// XXX we should get rid of this file, or only keep it for non-SQLite?!
+// only allow owner to read/write files
+umask(0077);
+
 try {
     FileIO::createDir($baseDir.'/data');
     $config = Config::fromFile($baseDir.'/config/config.php');

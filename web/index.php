@@ -58,6 +58,9 @@ use Vpn\Portal\Validator;
 use Vpn\Portal\VpnDaemon;
 use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
+// only allow owner permissions
+umask(0077);
+
 $logger = new SysLogger('vpn-user-portal');
 /** @var ?Vpn\Portal\Tpl $tpl */
 $tpl = null;

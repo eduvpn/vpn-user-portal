@@ -27,6 +27,9 @@ use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
 use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
+// only allow owner permissions
+umask(0077);
+
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();

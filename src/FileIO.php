@@ -43,12 +43,8 @@ class FileIO
 
     public static function writeFile(string $filePath, string $fileData): void
     {
-        // XXX touch, chmod, write to avoid racing condition?
         if (false === file_put_contents($filePath, $fileData)) {
             throw new RuntimeException(sprintf('unable to write file "%s"', $filePath));
-        }
-        if (false === chmod($filePath, 0600)) {
-            throw new RuntimeException(sprintf('unable to set permissions on file "%s"', $filePath));
         }
     }
 
@@ -62,7 +58,8 @@ class FileIO
     public static function createDir(string $dirPath): void
     {
         if (false === file_exists($dirPath)) {
-            if (false === mkdir($dirPath, 0700, true)) {
+            // umask still influences the default 0777
+            if (false === mkdir($dirPath, 0777, true)) {
                 throw new RuntimeException(sprintf('unable to create directory "%s"', $dirPath));
             }
         }

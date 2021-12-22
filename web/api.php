@@ -32,6 +32,9 @@ use Vpn\Portal\SysLogger;
 use Vpn\Portal\VpnDaemon;
 use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
+// only allow owner permissions
+umask(0077);
+
 $logger = new SysLogger('vpn-user-portal');
 
 try {

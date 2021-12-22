@@ -28,6 +28,9 @@ use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
 
+// only allow owner permissions
+umask(0077);
+
 $logger = new SysLogger('vpn-user-portal');
 
 try {
