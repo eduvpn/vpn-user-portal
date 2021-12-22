@@ -124,15 +124,6 @@ class Request
         return sprintf('%s://%s', $this->getScheme(), $this->getAuthority());
     }
 
-    public function isBrowser(): bool
-    {
-        if (null === $httpAccept = $this->optionalHeader('HTTP_ACCEPT')) {
-            return false;
-        }
-
-        return false !== strpos($httpAccept, 'text/html');
-    }
-
     public function getPathInfo(): string
     {
         // if we have PATH_INFO available, use it

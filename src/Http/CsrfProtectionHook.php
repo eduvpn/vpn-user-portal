@@ -27,11 +27,6 @@ class CsrfProtectionHook extends AbstractHook implements HookInterface
 {
     public function beforeAuth(Request $request): ?Response
     {
-        if (!$request->isBrowser()) {
-            // not a browser, no CSRF protected needed
-            return null;
-        }
-
         // ignore GET, HEAD, OPTIONS as they have no side-effects...
         if (\in_array($request->getRequestMethod(), ['GET', 'HEAD', 'OPTIONS'], true)) {
             return null;
