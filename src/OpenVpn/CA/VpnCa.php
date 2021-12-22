@@ -35,7 +35,7 @@ class VpnCa implements CaInterface
 
     public function caCert(): CaInfo
     {
-        $pemCert = $this->readFile('ca.crt');
+        $pemCert = FileIO::readFile($this->caDir.'/ca.crt');
         $parsedPem = openssl_x509_parse($pemCert);
 
         return new CaInfo(
@@ -57,8 +57,8 @@ class VpnCa implements CaInterface
         $keyFile = sprintf('%s/%s.key', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
         $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA -out-crt "%s" -out-key "%s"', $serverName, $profileId, $crtFile, $keyFile));
         $certInfo = $this->certKeyInfo($crtFile, $keyFile);
-        $this->deleteFile($crtFile);
-        $this->deleteFile($keyFile);
+        FileIO::deleteFile($crtFile);
+        FileIO::deleteFile($keyFile);
 
         return $certInfo;
     }
@@ -80,15 +80,15 @@ class VpnCa implements CaInterface
         $keyFile = sprintf('%s/%s.key', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
         $this->execVpnCa(sprintf('-client -name "%s" -ou "%s" -not-after "%s" -out-crt "%s" -out-key "%s"', $commonName, $profileId, $expiresAt->format(DateTimeImmutable::ATOM), $crtFile, $keyFile));
         $certInfo = $this->certKeyInfo($crtFile, $keyFile);
-        $this->deleteFile($crtFile);
-        $this->deleteFile($keyFile);
+        FileIO::deleteFile($crtFile);
+        FileIO::deleteFile($keyFile);
 
         return $certInfo;
     }
 
     public function initCa(DateInterval $caExpiry): void
     {
-        if ($this->hasFile('ca.key') || $this->hasFile('ca.crt')) {
+        if (FileIO::exists($this->caDir.'/ca.key') || FileIO::exists($this->caDir.'/ca.crt')) {
             return;
         }
 
@@ -106,12 +106,12 @@ class VpnCa implements CaInterface
 
     private function certKeyInfo(string $certFile, string $keyFile): CertInfo
     {
-        $pemCert = $this->readFile($certFile);
+        $pemCert = FileIO::readFile($certFile);
         $parsedPem = openssl_x509_parse($pemCert);
 
         return new CertInfo(
             $pemCert,
-            $this->readFile($keyFile),
+            FileIO::readFile($keyFile),
             (int) $parsedPem['validFrom_time_t'],
             (int) $parsedPem['validTo_time_t'],
         );
@@ -133,20 +133,5 @@ class VpnCa implements CaInterface
         if (0 !== $returnValue) {
             throw new RuntimeException(sprintf('command "%s" did not complete successfully: "%s"', $execCmd, implode(PHP_EOL, $commandOutput)));
         }
-    }
-
-    private function readFile(string $fileName): string
-    {
-        return trim(FileIO::readFile($this->caDir.'/'.$fileName));
-    }
-
-    private function hasFile(string $fileName): bool
-    {
-        return FileIO::exists($this->caDir.'/'.$fileName);
-    }
-
-    private function deleteFile(string $fileName): void
-    {
-        FileIO::deleteFile($this->caDir.'/'.$fileName);
     }
 }
