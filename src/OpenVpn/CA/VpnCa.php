@@ -16,6 +16,7 @@ use DateTimeImmutable;
 use RuntimeException;
 use Vpn\Portal\Dt;
 use Vpn\Portal\FileIO;
+use Vpn\Portal\Hex;
 use Vpn\Portal\OpenVpn\CA\Exception\CaException;
 use Vpn\Portal\Validator;
 
@@ -52,9 +53,8 @@ class VpnCa implements CaInterface
         Validator::serverName($serverName);
         Validator::profileId($profileId);
 
-        $crtFile = tempnam(sys_get_temp_dir(), 'crt');
-        $keyFile = tempnam(sys_get_temp_dir(), 'key');
-
+        $crtFile = sprintf('%s/%s.crt', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
+        $keyFile = sprintf('%s/%s.key', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
         $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA -out-crt "%s" -out-key "%s"', $serverName, $profileId, $crtFile, $keyFile));
         $certInfo = $this->certKeyInfo($crtFile, $keyFile);
         $this->deleteFile($crtFile);
@@ -76,8 +76,8 @@ class VpnCa implements CaInterface
             throw new CaException(sprintf('can not issue certificates that expire in the past (%s)', $expiresAt->format(DateTimeImmutable::ATOM)));
         }
 
-        $crtFile = tempnam(sys_get_temp_dir(), 'crt');
-        $keyFile = tempnam(sys_get_temp_dir(), 'key');
+        $crtFile = sprintf('%s/%s.crt', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
+        $keyFile = sprintf('%s/%s.key', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
         $this->execVpnCa(sprintf('-client -name "%s" -ou "%s" -not-after "%s" -out-crt "%s" -out-key "%s"', $commonName, $profileId, $expiresAt->format(DateTimeImmutable::ATOM), $crtFile, $keyFile));
         $certInfo = $this->certKeyInfo($crtFile, $keyFile);
         $this->deleteFile($crtFile);
