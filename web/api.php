@@ -48,7 +48,7 @@ try {
     $storage->update();
 
     $oauthStorage = new OAuthStorage($db, 'oauth_');
-    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
+    $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
 
     $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
     $oauthSigner = new Signer($oauthKey);

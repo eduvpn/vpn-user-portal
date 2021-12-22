@@ -13,10 +13,14 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\Signer;
+use Vpn\Portal\Config;
 use Vpn\Portal\FileIO;
+use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\WireGuard\KeyPair;
 
 try {
+    $config = Config::fromFile($baseDir.'/config/config.php');
+
     // OAuth key
     $apiKeyFile = $baseDir.'/config/oauth.key';
     if (!FileIO::exists($apiKeyFile)) {
@@ -38,6 +42,11 @@ try {
         FileIO::writeFile($wgSecretKeyFile, $keyPair['secret_key']);
         FileIO::writeFile($wgPublicKeyFile, $keyPair['public_key']);
     }
+
+    // OpenVPN CA
+    // NOTE: only created when the ca.crt and ca.key do not yet exist...
+    $vpnCa = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
+    $vpnCa->initCa($config->caExpiry());
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 

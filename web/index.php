@@ -91,7 +91,7 @@ try {
 
     $dateTime = Dt::get();
     FileIO::createDir($baseDir.'/data');
-    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
+    $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
     $sessionExpiry = Expiry::calculate(
         $dateTime,
         $ca->caCert()->validTo(),

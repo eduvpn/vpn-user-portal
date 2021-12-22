@@ -45,7 +45,7 @@ try {
     $storage = new Storage($db, $baseDir.'/schema');
     $storage->update();
 
-    $ca = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
+    $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
 
     $sessionExpiry = Expiry::calculate(
         Dt::get(),

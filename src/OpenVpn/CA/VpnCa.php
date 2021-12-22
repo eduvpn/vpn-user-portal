@@ -16,16 +16,12 @@ use DateTimeImmutable;
 use RuntimeException;
 use Vpn\Portal\Dt;
 use Vpn\Portal\FileIO;
-use Vpn\Portal\Hex;
 use Vpn\Portal\OpenVpn\CA\Exception\CaException;
-use Vpn\Portal\Random;
-use Vpn\Portal\RandomInterface;
 use Vpn\Portal\Validator;
 
 class VpnCa implements CaInterface
 {
     protected DateTimeImmutable $dateTime;
-    protected RandomInterface $random;
     private string $caDir;
     private string $vpnCaPath;
 
@@ -34,7 +30,6 @@ class VpnCa implements CaInterface
         $this->caDir = $caDir;
         $this->vpnCaPath = $vpnCaPath;
         $this->dateTime = Dt::get();
-        $this->random = new Random();
     }
 
     public function caCert(): CaInfo
@@ -56,10 +51,16 @@ class VpnCa implements CaInterface
     {
         Validator::serverName($serverName);
         Validator::profileId($profileId);
-        $crtKeyFile = Hex::encode($this->random->get(32));
-        $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA -out-crt "%s.crt" -out-key "%s.key"', $serverName, $profileId, $crtKeyFile, $crtKeyFile));
 
-        return $this->certInfo($crtKeyFile);
+        $crtFile = tempnam(sys_get_temp_dir(), 'crt');
+        $keyFile = tempnam(sys_get_temp_dir(), 'key');
+
+        $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA -out-crt "%s" -out-key "%s"', $serverName, $profileId, $crtFile, $keyFile));
+        $certInfo = $this->certKeyInfo($crtFile, $keyFile);
+        $this->deleteFile($crtFile);
+        $this->deleteFile($keyFile);
+
+        return $certInfo;
     }
 
     /**
@@ -75,20 +76,23 @@ class VpnCa implements CaInterface
             throw new CaException(sprintf('can not issue certificates that expire in the past (%s)', $expiresAt->format(DateTimeImmutable::ATOM)));
         }
 
-        $crtKeyFile = Hex::encode($this->random->get(32));
-        $this->execVpnCa(sprintf('-client -name "%s" -ou "%s" -not-after "%s" -out-crt "%s.crt" -out-key "%s.key"', $commonName, $profileId, $expiresAt->format(DateTimeImmutable::ATOM), $crtKeyFile, $crtKeyFile));
+        $crtFile = tempnam(sys_get_temp_dir(), 'crt');
+        $keyFile = tempnam(sys_get_temp_dir(), 'key');
+        $this->execVpnCa(sprintf('-client -name "%s" -ou "%s" -not-after "%s" -out-crt "%s" -out-key "%s"', $commonName, $profileId, $expiresAt->format(DateTimeImmutable::ATOM), $crtFile, $keyFile));
+        $certInfo = $this->certKeyInfo($crtFile, $keyFile);
+        $this->deleteFile($crtFile);
+        $this->deleteFile($keyFile);
 
-        return $this->certInfo($crtKeyFile);
+        return $certInfo;
     }
 
     public function initCa(DateInterval $caExpiry): void
     {
         if ($this->hasFile('ca.key') || $this->hasFile('ca.crt')) {
-            throw new CaException('CA already initialized');
+            return;
         }
 
         if (!FileIO::exists($this->caDir)) {
-            // we do not have the CA dir, create it
             FileIO::createDir($this->caDir);
         }
 
@@ -98,17 +102,6 @@ class VpnCa implements CaInterface
                 $this->dateTime->add($caExpiry)->format(DateTimeImmutable::ATOM)
             )
         );
-    }
-
-    private function certInfo(string $crtKeyFile): CertInfo
-    {
-        $certKeyInfo = $this->certKeyInfo($crtKeyFile.'.crt', $crtKeyFile.'.key');
-
-        // delete the crt and key from disk as we no longer need them
-        $this->deleteFile($crtKeyFile.'.crt');
-        $this->deleteFile($crtKeyFile.'.key');
-
-        return $certKeyInfo;
     }
 
     private function certKeyInfo(string $certFile, string $keyFile): CertInfo

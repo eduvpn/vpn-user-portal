@@ -14,7 +14,6 @@ $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Config;
 use Vpn\Portal\FileIO;
-use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\Storage;
 
 try {
@@ -31,10 +30,6 @@ try {
         $baseDir.'/schema'
     );
     $storage->init();
-
-    // initialize the CA for OpenVPN
-    $vpnCa = new VpnCa($baseDir.'/data/ca', $config->vpnCaPath());
-    $vpnCa->initCa($config->caExpiry());
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 
