@@ -16,6 +16,12 @@ use Vpn\Portal\Validator;
 
 /**
  * Protect against *Cross Site Request Forgery* (CSRF) for "POST" requests.
+ *
+ * NOTE: this hook is strictly speaking not necessary for any modern browser,
+ * just Internet Explorer as we also use SameSite=Strict cookies. That should
+ * prevent any CSRF attack.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
  */
 class CsrfProtectionHook extends AbstractHook implements HookInterface
 {
