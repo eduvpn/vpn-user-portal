@@ -41,12 +41,13 @@ class FileIO
         return $fileData;
     }
 
-    public static function writeFile(string $filePath, string $fileData, int $mode = 0600): void
+    public static function writeFile(string $filePath, string $fileData): void
     {
+        // XXX touch, chmod, write to avoid racing condition?
         if (false === file_put_contents($filePath, $fileData)) {
             throw new RuntimeException(sprintf('unable to write file "%s"', $filePath));
         }
-        if (false === chmod($filePath, $mode)) {
+        if (false === chmod($filePath, 0600)) {
             throw new RuntimeException(sprintf('unable to set permissions on file "%s"', $filePath));
         }
     }
