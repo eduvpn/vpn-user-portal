@@ -53,7 +53,7 @@
         "php": ">=7.4"
     },
     "require-dev": {
-        "fkooman/saml-sp": "dev-main",
+        "fkooman/saml-sp": "^2",
         "phpunit/phpunit": "^9"
     },
     "suggest": {

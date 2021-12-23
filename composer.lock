@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "57ce7902263a3b9f54f3bc7590e4332f",
+    "content-hash": "db9f914470040fe6c40a341654d14202",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
@@ -176,11 +176,11 @@
         },
         {
             "name": "fkooman/saml-sp",
-            "version": "dev-main",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "a0d6d36ea2a4341eac26dbc01d6cd84a18b3dfe2"
+                "reference": "b796eee6527e266b4308cd2e0555b88f191d309c"
             },
             "require": {
                 "ext-curl": "*",
@@ -201,7 +201,6 @@
                 "friendsofphp/php-cs-fixer": "^2",
                 "phpunit/phpunit": "^9"
             },
-            "default-branch": true,
             "type": "project",
             "autoload": {
                 "psr-4": {
@@ -227,7 +226,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2021-12-21T16:41:24+00:00"
+            "time": "2021-12-23T14:52:56+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2257,8 +2256,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fkooman/oauth2-server": 20,
-        "fkooman/saml-sp": 20
+        "fkooman/oauth2-server": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
