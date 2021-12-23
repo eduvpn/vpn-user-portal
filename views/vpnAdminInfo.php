@@ -181,14 +181,10 @@
 
 <?php if ($profileConfig->oSupport()):?>
         <tr><th colspan="2" class="openvpn"><?=$this->t('OpenVPN'); ?></th></tr>
-<?php if ($profileConfig->oClientToClient() || $profileConfig->oEnableLog() || $profileConfig->oBlockLan()):?>
+<?php if ($profileConfig->oEnableLog() || $profileConfig->oBlockLan()):?>
             <tr>
                 <th></th>
                 <td>
-<?php if ($profileConfig->oClientToClient()): ?>
-                    <span class="plain"><?=$this->t('Client-to-client'); ?></span>
-<?php endif; ?>
-
 <?php if ($profileConfig->oEnableLog()): ?>
                     <span class="plain"><?=$this->t('OpenVPN Server Log'); ?></span>
 <?php endif; ?>

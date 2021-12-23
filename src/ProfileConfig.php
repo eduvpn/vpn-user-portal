@@ -197,11 +197,6 @@ class ProfileConfig
         return $this->requireBool('oBlockLan', false);
     }
 
-    public function oClientToClient(): bool
-    {
-        return $this->requireBool('oClientToClient', false);
-    }
-
     public function oEnableLog(): bool
     {
         return $this->requireBool('oEnableLog', false);

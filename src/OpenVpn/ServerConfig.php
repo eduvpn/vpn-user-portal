@@ -189,13 +189,6 @@ class ServerConfig
             $serverConfig[] = 'push "explicit-exit-notify 1"';
         }
 
-        if ($profileConfig->oClientToClient()) {
-            // XXX document that the administrator may need to push the range
-            // and range6 routes as well when not in full-tunnel when wanting
-            // to reach other clients on other OpenVPN processes
-            $serverConfig[] = 'client-to-client';
-        }
-
         // Routes
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
