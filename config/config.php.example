@@ -315,10 +315,6 @@ return [
             // OpenVPN Only, OPTIONAL, DEFAULT = false
             //'oBlockLan' => true,
 
-            // Allow traffic between VPN clients
-            // OpenVPN Only, OPTIONAL, DEFAULT = false
-            //'oClientToClient' => true,
-
             // Enable OpenVPN server logging
             // OpenVPN Only, OPTIONAL, DEFAULT = false
             //'oEnableLog' => true,
