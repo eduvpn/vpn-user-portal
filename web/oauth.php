@@ -39,14 +39,7 @@ try {
 
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();
-
-    $db = new PDO(
-        $config->dbConfig($baseDir)->dbDsn(),
-        $config->dbConfig($baseDir)->dbUser(),
-        $config->dbConfig($baseDir)->dbPass()
-    );
-    $storage = new Storage($db, $baseDir.'/schema');
-
+    $storage = new Storage($config->dbConfig($baseDir));
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
 
     $sessionExpiry = Expiry::calculate(
@@ -57,7 +50,7 @@ try {
 
     // OAuth module
     $oauthServer = new VpnOAuthServer(
-        new OAuthStorage($db, 'oauth_'),
+        new OAuthStorage($storage->dbPdo(), 'oauth_'),
         new ClientDb(),
         new Signer(FileIO::readFile($baseDir.'/config/oauth.key')),
         $sessionExpiry,

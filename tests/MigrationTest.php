@@ -41,7 +41,7 @@ final class MigrationTest extends TestCase
     public function testInitNotAllowed(): void
     {
         static::expectException(MigrationException::class);
-        static::expectExceptionMessage('server configuration only allows manual database initialization/migration');
+        static::expectExceptionMessage('server configuration does not allow automatic database initialization and migration');
         Migration::run($this->dbh, $this->schemaDir, '2018010101', false);
     }
 

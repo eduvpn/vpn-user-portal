@@ -22,9 +22,24 @@ class DbConfig
         $this->configData = $configData;
     }
 
+    public function baseDir(): string
+    {
+        return $this->requireString('baseDir');
+    }
+
+    public function schemaDir(): string
+    {
+        return $this->baseDir().'/schema';
+    }
+
+    public function autoInitMigrate(): bool
+    {
+        return $this->requireBool('autoInitMigrate', true);
+    }
+
     public function dbDsn(): string
     {
-        return $this->requireString('dbDsn', 'sqlite://'.$this->requireString('baseDir').'/data/db.sqlite');
+        return $this->requireString('dbDsn', 'sqlite://'.$this->baseDir().'/data/db.sqlite');
     }
 
     public function dbUser(): ?string

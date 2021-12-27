@@ -40,15 +40,7 @@ try {
         )
     );
 
-    $storage = new Storage(
-        new PDO(
-            $config->dbConfig($baseDir)->dbDsn(),
-            $config->dbConfig($baseDir)->dbUser(),
-            $config->dbConfig($baseDir)->dbPass()
-        ),
-        $baseDir.'/schema'
-    );
-
+    $storage = new Storage($config->dbConfig($baseDir));
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
 
     $service->addModule(

@@ -41,15 +41,8 @@ try {
     $request = Request::createFromGlobals();
     FileIO::createDir($baseDir.'/data');
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $db = new PDO(
-        $config->dbConfig($baseDir)->dbDsn(),
-        $config->dbConfig($baseDir)->dbUser(),
-        $config->dbConfig($baseDir)->dbPass()
-    );
-
-    $storage = new Storage($db, $baseDir.'/schema');
-
-    $oauthStorage = new OAuthStorage($db, 'oauth_');
+    $storage = new Storage($config->dbConfig($baseDir));
+    $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
 
     $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');

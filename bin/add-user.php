@@ -75,14 +75,7 @@ try {
     }
 
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $storage = new Storage(
-        new PDO(
-            $config->dbConfig($baseDir)->dbDsn(),
-            $config->dbConfig($baseDir)->dbUser(),
-            $config->dbConfig($baseDir)->dbPass()
-        ),
-        $baseDir.'/schema'
-    );
+    $storage = new Storage($config->dbConfig($baseDir));
     $storage->localUserAdd($userId, $passwordHash, Dt::get());
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;

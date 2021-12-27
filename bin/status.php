@@ -110,13 +110,7 @@ try {
         return;
     }
 
-    $db = new PDO(
-        $config->dbConfig($baseDir)->dbDsn(),
-        $config->dbConfig($baseDir)->dbUser(),
-        $config->dbConfig($baseDir)->dbPass()
-    );
-    $storage = new Storage($db, $baseDir.'/schema');
-
+    $storage = new Storage($config->dbConfig($baseDir));
     $connectionManager = new ConnectionManager(
         $config,
         new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger),

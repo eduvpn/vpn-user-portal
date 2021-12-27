@@ -20,7 +20,7 @@ use Vpn\Portal\Exception\MigrationException;
 
 class Migration
 {
-    public static function run(PDO $db, string $schemaDir, string $schemaVersion, bool $allowInitMigrate): void
+    public static function run(PDO $db, string $schemaDir, string $schemaVersion, bool $autoInitMigrate): void
     {
         $currentVersion = self::getCurrentVersion($db);
         if ($schemaVersion === $currentVersion) {
@@ -28,8 +28,8 @@ class Migration
             return;
         }
 
-        if (!$allowInitMigrate) {
-            throw new MigrationException('server configuration only allows manual database initialization/migration');
+        if (!$autoInitMigrate) {
+            throw new MigrationException('server configuration does not allow automatic database initialization and migration');
         }
 
         if (null === $currentVersion) {

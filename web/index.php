@@ -104,13 +104,7 @@ try {
     if ($dateTime->add(new DateInterval('PT30M')) >= $dateTime->add($sessionExpiry)) {
         throw new RuntimeException('sessionExpiry MUST be > PT30M');
     }
-
-    $db = new PDO(
-        $config->dbConfig($baseDir)->dbDsn(),
-        $config->dbConfig($baseDir)->dbUser(),
-        $config->dbConfig($baseDir)->dbPass()
-    );
-    $storage = new Storage($db, $baseDir.'/schema');
+    $storage = new Storage($config->dbConfig($baseDir));
 
     $cookieOptions = CookieOptions::init()->withPath($request->getRoot());
     if (!$config->secureCookie()) {
@@ -217,7 +211,7 @@ try {
 
     $service->addBeforeHook($adminHook);
     $oauthClientDb = new ClientDb();
-    $oauthStorage = new OAuthStorage($db, 'oauth_');
+    $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $wireGuardServerConfig = new WireGuardServerConfig(FileIO::readFile($baseDir.'/config/wireguard.secret.key'), $config->wgPort());
     $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
     $oauthSigner = new Signer($oauthKey);

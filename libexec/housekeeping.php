@@ -18,15 +18,7 @@ use Vpn\Portal\Storage;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $storage = new Storage(
-        new PDO(
-            $config->dbConfig($baseDir)->dbDsn(),
-            $config->dbConfig($baseDir)->dbUser(),
-            $config->dbConfig($baseDir)->dbPass()
-        ),
-        $baseDir.'/schema'
-    );
-
+    $storage = new Storage($config->dbConfig($baseDir));
     // XXX remove WG/OpenVPN peer/certificate configurations for profiles that no longer exist
     // XXX remove WG peer configurations when IP range no longer matches profile range(s)
     $cleanBefore = Dt::get('now -32 days');

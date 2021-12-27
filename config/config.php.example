@@ -14,16 +14,20 @@ return [
 
     // Portal Database Configuration
     // OPTIONAL, DEFAULT = local SQLite database
-    // ** PostgreSQL **
     //'Db' => [
+    //    // ** PostgreSQL **
     //    'dbDsn' => 'pgsql:host=localhost;port=5432;dbname=vpn;user=user;password=pass',
+    //    // OPTIONAL, DEFAULT = true
+    //    //'autoInitMigrate' => true,
     //],
-    // ** MariaDB/MySQL **
     //'Db' => [
+    //    // ** MariaDB/MySQL **
     //    'dbDsn' => 'mysql:host=localhost;port=3306;dbname=vpn',
     //    'dbDsn' => 'mysql:unix_socket=/var/lib/mysql/mysql.sock;dbname=vpn',
     //    'dbUser' => 'user',
     //    'dbPass' => 'pass',
+    //    // OPTIONAL, DEFAULT = true
+    //    //'autoInitMigrate' => true,
     //],
 
     // Choose the User Authentication Module
@@ -224,7 +228,7 @@ return [
             //'defaultGateway' => false,
 
             // Provide DNS server(s) to the VPN client
-            // *Only* used when defaultGateway is true or dnsSearchDomainList 
+            // *Only* used when defaultGateway is true or dnsSearchDomainList
             // are specified
             // DEFAULT  = []
             'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],

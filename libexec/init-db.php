@@ -13,26 +13,11 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Config;
-use Vpn\Portal\FileIO;
 use Vpn\Portal\Storage;
 
-// XXX we should get rid of this file, or only keep it for non-SQLite?!
-// only allow owner to read/write files
-umask(0077);
-
 try {
-    FileIO::createDir($baseDir.'/data');
     $config = Config::fromFile($baseDir.'/config/config.php');
-
-    // initialize the DB
-    $storage = new Storage(
-        new PDO(
-            $config->dbConfig($baseDir)->dbDsn(),
-            $config->dbConfig($baseDir)->dbUser(),
-            $config->dbConfig($baseDir)->dbPass()
-        ),
-        $baseDir.'/schema'
-    );
+    $storage = new Storage($config->dbConfig($baseDir));
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 

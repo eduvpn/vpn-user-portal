@@ -22,16 +22,25 @@ class Storage
     public const CURRENT_SCHEMA_VERSION = '2021122701';
     private PDO $db;
 
-    public function __construct(PDO $db, string $schemaDir, bool $allowInitMigrate = true)
+    public function __construct(DbConfig $dbConfig)
     {
+        $db = new PDO(
+            $dbConfig->dbDsn(),
+            $dbConfig->dbUser(),
+            $dbConfig->dbPass()
+        );
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             $db->exec('PRAGMA foreign_keys = ON');
         }
         // run database initialization/migration if necessary and enabled
-        Migration::run($db, $schemaDir, self::CURRENT_SCHEMA_VERSION, $allow9InitMigrate);
-
+        Migration::run($db, $dbConfig->schemaDir(), self::CURRENT_SCHEMA_VERSION, $dbConfig->autoInitMigrate());
         $this->db = $db;
+    }
+
+    public function dbPdo(): PDO
+    {
+        return $this->db;
     }
 
     public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?string $authKey): void
