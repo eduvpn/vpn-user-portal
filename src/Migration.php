@@ -20,19 +20,12 @@ use Vpn\Portal\Exception\MigrationException;
 
 class Migration
 {
-    /**
-     * Run the migration.
-     */
-    public static function run(PDO $db, string $schemaDir, string $schemaVersion, bool $autoInitMigrate = true): void
+    public static function run(PDO $db, string $schemaDir, string $schemaVersion): void
     {
         $currentVersion = self::getCurrentVersion($db);
         if ($schemaVersion === $currentVersion) {
             // up to date
             return;
-        }
-
-        if (!$autoInitMigrate) {
-            throw new MigrationException('manual database initialization or migration required');
         }
 
         if (null === $currentVersion) {
@@ -63,8 +56,10 @@ class Migration
 
                     try {
                         $db->beginTransaction();
+                        // XXX use prepare
                         $db->exec(sprintf("DELETE FROM version WHERE current_version = '%s'", $fromVersion));
                         self::runQueries($db, $queryList);
+                        // XXX use prepare
                         $db->exec(sprintf("INSERT INTO version (current_version) VALUES('%s')", $toVersion));
                         $db->commit();
                         $currentVersion = $toVersion;
@@ -98,15 +93,12 @@ class Migration
     {
         try {
             $sth = $db->query('SELECT current_version FROM version');
-            $currentVersion = $sth->fetchColumn();
-            if (!\is_string($currentVersion)) {
-                // XXX this means database corruption?
-                throw new MigrationException('unable to retrieve current version');
-            }
-            // XXX validate?
+            $currentVersion = (string) $sth->fetchColumn();
+            self::validateSchemaVersion($currentVersion);
 
             return $currentVersion;
         } catch (PDOException $e) {
+            // the "version" table probably does not exist (yet)
             return null;
         }
     }
@@ -147,7 +139,7 @@ class Migration
 
     private static function createVersionTable(PDO $db, string $schemaVersion): void
     {
-        $db->exec('CREATE TABLE version (current_version TEXT NOT NULL)');
+        $db->exec('CREATE TABLE IF NOT EXISTS version (current_version TEXT NOT NULL)');
         // we know that schemaVersion is a 10 digit string as per
         // validateSchemaVersion
         $db->exec(sprintf("INSERT INTO version (current_version) VALUES('%s')", $schemaVersion));

@@ -29,7 +29,7 @@ class Storage
             $db->exec('PRAGMA foreign_keys = ON');
         }
         // run database initialization/migration if necessary
-        Migration::run($db, $schemaDir, self::CURRENT_SCHEMA_VERSION, true);
+        Migration::run($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
         $this->db = $db;
     }
 
