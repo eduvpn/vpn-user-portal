@@ -54,7 +54,7 @@ class VpnDaemon
     }
 
     /**
-     * @return array<string,array{public_key:string,ip_net:array{0:string,1:string},last_handshake_time:string,bytes_transferred:int}>
+     * @return array<string,array{public_key:string,ip_net:array<string>,last_handshake_time:?string,bytes_in:int,bytes_out:int}>
      */
     public function wPeerList(string $nodeUrl, bool $showAll): array
     {
@@ -98,22 +98,28 @@ class VpnDaemon
         }
     }
 
-    // XXX support array for publicKey is probably better!
-    public function wPeerRemove(string $nodeUrl, string $publicKey): void
+    /**
+     * @return ?array{public_key:string,ip_net:array<string>,last_handshake_time:?string,bytes_in:int,bytes_out:int}
+     */
+    public function wPeerRemove(string $nodeUrl, string $publicKey): ?array
     {
         try {
-            $this->httpClient->send(
-                new HttpClientRequest(
-                    'POST',
-                    $nodeUrl.'/w/remove_peer',
-                    [],
-                    [
-                        'public_key' => $publicKey,
-                    ]
-                )
+            return Json::decode(
+                $this->httpClient->send(
+                    new HttpClientRequest(
+                        'POST',
+                        $nodeUrl.'/w/remove_peer',
+                        [],
+                        [
+                            'public_key' => $publicKey,
+                        ]
+                    )
+                )->body()
             );
         } catch (HttpClientException $e) {
             $this->logger->error((string) $e);
+
+            return null;
         }
     }
 
