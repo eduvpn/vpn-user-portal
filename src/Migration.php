@@ -23,7 +23,7 @@ class Migration
     /**
      * Run the migration.
      */
-    public static function run(PDO $db, string $schemaDir, string $schemaVersion, bool $autoInitMigrate): void
+    public static function run(PDO $db, string $schemaDir, string $schemaVersion, bool $autoInitMigrate = true): void
     {
         $currentVersion = self::getCurrentVersion($db);
         if ($schemaVersion === $currentVersion) {
@@ -94,7 +94,7 @@ class Migration
     /**
      * Gets the current version of the database schema.
      */
-    private static function getCurrentVersion(PDO $db): ?string
+    public static function getCurrentVersion(PDO $db): ?string
     {
         try {
             $sth = $db->query('SELECT current_version FROM version');
