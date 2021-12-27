@@ -252,6 +252,7 @@ class ConnectionManager
                     $this->storage->wPeerRemove($userId, $connectionId);
                 }
                 if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($i), $connectionId)) {
+                    // XXX what if peer was not connected/registered anywhere?
                     // peer was connected to this node, use the information
                     // we got back to call "clientDisconnect"
                     $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], new DateTimeImmutable());
