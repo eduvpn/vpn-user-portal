@@ -60,8 +60,8 @@
                 <th><?=$this->t('CA'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Created'); ?></dt><dd><?=$this->d($serverInfo->ca()->caCert()->validFrom()); ?></dd>
-                        <dt><?=$this->t('Expires'); ?></dt><dd><?=$this->d($serverInfo->ca()->caCert()->validTo()); ?></dd>
+                        <dt><?=$this->t('Created On'); ?></dt><dd><span title="<?=$this->d($serverInfo->ca()->caCert()->validFrom()); ?>"><?=$this->d($serverInfo->ca()->caCert()->validFrom(), 'Y-m-d'); ?></span></dd>
+                        <dt><?=$this->t('Expires On'); ?></dt><dd><span title="<?=$this->d($serverInfo->ca()->caCert()->validTo()); ?>"><?=$this->d($serverInfo->ca()->caCert()->validTo(), 'Y-m-d'); ?></span></dd>
                         <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e(implode(' ', str_split($serverInfo->ca()->caCert()->fingerprint(), 4))); ?></code></dd>
                     </dl>
                 </td>

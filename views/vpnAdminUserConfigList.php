@@ -60,7 +60,7 @@
     <?php else: ?>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?></th></tr>
+                <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires On'); ?></th></tr>
             </thead>
             <tbody>
             <?php foreach ($configList as $configEntry): ?>
@@ -74,7 +74,7 @@
 <?php if (array_key_exists('public_key', $configEntry)): ?>
                     <td><span title="<?=$this->e($configEntry['public_key']); ?>"><?=$this->etr($configEntry['display_name'], 25); ?></span></td>
 <?php endif; ?>
-                    <td><?=$this->d($configEntry['expires_at']); ?></td>
+                    <td><span title="<?=$this->d($configEntry['expires_at']); ?>"><?=$this->d($configEntry['expires_at'], 'Y-m-d'); ?></span></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

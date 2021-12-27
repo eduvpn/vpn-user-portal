@@ -53,7 +53,7 @@
         <h2><?=$this->t('Active'); ?></h2>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires'); ?></th><th></th></tr>
+                <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires On'); ?></th><th></th></tr>
             </thead>
             <tbody>
 <?php foreach ($configList as $configItem): ?>
@@ -62,7 +62,7 @@
                         <span title="<?=$this->e($configItem['profile_id']); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $configItem['profile_id']); ?></span>
                     </td>
                     <td><span title="<?=$this->e($configItem['display_name']); ?>"><?=$this->etr($configItem['display_name'], 25); ?></span></td>
-                    <td><?=$this->d($configItem['expires_at']); ?></td>
+                    <td><span title="<?=$this->d($configItem['expires_at']); ?>"><?=$this->d($configItem['expires_at'], 'Y-m-d'); ?></span></td>
                     <td class="text-right">
                         <form class="frm" method="post" action="deleteConfig">
                             <input type="hidden" name="profileId" value="<?=$this->e($configItem['profile_id']); ?>">

@@ -61,12 +61,14 @@
 <?php else: ?>
     <table class="tbl">
         <thead>
-            <tr><th><?=$this->t('Name'); ?></th><th></th></tr>
+            <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Authorized On'); ?></th><th><?=$this->t('Expires On'); ?></th><th></th></tr>
         </thead>
         <tbody>
 <?php foreach ($authorizationList as $authorizationInfo): ?>
             <tr>
                 <td><span title="<?=$this->e($authorizationInfo->clientId()); ?>"><?=$this->clientIdToDisplayName($authorizationInfo->clientId()); ?></span></td>
+                <td><span title="<?=$this->d($authorizationInfo->authorizedAt()); ?>"><?=$this->d($authorizationInfo->authorizedAt(), 'Y-m-d'); ?></span></td>
+                <td><span title="<?=$this->d($authorizationInfo->expiresAt()); ?>"><?=$this->d($authorizationInfo->expiresAt(), 'Y-m-d'); ?></span></td>
                 <td class="text-right">
                     <form class="frm" method="post" action="removeClientAuthorization">
                         <input type="hidden" name="auth_key" value="<?=$this->e($authorizationInfo->authKey()); ?>">
