@@ -22,14 +22,15 @@ class Storage
     public const CURRENT_SCHEMA_VERSION = '2021122701';
     private PDO $db;
 
-    public function __construct(PDO $db, string $schemaDir)
+    public function __construct(PDO $db, string $schemaDir, bool $allowInitMigrate = true)
     {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             $db->exec('PRAGMA foreign_keys = ON');
         }
-        // run database initialization/migration if necessary
-        Migration::run($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
+        // run database initialization/migration if necessary and enabled
+        Migration::run($db, $schemaDir, self::CURRENT_SCHEMA_VERSION, $allow9InitMigrate);
+
         $this->db = $db;
     }
 
