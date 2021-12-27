@@ -130,17 +130,16 @@ class NodeApiModule implements ServiceModuleInterface
         $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
         $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
         $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
+        $bytesIn = (int) $request->requirePostParameter('bytes_in', fn (string $s) => Validator::nonNegativeInt($s));
+        $bytesOut = (int) $request->requirePostParameter('bytes_out', fn (string $s) => Validator::nonNegativeInt($s));
         $disconnectedAt = (int) $request->requirePostParameter('disconnected_at', fn (string $s) => Validator::nonNegativeInt($s));
-//        $bytesTransferred = Validator::bytesTransferred($request->requirePostParameter('bytes_transferred'));
-        // XXX add bytesTransferred to some global table
-
         if (null === $userInfo = $this->storage->oUserInfoByCommonName($commonName)) {
             // CN does not exist (anymore)
             // XXX do we need to do something special?
             return;
         }
         $userId = $userInfo['user_id'];
-        $this->storage->clientDisconnect($userId, $profileId, $commonName, Dt::get(sprintf('@%d', $disconnectedAt)));
+        $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, Dt::get(sprintf('@%d', $disconnectedAt)));
         $this->logger->info(
             $this->logMessage('DISCONNECT', $userId, $profileId, $originatingIp, $ipFour, $ipSix)
         );

@@ -19,7 +19,7 @@ class Storage
     public const INCLUDE_EXPIRED = 1;
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
-    public const CURRENT_SCHEMA_VERSION = '2021122701';
+    public const CURRENT_SCHEMA_VERSION = '2021122702';
     private PDO $db;
 
     public function __construct(DbConfig $dbConfig)
@@ -728,7 +728,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function clientDisconnect(string $userId, string $profileId, string $connectionId, DateTimeImmutable $disconnectedAt): void
+    public function clientDisconnect(string $userId, string $profileId, string $connectionId, int $bytesIn, int $bytesOut, DateTimeImmutable $disconnectedAt): void
     {
         // XXX make sure the entry with disconnect_at IS NULL exists, otherwise scream
         $stmt = $this->db->prepare(
@@ -736,6 +736,8 @@ class Storage
                     UPDATE
                         connection_log
                     SET
+                        bytes_in = :bytes_in,
+                        bytes_out = :bytes_out,
                         disconnected_at = :disconnected_at
                     WHERE
                         user_id = :user_id
@@ -752,6 +754,8 @@ class Storage
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->bindValue(':disconnected_at', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':bytes_in', $bytesIn, PDO::PARAM_INT);
+        $stmt->bindValue(':bytes_out', $bytesOut, PDO::PARAM_INT);
         $stmt->execute();
     }
 

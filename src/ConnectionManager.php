@@ -237,7 +237,6 @@ class ConnectionManager
         }
         $profileConfig = $this->config->profileConfig($profileId);
 
-        $storageDisconnectAlreadyCalled = false;
         for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
             // we do not know whether the connectionId is for OpenVPN or
             // WireGuard, so try both
@@ -252,12 +251,10 @@ class ConnectionManager
                 if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
                     $this->storage->wPeerRemove($userId, $connectionId);
                 }
-                $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($i), $connectionId);
-                // we only should call "clientDisconnect" once, not for every
-                // node...
-                if (!$storageDisconnectAlreadyCalled) {
-                    $this->storage->clientDisconnect($userId, $profileId, $connectionId, new DateTimeImmutable());
-                    $storageDisconnectAlreadyCalled = true;
+                if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($i), $connectionId)) {
+                    // peer was connected to this node, use the information
+                    // we got back to call "clientDisconnect"
+                    $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], new DateTimeImmutable());
                 }
             }
         }
