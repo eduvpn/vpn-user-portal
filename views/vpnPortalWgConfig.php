@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */ ?>
 <?php /** @var \Vpn\Portal\WireGuard\ClientConfig $wireGuardClientConfig */ ?>
-<?php $this->layout('base', ['activeItem' => 'configurations', 'pageTitle' => $this->t('Configurations')]); ?>
+<?php $this->layout('base', ['activeItem' => 'home', 'pageTitle' => $this->t('Home')]); ?>
 <?php $this->start('content'); ?>
     <h2><?= $this->t('WireGuard Configuration'); ?></h2>
 <?php if (null !== $qrCode = $wireGuardClientConfig->getQr()): ?>

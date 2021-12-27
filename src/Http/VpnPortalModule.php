@@ -59,28 +59,12 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/home',
             function (UserInfo $userInfo, Request $request): Response {
-                return new HtmlResponse(
-                    $this->tpl->render(
-                        'vpnPortalHome',
-                        []
-                    )
-                );
-            }
-        );
-
-        $service->get(
-            '/configurations',
-            function (UserInfo $userInfo, Request $request): Response {
-                if (!$this->config->enableConfigDownload()) {
-                    throw new HttpException('downloading configuration files has been disabled by the admin', 403);
-                }
-
                 $profileConfigList = $this->config->profileConfigList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
                 return new HtmlResponse(
                     $this->tpl->render(
-                        'vpnPortalConfigurations',
+                        'vpnPortalHome',
                         [
                             'profileConfigList' => $visibleProfileList,
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
@@ -92,7 +76,7 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/configurations',
+            '/addConfig',
             function (UserInfo $userInfo, Request $request): Response {
                 if (!$this->config->enableConfigDownload()) {
                     throw new HttpException('downloading configuration files has been disabled by the admin', 403);
@@ -143,7 +127,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $request->requirePostParameter('connectionId', fn (string $s) => Validator::connectionId($s))
                 );
 
-                return new RedirectResponse($request->getRootUri().'configurations', 302);
+                return new RedirectResponse($request->getRootUri().'home', 302);
             }
         );
 

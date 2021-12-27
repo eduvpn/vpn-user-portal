@@ -1,15 +1,12 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
-<?php /** @var bool $enableConfigDownload */?>
 <?php /** @var bool $isAdmin */?>
 <?php /** @var string $activeItem */?>
 <?php
-$menuItems = [];
-$menuItems['home'] = $this->t('Home');
-if ($enableConfigDownload) {
-    $menuItems['configurations'] = $this->t('Configurations');
-}
-$menuItems['account'] = $this->t('Account');
+$menuItems = [
+    'home' => $this->t('Home'),
+    'account' => $this->t('Account'),
+];
 if ($isAdmin) {
     $menuItems['connections'] = $this->t('Connections');
     $menuItems['users'] = $this->t('Users');
