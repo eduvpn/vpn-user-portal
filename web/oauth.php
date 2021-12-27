@@ -46,7 +46,6 @@ try {
         $config->dbConfig($baseDir)->dbPass()
     );
     $storage = new Storage($db, $baseDir.'/schema');
-    $storage->update();
 
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
 

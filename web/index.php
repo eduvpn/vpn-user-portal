@@ -111,7 +111,6 @@ try {
         $config->dbConfig($baseDir)->dbPass()
     );
     $storage = new Storage($db, $baseDir.'/schema');
-    $storage->update();
 
     $cookieOptions = CookieOptions::init()->withPath($request->getRoot());
     if (!$config->secureCookie()) {

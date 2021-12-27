@@ -19,12 +19,8 @@ class Storage
     public const INCLUDE_EXPIRED = 1;
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
-
     public const CURRENT_SCHEMA_VERSION = '2021122701';
-
     private PDO $db;
-
-    private Migration $migration;
 
     public function __construct(PDO $db, string $schemaDir)
     {
@@ -32,8 +28,9 @@ class Storage
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             $db->exec('PRAGMA foreign_keys = ON');
         }
+        // run database initialization/migration if necessary
+        Migration::run($db, $schemaDir, self::CURRENT_SCHEMA_VERSION, true);
         $this->db = $db;
-        $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
     }
 
     public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?string $authKey): void
@@ -342,16 +339,6 @@ class Storage
         $resultColumn = $stmt->fetchColumn(0);
 
         return \is_string($resultColumn) ? $resultColumn : null;
-    }
-
-    public function init(): void
-    {
-        $this->migration->init();
-    }
-
-    public function update(): void
-    {
-        $this->migration->run();
     }
 
     /**

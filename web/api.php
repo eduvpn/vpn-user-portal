@@ -48,7 +48,6 @@ try {
     );
 
     $storage = new Storage($db, $baseDir.'/schema');
-    $storage->update();
 
     $oauthStorage = new OAuthStorage($db, 'oauth_');
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());

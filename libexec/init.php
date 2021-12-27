@@ -33,7 +33,6 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $storage->init();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 

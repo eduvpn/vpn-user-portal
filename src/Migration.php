@@ -20,68 +20,57 @@ use Vpn\Portal\Exception\MigrationException;
 
 class Migration
 {
-    public const NO_VERSION = '0000000000';
-
-    private PDO $dbh;
-    private string $schemaVersion;
-    private string $schemaDir;
-
-    public function __construct(PDO $dbh, string $schemaDir, string $schemaVersion)
-    {
-        $this->dbh = $dbh;
-        $this->schemaDir = $schemaDir;
-        $this->schemaVersion = self::validateSchemaVersion($schemaVersion);
-    }
-
-    /**
-     * Initialize the database using the schema file located in the schema
-     * directory with schema version.
-     */
-    public function init(): void
-    {
-        $this->runQueries(self::getQueriesFromFile($this->getNameForDriver(sprintf('%s/%s.schema', $this->schemaDir, $this->schemaVersion))));
-        $this->createVersionTable($this->schemaVersion);
-    }
-
     /**
      * Run the migration.
      */
-    public function run(): bool
+    public static function run(PDO $db, string $schemaDir, string $schemaVersion, bool $autoInitMigrate): void
     {
-        $currentVersion = $this->getCurrentVersion();
-        if ($currentVersion === $this->schemaVersion) {
-            // database schema is up to date, no update required
-            return false;
+        $currentVersion = self::getCurrentVersion($db);
+        if ($schemaVersion === $currentVersion) {
+            // up to date
+            return;
+        }
+
+        if (!$autoInitMigrate) {
+            throw new MigrationException('manual database initialization or migration required');
+        }
+
+        if (null === $currentVersion) {
+            // no tables yet, initialize database
+            self::runQueries($db, self::getQueriesFromFile(self::getNameForDriver($db, sprintf('%s/%s.schema', $schemaDir, $schemaVersion))));
+            self::createVersionTable($db, $schemaVersion);
+
+            return;
         }
 
         /** @var array<string>|false $migrationList */
-        $migrationList = glob($this->getNameForDriver(sprintf('%s/*_*.migration', $this->schemaDir)));
+        $migrationList = glob(self::getNameForDriver($db, sprintf('%s/*_*.migration', $schemaDir)));
         if (false === $migrationList) {
-            throw new RuntimeException(sprintf('unable to read schema directory "%s"', $this->schemaDir));
+            throw new RuntimeException(sprintf('unable to read schema directory "%s"', $schemaDir));
         }
 
-        $this->lock();
+        self::lock($db);
 
         try {
             foreach ($migrationList as $migrationFile) {
-                $migrationVersion = $this->getNameForDriver(basename($migrationFile, '.migration'));
+                $migrationVersion = self::getNameForDriver($db, basename($migrationFile, '.migration'));
                 [$fromVersion, $toVersion] = self::validateMigrationVersion($migrationVersion);
-                if ($fromVersion === $currentVersion && $fromVersion !== $this->schemaVersion) {
+                if ($fromVersion === $currentVersion && $fromVersion !== $schemaVersion) {
                     // get the queries before we start the transaction as we
                     // ONLY want to deal with "PDOExceptions" once the
                     // transacation started...
-                    $queryList = self::getQueriesFromFile($this->getNameForDriver(sprintf('%s/%s.migration', $this->schemaDir, $migrationVersion)));
+                    $queryList = self::getQueriesFromFile(self::getNameForDriver($db, sprintf('%s/%s.migration', $schemaDir, $migrationVersion)));
 
                     try {
-                        $this->dbh->beginTransaction();
-                        $this->dbh->exec(sprintf("DELETE FROM version WHERE current_version = '%s'", $fromVersion));
-                        $this->runQueries($queryList);
-                        $this->dbh->exec(sprintf("INSERT INTO version (current_version) VALUES('%s')", $toVersion));
-                        $this->dbh->commit();
+                        $db->beginTransaction();
+                        $db->exec(sprintf("DELETE FROM version WHERE current_version = '%s'", $fromVersion));
+                        self::runQueries($db, $queryList);
+                        $db->exec(sprintf("INSERT INTO version (current_version) VALUES('%s')", $toVersion));
+                        $db->commit();
                         $currentVersion = $toVersion;
                     } catch (PDOException $e) {
                         // something went wrong with the SQL queries
-                        $this->dbh->rollback();
+                        $db->rollback();
 
                         throw $e;
                     }
@@ -89,38 +78,36 @@ class Migration
             }
         } catch (Exception $e) {
             // something went wrong that was not related to SQL queries
-            $this->unlock();
+            self::unlock($db);
 
             throw $e;
         }
 
-        $this->unlock();
+        self::unlock($db);
 
-        $currentVersion = $this->getCurrentVersion();
-        if ($currentVersion !== $this->schemaVersion) {
-            throw new MigrationException(sprintf('unable to migrate to database schema version "%s", not all required migrations are available', $this->schemaVersion));
+        $currentVersion = self::getCurrentVersion($db);
+        if ($currentVersion !== $schemaVersion) {
+            throw new MigrationException(sprintf('unable to migrate to database schema version "%s", not all required migrations are available', $schemaVersion));
         }
-
-        return true;
     }
 
     /**
      * Gets the current version of the database schema.
      */
-    public function getCurrentVersion(): string
+    private static function getCurrentVersion(PDO $db): ?string
     {
         try {
-            $sth = $this->dbh->query('SELECT current_version FROM version');
+            $sth = $db->query('SELECT current_version FROM version');
             $currentVersion = $sth->fetchColumn();
             if (!\is_string($currentVersion)) {
+                // XXX this means database corruption?
                 throw new MigrationException('unable to retrieve current version');
             }
+            // XXX validate?
 
             return $currentVersion;
         } catch (PDOException $e) {
-            $this->createVersionTable(self::NO_VERSION);
-
-            return self::NO_VERSION;
+            return null;
         }
     }
 
@@ -128,9 +115,9 @@ class Migration
      * See if there is a file available specifically for this DB driver. If
      * so, use it, if not fallback to the "default".
      */
-    private function getNameForDriver(string $fileName): string
+    private static function getNameForDriver(PDO $db, string $fileName): string
     {
-        $driverName = $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $driverName = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
         if (file_exists($fileName.'.'.$driverName)) {
             return $fileName.'.'.$driverName;
         }
@@ -138,45 +125,45 @@ class Migration
         return $fileName;
     }
 
-    private function lock(): void
+    private static function lock(PDO $db): void
     {
         // this creates a "lock" as only one process will succeed in this...
-        $this->dbh->exec('CREATE TABLE _migration_in_progress (dummy INTEGER)');
+        $db->exec('CREATE TABLE _migration_in_progress (dummy INTEGER)');
 
-        if ('sqlite' === $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME)) {
-            $this->dbh->exec('PRAGMA foreign_keys = OFF');
+        if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            $db->exec('PRAGMA foreign_keys = OFF');
         }
     }
 
-    private function unlock(): void
+    private static function unlock(PDO $db): void
     {
-        if ('sqlite' === $this->dbh->getAttribute(PDO::ATTR_DRIVER_NAME)) {
-            $this->dbh->exec('PRAGMA foreign_keys = ON');
+        if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            $db->exec('PRAGMA foreign_keys = ON');
         }
 
         // release "lock"
-        $this->dbh->exec('DROP TABLE _migration_in_progress');
+        $db->exec('DROP TABLE _migration_in_progress');
     }
 
-    private function createVersionTable(string $schemaVersion): void
+    private static function createVersionTable(PDO $db, string $schemaVersion): void
     {
-        $this->dbh->exec('CREATE TABLE version (current_version TEXT NOT NULL)');
+        $db->exec('CREATE TABLE version (current_version TEXT NOT NULL)');
         // we know that schemaVersion is a 10 digit string as per
         // validateSchemaVersion
-        $this->dbh->exec(sprintf("INSERT INTO version (current_version) VALUES('%s')", $schemaVersion));
+        $db->exec(sprintf("INSERT INTO version (current_version) VALUES('%s')", $schemaVersion));
     }
 
     /**
      * @param array<string> $queryList
      */
-    private function runQueries(array $queryList): void
+    private static function runQueries(PDO $db, array $queryList): void
     {
         foreach ($queryList as $dbQuery) {
             if (0 === Binary::safeStrlen(trim($dbQuery))) {
                 // ignore empty line(s)
                 continue;
             }
-            $this->dbh->exec($dbQuery);
+            $db->exec($dbQuery);
         }
     }
 
@@ -212,6 +199,6 @@ class Migration
             throw new RangeException('migrationVersion must be two times a 10 digit string separated by an underscore');
         }
 
-        return explode('_', $migrationVersion);
+        return explode('_', $migrationVersion, 2);
     }
 }

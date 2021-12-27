@@ -48,7 +48,7 @@ try {
         ),
         $baseDir.'/schema'
     );
-    $storage->update();
+
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
 
     $service->addModule(

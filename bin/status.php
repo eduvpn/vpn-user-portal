@@ -116,7 +116,6 @@ try {
         $config->dbConfig($baseDir)->dbPass()
     );
     $storage = new Storage($db, $baseDir.'/schema');
-    $storage->update();
 
     $connectionManager = new ConnectionManager(
         $config,
