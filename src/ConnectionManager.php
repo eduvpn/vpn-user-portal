@@ -22,18 +22,24 @@ use Vpn\Portal\WireGuard\KeyPair;
  */
 class ConnectionManager
 {
+    /**
+     * Used to indicate the certificate/peer should NOT be deleted, e.g. when
+     * an account is disabled.
+     */
     public const DO_NOT_DELETE = 1;
 
     protected RandomInterface $random;
     private Config $config;
     private Storage $storage;
     private VpnDaemon $vpnDaemon;
+    private LoggerInterface $logger;
 
-    public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage)
+    public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->storage = $storage;
         $this->vpnDaemon = $vpnDaemon;
+        $this->logger = $logger;
         $this->random = new Random();
     }
 
@@ -158,16 +164,10 @@ class ConnectionManager
         }
         $profileConfig = $this->config->profileConfig($profileId);
 
-        // Connect to a random node...
-        // XXX we should probably detect whether a node is up, that is a much
-        // better approach than taking random node! need to extend the daemon
-        // to give more info on how it is used so we can direct traffic better
-        // XXX also maybe implement "weight" based on available IP space or
-        // about % in use by querying node?
+        // pick a random node
+        // XXX: pick a random one that's not down
         $nodeNumber = random_int(0, $profileConfig->nodeCount() - 1);
 
-        // XXX we have to allow the client to *prefer* a protocol, now it will
-        // always return openvpn if openvpn is supported...
         if ('openvpn' === $useProto && $profileConfig->oSupport()) {
             $commonName = Base64::encode($this->random->get(32));
             $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
@@ -207,7 +207,11 @@ class ConnectionManager
             // the DB enforces this, but maybe a better error could be given?
             $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
             $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
-            $this->storage->clientConnect($userId, $profileId, $publicKey, $ipFour, $ipSix, new DateTimeImmutable());
+            $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, new DateTimeImmutable());
+
+            $this->logger->info(
+                $this->logMessage('CONNECT', $userId, $profileId, $ipFour, $ipSix)
+            );
 
             return new WireGuardClientConfig(
                 $nodeNumber,
@@ -225,12 +229,22 @@ class ConnectionManager
 
     public function disconnect(string $userId, string $profileId, string $connectionId, int $optionFlags = 0): void
     {
+        if (null === $connectionInfo = $this->storage->clientConnectionInfo($userId, $profileId, $connectionId)) {
+            // no connection log entry exists for this user/profile/connection_id, do nothing
+            return;
+        }
+
         if (!$this->config->hasProfile($profileId)) {
             // profile does not exist (anymore)
             // try to delete them anyway if we are not prevented...
             if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                $this->storage->oCertDelete($userId, $connectionId);
-                $this->storage->wPeerRemove($userId, $connectionId);
+                if ('wireguard' === $connectionInfo['vpn_proto']) {
+                    $this->storage->oCertDelete($userId, $connectionId);
+                }
+                if ('openvpn' === $connectionInfo['vpn_proto']) {
+                    $this->storage->wPeerRemove($userId, $connectionId);
+                }
+                // if no protocol matches, ignore it
             }
 
             return;
@@ -238,16 +252,14 @@ class ConnectionManager
         $profileConfig = $this->config->profileConfig($profileId);
 
         for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-            // we do not know whether the connectionId is for OpenVPN or
-            // WireGuard, so try both
-            if ($profileConfig->oSupport()) {
+            if ('openvpn' === $connectionInfo['vpn_proto']) {
                 if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
                     $this->storage->oCertDelete($userId, $connectionId);
                 }
                 $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($i), $connectionId);
             }
 
-            if ($profileConfig->wSupport()) {
+            if ('wireguard' === $connectionInfo['vpn_proto']) {
                 if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
                     $this->storage->wPeerRemove($userId, $connectionId);
                 }
@@ -256,6 +268,9 @@ class ConnectionManager
                     // peer was connected to this node, use the information
                     // we got back to call "clientDisconnect"
                     $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], new DateTimeImmutable());
+                    $this->logger->info(
+                        $this->logMessage('DISCONNECT', $userId, $profileId, $connectionInfo['ip_four'], $connectionInfo['ip_six'])
+                    );
                 }
             }
         }
@@ -278,5 +293,26 @@ class ConnectionManager
         }
 
         throw new ConnectionManagerException('no free IP address');
+    }
+
+    private function logMessage(string $eventType, string $userId, string $profileId, string $ipFour, string $ipSix): string
+    {
+        return str_replace(
+            [
+                '{{EVENT_TYPE}}',
+                '{{USER_ID}}',
+                '{{PROFILE_ID}}',
+                '{{IP_FOUR}}',
+                '{{IP_SIX}}',
+            ],
+            [
+                $eventType,
+                $userId,
+                $profileId,
+                $ipFour,
+                $ipSix,
+            ],
+            $this->config->connectionLogFormat()
+        );
     }
 }

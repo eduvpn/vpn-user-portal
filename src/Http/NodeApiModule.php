@@ -117,7 +117,7 @@ class NodeApiModule implements ServiceModuleInterface
         // XXX use validator not bool returning option!
         $connectedAt = (int) $request->requirePostParameter('connected_at', fn (string $s) => Validator::nonNegativeInt($s));
         $userId = $this->verifyConnection($profileId, $commonName);
-        $this->storage->clientConnect($userId, $profileId, $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
+        $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
         $this->logger->info(
             $this->logMessage('CONNECT', $userId, $profileId, $originatingIp, $ipFour, $ipSix)
         );

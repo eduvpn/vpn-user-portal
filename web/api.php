@@ -68,7 +68,7 @@ try {
             $config,
             $storage,
             $serverInfo,
-            new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger), $storage)
+            new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger), $storage, $logger)
         )
     );
 

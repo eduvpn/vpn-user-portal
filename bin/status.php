@@ -16,6 +16,7 @@ use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\Json;
+use Vpn\Portal\NullLogger;
 use Vpn\Portal\ProfileConfig;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -114,7 +115,8 @@ try {
     $connectionManager = new ConnectionManager(
         $config,
         new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger),
-        $storage
+        $storage,
+        new NullLogger()
     );
 
     $outputData = [];

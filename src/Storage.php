@@ -19,7 +19,7 @@ class Storage
     public const INCLUDE_EXPIRED = 1;
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
-    public const CURRENT_SCHEMA_VERSION = '2021122702';
+    public const CURRENT_SCHEMA_VERSION = '2021122801';
     private PDO $db;
 
     public function __construct(DbConfig $dbConfig)
@@ -694,7 +694,7 @@ class Storage
         return (bool) $stmt->fetchColumn(0);
     }
 
-    public function clientConnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
+    public function clientConnect(string $userId, string $profileId, string $vpnProto, string $connectionId, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -702,6 +702,7 @@ class Storage
                         (
                             user_id,
                             profile_id,
+                            vpn_proto,
                             connection_id,
                             ip_four,
                             ip_six,
@@ -711,6 +712,7 @@ class Storage
                         (
                             :user_id,
                             :profile_id,
+                            :vpn_proto,
                             :connection_id,
                             :ip_four,
                             :ip_six,
@@ -721,11 +723,54 @@ class Storage
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->bindValue(':vpn_proto', $vpnProto, PDO::PARAM_STR);
         $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
         $stmt->bindValue(':connected_at', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
+    }
+
+    /**
+     * @return array{vpn_proto:string,ip_four:string,ip_six:string}
+     */
+    public function clientConnectionInfo(string $userId, string $profileId, string $connectionId): ?array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    SELECT
+                        user_id,
+                        profile_id,
+                        vpn_proto,
+                        ip_four,
+                        ip_six
+                    FROM
+                        connection_log
+                    WHERE
+                        user_id= :user_id
+                    AND
+                        profile_id = :profile_id
+                    AND
+                        connection_id = :connection_id
+                    AND
+                        disconnect_at IS NULL
+                SQL
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
+        $stmt->execute();
+        $logEntry = [];
+        if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            return null;
+        }
+
+        return [
+            'vpn_proto' => (string) $resultRow['vpn_proto'],
+            'ip_four' => (string) $resultRow['ip_four'],
+            'ip_six' => (string) $resultRow['ip_six'],
+        ];
     }
 
     public function clientDisconnect(string $userId, string $profileId, string $connectionId, int $bytesIn, int $bytesOut, DateTimeImmutable $disconnectedAt): void

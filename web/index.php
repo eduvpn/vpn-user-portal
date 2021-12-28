@@ -225,7 +225,7 @@ try {
     );
 
     $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger);
-    $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage);
+    $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(

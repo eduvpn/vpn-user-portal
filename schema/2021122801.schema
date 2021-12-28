@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS wg_peers (
 CREATE TABLE IF NOT EXISTS connection_log(
     user_id VARCHAR(255) NOT NULL,
     profile_id VARCHAR(255) NOT NULL,
+    vpn_proto VARCHAR(255) NOT NULL,
     connection_id VARCHAR(255) NOT NULL,
     ip_four VARCHAR(255) NOT NULL,
     ip_six VARCHAR(255) NOT NULL,
