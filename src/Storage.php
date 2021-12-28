@@ -753,7 +753,7 @@ class Storage
                     AND
                         connection_id = :connection_id
                     AND
-                        disconnect_at IS NULL
+                        disconnected_at IS NULL
                 SQL
         );
 
@@ -775,7 +775,7 @@ class Storage
 
     public function clientDisconnect(string $userId, string $profileId, string $connectionId, int $bytesIn, int $bytesOut, DateTimeImmutable $disconnectedAt): void
     {
-        // XXX make sure the entry with disconnect_at IS NULL exists, otherwise scream
+        // XXX make sure the entry with disconnected_at IS NULL exists, otherwise scream
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     UPDATE
