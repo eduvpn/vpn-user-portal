@@ -216,7 +216,7 @@ class ConnectionManager
                 $ipFour,
                 $ipSix,
                 $serverInfo->wgPublicKey(),
-                $this->config->wgPort()
+                $this->config->wireGuardConfig()->listenPort()
             );
         }
 

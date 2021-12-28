@@ -131,9 +131,9 @@ class Config
         return $this->requireBool('showPermissions', false);
     }
 
-    public function wgPort(): int
+    public function wireGuardConfig(): WireGuardConfig
     {
-        return $this->requireInt('wgPort', 51820);
+        return new WireGuardConfig($this->s('WireGuard')->toArray());
     }
 
     public function hasProfile(string $profileId): bool

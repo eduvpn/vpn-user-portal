@@ -190,10 +190,18 @@ return [
     //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]',
     //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{ORIGINATING_IP}} => {{IP_FOUR}},{{IP_SIX}}]',
 
-    // The UDP port used by WireGuard
-    // OPTIONAL, DEFAULT = 51820
-    //'wgPort' => 51820,
-    //'wgPort' => 443,
+    //'WireGuard' => [
+    //    // The UDP port used by WireGuard
+    //    // OPTIONAL, DEFAULT = 51820
+    //    'listenPort' => 51820,
+    //    //'listenPort' => 443,
+    //
+    //    // The time an IP address registration remains valid for *API clients*
+    //    // not seen during that window (upper limit constrained by
+    //    // "sessionExpiry")
+    //    // OPTIONAL, DEFAULT = sessionExpiry
+    //    //'apiLeaseTime' => 'PT24H',
+    //],
 
     // OPTIONAL, DEFAULT = 'FileSessionModule'
     //'sessionModule' => 'FileSessionModule',
