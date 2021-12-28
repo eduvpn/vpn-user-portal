@@ -195,12 +195,6 @@ return [
     //    // OPTIONAL, DEFAULT = 51820
     //    'listenPort' => 51820,
     //    //'listenPort' => 443,
-    //
-    //    // The time an IP address registration remains valid for *API clients*
-    //    // not seen during that window (upper limit constrained by
-    //    // "sessionExpiry")
-    //    // OPTIONAL, DEFAULT = sessionExpiry
-    //    //'apiLeaseTime' => 'PT24H',
     //],
 
     // OPTIONAL, DEFAULT = 'FileSessionModule'
