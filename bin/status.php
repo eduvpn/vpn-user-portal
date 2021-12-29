@@ -46,8 +46,7 @@ function showHelp(array $argv): void
     echo '--json                use JSON output format'.\PHP_EOL;
     echo '--alert [percentage]  only show entries where IP space use is over specified'.\PHP_EOL;
     echo '                      percentage. The default percentage for --alert is 90 '.\PHP_EOL;
-    echo '--connections         include connected clients (only with --json and when'.\PHP_EOL;
-    echo '                      using vpn-daemon)'.\PHP_EOL;
+    echo '--connections         include connected clients (only with --json)'.\PHP_EOL;
 }
 
 function outputConversion(array $outputData, bool $asJson): void
