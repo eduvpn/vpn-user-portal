@@ -212,14 +212,14 @@ try {
     $service->addBeforeHook($adminHook);
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
-    $wireGuardServerConfig = new WireGuardServerConfig(FileIO::readFile($baseDir.'/config/wireguard.secret.key'), $config->wireGuardConfig()->listenPort());
+    $wireGuardServerConfig = new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort());
     $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
     $oauthSigner = new Signer($oauthKey);
     $tlsCrypt = new TlsCrypt($baseDir.'/data');
     $serverInfo = new ServerInfo(
+        $baseDir,
         $ca,
         $tlsCrypt,
-        FileIO::readFile($baseDir.'/config/wireguard.public.key'),
         $config->wireGuardConfig()->listenPort(),
         Signer::publicKeyFromSecretKey($oauthKey)
     );

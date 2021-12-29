@@ -12,24 +12,32 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http\Auth;
 
 use Vpn\Portal\Binary;
+use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
+use Vpn\Portal\Validator;
 
 class NodeAuthModule extends AbstractAuthModule
 {
-    private string $authToken;
+    private string $baseDir;
     private string $authRealm;
 
-    public function __construct(string $authToken, string $authRealm = 'Protected Area')
+    public function __construct(string $baseDir, string $authRealm = 'Protected Area')
     {
-        $this->authToken = $authToken;
+        $this->baseDir = $baseDir;
         $this->authRealm = $authRealm;
     }
 
     public function userInfo(Request $request): ?UserInfo
     {
+        if (null === $nodeNumber = $request->optionalHeader('HTTP_X_NODE_NUMBER')) {
+            return null;
+        }
+        // make sure nodeNumber is int >= 0
+        Validator::nodeNumber($nodeNumber);
+
         if (null === $authHeader = $request->optionalHeader('HTTP_AUTHORIZATION')) {
             return null;
         }
@@ -37,11 +45,18 @@ class NodeAuthModule extends AbstractAuthModule
             return null;
         }
         $userAuthToken = Binary::safeSubstr($authHeader, 7);
-        if (!hash_equals($this->authToken, $userAuthToken)) {
+
+        // get the node key for this node number
+        $nodeKeyFile = sprintf('%s/config/node.%d.key', $this->baseDir, $nodeNumber);
+        if (!FileIO::exists($nodeKeyFile)) {
             return null;
         }
 
-        return new UserInfo('vpn-server-node', []);
+        if (!hash_equals(FileIO::readFile($nodeKeyFile), $userAuthToken)) {
+            return null;
+        }
+
+        return new UserInfo($nodeNumber, []);
     }
 
     public function startAuth(Request $request): ?Response

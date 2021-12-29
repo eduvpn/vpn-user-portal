@@ -13,7 +13,6 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Config;
-use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\Auth\NodeAuthModule;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\NodeApiModule;
@@ -35,7 +34,7 @@ try {
     $service = new Service();
     $service->setAuthModule(
         new NodeAuthModule(
-            FileIO::readFile($baseDir.'/config/node.key'),
+            $baseDir,
             'Node API'
         )
     );
@@ -49,7 +48,7 @@ try {
             $storage,
             new ServerConfig(
                 new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data')),
-                new WireGuardServerConfig(FileIO::readFile($baseDir.'/config/wireguard.secret.key'), $config->wireGuardConfig()->listenPort()),
+                new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort()),
             ),
             new SysLogger('vpn-user-portal-node-api')
         )

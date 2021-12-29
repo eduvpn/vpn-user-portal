@@ -16,7 +16,6 @@ use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Config;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
-use Vpn\Portal\WireGuard\KeyPair;
 
 // allow group to read the created files/folders
 umask(0027);
@@ -31,19 +30,10 @@ try {
     }
 
     // Node Key
-    $nodeKeyFile = $baseDir.'/config/node.key';
+    $nodeKeyFile = $baseDir.'/config/node.0.key';
     if (!FileIO::exists($nodeKeyFile)) {
         $secretKey = random_bytes(32);
         FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey));
-    }
-
-    // WireGuard Key
-    $wgSecretKeyFile = $baseDir.'/config/wireguard.secret.key';
-    $wgPublicKeyFile = $baseDir.'/config/wireguard.public.key';
-    if (!FileIO::exists($wgSecretKeyFile) && !FileIO::exists($wgPublicKeyFile)) {
-        $keyPair = KeyPair::generate();
-        FileIO::writeFile($wgSecretKeyFile, $keyPair['secret_key']);
-        FileIO::writeFile($wgPublicKeyFile, $keyPair['public_key']);
     }
 
     // OpenVPN CA

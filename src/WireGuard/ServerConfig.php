@@ -11,21 +11,23 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\WireGuard;
 
+use Vpn\Portal\FileIO;
+
 class ServerConfig
 {
-    private string $secretKey;
+    private string $baseDir;
     private int $wgPort;
 
-    public function __construct(string $secretKey, int $wgPort)
+    public function __construct(string $baseDir, int $wgPort)
     {
-        $this->secretKey = $secretKey;
+        $this->baseDir = $baseDir;
         $this->wgPort = $wgPort;
     }
 
     /**
      * @param array<\Vpn\Portal\ProfileConfig> $profileConfigList
      */
-    public function get(array $profileConfigList, int $nodeNumber): ?string
+    public function get(array $profileConfigList, int $nodeNumber, string $publicKey): ?string
     {
         $ipFourList = [];
         $ipSixList = [];
@@ -44,11 +46,18 @@ class ServerConfig
             return null;
         }
 
+        $publicKeyFile = sprintf('%s/data/wireguard.%d.public.key', $this->baseDir, $nodeNumber);
+        if (!FileIO::exists($publicKeyFile)) {
+            // XXX what should we do when file exists? compare and scream when
+            // it is not the same anymore?
+            FileIO::writeFile($publicKeyFile, $publicKey);
+        }
+
         return <<< EOF
             [Interface]
             Address = {$ipList}
             ListenPort = {$this->wgPort}
-            PrivateKey = {$this->secretKey}
+            PrivateKey = {{PRIVATE_KEY}}
             EOF;
     }
 }

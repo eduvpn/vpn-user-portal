@@ -54,11 +54,11 @@ try {
     );
     $service = new ApiService($bearerValidator);
 
-    $wireGuardServerConfig = new WireGuardServerConfig(FileIO::readFile($baseDir.'/config/wireguard.secret.key'), $config->wireGuardConfig()->listenPort());
+    $wireGuardServerConfig = new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort());
     $serverInfo = new ServerInfo(
+        $baseDir,
         $ca,
         new TlsCrypt($baseDir.'/data'),
-        FileIO::readFile($baseDir.'/config/wireguard.public.key'),
         $config->wireGuardConfig()->listenPort(),
         Signer::publicKeyFromSecretKey($oauthKey)
     );

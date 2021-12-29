@@ -16,17 +16,17 @@ use Vpn\Portal\OpenVpn\TlsCrypt;
 
 class ServerInfo
 {
+    private string $baseDir;
     private CaInterface $ca;
     private TlsCrypt $tlsCrypt;
-    private string $wgPublicKey;
     private int $wgPort;
     private string $oauthPublicKey;
 
-    public function __construct(CaInterface $ca, TlsCrypt $tlsCrypt, string $wgPublicKey, int $wgPort, string $oauthPublicKey)
+    public function __construct(string $baseDir, CaInterface $ca, TlsCrypt $tlsCrypt, int $wgPort, string $oauthPublicKey)
     {
+        $this->baseDir = $baseDir;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
-        $this->wgPublicKey = $wgPublicKey;
         $this->wgPort = $wgPort;
         $this->oauthPublicKey = $oauthPublicKey;
     }
@@ -41,9 +41,14 @@ class ServerInfo
         return $this->tlsCrypt;
     }
 
-    public function wgPublicKey(): string
+    public function publicKey(int $nodeNumber): ?string
     {
-        return $this->wgPublicKey;
+        $publicKeyFile = sprintf('%s/data/wireguard.%d.public.key', $this->baseDir, $nodeNumber);
+        if (!FileIO::exists($publicKeyFile)) {
+            return null;
+        }
+
+        return FileIO::readFile($publicKeyFile);
     }
 
     public function wgPort(): int

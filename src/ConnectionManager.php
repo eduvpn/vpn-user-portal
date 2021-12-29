@@ -193,6 +193,12 @@ class ConnectionManager
 
         if ('wireguard' === $useProto && $profileConfig->wSupport()) {
             // WireGuard
+
+            // make sure the node registered their public key with us
+            if (null === $serverPublicKey = $serverInfo->publicKey($nodeNumber)) {
+                throw new ConnectionManagerException(sprintf('node "%d" did not yet register their WireGuard public key', $nodeNumber));
+            }
+
             $privateKey = null;
             if (null === $publicKey) {
                 $keyPair = KeyPair::generate();
@@ -219,7 +225,7 @@ class ConnectionManager
                 $privateKey,
                 $ipFour,
                 $ipSix,
-                $serverInfo->wgPublicKey(),
+                $serverPublicKey,
                 $this->config->wireGuardConfig()->listenPort()
             );
         }

@@ -30,7 +30,7 @@ class ServerConfig
      *
      * @return array<string,string>
      */
-    public function get(array $profileConfigList, int $nodeNumber, bool $cpuHasAes): array
+    public function get(array $profileConfigList, int $nodeNumber, string $publicKey, bool $cpuHasAes): array
     {
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
@@ -39,7 +39,7 @@ class ServerConfig
             }
         }
 
-        if (null === $wgConfig = $this->wireGuardServerConfig->get($profileConfigList, $nodeNumber)) {
+        if (null === $wgConfig = $this->wireGuardServerConfig->get($profileConfigList, $nodeNumber, $publicKey)) {
             // no WireGuard profiles
             return $serverConfig;
         }
