@@ -164,13 +164,21 @@ class ConnectionManager
         }
         $profileConfig = $this->config->profileConfig($profileId);
 
+        // try to find a usable node to connect to, loop over all of them in a
+        // random order until we find one that responds, this algorithm can use
+        // some tweaking, e.g. consider the load of a node instead of just
+        // checking whether it is up
         $nodeNumber = null;
-        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-            if (null !== $nodeNumber = $this->randomNode($profileConfig)) {
+        $nodeList = range(0, $profileConfig->nodeCount() - 1);
+        shuffle($nodeList);
+        foreach ($nodeList as $i) {
+            if (null !== $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($i))) {
+                $nodeNumber = $i;
+
                 break;
             }
+            $this->logger->warning('VPN node "'.$i.'" is not usable');
         }
-
         if (null === $nodeNumber) {
             throw new ConnectionManagerException('unable to find acceptable VPN node');
         }
@@ -287,17 +295,6 @@ class ConnectionManager
                 }
             }
         }
-    }
-
-    private function randomNode(ProfileConfig $profileConfig): ?int
-    {
-        $nodeCount = $profileConfig->nodeCount();
-        $nodeNumber = random_int(0, $nodeCount - 1);
-        if (null !== $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($nodeNumber))) {
-            return $nodeNumber;
-        }
-
-        return null;
     }
 
     /**
