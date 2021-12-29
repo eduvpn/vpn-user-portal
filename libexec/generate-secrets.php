@@ -21,8 +21,39 @@ use Vpn\Portal\OpenVpn\CA\VpnCa;
 umask(0027);
 
 try {
-    $config = Config::fromFile($baseDir.'/config/config.php');
+    $nodeNumberStr = null;
+    for ($i = 1; $i < $argc; ++$i) {
+        if ('--node' === $argv[$i]) {
+            if ($i + 1 < $argc) {
+                $nodeNumberStr = $argv[$i + 1];
+            }
 
+            continue;
+        }
+        if ('--help' === $argv[$i]) {
+            echo 'SYNTAX: '.$argv[0].' [--node NODE_NUMBER]'.\PHP_EOL;
+
+            exit(0);
+        }
+    }
+
+    if (null !== $nodeNumberStr) {
+        // generate a secret for the specified node number
+        $nodeNumber = (int) $nodeNumberStr;
+        if ($nodeNumber < 0) {
+            throw new Exception('--node MUST be followed by a number >= 0');
+        }
+        // Node Key
+        $nodeKeyFile = $baseDir.'/config/node.'.$nodeNumber.'.key';
+        if (!FileIO::exists($nodeKeyFile)) {
+            $secretKey = random_bytes(32);
+            FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey));
+        }
+
+        exit(0);
+    }
+
+    $config = Config::fromFile($baseDir.'/config/config.php');
     // OAuth key
     $apiKeyFile = $baseDir.'/config/oauth.key';
     if (!FileIO::exists($apiKeyFile)) {
