@@ -164,9 +164,16 @@ class ConnectionManager
         }
         $profileConfig = $this->config->profileConfig($profileId);
 
-        // pick a random node
-        // XXX: pick a random one that's not down
-        $nodeNumber = random_int(0, $profileConfig->nodeCount() - 1);
+        $nodeNumber = null;
+        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
+            if (null !== $nodeNumber = $this->randomNode($profileConfig)) {
+                break;
+            }
+        }
+
+        if (null === $nodeNumber) {
+            throw new ConnectionManagerException('unable to find acceptable VPN node');
+        }
 
         if ('openvpn' === $useProto && $profileConfig->oSupport()) {
             $commonName = Base64::encode($this->random->get(32));
@@ -280,6 +287,17 @@ class ConnectionManager
                 }
             }
         }
+    }
+
+    private function randomNode(ProfileConfig $profileConfig): ?int
+    {
+        $nodeCount = $profileConfig->nodeCount();
+        $nodeNumber = random_int(0, $nodeCount - 1);
+        if (null !== $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($nodeNumber))) {
+            return $nodeNumber;
+        }
+
+        return null;
     }
 
     /**
