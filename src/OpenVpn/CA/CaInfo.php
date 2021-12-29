@@ -29,7 +29,7 @@ class CaInfo
 
     public function pemCert(): string
     {
-        return $this->pemCert;
+        return trim($this->pemCert);
     }
 
     public function validFrom(): DateTimeImmutable

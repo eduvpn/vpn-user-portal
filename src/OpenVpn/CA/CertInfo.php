@@ -31,12 +31,12 @@ class CertInfo
 
     public function pemCert(): string
     {
-        return $this->pemCert;
+        return trim($this->pemCert);
     }
 
     public function pemKey(): string
     {
-        return $this->pemKey;
+        return trim($this->pemKey);
     }
 
     public function validFrom(): DateTimeImmutable
