@@ -35,9 +35,9 @@ class Config
         return new DateInterval($this->requireString('caExpiry', 'P10Y'));
     }
 
-    public function maxActivePortalConfigurations(): ?int
+    public function maxActiveConfigurations(): ?int
     {
-        return $this->optionalInt('maxActivePortalConfigurations');
+        return $this->optionalInt('maxActiveConfigurations');
     }
 
     public function secureCookie(): bool

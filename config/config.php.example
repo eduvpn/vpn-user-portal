@@ -179,10 +179,12 @@ return [
     // Limit the number of active VPN configurations downloaded through the
     // Portal. When this limit has been reached, an old(er) one needs to be
     // deleted first...
+    // See also maxActiveConfigurations under [Api] to limit API client
+    // configuration downloads
     // OPTIONAL, DEFAULT = null (no limit)
-    //'maxActivePortalConfigurations' => 3,
+    //'maxActiveConfigurations' => 3,
     // do NOT allow any portal configurations downloads, allow VPN apps only
-    //'maxActivePortalConfigurations' => 0,
+    //'maxActiveConfigurations' => 0,
 
     // Determine what to log to "syslog"
     // NOTE: "{{ORIGINATING_IP}}" only works with OpenVPN connections
@@ -194,6 +196,8 @@ return [
     //    // Limit the number of active VPN configurations through the API.
     //    // Effectively this means that the user can have this many VPN apps
     //    // connected simultaneously.
+    //    // See also maxActiveConfigurations outside [Api] to limit portal
+    //    // configuration downloads
     //    // OPTIONAL, DEFAULT = null (no limit)
     //    //'maxActiveConfigurations' => 3,
     //    // do NOT allow any API configurations downloads, allow portal downloads

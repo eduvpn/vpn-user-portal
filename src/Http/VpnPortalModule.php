@@ -63,7 +63,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
                 $numberOfActivePortalConfigurations = 0;
-                if (null !== $maxActivePortalConfigurations = $this->config->maxActivePortalConfigurations()) {
+                if (null !== $maxActiveConfigurations = $this->config->maxActiveConfigurations()) {
                     // only hit the database to count the number of active
                     // configurations when there *is* a limit set
                     $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
@@ -73,7 +73,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalHome',
                         [
-                            'maxActivePortalConfigurations' => $maxActivePortalConfigurations,
+                            'maxActiveConfigurations' => $maxActiveConfigurations,
                             'numberOfActivePortalConfigurations' => $numberOfActivePortalConfigurations,
                             'profileConfigList' => $visibleProfileList,
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
@@ -87,13 +87,13 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/addConfig',
             function (UserInfo $userInfo, Request $request): Response {
-                $maxActivePortalConfigurations = $this->config->maxActivePortalConfigurations();
-                if (null !== $maxActivePortalConfigurations) {
-                    if (0 === $maxActivePortalConfigurations) {
+                $maxActiveConfigurations = $this->config->maxActiveConfigurations();
+                if (null !== $maxActiveConfigurations) {
+                    if (0 === $maxActiveConfigurations) {
                         throw new HttpException('no portal configuration downloads allowed', 403);
                     }
                     $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
-                    if ($numberOfActivePortalConfigurations >= $maxActivePortalConfigurations) {
+                    if ($numberOfActivePortalConfigurations >= $maxActiveConfigurations) {
                         throw new HttpException('limit of available portal configuration downloads has been reached', 403);
                     }
                 }
