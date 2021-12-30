@@ -997,8 +997,8 @@ class Storage
     }
 
     /**
-     * Get the number of non-expired WireGuard and OpenVPN configurations for a
-     * particular user.
+     * Get the number of non-expired WireGuard and OpenVPN *portal*
+     * configurations for a particular user.
      */
     public function numberOfActivePortalConfigurations(string $userId, DateTimeImmutable $dateTime): int
     {
@@ -1013,6 +1013,8 @@ class Storage
                             WHERE
                                 user_id = :user_id
                             AND
+                                auth_key IS NULL
+                            AND
                                 expires_at > :date_time
                         UNION ALL
                             SELECT
@@ -1021,6 +1023,8 @@ class Storage
                                 certificates
                             WHERE
                                 user_id = :user_id
+                            AND
+                                auth_key IS NULL
                             AND
                                 expires_at > :date_time
                         ) AS c
