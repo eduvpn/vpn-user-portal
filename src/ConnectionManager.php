@@ -250,19 +250,20 @@ class ConnectionManager
 
     public function disconnect(string $userId, string $profileId, string $connectionId, int $optionFlags = 0): void
     {
-        if (null === $connectionInfo = $this->storage->clientConnectionInfo($userId, $profileId, $connectionId)) {
-            // no connection log entry exists for this user/profile/connection_id, do nothing
+        $vpnProto = $this->storage->vpnProto($userId, $profileId, $connectionId);
+        if (null === $vpnProto) {
+            // the connectionId did not exist
             return;
         }
 
         if (!$this->config->hasProfile($profileId)) {
             // profile does not exist (anymore)
-            // try to delete them anyway if we are not prevented...
+            // try to delete connectionId anyway if we are not prevented...
             if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                if ('wireguard' === $connectionInfo['vpn_proto']) {
+                if ('wireguard' === $vpnProto) {
                     $this->storage->oCertDelete($userId, $connectionId);
                 }
-                if ('openvpn' === $connectionInfo['vpn_proto']) {
+                if ('openvpn' === $vpnProto) {
                     $this->storage->wPeerRemove($userId, $connectionId);
                 }
                 // if no protocol matches, ignore it
@@ -273,14 +274,14 @@ class ConnectionManager
         $profileConfig = $this->config->profileConfig($profileId);
 
         for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-            if ('openvpn' === $connectionInfo['vpn_proto']) {
+            if ('openvpn' === $vpnProto) {
                 if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
                     $this->storage->oCertDelete($userId, $connectionId);
                 }
                 $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($i), $connectionId);
             }
 
-            if ('wireguard' === $connectionInfo['vpn_proto']) {
+            if ('wireguard' === $vpnProto) {
                 if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
                     $this->storage->wPeerRemove($userId, $connectionId);
                 }
@@ -290,7 +291,7 @@ class ConnectionManager
                     // we got back to call "clientDisconnect"
                     $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], new DateTimeImmutable());
                     $this->logger->info(
-                        $this->logMessage('DISCONNECT', $userId, $profileId, $connectionInfo['ip_four'], $connectionInfo['ip_six'])
+                        $this->logMessage('DISCONNECT', $userId, $profileId, '*', '*')
                     );
                 }
             }

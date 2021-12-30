@@ -731,46 +731,42 @@ class Storage
         $stmt->execute();
     }
 
-    /**
-     * @return array{vpn_proto:string,ip_four:string,ip_six:string}
-     */
-    public function clientConnectionInfo(string $userId, string $profileId, string $connectionId): ?array
+    public function vpnProto(string $userId, string $profileId, string $connectionId): ?string
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
-                    SELECT
-                        user_id,
-                        profile_id,
-                        vpn_proto,
-                        ip_four,
-                        ip_six
-                    FROM
-                        connection_log
-                    WHERE
-                        user_id= :user_id
-                    AND
-                        profile_id = :profile_id
-                    AND
-                        connection_id = :connection_id
-                    AND
-                        disconnected_at IS NULL
+                SELECT
+                    (
+                        SELECT
+                            COUNT(*)
+                        FROM
+                            wg_peers
+                        WHERE
+                            public_key = :connection_id
+                    ) AS w_count,
+                    (
+                        SELECT
+                            COUNT(*)
+                        FROM
+                            certificates
+                        WHERE
+                            common_name = :connection_id
+                    ) AS o_count
                 SQL
         );
-
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->execute();
-        $logEntry = [];
         if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
             return null;
         }
+        if (1 === (int) $resultRow['w_count']) {
+            return 'wireguard';
+        }
+        if (1 === (int) $resultRow['o_count']) {
+            return 'openvpn';
+        }
 
-        return [
-            'vpn_proto' => (string) $resultRow['vpn_proto'],
-            'ip_four' => (string) $resultRow['ip_four'],
-            'ip_six' => (string) $resultRow['ip_six'],
-        ];
+        return null;
     }
 
     public function clientDisconnect(string $userId, string $profileId, string $connectionId, int $bytesIn, int $bytesOut, DateTimeImmutable $disconnectedAt): void
