@@ -19,7 +19,7 @@ class Storage
     public const INCLUDE_EXPIRED = 1;
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
-    public const CURRENT_SCHEMA_VERSION = '2021122801';
+    public const CURRENT_SCHEMA_VERSION = '2021123001';
     private PDO $db;
 
     public function __construct(DbConfig $dbConfig)
@@ -43,7 +43,7 @@ class Storage
         return $this->db;
     }
 
-    public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $expiresAt, ?string $authKey): void
+    public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, DateTimeImmutable $expiresAt, ?string $authKey): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -56,6 +56,7 @@ class Storage
                         public_key,
                         ip_four,
                         ip_six,
+                        created_at,
                         expires_at,
                         auth_key
                     )
@@ -66,6 +67,7 @@ class Storage
                         :public_key,
                         :ip_four,
                         :ip_six,
+                        :created_at,
                         :expires_at,
                         :auth_key
                     )
@@ -78,6 +80,7 @@ class Storage
         $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
         $stmt->bindValue(':ip_four', $ipFour, PDO::PARAM_STR);
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
+        $stmt->bindValue(':created_at', $createdAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':expires_at', $expiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':auth_key', $authKey ?? null, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
@@ -442,20 +445,21 @@ class Storage
         $stmt->execute();
     }
 
-    public function oCertAdd(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $expiresAt, ?string $authKey): void
+    public function oCertAdd(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $createdAt, DateTimeImmutable $expiresAt, ?string $authKey): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     INSERT INTO certificates
-                        (profile_id, common_name, user_id, display_name, expires_at, auth_key)
+                        (profile_id, common_name, user_id, display_name, created_at, expires_at, auth_key)
                     VALUES
-                        (:profile_id, :common_name, :user_id, :display_name, :expires_at, :auth_key)
+                        (:profile_id, :common_name, :user_id, :display_name, :created_at, :expires_at, :auth_key)
                 SQL
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':display_name', $displayName, PDO::PARAM_STR);
+        $stmt->bindValue(':created_at', $createdAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':expires_at', $expiresAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':auth_key', $authKey ?? null, PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->execute();
@@ -981,39 +985,38 @@ class Storage
     }
 
     /**
-     * Get the number of non-expired WireGuard and OpenVPN *API*
-     * configurations for a particular user.
+     * Get the non-expired WireGuard and OpenVPN *API* configurations for a
+     * particular user.
+     *
+     * @return array<array{profile_id:string,connection_id:string}>
      */
-    public function numberOfActiveApiConfigurations(string $userId, DateTimeImmutable $dateTime): int
+    public function activeApiConfigurations(string $userId, DateTimeImmutable $dateTime): array
     {
-        // NOTE: this query is almost identical to the one in
-        // numberOfActivePortalConfigurations, IS NOT NULL vs IS NULL
         $stmt = $this->db->prepare(
             <<< 'SQL'
-                        SELECT SUM(c)
-                        FROM (
-                            SELECT
-                                COUNT(public_key) AS c
-                            FROM
-                                wg_peers
-                            WHERE
-                                user_id = :user_id
-                            AND
-                                auth_key IS NOT NULL
-                            AND
-                                expires_at > :date_time
-                        UNION ALL
-                            SELECT
-                                COUNT(common_name) AS c
-                            FROM
-                                certificates
-                            WHERE
-                                user_id = :user_id
-                            AND
-                                auth_key IS NOT NULL
-                            AND
-                                expires_at > :date_time
-                        ) AS c
+                SELECT
+                    profile_id, common_name AS connection_id, created_at
+                FROM
+                    certificates
+                WHERE
+                    user_id = :user_id
+                AND
+                    auth_key IS NOT NULL
+                AND
+                    expires_at > :date_time
+                UNION
+                SELECT
+                    profile_id, public_key AS connection_id, created_at
+                FROM
+                    wg_peers
+                WHERE
+                    user_id = :user_id
+                AND
+                    auth_key IS NOT NULL
+                AND
+                    expires_at > :date_time
+                ORDER BY
+                    created_at
                 SQL
         );
 
@@ -1021,7 +1024,15 @@ class Storage
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
 
-        return (int) $stmt->fetchColumn();
+        $activeApiConfigurations = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $activeApiConfigurations[] = [
+                'profile_id' => (string) $resultRow['profile_id'],
+                'connection_id' => (string) $resultRow['connection_id'],
+            ];
+        }
+
+        return $activeApiConfigurations;
     }
 
     /**

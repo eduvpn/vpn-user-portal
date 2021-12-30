@@ -84,14 +84,16 @@ class VpnApiThreeModule implements ServiceModuleInterface
                     if (0 === $maxActiveApiConfigurations) {
                         return new JsonResponse(['error' => 'no API configuration downloads allowed'], [], 403);
                     }
-                    $numberOfActiveApiConfigurations = $this->storage->numberOfActiveApiConfigurations($accessToken->userId(), $this->dateTime);
-                    if ($numberOfActiveApiConfigurations >= $maxActiveApiConfigurations) {
-                        // we find the client that we saw the longest ago to 
-                        // try to keep recently used clients online...
-
-                        // find all peers/certificates with auth_keys for this user, and then pick one to delete
-                    
-                        return new JsonResponse(['error' => 'limit of available API configuration downloads has been reached'], [], 403);
+                    $activeApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
+                    if (\count($activeApiConfigurations) >= $maxActiveApiConfigurations) {
+                        // we disconnect the client that connected the longest
+                        // time ago, which is first one from the set in
+                        // activeApiConfigurations
+                        $this->connectionManager->disconnect(
+                            $accessToken->userId(),
+                            $activeApiConfigurations[0]['profile_id'],
+                            $activeApiConfigurations[0]['connection_id']
+                        );
                     }
                 }
 

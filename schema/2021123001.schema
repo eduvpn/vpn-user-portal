@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS certificates(
     profile_id VARCHAR(255) NOT NULL,
     display_name VARCHAR(255) NOT NULL,
     common_name VARCHAR(255) UNIQUE NOT NULL,
+    created_at VARCHAR(255) NOT NULL,
     expires_at VARCHAR(255) NOT NULL,
     auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS wg_peers (
     public_key VARCHAR(255) NOT NULL UNIQUE,
     ip_four VARCHAR(255) NOT NULL UNIQUE,
     ip_six VARCHAR(255) NOT NULL UNIQUE,
+    created_at VARCHAR(255) NOT NULL,
     expires_at VARCHAR(255) NOT NULL,
     auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE

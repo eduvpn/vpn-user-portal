@@ -33,6 +33,7 @@ class ConnectionManager
     private Storage $storage;
     private VpnDaemon $vpnDaemon;
     private LoggerInterface $logger;
+    private DateTimeImmutable $dateTime;
 
     public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage, LoggerInterface $logger)
     {
@@ -41,6 +42,7 @@ class ConnectionManager
         $this->vpnDaemon = $vpnDaemon;
         $this->logger = $logger;
         $this->random = new Random();
+        $this->dateTime = Dt::get();
     }
 
     /**
@@ -191,6 +193,7 @@ class ConnectionManager
                 $profileId,
                 $commonName,
                 $displayName,
+                $this->dateTime,
                 $expiresAt,
                 $authKey
             );
@@ -226,7 +229,7 @@ class ConnectionManager
 
             // XXX we MUST make sure public_key is unique on this server!!!
             // the DB enforces this, but maybe a better error could be given?
-            $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $expiresAt, $authKey);
+            $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
             $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
             $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, new DateTimeImmutable());
 
@@ -259,6 +262,7 @@ class ConnectionManager
         if (!$this->config->hasProfile($profileId)) {
             // profile does not exist (anymore)
             // try to delete connectionId anyway if we are not prevented...
+            // XXX why could we possibly be prevented here? the profile is no longer there... I guess we are not
             if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
                 if ('wireguard' === $vpnProto) {
                     $this->storage->oCertDelete($userId, $connectionId);
