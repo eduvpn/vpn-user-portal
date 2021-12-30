@@ -231,7 +231,7 @@ class ConnectionManager
             $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, new DateTimeImmutable());
 
             $this->logger->info(
-                $this->logMessage('CONNECT', $userId, $profileId, $ipFour, $ipSix)
+                $this->logMessage('CONNECT', $userId, $profileId, $publicKey, $ipFour, $ipSix)
             );
 
             return new WireGuardClientConfig(
@@ -291,7 +291,7 @@ class ConnectionManager
                     // we got back to call "clientDisconnect"
                     $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], new DateTimeImmutable());
                     $this->logger->info(
-                        $this->logMessage('DISCONNECT', $userId, $profileId, '*', '*')
+                        $this->logMessage('DISCONNECT', $userId, $profileId, $connectionId, '_', '_')
                     );
                 }
             }
@@ -317,13 +317,14 @@ class ConnectionManager
         throw new ConnectionManagerException('no free IP address');
     }
 
-    private function logMessage(string $eventType, string $userId, string $profileId, string $ipFour, string $ipSix): string
+    private function logMessage(string $eventType, string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix): string
     {
         return str_replace(
             [
                 '{{EVENT_TYPE}}',
                 '{{USER_ID}}',
                 '{{PROFILE_ID}}',
+                '{{CONNECTION_ID}}',
                 '{{IP_FOUR}}',
                 '{{IP_SIX}}',
             ],
@@ -331,6 +332,7 @@ class ConnectionManager
                 $eventType,
                 $userId,
                 $profileId,
+                $connectionId,
                 $ipFour,
                 $ipSix,
             ],
