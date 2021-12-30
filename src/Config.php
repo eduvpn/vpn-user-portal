@@ -114,7 +114,7 @@ class Config
 
     public function connectionLogFormat(): string
     {
-        return $this->requireString('connectionLogFormat', '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]');
+        return $this->requireString('connectionLogFormat', '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{IP_FOUR}},{{IP_SIX}}]');
     }
 
     public function showPermissions(): bool

@@ -186,9 +186,9 @@ return [
 
     // Determine what to log to "syslog"
     // NOTE: "{{ORIGINATING_IP}}" only works with OpenVPN connections
-    // OPTIONAL, DEFAULT = {{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]
-    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{IP_FOUR}},{{IP_SIX}}]',
-    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}) [{{ORIGINATING_IP}} => {{IP_FOUR}},{{IP_SIX}}]',
+    // OPTIONAL, DEFAULT = {{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{IP_FOUR}},{{IP_SIX}}]
+    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{IP_FOUR}},{{IP_SIX}}]',
+    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{ORIGINATING_IP}} => {{IP_FOUR}},{{IP_SIX}}]',
 
     //'WireGuard' => [
     //    // The UDP port used by WireGuard

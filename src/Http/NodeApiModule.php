@@ -121,7 +121,7 @@ class NodeApiModule implements ServiceModuleInterface
         $userId = $this->verifyConnection($profileId, $commonName);
         $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
         $this->logger->info(
-            $this->logMessage('CONNECT', $userId, $profileId, $originatingIp, $ipFour, $ipSix)
+            $this->logMessage('CONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
         );
     }
 
@@ -143,7 +143,7 @@ class NodeApiModule implements ServiceModuleInterface
         $userId = $userInfo['user_id'];
         $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, Dt::get(sprintf('@%d', $disconnectedAt)));
         $this->logger->info(
-            $this->logMessage('DISCONNECT', $userId, $profileId, $originatingIp, $ipFour, $ipSix)
+            $this->logMessage('DISCONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
         );
     }
 
@@ -189,13 +189,14 @@ class NodeApiModule implements ServiceModuleInterface
         return false;
     }
 
-    private function logMessage(string $eventType, string $userId, string $profileId, string $originatingIp, string $ipFour, string $ipSix): string
+    private function logMessage(string $eventType, string $userId, string $profileId, string $connectionId, string $originatingIp, string $ipFour, string $ipSix): string
     {
         return str_replace(
             [
                 '{{EVENT_TYPE}}',
                 '{{USER_ID}}',
                 '{{PROFILE_ID}}',
+                '{{CONNECTION_ID}}',
                 '{{ORIGINATING_IP}}',
                 '{{IP_FOUR}}',
                 '{{IP_SIX}}',
@@ -204,6 +205,7 @@ class NodeApiModule implements ServiceModuleInterface
                 $eventType,
                 $userId,
                 $profileId,
+                $connectionId,
                 $originatingIp,
                 $ipFour,
                 $ipSix,
