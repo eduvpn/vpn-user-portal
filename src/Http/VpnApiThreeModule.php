@@ -40,7 +40,6 @@ class VpnApiThreeModule implements ServiceModuleInterface
             '/v3/info',
             function (AccessToken $accessToken, Request $request): Response {
                 $profileConfigList = $this->config->profileConfigList();
-                // XXX really think about storing permissions in OAuth token!
                 $userPermissions = $this->storage->userPermissionList($accessToken->userId());
                 $userProfileList = [];
                 foreach ($profileConfigList as $profileConfig) {
