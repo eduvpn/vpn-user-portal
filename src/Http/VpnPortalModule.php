@@ -62,12 +62,19 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileConfigList = $this->config->profileConfigList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
+                $numberOfActivePortalConfigurations = 0;
+                if (null !== $maxActivePortalConfigurations = $this->config->maxActivePortalConfigurations()) {
+                    // only hit the database to count the number of active
+                    // configurations when there *is* a limit set
+                    $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
+                }
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalHome',
                         [
-                            'maxActivePortalConfigurations' => $this->config->maxActivePortalConfigurations(),
-                            'numberOfActivePortalConfigurations' => $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime),
+                            'maxActivePortalConfigurations' => $maxActivePortalConfigurations,
+                            'numberOfActivePortalConfigurations' => $numberOfActivePortalConfigurations,
                             'profileConfigList' => $visibleProfileList,
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'configList' => $this->filterConfigList($userInfo->userId()),

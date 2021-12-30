@@ -177,8 +177,8 @@ return [
     //'showPermissions' => false,
 
     // Limit the number of active VPN configurations downloaded through the
-    // Portal. Before a new one can be downloaded, an old(er) one needs to be
-    // deleted first.
+    // Portal. When this limit has been reached, an old(er) one needs to be
+    // deleted first...
     // OPTIONAL, DEFAULT = null (no limit)
     //'maxActivePortalConfigurations' => 3,
     // do NOT allow any portal configurations downloads, allow VPN apps only
