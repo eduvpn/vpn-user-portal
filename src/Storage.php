@@ -981,18 +981,6 @@ class Storage
     }
 
     /**
-     * Get the number of active OAuth authorizations for a particular user.
-     */
-    public function numberOfAuthorizedClients(string $userId): int
-    {
-        $stmt = $this->db->prepare('SELECT COUNT(auth_key) FROM oauth_authorizations WHERE user_id = :user_id');
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return (int) $stmt->fetchColumn();
-    }
-
-    /**
      * Get the number of non-expired WireGuard and OpenVPN *API*
      * configurations for a particular user.
      */
