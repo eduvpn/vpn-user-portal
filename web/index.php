@@ -262,7 +262,6 @@ try {
     );
 
     $oauthModule = new OAuthModule(
-        $storage,
         $oauthServer,
         $tpl
     );

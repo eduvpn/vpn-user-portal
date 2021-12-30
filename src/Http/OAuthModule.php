@@ -15,18 +15,15 @@ use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\Http\Response as OAuthResponse;
 use fkooman\OAuth\Server\OAuthServer;
 use Vpn\Portal\Http\Exception\HttpException;
-use Vpn\Portal\Storage;
 use Vpn\Portal\TplInterface;
 
 class OAuthModule implements ServiceModuleInterface
 {
-    private Storage $storage;
     private OAuthServer $oauthServer;
     private TplInterface $tpl;
 
-    public function __construct(Storage $storage, OAuthServer $oauthServer, TplInterface $tpl)
+    public function __construct(OAuthServer $oauthServer, TplInterface $tpl)
     {
-        $this->storage = $storage;
         $this->oauthServer = $oauthServer;
         $this->tpl = $tpl;
     }
