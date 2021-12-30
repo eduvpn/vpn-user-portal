@@ -31,4 +31,9 @@ class ApiConfig
     {
         return new DateInterval($this->requireString('tokenExpiry', 'PT1H'));
     }
+
+    public function maxActiveConfigurations(): ?int
+    {
+        return $this->optionalInt('maxActiveConfigurations');
+    }
 }

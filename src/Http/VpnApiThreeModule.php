@@ -15,6 +15,7 @@ use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
 use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
+use Vpn\Portal\Dt;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\Validator;
@@ -25,6 +26,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
     private Storage $storage;
     private ServerInfo $serverInfo;
     private ConnectionManager $connectionManager;
+    private DateTimeImmutable $dateTime;
 
     public function __construct(Config $config, Storage $storage, ServerInfo $serverInfo, ConnectionManager $connectionManager)
     {
@@ -32,6 +34,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
         $this->storage = $storage;
         $this->serverInfo = $serverInfo;
         $this->connectionManager = $connectionManager;
+        $this->dateTime = Dt::get();
     }
 
     public function init(ServiceInterface $service): void
@@ -76,6 +79,17 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 // by this client are removed / disconnected
                 $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
+                $maxActiveApiConfigurations = $this->config->apiConfig()->maxActiveConfigurations();
+                if (null !== $maxActiveApiConfigurations) {
+                    if (0 === $maxActiveApiConfigurations) {
+                        return new JsonResponse(['error' => 'no API configuration downloads allowed'], [], 403);
+                    }
+                    $numberOfActiveApiConfigurations = $this->storage->numberOfActiveApiConfigurations($accessToken->userId(), $this->dateTime);
+                    if ($numberOfActiveApiConfigurations >= $maxActiveApiConfigurations) {
+                        return new JsonResponse(['error' => 'limit of available API configuration downloads has been reached'], [], 403);
+                    }
+                }
+
                 // XXX catch InputValidationException
                 $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
@@ -103,7 +117,6 @@ class VpnApiThreeModule implements ServiceModuleInterface
                     $vpnProto = $profileConfig->preferredProto();
                 }
 
-                // XXX make sure we don't exceed the max. number of allowed configurations per user
                 // XXX we can make this independent I think?
 
                 if ('openvpn' === $vpnProto && $profileConfig->oSupport()) {

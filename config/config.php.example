@@ -190,6 +190,17 @@ return [
     //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{IP_FOUR}},{{IP_SIX}}]',
     //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{ORIGINATING_IP}} => {{IP_FOUR}},{{IP_SIX}}]',
 
+    //'Api' => [
+    //    // Limit the number of active VPN configurations through the API.
+    //    // Effectively this means that the user can have this many VPN apps
+    //    // connected simultaneously.
+    //    // OPTIONAL, DEFAULT = null (no limit)
+    //    //'maxActiveConfigurations' => 3,
+    //    // do NOT allow any API configurations downloads, allow portal downloads
+    //    // only
+    //    //'maxActiveConfigurations' => 0,
+    //],
+
     //'WireGuard' => [
     //    // The UDP port used by WireGuard
     //    // OPTIONAL, DEFAULT = 51820

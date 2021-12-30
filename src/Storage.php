@@ -993,6 +993,50 @@ class Storage
     }
 
     /**
+     * Get the number of non-expired WireGuard and OpenVPN *API*
+     * configurations for a particular user.
+     */
+    public function numberOfActiveApiConfigurations(string $userId, DateTimeImmutable $dateTime): int
+    {
+        // NOTE: this query is almost identical to the one in
+        // numberOfActivePortalConfigurations, IS NOT NULL vs IS NULL
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                        SELECT SUM(c)
+                        FROM (
+                            SELECT
+                                COUNT(public_key) AS c
+                            FROM
+                                wg_peers
+                            WHERE
+                                user_id = :user_id
+                            AND
+                                auth_key IS NOT NULL
+                            AND
+                                expires_at > :date_time
+                        UNION ALL
+                            SELECT
+                                COUNT(common_name) AS c
+                            FROM
+                                certificates
+                            WHERE
+                                user_id = :user_id
+                            AND
+                                auth_key IS NOT NULL
+                            AND
+                                expires_at > :date_time
+                        ) AS c
+                SQL
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
      * Get the number of non-expired WireGuard and OpenVPN *portal*
      * configurations for a particular user.
      */
