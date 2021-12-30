@@ -1,6 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */ ?>
-<?php /** @var bool $enableConfigDownload */ ?>
+<?php /** @var ?int $maxActivePortalConfigurations */ ?>
+<?php /** @var int $numberOfActivePortalConfigurations */ ?>
 <?php /** @var \DateTimeImmutable $expiryDate */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}> $configList */?>
@@ -9,9 +10,13 @@
 
 <p class="lead"><?= $this->t('Welcome to this VPN service!'); ?></p>
     <h2><?=$this->t('New Configuration'); ?></h2>
-<?php if (!$enableConfigDownload): ?>
+<?php if (0 === $maxActivePortalConfigurations): ?>
         <p class="warning">
-            <?=$this->t('It is not, or no longer, possible to manually download new VPN configurations. Please use the native VPN applications.'); ?>
+            <?=$this->t('Manually downloading VPN configurations is not allowed by your VPN administrator. Please use a VPN application.'); ?>
+        </p>
+<?php elseif (null !== $maxActivePortalConfigurations && $numberOfActivePortalConfigurations >= $maxActivePortalConfigurations): ?>
+        <p class="warning">
+            <?=$this->t('You have reached the maximum number of allowed VPN configuration downloads. Please delete some existing ones first.'); ?>
         </p>
 <?php else: ?>
     <?php if (0 === count($profileConfigList)): ?>

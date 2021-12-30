@@ -66,6 +66,8 @@ class VpnPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnPortalHome',
                         [
+                            'maxActivePortalConfigurations' => $this->config->maxActivePortalConfigurations(),
+                            'numberOfActivePortalConfigurations' => $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime),
                             'profileConfigList' => $visibleProfileList,
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'configList' => $this->filterConfigList($userInfo->userId()),
@@ -78,12 +80,15 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/addConfig',
             function (UserInfo $userInfo, Request $request): Response {
-                if (!$this->config->enableConfigDownload()) {
-                    throw new HttpException('downloading configuration files has been disabled by the admin', 403);
-                }
-
-                if ($this->config->maxNumberOfActivePortalConfigurations() <= $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime)) {
-                    throw new HttpException('only '.$this->config->maxNumberOfActivePortalConfigurations().' active portal VPN configurations at a time allowed', 403);
+                $maxActivePortalConfigurations = $this->config->maxActivePortalConfigurations();
+                if (null !== $maxActivePortalConfigurations) {
+                    if (0 === $maxActivePortalConfigurations) {
+                        throw new HttpException('no portal configuration downloads allowed', 403);
+                    }
+                    $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
+                    if ($numberOfActivePortalConfigurations >= $maxActivePortalConfigurations) {
+                        throw new HttpException('limit of available portal configuration downloads has been reached', 403);
+                    }
                 }
 
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));

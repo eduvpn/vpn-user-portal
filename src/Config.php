@@ -35,6 +35,11 @@ class Config
         return new DateInterval($this->requireString('caExpiry', 'P10Y'));
     }
 
+    public function maxActivePortalConfigurations(): ?int
+    {
+        return $this->optionalInt('maxActivePortalConfigurations');
+    }
+
     public function secureCookie(): bool
     {
         return $this->requireBool('secureCookie', true);
@@ -60,23 +65,9 @@ class Config
         return $this->requireString('authModule', 'DbAuthModule');
     }
 
-    public function enableConfigDownload(): bool
-    {
-        return $this->requireBool('enableConfigDownload', true);
-    }
-
     public function sessionModule(): string
     {
         return $this->requireString('sessionModule', 'FileSessionModule');
-    }
-
-    /**
-     * The maximum number of active VPN configurations per user through manual
-     * portal download.
-     */
-    public function maxNumberOfActivePortalConfigurations(): int
-    {
-        return $this->requireInt('maxNumberOfActivePortalConfigurations', 10);
     }
 
     public function defaultLanguage(): string

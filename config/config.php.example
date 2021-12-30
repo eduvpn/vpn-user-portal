@@ -176,14 +176,13 @@ return [
     // OPTIONAL, DEFAULT = false
     //'showPermissions' => false,
 
-    // Allow manual configuration download through Portal
-    // OPTIONAL, DEFAULT = true
-    //'enableConfigDownload' => true,
-
     // Limit the number of active VPN configurations downloaded through the
-    // Portal
-    // OPTIONAL, DEFAULT = 10
-    //'maxNumberOfActivePortalConfigurations' => 10,
+    // Portal. Before a new one can be downloaded, an old(er) one needs to be
+    // deleted first.
+    // OPTIONAL, DEFAULT = null (no limit)
+    //'maxActivePortalConfigurations' => 3,
+    // do NOT allow any portal configurations downloads, allow VPN apps only
+    //'maxActivePortalConfigurations' => 0,
 
     // Determine what to log to "syslog"
     // NOTE: "{{ORIGINATING_IP}}" only works with OpenVPN connections

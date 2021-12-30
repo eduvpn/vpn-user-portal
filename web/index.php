@@ -79,7 +79,6 @@ try {
         $uiLanguage,
         [
             'portalHostname' => gethostname(),
-            'enableConfigDownload' => $config->enableConfigDownload(),
             'requestUri' => $request->getUri(),
             'requestRoot' => $request->getRoot(),
             'requestRootUri' => $request->getRootUri(),
