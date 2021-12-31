@@ -30,11 +30,19 @@ class Storage
             $dbConfig->dbPass()
         );
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+
+        $dbDriver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ('sqlite' === $dbDriver) {
             $db->exec('PRAGMA foreign_keys = ON');
         }
         // run database initialization/migration if necessary and enabled
-        Migration::run($db, $dbConfig->schemaDir(), self::CURRENT_SCHEMA_VERSION, $dbConfig->autoInitMigrate());
+        Migration::run(
+            $db,
+            $dbConfig->schemaDir(),
+            self::CURRENT_SCHEMA_VERSION,
+            'sqlite' === $dbDriver,     // auto initialization
+            'sqlite' === $dbDriver      // auto migration
+        );
         $this->db = $db;
     }
 

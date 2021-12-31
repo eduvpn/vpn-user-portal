@@ -32,11 +32,6 @@ class DbConfig
         return $this->baseDir().'/schema';
     }
 
-    public function autoInitMigrate(): bool
-    {
-        return $this->requireBool('autoInitMigrate', true);
-    }
-
     public function dbDsn(): string
     {
         return $this->requireString('dbDsn', 'sqlite://'.$this->baseDir().'/data/db.sqlite');

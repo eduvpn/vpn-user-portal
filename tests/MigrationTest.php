@@ -34,24 +34,34 @@ final class MigrationTest extends TestCase
 
     public function testInit(): void
     {
-        Migration::run($this->dbh, $this->schemaDir, '2018010101', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018010101', true, true);
         static::assertSame('2018010101', Migration::getCurrentVersion($this->dbh));
     }
 
     public function testInitNotAllowed(): void
     {
         static::expectException(MigrationException::class);
-        static::expectExceptionMessage('server configuration does not allow automatic database initialization and migration');
-        Migration::run($this->dbh, $this->schemaDir, '2018010101', false);
+        static::expectExceptionMessage('database not initialized');
+        Migration::run($this->dbh, $this->schemaDir, '2018010101', false, false);
+    }
+
+    public function testMigrationNotAllowed(): void
+    {
+        static::expectException(MigrationException::class);
+        static::expectExceptionMessage('database migration required');
+        Migration::run($this->dbh, $this->schemaDir, '2018010101', true, false);
+        static::assertSame('2018010101', Migration::getCurrentVersion($this->dbh));
+        $this->dbh->exec('INSERT INTO foo (a) VALUES(3)');
+        Migration::run($this->dbh, $this->schemaDir, '2018010102', false, false);
     }
 
     public function testSimpleMigration(): void
     {
-        Migration::run($this->dbh, $this->schemaDir, '2018010101', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018010101', true, true);
         static::assertSame('2018010101', Migration::getCurrentVersion($this->dbh));
         $this->dbh->exec('INSERT INTO foo (a) VALUES(3)');
 
-        Migration::run($this->dbh, $this->schemaDir, '2018010102', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018010102', true, true);
         static::assertSame('2018010102', Migration::getCurrentVersion($this->dbh));
         $sth = $this->dbh->query('SELECT * FROM foo');
         static::assertSame(
@@ -67,10 +77,10 @@ final class MigrationTest extends TestCase
 
     public function testMultiMigration(): void
     {
-        Migration::run($this->dbh, $this->schemaDir, '2018010101', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018010101', true, true);
         static::assertSame('2018010101', Migration::getCurrentVersion($this->dbh));
         $this->dbh->exec('INSERT INTO foo (a) VALUES(3)');
-        Migration::run($this->dbh, $this->schemaDir, '2018010103', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018010103', true, true);
         static::assertSame('2018010103', Migration::getCurrentVersion($this->dbh));
         $sth = $this->dbh->query('SELECT * FROM foo');
         static::assertSame(
@@ -93,7 +103,7 @@ final class MigrationTest extends TestCase
         $this->dbh->exec('CREATE TABLE foo (a INTEGER NOT NULL)');
         $this->dbh->exec('INSERT INTO foo (a) VALUES(3)');
         static::assertNull(Migration::getCurrentVersion($this->dbh));
-        Migration::run($this->dbh, $this->schemaDir, '2018010101', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018010101', true, true);
         static::assertSame('2018010101', Migration::getCurrentVersion($this->dbh));
         $sth = $this->dbh->query('SELECT * FROM foo');
         static::assertSame(
@@ -108,11 +118,11 @@ final class MigrationTest extends TestCase
 
     public function testFailingUpdate(): void
     {
-        Migration::run($this->dbh, $this->schemaDir, '2018020201', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018020201', true, true);
         static::assertSame('2018020201', Migration::getCurrentVersion($this->dbh));
 
         try {
-            Migration::run($this->dbh, $this->schemaDir, '2018020202', true);
+            Migration::run($this->dbh, $this->schemaDir, '2018020202', true, true);
             static::fail();
         } catch (PDOException $e) {
             static::assertSame('2018020201', Migration::getCurrentVersion($this->dbh));
@@ -122,11 +132,11 @@ final class MigrationTest extends TestCase
     public function testWithForeignKeys(): void
     {
         $this->dbh->exec('PRAGMA foreign_keys = ON');
-        Migration::run($this->dbh, $this->schemaDir, '2018010101', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018010101', true, true);
         static::assertSame('2018010101', Migration::getCurrentVersion($this->dbh));
         $this->dbh->exec('INSERT INTO foo (a) VALUES(3)');
 
-        Migration::run($this->dbh, $this->schemaDir, '2018010102', true);
+        Migration::run($this->dbh, $this->schemaDir, '2018010102', true, true);
         static::assertSame('2018010102', Migration::getCurrentVersion($this->dbh));
         $sth = $this->dbh->query('SELECT * FROM foo');
         static::assertSame(

@@ -13,12 +13,12 @@ return [
     //'sessionExpiry' => 'P1D',   // 1 day
 
     // Portal Database Configuration
+    // NOTE: using any other database than SQLite requires *manual*
+    // initialization and migration!
     // OPTIONAL, DEFAULT = local SQLite database
     //'Db' => [
     //    // ** PostgreSQL **
     //    'dbDsn' => 'pgsql:host=localhost;port=5432;dbname=vpn;user=user;password=pass',
-    //    // OPTIONAL, DEFAULT = true
-    //    //'autoInitMigrate' => true,
     //],
     //'Db' => [
     //    // ** MariaDB/MySQL **
@@ -26,8 +26,6 @@ return [
     //    'dbDsn' => 'mysql:unix_socket=/var/lib/mysql/mysql.sock;dbname=vpn',
     //    'dbUser' => 'user',
     //    'dbPass' => 'pass',
-    //    // OPTIONAL, DEFAULT = true
-    //    //'autoInitMigrate' => true,
     //],
 
     // Choose the User Authentication Module
