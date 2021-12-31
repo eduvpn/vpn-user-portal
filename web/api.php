@@ -44,7 +44,7 @@ try {
     $storage = new Storage($config->dbConfig($baseDir));
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
-    $oauthKey = FileIO::readFile($baseDir.'/conf/oauth.key');
+    $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
     $bearerValidator = new VpnBearerValidator(
         new Signer($oauthKey),
         new ClientDb(),
