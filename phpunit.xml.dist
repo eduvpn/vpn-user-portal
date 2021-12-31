@@ -8,7 +8,7 @@
          beStrictAboutCoversAnnotation="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
-         failOnRisky="true"
+         failOnRisky="false"
          failOnWarning="true"
          verbose="true">
     <testsuites>
