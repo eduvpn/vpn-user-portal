@@ -32,6 +32,12 @@ final class MigrationTest extends TestCase
         $this->dbh = new PDO('sqlite::memory:');
         // on older versions of PHP we need to set the ERRMODE explicitly
         $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // in PHP < 8.1 the ATTR_STRINGIFY_FETCHES attribute was always true,
+        // but changed to a default of false in 8.1. Setting this option
+        // restores the pre-8.1 behavior. We may switch it to false at some
+        // point, but this requires proper testing...
+        // @see https://www.php.net/manual/en/migration81.incompatible.php
+        $this->dbh->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
     }
 
     public function testInit(): void

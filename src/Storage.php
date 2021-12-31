@@ -35,6 +35,14 @@ class Storage
         if ('sqlite' === $dbDriver) {
             $db->exec('PRAGMA foreign_keys = ON');
         }
+
+        // in PHP < 8.1 the ATTR_STRINGIFY_FETCHES attribute was always true,
+        // but changed to a default of false in 8.1. Setting this option
+        // restores the pre-8.1 behavior. We may switch it to false at some
+        // point, but this requires proper testing...
+        // @see https://www.php.net/manual/en/migration81.incompatible.php
+        $db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+
         // run database initialization/migration if necessary and enabled
         Migration::run(
             $db,
