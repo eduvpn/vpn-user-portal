@@ -7,6 +7,8 @@ packages:
   - php-date
   - php-mbstring
   - php-pdo-sqlite
+  - php-intl
+  - php-gmp
 sources:
   -  https://git.sr.ht/~fkooman/vpn-user-portal
 tasks:

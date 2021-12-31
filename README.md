@@ -6,6 +6,8 @@ designated administrators.
 
 **License**:  AGPL-3.0-or-later
 
+[![builds.sr.ht status](https://builds.sr.ht/~fkooman/vpn-user-portal.svg)](https://builds.sr.ht/~fkooman/vpn-user-portal?)
+
 # Introduction
 
 This project contains the user portal and OAuth authorization server of the 
