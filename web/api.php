@@ -12,8 +12,6 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\OAuth\Server\BearerValidator;
-use fkooman\OAuth\Server\LocalAccessTokenVerifier;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Config;
@@ -25,6 +23,7 @@ use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\VpnApiThreeModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OAuth\VpnBearerValidator;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
 use Vpn\Portal\ServerInfo;
@@ -45,19 +44,13 @@ try {
     $storage = new Storage($config->dbConfig($baseDir));
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
-
-    $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
-    $oauthSigner = new Signer($oauthKey);
-    // XXX move this to VpnBearerValidator class
-    $bearerValidator = new BearerValidator(
-        $oauthSigner,
-        new LocalAccessTokenVerifier(
-            new ClientDb(),
-            $oauthStorage
-        )
+    $oauthKey = FileIO::readFile($baseDir.'/conf/oauth.key');
+    $bearerValidator = new VpnBearerValidator(
+        new Signer($oauthKey),
+        new ClientDb(),
+        $oauthStorage
     );
     $service = new ApiService($bearerValidator);
-
     $wireGuardServerConfig = new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort());
     $serverInfo = new ServerInfo(
         $baseDir,
