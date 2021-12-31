@@ -30,6 +30,8 @@ final class MigrationTest extends TestCase
     {
         $this->schemaDir = sprintf('%s/schema', __DIR__);
         $this->dbh = new PDO('sqlite::memory:');
+        // on older versions of PHP we need to set the ERRMODE explicitly
+        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     public function testInit(): void

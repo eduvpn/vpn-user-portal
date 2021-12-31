@@ -22,6 +22,10 @@ class Migration
 {
     public static function run(PDO $db, string $schemaDir, string $schemaVersion, bool $autoInit, bool $autoMigrate): void
     {
+        if (PDO::ERRMODE_EXCEPTION !== $db->getAttribute(PDO::ATTR_ERRMODE)) {
+            throw new MigrationException('PDO::ATTR_ERRMODE MUST be PDO::ERRMODE_EXCEPTION');
+        }
+
         $currentVersion = self::getCurrentVersion($db);
         if ($schemaVersion === $currentVersion) {
             // all good, initialized and up to date
