@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\BearerValidator;
+use fkooman\OAuth\Server\LocalAccessTokenVerifier;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Config;
@@ -47,10 +48,13 @@ try {
 
     $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
     $oauthSigner = new Signer($oauthKey);
+    // XXX move this to VpnBearerValidator class
     $bearerValidator = new BearerValidator(
-        $oauthStorage,
-        new ClientDb(),
-        $oauthSigner
+        $oauthSigner,
+        new LocalAccessTokenVerifier(
+            new ClientDb(),
+            $oauthStorage
+        )
     );
     $service = new ApiService($bearerValidator);
 
