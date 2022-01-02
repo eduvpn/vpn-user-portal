@@ -25,7 +25,6 @@ try {
     $storage->cleanConnectionLog($cleanBefore);
     $storage->cleanExpiredCertificates($cleanBefore);
     $storage->cleanExpiredOAuthAuthorizations($cleanBefore);
-    $storage->cleanUserLog($cleanBefore);
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 

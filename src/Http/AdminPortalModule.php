@@ -128,7 +128,6 @@ class AdminPortalModule implements ServiceModuleInterface
                 }
                 // XXX use same means as in VpnPortal with the filter to use connection_id instead!
                 $configList = array_merge($this->storage->oCertListByUserId($userId), $this->storage->wPeerListByUserId($userId));
-                $userMessages = $this->storage->userLog($userId);
                 $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
 
                 return new HtmlResponse(
@@ -136,7 +135,6 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminUserConfigList',
                         [
                             'userId' => $userId,
-                            'userMessages' => $userMessages,
                             'profileConfigList' => $this->config->profileConfigList(),
                             'configList' => $configList,
                             'isDisabled' => $this->storage->userIsDisabled($userId),
@@ -189,7 +187,6 @@ class AdminPortalModule implements ServiceModuleInterface
                 // OAuth clients, allow OpenVPN connections again and sync the
                 // WireGuard peer configurations to the daemon(s)
                 $this->storage->userEnable($userId);
-                $this->storage->userLogAdd($userId, Storage::LOG_NOTICE, 'account enabled by admin', $this->dateTime);
 
                 return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }

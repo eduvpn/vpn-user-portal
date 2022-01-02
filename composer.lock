@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "c056e5e1d62db68455b504c673c270e129eb751f"
+                "reference": "33241d201120a7cc0a6f315f088173aa43d91628"
             },
             "require": {
                 "ext-date": "*",
@@ -55,7 +55,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2021-12-31T11:58:12+00:00"
+            "time": "2022-01-02T12:14:07+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -244,9 +244,6 @@
             },
             "require": {
                 "php": "^7.1 || ^8.0"
-            },
-            "replace": {
-                "myclabs/deep-copy": "self.version"
             },
             "require-dev": {
                 "doctrine/collections": "^1.0",
@@ -2277,5 +2274,5 @@
         "php": ">=7.4"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

@@ -5,7 +5,6 @@
 <?php /** @var bool $isDisabled */?>
 <?php /** @var bool $isSelf */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}> $userMessages */?>
 <?php /** @var array<array{profile_id:string,common_name?:string,public_key?:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}> $configList */ ?>
 <?php /** @var string $requestRoot */?>
 <?php /** @var string $authModule */?>
@@ -113,26 +112,4 @@
         </tbody>
     </table>
 <?php endif; ?>
-
-    <h2><?=$this->t('Events'); ?></h2>
-    <p>
-        <?=$this->t('The most recent events related to this account.'); ?>
-    </p>
-    <?php if (empty($userMessages)): ?>
-        <p class="plain"><?=$this->t('No events yet.'); ?></p>
-    <?php else: ?>
-        <table class="tbl">
-            <thead>
-                <tr><th><?=$this->t('Date/Time'); ?></th><th><?=$this->t('Message'); ?></th></tr>
-            </thead>
-            <tbody>
-                <?php foreach ($userMessages as $message): ?>
-                    <tr>
-                        <td><?=$this->d($message['date_time']); ?></td>
-                        <td><?=$this->e($message['log_message']); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
 <?php $this->stop('content'); ?>

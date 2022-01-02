@@ -157,7 +157,6 @@ class VpnPortalModule implements ServiceModuleInterface
                             'showPermissions' => $this->config->showPermissions(),
                             'userInfo' => $userInfo,
                             'authorizationList' => $this->oauthStorage->getAuthorizations($userInfo->userId()),
-                            'userMessages' => $this->storage->userLog($userInfo->userId()),
                         ]
                     )
                 );
