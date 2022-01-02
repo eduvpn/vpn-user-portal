@@ -12,11 +12,11 @@
     <h2><?=$this->t('New Configuration'); ?></h2>
 <?php if (0 === $maxActiveConfigurations): ?>
         <p class="warning">
-            <?=$this->t('Manually downloading VPN configurations is not allowed by your VPN administrator. Please use a VPN application.'); ?>
+            <?=$this->t('Downloading VPN configurations is not allowed. Please use a VPN application.'); ?>
         </p>
 <?php elseif (null !== $maxActiveConfigurations && $numberOfActivePortalConfigurations >= $maxActiveConfigurations): ?>
         <p class="warning">
-            <?=$this->t('You have reached the maximum number of allowed VPN configuration downloads. Please delete some existing ones first.'); ?>
+            <?=$this->t('You have reached the maximum number of allowed active VPN configuration.'); ?>
         </p>
 <?php else: ?>
     <?php if (0 === count($profileConfigList)): ?>
