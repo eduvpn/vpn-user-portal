@@ -18,7 +18,6 @@ use Vpn\Portal\ConfigCheck;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\HttpException;
-use Vpn\Portal\LoggerInterface;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\TplInterface;
@@ -190,7 +189,7 @@ class AdminPortalModule implements ServiceModuleInterface
                 // OAuth clients, allow OpenVPN connections again and sync the
                 // WireGuard peer configurations to the daemon(s)
                 $this->storage->userEnable($userId);
-                $this->storage->userLogAdd($userId, LoggerInterface::NOTICE, 'account enabled by admin', $this->dateTime);
+                $this->storage->userLogAdd($userId, Storage::LOG_NOTICE, 'account enabled by admin', $this->dateTime);
 
                 return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }

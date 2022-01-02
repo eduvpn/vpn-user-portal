@@ -83,7 +83,7 @@ class NodeApiModule implements ServiceModuleInterface
                     return new Response('OK');
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
-                        $this->storage->userLogAdd($userId, LoggerInterface::ERROR, 'unable to connect: '.$e->getMessage(), $this->dateTime);
+                        $this->storage->userLogAdd($userId, Storage::LOG_ERROR, 'unable to connect: '.$e->getMessage(), $this->dateTime);
                     }
 
                     return new Response('ERR');
@@ -100,7 +100,7 @@ class NodeApiModule implements ServiceModuleInterface
                     return new Response('OK');
                 } catch (NodeApiException $e) {
                     if (null !== $userId = $e->getUserId()) {
-                        $this->storage->userLogAdd($userId, LoggerInterface::ERROR, 'unable to disconnect: '.$e->getMessage(), $this->dateTime);
+                        $this->storage->userLogAdd($userId, Storage::LOG_ERROR, 'unable to disconnect: '.$e->getMessage(), $this->dateTime);
                     }
 
                     return new Response('ERR');

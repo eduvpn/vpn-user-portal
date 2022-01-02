@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS connection_log(
 );
 CREATE TABLE IF NOT EXISTS user_log(
     date_time VARCHAR(255) NOT NULL,
-    log_level INTEGER NOT NULL,
+    log_level VARCHAR(255) NOT NULL,
     log_message TEXT NOT NULL,
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );

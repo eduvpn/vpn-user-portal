@@ -13,13 +13,21 @@ namespace Vpn\Portal;
 
 use DateTimeImmutable;
 use PDO;
+use RangeException;
 
 class Storage
 {
     public const INCLUDE_EXPIRED = 1;
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
-    public const CURRENT_SCHEMA_VERSION = '2021123001';
+
+    public const LOG_WARNING = 'warning';
+    public const LOG_ERROR = 'error';
+    public const LOG_NOTICE = 'notice';
+    public const LOG_INFO = 'info';
+
+    public const CURRENT_SCHEMA_VERSION = '2022010201';
+
     private PDO $db;
 
     public function __construct(DbConfig $dbConfig)
@@ -942,7 +950,7 @@ class Storage
     /**
      * Get all log messages for a particular user.
      *
-     * @return array<array{log_level:int,log_message:string,date_time:\DateTimeImmutable}>
+     * @return array<array{log_level:string,log_message:string,date_time:\DateTimeImmutable}>
      */
     public function userLog(string $userId): array
     {
@@ -965,7 +973,7 @@ class Storage
         $logMessages = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $logMessages[] = [
-                'log_level' => (int) $resultRow['log_level'],
+                'log_level' => (string) $resultRow['log_level'],
                 'log_message' => (string) $resultRow['log_message'],
                 'date_time' => Dt::get($resultRow['date_time']),
             ];
@@ -974,8 +982,12 @@ class Storage
         return $logMessages;
     }
 
-    public function userLogAdd(string $userId, int $logLevel, string $logMessage, DateTimeImmutable $dateTime): void
+    public function userLogAdd(string $userId, string $logLevel, string $logMessage, DateTimeImmutable $dateTime): void
     {
+        if (!\in_array($logLevel, [self::LOG_WARNING, self::LOG_ERROR, self::LOG_NOTICE, self::LOG_INFO], true)) {
+            throw new RangeException('log level not supported');
+        }
+
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     INSERT INTO user_log
@@ -986,7 +998,7 @@ class Storage
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':log_level', $logLevel, PDO::PARAM_INT);
+        $stmt->bindValue(':log_level', $logLevel, PDO::PARAM_STR);
         $stmt->bindValue(':log_message', $logMessage, PDO::PARAM_STR);
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
