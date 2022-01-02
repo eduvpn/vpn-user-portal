@@ -53,7 +53,7 @@
                             <option value="wireguard"><?=$this->t('WireGuard'); ?></option>
                         </select>
                     </fieldset>
-                    <input type="checkbox" id="tcpOnly" name="tcpOnly"> <label for="tcpOnly"><?=$this->t('Connect over TCP only (OpenVPN)'); ?></label>
+                    <input type="checkbox" id="tcpOnly" name="tcpOnly"> <label for="tcpOnly"><?=$this->t('Connect over TCP (only OpenVPN)'); ?></label>
                 </details>
             </fieldset>
             <fieldset>
@@ -63,8 +63,12 @@
     <?php endif; ?>
 <?php endif; ?>
 
-<?php if (0 !== count($configList)): ?>
         <h2><?=$this->t('Active Configurations'); ?></h2>
+<?php if (0 === count($configList)): ?>
+    <p class="plain">
+            <?=$this->t('Currently no active configurations.'); ?>
+    </p>
+<?php else: ?>
         <table class="tbl">
             <thead>
                 <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires On'); ?></th><th></th></tr>

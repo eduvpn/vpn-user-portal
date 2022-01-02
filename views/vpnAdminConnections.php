@@ -25,7 +25,7 @@
 <?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
         <h2 id="<?=$this->e($profileId); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $profileId); ?></h2>
         <?php if (0 === count($connectionList)): ?>
-            <p class="plain"><?=$this->t('No clients connected.'); ?></p>
+            <p class="plain"><?=$this->t('Currently there are no clients connected to this profile.'); ?></p>
         <?php else: ?>
             <table class="tbl">
             <thead>

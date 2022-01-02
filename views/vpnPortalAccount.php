@@ -37,7 +37,7 @@
             <th><?=$this->t('Available Profiles'); ?></th>
             <td>
 <?php if (0 === count($profileConfigList)): ?>
-                <em><?=$this->t('No VPN profiles are available for your account.'); ?></em>
+                <em><?=$this->t('Your account does not have access to any VPN profile.'); ?></em>
 <?php else: ?>
                 <ul>
                     <?php foreach ($profileConfigList as $profileConfig): ?>
@@ -55,7 +55,7 @@
     </p>
 <?php if (0 === count($authorizationList)): ?>
     <p class="plain">
-        <?=$this->t('No authorized applications yet.'); ?>
+        <?=$this->t('You currently have no authorized applications.'); ?>
     </p>
 <?php else: ?>
     <table class="tbl">
