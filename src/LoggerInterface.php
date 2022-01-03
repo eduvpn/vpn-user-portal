@@ -17,7 +17,5 @@ interface LoggerInterface
 
     public function error(string $logMessage): void;
 
-    public function notice(string $logMessage): void;
-
     public function info(string $logMessage): void;
 }

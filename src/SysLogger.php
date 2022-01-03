@@ -37,11 +37,6 @@ class SysLogger implements LoggerInterface
         syslog(LOG_ERR, $logMessage);
     }
 
-    public function notice(string $logMessage): void
-    {
-        syslog(LOG_NOTICE, $logMessage);
-    }
-
     public function info(string $logMessage): void
     {
         syslog(LOG_INFO, $logMessage);
