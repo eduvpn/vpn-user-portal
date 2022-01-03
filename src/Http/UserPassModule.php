@@ -62,7 +62,7 @@ class UserPassModule implements ServiceModuleInterface
                 $this->session->set('_form_auth_user', $userInfo->userId());
                 $this->session->set('_form_auth_permission_list', Json::encode($userInfo->permissionList()));
 
-                return new RedirectResponse($redirectTo, 302);
+                return new RedirectResponse($redirectTo);
             }
         );
     }

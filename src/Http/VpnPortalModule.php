@@ -53,7 +53,7 @@ class VpnPortalModule implements ServiceModuleInterface
     {
         $service->get(
             '/',
-            fn (UserInfo $userInfo, Request $request): Response => new RedirectResponse($request->getRootUri().'home', 302)
+            fn (UserInfo $userInfo, Request $request): Response => new RedirectResponse($request->getRootUri().'home')
         );
 
         $service->get(
@@ -139,7 +139,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $request->requirePostParameter('connectionId', fn (string $s) => Validator::connectionId($s))
                 );
 
-                return new RedirectResponse($request->getRootUri().'home', 302);
+                return new RedirectResponse($request->getRootUri().'home');
             }
         );
 
@@ -179,7 +179,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 // delete the OAuth authorization
                 $this->oauthStorage->deleteAuthorization($authKey);
 
-                return new RedirectResponse($request->getRootUri().'account', 302);
+                return new RedirectResponse($request->getRootUri().'account');
             }
         );
 
@@ -188,7 +188,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request): Response {
                 $this->cookie->set('L', $request->requirePostParameter('uiLanguage', fn (string $s) => Validator::inSet($s, array_keys(Tpl::supportedLanguages()))));
 
-                return new RedirectResponse($request->requireReferrer(), 302);
+                return new RedirectResponse($request->requireReferrer());
             }
         );
     }

@@ -85,7 +85,7 @@ class PasswdModule implements ServiceModuleInterface
                 }
                 $this->storage->localUserUpdatePassword($userInfo->userId(), $passwordHash);
 
-                return new RedirectResponse($request->getRootUri().'account', 302);
+                return new RedirectResponse($request->getRootUri().'account');
             }
         );
     }
