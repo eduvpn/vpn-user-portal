@@ -46,14 +46,8 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
             throw new HttpException(sprintf('missing SAML user_id attribute "%s"', $userIdAttribute), 500);
         }
 
-        // we no longer need "samlAuth" afterwards, call its destructor to
-        // clean up the SamlAuth session and get back our own...
-        unset($this->samlAuth);
-
-        $userId = $samlAttributes[$userIdAttribute][0];
-
         return new UserInfo(
-            $userId,
+            $samlAttributes[$userIdAttribute][0],
             $this->getPermissionList($samlAttributes)
         );
     }
