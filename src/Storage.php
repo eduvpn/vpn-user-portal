@@ -764,6 +764,8 @@ class Storage
                         FROM
                             wg_peers
                         WHERE
+                            user_id = :user_id
+                        AND
                             public_key = :connection_id
                     ) AS w_count,
                     (
@@ -776,6 +778,7 @@ class Storage
                     ) AS o_count
                 SQL
         );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->execute();
         if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
