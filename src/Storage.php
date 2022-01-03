@@ -594,12 +594,9 @@ class Storage
     }
 
     /**
-     * XXX where is the is_disabled used here? on connect in NodeApiModule I guess?
-     * document this!
-     *
      * @return ?array{user_id:string,user_is_disabled:bool}
      */
-    public function oUserInfoByCommonName(string $commonName): ?array
+    public function oUserInfoByProfileIdAndCommonName(string $profileId, string $commonName): ?array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -611,10 +608,13 @@ class Storage
                     WHERE
                         u.user_id = c.user_id
                     AND
+                        c.profile_id = :profile_id
+                    AND
                         c.common_name = :common_name
                 SQL
         );
 
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->execute();
 

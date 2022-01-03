@@ -14,7 +14,7 @@ namespace Vpn\Portal\Http;
 use Vpn\Portal\Base64;
 use Vpn\Portal\Config;
 use Vpn\Portal\Dt;
-use Vpn\Portal\Exception\NodeApiException;
+use Vpn\Portal\Http\Exception\NodeApiException;
 use Vpn\Portal\LoggerInterface;
 use Vpn\Portal\ServerConfig;
 use Vpn\Portal\Storage;
@@ -52,8 +52,7 @@ class NodeApiModule implements ServiceModuleInterface
 
                 $serverConfigList = $this->serverConfig->get(
                     $profileConfigList,
-                    // userId = nodeNumber
-                    (int) $userInfo->userId(),
+                    (int) $userInfo->userId(), // userId = nodeNumber
                     $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s)),
                     'yes' === $request->requirePostParameter('prefer_aes', fn (string $s) => Validator::preferAes($s))
                 );
@@ -62,59 +61,45 @@ class NodeApiModule implements ServiceModuleInterface
                     $bodyLines[] = $configName.':'.Base64::encode($configFile);
                 }
 
-                /// XXX content type?
                 return new Response(implode("\n", $bodyLines));
             }
         );
 
         $service->post(
             '/connect',
-            function (UserInfo $userInfo, Request $request): Response {
-                try {
-                    $this->connect($request);
-
-                    return new Response('OK');
-                } catch (NodeApiException $e) {
-                    $this->logger->warning('unable to connect: '.$e->getMessage());
-
-                    return new Response('ERR');
-                }
-            }
+            fn (UserInfo $userInfo, Request $request): Response => $this->connect($request)
         );
 
         $service->post(
             '/disconnect',
-            function (UserInfo $userInfo, Request $request): Response {
-                try {
-                    $this->disconnect($request);
-
-                    return new Response('OK');
-                } catch (NodeApiException $e) {
-                    $this->logger->warning('unable to disconnect: '.$e->getMessage());
-
-                    return new Response('ERR');
-                }
-            }
+            fn (UserInfo $userInfo, Request $request): Response => $this->disconnect($request)
         );
     }
 
-    public function connect(Request $request): void
+    public function connect(Request $request): Response
     {
-        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
-        $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::commonName($s));
-        $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
-        $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
-        $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
-        // XXX use validator not bool returning option!
-        $connectedAt = (int) $request->requirePostParameter('connected_at', fn (string $s) => Validator::nonNegativeInt($s));
-        $userId = $this->verifyConnection($profileId, $commonName);
-        $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
-        $this->logger->info(
-            $this->logMessage('CONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
-        );
+        try {
+            $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
+            $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::commonName($s));
+            $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
+            $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
+            $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
+            $connectedAt = (int) $request->requirePostParameter('connected_at', fn (string $s) => Validator::nonNegativeInt($s));
+            $userId = $this->verifyConnection($profileId, $commonName);
+            $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
+            $this->logger->info(
+                $this->logMessage('CONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
+            );
+
+            return new Response('OK');
+        } catch (NodeApiException $e) {
+            $this->logger->warning($e->getMessage());
+
+            return new Response('ERR');
+        }
     }
 
-    public function disconnect(Request $request): void
+    public function disconnect(Request $request): Response
     {
         $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
         $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::commonName($s));
@@ -124,46 +109,42 @@ class NodeApiModule implements ServiceModuleInterface
         $bytesIn = (int) $request->requirePostParameter('bytes_in', fn (string $s) => Validator::nonNegativeInt($s));
         $bytesOut = (int) $request->requirePostParameter('bytes_out', fn (string $s) => Validator::nonNegativeInt($s));
         $disconnectedAt = (int) $request->requirePostParameter('disconnected_at', fn (string $s) => Validator::nonNegativeInt($s));
-        if (null === $userInfo = $this->storage->oUserInfoByCommonName($commonName)) {
-            // CN does not exist (anymore)
-            // XXX do we need to do something special?
-            return;
+        if (null === $userInfo = $this->storage->oUserInfoByProfileIdAndCommonName($profileId, $commonName)) {
+            // this is not fatal, there's nothing we can do anyway...
+            $this->logger->warning(sprintf('unable to find certificate with CN "%s" in the database', $commonName));
+
+            return new Response('OK');
         }
         $userId = $userInfo['user_id'];
         $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, Dt::get(sprintf('@%d', $disconnectedAt)));
         $this->logger->info(
             $this->logMessage('DISCONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
         );
+
+        return new Response('OK');
     }
 
     private function verifyConnection(string $profileId, string $commonName): string
     {
-        // verify status of certificate/user
-        if (null === $userInfo = $this->storage->oUserInfoByCommonName($commonName)) {
-            // we do not (yet) know the user as only an existing *//* certificate can be linked back to a user...
-            throw new NodeApiException(null, sprintf('user or certificate does not exist [profile_id: %s, common_name: %s]', $profileId, $commonName));
+        if (null === $userInfo = $this->storage->oUserInfoByProfileIdAndCommonName($profileId, $commonName)) {
+            throw new NodeApiException(sprintf('unable to find certificate with CN "%s" in the database', $commonName));
         }
 
         $userId = $userInfo['user_id'];
         if ($userInfo['user_is_disabled']) {
-            throw new NodeApiException($userId, 'unable to connect, account is disabled');
+            throw new NodeApiException(sprintf('account "%s" has been disabled', $userId));
         }
 
-        $this->verifyAcl($profileId, $userId);
-
-        return $userId;
-    }
-
-    private function verifyAcl(string $profileId, string $userId): void
-    {
         $profileConfig = $this->config->profileConfig($profileId);
         if (null !== $profilePermissionList = $profileConfig->aclPermissionList()) {
             // ACL is enabled for this profile
             $userPermissionList = $this->storage->userPermissionList($userId);
             if (false === self::hasPermission($userPermissionList, $profilePermissionList)) {
-                throw new NodeApiException($userId, sprintf('unable to connect, user permissions are [%s], but requires any of [%s]', implode(',', $userPermissionList), implode(',', $profilePermissionList)));
+                throw new NodeApiException(sprintf('account "%s" has insufficient permissions to access profile "%s"', $userId, $profileId));
             }
         }
+
+        return $userId;
     }
 
     private static function hasPermission(array $userPermissionList, array $aclPermissionList): bool
