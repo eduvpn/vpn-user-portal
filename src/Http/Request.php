@@ -15,6 +15,7 @@ use Closure;
 use RangeException;
 use Vpn\Portal\Binary;
 use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Validator;
 
 class Request
 {
@@ -288,5 +289,35 @@ class Request
         }
 
         return $this->requireHeader($headerKey);
+    }
+
+    /**
+     * If the HTTP_REFERER header is set, verify it and return it.
+     */
+    public function optionalReferrer(): ?string
+    {
+        if (null === $referrerHeaderValue = $this->optionalHeader('HTTP_REFERER')) {
+            return null;
+        }
+
+        try {
+            Validator::matchesOrigin($this->getOrigin(), $referrerHeaderValue);
+
+            return $referrerHeaderValue;
+        } catch (RangeException $e) {
+            throw new HttpException('unexpected HTTP_REFERER', 400);
+        }
+    }
+
+    /**
+     * Verify the HTTP_REFERER and return it.
+     */
+    public function requireReferrer(): string
+    {
+        if (null === $referrerHeaderValue = $this->optionalReferrer()) {
+            throw new HttpException('missing HTTP_REFERER', 400);
+        }
+
+        return $referrerHeaderValue;
     }
 }

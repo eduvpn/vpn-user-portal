@@ -44,7 +44,7 @@ class ShibAuthModule extends AbstractAuthModule
     public function triggerLogout(Request $request): Response
     {
         return new RedirectResponse(
-            $request->getScheme().'://'.$request->getAuthority().'/Shibboleth.sso/Logout?'.http_build_query(['return' => $request->requireHeader('HTTP_REFERER')])
+            $request->getScheme().'://'.$request->getAuthority().'/Shibboleth.sso/Logout?'.http_build_query(['return' => $request->requireReferrer()])
         );
     }
 }

@@ -188,7 +188,7 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request): Response {
                 $this->cookie->set('L', $request->requirePostParameter('uiLanguage', fn (string $s) => Validator::inSet($s, array_keys(Tpl::supportedLanguages()))));
 
-                return new RedirectResponse($request->requireHeader('HTTP_REFERER'), 302);
+                return new RedirectResponse($request->requireReferrer(), 302);
             }
         );
     }

@@ -34,6 +34,6 @@ class AbstractAuthModule implements AuthModuleInterface
         // by default we return to the place the users came from, it is up to
         // authentication mechanisms that implement their own logout, e.g.
         // SAML authentication to override this method
-        return new RedirectResponse($request->requireHeader('HTTP_REFERER'));
+        return new RedirectResponse($request->requireReferrer());
     }
 }
