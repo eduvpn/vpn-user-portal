@@ -25,6 +25,8 @@ class HttpClientRequest
     /** @var array<string,string> */
     private array $requestHeaders;
 
+    private bool $httpBuildQuery = false;
+
     /**
      * @param array<string,array<string>|string> $queryParameters
      * @param array<string,array<string>|string> $postParameters
@@ -52,6 +54,14 @@ class HttpClientRequest
         return 'unsupported request method';
     }
 
+    public function withHttpBuildQuery(): self
+    {
+        $objCopy = clone $this;
+        $objCopy->httpBuildQuery = true;
+
+        return $objCopy;
+    }
+
     public function requestMethod(): string
     {
         return $this->requestMethod;
@@ -71,18 +81,33 @@ class HttpClientRequest
 
     public function queryParameters(): string
     {
+        if ($this->httpBuildQuery) {
+            return http_build_query($this->queryParameters);
+        }
+
         return self::buildQuery($this->queryParameters);
     }
 
     public function postParameters(): string
     {
+        if ($this->httpBuildQuery) {
+            return http_build_query($this->postParameters);
+        }
+
         return self::buildQuery($this->postParameters);
     }
 
-    // XXX sync with vpn-server-node, we need to 'serialize' them!
+    /**
+     * @return array<string>
+     */
     public function requestHeaders(): array
     {
-        return $this->requestHeaders;
+        $headerList = [];
+        foreach ($this->requestHeaders as $k => $v) {
+            $headerList[] = $k.': '.$v;
+        }
+
+        return $headerList;
     }
 
     /**
