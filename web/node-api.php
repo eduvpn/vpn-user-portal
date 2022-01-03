@@ -29,6 +29,8 @@ use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 // only allow owner permissions
 umask(0077);
 
+$logger = new SysLogger('vpn-user-portal');
+
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();
@@ -50,13 +52,12 @@ try {
                 new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data')),
                 new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort()),
             ),
-            new SysLogger('vpn-user-portal-node-api')
+            $logger
         )
     );
     $request = Request::createFromGlobals();
     $service->run($request)->send();
 } catch (Exception $e) {
-    $logger = new SysLogger('vpn-user-portal-node-api');
     $logger->error($e->getMessage());
     $response = new JsonResponse(['error' => $e->getMessage()], [], 500);
     $response->send();
