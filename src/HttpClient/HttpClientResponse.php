@@ -13,14 +13,9 @@ namespace Vpn\Portal\HttpClient;
 
 class HttpClientResponse
 {
-    /** @var int */
-    private $statusCode;
-
-    /** @var string */
-    private $headerList;
-
-    /** @var string */
-    private $responseBody;
+    private int $statusCode;
+    private string $headerList;
+    private string $responseBody;
 
     public function __construct(int $statusCode, string $headerList, string $responseBody)
     {
