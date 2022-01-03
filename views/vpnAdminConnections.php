@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
-<?php /** @var array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>> $profileConnectionList */?>
+<?php /** @var array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>,vpn_proto:string}>> $profileConnectionList */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var string $requestRoot */?>
 
@@ -46,9 +46,9 @@
                     </td>
                     <td>
                         <ul>
-                            <?php foreach ($connection['ip_list'] as $ip): ?>
-                            <li><code><?=$this->e($ip); ?></code></li>
-                            <?php endforeach; ?>
+<?php foreach ($connection['ip_list'] as $ip): ?>
+                            <li><code class="<?=$this->e($connection['vpn_proto']); ?>"><?=$this->e($ip); ?></code></li>
+<?php endforeach; ?>
                         </ul>
                     </td>
                 </tr>
