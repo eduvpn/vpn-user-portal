@@ -28,14 +28,6 @@ class TlsCrypt
         // validate profileId also here, to make absolutely sure...
         Validator::profileId($profileId);
 
-        // if we have "tls-crypt.key" we'll use that for all profiles, if not,
-        // we use the profile specific ones
-        $tlsCryptKeyFile = $this->keyDir.'/tls-crypt.key';
-        if (FileIO::exists($tlsCryptKeyFile)) {
-            return FileIO::read($tlsCryptKeyFile);
-        }
-
-        // profile specific tls-crypt file
         $tlsCryptKeyFile = $this->keyDir.'/tls-crypt-'.$profileId.'.key';
         if (FileIO::exists($tlsCryptKeyFile)) {
             return FileIO::read($tlsCryptKeyFile);
