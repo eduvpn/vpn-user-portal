@@ -38,7 +38,7 @@ final class KeyPairTest extends TestCase
      * We expect the public key that is in the output of the generate() call to
      * be identical to the public key derived from the secret key.
      */
-    public function testGenerateAndComputeCompare()
+    public function testGenerateAndComputeCompare(): void
     {
         $keyPair = KeyPair::generate();
         static::assertSame($keyPair['public_key'], KeyPair::computePublicKey($keyPair['secret_key']));
