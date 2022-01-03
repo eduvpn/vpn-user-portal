@@ -46,7 +46,7 @@ class ConnectionManager
     }
 
     /**
-     * @return array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>}>>
+     * @return array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>,vpn_proto:string}>>
      */
     public function get(): array
     {
@@ -76,6 +76,7 @@ class ConnectionManager
                             'connection_id' => $certInfo['common_name'],
                             'display_name' => $certInfo['display_name'],
                             'ip_list' => [$oConnectionList[$commonName]['ip_four'], $oConnectionList[$commonName]['ip_six']],
+                            'vpn_proto' => 'openvpn',
                         ];
                     }
                 }
@@ -97,6 +98,7 @@ class ConnectionManager
                             'connection_id' => $peerInfo['public_key'],
                             'display_name' => $peerInfo['display_name'],
                             'ip_list' => [$peerInfo['ip_four'], $peerInfo['ip_six']],
+                            'vpn_proto' => 'wireguard',
                         ];
                     }
                 }
