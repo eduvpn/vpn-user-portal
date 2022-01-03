@@ -181,10 +181,12 @@ class ConnectionManager
 
                 break;
             }
-            $this->logger->warning('VPN node "'.$i.'" is not usable');
+            $this->logger->error(sprintf('VPN node "%d" (%s) is not available', $i, $profileConfig->nodeUrl($i)));
         }
         if (null === $nodeNumber) {
-            throw new ConnectionManagerException('unable to find acceptable VPN node');
+            $this->logger->error('no VPN node available');
+
+            throw new ConnectionManagerException('no VPN node available');
         }
 
         if ('openvpn' === $useProto && $profileConfig->oSupport()) {
