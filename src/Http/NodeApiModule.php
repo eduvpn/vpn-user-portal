@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
-use DateTimeImmutable;
 use Vpn\Portal\Base64;
 use Vpn\Portal\Config;
 use Vpn\Portal\Dt;
@@ -24,14 +23,9 @@ use Vpn\Portal\Validator;
 class NodeApiModule implements ServiceModuleInterface
 {
     private Config $config;
-
     private Storage $storage;
-
     private ServerConfig $serverConfig;
-
     private LoggerInterface $logger;
-
-    private DateTimeImmutable $dateTime;
 
     public function __construct(Config $config, Storage $storage, ServerConfig $serverConfig, LoggerInterface $logger)
     {
@@ -39,7 +33,6 @@ class NodeApiModule implements ServiceModuleInterface
         $this->storage = $storage;
         $this->serverConfig = $serverConfig;
         $this->logger = $logger;
-        $this->dateTime = Dt::get();
     }
 
     public function init(ServiceInterface $service): void
