@@ -15,7 +15,7 @@ use DateTimeImmutable;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
-use Vpn\Portal\WireGuard\KeyPair;
+use Vpn\Portal\WireGuard\Key;
 
 /**
  * List, add and remove connections.
@@ -219,11 +219,10 @@ class ConnectionManager
                 throw new ConnectionManagerException(sprintf('node "%d" did not yet register their WireGuard public key', $nodeNumber));
             }
 
-            $privateKey = null;
+            $secretKey = null;
             if (null === $publicKey) {
-                $keyPair = KeyPair::generate();
-                $privateKey = $keyPair['secret_key'];
-                $publicKey = $keyPair['public_key'];
+                $secretKey = Key::generate();
+                $publicKey = Key::publicKeyFromSecretKey($secretKey);
             }
 
             // XXX this call can throw a ConnectionManagerException!
@@ -242,7 +241,7 @@ class ConnectionManager
             return new WireGuardClientConfig(
                 $nodeNumber,
                 $profileConfig,
-                $privateKey,
+                $secretKey,
                 $ipFour,
                 $ipSix,
                 $serverPublicKey,
