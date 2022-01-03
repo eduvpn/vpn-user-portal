@@ -48,7 +48,7 @@ class ServerInfo
             return null;
         }
 
-        return FileIO::readFile($publicKeyFile);
+        return FileIO::read($publicKeyFile);
     }
 
     public function wgPort(): int

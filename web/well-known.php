@@ -33,7 +33,7 @@ try {
                 'token_endpoint' => $appRootUri.'/oauth/token',
             ],
         ],
-        'v' => trim(FileIO::readFile($baseDir.'/VERSION')),
+        'v' => trim(FileIO::read($baseDir.'/VERSION')),
     ];
 
     $response = new JsonResponse($jsonData, ['Cache-Control' => 'no-store']);

@@ -50,7 +50,7 @@ class ServerConfig
         if (!FileIO::exists($publicKeyFile)) {
             // XXX what should we do when file exists? compare and scream when
             // it is not the same anymore?
-            FileIO::writeFile($publicKeyFile, $publicKey);
+            FileIO::write($publicKeyFile, $publicKey);
         }
 
         return <<< EOF

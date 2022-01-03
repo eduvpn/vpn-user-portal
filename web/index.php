@@ -83,7 +83,7 @@ try {
             'requestRoot' => $request->getRoot(),
             'requestRootUri' => $request->getRootUri(),
             'enabledLanguages' => $config->enabledLanguages(),
-            'portalVersion' => trim(FileIO::readFile($baseDir.'/VERSION')),
+            'portalVersion' => trim(FileIO::read($baseDir.'/VERSION')),
             'isAdmin' => false,
             'uiLanguage' => $uiLanguage,
             '_show_logout_button' => true,
@@ -92,7 +92,7 @@ try {
     );
 
     $dateTime = Dt::get();
-    FileIO::createDir($baseDir.'/data');
+    FileIO::mkdir($baseDir.'/data');
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
     $sessionExpiry = Expiry::calculate(
         $dateTime,
@@ -212,7 +212,7 @@ try {
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $wireGuardServerConfig = new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort());
-    $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
+    $oauthKey = FileIO::read($baseDir.'/config/oauth.key');
     $oauthSigner = new Signer($oauthKey);
     $tlsCrypt = new TlsCrypt($baseDir.'/data');
     $serverInfo = new ServerInfo(

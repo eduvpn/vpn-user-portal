@@ -30,20 +30,21 @@ class TlsCrypt
 
         // if we have "tls-crypt.key" we'll use that for all profiles, if not,
         // we use the profile specific ones
-        if (null !== $tlsCryptKey = FileIO::readFileIfExists($this->keyDir.'/tls-crypt.key')) {
-            return $tlsCryptKey;
+        $tlsCryptKeyFile = $this->keyDir.'/tls-crypt.key';
+        if (FileIO::exists($tlsCryptKeyFile)) {
+            return FileIO::read($tlsCryptKeyFile);
         }
 
         // profile specific tls-crypt file
         $tlsCryptKeyFile = $this->keyDir.'/tls-crypt-'.$profileId.'.key';
-        if (null !== $tlsCryptKey = FileIO::readFileIfExists($tlsCryptKeyFile)) {
-            return $tlsCryptKey;
+        if (FileIO::exists($tlsCryptKeyFile)) {
+            return FileIO::read($tlsCryptKeyFile);
         }
 
         // no key yet, create one
-        FileIO::writeFile($tlsCryptKeyFile, self::generate());
+        FileIO::write($tlsCryptKeyFile, self::generate());
 
-        return FileIO::readFile($tlsCryptKeyFile);
+        return FileIO::read($tlsCryptKeyFile);
     }
 
     private static function generate(): string

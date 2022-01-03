@@ -20,16 +20,7 @@ class FileIO
         return file_exists($filePath);
     }
 
-    public static function readFileIfExists(string $filePath): ?string
-    {
-        if (!self::exists($filePath)) {
-            return null;
-        }
-
-        return self::readFile($filePath);
-    }
-
-    public static function readFile(string $filePath): string
+    public static function read(string $filePath): string
     {
         if (false === self::exists($filePath)) {
             throw new RuntimeException(sprintf('unable to find "%s"', $filePath));
@@ -41,21 +32,21 @@ class FileIO
         return $fileData;
     }
 
-    public static function writeFile(string $filePath, string $fileData): void
+    public static function write(string $filePath, string $fileData): void
     {
         if (false === file_put_contents($filePath, $fileData)) {
             throw new RuntimeException(sprintf('unable to write file "%s"', $filePath));
         }
     }
 
-    public static function deleteFile(string $filePath): void
+    public static function delete(string $filePath): void
     {
         if (false === unlink($filePath)) {
             throw new RuntimeException(sprintf('unable to delete file "%s"', $filePath));
         }
     }
 
-    public static function createDir(string $dirPath): void
+    public static function mkdir(string $dirPath): void
     {
         if (false === file_exists($dirPath)) {
             // umask still influences the default 0777

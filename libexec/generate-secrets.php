@@ -47,7 +47,7 @@ try {
         $nodeKeyFile = $baseDir.'/config/node.'.$nodeNumber.'.key';
         if (!FileIO::exists($nodeKeyFile)) {
             $secretKey = random_bytes(32);
-            FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey));
+            FileIO::write($nodeKeyFile, sodium_bin2hex($secretKey));
         }
 
         exit(0);
@@ -57,14 +57,14 @@ try {
     // OAuth key
     $apiKeyFile = $baseDir.'/config/oauth.key';
     if (!FileIO::exists($apiKeyFile)) {
-        FileIO::writeFile($apiKeyFile, Signer::generateSecretKey());
+        FileIO::write($apiKeyFile, Signer::generateSecretKey());
     }
 
     // Node Key
     $nodeKeyFile = $baseDir.'/config/node.0.key';
     if (!FileIO::exists($nodeKeyFile)) {
         $secretKey = random_bytes(32);
-        FileIO::writeFile($nodeKeyFile, sodium_bin2hex($secretKey));
+        FileIO::write($nodeKeyFile, sodium_bin2hex($secretKey));
     }
 
     // OpenVPN CA

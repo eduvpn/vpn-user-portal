@@ -52,7 +52,7 @@ class NodeAuthModule extends AbstractAuthModule
             return null;
         }
 
-        if (!hash_equals(FileIO::readFile($nodeKeyFile), $userAuthToken)) {
+        if (!hash_equals(FileIO::read($nodeKeyFile), $userAuthToken)) {
             return null;
         }
 

@@ -39,12 +39,12 @@ $logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = Request::createFromGlobals();
-    FileIO::createDir($baseDir.'/data');
+    FileIO::mkdir($baseDir.'/data');
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage($config->dbConfig($baseDir));
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
-    $oauthKey = FileIO::readFile($baseDir.'/config/oauth.key');
+    $oauthKey = FileIO::read($baseDir.'/config/oauth.key');
     $bearerValidator = new VpnBearerValidator(
         new Signer($oauthKey),
         new ClientDb(),

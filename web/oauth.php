@@ -35,7 +35,7 @@ $logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = Request::createFromGlobals();
-    FileIO::createDir($baseDir.'/data');
+    FileIO::mkdir($baseDir.'/data');
 
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();
@@ -52,7 +52,7 @@ try {
     $oauthServer = new VpnOAuthServer(
         new OAuthStorage($storage->dbPdo(), 'oauth_'),
         new ClientDb(),
-        new Signer(FileIO::readFile($baseDir.'/config/oauth.key')),
+        new Signer(FileIO::read($baseDir.'/config/oauth.key')),
         $sessionExpiry,
         $config->apiConfig()->tokenExpiry()
     );
