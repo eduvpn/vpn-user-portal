@@ -239,8 +239,6 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                $profileConfigList = $this->config->profileConfigList();
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',

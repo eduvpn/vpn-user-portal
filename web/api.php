@@ -30,7 +30,6 @@ use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
 use Vpn\Portal\VpnDaemon;
-use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 // only allow owner permissions
 umask(0077);
@@ -51,7 +50,6 @@ try {
         $oauthStorage
     );
     $service = new ApiService($bearerValidator);
-    $wireGuardServerConfig = new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort());
     $serverInfo = new ServerInfo(
         $baseDir,
         $ca,

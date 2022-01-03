@@ -149,18 +149,6 @@ class Request
     }
 
     /**
-     * Return the "raw" query string.
-     */
-    public function getQueryString(): string
-    {
-        if (null === $queryString = $this->optionalHeader('QUERY_STRING')) {
-            return '';
-        }
-
-        return $queryString;
-    }
-
-    /**
      * @param Closure(string):void $c
      */
     public function requireQueryParameter(string $queryKey, Closure $c): string

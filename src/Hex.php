@@ -21,9 +21,4 @@ class Hex
     {
         return sodium_bin2hex($string);
     }
-
-    public static function decode(string $string): string
-    {
-        return sodium_hex2bin($string);
-    }
 }

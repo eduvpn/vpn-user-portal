@@ -35,9 +35,4 @@ class KeyPair
             'public_key' => Base64::encode(sodium_crypto_box_publickey($keyPair)),
         ];
     }
-
-    public static function computePublicKey(string $secretKey): string
-    {
-        return Base64::encode(sodium_crypto_box_publickey_from_secretkey(Base64::decode($secretKey)));
-    }
 }

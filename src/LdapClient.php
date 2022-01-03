@@ -55,12 +55,6 @@ class LdapClient
         return ldap_escape($str, '', LDAP_ESCAPE_DN);
     }
 
-    public static function escapeFilter(string $str): string
-    {
-        // ldap_escape in PHP >= 5.6 (or symfony/polyfill-php56)
-        return ldap_escape($str, '', LDAP_ESCAPE_FILTER);
-    }
-
     /**
      * @param array<string> $attributeList
      */

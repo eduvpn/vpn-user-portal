@@ -56,7 +56,7 @@ class VpnCa implements CaInterface
         $crtFile = sprintf('%s/%s.crt', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
         $keyFile = sprintf('%s/%s.key', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
         $this->execVpnCa(sprintf('-server -name "%s" -ou "%s" -not-after CA -out-crt "%s" -out-key "%s"', $serverName, $profileId, $crtFile, $keyFile));
-        $certInfo = $this->certKeyInfo($crtFile, $keyFile);
+        $certInfo = new CertInfo(FileIO::read($crtFile), FileIO::read($keyFile));
         FileIO::delete($crtFile);
         FileIO::delete($keyFile);
 
@@ -79,7 +79,7 @@ class VpnCa implements CaInterface
         $crtFile = sprintf('%s/%s.crt', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
         $keyFile = sprintf('%s/%s.key', sys_get_temp_dir(), Hex::encode(random_bytes(32)));
         $this->execVpnCa(sprintf('-client -name "%s" -ou "%s" -not-after "%s" -out-crt "%s" -out-key "%s"', $commonName, $profileId, $expiresAt->format(DateTimeImmutable::ATOM), $crtFile, $keyFile));
-        $certInfo = $this->certKeyInfo($crtFile, $keyFile);
+        $certInfo = new CertInfo(FileIO::read($crtFile), FileIO::read($keyFile));
         FileIO::delete($crtFile);
         FileIO::delete($keyFile);
 
@@ -101,19 +101,6 @@ class VpnCa implements CaInterface
                 '-init-ca -not-after %s -name "VPN CA"',
                 $this->dateTime->add($caExpiry)->format(DateTimeImmutable::ATOM)
             )
-        );
-    }
-
-    private function certKeyInfo(string $certFile, string $keyFile): CertInfo
-    {
-        $pemCert = FileIO::read($certFile);
-        $parsedPem = openssl_x509_parse($pemCert);
-
-        return new CertInfo(
-            $pemCert,
-            FileIO::read($keyFile),
-            (int) $parsedPem['validFrom_time_t'],
-            (int) $parsedPem['validTo_time_t'],
         );
     }
 

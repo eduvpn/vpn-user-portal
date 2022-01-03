@@ -21,9 +21,4 @@ class Base64
     {
         return sodium_bin2base64($string, SODIUM_BASE64_VARIANT_ORIGINAL);
     }
-
-    public static function decode(string $string): string
-    {
-        return sodium_base642bin($string, SODIUM_BASE64_VARIANT_ORIGINAL);
-    }
 }

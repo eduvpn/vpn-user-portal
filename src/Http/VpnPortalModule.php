@@ -123,7 +123,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 if ('wireguard' === $vpnProto && $profileConfig->wSupport()) {
-                    return $this->getWireGuardConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt);
+                    return $this->getWireGuardConfig($profileId, $userInfo->userId(), $displayName, $expiresAt);
                 }
 
                 throw new HttpException(sprintf('profile "%s" does not support protocol "%s"', $profileId, $vpnProto), 400);
@@ -205,9 +205,8 @@ class VpnPortalModule implements ServiceModuleInterface
         return false;
     }
 
-    private function getWireGuardConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
+    private function getWireGuardConfig(string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
     {
-        // XXX we don't do anything with serverName?
         $clientConfig = $this->connectionManager->connect(
             $this->serverInfo,
             $userId,
@@ -232,7 +231,6 @@ class VpnPortalModule implements ServiceModuleInterface
 
     private function getOpenVpnConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $tcpOnly): Response
     {
-        // XXX we don't do anything with serverName?
         $clientConfig = $this->connectionManager->connect(
             $this->serverInfo,
             $userId,

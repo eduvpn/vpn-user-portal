@@ -66,11 +66,6 @@ class Tpl implements TplInterface
         $this->templateVariables[$k] = $v;
     }
 
-    public function addCallback(string $callbackName, callable $cb): void
-    {
-        $this->callbackList[$callbackName] = $cb;
-    }
-
     /**
      * @param array<string,mixed> $templateVariables
      */

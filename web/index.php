@@ -56,7 +56,6 @@ use Vpn\Portal\SysLogger;
 use Vpn\Portal\Tpl;
 use Vpn\Portal\Validator;
 use Vpn\Portal\VpnDaemon;
-use Vpn\Portal\WireGuard\ServerConfig as WireGuardServerConfig;
 
 // only allow owner permissions
 umask(0077);
@@ -211,7 +210,6 @@ try {
     $service->addBeforeHook($adminHook);
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
-    $wireGuardServerConfig = new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort());
     $oauthKey = FileIO::read($baseDir.'/config/oauth.key');
     $oauthSigner = new Signer($oauthKey);
     $tlsCrypt = new TlsCrypt($baseDir.'/data');

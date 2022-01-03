@@ -11,22 +11,15 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\OpenVpn\CA;
 
-use DateTimeImmutable;
-use Vpn\Portal\Dt;
-
 class CertInfo
 {
     private string $pemCert;
     private string $pemKey;
-    private int $validFrom;
-    private int $validTo;
 
-    public function __construct(string $pemCert, string $pemKey, int $validFrom, int $validTo)
+    public function __construct(string $pemCert, string $pemKey)
     {
         $this->pemCert = $pemCert;
         $this->pemKey = $pemKey;
-        $this->validFrom = $validFrom;
-        $this->validTo = $validTo;
     }
 
     public function pemCert(): string
@@ -37,15 +30,5 @@ class CertInfo
     public function pemKey(): string
     {
         return trim($this->pemKey);
-    }
-
-    public function validFrom(): DateTimeImmutable
-    {
-        return Dt::get('@'.$this->validFrom);
-    }
-
-    public function validTo(): DateTimeImmutable
-    {
-        return Dt::get('@'.$this->validTo);
     }
 }

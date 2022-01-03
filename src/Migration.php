@@ -177,22 +177,18 @@ class Migration
      */
     private static function getQueriesFromFile(string $filePath): array
     {
-        /** @var false|string $fileContent */
-        $fileContent = file_get_contents($filePath);
-        if (false === $fileContent) {
+        if (false === $fileContent = file_get_contents($filePath)) {
             throw new RuntimeException(sprintf('unable to read "%s"', $filePath));
         }
 
         return explode(';', $fileContent);
     }
 
-    private static function validateSchemaVersion(string $schemaVersion): string
+    private static function validateSchemaVersion(string $schemaVersion): void
     {
         if (1 !== preg_match('/^[0-9]{10}$/', $schemaVersion)) {
             throw new RangeException('schemaVersion must be 10 a digit string');
         }
-
-        return $schemaVersion;
     }
 
     /**

@@ -62,8 +62,6 @@ class LdapCredentialValidator implements CredentialValidatorInterface
             }
 
             $userId = $authUser;
-            $permissionList = [];
-
             if (null !== $userIdAttribute = $this->ldapAuthConfig->userIdAttribute()) {
                 // normalize the userId by querying it from the LDAP, benefits:
                 // (1) we get the exact same capitalization as in the LDAP
