@@ -64,10 +64,6 @@ try {
         }
     }
 
-    if (!$doInit && !$doMigrate) {
-        throw new Exception('need to specify either --init or --migrate');
-    }
-
     $config = Config::fromFile($baseDir.'/config/config.php');
     $dbConfig = $config->dbConfig($baseDir);
     $db = new PDO(
@@ -78,6 +74,29 @@ try {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
         throw new Exception('no need to run this command for SQLite database');
+    }
+
+    if (!$doInit && !$doMigrate) {
+        // show database status information
+        $currentVersion = Migration::getCurrentVersion($db);
+        $latestVersion = Storage::CURRENT_SCHEMA_VERSION;
+        echo 'Current Schema Version : '.$currentVersion.PHP_EOL;
+        echo 'Required Schema Version: '.$latestVersion.PHP_EOL;
+
+        if ($currentVersion === $latestVersion) {
+            echo 'Status                 : **OK**'.PHP_EOL;
+
+            exit(0);
+        }
+        if (null === $currentVersion) {
+            echo 'Status                 : **Initialization Required** (use --init)'.PHP_EOL;
+
+            exit(1);
+        }
+
+        echo 'Status                     : **Migration Required** (use --migrate)'.PHP_EOL;
+
+        exit(1);
     }
 
     Migration::run(
