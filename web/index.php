@@ -34,13 +34,12 @@ use Vpn\Portal\Http\Auth\ShibAuthModule;
 use Vpn\Portal\Http\Auth\UserPassAuthModule;
 use Vpn\Portal\Http\CsrfProtectionHook;
 use Vpn\Portal\Http\DisabledUserHook;
-use Vpn\Portal\Http\HtmlResponse;
+use Vpn\Portal\Http\HtmlService;
 use Vpn\Portal\Http\LogoutModule;
 use Vpn\Portal\Http\OAuthModule;
 use Vpn\Portal\Http\PasswdModule;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\SeCookie;
-use Vpn\Portal\Http\Service;
 use Vpn\Portal\Http\SeSession;
 use Vpn\Portal\Http\UpdateUserInfoHook;
 use Vpn\Portal\Http\UserPassModule;
@@ -61,8 +60,6 @@ use Vpn\Portal\VpnDaemon;
 umask(0077);
 
 $logger = new SysLogger('vpn-user-portal');
-/** @var ?Vpn\Portal\Tpl $tpl */
-$tpl = null;
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
@@ -111,7 +108,7 @@ try {
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
     $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config);
 
-    $service = new Service();
+    $service = new HtmlService($tpl);
     $service->addBeforeHook(new CsrfProtectionHook());
 
     switch ($config->authModule()) {
@@ -268,17 +265,6 @@ try {
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
-    $htmlBody = Tpl::escape('ERROR: '.$e->getMessage());
-    if (null !== $tpl) {
-        $tpl->reset();
-        $htmlBody = $tpl->render(
-            'errorPage',
-            [
-                'message' => $e->getMessage(),
-                'code' => 500,
-            ]
-        );
-    }
-    $response = new HtmlResponse($htmlBody, [], 500);
+    $response = new Response($e->getMessage(), [], 500);
     $response->send();
 }
