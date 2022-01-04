@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS connection_log(
     ip_four VARCHAR(255) NOT NULL,
     ip_six VARCHAR(255) NOT NULL,
     connected_at VARCHAR(255) NOT NULL,
-    bytes_in INTEGER DEFAULT NULL,
-    bytes_out INTEGER DEFAULT NULL,
+    bytes_in BIGINT DEFAULT NULL,
+    bytes_out BIGINT DEFAULT NULL,
     disconnected_at VARCHAR(255) DEFAULT NULL
 );
