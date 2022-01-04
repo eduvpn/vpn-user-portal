@@ -80,7 +80,7 @@ try {
         // show database status information
         $currentVersion = Migration::getCurrentVersion($db);
         $latestVersion = Storage::CURRENT_SCHEMA_VERSION;
-        echo 'Current Schema Version : '.$currentVersion.PHP_EOL;
+        echo 'Current Schema Version : '.($currentVersion ?? 'N/A').PHP_EOL;
         echo 'Required Schema Version: '.$latestVersion.PHP_EOL;
 
         if ($currentVersion === $latestVersion) {
