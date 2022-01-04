@@ -204,6 +204,7 @@ class Migration
     {
         // MySQL does not allow for CREATE/DROP TABLE inside a transaction, it
         // will commit by itself.
+        // @see https://mariadb.com/kb/en/sql-statements-that-cause-an-implicit-commit/
         if ('mysql' !== $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             $db->beginTransaction();
         }
@@ -213,6 +214,7 @@ class Migration
     {
         // MySQL does not allow for CREATE/DROP TABLE inside a transaction, it
         // will commit by itself.
+        // @see https://mariadb.com/kb/en/sql-statements-that-cause-an-implicit-commit/
         if ('mysql' !== $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             $db->commit();
         }
@@ -222,6 +224,7 @@ class Migration
     {
         // MySQL does not allow for CREATE/DROP TABLE inside a transaction, it
         // will commit by itself.
+        // @see https://mariadb.com/kb/en/sql-statements-that-cause-an-implicit-commit/
         if ('mysql' !== $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             $db->rollback();
         }
