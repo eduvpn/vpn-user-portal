@@ -68,17 +68,14 @@ class Migration
                     $queryList = self::getQueriesFromFile(self::getNameForDriver($db, sprintf('%s/%s.migration', $schemaDir, $migrationVersion)));
 
                     try {
-                        $db->beginTransaction();
-                        // XXX use prepare
+                        self::dbBeginTransaction($db);
                         $db->exec(sprintf("DELETE FROM version WHERE current_version = '%s'", $fromVersion));
                         self::runQueries($db, $queryList);
-                        // XXX use prepare
                         $db->exec(sprintf("INSERT INTO version (current_version) VALUES('%s')", $toVersion));
-                        $db->commit();
+                        self::dbCommit($db);
                         $currentVersion = $toVersion;
                     } catch (PDOException $e) {
-                        // something went wrong with the SQL queries
-                        $db->rollback();
+                        self::dbRollback($db);
 
                         throw $e;
                     }
@@ -201,5 +198,32 @@ class Migration
         }
 
         return explode('_', $migrationVersion, 2);
+    }
+
+    private static function dbBeginTransaction(PDO $db): void
+    {
+        // MySQL does not allow for CREATE/DROP TABLE inside a transaction, it
+        // will commit by itself.
+        if ('mysql' !== $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            $db->beginTransaction();
+        }
+    }
+
+    private static function dbCommit(PDO $db): void
+    {
+        // MySQL does not allow for CREATE/DROP TABLE inside a transaction, it
+        // will commit by itself.
+        if ('mysql' !== $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            $db->commit();
+        }
+    }
+
+    private static function dbRollback(PDO $db): void
+    {
+        // MySQL does not allow for CREATE/DROP TABLE inside a transaction, it
+        // will commit by itself.
+        if ('mysql' !== $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            $db->rollback();
+        }
     }
 }
