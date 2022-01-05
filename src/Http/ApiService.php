@@ -11,16 +11,16 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
-use fkooman\OAuth\Server\BearerValidator;
 use fkooman\OAuth\Server\Exception\OAuthException;
 use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\OAuth\ValidatorInterface;
 
 class ApiService implements ServiceInterface
 {
-    private BearerValidator $bearerValidator;
+    private ValidatorInterface $bearerValidator;
     private array $routeList = [];
 
-    public function __construct(BearerValidator $bearerValidator)
+    public function __construct(ValidatorInterface $bearerValidator)
     {
         $this->bearerValidator = $bearerValidator;
     }

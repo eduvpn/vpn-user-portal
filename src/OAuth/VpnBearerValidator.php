@@ -17,7 +17,7 @@ use fkooman\OAuth\Server\LocalAccessTokenVerifier;
 use fkooman\OAuth\Server\SignerInterface;
 use fkooman\OAuth\Server\StorageInterface;
 
-class VpnBearerValidator extends BearerValidator
+class VpnBearerValidator extends BearerValidator implements ValidatorInterface
 {
     public function __construct(SignerInterface $signer, ClientDbInterface $clientDb, StorageInterface $storage)
     {
