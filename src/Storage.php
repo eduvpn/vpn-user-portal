@@ -423,7 +423,7 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        // XXX what if user does not exist?
+        // XXX what if user does not (yet) exist, later also for guest scenario?
         return self::stringToPermissionList((string) $stmt->fetchColumn());
     }
 
