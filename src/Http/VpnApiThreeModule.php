@@ -120,7 +120,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
                 $publicKey = $request->optionalPostParameter('public_key', fn (string $s) => Validator::publicKey($s));
-                $tcpOnly = $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
+                $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
                 $vpnProto = self::determineProto($profileConfig, $publicKey, $tcpOnly);
 
                 switch ($vpnProto) {
