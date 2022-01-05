@@ -1,6 +1,7 @@
 /vendor
 /data
 /config/*.php
+/config/ca
 /config/views
 /config/*.key
 /.phpunit.cache
