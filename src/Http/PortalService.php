@@ -14,7 +14,7 @@ namespace Vpn\Portal\Http;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\TplInterface;
 
-class HtmlService implements ServiceInterface
+class PortalService implements ServiceInterface
 {
     private ?AuthModuleInterface $authModule = null;
     private TplInterface $tpl;

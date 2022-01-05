@@ -34,10 +34,10 @@ use Vpn\Portal\Http\Auth\ShibAuthModule;
 use Vpn\Portal\Http\Auth\UserPassAuthModule;
 use Vpn\Portal\Http\CsrfProtectionHook;
 use Vpn\Portal\Http\DisabledUserHook;
-use Vpn\Portal\Http\HtmlService;
 use Vpn\Portal\Http\LogoutModule;
 use Vpn\Portal\Http\OAuthModule;
 use Vpn\Portal\Http\PasswdModule;
+use Vpn\Portal\Http\PortalService;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\SeCookie;
@@ -106,7 +106,7 @@ try {
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
     $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config);
 
-    $service = new HtmlService($tpl);
+    $service = new PortalService($tpl);
     $service->addBeforeHook(new CsrfProtectionHook());
 
     switch ($config->authModule()) {
