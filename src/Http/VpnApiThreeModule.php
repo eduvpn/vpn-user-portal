@@ -16,6 +16,7 @@ use fkooman\OAuth\Server\AccessToken;
 use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
+use Vpn\Portal\ProfileConfig;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\Validator;
@@ -118,60 +119,56 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 }
 
                 $profileConfig = $this->config->profileConfig($requestedProfileId);
+                $publicKey = $request->optionalPostParameter('public_key', fn (string $s) => Validator::publicKey($s));
+                $tcpOnly = $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
+                $vpnProto = self::determineProto($profileConfig, $publicKey, $tcpOnly);
 
-                $vpnProto = $request->optionalPostParameter('vpn_proto', fn (string $s) => Validator::vpnProto($s));
-                if (null === $vpnProto || 'default' === $vpnProto) {
-                    $vpnProto = $profileConfig->preferredProto();
+                switch ($vpnProto) {
+                    case 'openvpn':
+                        $clientConfig = $this->connectionManager->connect(
+                            $this->serverInfo,
+                            $accessToken->userId(),
+                            $profileConfig->profileId(),
+                            $vpnProto,
+                            $accessToken->clientId(),
+                            $accessToken->authorizationExpiresAt(),
+                            $tcpOnly,
+                            null,
+                            $accessToken->authKey(),
+                        );
+
+                        return new Response(
+                            $clientConfig->get(),
+                            [
+                                'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                                'Content-Type' => $clientConfig->contentType(),
+                            ]
+                        );
+
+                    case 'wireguard':
+                        $clientConfig = $this->connectionManager->connect(
+                            $this->serverInfo,
+                            $accessToken->userId(),
+                            $profileConfig->profileId(),
+                            $vpnProto,
+                            $accessToken->clientId(),
+                            $accessToken->authorizationExpiresAt(),
+                            false,
+                            $publicKey,
+                            $accessToken->authKey()
+                        );
+
+                        return new Response(
+                            $clientConfig->get(),
+                            [
+                                'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                                'Content-Type' => $clientConfig->contentType(),
+                            ]
+                        );
+
+                    default:
+                        return new JsonResponse(['error' => 'unsupported VPN protocol'], [], 400);
                 }
-
-                // XXX we can make this independent I think?
-
-                if ('openvpn' === $vpnProto && $profileConfig->oSupport()) {
-                    $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
-                    $clientConfig = $this->connectionManager->connect(
-                        $this->serverInfo,
-                        $accessToken->userId(),
-                        $profileConfig->profileId(),
-                        'openvpn',
-                        $accessToken->clientId(),
-                        $accessToken->authorizationExpiresAt(),
-                        $tcpOnly,
-                        null,
-                        $accessToken->authKey(),
-                    );
-
-                    return new Response(
-                        $clientConfig->get(),
-                        [
-                            'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                            'Content-Type' => $clientConfig->contentType(),
-                        ]
-                    );
-                }
-
-                if ('wireguard' === $vpnProto && $profileConfig->wSupport()) {
-                    $clientConfig = $this->connectionManager->connect(
-                        $this->serverInfo,
-                        $accessToken->userId(),
-                        $profileConfig->profileId(),
-                        'wireguard',
-                        $accessToken->clientId(),
-                        $accessToken->authorizationExpiresAt(),
-                        false,
-                        $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s)),
-                        $accessToken->authKey()
-                    );
-
-                    return new Response(
-                        $clientConfig->get(),
-                        [
-                            'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                            'Content-Type' => $clientConfig->contentType(),
-                        ]
-                    );
-                }
-
-                return new JsonResponse(['error' => 'invalid "vpn_proto"'], [], 400);
             }
         );
 
@@ -183,5 +180,38 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 return new Response(null, [], 204);
             }
         );
+    }
+
+    private static function determineProto(ProfileConfig $profileConfig, ?string $publicKey, bool $tcpOnly): string
+    {
+        // only supports OpenVPN
+        if ($profileConfig->oSupport() && !$profileConfig->wSupport()) {
+            return 'openvpn';
+        }
+
+        // only supports WireGuard
+        if (!$profileConfig->oSupport() && $profileConfig->wSupport()) {
+            return 'wireguard';
+        }
+
+        // Profile supports OpenVPN & WireGuard
+        // VPN client requests TCP connection
+        if ($tcpOnly) {
+            return 'openvpn';
+        }
+
+        // Profile prefers OpenVPN
+        if ('openvpn' === $profileConfig->preferredProto()) {
+            return 'openvpn';
+        }
+
+        // VPN client provides a WireGuard Public Key, server prefers WireGuard
+        if (null !== $publicKey) {
+            return 'wireguard';
+        }
+
+        // Server prefers WireGuard, but VPN client does not provide a
+        // WireGuard Public Key, so use OpenVPN...
+        return 'openvpn';
     }
 }
