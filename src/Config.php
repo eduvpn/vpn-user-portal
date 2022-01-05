@@ -155,7 +155,7 @@ class Config
     public function profileConfigList(): array
     {
         $profileConfigList = [];
-        foreach ($this->s('vpnProfiles')->toArray() as $profileData) {
+        foreach ($this->s('ProfileList')->toArray() as $profileData) {
             $profileConfigList[] = new ProfileConfig($profileData);
         }
 

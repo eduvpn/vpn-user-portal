@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     // Choose the Portal Template to be used (must be installed)
     // OPTIONAL, DEFAULT = null
@@ -222,8 +224,8 @@ return [
     //    ]
     //],
 
-    // List of VPN profiles
-    'vpnProfiles' => [
+    // VPN Profile List
+    'ProfileList' => [
         [
             // Unique identifier for this profile.
             // REQUIRED
