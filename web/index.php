@@ -75,13 +75,13 @@ try {
         $config->styleName(),
         $uiLanguage,
         [
-            'portalHostname' => gethostname(),
             'requestRoot' => $request->getRoot(),
-            'enabledLanguages' => $config->enabledLanguages(),
+            'portalHost' => gethostname(),
             'portalVersion' => trim(FileIO::read($baseDir.'/VERSION')),
+            'enabledLanguages' => $config->enabledLanguages(),
+            'authModule' => $config->authModule(),
             'isAdmin' => false,
             'showLogoutButton' => true,
-            'authModule' => $config->authModule(),
         ]
     );
 
