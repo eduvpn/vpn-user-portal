@@ -30,6 +30,11 @@ class Response
         $this->statusCode = $statusCode;
     }
 
+    public function responseBody(): ?string
+    {
+        return $this->responseBody;
+    }
+
     public function send(): void
     {
         http_response_code($this->statusCode);
