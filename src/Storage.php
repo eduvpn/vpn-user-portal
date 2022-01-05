@@ -408,7 +408,7 @@ class Storage
     /**
      * @return array<string>
      */
-    public function userPermissionList(string $userId)
+    public function userPermissionList(string $userId): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -423,6 +423,7 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
+        // XXX what if user does not exist?
         return self::stringToPermissionList((string) $stmt->fetchColumn());
     }
 
@@ -871,7 +872,7 @@ class Storage
     /**
      * @return array<array{user_id:string,profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable}>
      */
-    public function getLogEntries(DateTimeImmutable $dateTime, string $ipAddress)
+    public function getLogEntries(DateTimeImmutable $dateTime, string $ipAddress): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -1071,7 +1072,7 @@ class Storage
     /**
      * @return array<array{client_id:string,client_count:int}>
      */
-    public function appUsage()
+    public function appUsage(): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
