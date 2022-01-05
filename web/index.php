@@ -80,7 +80,7 @@ try {
             'enabledLanguages' => $config->enabledLanguages(),
             'portalVersion' => trim(FileIO::read($baseDir.'/VERSION')),
             'isAdmin' => false,
-            '_show_logout_button' => true,
+            'showLogoutButton' => true,
             'authModule' => $config->authModule(),
         ]
     );

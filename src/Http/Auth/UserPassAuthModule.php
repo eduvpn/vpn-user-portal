@@ -55,7 +55,7 @@ class UserPassAuthModule extends AbstractAuthModule
             [
                 '_form_auth_invalid_credentials' => false,
                 '_form_auth_redirect_to' => $request->getUri(),
-                '_show_logout_button' => false,
+                'showLogoutButton' => false,
             ]
         );
 
