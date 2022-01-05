@@ -123,6 +123,11 @@ class Tpl implements TplInterface
         return $this->e($profileId);
     }
 
+    public function uiLanguage(): string
+    {
+        return $this->uiLanguage;
+    }
+
     public static function languageCodeToHuman(string $uiLanguage): string
     {
         $supportedLanguages = self::supportedLanguages();

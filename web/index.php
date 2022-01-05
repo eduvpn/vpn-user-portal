@@ -76,13 +76,10 @@ try {
         $uiLanguage,
         [
             'portalHostname' => gethostname(),
-            'requestUri' => $request->getUri(),
             'requestRoot' => $request->getRoot(),
-            'requestRootUri' => $request->getRootUri(),
             'enabledLanguages' => $config->enabledLanguages(),
             'portalVersion' => trim(FileIO::read($baseDir.'/VERSION')),
             'isAdmin' => false,
-            'uiLanguage' => $uiLanguage,
             '_show_logout_button' => true,
             'authModule' => $config->authModule(),
         ]

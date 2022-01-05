@@ -1,12 +1,11 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
-<?php /** @var string $uiLanguage */ ?>
 <?php /** @var string $pageTitle */ ?>
 <?php /** @var string $requestRoot */ ?>
 <?php /** @var string $portalHostname */ ?>
 <!DOCTYPE html>
 
-<html lang="<?=$this->e($uiLanguage); ?>" dir="<?=$this->textDir(); ?>">
+<html lang="<?=$this->uiLanguage(); ?>" dir="<?=$this->textDir(); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
