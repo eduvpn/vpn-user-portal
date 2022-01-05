@@ -39,6 +39,7 @@ use Vpn\Portal\Http\LogoutModule;
 use Vpn\Portal\Http\OAuthModule;
 use Vpn\Portal\Http\PasswdModule;
 use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\SeCookie;
 use Vpn\Portal\Http\SeSession;
 use Vpn\Portal\Http\UpdateUserInfoHook;
@@ -265,6 +266,6 @@ try {
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
-    $response = new Response($e->getMessage(), [], 500);
+    $response = new Response($e->getMessage(), ['Content-Type' => 'text/plain'], 500);
     $response->send();
 }
