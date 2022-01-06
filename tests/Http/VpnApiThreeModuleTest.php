@@ -34,10 +34,11 @@ final class VpnApiThreeModuleTest extends TestCase
 {
     private ApiService $service;
     private Storage $storage;
+    private DateTimeImmutable $dateTime;
 
     protected function setUp(): void
     {
-        $dateTime = new DateTimeImmutable();
+        $this->dateTime = new DateTimeImmutable();
         $tmpDir = sprintf('%s/vpn-user-portal-%s', sys_get_temp_dir(), bin2hex(random_bytes(32)));
         mkdir($tmpDir);
         copy(\dirname(__DIR__).'/data/tls-crypt-default.key', $tmpDir.'/tls-crypt-default.key');
@@ -78,9 +79,9 @@ final class VpnApiThreeModuleTest extends TestCase
         $this->storage = new Storage($config->dbConfig($baseDir));
 
         // XXX the user & authorization MUST exist apparently, this will NOT work with guest usage!
-        $this->storage->userAdd('user_id', $dateTime, []);
+        $this->storage->userAdd('user_id', $this->dateTime, []);
         $oauthStorage = new OAuthStorage($this->storage->dbPdo(), 'oauth_');
-        $oauthStorage->storeAuthorization('user_id', 'client_id', new Scope('config'), 'auth_key', $dateTime, $dateTime->add(new DateInterval('P90D')));
+        $oauthStorage->storeAuthorization('user_id', 'client_id', new Scope('config'), 'auth_key', $this->dateTime, $this->dateTime->add(new DateInterval('P90D')));
 
         $apiModule = new VpnApiThreeModule(
             $config,
@@ -159,8 +160,18 @@ final class VpnApiThreeModuleTest extends TestCase
 
     public function testDisconnectOpenVpn(): void
     {
-        // XXX we must make sure the certificate with auth_key is in the
-        // database, and afterwards not anymore
+        $this->storage->oCertAdd('user_id', 'default', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=', 'display_name', $this->dateTime, $this->dateTime->add(new DateInterval('P90D')), 'auth_key');
+        static::assertSame(
+            [
+                [
+                    'user_id' => 'user_id',
+                    'profile_id' => 'default',
+                    'common_name' => 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
+                ],
+            ],
+            $this->storage->oCertListByAuthKey('auth_key')
+        );
+
         $request = new Request(
             [
                 'REQUEST_URI' => '/v3/disconnect',
