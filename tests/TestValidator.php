@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Tests;
 
+use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
 use fkooman\OAuth\Server\Http\Request;
@@ -21,14 +22,18 @@ class TestValidator implements ValidatorInterface
 {
     public function validate(?Request $request = null): AccessToken
     {
+        $dateTime = new DateTimeImmutable('2022-01-01T09:00:00+00:00');
+        $expiresAt = $dateTime->add(new DateInterval('PT1H'));
+        $authorizationExpiresAt = $dateTime->add(new DateInterval('P90D'));
+
         return new AccessToken(
             'token_id',
             'auth_key',
             'user_id',
             'client_id',
             new Scope('config'),
-            new DateTimeImmutable(),
-            new DateTimeImmutable(),
+            $expiresAt,
+            $authorizationExpiresAt,
             'raw_token'
         );
     }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\OpenVpn;
 
+use DateTimeImmutable;
 use Vpn\Portal\ClientConfigInterface;
 use Vpn\Portal\OpenVpn\CA\CaInfo;
 use Vpn\Portal\OpenVpn\CA\CertInfo;
@@ -25,8 +26,9 @@ class ClientConfig implements ClientConfigInterface
     private TlsCrypt $tlsCrypt;
     private CertInfo $certInfo;
     private bool $tcpOnly;
+    private DateTimeImmutable $expiresAt;
 
-    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $tcpOnly)
+    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $tcpOnly, DateTimeImmutable $expiresAt)
     {
         $this->nodeNumber = $nodeNumber;
         $this->profileConfig = $profileConfig;
@@ -34,6 +36,7 @@ class ClientConfig implements ClientConfigInterface
         $this->tlsCrypt = $tlsCrypt;
         $this->certInfo = $certInfo;
         $this->tcpOnly = $tcpOnly;
+        $this->expiresAt = $expiresAt;
     }
 
     public function contentType(): string
@@ -71,6 +74,10 @@ class ClientConfig implements ClientConfigInterface
         }
 
         $clientConfig = [
+            sprintf('# Profile: %s (%s)', $this->profileConfig->displayName(), $this->profileConfig->profileId()),
+            sprintf('# Expires: %s', $this->expiresAt->format(DateTimeImmutable::ATOM)),
+            '',
+
             'dev tun',
             'client',
             'nobind',

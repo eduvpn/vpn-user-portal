@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\WireGuard;
 
+use DateTimeImmutable;
 use Vpn\Portal\ClientConfigInterface;
 use Vpn\Portal\Exception\QrCodeException;
 use Vpn\Portal\Ip;
@@ -30,8 +31,9 @@ class ClientConfig implements ClientConfigInterface
     private string $ipSix;
     private string $serverPublicKey;
     private int $wgPort;
+    private DateTimeImmutable $expiresAt;
 
-    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, ?string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort)
+    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, ?string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort, DateTimeImmutable $expiresAt)
     {
         $this->nodeNumber = $nodeNumber;
         $this->profileConfig = $profileConfig;
@@ -40,6 +42,7 @@ class ClientConfig implements ClientConfigInterface
         $this->ipSix = $ipSix;
         $this->serverPublicKey = $serverPublicKey;
         $this->wgPort = $wgPort;
+        $this->expiresAt = $expiresAt;
     }
 
     public function contentType(): string
@@ -63,7 +66,11 @@ class ClientConfig implements ClientConfigInterface
             $routeList->remove(Ip::fromIpPrefix($routeIpPrefix));
         }
 
-        $output = [];
+        $output = [
+            sprintf('# Profile: %s (%s)', $this->profileConfig->displayName(), $this->profileConfig->profileId()),
+            sprintf('# Expires: %s', $this->expiresAt->format(DateTimeImmutable::ATOM)),
+            '',
+        ];
         $output[] = '[Interface]';
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;

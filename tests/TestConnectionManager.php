@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Tests;
 
+use DateTimeImmutable;
 use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\LoggerInterface;
@@ -23,5 +24,6 @@ class TestConnectionManager extends ConnectionManager
     {
         parent::__construct($config, $vpnDaemon, $storage, $logger);
         $this->random = new TestRandom();
+        $this->dateTime = new DateTimeImmutable('2022-01-01T09:00:00+00:00');
     }
 }

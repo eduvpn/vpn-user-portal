@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Tests;
 
-use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Scope;
@@ -19,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 use Vpn\Portal\Config;
 use Vpn\Portal\Http\ApiService;
 use Vpn\Portal\Http\Request;
-use Vpn\Portal\Http\VpnApiThreeModule;
 use Vpn\Portal\NullLogger;
 use Vpn\Portal\OpenVpn\TlsCrypt;
 use Vpn\Portal\ServerInfo;
@@ -32,20 +30,14 @@ use Vpn\Portal\VpnDaemon;
  */
 final class VpnApiThreeModuleTest extends TestCase
 {
+    private Config $config;
     private ApiService $service;
     private Storage $storage;
     private DateTimeImmutable $dateTime;
 
     protected function setUp(): void
     {
-        $this->dateTime = new DateTimeImmutable();
-        $tmpDir = sprintf('%s/vpn-user-portal-%s', sys_get_temp_dir(), bin2hex(random_bytes(32)));
-        mkdir($tmpDir);
-        copy(\dirname(__DIR__).'/data/tls-crypt-default.key', $tmpDir.'/tls-crypt-default.key');
-        copy(\dirname(__DIR__).'/data/wireguard.0.public.key', $tmpDir.'/wireguard.0.public.key');
-
-        $baseDir = \dirname(__DIR__, 2);
-        $config = new Config(
+        $this->config = new Config(
             [
                 'Db' => [
                     'dbDsn' => 'sqlite::memory:',
@@ -76,25 +68,33 @@ final class VpnApiThreeModuleTest extends TestCase
             ]
         );
 
-        $this->storage = new Storage($config->dbConfig($baseDir));
+        $this->dateTime = new DateTimeImmutable('2022-01-01T09:00:00+00:00');
+        $tmpDir = sprintf('%s/vpn-user-portal-%s', sys_get_temp_dir(), bin2hex(random_bytes(32)));
+        mkdir($tmpDir);
+        copy(\dirname(__DIR__).'/data/tls-crypt-default.key', $tmpDir.'/tls-crypt-default.key');
+        copy(\dirname(__DIR__).'/data/wireguard.0.public.key', $tmpDir.'/wireguard.0.public.key');
+
+        $baseDir = \dirname(__DIR__, 2);
+
+        $this->storage = new Storage($this->config->dbConfig($baseDir));
 
         // XXX the user & authorization MUST exist apparently, this will NOT work with guest usage!
         $this->storage->userAdd('user_id', $this->dateTime, []);
         $oauthStorage = new OAuthStorage($this->storage->dbPdo(), 'oauth_');
-        $oauthStorage->storeAuthorization('user_id', 'client_id', new Scope('config'), 'auth_key', $this->dateTime, $this->dateTime->add(new DateInterval('P90D')));
+        $oauthStorage->storeAuthorization('user_id', 'client_id', new Scope('config'), 'auth_key', $this->dateTime, $this->dateTime->add($this->config->sessionExpiry()));
 
-        $apiModule = new VpnApiThreeModule(
-            $config,
+        $apiModule = new TestVpnApiThreeModule(
+            $this->config,
             $this->storage,
             new ServerInfo(
                 $tmpDir,
                 new TestCa(),
                 new TlsCrypt($tmpDir),
-                $config->wireGuardConfig()->listenPort(),
+                $this->config->wireGuardConfig()->listenPort(),
                 'gc6RjjPtIKeflbOun+dyAssnsdXzD6bmWisbxJrZiB0=',
             ),
             new TestConnectionManager(
-                $config,
+                $this->config,
                 new VpnDaemon(
                     new TestHttpClient(),
                     new NullLogger()
@@ -160,7 +160,7 @@ final class VpnApiThreeModuleTest extends TestCase
 
     public function testDisconnectOpenVpn(): void
     {
-        $this->storage->oCertAdd('user_id', 'default', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=', 'display_name', $this->dateTime, $this->dateTime->add(new DateInterval('P90D')), 'auth_key');
+        $this->storage->oCertAdd('user_id', 'default', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=', 'display_name', $this->dateTime, $this->dateTime->add($this->config->sessionExpiry()), 'auth_key');
         static::assertSame(
             [
                 [

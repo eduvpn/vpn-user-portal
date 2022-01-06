@@ -29,11 +29,11 @@ class ConnectionManager
     public const DO_NOT_DELETE = 1;
 
     protected RandomInterface $random;
+    protected DateTimeImmutable $dateTime;
     private Config $config;
     private Storage $storage;
     private VpnDaemon $vpnDaemon;
     private LoggerInterface $logger;
-    private DateTimeImmutable $dateTime;
 
     public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage, LoggerInterface $logger)
     {
@@ -209,7 +209,8 @@ class ConnectionManager
                 $serverInfo->ca()->caCert(),
                 $serverInfo->tlsCrypt(),
                 $certInfo,
-                $tcpOnly
+                $tcpOnly,
+                $expiresAt
             );
         }
 
@@ -234,7 +235,7 @@ class ConnectionManager
             // the DB enforces this, but maybe a better error could be given?
             $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
             $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
-            $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, new DateTimeImmutable());
+            $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
 
             $this->logger->info(
                 $this->logMessage('CONNECT', $userId, $profileId, $publicKey, $ipFour, $ipSix)
@@ -247,7 +248,8 @@ class ConnectionManager
                 $ipFour,
                 $ipSix,
                 $serverPublicKey,
-                $this->config->wireGuardConfig()->listenPort()
+                $this->config->wireGuardConfig()->listenPort(),
+                $expiresAt
             );
         }
 
@@ -296,7 +298,7 @@ class ConnectionManager
                     // XXX what if peer was not connected/registered anywhere?
                     // peer was connected to this node, use the information
                     // we got back to call "clientDisconnect"
-                    $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], new DateTimeImmutable());
+                    $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
                     $this->logger->info(
                         $this->logMessage('DISCONNECT', $userId, $profileId, $connectionId, '_', '_')
                     );

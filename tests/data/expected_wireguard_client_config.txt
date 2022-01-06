@@ -1,3 +1,6 @@
+# Profile: Default (WireGuard) (default-wg)
+# Expires: 2022-04-01T09:00:00+00:00
+
 [Interface]
 Address = 10.44.44.2/24,fd44::2/64
 DNS = 9.9.9.9,2620:fe::fe
