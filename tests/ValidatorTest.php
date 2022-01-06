@@ -21,11 +21,6 @@ use Vpn\Portal\Validator;
  */
 final class ValidatorTest extends TestCase
 {
-    public function testPublicKey(): void
-    {
-        Validator::publicKey('EtPxdnGP+KCSv7tVBohNgt5lcXF7XubTDKr6QdwuyGU=');
-    }
-
     public function testInvalidPublicKey(): void
     {
         $this->expectException(RangeException::class);
