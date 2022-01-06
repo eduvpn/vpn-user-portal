@@ -41,6 +41,7 @@ final class VpnApiThreeModuleTest extends TestCase
         $tmpDir = sprintf('%s/vpn-user-portal-%s', sys_get_temp_dir(), bin2hex(random_bytes(32)));
         mkdir($tmpDir);
         copy(\dirname(__DIR__).'/data/tls-crypt-default.key', $tmpDir.'/tls-crypt-default.key');
+        copy(\dirname(__DIR__).'/data/wireguard.0.public.key', $tmpDir.'/wireguard.0.public.key');
 
         $baseDir = \dirname(__DIR__, 2);
         $config = new Config(
@@ -58,6 +59,17 @@ final class VpnApiThreeModuleTest extends TestCase
                         'wRangeSix' => 'fd43::/64',
                         'oRangeFour' => '10.42.42.0/24',
                         'oRangeSix' => 'fd42::/64',
+                    ],
+                    [
+                        'profileId' => 'default-wg',
+                        'displayName' => 'Default (WireGuard)',
+                        'hostName' => 'vpn.example',
+                        'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
+                        'wRangeFour' => '10.44.44.0/24',
+                        'wRangeSix' => 'fd44::/64',
+                        'oRangeFour' => '10.45.45.0/24',
+                        'oRangeSix' => 'fd45::/64',
+                        'preferredProto' => 'wireguard',
                     ],
                 ],
             ]
@@ -106,10 +118,13 @@ final class VpnApiThreeModuleTest extends TestCase
             []
         );
 
-        static::assertSame('{"info":{"profile_list":[{"profile_id":"default","display_name":"Default","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"openvpn","default_gateway":true}]}}', $this->service->run($request)->responseBody());
+        static::assertSame(
+            '{"info":{"profile_list":[{"profile_id":"default","display_name":"Default","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"openvpn","default_gateway":true},{"profile_id":"default-wg","display_name":"Default (WireGuard)","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"wireguard","default_gateway":true}]}}',
+            $this->service->run($request)->responseBody()
+        );
     }
 
-    public function testConnect(): void
+    public function testConnectOpenVpn(): void
     {
         $request = new Request(
             [
@@ -125,7 +140,30 @@ final class VpnApiThreeModuleTest extends TestCase
 
         static::assertSame(
             trim(
-                file_get_contents(\dirname(__DIR__).'/data/expected_api_connect_response.txt')
+                file_get_contents(\dirname(__DIR__).'/data/expected_openvpn_client_config.txt')
+            ),
+            $this->service->run($request)->responseBody()
+        );
+    }
+
+    public function testConnectWireGuard(): void
+    {
+        $request = new Request(
+            [
+                'REQUEST_URI' => '/v3/connect',
+                'REQUEST_METHOD' => 'POST',
+            ],
+            [],
+            [
+                'profile_id' => 'default-wg',
+                'public_key' => 'eRPR1zoK0lm97k5Vgb3ViEX6lNWyay6V6ynEMnYs+2w=',
+            ],
+            []
+        );
+
+        static::assertSame(
+            trim(
+                file_get_contents(\dirname(__DIR__).'/data/expected_wireguard_client_config.txt')
             ),
             $this->service->run($request)->responseBody()
         );

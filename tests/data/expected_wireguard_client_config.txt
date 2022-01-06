@@ -1,0 +1,8 @@
+[Interface]
+Address = 10.44.44.2/24,fd44::2/64
+DNS = 9.9.9.9,2620:fe::fe
+
+[Peer]
+PublicKey = wjZvgsd0N2aSRgRKHZ8mxcm6T9mzifYUt9n+Oz2tWz8=
+AllowedIPs = 0.0.0.0/0,::/0
+Endpoint = vpn.example:51820
