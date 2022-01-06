@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
+use DateTimeImmutable;
 use Vpn\Portal\Base64;
 use Vpn\Portal\Config;
 use Vpn\Portal\Dt;
@@ -22,6 +23,7 @@ use Vpn\Portal\Validator;
 
 class NodeApiModule implements ServiceModuleInterface
 {
+    protected DateTimeImmutable $dateTime;
     private Config $config;
     private Storage $storage;
     private ServerConfig $serverConfig;
@@ -33,6 +35,7 @@ class NodeApiModule implements ServiceModuleInterface
         $this->storage = $storage;
         $this->serverConfig = $serverConfig;
         $this->logger = $logger;
+        $this->dateTime = Dt::get();
     }
 
     public function init(ServiceInterface $service): void
@@ -84,9 +87,8 @@ class NodeApiModule implements ServiceModuleInterface
             $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
             $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
             $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
-            $connectedAt = (int) $request->requirePostParameter('connected_at', fn (string $s) => Validator::nonNegativeInt($s));
             $userId = $this->verifyConnection($profileId, $commonName);
-            $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, Dt::get(sprintf('@%d', $connectedAt)));
+            $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $this->dateTime);
             $this->logger->info(
                 $this->logMessage('CONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
             );
@@ -108,7 +110,6 @@ class NodeApiModule implements ServiceModuleInterface
         $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
         $bytesIn = (int) $request->requirePostParameter('bytes_in', fn (string $s) => Validator::nonNegativeInt($s));
         $bytesOut = (int) $request->requirePostParameter('bytes_out', fn (string $s) => Validator::nonNegativeInt($s));
-        $disconnectedAt = (int) $request->requirePostParameter('disconnected_at', fn (string $s) => Validator::nonNegativeInt($s));
         if (null === $userInfo = $this->storage->oUserInfoByProfileIdAndCommonName($profileId, $commonName)) {
             // this is not fatal, there's nothing we can do anyway...
             $this->logger->warning(sprintf('unable to find certificate with CN "%s" in the database', $commonName));
@@ -116,7 +117,7 @@ class NodeApiModule implements ServiceModuleInterface
             return new Response('OK');
         }
         $userId = $userInfo['user_id'];
-        $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, Dt::get(sprintf('@%d', $disconnectedAt)));
+        $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, $this->dateTime);
         $this->logger->info(
             $this->logMessage('DISCONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
         );
