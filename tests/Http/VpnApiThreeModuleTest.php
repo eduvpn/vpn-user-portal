@@ -17,7 +17,6 @@ use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Scope;
 use PHPUnit\Framework\TestCase;
 use Vpn\Portal\Config;
-use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Http\ApiService;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\VpnApiThreeModule;
@@ -34,6 +33,7 @@ use Vpn\Portal\VpnDaemon;
 final class VpnApiThreeModuleTest extends TestCase
 {
     private ApiService $service;
+    private Storage $storage;
 
     protected function setUp(): void
     {
@@ -75,16 +75,16 @@ final class VpnApiThreeModuleTest extends TestCase
             ]
         );
 
-        $storage = new Storage($config->dbConfig($baseDir));
+        $this->storage = new Storage($config->dbConfig($baseDir));
 
         // XXX the user & authorization MUST exist apparently, this will NOT work with guest usage!
-        $storage->userAdd('user_id', $dateTime, []);
-        $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
+        $this->storage->userAdd('user_id', $dateTime, []);
+        $oauthStorage = new OAuthStorage($this->storage->dbPdo(), 'oauth_');
         $oauthStorage->storeAuthorization('user_id', 'client_id', new Scope('config'), 'auth_key', $dateTime, $dateTime->add(new DateInterval('P90D')));
 
         $apiModule = new VpnApiThreeModule(
             $config,
-            $storage,
+            $this->storage,
             new ServerInfo(
                 $tmpDir,
                 new TestCa(),
@@ -92,13 +92,13 @@ final class VpnApiThreeModuleTest extends TestCase
                 $config->wireGuardConfig()->listenPort(),
                 'gc6RjjPtIKeflbOun+dyAssnsdXzD6bmWisbxJrZiB0=',
             ),
-            new ConnectionManager(
+            new TestConnectionManager(
                 $config,
                 new VpnDaemon(
                     new TestHttpClient(),
                     new NullLogger()
                 ),
-                $storage,
+                $this->storage,
                 new NullLogger()
             )
         );
@@ -144,6 +144,39 @@ final class VpnApiThreeModuleTest extends TestCase
             ),
             $this->service->run($request)->responseBody()
         );
+
+        static::assertSame(
+            [
+                [
+                    'user_id' => 'user_id',
+                    'profile_id' => 'default',
+                    'common_name' => 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
+                ],
+            ],
+            $this->storage->oCertListByAuthKey('auth_key')
+        );
+    }
+
+    public function testDisconnectOpenVpn(): void
+    {
+        // XXX we must make sure the certificate with auth_key is in the
+        // database, and afterwards not anymore
+        $request = new Request(
+            [
+                'REQUEST_URI' => '/v3/disconnect',
+                'REQUEST_METHOD' => 'POST',
+            ],
+            [],
+            [],
+            []
+        );
+
+        static::assertSame(
+            204,
+            $this->service->run($request)->statusCode()
+        );
+
+        static::assertEmpty($this->storage->oCertListByAuthKey('auth_key'));
     }
 
     public function testConnectWireGuard(): void
