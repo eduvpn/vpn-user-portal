@@ -209,7 +209,7 @@ try {
     $oauthSigner = new Signer($oauthKey);
     $tlsCrypt = new TlsCrypt($baseDir.'/data');
     $serverInfo = new ServerInfo(
-        $baseDir,
+        $baseDir.'/data',
         $ca,
         $tlsCrypt,
         $config->wireGuardConfig()->listenPort(),
