@@ -758,48 +758,62 @@ class Storage
         $stmt->execute();
     }
 
-    public function vpnProto(string $userId, string $profileId, string $connectionId): ?string
+    public function wNodeNumber(string $userId, string $profileId, string $connectionId): ?int
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                 SELECT
-                    (
-                        SELECT
-                            COUNT(*)
-                        FROM
-                            wg_peers
-                        WHERE
-                            user_id = :user_id
-                        AND
-                            profile_id = :profile_id
-                        AND
-                            public_key = :connection_id
-                    ) AS w_count,
-                    (
-                        SELECT
-                            COUNT(*)
-                        FROM
-                            certificates
-                        WHERE
-                            common_name = :connection_id
-                    ) AS o_count
+                    node_number
+                FROM
+                    wg_peers
+                WHERE
+                    user_id = :user_id
+                AND
+                    profile_id = :profile_id
+                AND
+                    public_key = :public_key
                 SQL
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
+        $stmt->bindValue(':public_key', $connectionId, PDO::PARAM_STR);
+
         $stmt->execute();
-        if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        if (false === $resultColumn = $stmt->fetchColumn(0)) {
             return null;
         }
-        if (1 === (int) $resultRow['w_count']) {
-            return 'wireguard';
-        }
-        if (1 === (int) $resultRow['o_count']) {
-            return 'openvpn';
+
+        return (int) $resultColumn;
+    }
+
+    public function oNodeNumber(string $userId, string $profileId, string $connectionId): ?int
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    node_number
+                FROM
+                    certificates
+                WHERE
+                    user_id = :user_id
+                AND
+                    profile_id = :profile_id
+                AND
+                    common_name = :common_name
+                SQL
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->bindValue(':common_name', $connectionId, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        if (false === $resultColumn = $stmt->fetchColumn(0)) {
+            return null;
         }
 
-        return null;
+        return (int) $resultColumn;
     }
 
     public function clientDisconnect(string $userId, string $profileId, string $connectionId, int $bytesIn, int $bytesOut, DateTimeImmutable $disconnectedAt): void

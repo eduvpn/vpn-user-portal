@@ -259,9 +259,9 @@ class ConnectionManager
 
     public function disconnect(string $userId, string $profileId, string $connectionId, int $optionFlags = 0): void
     {
-        $vpnProto = $this->storage->vpnProto($userId, $profileId, $connectionId);
-        if (null === $vpnProto) {
-            // the connectionId did not exist
+        [$vpnProto, $nodeNumber] = $this->determineVpnProtoNodeNumber($userId, $profileId, $connectionId);
+        if (null === $vpnProto || null === $nodeNumber) {
+            // can't find the connection, nothing we can do
             return;
         }
 
@@ -281,29 +281,30 @@ class ConnectionManager
 
             return;
         }
+
         $profileConfig = $this->config->profileConfig($profileId);
 
-        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-            if ('openvpn' === $vpnProto) {
-                if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                    $this->storage->oCertDelete($userId, $connectionId);
-                }
-                $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($i), $connectionId);
+        switch ($vpnProto) {
+        case 'openvpn':
+            if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
+                $this->storage->oCertDelete($userId, $connectionId);
             }
+            $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
 
-            if ('wireguard' === $vpnProto) {
-                if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                    $this->storage->wPeerRemove($userId, $connectionId);
-                }
-                if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($i), $connectionId)) {
-                    // XXX what if peer was not connected/registered anywhere?
-                    // peer was connected to this node, use the information
-                    // we got back to call "clientDisconnect"
-                    $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
-                    $this->logger->info(
-                        $this->logMessage('DISCONNECT', $userId, $profileId, $connectionId, '_', '_')
-                    );
-                }
+            break;
+
+        case 'wireguard':
+            if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
+                $this->storage->wPeerRemove($userId, $connectionId);
+            }
+            if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId)) {
+                // XXX what if peer was not connected/registered anywhere?
+                // peer was connected to this node, use the information
+                // we got back to call "clientDisconnect"
+                $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
+                $this->logger->info(
+                    $this->logMessage('DISCONNECT', $userId, $profileId, $connectionId, '_', '_')
+                );
             }
         }
     }
@@ -325,6 +326,21 @@ class ConnectionManager
         }
 
         throw new ConnectionManagerException('no free IP address');
+    }
+
+    /**
+     * @return ?array{0:string,1:int}
+     */
+    private function determineVpnProtoNodeNumber(string $userId, string $profileId, string $connectionId): ?array
+    {
+        if (null !== $nodeNumber = $this->storage->wNodeNumber($userId, $profileId, $connectionId)) {
+            return ['wireguard', $nodeNumber];
+        }
+        if (null !== $nodeNumber = $this->storage->oNodeNumber($userId, $profileId, $connectionId)) {
+            return ['openvpn', $nodeNumber];
+        }
+
+        return null;
     }
 
     private function logMessage(string $eventType, string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix): string
