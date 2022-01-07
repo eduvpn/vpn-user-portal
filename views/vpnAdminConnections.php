@@ -33,6 +33,7 @@
                     <th><?=$this->t('User ID'); ?></th>
                     <th><?=$this->t('Name'); ?></th>
                     <th><?=$this->t('IP Address'); ?></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -47,9 +48,16 @@
                     <td>
                         <ul>
 <?php foreach ($connection['ip_list'] as $ip): ?>
-                            <li><code class="<?=$this->e($connection['vpn_proto']); ?>"><?=$this->e($ip); ?></code></li>
+                            <li><code><?=$this->e($ip); ?></code></li>
 <?php endforeach; ?>
                         </ul>
+                    </td>
+                    <td>
+<?php if ('wireguard' === $connection['vpn_proto']): ?>
+                        <span class="wireguard"><?=$this->t('WireGuard'); ?></span>
+<?php else: ?>
+                        <span class="openvpn"><?=$this->t('OpenVPN'); ?></span>
+<?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
