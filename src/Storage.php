@@ -20,7 +20,7 @@ class Storage
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
 
-    public const CURRENT_SCHEMA_VERSION = '2022010401';
+    public const CURRENT_SCHEMA_VERSION = '2022010701';
 
     private PDO $db;
 
@@ -61,7 +61,7 @@ class Storage
         return $this->db;
     }
 
-    public function wPeerAdd(string $userId, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, DateTimeImmutable $expiresAt, ?string $authKey): void
+    public function wPeerAdd(string $userId, int $nodeNumber, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, DateTimeImmutable $expiresAt, ?string $authKey): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -69,6 +69,7 @@ class Storage
                 INTO
                     wg_peers (
                         user_id,
+                        node_number,
                         profile_id,
                         display_name,
                         public_key,
@@ -80,6 +81,7 @@ class Storage
                     )
                     VALUES(
                         :user_id,
+                        :node_number,
                         :profile_id,
                         :display_name,
                         :public_key,
@@ -93,6 +95,7 @@ class Storage
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':node_number', $nodeNumber, PDO::PARAM_INT);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':display_name', $displayName, PDO::PARAM_STR);
         $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
@@ -464,16 +467,17 @@ class Storage
         $stmt->execute();
     }
 
-    public function oCertAdd(string $userId, string $profileId, string $commonName, string $displayName, DateTimeImmutable $createdAt, DateTimeImmutable $expiresAt, ?string $authKey): void
+    public function oCertAdd(string $userId, int $nodeNumber, string $profileId, string $commonName, string $displayName, DateTimeImmutable $createdAt, DateTimeImmutable $expiresAt, ?string $authKey): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     INSERT INTO certificates
-                        (profile_id, common_name, user_id, display_name, created_at, expires_at, auth_key)
+                        (node_number, profile_id, common_name, user_id, display_name, created_at, expires_at, auth_key)
                     VALUES
-                        (:profile_id, :common_name, :user_id, :display_name, :created_at, :expires_at, :auth_key)
+                        (:node_number, :profile_id, :common_name, :user_id, :display_name, :created_at, :expires_at, :auth_key)
                 SQL
         );
+        $stmt->bindValue(':node_number', $nodeNumber, PDO::PARAM_INT);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);

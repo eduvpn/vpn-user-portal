@@ -160,7 +160,7 @@ final class VpnApiThreeModuleTest extends TestCase
 
     public function testDisconnectOpenVpn(): void
     {
-        $this->storage->oCertAdd('user_id', 'default', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=', 'display_name', $this->dateTime, $this->dateTime->add($this->config->sessionExpiry()), 'auth_key');
+        $this->storage->oCertAdd('user_id', 0, 'default', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=', 'display_name', $this->dateTime, $this->dateTime->add($this->config->sessionExpiry()), 'auth_key');
         static::assertSame(
             [
                 [

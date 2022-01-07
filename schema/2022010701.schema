@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS oauth_refresh_token_log (
     UNIQUE(auth_key, refresh_token_id)
 );
 CREATE TABLE IF NOT EXISTS certificates(
+    node_number BIGINT NOT NULL,
     profile_id VARCHAR(255) NOT NULL,
     display_name VARCHAR(255) NOT NULL,
     common_name VARCHAR(255) UNIQUE NOT NULL,
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS certificates(
     user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS wg_peers (
+    node_number BIGINT NOT NULL,
     profile_id VARCHAR(255) NOT NULL,
     display_name VARCHAR(255) NOT NULL,
     public_key VARCHAR(255) NOT NULL UNIQUE,

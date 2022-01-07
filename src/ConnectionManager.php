@@ -194,6 +194,7 @@ class ConnectionManager
             $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
             $this->storage->oCertAdd(
                 $userId,
+                $nodeNumber,
                 $profileId,
                 $commonName,
                 $displayName,
@@ -233,7 +234,7 @@ class ConnectionManager
 
             // XXX we MUST make sure public_key is unique on this server!!!
             // the DB enforces this, but maybe a better error could be given?
-            $this->storage->wPeerAdd($userId, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
+            $this->storage->wPeerAdd($userId, $nodeNumber, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
             $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
             $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
 
