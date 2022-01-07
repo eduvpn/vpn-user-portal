@@ -844,14 +844,14 @@ class Storage
                     WHERE
                         profile_id = :profile_id
                     AND
-                        common_name = :common_name
+                        connection_id = :connection_id
                     AND
                         disconnected_at IS NULL
                 SQL
         );
 
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
+        $stmt->bindValue(':connection_id', $commonName, PDO::PARAM_STR);
         $stmt->execute();
 
         if (false === $resultColumn = $stmt->fetchColumn(0)) {
