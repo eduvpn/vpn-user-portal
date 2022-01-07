@@ -5,7 +5,7 @@
 <?php /** @var bool $isDisabled */?>
 <?php /** @var bool $isSelf */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<array{profile_id:string,common_name?:string,public_key?:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}> $configList */ ?>
+<?php /** @var array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}> $configList */ ?>
 <?php /** @var string $requestRoot */?>
 <?php /** @var string $authModule */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
@@ -67,13 +67,12 @@
                     <td>
                         <span title="<?=$this->e($configEntry['profile_id']); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $configEntry['profile_id']); ?></span>
                     </td>
-<?php if (array_key_exists('common_name', $configEntry)): ?>
-                    <td><span title="<?=$this->e($configEntry['common_name']); ?>"><?=$this->etr($configEntry['display_name'], 25); ?></span></td>
-<?php endif; ?>
-<?php if (array_key_exists('public_key', $configEntry)): ?>
-                    <td><span title="<?=$this->e($configEntry['public_key']); ?>"><?=$this->etr($configEntry['display_name'], 25); ?></span></td>
-<?php endif; ?>
-                    <td><span title="<?=$this->d($configEntry['expires_at']); ?>"><?=$this->d($configEntry['expires_at'], 'Y-m-d'); ?></span></td>
+                    <td>
+                        <span title="<?=$this->e($configEntry['connection_id']); ?>"><?=$this->etr($configEntry['display_name'], 25); ?></span>
+                    </td>
+                    <td>
+                        <span title="<?=$this->d($configEntry['expires_at']); ?>"><?=$this->d($configEntry['expires_at'], 'Y-m-d'); ?></span>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

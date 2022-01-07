@@ -126,9 +126,6 @@ class AdminPortalModule implements ServiceModuleInterface
                 if (!$this->storage->userExists($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
-                // XXX use same means as in VpnPortal with the filter to use connection_id instead!
-                $configList = array_merge($this->storage->oCertListByUserId($userId), $this->storage->wPeerListByUserId($userId));
-                $userConnectionLogEntries = $this->storage->getConnectionLogForUser($userId);
 
                 return new HtmlResponse(
                     $this->tpl->render(
@@ -136,10 +133,10 @@ class AdminPortalModule implements ServiceModuleInterface
                         [
                             'userId' => $userId,
                             'profileConfigList' => $this->config->profileConfigList(),
-                            'configList' => $configList,
+                            'configList' => VpnPortalModule::filterConfigList($this->storage, $userId),
                             'isDisabled' => $this->storage->userIsDisabled($userId),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
-                            'userConnectionLogEntries' => $userConnectionLogEntries,
+                            'userConnectionLogEntries' => $this->storage->getConnectionLogForUser($userId),
                         ]
                     )
                 );

@@ -77,7 +77,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'numberOfActivePortalConfigurations' => $numberOfActivePortalConfigurations,
                             'profileConfigList' => $visibleProfileList,
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
-                            'configList' => $this->filterConfigList($userInfo->userId()),
+                            'configList' => self::filterConfigList($this->storage, $userInfo->userId()),
                         ]
                     )
                 );
@@ -205,6 +205,39 @@ class VpnPortalModule implements ServiceModuleInterface
         return false;
     }
 
+    /**
+     * @return array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}>
+     */
+    public static function filterConfigList(Storage $storage, string $userId): array
+    {
+        $configList = [];
+        foreach ($storage->oCertListByUserId($userId) as $oCert) {
+            if (null !== $oCert['auth_key']) {
+                continue;
+            }
+            $configList[] = array_merge(
+                $oCert,
+                [
+                    'connection_id' => $oCert['common_name'],
+                ]
+            );
+        }
+
+        foreach ($storage->wPeerListByUserId($userId) as $wPeer) {
+            if (null !== $wPeer['auth_key']) {
+                continue;
+            }
+            $configList[] = array_merge(
+                $wPeer,
+                [
+                    'connection_id' => $wPeer['public_key'],
+                ]
+            );
+        }
+
+        return $configList;
+    }
+
     private function getWireGuardConfig(string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
     {
         $clientConfig = $this->connectionManager->connect(
@@ -294,38 +327,5 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return false;
-    }
-
-    /**
-     * @return array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}>
-     */
-    private function filterConfigList(string $userId): array
-    {
-        $configList = [];
-        foreach ($this->storage->oCertListByUserId($userId) as $oCert) {
-            if (null !== $oCert['auth_key']) {
-                continue;
-            }
-            $configList[] = array_merge(
-                $oCert,
-                [
-                    'connection_id' => $oCert['common_name'],
-                ]
-            );
-        }
-
-        foreach ($this->storage->wPeerListByUserId($userId) as $wPeer) {
-            if (null !== $wPeer['auth_key']) {
-                continue;
-            }
-            $configList[] = array_merge(
-                $wPeer,
-                [
-                    'connection_id' => $wPeer['public_key'],
-                ]
-            );
-        }
-
-        return $configList;
     }
 }
