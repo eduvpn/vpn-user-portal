@@ -54,9 +54,9 @@
                     </td>
                     <td>
 <?php if ('wireguard' === $connection['vpn_proto']): ?>
-                        <span class="wireguard"><?=$this->t('WireGuard'); ?></span>
+                        <span class="plain wireguard"><?=$this->t('WireGuard'); ?></span>
 <?php else: ?>
-                        <span class="openvpn"><?=$this->t('OpenVPN'); ?></span>
+                        <span class="plain openvpn"><?=$this->t('OpenVPN'); ?></span>
 <?php endif; ?>
                     </td>
                 </tr>
