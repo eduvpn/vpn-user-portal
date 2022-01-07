@@ -110,16 +110,14 @@ class NodeApiModule implements ServiceModuleInterface
         $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
         $bytesIn = (int) $request->requirePostParameter('bytes_in', fn (string $s) => Validator::nonNegativeInt($s));
         $bytesOut = (int) $request->requirePostParameter('bytes_out', fn (string $s) => Validator::nonNegativeInt($s));
-        if (null === $userInfo = $this->storage->oUserInfoByProfileIdAndCommonName($profileId, $commonName)) {
-            // this is not fatal, there's nothing we can do anyway...
-            $this->logger->warning(sprintf('unable to find certificate with CN "%s" in the database', $commonName));
 
-            return new Response('OK');
+        // try to find the "open" connection in the connection_log table, i.e.
+        // where "disconnected_at IS NULL", if found "close" the connection
+        if (null !== $userId = $this->storage->oUserIdFromConnectionLog($profileId, $commonName)) {
+            $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, $this->dateTime);
         }
-        $userId = $userInfo['user_id'];
-        $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, $this->dateTime);
         $this->logger->info(
-            $this->logMessage('DISCONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
+            $this->logMessage('DISCONNECT', $userId ?? 'N/A', $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
         );
 
         return new Response('OK');
