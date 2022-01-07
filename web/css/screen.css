@@ -387,14 +387,6 @@ span.wireguard {
   color: white;
 }
 
-code.wireguard {
-  color: #88171a;
-}
-
-code.openvpn {
-  color: #ed7f22;
-}
-
 p.warning {
   border: 1px solid #ff9900;
   color: #ff9900;
