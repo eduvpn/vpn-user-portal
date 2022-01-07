@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
-<?php /** @var array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>,vpn_proto:string}>> $profileConnectionList */?>
+<?php /** @var array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>,vpn_proto:string,auth_key:?string}>> $profileConnectionList */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var string $requestRoot */?>
 
@@ -43,7 +43,11 @@
                         <a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($connection['user_id'], 'rawurlencode'); ?>" title="<?=$this->e($connection['user_id']); ?>"><?=$this->etr($connection['user_id'], 25); ?></a>
                     </td>
                     <td>
+<?php if (null === $connection['auth_key']): ?>
                         <span title="<?=$this->e($connection['display_name']); ?>"><?=$this->etr($connection['display_name'], 25); ?></span>
+<?php else: ?>
+                        <span title="<?=$this->e($connection['display_name']); ?>"><?=$this->clientIdToDisplayName($connection['display_name']); ?></span>
+<?php endif; ?>
                     </td>
                     <td>
                         <ul>

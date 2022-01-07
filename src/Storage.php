@@ -521,7 +521,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable}>
+     * @return array<array{user_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
     public function oCertListByProfileId(string $profileId, int $returnSet): array
     {
@@ -531,7 +531,8 @@ class Storage
                         user_id,
                         common_name,
                         display_name,
-                        expires_at
+                        expires_at,
+                        auth_key
                     FROM
                         certificates
                     WHERE
@@ -554,6 +555,7 @@ class Storage
                 'common_name' => (string) $resultRow['common_name'],
                 'display_name' => (string) $resultRow['display_name'],
                 'expires_at' => $expiresAt,
+                'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }
 
