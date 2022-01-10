@@ -23,11 +23,11 @@ use Vpn\Portal\Validator;
 
 class VpnApiThreeModule implements ServiceModuleInterface
 {
+    protected DateTimeImmutable $dateTime;
     private Config $config;
     private Storage $storage;
     private ServerInfo $serverInfo;
     private ConnectionManager $connectionManager;
-    private DateTimeImmutable $dateTime;
 
     public function __construct(Config $config, Storage $storage, ServerInfo $serverInfo, ConnectionManager $connectionManager)
     {
