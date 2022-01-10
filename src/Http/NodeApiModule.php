@@ -57,7 +57,7 @@ class NodeApiModule implements ServiceModuleInterface
                     $profileConfigList,
                     (int) $userInfo->userId(), // userId = nodeNumber
                     $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s)),
-                    'yes' === $request->requirePostParameter('prefer_aes', fn (string $s) => Validator::preferAes($s))
+                    'yes' === $request->requirePostParameter('prefer_aes', fn (string $s) => Validator::yesOrNo($s))
                 );
                 $bodyLines = [];
                 foreach ($serverConfigList as $configName => $configFile) {

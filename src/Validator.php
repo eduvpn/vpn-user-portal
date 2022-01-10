@@ -168,9 +168,9 @@ class Validator
         }
     }
 
-    public static function preferAes(string $preferAes): void
+    public static function yesOrNo(string $yesOrNo): void
     {
-        self::inSet($preferAes, ['yes', 'no']);
+        self::inSet($yesOrNo, ['yes', 'no']);
     }
 
     public static function vpnProto(string $vpnProto): void
