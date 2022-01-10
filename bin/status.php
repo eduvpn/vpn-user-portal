@@ -53,7 +53,7 @@ function outputConversion(array $outputData, bool $asJson): void
 {
     // JSON
     if ($asJson) {
-        echo Json::encode($outputData);
+        echo Json::encodePretty($outputData);
 
         return;
     }
