@@ -268,17 +268,15 @@ class ConnectionManager
         }
 
         if (!$this->config->hasProfile($profileId)) {
-            // profile does not exist (anymore)
-            // try to delete connectionId anyway if we are not prevented...
-            // XXX why could we possibly be prevented here? the profile is no longer there... I guess we are not
+            // profile no longer exists, simply delete the configuration
+            // (if we are not prevented)
             if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                if ('wireguard' === $vpnProto) {
+                if ('openvpn' === $vpnProto) {
                     $this->storage->oCertDelete($userId, $connectionId);
                 }
-                if ('openvpn' === $vpnProto) {
+                if ('wireguard' === $vpnProto) {
                     $this->storage->wPeerRemove($userId, $connectionId);
                 }
-                // if no protocol matches, ignore it
             }
 
             return;
