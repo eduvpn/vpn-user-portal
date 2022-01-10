@@ -102,13 +102,18 @@ class AdminPortalModule implements ServiceModuleInterface
             '/users',
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
-
                 $userList = $this->storage->userList();
+                $disabledOnly = 'disabled_only' === $request->optionalQueryParameter('list_users', fn (string $s) => Validator::listUsers($s));
+
+                if ($disabledOnly) {
+                    $userList = array_filter($userList, fn ($v) => $v['is_disabled']);
+                }
 
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminUserList',
                         [
+                            'disabledOnly' => $disabledOnly,
                             'userList' => $userList,
                         ]
                     )

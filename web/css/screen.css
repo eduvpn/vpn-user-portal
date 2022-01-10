@@ -338,6 +338,14 @@ header.main h1 {
   margin: 0;
 }
 
+p.end {
+  text-align: end;
+}
+
+p.small {
+  font-size: small;
+}
+
 p.warning, p.error, p.plain {
   padding: 1em 1.5em;
   border-radius: 0.5em;

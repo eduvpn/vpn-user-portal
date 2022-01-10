@@ -183,6 +183,11 @@ class Validator
         self::inSet($onOrOff, ['on', 'off']);
     }
 
+    public static function listUsers(string $listUsers): void
+    {
+        self::inSet($listUsers, ['all', 'disabled_only']);
+    }
+
     public static function nodeNumber(string $nodeNumber): void
     {
         self::nonNegativeInt($nodeNumber);

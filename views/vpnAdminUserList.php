@@ -2,8 +2,14 @@
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<array{user_id:string,last_seen:\DateTimeImmutable,permission_list:array<string>,is_disabled:bool}> $userList */?>
 <?php /** @var string $requestRoot */?>
+<?php /** @var bool $disabledOnly */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
 <?php $this->start('content'); ?>
+<?php if ($disabledOnly): ?>
+    <p class="end small">&lt; <a href="?list_users=all"><?=$this->t('All'); ?></a> | <?=$this->t('Disabled Only'); ?> &gt;</p>
+<?php else: ?>
+    <p class="end small">&lt; <?=$this->t('All'); ?> | <a href="?list_users=disabled_only"><?=$this->t('Disabled Only'); ?></a> &gt;</p>
+<?php endif; ?>
 <table class="tbl">
     <thead>
         <tr><th><?=$this->t('User ID'); ?></th></th><th></th></tr>
