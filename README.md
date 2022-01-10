@@ -10,11 +10,12 @@ designated administrators.
 
 # Introduction
 
-This project contains the user portal and OAuth authorization server of the 
-Let's Connect! software.
+This project contains the user and admin portal for the Let's Connect! and 
+eduVPN software.
 
-It allows users to download and manage VPN configurations / Certificates. It 
-can also be used to view and revoke authorized the native VPN apps.
+# Issue Tracker
+
+Find our issue tracker [here](https://todo.sr.ht/~eduvpn/server).
 
 # Contributing
 
