@@ -329,9 +329,9 @@ class ConnectionManager
     }
 
     /**
-     * @return ?array{0:string,1:int}
+     * @return array{0:?string,1:?int}
      */
-    private function determineVpnProtoNodeNumber(string $userId, string $profileId, string $connectionId): ?array
+    private function determineVpnProtoNodeNumber(string $userId, string $profileId, string $connectionId): array
     {
         if (null !== $nodeNumber = $this->storage->wNodeNumber($userId, $profileId, $connectionId)) {
             return ['wireguard', $nodeNumber];
@@ -340,7 +340,7 @@ class ConnectionManager
             return ['openvpn', $nodeNumber];
         }
 
-        return null;
+        return [null, null];
     }
 
     private function logMessage(string $eventType, string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix): string
