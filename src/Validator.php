@@ -185,7 +185,7 @@ class Validator
 
     public static function listUsers(string $listUsers): void
     {
-        self::inSet($listUsers, ['all', 'disabled_only']);
+        self::inSet($listUsers, ['all', 'active', 'disabled']);
     }
 
     public static function nodeNumber(string $nodeNumber): void
