@@ -16,6 +16,7 @@ return [
     'Active' => 'Activo',
     //'Active Configurations' => '',
     //'Advanced' => '',
+    //'All' => '',
     'An application attempts to establish a VPN connection.' => 'Una aplicación intenta establecer una conexión VPN.',
     'An error occurred.' => 'Ocurrió un error.',
     'Application Usage' => 'Uso de la Aplicación',

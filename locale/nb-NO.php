@@ -16,6 +16,7 @@ return [
     'Active' => 'Aktiv',
     //'Active Configurations' => '',
     //'Advanced' => '',
+    //'All' => '',
     'An application attempts to establish a VPN connection.' => 'En applikasjon prøver å koble til VPN.',
     'An error occurred.' => 'Noe har gått galt.',
     'Application Usage' => 'Applikasjonsbruk',

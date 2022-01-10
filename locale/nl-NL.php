@@ -16,6 +16,7 @@ return [
     'Active' => 'Actief',
     'Active Configurations' => 'Actieve configuraties',
     'Advanced' => 'Geavanceerd',
+    'All' => 'Alle',
     'An application attempts to establish a VPN connection.' => 'Een applicatie probeert een VPN-verbinding op te zetten.',
     'An error occurred.' => 'Er is een fout opgetreden.',
     'Application Usage' => 'Applicatiegebruik',

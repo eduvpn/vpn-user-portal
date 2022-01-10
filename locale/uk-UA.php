@@ -16,6 +16,7 @@ return [
     'Active' => 'Активний',
     //'Active Configurations' => '',
     //'Advanced' => '',
+    //'All' => '',
     'An application attempts to establish a VPN connection.' => 'Програма намагається встановити VPN-з’єднання.',
     'An error occurred.' => 'Сталася помилка.',
     'Application Usage' => 'Використання додатку',

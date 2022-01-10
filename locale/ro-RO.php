@@ -16,6 +16,7 @@ return [
     'Active' => 'Activ',
     //'Active Configurations' => '',
     //'Advanced' => '',
+    //'All' => '',
     'An application attempts to establish a VPN connection.' => 'O aplicație încearcă să stabilească o conexiune VPN.',
     'An error occurred.' => 'A apărut o eroare.',
     'Application Usage' => 'Aplicații utilizate',

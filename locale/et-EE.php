@@ -16,6 +16,7 @@ return [
     'Active' => 'Aktiivne',
     //'Active Configurations' => '',
     //'Advanced' => '',
+    //'All' => '',
     'An application attempts to establish a VPN connection.' => 'Rakendus proovib luua VPN ühendust.',
     'An error occurred.' => 'Tekkis viga',
     //'Application Usage' => '',
