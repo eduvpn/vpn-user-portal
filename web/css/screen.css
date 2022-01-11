@@ -338,12 +338,10 @@ header.main h1 {
   margin: 0;
 }
 
-p.end {
+p.filter {
   text-align: end;
-}
-
-p.small {
   font-size: small;
+  font-weight: bold;
 }
 
 p.warning, p.error, p.plain {
