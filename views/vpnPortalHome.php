@@ -43,16 +43,16 @@
                 </select>
                 <label for="displayName"><?=$this->t('Name'); ?></label>
                 <input type="text" name="displayName" id="displayName" size="32" maxlength="64" placeholder="<?=$this->t('Name'); ?>" autofocus required>
+            </fieldset>
+            <fieldset>
                 <details>
                     <summary><?=$this->t('Advanced'); ?></summary>
-                    <fieldset>
-                        <label for="vpnProto"><?=$this->t('Use Protocol'); ?></label>
-                        <select name="vpnProto" id="vpnProto">
-                            <option value="default" selected><?=$this->t('Default'); ?></option>
-                            <option value="openvpn"><?=$this->t('OpenVPN'); ?></option>
-                            <option value="wireguard"><?=$this->t('WireGuard'); ?></option>
-                        </select>
-                    </fieldset>
+                    <label for="vpnProto"><?=$this->t('Use Protocol'); ?></label>
+                    <select name="vpnProto" id="vpnProto">
+                        <option value="default" selected><?=$this->t('Default'); ?></option>
+                        <option value="openvpn"><?=$this->t('OpenVPN'); ?></option>
+                        <option value="wireguard"><?=$this->t('WireGuard'); ?></option>
+                    </select>
                     <input type="checkbox" id="tcpOnly" name="tcpOnly"> <label for="tcpOnly"><?=$this->t('Connect over TCP (only OpenVPN)'); ?></label>
                 </details>
             </fieldset>

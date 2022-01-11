@@ -38,10 +38,6 @@ h1, h2, h3, h4 {
   line-height: 1.25;
 }
 
-details {
-  margin: 0.5em 0;
-}
-
 a, summary {
   color: #216aed;
   font-weight: bold;
@@ -170,7 +166,11 @@ form.frm label {
   margin: 0.5em 0 0.3em 0;
 }
 
-input[type="checkbox"] + label {
+input[type=checkbox] {
+  margin-top: 1em;
+}
+
+input[type=checkbox] + label {
   display: inline;
   font-weight: normal;
 }
