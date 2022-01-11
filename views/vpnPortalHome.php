@@ -42,7 +42,7 @@
 <?php endforeach; ?>
                 </select>
                 <label for="displayName"><?=$this->t('Name'); ?></label>
-                <input type="text" name="displayName" id="displayName" size="32" maxlength="64" placeholder="<?=$this->t('Name'); ?>" autofocus required>
+                <input type="text" name="displayName" id="displayName" size="32" maxlength="64" placeholder="<?=$this->t('Name'); ?>" required>
             </fieldset>
             <fieldset>
                 <details>
