@@ -42,34 +42,6 @@ details {
   margin: 0.5em 0;
 }
 
-details summary {
-  margin: 1.5em 0;
-  list-style: none;
-  background-image: url("../img/icon-Chevron-closed.png");
-  background-repeat: no-repeat;
-  background-position: 0 50%;
-  background-size: 18px auto;
-  padding-left: 1.5em;
-}
-
-form details summary {
-  margin: 0;
-}
-
-form details[open] summary {
-  margin-bottom: 0.5em;
-}
-
-/* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details */
-details summary::-webkit-details-marker {
-  display: none;
-}
-
-details[open] summary {
-  background-image: url("../img/icon-Chevron-open.png");
-  background-repeat: no-repeat;
-}
-
 a, summary {
   color: #216aed;
   font-weight: bold;
