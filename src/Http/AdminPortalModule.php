@@ -271,6 +271,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $csvString,
                     [
                         'Content-Type' => 'text/csv',
+                        'Content-Disposition' => sprintf('attachment; filename="%s_stats.csv"', $profileId),
                     ]
                 );
             }
