@@ -296,6 +296,16 @@ class Tpl implements TplInterface
         return $this->e($dateTime->format($dateFormat));
     }
 
+    /**
+     * Format a date, UTC.
+     */
+    public function du(DateTimeImmutable $dateTime, string $dateFormat = 'Y-m-d H:i:s T'): string
+    {
+        $dateTime = $dateTime->setTimeZone(new DateTimeZone('UTC'));
+
+        return $this->e($dateTime->format($dateFormat));
+    }
+
     public function t(string $v): string
     {
         // use original, unless it is found in any of the translation files...

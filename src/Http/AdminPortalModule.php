@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use Vpn\Portal\Config;
 use Vpn\Portal\ConfigCheck;
@@ -260,9 +261,9 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
 
                 $dateTime = new DateTimeImmutable(
-                    $request->requirePostParameter('date_time', fn (string $s) => Validator::dateTime($s))
+                    $request->requirePostParameter('date_time', fn (string $s) => Validator::dateTime($s)),
+                    new DateTimeZone('UTC')
                 );
-                // XXX make sure it works correctly regarding timezone!
 
                 // make sure it is NOT in the future
                 if ($dateTime > $this->dateTime) {

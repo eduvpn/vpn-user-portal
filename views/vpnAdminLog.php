@@ -15,12 +15,13 @@
     </p>
     <p>
         <?=$this->t('The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.'); ?>
+        <?=$this->t('The <em>Date/Time</em> MUST be in UTC.'); ?>
     </p>
 
     <form class="frm" method="post">
         <fieldset>
             <label for="dateTime"><?=$this->t('Date/Time'); ?></label>
-            <input id="dateTime" name="date_time" type="text" size="30" value="<?php if (null !== $date_time): ?><?=$this->d($date_time, 'Y-m-d H:i:s'); ?><?php else: ?><?=$this->d($now, 'Y-m-d H:i:s'); ?><?php endif; ?>" required>
+            <input id="dateTime" name="date_time" type="text" size="30" value="<?php if (null !== $date_time): ?><?=$this->du($date_time, 'Y-m-d H:i:s'); ?><?php else: ?><?=$this->du($now, 'Y-m-d H:i:s'); ?><?php endif; ?>" required>
             <label for="ipAddress"><?=$this->t('IP Address'); ?></label>
             <input id="ipAddress" name="ip_address" type="text" size="30" value="<?php if ($ip_address): ?><?=$this->e($ip_address); ?><?php endif; ?>" placeholder="fdc6:6794:d2bf:1::1000" required>
         </fieldset>
