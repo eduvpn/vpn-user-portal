@@ -264,7 +264,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 $csvString = 'Date/Time,Connection Count'.PHP_EOL;
                 foreach ($this->storage->statsGet($profileId) as $statsEntry) {
-                    $csvString .= sprintf('%s,%d', $statsEntry['date_time']->format(DateTimeImmutable::ATOM), $statsEntry['connection_count']).PHP_EOL;
+                    $csvString .= sprintf('%s,%d', $statsEntry['date_time']->format('Y-m-d\TH:i:s'), $statsEntry['connection_count']).PHP_EOL;
                 }
 
                 return new Response(
