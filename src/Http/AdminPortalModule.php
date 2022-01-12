@@ -275,6 +275,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminLog',
                         [
+                            'profileConfigList' => $this->config->profileConfigList(),
                             'now' => $this->dateTime,
                             'date_time' => $dateTime,
                             'ip_address' => $ipAddress,

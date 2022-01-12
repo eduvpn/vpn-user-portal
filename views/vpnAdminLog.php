@@ -1,5 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
+<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var ?\DateTimeImmutable $date_time */?>
 <?php /** @var ?string $ip_address */?>
 <?php /** @var \DateTimeImmutable $now */?>
@@ -40,7 +41,7 @@
                 <tbody>
                     <tr>
                         <th><?=$this->t('Profile'); ?></th>
-                        <td><?=$this->e($logEntry['profile_id']); ?></td>
+                        <td><?=$this->profileIdToDisplayName($profileConfigList, $logEntry['profile_id']); ?></td>
                     </tr>
                     <tr>
                         <th><?=$this->t('User ID'); ?></th>
