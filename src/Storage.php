@@ -978,11 +978,14 @@ class Storage
         $stmt->execute();
     }
 
-    public function cleanExpiredCertificates(DateTimeImmutable $dateTime): void
+    public function cleanExpiredConfigurations(DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare('DELETE FROM certificates WHERE expires_at < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        // XXX also clean wireguard somewhere
+        $stmt->execute();
+
+        $stmt = $this->db->prepare('DELETE FROM wg_peers WHERE expires_at < :date_time');
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
     }
 
