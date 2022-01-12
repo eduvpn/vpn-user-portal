@@ -19,16 +19,18 @@ use Vpn\Portal\Storage;
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage($config->dbConfig($baseDir));
-    $cleanBefore = Dt::get('now -32 days');
+
+    $oneMonth = Dt::get('now -1 month');
+    $fiveDays = Dt::get('now -5 days');
 
     // remove old entries from the connection log
-    $storage->cleanConnectionLog($cleanBefore);
+    $storage->cleanConnectionLog($oneMonth);
 
     // delete expired WireGuard peers and OpenVPN certificates
-    $storage->cleanExpiredConfigurations($cleanBefore);
+    $storage->cleanExpiredConfigurations($fiveDays);
 
     // delete expires OAuth authorizations
-    $storage->cleanExpiredOAuthAuthorizations($cleanBefore);
+    $storage->cleanExpiredOAuthAuthorizations($fiveDays);
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 
