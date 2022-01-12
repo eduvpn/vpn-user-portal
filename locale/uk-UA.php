@@ -109,6 +109,7 @@ return [
     'Sign In' => 'Увійти',
     'Sign Out' => 'Вийти',
     'Stats' => 'Ститистика',
+    //'The <em>Date/Time</em> MUST be in UTC.' => '',
     'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => 'Поле <em>Дата/Час</em> приймає дані у форматі <code>Рік-місяць-день г:хв:сек</code>, e.g. <code>2019-01-01 08:00:00</code>.',
     'The credentials you provided were not correct.' => 'Надані вами облікові дані були невірними.',
     'The list of applications you authorized to create a VPN connection.' => 'Список програм, яким ви надали дозвіл на створення VPN-з\'єднання.',

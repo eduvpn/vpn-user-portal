@@ -109,6 +109,7 @@ return [
     'Sign In' => 'Logi sisse',
     'Sign Out' => 'Logi välja',
     'Stats' => 'Statistika',
+    //'The <em>Date/Time</em> MUST be in UTC.' => '',
     'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => 'Välja <em>Kuupäev/kellaaeg</em> vorming: <code>aasta-kuu-päev tund:minut:sekund</code>, näiteks <code>2019-01-01 08:00:00</code>.',
     'The credentials you provided were not correct.' => 'Kasutajakonto andmed ei olnud õiged.',
     //'The list of applications you authorized to create a VPN connection.' => '',

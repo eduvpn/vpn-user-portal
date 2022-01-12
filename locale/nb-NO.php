@@ -109,6 +109,7 @@ return [
     'Sign In' => 'Logg inn',
     'Sign Out' => 'Logg ut',
     'Stats' => 'Statistikk',
+    //'The <em>Date/Time</em> MUST be in UTC.' => '',
     'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => '<em>Dato/Tid</em>-feltet tar datoformat <code>Y-m-d H:i:s</code>, f.eks. <code>2019-01-01 08:00:00</code>.',
     'The credentials you provided were not correct.' => 'Innloggingsdetaljene er ikke riktige.',
     'The list of applications you authorized to create a VPN connection.' => 'Liste over applikasjoner du har tillatt å opprette en VPN-tilkobling.',

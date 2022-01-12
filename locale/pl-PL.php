@@ -109,6 +109,7 @@ return [
     'Sign In' => 'Logowanie',
     'Sign Out' => 'Wyloguj',
     'Stats' => 'Statystyki',
+    //'The <em>Date/Time</em> MUST be in UTC.' => '',
     'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => 'Pole daty akceptuje daty w formacie <code>Y-m-d H:i:s</code>, np. <code>2019-01-01 08:00:00</code>.',
     'The credentials you provided were not correct.' => 'Dane uwierzytelniające są nieprawidłowe.',
     'The list of applications you authorized to create a VPN connection.' => 'Lista aplikacji, które autoryzowałeś do zestawienia połączenia VPN.',
