@@ -41,7 +41,7 @@
                 <tbody>
                     <tr>
                         <th><?=$this->t('Profile'); ?></th>
-                        <td><?=$this->profileIdToDisplayName($profileConfigList, $logEntry['profile_id']); ?></td>
+                        <td><span title="<?=$this->e($logEntry['profile_id']); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $logEntry['profile_id']); ?></span></td>
                     </tr>
                     <tr>
                         <th><?=$this->t('User ID'); ?></th>
