@@ -58,3 +58,8 @@ CREATE TABLE IF NOT EXISTS connection_log(
     bytes_out BIGINT DEFAULT NULL,
     disconnected_at VARCHAR(255) DEFAULT NULL
 );
+CREATE TABLE IF NOT EXISTS connection_stats(
+    date_time VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    connection_count BIGINT NOT NULL
+);

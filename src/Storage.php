@@ -20,7 +20,7 @@ class Storage
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
 
-    public const CURRENT_SCHEMA_VERSION = '2022010701';
+    public const CURRENT_SCHEMA_VERSION = '2022011201';
 
     private PDO $db;
 
@@ -1117,6 +1117,29 @@ class Storage
         $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
         $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
+        $stmt->execute();
+    }
+
+    public function statsAdd(DateTimeImmutable $dateTime, string $profileId, int $connectionCount): void
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    INSERT INTO
+                        connection_stats (
+                            date_time,
+                            profile_id,
+                            connection_count
+                        )
+                    VALUES (
+                        :date_time,
+                        :profile_id,
+                        :connection_count
+                    )
+                SQL
+        );
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->bindValue(':connection_count', $connectionCount, PDO::PARAM_INT);
         $stmt->execute();
     }
 
