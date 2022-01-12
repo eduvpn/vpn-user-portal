@@ -16,7 +16,6 @@ use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\Json;
-use Vpn\Portal\NullLogger;
 use Vpn\Portal\ProfileConfig;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -43,6 +42,7 @@ function getMaxClientLimit(ProfileConfig $profileConfig): int
 function showHelp(array $argv): void
 {
     echo 'SYNTAX: '.$argv[0].\PHP_EOL.\PHP_EOL;
+    echo '--csv                 use CSV output format (DEFAULT)'.\PHP_EOL;
     echo '--json                use JSON output format'.\PHP_EOL;
     echo '--alert [percentage]  only show entries where IP space use is over specified'.\PHP_EOL;
     echo '                      percentage. The default percentage for --alert is 90 '.\PHP_EOL;
@@ -115,7 +115,7 @@ try {
         $config,
         new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger),
         $storage,
-        new NullLogger()
+        $logger
     );
 
     $outputData = [];
