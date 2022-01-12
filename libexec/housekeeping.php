@@ -21,16 +21,16 @@ try {
     $storage = new Storage($config->dbConfig($baseDir));
 
     $oneMonth = Dt::get('now -1 month');
-    $fiveDays = Dt::get('now -5 days');
+    $threeDays = Dt::get('now -3 days');
 
     // remove old entries from the connection log
     $storage->cleanConnectionLog($oneMonth);
 
     // delete expired WireGuard peers and OpenVPN certificates
-    $storage->cleanExpiredConfigurations($fiveDays);
+    $storage->cleanExpiredConfigurations($threeDays);
 
     // delete expires OAuth authorizations
-    $storage->cleanExpiredOAuthAuthorizations($fiveDays);
+    $storage->cleanExpiredOAuthAuthorizations($threeDays);
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 
