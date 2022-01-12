@@ -8,7 +8,7 @@
 <h2><?=$this->t('Profile Usage'); ?></h2>
 <table class="tbl">
 <thead>
-    <tr><th><?=$this->t('Profile'); ?><th>Max Connection Count</th><th></th></tr>
+    <tr><th><?=$this->t('Profile'); ?><th><?=$this->t('Max #Active Connections'); ?></th><th></th></tr>
 </thead>
 <tbody>
 <?php foreach ($profileConfigList as $profileConfig): ?>
