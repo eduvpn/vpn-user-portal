@@ -244,11 +244,14 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
+                //var_dump($this->storage->statsMaxConnectionCountList());
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
                             'profileConfigList' => $this->config->profileConfigList(),
+                            'maxConnectionCountList' => $this->storage->statsMaxConnectionCountList(),
                             'appUsage' => self::appUsage($this->storage->appUsage()),
                         ]
                     )
