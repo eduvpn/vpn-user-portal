@@ -1,8 +1,20 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<array{client_id:string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}> $appUsage */?>
+<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')]); ?>
 <?php $this->start('content'); ?>
+<h2><?=$this->t('Profile Usage'); ?></h2>
+<table class="tbl">
+<thead>
+    <tr><th><?=$this->t('Profile'); ?></th><th></th></tr>
+</thead>
+<tbody>
+<?php foreach ($profileConfigList as $profileConfig): ?>
+    <tr><td><?=$this->e($profileConfig->displayName()); ?></td><td><a href="csv_stats?profile_id=<?=$this->e($profileConfig->profileId()); ?>"><?=$this->t('CSV'); ?></a></td></tr>
+<?php endforeach; ?>
+</tbody>
+</table>
 <?php if (0 !== count($appUsage)): ?>
 <h2><?=$this->t('Application Usage'); ?></h2>
 <figure>

@@ -1144,6 +1144,36 @@ class Storage
     }
 
     /**
+     * @return array<array{date_time:\DateTimeImmutable,connection_count:int}>
+     */
+    public function statsGet(string $profileId): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    SELECT
+                        date_time,
+                        connection_count
+                    FROM
+                        connection_stats
+                    WHERE
+                        profile_id = :profile_id
+                SQL
+        );
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $statsData = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $statsData[] = [
+                'date_time' => Dt::get($resultRow['date_time']),
+                'connection_count' => (int) $resultRow['connection_count'],
+            ];
+        }
+
+        return $statsData;
+    }
+
+    /**
      * @return array<array{client_id:string,client_count:int}>
      */
     public function appUsage(): array

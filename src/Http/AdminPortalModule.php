@@ -248,9 +248,30 @@ class AdminPortalModule implements ServiceModuleInterface
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
+                            'profileConfigList' => $this->config->profileConfigList(),
                             'appUsage' => self::appUsage($this->storage->appUsage()),
                         ]
                     )
+                );
+            }
+        );
+
+        $service->get(
+            '/csv_stats',
+            function (UserInfo $userInfo, Request $request): Response {
+                $this->requireAdmin($userInfo);
+                $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
+
+                $csvString = 'Date/Time,Connection Count'.PHP_EOL;
+                foreach ($this->storage->statsGet($profileId) as $statsEntry) {
+                    $csvString .= sprintf('%s,%d', $statsEntry['date_time']->format(DateTimeImmutable::ATOM), $statsEntry['connection_count']).PHP_EOL;
+                }
+
+                return new Response(
+                    $csvString,
+                    [
+                        'Content-Type' => 'text/csv',
+                    ]
                 );
             }
         );
