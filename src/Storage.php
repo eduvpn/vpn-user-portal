@@ -20,7 +20,7 @@ class Storage
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
 
-    public const CURRENT_SCHEMA_VERSION = '2022011201';
+    public const CURRENT_SCHEMA_VERSION = '2022011301';
 
     private PDO $db;
 
