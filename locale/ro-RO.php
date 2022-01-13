@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 return [
     '#Active Connections' => 'Numărul de conexiuni active',
+    //'#Unique Users' => '',
     'ACL Permission List' => 'Lista de permisiuni (ACL)',
     'Account' => 'Cont',
     'Active' => 'Activ',
@@ -117,6 +118,7 @@ return [
     'The credentials you provided were not correct.' => 'Numele de utilizator și/sau parola pe care le-ai introdus nu sunt corecte.',
     'The list of applications you authorized to create a VPN connection.' => 'Lista aplicațiilor pe care le-ai autorizat să creeze o conexiune VPN.',
     //'The most recent VPN connections with this account.' => '',
+    //'The table below shows the per profile VPN usage over the last month.' => '',
     'There are no results matching your criteria.' => 'Nu există rezultate care să corespundă criteriilor tale.',
     //'This server uses an external authentication source. Deleting the account data will not prevent the user from authenticating (again)!' => '',
     //'This user does not have any active configurations.' => '',

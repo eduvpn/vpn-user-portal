@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 return [
     '#Active Connections' => 'Активні з’єднання.',
+    //'#Unique Users' => '',
     //'ACL Permission List' => '',
     'Account' => 'Акаунт',
     'Active' => 'Активний',
@@ -117,6 +118,7 @@ return [
     'The credentials you provided were not correct.' => 'Надані вами облікові дані були невірними.',
     'The list of applications you authorized to create a VPN connection.' => 'Список програм, яким ви надали дозвіл на створення VPN-з\'єднання.',
     //'The most recent VPN connections with this account.' => '',
+    //'The table below shows the per profile VPN usage over the last month.' => '',
     'There are no results matching your criteria.' => 'Немає результатів, що відповідають вашим критеріям.',
     //'This server uses an external authentication source. Deleting the account data will not prevent the user from authenticating (again)!' => '',
     //'This user does not have any active configurations.' => '',

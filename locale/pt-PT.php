@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 return [
     '#Active Connections' => '# Ligações ativas',
+    //'#Unique Users' => '',
     //'ACL Permission List' => '',
     'Account' => 'Conta',
     'Active' => 'Ativo',
@@ -117,6 +118,7 @@ return [
     'The credentials you provided were not correct.' => 'As credênciais que forneceu não estavam corretas',
     'The list of applications you authorized to create a VPN connection.' => 'A lista de aplicações que autorizou a criar ligações VPN.',
     //'The most recent VPN connections with this account.' => '',
+    //'The table below shows the per profile VPN usage over the last month.' => '',
     'There are no results matching your criteria.' => 'Não há resultados para os seus critérios',
     //'This server uses an external authentication source. Deleting the account data will not prevent the user from authenticating (again)!' => '',
     //'This user does not have any active configurations.' => '',

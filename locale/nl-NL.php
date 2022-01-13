@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 return [
     '#Active Connections' => '#Actieve verbindingen',
+    '#Unique Users' => '#Unieke gebruikers',
     'ACL Permission List' => 'ACL-lijst',
     'Account' => 'Account',
     'Active' => 'Actief',
@@ -117,6 +118,7 @@ return [
     'The credentials you provided were not correct.' => 'De inloggegevens zijn niet correct.',
     'The list of applications you authorized to create a VPN connection.' => 'De lijst van applicaties die je toestemming hebt gegeven een VPN-verbinding op te zetten.',
     'The most recent VPN connections with this account.' => 'De meest recente VPN-verbindingen van dit account.',
+    'The table below shows the per profile VPN usage over the last month.' => 'De tabel hieronder laat het VPN-gebruik zien over de laatste maand.',
     'There are no results matching your criteria.' => 'Er zijn geen resultaten die voldoen aan de criteria.',
     'This server uses an external authentication source. Deleting the account data will not prevent the user from authenticating (again)!' => 'Deze server gebruikt een externe gebruikersdatabase. Een account verwijderen voorkomt niet dat de gebruiker (opnieuw) kan inloggen!',
     'This user does not have any active configurations.' => 'Deze gebruiker heeft geen actieve configuraties.',
