@@ -73,7 +73,7 @@ return [
     'Issues' => 'Problemen',
     'Log' => 'Log',
     'Managing user <code>%userId%</code>.' => 'Beheer gebruiker <code>%userId%</code>.',
-    'Max #Active Connections' => 'Max #Actieve verbindingen',
+    'Max #Active Connections' => 'Maximum #actieve verbindingen',
     'More' => 'Meer',
     'N/A' => 'N.v.t.',
     'Name' => 'Naam',
