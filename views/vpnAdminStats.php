@@ -3,19 +3,30 @@
 <?php /** @var array<array{client_id:string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}> $appUsage */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<string,int> $maxConnectionCountList */?>
+<?php /** @var array<string,int> $uniqueUsersCountList */?>
 <?php $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')]); ?>
 <?php $this->start('content'); ?>
 <h2><?=$this->t('Profile Usage'); ?></h2>
 <table class="tbl">
 <thead>
-    <tr><th><?=$this->t('Profile'); ?><th><?=$this->t('Max #Active Connections'); ?></th><th></th></tr>
+    <tr>
+        <th><?=$this->t('Profile'); ?></th>
+        <th><?=$this->t('#Unique Users'); ?></th>
+        <th><?=$this->t('Max #Active Connections'); ?></th>
+        <th></th>
+    </tr>
 </thead>
 <tbody>
 <?php foreach ($profileConfigList as $profileConfig): ?>
     <tr>
         <td><?=$this->e($profileConfig->displayName()); ?></td>
+<?php if (!array_key_exists($profileConfig->profileId(), $uniqueUsersCountList)): ?>
+        <td>0</td>
+<?php else: ?>
+        <td><?=$this->e((string) $uniqueUsersCountList[$profileConfig->profileId()]); ?></td>
+<?php endif; ?>
 <?php if (!array_key_exists($profileConfig->profileId(), $maxConnectionCountList)): ?>
-        <td><em><?=$this->t('N/A'); ?></em></td>
+        <td>0</td>
 <?php else: ?>
         <td><?=$this->e((string) $maxConnectionCountList[$profileConfig->profileId()]); ?></td>
 <?php endif; ?>

@@ -251,6 +251,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminStats',
                         [
                             'profileConfigList' => $this->config->profileConfigList(),
+                            'uniqueUsersCountList' => $this->storage->statsUniqueUsersCountList(),
                             'maxConnectionCountList' => $this->storage->statsMaxConnectionCountList(),
                             'appUsage' => self::appUsage($this->storage->appUsage()),
                         ]

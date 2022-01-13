@@ -1199,6 +1199,31 @@ class Storage
     }
 
     /**
+     * @return array<string,int>
+     */
+    public function statsUniqueUsersCountList(): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    SELECT
+                        profile_id,
+                        COUNT(DISTINCT user_id) AS unique_user_count
+                    FROM
+                        connection_log
+                    GROUP BY
+                        profile_id
+                SQL
+        );
+        $stmt->execute();
+        $statsData = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $statsData[(string) $resultRow['profile_id']] = (int) $resultRow['unique_user_count'];
+        }
+
+        return $statsData;
+    }
+
+    /**
      * @return array<array{client_id:string,client_count:int}>
      */
     public function appUsage(): array
