@@ -978,6 +978,21 @@ class Storage
         $stmt->execute();
     }
 
+    public function cleanConnectionStats(DateTimeImmutable $dateTime): void
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    DELETE FROM
+                        connection_stats
+                    WHERE
+                        date_time < :date_time
+                SQL
+        );
+
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
     public function cleanExpiredConfigurations(DateTimeImmutable $dateTime): void
     {
         $stmt = $this->db->prepare('DELETE FROM certificates WHERE expires_at < :date_time');

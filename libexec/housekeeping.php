@@ -26,6 +26,9 @@ try {
     // remove old entries from the connection log
     $storage->cleanConnectionLog($oneMonth);
 
+    // remove old entries from the connection stats
+    $storage->cleanConnectionStats($oneMonth);
+
     // delete expired WireGuard peers and OpenVPN certificates
     $storage->cleanExpiredConfigurations($threeDays);
 
