@@ -244,14 +244,12 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
-                //var_dump($this->storage->statsMaxConnectionCountList());
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
                             'profileConfigList' => $this->config->profileConfigList(),
-                            'statsMax' => $this->storage->statsGetMax(),
+                            'statsMax' => $this->storage->statsGetLiveMax(),
                             'appUsage' => self::appUsage($this->storage->appUsage()),
                         ]
                     )
@@ -260,13 +258,13 @@ class AdminPortalModule implements ServiceModuleInterface
         );
 
         $service->get(
-            '/csv_stats',
+            '/csv_stats/live',
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
                 $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
 
-                $csvString = 'Date/Time,Unique User Count,Connection Count'.PHP_EOL;
-                foreach ($this->storage->statsGet($profileId) as $statsEntry) {
+                $csvString = 'Date/Time,#Unique User Count,#Connection Count'.PHP_EOL;
+                foreach ($this->storage->statsGetLive($profileId) as $statsEntry) {
                     $csvString .= sprintf(
                         '%s,%d,%d',
                         $statsEntry['date_time']->format('Y-m-d\TH:i:s'),
@@ -279,7 +277,33 @@ class AdminPortalModule implements ServiceModuleInterface
                     $csvString,
                     [
                         'Content-Type' => 'text/csv',
-                        'Content-Disposition' => sprintf('attachment; filename="%s_stats.csv"', $profileId),
+                        'Content-Disposition' => sprintf('attachment; filename="%s_live_stats.csv"', $profileId),
+                    ]
+                );
+            }
+        );
+
+        $service->get(
+            '/csv_stats/aggregate',
+            function (UserInfo $userInfo, Request $request): Response {
+                $this->requireAdmin($userInfo);
+                $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
+
+                $csvString = 'Date,Max #Unique User Count,Max #Connection Count'.PHP_EOL;
+                foreach ($this->storage->statsGetAggregate($profileId) as $statsEntry) {
+                    $csvString .= sprintf(
+                        '%s,%d,%d',
+                        $statsEntry['date'],
+                        $statsEntry['max_unique_user_count'],
+                        $statsEntry['max_connection_count']
+                    ).PHP_EOL;
+                }
+
+                return new Response(
+                    $csvString,
+                    [
+                        'Content-Type' => 'text/csv',
+                        'Content-Disposition' => sprintf('attachment; filename="%s_aggregate_stats.csv"', $profileId),
                     ]
                 );
             }

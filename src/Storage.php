@@ -1164,7 +1164,7 @@ class Storage
     /**
      * @return array<array{date_time:\DateTimeImmutable,unique_user_count:int,connection_count:int}>
      */
-    public function statsGet(string $profileId): array
+    public function statsGetLive(string $profileId): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -1196,7 +1196,7 @@ class Storage
     /**
      * @return array<string,array{max_unique_user_count:int,max_connection_count:int}>
      */
-    public function statsGetMax(): array
+    public function statsGetLiveMax(): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -1214,6 +1214,38 @@ class Storage
         $statsData = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $statsData[(string) $resultRow['profile_id']] = [
+                'max_unique_user_count' => (int) $resultRow['max_unique_user_count'],
+                'max_connection_count' => (int) $resultRow['max_connection_count'],
+            ];
+        }
+
+        return $statsData;
+    }
+
+    /**
+     * @return array<string,array{date:string,max_unique_user_count:int,max_connection_count:int}>
+     */
+    public function statsGetAggregate(string $profileId): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    SELECT
+                        date,
+                        max_unique_user_count,
+                        max_connection_count
+                    FROM
+                        aggregate_stats
+                    WHERE
+                        profile_id = :profile_id
+                SQL
+        );
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $statsData = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $statsData[(string) $resultRow['profile_id']] = [
+                'date' => (string) $resultRow['date'],
                 'max_unique_user_count' => (int) $resultRow['max_unique_user_count'],
                 'max_connection_count' => (int) $resultRow['max_connection_count'],
             ];

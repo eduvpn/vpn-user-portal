@@ -15,7 +15,7 @@
         <th><?=$this->t('Profile'); ?></th>
         <th><?=$this->t('Max #Unique Users'); ?></th>
         <th><?=$this->t('Max #Active Connections'); ?></th>
-        <th></th>
+        <th><?=$this->t('Export (CSV)'); ?></th>
     </tr>
 </thead>
 <tbody>
@@ -29,7 +29,10 @@
         <td><?=$this->e((string) $statsMax[$profileConfig->profileId()]['max_unique_user_count']); ?></td>
         <td><?=$this->e((string) $statsMax[$profileConfig->profileId()]['max_connection_count']); ?></td>
 <?php endif; ?>
-        <td><a href="csv_stats?profile_id=<?=$this->e($profileConfig->profileId()); ?>"><?=$this->t('CSV'); ?></a></td>
+        <td>
+            <a href="csv_stats/live?profile_id=<?=$this->e($profileConfig->profileId()); ?>"><?=$this->t('Live'); ?></a> │
+            <a href="csv_stats/aggregate?profile_id=<?=$this->e($profileConfig->profileId()); ?>"><?=$this->t('Aggregate'); ?></a>
+        </td>
     </tr>
 <?php endforeach; ?>
 </tbody>
