@@ -20,8 +20,8 @@ try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage($config->dbConfig($baseDir));
 
-    $oneMonthAgo = Dt::get('today -1 month');
-    $threeDays = Dt::get('now -3 days');
+    $oneMonthAgo = Dt::get('today -1 month', new DateTimeZone('UTC'));
+    $threeDays = Dt::get('now -3 days', new DateTimeZone('UTC'));
 
     // aggregate old entries from the connection statistics
     $storage->statsAggregate($oneMonthAgo);

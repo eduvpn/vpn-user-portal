@@ -19,9 +19,9 @@ use DateTimeZone;
  */
 class Dt
 {
-    public static function get(?string $dateTimeString = null): DateTimeImmutable
+    public static function get(?string $dateTimeString = null, ?DateTimeZone $dateTimeZone = null): DateTimeImmutable
     {
-        $dateTime = new DateTimeImmutable(null === $dateTimeString ? 'now' : $dateTimeString);
+        $dateTime = new DateTimeImmutable(null === $dateTimeString ? 'now' : $dateTimeString, $dateTimeZone);
 
         // whatever the local time zone is, always convert to UTC
         return $dateTime->setTimeZone(new DateTimeZone('UTC'));
