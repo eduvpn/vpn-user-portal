@@ -179,9 +179,8 @@ return [
     // Limit the number of active VPN configurations downloaded through the
     // Portal. When this limit has been reached, an old(er) one needs to be
     // deleted first...
-    // See also maxActiveConfigurations under [Api] to limit API client
-    // configuration downloads
-    // OPTIONAL, DEFAULT = null (no limit)
+    // See also maxActiveConfigurations under [Api] to limit the VPN apps
+    // OPTIONAL, DEFAULT = 3
     //'maxActiveConfigurations' => 3,
     // do NOT allow any portal configurations downloads, allow VPN apps only
     //'maxActiveConfigurations' => 0,
@@ -198,7 +197,7 @@ return [
     //    // connected simultaneously.
     //    // See also maxActiveConfigurations outside [Api] to limit portal
     //    // configuration downloads
-    //    // OPTIONAL, DEFAULT = null (no limit)
+    //    // OPTIONAL, DEFAULT = 3
     //    //'maxActiveConfigurations' => 3,
     //    // do NOT allow any API configurations downloads, allow portal downloads
     //    // only

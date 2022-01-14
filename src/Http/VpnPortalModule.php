@@ -62,19 +62,12 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileConfigList = $this->config->profileConfigList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
-                $numberOfActivePortalConfigurations = 0;
-                if (null !== $maxActiveConfigurations = $this->config->maxActiveConfigurations()) {
-                    // only hit the database to count the number of active
-                    // configurations when there *is* a limit set
-                    $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
-                }
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalHome',
                         [
-                            'maxActiveConfigurations' => $maxActiveConfigurations,
-                            'numberOfActivePortalConfigurations' => $numberOfActivePortalConfigurations,
+                            'maxActiveConfigurations' => $this->config->maxActiveConfigurations(),
+                            'numberOfActivePortalConfigurations' => $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime),
                             'profileConfigList' => $visibleProfileList,
                             'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
                             'configList' => self::filterConfigList($this->storage, $userInfo->userId()),
@@ -88,14 +81,12 @@ class VpnPortalModule implements ServiceModuleInterface
             '/addConfig',
             function (UserInfo $userInfo, Request $request): Response {
                 $maxActiveConfigurations = $this->config->maxActiveConfigurations();
-                if (null !== $maxActiveConfigurations) {
-                    if (0 === $maxActiveConfigurations) {
-                        throw new HttpException('no portal configuration downloads allowed', 403);
-                    }
-                    $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
-                    if ($numberOfActivePortalConfigurations >= $maxActiveConfigurations) {
-                        throw new HttpException('limit of available portal configuration downloads has been reached', 403);
-                    }
+                if (0 === $maxActiveConfigurations) {
+                    throw new HttpException('no portal configuration downloads allowed', 403);
+                }
+                $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
+                if ($numberOfActivePortalConfigurations >= $maxActiveConfigurations) {
+                    throw new HttpException('limit of available portal configuration downloads has been reached', 403);
                 }
 
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));

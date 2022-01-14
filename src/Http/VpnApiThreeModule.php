@@ -81,21 +81,19 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
                 $maxActiveApiConfigurations = $this->config->apiConfig()->maxActiveConfigurations();
-                if (null !== $maxActiveApiConfigurations) {
-                    if (0 === $maxActiveApiConfigurations) {
-                        return new JsonResponse(['error' => 'no API configuration downloads allowed'], [], 403);
-                    }
-                    $activeApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
-                    if (\count($activeApiConfigurations) >= $maxActiveApiConfigurations) {
-                        // we disconnect the client that connected the longest
-                        // time ago, which is first one from the set in
-                        // activeApiConfigurations
-                        $this->connectionManager->disconnect(
-                            $accessToken->userId(),
-                            $activeApiConfigurations[0]['profile_id'],
-                            $activeApiConfigurations[0]['connection_id']
-                        );
-                    }
+                if (0 === $maxActiveApiConfigurations) {
+                    return new JsonResponse(['error' => 'no API configuration downloads allowed'], [], 403);
+                }
+                $activeApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
+                if (\count($activeApiConfigurations) >= $maxActiveApiConfigurations) {
+                    // we disconnect the client that connected the longest
+                    // time ago, which is first one from the set in
+                    // activeApiConfigurations
+                    $this->connectionManager->disconnect(
+                        $accessToken->userId(),
+                        $activeApiConfigurations[0]['profile_id'],
+                        $activeApiConfigurations[0]['connection_id']
+                    );
                 }
 
                 // XXX catch InputValidationException
