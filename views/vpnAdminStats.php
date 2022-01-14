@@ -15,7 +15,7 @@
         <th><?=$this->t('Profile'); ?></th>
         <th><?=$this->t('Max #Unique Users'); ?></th>
         <th><?=$this->t('Max #Active Connections'); ?></th>
-        <th><?=$this->t('Export (CSV)'); ?></th>
+        <th colspan="2"><?=$this->t('Export (CSV)'); ?></th>
     </tr>
 </thead>
 <tbody>
@@ -30,8 +30,10 @@
         <td><?=$this->e((string) $statsMax[$profileConfig->profileId()]['max_connection_count']); ?></td>
 <?php endif; ?>
         <td>
-            <a href="csv_stats/live?profile_id=<?=$this->e($profileConfig->profileId()); ?>"><?=$this->t('Live'); ?></a> │
-            <a href="csv_stats/aggregate?profile_id=<?=$this->e($profileConfig->profileId()); ?>"><?=$this->t('Aggregate'); ?></a>
+            <form class="frm" method="get" action="csv_stats/live"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button><?=$this->t('Live'); ?></button></form>
+            </td>
+            <td>
+            <form class="frm" method="get" action="csv_stats/aggregate"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button><?=$this->t('Aggregate'); ?></button></form>
         </td>
     </tr>
 <?php endforeach; ?>
