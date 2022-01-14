@@ -1240,8 +1240,6 @@ class Storage
 
     public function statsAggregate(DateTimeImmutable $dateTime): void
     {
-        // XXX make sure this thing is called with today -1 month and not
-        // 'now -1 month'
         // XXX add unique_user_count column somehow
         $stmt = $this->db->prepare(
             <<< 'SQL'
