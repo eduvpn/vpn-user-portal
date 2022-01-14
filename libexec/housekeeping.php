@@ -20,18 +20,17 @@ try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage($config->dbConfig($baseDir));
 
-    $oneWeekAgo = Dt::get('today -1 week', new DateTimeZone('UTC'));
     $oneMonthAgo = Dt::get('today -1 month', new DateTimeZone('UTC'));
     $threeDaysAgo = Dt::get('now -3 days', new DateTimeZone('UTC'));
 
     // aggregate old entries from the connection statistics
-    $storage->statsAggregate($oneWeekAgo);
+    $storage->statsAggregate($oneMonthAgo);
 
     // remove old entries from the connection log
     $storage->cleanConnectionLog($oneMonthAgo);
 
     // remove old entries from the connection statistics
-    $storage->cleanConnectionStats($oneWeekAgo);
+    $storage->cleanLiveStats($oneMonthAgo);
 
     // delete expired WireGuard peers and OpenVPN certificates
     $storage->cleanExpiredConfigurations($threeDaysAgo);

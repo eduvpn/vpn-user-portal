@@ -34,7 +34,13 @@ try {
 
     $dateTime = Dt::get();
     foreach ($connectionManager->get() as $profileId => $connectionInfoList) {
-        $storage->statsAdd($dateTime, $profileId, count($connectionInfoList));
+        // suboptimal way to determine the number of unique users connected to
+        // the VPN profile (the same user can have multiple clients connected)
+        $userIdList = [];
+        foreach ($connectionInfoList as $connectionInfo) {
+            $userIdList[] = $connectionInfo['user_id'];
+        }
+        $storage->statsAdd($dateTime, $profileId, count(array_unique($userIdList)), count($connectionInfoList));
     }
 } catch (Exception $e) {
     echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;

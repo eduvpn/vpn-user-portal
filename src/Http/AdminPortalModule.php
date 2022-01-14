@@ -251,8 +251,7 @@ class AdminPortalModule implements ServiceModuleInterface
                         'vpnAdminStats',
                         [
                             'profileConfigList' => $this->config->profileConfigList(),
-                            'uniqueUsersCountList' => $this->storage->statsUniqueUsersCountList(),
-                            'maxConnectionCountList' => $this->storage->statsMaxConnectionCountList(),
+                            'statsMax' => $this->storage->statsGetMax(),
                             'appUsage' => self::appUsage($this->storage->appUsage()),
                         ]
                     )
@@ -266,9 +265,14 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
                 $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
 
-                $csvString = 'Date/Time,Connection Count'.PHP_EOL;
+                $csvString = 'Date/Time,Unique User Count,Connection Count'.PHP_EOL;
                 foreach ($this->storage->statsGet($profileId) as $statsEntry) {
-                    $csvString .= sprintf('%s,%d', $statsEntry['date_time']->format('Y-m-d\TH:i:s'), $statsEntry['connection_count']).PHP_EOL;
+                    $csvString .= sprintf(
+                        '%s,%d,%d',
+                        $statsEntry['date_time']->format('Y-m-d\TH:i:s'),
+                        $statsEntry['unique_user_count'],
+                        $statsEntry['connection_count']
+                    ).PHP_EOL;
                 }
 
                 return new Response(

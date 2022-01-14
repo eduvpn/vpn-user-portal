@@ -58,14 +58,15 @@ CREATE TABLE IF NOT EXISTS connection_log(
     bytes_out BIGINT DEFAULT NULL,
     disconnected_at VARCHAR(255) DEFAULT NULL
 );
-CREATE TABLE IF NOT EXISTS connection_stats(
+CREATE TABLE IF NOT EXISTS live_stats(
     date_time VARCHAR(255) NOT NULL,
     profile_id VARCHAR(255) NOT NULL,
+    unique_user_count BIGINT NOT NULL,
     connection_count BIGINT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS aggregate_stats(
     date VARCHAR(255) NOT NULL,
     profile_id VARCHAR(255) NOT NULL,
     max_connection_count BIGINT NOT NULL,
-    unique_user_count BIGINT NOT NULL
+    max_unique_user_count BIGINT NOT NULL
 );
