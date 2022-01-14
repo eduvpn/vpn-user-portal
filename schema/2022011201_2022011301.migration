@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS server_stats(
-    date_time VARCHAR(255) NOT NULL,
-    profile_id VARCHAR(255) NOT NULL,
-    max_connection_count BIGINT NOT NULL,
-    unique_user_count BIGINT NOT NULL
-);

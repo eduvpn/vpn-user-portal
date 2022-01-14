@@ -20,7 +20,7 @@ class Storage
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
 
-    public const CURRENT_SCHEMA_VERSION = '2022011301';
+    public const CURRENT_SCHEMA_VERSION = '2022011401';
 
     private PDO $db;
 
@@ -1236,6 +1236,33 @@ class Storage
         }
 
         return $statsData;
+    }
+
+    public function statsAggregate(DateTimeImmutable $dateTime): void
+    {
+        // XXX make sure this thing is called with today -1 month and not
+        // 'now -1 month'
+        // XXX add unique_user_count column somehow
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                INSERT INTO
+                    aggregate_stats
+                SELECT
+                    DATE(date_time) AS date,
+                    profile_id,
+                    MAX(connection_count) AS max_connection_count,
+                    0
+                FROM
+                    connection_stats
+                WHERE
+                    date_time < :date_time
+                GROUP BY
+                    profile_id,
+                    date
+                SQL
+        );
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->execute();
     }
 
     /**
