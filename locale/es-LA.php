@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 return [
     '#Active Connections' => ' Número de Conexiones Activas',
-    //'#Unique Users' => '',
     'ACL Permission List' => 'Lista de Permisos ACL',
     'Account' => 'Cuenta',
     'Active' => 'Activo',
@@ -74,6 +73,7 @@ return [
     'Log' => 'Log',
     'Managing user <code>%userId%</code>.' => 'Administrando usuario <code>%userId%</code>.',
     //'Max #Active Connections' => '',
+    //'Max #Unique Users' => '',
     //'More' => '',
     'N/A' => 'N/A',
     'Name' => 'Nombre',

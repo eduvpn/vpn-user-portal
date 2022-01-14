@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 return [
     //'#Active Connections' => '',
-    //'#Unique Users' => '',
     //'ACL Permission List' => '',
     'Account' => 'Konto',
     'Active' => 'Aktiivne',
@@ -74,6 +73,7 @@ return [
     'Log' => 'Logi',
     'Managing user <code>%userId%</code>.' => 'Kasutaja <code>%userId%</code> haldamine.',
     //'Max #Active Connections' => '',
+    //'Max #Unique Users' => '',
     //'More' => '',
     'N/A' => 'N/A',
     'Name' => 'Nimi',

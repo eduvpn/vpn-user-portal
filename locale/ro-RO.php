@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 return [
     '#Active Connections' => 'Numărul de conexiuni active',
-    //'#Unique Users' => '',
     'ACL Permission List' => 'Lista de permisiuni (ACL)',
     'Account' => 'Cont',
     'Active' => 'Activ',
@@ -74,6 +73,7 @@ return [
     'Log' => 'Jurnal',
     'Managing user <code>%userId%</code>.' => 'Gestionezi utilizatorul: <code>%userId%</code>.',
     //'Max #Active Connections' => '',
+    //'Max #Unique Users' => '',
     //'More' => '',
     'N/A' => 'Indisponibil',
     'Name' => 'Nume',
