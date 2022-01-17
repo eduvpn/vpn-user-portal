@@ -23,6 +23,7 @@ use Vpn\Portal\OpenVpn\TlsCrypt;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\VpnDaemon;
+use Vpn\Portal\WireGuard\Key;
 
 /**
  * @internal
@@ -58,7 +59,7 @@ final class VpnApiThreeModuleTest extends TestCase
                         'displayName' => 'Default (Prefer WireGuard)',
                         'hostName' => 'vpn.example',
                         'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
-                        'wRangeFour' => '10.44.44.0/24',
+                        'wRangeFour' => '10.44.44.0/29',
                         'wRangeSix' => 'fd44::/64',
                         'oRangeFour' => '10.45.45.0/24',
                         'oRangeSix' => 'fd45::/64',
@@ -123,6 +124,50 @@ final class VpnApiThreeModuleTest extends TestCase
             '{"info":{"profile_list":[{"profile_id":"default","display_name":"Default (Prefer OpenVPN)","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"openvpn","default_gateway":true},{"profile_id":"default-wg","display_name":"Default (Prefer WireGuard)","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"wireguard","default_gateway":true}]}}',
             $this->service->run($request)->responseBody()
         );
+    }
+
+    public function testConnectMissingProfile(): void
+    {
+        $request = new Request(
+            [
+                'REQUEST_URI' => '/v3/connect',
+                'REQUEST_METHOD' => 'POST',
+            ],
+            [],
+            [
+                'profile_id' => 'missing-profile',
+                // we specify random pubic key here, it doesn't come back in
+                // the WireGuard config anyway...
+                'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
+            ],
+            []
+        );
+
+        $httpResponse = $this->service->run($request);
+        static::assertSame(400, $httpResponse->statusCode());
+        static::assertSame('{"error":"profile not available"}', $httpResponse->responseBody());
+    }
+
+    public function testConnectInvalidProfileSyntax(): void
+    {
+        $request = new Request(
+            [
+                'REQUEST_URI' => '/v3/connect',
+                'REQUEST_METHOD' => 'POST',
+            ],
+            [],
+            [
+                'profile_id' => 'invalid%profile',
+                // we specify random pubic key here, it doesn't come back in
+                // the WireGuard config anyway...
+                'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
+            ],
+            []
+        );
+
+        $httpResponse = $this->service->run($request);
+        static::assertSame(400, $httpResponse->statusCode());
+        static::assertSame('{"error":"invalid \"profile_id\" [invalid value for \"profileId\"]"}', $httpResponse->responseBody());
     }
 
     public function testConnectOpenVpn(): void
@@ -200,7 +245,9 @@ final class VpnApiThreeModuleTest extends TestCase
             [],
             [
                 'profile_id' => 'default-wg',
-                'public_key' => 'eRPR1zoK0lm97k5Vgb3ViEX6lNWyay6V6ynEMnYs+2w=',
+                // we specify random pubic key here, it doesn't come back in
+                // the WireGuard config anyway...
+                'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
             ],
             []
         );
@@ -211,5 +258,33 @@ final class VpnApiThreeModuleTest extends TestCase
             ),
             $this->service->run($request)->responseBody()
         );
+    }
+
+    public function testNoMoreAvailableWireGuardIp(): void
+    {
+        // use up all IPs so the client cannot get a WireGuard config
+        for ($i = 2; $i < 7; ++$i) {
+            $this->storage->wPeerAdd('user_id', 0, 'default-wg', 'My Test', Key::publicKeyFromSecretKey(Key::generate()), '10.44.44.'.$i, 'fd44::'.$i, $this->dateTime, $this->dateTime->add($this->config->sessionExpiry()), null);
+        }
+
+        $request = new Request(
+            [
+                'REQUEST_URI' => '/v3/connect',
+                'REQUEST_METHOD' => 'POST',
+            ],
+            [],
+            [
+                'profile_id' => 'default-wg',
+                'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
+            ],
+            []
+        );
+
+        $httpResponse = $this->service->run($request);
+        // as the profile also supports OpenVPN, it really should return an
+        // OpenVPN config...
+        // XXX implement this
+        static::assertSame(500, $httpResponse->statusCode());
+        static::assertSame('{"error":"/connect failed: no free IP address"}', $httpResponse->responseBody());
     }
 }

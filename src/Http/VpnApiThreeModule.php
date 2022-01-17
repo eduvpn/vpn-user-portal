@@ -16,6 +16,8 @@ use fkooman\OAuth\Server\AccessToken;
 use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
+use Vpn\Portal\Exception\ConnectionManagerException;
+use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\ProfileConfig;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
@@ -76,96 +78,76 @@ class VpnApiThreeModule implements ServiceModuleInterface
         $service->post(
             '/v3/connect',
             function (AccessToken $accessToken, Request $request): Response {
-                // make sure all client configurations / connections initiated
-                // by this client are removed / disconnected
-                $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
+                try {
+                    // make sure all client configurations / connections initiated
+                    // by this client are removed / disconnected
+                    $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
-                $maxActiveApiConfigurations = $this->config->apiConfig()->maxActiveConfigurations();
-                if (0 === $maxActiveApiConfigurations) {
-                    return new JsonResponse(['error' => 'no API configuration downloads allowed'], [], 403);
-                }
-                $activeApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
-                if (\count($activeApiConfigurations) >= $maxActiveApiConfigurations) {
-                    // we disconnect the client that connected the longest
-                    // time ago, which is first one from the set in
-                    // activeApiConfigurations
-                    $this->connectionManager->disconnect(
-                        $accessToken->userId(),
-                        $activeApiConfigurations[0]['profile_id'],
-                        $activeApiConfigurations[0]['connection_id']
-                    );
-                }
-
-                // XXX catch InputValidationException
-                $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
-                $profileConfigList = $this->config->profileConfigList();
-                $userPermissions = $this->storage->userPermissionList($accessToken->userId());
-                $availableProfiles = [];
-                foreach ($profileConfigList as $profileConfig) {
-                    if (null !== $aclPermissionList = $profileConfig->aclPermissionList()) {
-                        // is the user member of the userPermissions?
-                        if (!VpnPortalModule::isMember($aclPermissionList, $userPermissions)) {
-                            continue;
+                    $maxActiveApiConfigurations = $this->config->apiConfig()->maxActiveConfigurations();
+                    if (0 === $maxActiveApiConfigurations) {
+                        throw new HttpException('no API configuration downloads allowed', 403);
+                    }
+                    $activeApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
+                    if (\count($activeApiConfigurations) >= $maxActiveApiConfigurations) {
+                        // we disconnect the client that connected the longest
+                        // time ago, which is first one from the set in
+                        // activeApiConfigurations
+                        $this->connectionManager->disconnect(
+                            $accessToken->userId(),
+                            $activeApiConfigurations[0]['profile_id'],
+                            $activeApiConfigurations[0]['connection_id']
+                        );
+                    }
+                    $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
+                    $profileConfigList = $this->config->profileConfigList();
+                    $userPermissions = $this->storage->userPermissionList($accessToken->userId());
+                    $availableProfiles = [];
+                    foreach ($profileConfigList as $profileConfig) {
+                        if (null !== $aclPermissionList = $profileConfig->aclPermissionList()) {
+                            // is the user member of the userPermissions?
+                            if (!VpnPortalModule::isMember($aclPermissionList, $userPermissions)) {
+                                continue;
+                            }
                         }
+
+                        $availableProfiles[] = $profileConfig->profileId();
                     }
 
-                    $availableProfiles[] = $profileConfig->profileId();
-                }
+                    if (!\in_array($requestedProfileId, $availableProfiles, true)) {
+                        throw new HttpException('profile not available', 400);
+                    }
 
-                if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                    return new JsonResponse(['error' => 'profile not available'], [], 400);
-                }
+                    $profileConfig = $this->config->profileConfig($requestedProfileId);
+                    $publicKey = $request->optionalPostParameter('public_key', fn (string $s) => Validator::publicKey($s));
+                    $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
+                    $vpnProto = self::determineProto($profileConfig, $publicKey, $tcpOnly);
+                    if ('wireguard' === $vpnProto && null === $publicKey) {
+                        throw new HttpException('"public_key" not provided', 400);
+                    }
 
-                $profileConfig = $this->config->profileConfig($requestedProfileId);
-                $publicKey = $request->optionalPostParameter('public_key', fn (string $s) => Validator::publicKey($s));
-                $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
-                $vpnProto = self::determineProto($profileConfig, $publicKey, $tcpOnly);
+                    // XXX if proto is wireguard, but it fails, do openvpn if supported
+                    // XXX connection manager can also override perhaps?!
+                    $clientConfig = $this->connectionManager->connect(
+                        $this->serverInfo,
+                        $accessToken->userId(),
+                        $profileConfig->profileId(),
+                        $vpnProto,
+                        $accessToken->clientId(),
+                        $accessToken->authorizationExpiresAt(),
+                        $tcpOnly,
+                        $publicKey,
+                        $accessToken->authKey(),
+                    );
 
-                switch ($vpnProto) {
-                    case 'openvpn':
-                        $clientConfig = $this->connectionManager->connect(
-                            $this->serverInfo,
-                            $accessToken->userId(),
-                            $profileConfig->profileId(),
-                            $vpnProto,
-                            $accessToken->clientId(),
-                            $accessToken->authorizationExpiresAt(),
-                            $tcpOnly,
-                            null,
-                            $accessToken->authKey(),
-                        );
-
-                        return new Response(
-                            $clientConfig->get(),
-                            [
-                                'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                                'Content-Type' => $clientConfig->contentType(),
-                            ]
-                        );
-
-                    case 'wireguard':
-                        $clientConfig = $this->connectionManager->connect(
-                            $this->serverInfo,
-                            $accessToken->userId(),
-                            $profileConfig->profileId(),
-                            $vpnProto,
-                            $accessToken->clientId(),
-                            $accessToken->authorizationExpiresAt(),
-                            false,
-                            $publicKey,
-                            $accessToken->authKey()
-                        );
-
-                        return new Response(
-                            $clientConfig->get(),
-                            [
-                                'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
-                                'Content-Type' => $clientConfig->contentType(),
-                            ]
-                        );
-
-                    default:
-                        return new JsonResponse(['error' => 'unsupported VPN protocol'], [], 400);
+                    return new Response(
+                        $clientConfig->get(),
+                        [
+                            'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                            'Content-Type' => $clientConfig->contentType(),
+                        ]
+                    );
+                } catch (ConnectionManagerException $e) {
+                    throw new HttpException(sprintf('/connect failed: %s', $e->getMessage()), 500);
                 }
             }
         );
