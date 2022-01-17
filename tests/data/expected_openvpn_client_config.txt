@@ -1,4 +1,4 @@
-# Profile: Default (default)
+# Profile: Default (Prefer OpenVPN) (default)
 # Expires: 2022-04-01T09:00:00+00:00
 
 dev tun

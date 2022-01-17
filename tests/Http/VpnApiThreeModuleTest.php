@@ -45,7 +45,7 @@ final class VpnApiThreeModuleTest extends TestCase
                 'ProfileList' => [
                     [
                         'profileId' => 'default',
-                        'displayName' => 'Default',
+                        'displayName' => 'Default (Prefer OpenVPN)',
                         'hostName' => 'vpn.example',
                         'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
                         'wRangeFour' => '10.43.43.0/24',
@@ -55,7 +55,7 @@ final class VpnApiThreeModuleTest extends TestCase
                     ],
                     [
                         'profileId' => 'default-wg',
-                        'displayName' => 'Default (WireGuard)',
+                        'displayName' => 'Default (Prefer WireGuard)',
                         'hostName' => 'vpn.example',
                         'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
                         'wRangeFour' => '10.44.44.0/24',
@@ -120,7 +120,7 @@ final class VpnApiThreeModuleTest extends TestCase
         );
 
         static::assertSame(
-            '{"info":{"profile_list":[{"profile_id":"default","display_name":"Default","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"openvpn","default_gateway":true},{"profile_id":"default-wg","display_name":"Default (WireGuard)","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"wireguard","default_gateway":true}]}}',
+            '{"info":{"profile_list":[{"profile_id":"default","display_name":"Default (Prefer OpenVPN)","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"openvpn","default_gateway":true},{"profile_id":"default-wg","display_name":"Default (Prefer WireGuard)","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"wireguard","default_gateway":true}]}}',
             $this->service->run($request)->responseBody()
         );
     }
