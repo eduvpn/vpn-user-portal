@@ -35,7 +35,7 @@ try {
     $dateTime = Dt::get();
     foreach ($connectionManager->get() as $profileId => $connectionInfoList) {
         // suboptimal way to determine the number of unique users connected to
-        // the VPN profile (the same user can have multiple clients connected)
+        // the VPN profile
         $userIdList = [];
         foreach ($connectionInfoList as $connectionInfo) {
             $userIdList[] = $connectionInfo['user_id'];
