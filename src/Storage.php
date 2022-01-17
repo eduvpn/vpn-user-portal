@@ -521,7 +521,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}>
+     * @return array<string,array{user_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
     public function oCertListByProfileId(string $profileId, int $returnSet): array
     {
@@ -550,9 +550,11 @@ class Storage
                     continue;
                 }
             }
-            $certList[] = [
+
+            $commonName = (string) $resultRow['common_name'];
+            $certList[$commonName] = [
                 'user_id' => (string) $resultRow['user_id'],
-                'common_name' => (string) $resultRow['common_name'],
+                'common_name' => $commonName,
                 'display_name' => (string) $resultRow['display_name'],
                 'expires_at' => $expiresAt,
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
