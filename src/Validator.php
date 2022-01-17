@@ -25,6 +25,7 @@ class Validator
     private const REGEXP_USER_AUTH_PASS = '/^.+$/';
     private const REGEXP_USER_PASS = '/^.{8,}$/';
     private const REGEXP_DISPLAY_NAME = '/^.+$/';
+
     /** @see https://lore.kernel.org/wireguard/X+UkseUOEY1sVDEe@zx2c4.com/ */
     private const REGEXP_CONNECTION_ID = '/^[A-Za-z0-9+\\/]{42}[A|E|I|M|Q|U|Y|c|g|k|o|s|w|4|8|0]=$/';
     private const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';

@@ -316,6 +316,7 @@ class Tpl implements TplInterface
                 if (!file_exists($translationFile)) {
                     continue;
                 }
+
                 /** @var array<string,string> $translationData */
                 $translationData = include $translationFile;
                 if (\array_key_exists($v, $translationData)) {
