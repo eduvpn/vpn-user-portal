@@ -7,7 +7,8 @@
 <?php $this->start('content'); ?>
 <h2><?=$this->t('Profile Usage'); ?></h2>
 <p>
-<?=$this->t('The table below shows the per profile VPN usage over the last month.'); ?>
+<?=$this->t('The table below shows the per profile VPN usage over the last week.'); ?>
+<?=$this->t('You can download the detailed VPN usage statistics below.'); ?>
 </p>
 <table class="tbl">
 <thead>
@@ -30,10 +31,10 @@
         <td><?=$this->e((string) $statsMax[$profileConfig->profileId()]['max_connection_count']); ?></td>
 <?php endif; ?>
         <td>
-            <form class="frm" method="get" action="csv_stats/live"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button><?=$this->t('Live'); ?></button></form>
+            <form class="frm" method="get" action="csv_stats/live"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('VPN Usage in 5 minute intervals'); ?>"><?=$this->t('Live'); ?></button></form>
             </td>
             <td>
-            <form class="frm" method="get" action="csv_stats/aggregate"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button><?=$this->t('Aggregate'); ?></button></form>
+            <form class="frm" method="get" action="csv_stats/aggregate"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('VPN Usage since server installation'); ?>"><?=$this->t('Aggregate'); ?></button></form>
         </td>
     </tr>
 <?php endforeach; ?>

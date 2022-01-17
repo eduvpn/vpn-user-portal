@@ -16,7 +16,7 @@
         </p>
 <?php elseif (null !== $maxActiveConfigurations && $numberOfActivePortalConfigurations >= $maxActiveConfigurations): ?>
         <p class="warning">
-            <?=$this->t('You have reached the maximum number of allowed active VPN configuration.'); ?>
+            <?=$this->t('You have reached the maximum number of allowed active VPN configurations. Delete some first.'); ?>
         </p>
 <?php else: ?>
     <?php if (0 === count($profileConfigList)): ?>
