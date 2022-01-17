@@ -135,7 +135,7 @@ class Validator
     public static function ipAddress(string $ipAddress): void
     {
         if (false === filter_var($ipAddress, FILTER_VALIDATE_IP)) {
-            throw new RangeException('not an IP address');
+            throw new RangeException();
         }
     }
 
@@ -145,7 +145,7 @@ class Validator
     public static function ipFour(string $ipFour): void
     {
         if (false === filter_var($ipFour, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            throw new RangeException('not an IPv4 address');
+            throw new RangeException();
         }
     }
 
@@ -155,7 +155,7 @@ class Validator
     public static function ipSix(string $ipSix): void
     {
         if (false === filter_var($ipSix, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            throw new RangeException('not an IPv6 address');
+            throw new RangeException();
         }
     }
 
@@ -165,7 +165,7 @@ class Validator
     public static function dateTime(string $dateTime): void
     {
         if (false === DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dateTime)) {
-            throw new RangeException('not a valid date/time format');
+            throw new RangeException();
         }
     }
 
@@ -199,14 +199,14 @@ class Validator
         // cast string to int and compare the unsigned int representation as
         // string with the provided input to make sure we have a number >= 0
         if ($nonNegativeInt !== sprintf('%u', (int) $nonNegativeInt)) {
-            throw new RangeException('integer not >= 0');
+            throw new RangeException();
         }
     }
 
     public static function languageCode(string $languageCode): void
     {
         if (!\array_key_exists($languageCode, Tpl::supportedLanguages())) {
-            throw new RangeException('invalid language code');
+            throw new RangeException();
         }
     }
 
@@ -215,19 +215,19 @@ class Validator
         $urlScheme = parse_url($urlToMatch, PHP_URL_SCHEME);
         if ('https' !== $urlScheme && 'http' !== $urlScheme) {
             // only https/http is supported
-            throw new RangeException('URL must match "Origin"');
+            throw new RangeException();
         }
         if (null !== parse_url($urlToMatch, PHP_URL_USER)) {
             // URL MUST NOT contain authentication information (DEC-01-001 WP1)
             // before PHP 7.4.14 & 7.3.26 there was a bug that invalid userinfo
             // appeared as PHP_URL_USER instead of as part of the hostname,
             // @see https://bugs.php.net/bug.php?id=77423
-            throw new RangeException('URL must match "Origin"');
+            throw new RangeException();
         }
         $urlHost = parse_url($urlToMatch, PHP_URL_HOST);
         if (!\is_string($urlHost)) {
             // not a valid host
-            throw new RangeException('URL must match "Origin"');
+            throw new RangeException();
         }
         $constructedUrl = $urlScheme.'://'.$urlHost;
         if (null !== $urlPort = parse_url($urlToMatch, PHP_URL_PORT)) {
@@ -235,7 +235,7 @@ class Validator
         }
 
         if ($httpOrigin !== $constructedUrl) {
-            throw new RangeException('URL must match "Origin"');
+            throw new RangeException();
         }
     }
 
@@ -244,9 +244,8 @@ class Validator
      */
     public static function inSet(string $setNeedle, array $setHaystack): void
     {
-        // XXX use inSet also for other "in set" functions in this file
         if (!\in_array($setNeedle, $setHaystack, true)) {
-            throw new RangeException('provided value "'.$setNeedle.'" not any of {'.implode(',', $setHaystack).'}');
+            throw new RangeException();
         }
     }
 
@@ -256,8 +255,7 @@ class Validator
     private static function re(string $inputStr, string $regExp, string $errorKey): void
     {
         if (1 !== preg_match($regExp, $inputStr)) {
-            // XXX we MUST NOT show inputStr here in case it is password!
-            throw new RangeException('invalid value for "'.$errorKey.'"');
+            throw new RangeException();
         }
     }
 }

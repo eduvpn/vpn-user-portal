@@ -163,7 +163,7 @@ class Request
         try {
             $c($this->getData[$queryKey]);
         } catch (RangeException $e) {
-            throw new HttpException(sprintf('invalid "%s" [%s]', $queryKey, $e->getMessage()), 400);
+            throw new HttpException(sprintf('invalid value for "%s"', $queryKey), 400);
         }
 
         return $this->getData[$queryKey];
@@ -197,7 +197,7 @@ class Request
         try {
             $c($postValue);
         } catch (RangeException $e) {
-            throw new HttpException(sprintf('invalid "%s" [%s]', $postKey, $e->getMessage()), 400);
+            throw new HttpException(sprintf('invalid value for "%s"', $postKey), 400);
         }
 
         return $postValue;
@@ -218,7 +218,7 @@ class Request
         try {
             $c($this->postData[$postKey]);
         } catch (RangeException $e) {
-            throw new HttpException(sprintf('invalid "%s" [%s]', $postKey, $e->getMessage()), 400);
+            throw new HttpException(sprintf('invalid value for "%s"', $postKey), 400);
         }
 
         return $this->postData[$postKey];

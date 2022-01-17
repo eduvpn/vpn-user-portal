@@ -167,7 +167,7 @@ final class VpnApiThreeModuleTest extends TestCase
 
         $httpResponse = $this->service->run($request);
         static::assertSame(400, $httpResponse->statusCode());
-        static::assertSame('{"error":"invalid \"profile_id\" [invalid value for \"profileId\"]"}', $httpResponse->responseBody());
+        static::assertSame('{"error":"invalid value for \"profile_id\""}', $httpResponse->responseBody());
     }
 
     public function testConnectOpenVpn(): void

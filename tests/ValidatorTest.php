@@ -24,7 +24,6 @@ final class ValidatorTest extends TestCase
     public function testInvalidPublicKey(): void
     {
         $this->expectException(RangeException::class);
-        $this->expectExceptionMessage('invalid value for "publicKey"');
         Validator::publicKey('EtPxdnGP+KCS7tVBohNgt5lcXF7XubTDKr6QdwuyGU=');
     }
 }
