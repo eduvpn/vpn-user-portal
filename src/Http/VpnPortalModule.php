@@ -90,7 +90,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));
-                $tcpOnly = 'on' === $request->optionalPostParameter('tcpOnly', fn (string $s) => Validator::onOrOff($s));
+                $preferTcp = 'on' === $request->optionalPostParameter('preferTcp', fn (string $s) => Validator::onOrOff($s));
                 $profileId = $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s));
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $userInfo->permissionList();
@@ -110,7 +110,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 if ('openvpn' === $vpnProto && $profileConfig->oSupport()) {
-                    return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt, $tcpOnly);
+                    return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt, $preferTcp);
                 }
 
                 if ('wireguard' === $vpnProto && $profileConfig->wSupport()) {
@@ -253,7 +253,7 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    private function getOpenVpnConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $tcpOnly): Response
+    private function getOpenVpnConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp): Response
     {
         $clientConfig = $this->connectionManager->connect(
             $this->serverInfo,
@@ -262,7 +262,7 @@ class VpnPortalModule implements ServiceModuleInterface
             'openvpn',
             $displayName,
             $expiresAt,
-            $tcpOnly,
+            $preferTcp,
             null,
             null
         );

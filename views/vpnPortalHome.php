@@ -53,7 +53,7 @@
                         <option value="openvpn"><?=$this->t('OpenVPN'); ?></option>
                         <option value="wireguard"><?=$this->t('WireGuard'); ?></option>
                     </select>
-                    <input type="checkbox" id="tcpOnly" name="tcpOnly"> <label for="tcpOnly"><?=$this->t('Connect over TCP (only OpenVPN)'); ?></label>
+                    <input type="checkbox" id="preferTcp" name="preferTcp"> <label for="preferTcp"><?=$this->t('Prefer connecting over TCP (OpenVPN)'); ?></label>
                 </details>
             </fieldset>
             <fieldset>

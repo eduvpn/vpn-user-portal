@@ -260,7 +260,7 @@ final class VpnApiThreeModuleTest extends TestCase
         );
     }
 
-    public function testTcpOnly(): void
+    public function testPreferTcp(): void
     {
         $request = new Request(
             [
@@ -270,14 +270,14 @@ final class VpnApiThreeModuleTest extends TestCase
             [],
             [
                 'profile_id' => 'default',
-                'tcp_only' => 'on',
+                'prefer_tcp' => 'yes',
             ],
             []
         );
 
         static::assertSame(
             trim(
-                file_get_contents(\dirname(__DIR__).'/data/expected_openvpn_client_config_tcp_only.txt')
+                file_get_contents(\dirname(__DIR__).'/data/expected_openvpn_client_config_prefer_tcp.txt')
             ),
             $this->service->run($request)->responseBody()
         );

@@ -163,7 +163,7 @@ class ConnectionManager
         }
     }
 
-    public function connect(ServerInfo $serverInfo, string $userId, string $profileId, string $useProto, string $displayName, DateTimeImmutable $expiresAt, bool $tcpOnly, ?string $publicKey, ?string $authKey): ClientConfigInterface
+    public function connect(ServerInfo $serverInfo, string $userId, string $profileId, string $useProto, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $publicKey, ?string $authKey): ClientConfigInterface
     {
         if (!$this->config->hasProfile($profileId)) {
             throw new ConnectionManagerException('profile "'.$profileId.'" does not exist');
@@ -212,7 +212,7 @@ class ConnectionManager
                 $serverInfo->ca()->caCert(),
                 $serverInfo->tlsCrypt(),
                 $certInfo,
-                $tcpOnly,
+                $preferTcp,
                 $expiresAt
             );
         }

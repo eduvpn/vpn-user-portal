@@ -119,8 +119,16 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                     $profileConfig = $this->config->profileConfig($requestedProfileId);
                     $publicKey = $request->optionalPostParameter('public_key', fn (string $s) => Validator::publicKey($s));
-                    $tcpOnly = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
-                    $vpnProto = self::determineProto($profileConfig, $publicKey, $tcpOnly);
+
+                    // still support "tcp_only" as an alias for "prefer_tcp",
+                    // breaks when tcp_only=on and prefer_tcp=no, but we only
+                    // want to support old clients (still using tcp_only) and
+                    // new clients supporting prefer_tcp, and not a client
+                    // where both are used...
+                    $preferTcp = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
+                    $preferTcp = $preferTcp || 'yes' === $request->optionalPostParameter('prefer_tcp', fn (string $s) => Validator::yesOrNo($s));
+
+                    $vpnProto = self::determineProto($profileConfig, $publicKey, $preferTcp);
                     if ('wireguard' === $vpnProto && null === $publicKey) {
                         throw new HttpException('"public_key" not provided', 400);
                     }
@@ -134,7 +142,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                         $vpnProto,
                         $accessToken->clientId(),
                         $accessToken->authorizationExpiresAt(),
-                        $tcpOnly,
+                        $preferTcp,
                         $publicKey,
                         $accessToken->authKey(),
                     );
@@ -162,7 +170,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
         );
     }
 
-    private static function determineProto(ProfileConfig $profileConfig, ?string $publicKey, bool $tcpOnly): string
+    private static function determineProto(ProfileConfig $profileConfig, ?string $publicKey, bool $preferTcp): string
     {
         // only supports OpenVPN
         if ($profileConfig->oSupport() && !$profileConfig->wSupport()) {
@@ -176,7 +184,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
         // Profile supports OpenVPN & WireGuard
         // VPN client requests TCP connection
-        if ($tcpOnly) {
+        if ($preferTcp) {
             return 'openvpn';
         }
 

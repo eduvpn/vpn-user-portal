@@ -25,17 +25,17 @@ class ClientConfig implements ClientConfigInterface
     private CaInfo $caInfo;
     private TlsCrypt $tlsCrypt;
     private CertInfo $certInfo;
-    private bool $tcpOnly;
+    private bool $preferTcp;
     private DateTimeImmutable $expiresAt;
 
-    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $tcpOnly, DateTimeImmutable $expiresAt)
+    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $preferTcp, DateTimeImmutable $expiresAt)
     {
         $this->nodeNumber = $nodeNumber;
         $this->profileConfig = $profileConfig;
         $this->caInfo = $caInfo;
         $this->tlsCrypt = $tlsCrypt;
         $this->certInfo = $certInfo;
-        $this->tcpOnly = $tcpOnly;
+        $this->preferTcp = $preferTcp;
         $this->expiresAt = $expiresAt;
     }
 
@@ -62,11 +62,6 @@ class ClientConfig implements ClientConfigInterface
 
         $oUdpPortList = self::filterPortList($oUdpPortList, [53, 443]);
         $oTcpPortList = self::filterPortList($oTcpPortList, [80, 443]);
-        // if "tcp_only" is set, and we do have some TCP ports, empty the list
-        // of UDP ports, otherwise ignore "tcp_only"
-        if ($this->tcpOnly && 0 !== \count($oTcpPortList)) {
-            $oUdpPortList = [];
-        }
 
         // make sure we have _something_ to connect to
         if (0 === \count($oUdpPortList) && 0 === \count($oTcpPortList)) {
@@ -120,15 +115,15 @@ class ClientConfig implements ClientConfigInterface
             '</tls-crypt>',
         ];
 
-        // UDP
-        foreach ($oUdpPortList as $udpPort) {
-            $clientConfig[] = sprintf('remote %s %d udp', $this->profileConfig->hostName($this->nodeNumber), $udpPort);
-        }
-
-        // TCP
-        foreach ($oTcpPortList as $tcpPort) {
-            $clientConfig[] = sprintf('remote %s %d tcp', $this->profileConfig->hostName($this->nodeNumber), $tcpPort);
-        }
+        $clientConfig = array_merge(
+            $clientConfig,
+            self::addRemotes(
+                $oUdpPortList,
+                $oTcpPortList,
+                $this->profileConfig->hostName($this->nodeNumber),
+                $this->preferTcp
+            )
+        );
 
         return implode(PHP_EOL, $clientConfig);
     }
@@ -164,5 +159,29 @@ class ClientConfig implements ClientConfigInterface
         }
 
         return $clientPortList;
+    }
+
+    /**
+     * @param array<int> $oUdpPortList
+     * @param array<int> $oTcpPortList
+     *
+     * @return array<string>
+     */
+    private static function addRemotes(array $oUdpPortList, array $oTcpPortList, string $hostName, bool $preferTcp): array
+    {
+        $udpRemotes = [];
+        $tcpRemotes = [];
+        foreach ($oUdpPortList as $udpPort) {
+            $udpRemotes[] = sprintf('remote %s %d udp', $hostName, $udpPort);
+        }
+        foreach ($oTcpPortList as $tcpPort) {
+            $tcpRemotes[] = sprintf('remote %s %d tcp', $hostName, $tcpPort);
+        }
+
+        if ($preferTcp) {
+            return array_merge($tcpRemotes, $udpRemotes);
+        }
+
+        return array_merge($udpRemotes, $tcpRemotes);
     }
 }

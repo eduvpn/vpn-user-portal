@@ -43,3 +43,4 @@ ff80428802f089afc206f3b4e67105ec
 -----END OpenVPN Static key V1-----
 </tls-crypt>
 remote vpn.example 1194 tcp
+remote vpn.example 1194 udp
