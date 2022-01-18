@@ -128,7 +128,7 @@ class VpnApiModule implements ServiceModuleInterface
 
                     // if Accept header is set, and does not contain OpenVPN, error out
                     if (null !== $httpAccept = $request->optionalHeader('HTTP_ACCEPT')) {
-                        if (false === strpos($httpAccept, 'application/x-openvpn-profile')) {
+                        if ('*/*' !== $httpAccept && false === strpos($httpAccept, 'application/x-openvpn-profile')) {
                             return new JsonResponse(['error' => 'client does not support OpenVPN'], 406);
                         }
                     }
