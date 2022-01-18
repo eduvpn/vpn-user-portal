@@ -128,7 +128,7 @@ class VpnApiModule implements ServiceModuleInterface
 
                     // if Accept header is set, and does not contain OpenVPN, error out
                     if (null !== $httpAccept = $request->optionalHeader('HTTP_ACCEPT')) {
-                        if ('*/*' !== $httpAccept && false === strpos($httpAccept, 'application/x-openvpn-profile')) {
+                        if (!self::clientSupportsOpenVpn($httpAccept)) {
                             return new JsonResponse(['error' => 'client does not support OpenVPN'], 406);
                         }
                     }
@@ -467,5 +467,35 @@ class VpnApiModule implements ServiceModuleInterface
         }
 
         return new DateTime($this->serverClient->getRequireString('user_session_expires_at', ['user_id' => $accessTokenInfo->getUserId()]));
+    }
+
+    /**
+     * We only take the Accpet header serious if it contains either of the
+     * known VPN protocols.
+     *
+     * @param string $httpAccept
+     *
+     * @return bool
+     */
+    private static function clientSupportsOpenVpn($httpAccept)
+    {
+        $oSupport = false;
+        $takeSerious = false;
+        $mimeTypeList = explode(',', $httpAccept);
+        foreach ($mimeTypeList as $mimeType) {
+            if ('application/x-openvpn-profile' === $mimeType) {
+                $oSupport = true;
+                $takeSerious = true;
+            }
+            if ('application/x-wireguard-profile' === $mimeType) {
+                $takeSerious = true;
+            }
+        }
+
+        if (false === $takeSerious) {
+            return true;
+        }
+
+        return $oSupport;
     }
 }
