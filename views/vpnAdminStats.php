@@ -8,6 +8,7 @@
 <h2><?=$this->t('Profile Usage'); ?></h2>
 <p>
 <?=$this->t('The table below shows the per profile VPN usage over the last week.'); ?>
+
 <?=$this->t('You can download the detailed VPN usage statistics below.'); ?>
 </p>
 <table class="tbl">
