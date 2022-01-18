@@ -10,7 +10,6 @@
 namespace LC\Portal;
 
 use LC\Common\ProfileConfig;
-use LC\Portal\Exception\ClientConfigException;
 
 class ClientConfig
 {
@@ -20,11 +19,11 @@ class ClientConfig
 
     /**
      * @param int  $remoteStrategy
-     * @param bool $tcpOnly
+     * @param bool $preferTcp
      *
      * @return string
      */
-    public static function get(ProfileConfig $profileConfig, array $serverInfo, array $clientCertificate, $remoteStrategy, $tcpOnly)
+    public static function get(ProfileConfig $profileConfig, array $serverInfo, array $clientCertificate, $remoteStrategy, $preferTcp)
     {
         // make a list of ports/proto to add to the configuration file
         $hostName = $profileConfig->hostName();
@@ -34,13 +33,7 @@ class ClientConfig
             $vpnProtoPorts = $profileConfig->exposedVpnProtoPorts();
         }
 
-        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy, $tcpOnly);
-        // make sure we have remotes
-        // we assume that *without* tcpOnly we always have remotes,
-        // otherwise it is a server configuration bug
-        if ($tcpOnly && 0 === \count($remoteProtoPortList)) {
-            throw new ClientConfigException('no TCP remotes available');
-        }
+        $remoteProtoPortList = self::remotePortProtoList($vpnProtoPorts, $remoteStrategy, $preferTcp);
 
         $clientConfig = [
             '# OpenVPN Client Configuration',
@@ -128,11 +121,11 @@ class ClientConfig
      * port.
      *
      * @param int  $remoteStrategy
-     * @param bool $tcpOnly
+     * @param bool $preferTcp
      *
      * @return array<string>
      */
-    public static function remotePortProtoList(array $vpnProtoPorts, $remoteStrategy, $tcpOnly)
+    public static function remotePortProtoList(array $vpnProtoPorts, $remoteStrategy, $preferTcp)
     {
         $specialUdpPorts = [];
         $specialTcpPorts = [];
@@ -160,19 +153,38 @@ class ClientConfig
         }
 
         $clientPortList = [];
-        // we use twice the conditional, to keep the same order of ports, we
-        // may have to reconsider this though at some point? i.e. first try
-        // all available UDP options, and only then try TCP...
-        if (!$tcpOnly) {
-            self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
-        }
+        self::getItem($clientPortList, $normalUdpPorts, $remoteStrategy);
         self::getItem($clientPortList, $normalTcpPorts, $remoteStrategy);
-        if (!$tcpOnly) {
-            self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
-        }
+        self::getItem($clientPortList, $specialUdpPorts, $remoteStrategy);
         self::getItem($clientPortList, $specialTcpPorts, $remoteStrategy);
 
+        if ($preferTcp) {
+            // client prefers to connect over TCP, so put all TCP remotes first
+            $clientPortList = self::preferTcp($clientPortList);
+        }
+
         return $clientPortList;
+    }
+
+    /**
+     * @param array<string> $clientPortList
+     *
+     * @return array<string>
+     */
+    private static function preferTcp(array $clientPortList)
+    {
+        $tcpClientPortList = [];
+        $udpClientPortList = [];
+        foreach ($clientPortList as $clientPort) {
+            if (0 === strpos($clientPort, 'tcp')) {
+                $tcpClientPortList[] = $clientPort;
+                continue;
+            }
+
+            $udpClientPortList[] = $clientPort;
+        }
+
+        return array_merge($tcpClientPortList, $udpClientPortList);
     }
 
     /**
