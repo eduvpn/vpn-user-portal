@@ -114,7 +114,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                     }
 
                     if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                        throw new HttpException('profile not available', 400);
+                        throw new HttpException('no such "profile_id"', 404);
                     }
 
                     $profileConfig = $this->config->profileConfig($requestedProfileId);
@@ -130,7 +130,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
 
                     $vpnProto = self::determineProto($profileConfig, $publicKey, $preferTcp);
                     if ('wireguard' === $vpnProto && null === $publicKey) {
-                        throw new HttpException('"public_key" not provided', 400);
+                        throw new HttpException('missing "public_key" parameter', 400);
                     }
 
                     // XXX if proto is wireguard, but it fails, do openvpn if supported
