@@ -144,8 +144,8 @@ final class VpnApiThreeModuleTest extends TestCase
         );
 
         $httpResponse = $this->service->run($request);
-        static::assertSame(400, $httpResponse->statusCode());
-        static::assertSame('{"error":"profile not available"}', $httpResponse->responseBody());
+        static::assertSame(404, $httpResponse->statusCode());
+        static::assertSame('{"error":"no such \"profile_id\""}', $httpResponse->responseBody());
     }
 
     public function testConnectInvalidProfileSyntax(): void
