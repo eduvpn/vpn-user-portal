@@ -175,27 +175,43 @@ class VpnApiThreeModule implements ServiceModuleInterface
         );
     }
 
+    /**
+     * We only take the Accept header serious if we detect at least one
+     * mime-type we recognize, otherwise we assume it is garbage and consider
+     * it as "not sent".
+     *
+     * @return array{0:bool,1:bool}
+     */
+    private static function parseMimeType(string $httpAccept): array
+    {
+        $oSupport = false;
+        $wSupport = false;
+        $takeSerious = false;
+
+        $mimeTypeList = explode(',', $httpAccept);
+        foreach ($mimeTypeList as $mimeType) {
+            if ('application/x-openvpn-profile' === $mimeType) {
+                $oSupport = true;
+                $takeSerious = true;
+            }
+            if ('application/x-wireguard-profile' === $mimeType) {
+                $wSupport = true;
+                $takeSerious = true;
+            }
+        }
+        if (false === $takeSerious) {
+            return [true, true];
+        }
+
+        return [$oSupport, $wSupport];
+    }
+
     private static function determineProto(ProfileConfig $profileConfig, ?string $httpAccept, ?string $publicKey, bool $preferTcp): string
     {
         // figure out which protocols the client supports, if the server also
         // supports that one, go with it
         if (null !== $httpAccept) {
-            $oSupport = false;
-            $wSupport = false;
-            $mimeTypeList = explode(',', $httpAccept);
-            foreach ($mimeTypeList as $mimeType) {
-                if ('*/*' === $mimeType) {
-                    $oSupport = true;
-                    $wSupport = true;
-                }
-                if ('application/x-openvpn-profile' === $mimeType) {
-                    $oSupport = true;
-                }
-                if ('application/x-wireguard-profile' === $mimeType) {
-                    $wSupport = true;
-                }
-            }
-
+            [$oSupport, $wSupport] = self::parseMimeType($httpAccept);
             if ($oSupport && false === $wSupport) {
                 if ($profileConfig->oSupport()) {
                     return 'openvpn';
