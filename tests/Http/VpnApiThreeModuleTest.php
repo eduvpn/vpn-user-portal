@@ -65,6 +65,14 @@ final class VpnApiThreeModuleTest extends TestCase
                         'oRangeSix' => 'fd45::/64',
                         'preferredProto' => 'wireguard',
                     ],
+                    [
+                        'profileId' => 'default-wg-only',
+                        'displayName' => 'Default (WireGuard Only)',
+                        'hostName' => 'vpn.example',
+                        'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
+                        'wRangeFour' => '10.46.46.0/29',
+                        'wRangeSix' => 'fd46::/64',
+                    ],
                 ],
             ]
         );
@@ -121,7 +129,7 @@ final class VpnApiThreeModuleTest extends TestCase
         );
 
         static::assertSame(
-            '{"info":{"profile_list":[{"profile_id":"default","display_name":"Default (Prefer OpenVPN)","vpn_proto_list":["openvpn","wireguard"],"default_gateway":true},{"profile_id":"default-wg","display_name":"Default (Prefer WireGuard)","vpn_proto_list":["openvpn","wireguard"],"default_gateway":true}]}}',
+            '{"info":{"profile_list":[{"profile_id":"default","display_name":"Default (Prefer OpenVPN)","vpn_proto_list":["openvpn","wireguard"],"default_gateway":true},{"profile_id":"default-wg","display_name":"Default (Prefer WireGuard)","vpn_proto_list":["openvpn","wireguard"],"default_gateway":true},{"profile_id":"default-wg-only","display_name":"Default (WireGuard Only)","vpn_proto_list":["wireguard"],"default_gateway":true}]}}',
             $this->service->run($request)->responseBody()
         );
     }
@@ -281,6 +289,56 @@ final class VpnApiThreeModuleTest extends TestCase
             ),
             $this->service->run($request)->responseBody()
         );
+    }
+
+    /**
+     * Here we connect using a client that only supports Wireguard, to a
+     * profile that prefers OpenVPN. If the client would support both protocols
+     * OpenVPN would be chosen, but as we only support WireGuard, we get
+     * WireGuard here...
+     */
+    public function testOnlyWireGuardSupport(): void
+    {
+        $request = new Request(
+            [
+                'REQUEST_URI' => '/v3/connect',
+                'REQUEST_METHOD' => 'POST',
+                'HTTP_ACCEPT' => 'application/x-wireguard-profile',
+            ],
+            [],
+            [
+                'profile_id' => 'default',
+                'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
+            ],
+            []
+        );
+
+        static::assertSame(
+            trim(
+                file_get_contents(\dirname(__DIR__).'/data/expected_wireguard_client_config_wireguard_only_client.txt')
+            ),
+            $this->service->run($request)->responseBody()
+        );
+    }
+
+    public function testOpenVpnOnlyClientToWireGuardOnlyProfile(): void
+    {
+        $request = new Request(
+            [
+                'REQUEST_URI' => '/v3/connect',
+                'REQUEST_METHOD' => 'POST',
+                'HTTP_ACCEPT' => 'application/x-openvpn-profile',
+            ],
+            [],
+            [
+                'profile_id' => 'default-wg-only',
+            ],
+            []
+        );
+
+        $httpResponse = $this->service->run($request);
+        static::assertSame(406, $httpResponse->statusCode());
+        static::assertSame('{"error":"profile \"default-wg-only\" does not support OpenVPN"}', $httpResponse->responseBody());
     }
 
     public function testNoMoreAvailableWireGuardIp(): void

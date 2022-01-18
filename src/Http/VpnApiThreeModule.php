@@ -127,7 +127,13 @@ class VpnApiThreeModule implements ServiceModuleInterface
                     $preferTcp = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
                     $preferTcp = $preferTcp || 'yes' === $request->optionalPostParameter('prefer_tcp', fn (string $s) => Validator::yesOrNo($s));
 
-                    $vpnProto = self::determineProto($profileConfig, $publicKey, $preferTcp);
+                    $vpnProto = self::determineProto(
+                        $profileConfig,
+                        $request->optionalHeader('HTTP_ACCEPT'),
+                        $publicKey,
+                        $preferTcp
+                    );
+
                     if ('wireguard' === $vpnProto && null === $publicKey) {
                         throw new HttpException('missing "public_key" parameter', 400);
                     }
@@ -169,8 +175,40 @@ class VpnApiThreeModule implements ServiceModuleInterface
         );
     }
 
-    private static function determineProto(ProfileConfig $profileConfig, ?string $publicKey, bool $preferTcp): string
+    private static function determineProto(ProfileConfig $profileConfig, ?string $httpAccept, ?string $publicKey, bool $preferTcp): string
     {
+        // figure out which protocols the client supports, if the server also
+        // supports that one, go with it
+        if (null !== $httpAccept) {
+            $oSupport = false;
+            $wSupport = false;
+            $mimeTypeList = explode(',', $httpAccept);
+            foreach ($mimeTypeList as $mimeType) {
+                if ('application/x-openvpn-profile' === $mimeType) {
+                    $oSupport = true;
+                }
+                if ('application/x-wireguard-profile' === $mimeType) {
+                    $wSupport = true;
+                }
+            }
+
+            if ($oSupport && !$wSupport) {
+                if ($profileConfig->oSupport()) {
+                    return 'openvpn';
+                }
+
+                throw new HttpException(sprintf('profile "%s" does not support OpenVPN', $profileConfig->profileId()), 406);
+            }
+
+            if ($wSupport && !$oSupport) {
+                if ($profileConfig->wSupport()) {
+                    return 'wireguard';
+                }
+
+                throw new HttpException(sprintf('profile "%s" does not support WireGuard', $profileConfig->profileId()), 406);
+            }
+        }
+
         // only supports OpenVPN
         if ($profileConfig->oSupport() && !$profileConfig->wSupport()) {
             return 'openvpn';
