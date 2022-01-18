@@ -183,9 +183,14 @@ class VpnApiThreeModule implements ServiceModuleInterface
         }
 
         // Profile supports OpenVPN & WireGuard
-        // VPN client requests TCP connection
+
+        // VPN client prefers connecting over TCP
         if ($preferTcp) {
-            return 'openvpn';
+            // but this has only meaning if there are actually TCP ports to
+            // connect to...
+            if (0 !== \count($profileConfig->oExposedTcpPortList()) || 0 !== \count($profileConfig->oExposedTcpPortList())) {
+                return 'openvpn';
+            }
         }
 
         // Profile prefers OpenVPN
