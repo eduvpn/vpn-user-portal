@@ -192,7 +192,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 }
             }
 
-            if ($oSupport && !$wSupport) {
+            if ($oSupport && false === $wSupport) {
                 if ($profileConfig->oSupport()) {
                     return 'openvpn';
                 }
@@ -200,12 +200,16 @@ class VpnApiThreeModule implements ServiceModuleInterface
                 throw new HttpException(sprintf('profile "%s" does not support OpenVPN', $profileConfig->profileId()), 406);
             }
 
-            if ($wSupport && !$oSupport) {
+            if ($wSupport && false === $oSupport) {
                 if ($profileConfig->wSupport()) {
                     return 'wireguard';
                 }
 
                 throw new HttpException(sprintf('profile "%s" does not support WireGuard', $profileConfig->profileId()), 406);
+            }
+
+            if (false === $oSupport && false === $wSupport) {
+                throw new HttpException('client does not support OpenVPN or WireGuard', 406);
             }
         }
 
