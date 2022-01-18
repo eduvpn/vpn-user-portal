@@ -24,7 +24,6 @@ use LC\Common\Http\Service;
 use LC\Common\Http\ServiceModuleInterface;
 use LC\Common\HttpClient\ServerClient;
 use LC\Common\ProfileConfig;
-use LC\Portal\Exception\ClientConfigException;
 use LC\Portal\OAuth\VpnAccessTokenInfo;
 
 class VpnApiModule implements ServiceModuleInterface
@@ -125,7 +124,7 @@ class VpnApiModule implements ServiceModuleInterface
                     }
 
                     if (!\in_array($requestedProfileId, $availableProfiles, true)) {
-                        return new JsonResponse(['error' => 'profile not available'], 400);
+                        return new JsonResponse(['error' => 'no such "profile_id"'], 404);
                     }
 
                     $preferTcp = 'on' === InputValidation::tcpOnly($request->optionalPostParameter('tcp_only'));
@@ -141,8 +140,6 @@ class VpnApiModule implements ServiceModuleInterface
                     return $response;
                 } catch (InputValidationException $e) {
                     return new JsonResponse(['error' => $e->getMessage()], 400);
-                } catch (ClientConfigException $e) {
-                    return new JsonResponse(['error' => $e->getMessage()], 406);
                 }
             }
         );
