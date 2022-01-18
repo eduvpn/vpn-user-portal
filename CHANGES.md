@@ -4,6 +4,8 @@
 - update APIv3 support
   - 404 HTTP response code when profile is missing (`/connect`)
   - implement support for `prefer_tcp` which replaces `force_tcp`
+  - remove `vpn_proto_preferred` from the `/info` response
+  - implement `Accept` header support
 - remove obsolete `ClientConfigException`
 
 ## 2.4.0 (2021-11-09)
