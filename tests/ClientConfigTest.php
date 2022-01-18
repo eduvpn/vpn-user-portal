@@ -167,10 +167,10 @@ class ClientConfigTest extends TestCase
     /**
      * @return void
      */
-    public function testTcpOnly()
+    public function testPreferTcp()
     {
         $this->assertSame(
-            ['tcp/1194', 'tcp/1195', 'tcp/1196', 'tcp/443'],
+            ['tcp/1194', 'tcp/1195', 'tcp/1196', 'tcp/443', 'udp/1194', 'udp/1195', 'udp/1196', 'udp/1197'],
             ClientConfig::remotePortProtoList(
                 ['udp/1194', 'tcp/1194', 'udp/1195', 'tcp/1195', 'udp/1196', 'tcp/1196', 'udp/1197', 'tcp/443'],
                 ClientConfig::STRATEGY_ALL,
