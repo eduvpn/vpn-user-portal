@@ -184,6 +184,10 @@ class VpnApiThreeModule implements ServiceModuleInterface
             $wSupport = false;
             $mimeTypeList = explode(',', $httpAccept);
             foreach ($mimeTypeList as $mimeType) {
+                if ('*/*' === $mimeType) {
+                    $oSupport = true;
+                    $wSupport = true;
+                }
                 if ('application/x-openvpn-profile' === $mimeType) {
                     $oSupport = true;
                 }
