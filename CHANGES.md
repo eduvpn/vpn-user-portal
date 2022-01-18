@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.1 (...)
+- update APIv3 support
+  - 404 HTTP response code when profile is missing (`/connect`)
+  - implement support for `prefer_tcp` which replaces `force_tcp`
+- remove obsolete `ClientConfigException`
+
 ## 2.4.0 (2021-11-09)
 - include and enable [APIv3](https://github.com/eduvpn/documentation/blob/v2/API_V3.md)
 - update German translation
