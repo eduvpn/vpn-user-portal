@@ -86,7 +86,6 @@ class VpnApiModule implements ServiceModuleInterface
                         'default_gateway' => $profileConfig->defaultGateway(),
                         'display_name' => $profileConfig->displayName(),
                         'vpn_proto_list' => ['openvpn'],
-                        'vpn_proto_preferred' => 'openvpn',
                     ];
                 }
 
@@ -125,6 +124,13 @@ class VpnApiModule implements ServiceModuleInterface
 
                     if (!\in_array($requestedProfileId, $availableProfiles, true)) {
                         return new JsonResponse(['error' => 'no such "profile_id"'], 404);
+                    }
+
+                    // if Accept header is set, and does not contain OpenVPN, error out
+                    if (null !== $httpAccept = $request->optionalHeader('HTTP_ACCEPT')) {
+                        if (false === strpos($httpAccept, 'application/x-openvpn-profile')) {
+                            return new JsonResponse(['error' => 'client does not support OpenVPN'], 406);
+                        }
                     }
 
                     $preferTcp = 'on' === InputValidation::tcpOnly($request->optionalPostParameter('tcp_only'));
