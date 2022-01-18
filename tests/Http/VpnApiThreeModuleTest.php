@@ -260,6 +260,29 @@ final class VpnApiThreeModuleTest extends TestCase
         );
     }
 
+    public function testTcpOnly(): void
+    {
+        $request = new Request(
+            [
+                'REQUEST_URI' => '/v3/connect',
+                'REQUEST_METHOD' => 'POST',
+            ],
+            [],
+            [
+                'profile_id' => 'default',
+                'tcp_only' => 'on',
+            ],
+            []
+        );
+
+        static::assertSame(
+            trim(
+                file_get_contents(\dirname(__DIR__).'/data/expected_openvpn_client_config_tcp_only.txt')
+            ),
+            $this->service->run($request)->responseBody()
+        );
+    }
+
     public function testNoMoreAvailableWireGuardIp(): void
     {
         // use up all IPs so the client cannot get a WireGuard config

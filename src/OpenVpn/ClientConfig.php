@@ -62,15 +62,15 @@ class ClientConfig implements ClientConfigInterface
 
         $oUdpPortList = self::filterPortList($oUdpPortList, [53, 443]);
         $oTcpPortList = self::filterPortList($oTcpPortList, [80, 443]);
+        // if "tcp_only" is set, and we do have some TCP ports, empty the list
+        // of UDP ports, otherwise ignore "tcp_only"
+        if ($this->tcpOnly && 0 !== \count($oTcpPortList)) {
+            $oUdpPortList = [];
+        }
 
         // make sure we have _something_ to connect to
         if (0 === \count($oUdpPortList) && 0 === \count($oTcpPortList)) {
             throw new ClientConfigException('no UDP/TCP port available');
-        }
-
-        // make sure we have a TCP port to connect to when "tcp only"
-        if ($this->tcpOnly && 0 === \count($oTcpPortList)) {
-            throw new ClientConfigException('no TCP port available');
         }
 
         $clientConfig = [
