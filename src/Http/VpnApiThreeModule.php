@@ -188,7 +188,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
         if ($preferTcp) {
             // but this has only meaning if there are actually TCP ports to
             // connect to...
-            if (0 !== \count($profileConfig->oExposedTcpPortList()) || 0 !== \count($profileConfig->oExposedTcpPortList())) {
+            if (0 !== \count($profileConfig->oExposedTcpPortList()) || 0 !== \count($profileConfig->oTcpPortList())) {
                 return 'openvpn';
             }
         }
