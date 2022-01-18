@@ -121,7 +121,7 @@ final class VpnApiThreeModuleTest extends TestCase
         );
 
         static::assertSame(
-            '{"info":{"profile_list":[{"profile_id":"default","display_name":"Default (Prefer OpenVPN)","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"openvpn","default_gateway":true},{"profile_id":"default-wg","display_name":"Default (Prefer WireGuard)","vpn_proto_list":["openvpn","wireguard"],"vpn_proto_preferred":"wireguard","default_gateway":true}]}}',
+            '{"info":{"profile_list":[{"profile_id":"default","display_name":"Default (Prefer OpenVPN)","vpn_proto_list":["openvpn","wireguard"],"default_gateway":true},{"profile_id":"default-wg","display_name":"Default (Prefer WireGuard)","vpn_proto_list":["openvpn","wireguard"],"default_gateway":true}]}}',
             $this->service->run($request)->responseBody()
         );
     }
