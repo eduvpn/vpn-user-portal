@@ -6,7 +6,7 @@
     <h2><?= $this->t('WireGuard Configuration'); ?></h2>
 <?php if (null !== $qrCode = $wireGuardClientConfig->getQr()): ?>
     <p>
-<?=$this->t('Scan this QR code with your mobile device.'); ?>
+<?=$this->t('Use the WireGuard app on your mobile device to scan this QR code'); ?>
     </p>
 <?=$qrCode; ?>
 <?php endif; ?>
