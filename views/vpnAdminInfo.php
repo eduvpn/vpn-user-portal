@@ -30,7 +30,7 @@
                 <td>
 <?php foreach ($nodeInfoList as $nodeUrl => $nodeInfo): ?>
 <?php if (null === $nodeInfo): ?>
-            <span class="error" title="<?=$this->e($nodeUrl); ?>"><?=$this->t('Offline'); ?><br><small><?=$this->t('N/A'); ?></small></span>
+            <span class="error" title="<?=$this->e($nodeUrl); ?>"><?=$this->t('Offline'); ?><br><small><?=$this->t('CPU Usage:'); ?> <?=$this->t('N/A'); ?></small></span>
 <?php else: ?>
 <?php if ($nodeInfo['rel_load_average'][0] >= 75): ?>
             <span class="warning" title="<?=$this->e($nodeUrl); ?> [<?=implode(', ', $nodeInfo['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['cpu_count']); ?>">
@@ -43,7 +43,7 @@
 <?php endif; ?>
                 <br>
                 <small>
-<?=$this->e(sprintf('%d%%', $nodeInfo['rel_load_average'][0])); ?>
+<?=$this->t('CPU Usage:'); ?> <?=$this->e(sprintf('%d%%', $nodeInfo['rel_load_average'][0])); ?>
                 </small>
             </span>
 <?php endif; ?>
