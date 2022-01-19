@@ -244,12 +244,17 @@ class AdminPortalModule implements ServiceModuleInterface
             function (UserInfo $userInfo, Request $request): Response {
                 $this->requireAdmin($userInfo);
 
+                // XXX this is not really testable, should base it on
+                // $this->dateTime somehow...
+                $oneWeekAgo = Dt::get('today -1 week', new DateTimeZone('UTC'));
+
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminStats',
                         [
                             'profileConfigList' => $this->config->profileConfigList(),
-                            'statsMax' => $this->storage->statsGetLiveMax(),
+                            'statsMaxConnectionCount' => $this->storage->statsGetLiveMaxConnectionCount(),
+                            'statsUniqueUserCount' => $this->storage->statsGetUniqueUsers($oneWeekAgo),
                             'appUsage' => self::appUsage($this->storage->appUsage()),
                         ]
                     )
@@ -263,12 +268,11 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
                 $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
 
-                $csvString = 'Date/Time,#Unique User Count,#Connection Count'.PHP_EOL;
+                $csvString = 'Date/Time,#Connections'.PHP_EOL;
                 foreach ($this->storage->statsGetLive($profileId) as $statsEntry) {
                     $csvString .= sprintf(
-                        '%s,%d,%d',
+                        '%s,%d',
                         $statsEntry['date_time']->format('Y-m-d\TH:i:s'),
-                        $statsEntry['unique_user_count'],
                         $statsEntry['connection_count']
                     ).PHP_EOL;
                 }
@@ -289,12 +293,12 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
                 $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
 
-                $csvString = 'Date,Max #Unique User Count,Max #Connection Count'.PHP_EOL;
+                $csvString = 'Date,#Unique Users,Max #Connections'.PHP_EOL;
                 foreach ($this->storage->statsGetAggregate($profileId) as $statsEntry) {
                     $csvString .= sprintf(
                         '%s,%d,%d',
                         $statsEntry['date'],
-                        $statsEntry['max_unique_user_count'],
+                        $statsEntry['unique_user_count'],
                         $statsEntry['max_connection_count']
                     ).PHP_EOL;
                 }

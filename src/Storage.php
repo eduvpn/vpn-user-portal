@@ -20,7 +20,7 @@ class Storage
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
 
-    public const CURRENT_SCHEMA_VERSION = '2022011402';
+    public const CURRENT_SCHEMA_VERSION = '2022011901';
 
     private PDO $db;
 
@@ -1137,7 +1137,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function statsAdd(DateTimeImmutable $dateTime, string $profileId, int $uniqueUserCount, int $connectionCount): void
+    public function statsAdd(DateTimeImmutable $dateTime, string $profileId, int $connectionCount): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -1145,26 +1145,23 @@ class Storage
                         live_stats (
                             date_time,
                             profile_id,
-                            unique_user_count,
                             connection_count
                         )
                     VALUES (
                         :date_time,
                         :profile_id,
-                        :unique_user_count,
                         :connection_count
                     )
                 SQL
         );
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':unique_user_count', $uniqueUserCount, PDO::PARAM_INT);
         $stmt->bindValue(':connection_count', $connectionCount, PDO::PARAM_INT);
         $stmt->execute();
     }
 
     /**
-     * @return array<array{date_time:\DateTimeImmutable,unique_user_count:int,connection_count:int}>
+     * @return array<array{date_time:\DateTimeImmutable,connection_count:int}>
      */
     public function statsGetLive(string $profileId): array
     {
@@ -1172,7 +1169,6 @@ class Storage
             <<< 'SQL'
                     SELECT
                         date_time,
-                        unique_user_count,
                         connection_count
                     FROM
                         live_stats
@@ -1187,7 +1183,6 @@ class Storage
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $statsData[] = [
                 'date_time' => Dt::get($resultRow['date_time']),
-                'unique_user_count' => (int) $resultRow['unique_user_count'],
                 'connection_count' => (int) $resultRow['connection_count'],
             ];
         }
@@ -1196,15 +1191,16 @@ class Storage
     }
 
     /**
-     * @return array<string,array{max_unique_user_count:int,max_connection_count:int}>
+     * @return array<string,array{max_connection_count:int}>
      */
-    public function statsGetLiveMax(): array
+    public function statsGetLiveMaxConnectionCount(): array
     {
+        // XXX housekeeping will remove all entries older than 1 week, so I
+        // guess we do not have to limit here...
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
                         profile_id,
-                        MAX(unique_user_count) AS max_unique_user_count,
                         MAX(connection_count) AS max_connection_count
                     FROM
                         live_stats
@@ -1216,7 +1212,6 @@ class Storage
         $statsData = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $statsData[(string) $resultRow['profile_id']] = [
-                'max_unique_user_count' => (int) $resultRow['max_unique_user_count'],
                 'max_connection_count' => (int) $resultRow['max_connection_count'],
             ];
         }
@@ -1225,7 +1220,38 @@ class Storage
     }
 
     /**
-     * @return array<string,array{date:string,max_unique_user_count:int,max_connection_count:int}>
+     * @return array<string,array{unique_user_count:int}>
+     */
+    public function statsGetUniqueUsers(DateTimeImmutable $dateTime): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    profile_id,
+                    COUNT(DISTINCT user_id) AS unique_user_count
+                FROM
+                    connection_log
+                WHERE
+                    connected_at >= :date_time
+                GROUP BY
+                    profile_id
+
+                SQL
+        );
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->execute();
+        $statsData = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $statsData[(string) $resultRow['profile_id']] = [
+                'unique_user_count' => (int) $resultRow['unique_user_count'],
+            ];
+        }
+
+        return $statsData;
+    }
+
+    /**
+     * @return array<string,array{date:string,unique_user_count:int,max_connection_count:int}>
      */
     public function statsGetAggregate(string $profileId): array
     {
@@ -1233,7 +1259,7 @@ class Storage
             <<< 'SQL'
                     SELECT
                         date,
-                        max_unique_user_count,
+                        unique_user_count,
                         max_connection_count
                     FROM
                         aggregate_stats
@@ -1248,7 +1274,7 @@ class Storage
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
             $statsData[(string) $resultRow['profile_id']] = [
                 'date' => (string) $resultRow['date'],
-                'max_unique_user_count' => (int) $resultRow['max_unique_user_count'],
+                'unique_user_count' => (int) $resultRow['unique_user_count'],
                 'max_connection_count' => (int) $resultRow['max_connection_count'],
             ];
         }
@@ -1263,17 +1289,23 @@ class Storage
                 INSERT INTO
                     aggregate_stats
                 SELECT
-                    DATE(date_time) AS date,
-                    profile_id,
-                    MAX(connection_count) AS max_connection_count,
-                    MAX(unique_user_count) AS max_unique_user_count
+                    DATE(l.date_time) AS date,
+                    l.profile_id AS profile_id,
+                    MAX(l.connection_count) AS max_connection_count,
+                    COUNT(DISTINCT c.user_id) AS unique_user_count
                 FROM
-                    live_stats
+                    live_stats l
+                LEFT JOIN
+                    connection_log c
+                ON
+                    DATE(l.date_time) = DATE(c.connected_at)
+                AND
+                    l.profile_id = c.profile_id
                 WHERE
-                    date_time < :date_time
+                    l.date_time < :date_time
                 GROUP BY
-                    profile_id,
-                    date
+                    date,
+                    l.profile_id
                 SQL
         );
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);

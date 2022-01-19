@@ -2,7 +2,8 @@
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<array{client_id:string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}> $appUsage */?>
 <?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<string,array{max_unique_user_count:int,max_connection_count:int}> $statsMax */?>
+<?php /** @var array<string,array{max_connection_count:int}> $statsMaxConnectionCount */?>
+<?php /** @var array<string,array{unique_user_count:int}> $statsUniqueUserCount */?>
 <?php $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')]); ?>
 <?php $this->start('content'); ?>
 <h2><?=$this->t('Profile Usage'); ?></h2>
@@ -15,8 +16,8 @@
 <thead>
     <tr>
         <th><?=$this->t('Profile'); ?></th>
-        <th><?=$this->t('Max #Unique Users'); ?></th>
-        <th><?=$this->t('Max #Active Connections'); ?></th>
+        <th title="<?=$this->t('The number of unique users connecting to the VPN service in the last week'); ?>"><?=$this->t('#Unique Users'); ?></th>
+        <th title="<?=$this->t('The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week'); ?>"><?=$this->t('Max #Connections'); ?></th>
         <th colspan="2"><?=$this->t('Export (CSV)'); ?></th>
     </tr>
 </thead>
@@ -24,23 +25,28 @@
 <?php foreach ($profileConfigList as $profileConfig): ?>
     <tr>
         <td><?=$this->e($profileConfig->displayName()); ?></td>
-<?php if (!array_key_exists($profileConfig->profileId(), $statsMax)): ?>
-        <td>0</td>
+<?php if (!array_key_exists($profileConfig->profileId(), $statsUniqueUserCount)): ?>
         <td>0</td>
 <?php else: ?>
-        <td><?=$this->e((string) $statsMax[$profileConfig->profileId()]['max_unique_user_count']); ?></td>
-        <td><?=$this->e((string) $statsMax[$profileConfig->profileId()]['max_connection_count']); ?></td>
+        <td><?=$this->e((string) $statsUniqueUserCount[$profileConfig->profileId()]['unique_user_count']); ?></td>
+<?php endif; ?>
+
+<?php if (!array_key_exists($profileConfig->profileId(), $statsMaxConnectionCount)): ?>
+        <td>0</td>
+<?php else: ?>
+        <td><?=$this->e((string) $statsMaxConnectionCount[$profileConfig->profileId()]['max_connection_count']); ?></td>
 <?php endif; ?>
         <td>
-            <form class="frm" method="get" action="csv_stats/live"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('VPN Usage in 5 minute intervals'); ?>"><?=$this->t('Live'); ?></button></form>
+            <form class="frm" method="get" action="csv_stats/live"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('#Connections in 5 minute intervals'); ?>"><?=$this->t('Live'); ?></button></form>
             </td>
             <td>
-            <form class="frm" method="get" action="csv_stats/aggregate"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('VPN Usage since server installation'); ?>"><?=$this->t('Aggregate'); ?></button></form>
+            <form class="frm" method="get" action="csv_stats/aggregate"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('#Unique users and max #connections per day'); ?>"><?=$this->t('Aggregated'); ?></button></form>
         </td>
     </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
+
 <?php if (0 !== count($appUsage)): ?>
 <h2><?=$this->t('Application Usage'); ?></h2>
 <figure>
