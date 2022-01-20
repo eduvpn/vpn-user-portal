@@ -1251,7 +1251,7 @@ class Storage
     }
 
     /**
-     * @return array<string,array{date:string,unique_user_count:int,max_connection_count:int}>
+     * @return array<array{date:string,unique_user_count:int,max_connection_count:int}>
      */
     public function statsGetAggregate(string $profileId): array
     {
@@ -1269,10 +1269,9 @@ class Storage
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->execute();
-
         $statsData = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $statsData[(string) $resultRow['profile_id']] = [
+            $statsData[] = [
                 'date' => (string) $resultRow['date'],
                 'unique_user_count' => (int) $resultRow['unique_user_count'],
                 'max_connection_count' => (int) $resultRow['max_connection_count'],
