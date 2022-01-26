@@ -63,12 +63,8 @@
     <?php endif; ?>
 <?php endif; ?>
 
+<?php if (0 !== count($configList)): ?>
         <h2><?=$this->t('Active Configurations'); ?></h2>
-<?php if (0 === count($configList)): ?>
-    <p class="plain">
-            <?=$this->t('Currently no active configurations.'); ?>
-    </p>
-<?php else: ?>
         <table class="tbl">
             <thead>
                 <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires On'); ?></th><th></th></tr>
