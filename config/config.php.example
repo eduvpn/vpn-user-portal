@@ -20,14 +20,14 @@ return [
     // OPTIONAL, DEFAULT = local SQLite database
     //'Db' => [
     //    // ** PostgreSQL **
-    //    'dbDsn' => 'pgsql:host=localhost;port=5432;dbname=vpn;user=user;password=pass',
+    //    'dbDsn' => 'pgsql:host=db.example.org;dbname=vpn;user=vpn;password=s3cr3t',
     //],
     //'Db' => [
     //    // ** MariaDB/MySQL **
-    //    'dbDsn' => 'mysql:host=localhost;port=3306;dbname=vpn',
+    //    'dbDsn' => 'mysql:host=db.example.org;dbname=vpn',
     //    'dbDsn' => 'mysql:unix_socket=/var/lib/mysql/mysql.sock;dbname=vpn',
-    //    'dbUser' => 'user',
-    //    'dbPass' => 'pass',
+    //    'dbUser' => 'vpn',
+    //    'dbPass' => 's3cr3t',
     //],
 
     // Choose the User Authentication Module
