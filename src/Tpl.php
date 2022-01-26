@@ -170,7 +170,13 @@ class Tpl implements TplInterface
      */
     public function insert(string $templateName, array $templateVariables = []): string
     {
-        return $this->render($templateName, $templateVariables);
+        $this->templateVariables = array_merge($this->templateVariables, $templateVariables);
+        extract($this->templateVariables);
+        ob_start();
+        /** @psalm-suppress UnresolvableInclude */
+        include $this->templatePath($templateName);
+
+        return ob_get_clean();
     }
 
     /**
