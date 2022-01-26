@@ -18,6 +18,7 @@ use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\ProfileConfig;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\Tpl;
@@ -105,15 +106,13 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $profileConfig = $this->config->profileConfig($profileId);
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
-                if ('default' === $vpnProto = $request->requirePostParameter('vpnProto', fn (string $s) => Validator::vpnProto($s))) {
-                    $vpnProto = $profileConfig->preferredProto();
-                }
 
-                if ('openvpn' === $vpnProto && $profileConfig->oSupport()) {
+                $vpnProto = self::determineProto($profileConfig, $request->requirePostParameter('preferProto', fn (string $s) => Validator::vpnProto($s)));
+                if ('openvpn' === $vpnProto) {
                     return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt, $preferTcp);
                 }
 
-                if ('wireguard' === $vpnProto && $profileConfig->wSupport()) {
+                if ('wireguard' === $vpnProto) {
                     return $this->getWireGuardConfig($profileId, $userInfo->userId(), $displayName, $expiresAt);
                 }
 
@@ -318,5 +317,21 @@ class VpnPortalModule implements ServiceModuleInterface
         }
 
         return false;
+    }
+
+    /**
+     * Determine the VPN protocol that will be used, based on the user's
+     * preference (if possible).
+     */
+    private static function determineProto(ProfileConfig $profileConfig, string $preferProto): string
+    {
+        if ('openvpn' === $preferProto && $profileConfig->oSupport()) {
+            return 'openvpn';
+        }
+        if ('wireguard' === $preferProto && $profileConfig->wSupport()) {
+            return 'wireguard';
+        }
+
+        return $profileConfig->preferredProto();
     }
 }

@@ -129,7 +129,6 @@ return [
     //'This user does not have any active configurations.' => '',
     //'This user does not have any connections.' => '',
     'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => 'Para impedir que aplicações maliciosas estabeleçam secretamente uma ligação VPN em seu nome, tem de aprovar explicitamente esta aplicação.',
-    //'Use Protocol' => '',
     //'Use the WireGuard app on your mobile device to scan this QR code.' => '',
     'User ID' => 'ID de Utilizador',
     'Username' => 'Nome de utilizador',
