@@ -49,15 +49,11 @@
         </tr>
     </table>
 
+<?php if (0 !== count($authorizationList)): ?>
     <h2><?=$this->t('Authorized Applications'); ?></h2>
     <p>
         <?=$this->t('The list of applications you authorized to create a VPN connection.'); ?>
     </p>
-<?php if (0 === count($authorizationList)): ?>
-    <p class="plain">
-        <?=$this->t('You currently have no authorized applications.'); ?>
-    </p>
-<?php else: ?>
     <table class="tbl">
         <thead>
             <tr><th><?=$this->t('Name'); ?></th><th><?=$this->t('Authorized On'); ?></th><th><?=$this->t('Expires On'); ?></th><th></th></tr>
