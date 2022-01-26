@@ -22,6 +22,7 @@
 <?php else: ?>
 <p>
 <?=$this->t('Obtain a new VPN configuration file for use in your VPN client.'); ?>
+
 <?=$this->t('Select a profile and choose a name, e.g. "Phone".'); ?>
 </p>
 
