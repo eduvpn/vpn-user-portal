@@ -11,8 +11,8 @@ return [
     // Default VPN Session Expiry
     // OPTIONAL, DEFAULT = P90D
     //'sessionExpiry' => 'P90D',  // 90 days
-    //'sessionExpiry' => 'PT12H', // 12 hours
     //'sessionExpiry' => 'P1D',   // 1 day
+    //'sessionExpiry' => 'PT12H', // 12 hours
 
     // Portal Database Configuration
     // NOTE: using any other database than SQLite requires *manual*
@@ -25,7 +25,6 @@ return [
     //'Db' => [
     //    // ** MariaDB/MySQL **
     //    'dbDsn' => 'mysql:host=db.example.org;dbname=vpn',
-    //    'dbDsn' => 'mysql:unix_socket=/var/lib/mysql/mysql.sock;dbname=vpn',
     //    'dbUser' => 'vpn',
     //    'dbPass' => 's3cr3t',
     //],
