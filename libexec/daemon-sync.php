@@ -60,7 +60,7 @@ function determineNodeUrl(ProfileConfig $profileConfig, Ip $ipFour): ?string
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage($config->dbConfig($baseDir));
-    $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger);
+    $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
 
     // Obtain a list of all WireGuard/OpenVPN peers/clients that we have in the
     // database

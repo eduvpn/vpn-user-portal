@@ -21,6 +21,11 @@ use Vpn\Portal\OpenVpn\CA\VpnCa;
 umask(0027);
 
 try {
+    $keyDir = $baseDir.'/config/keys';
+    FileIO::mkdir($keyDir);
+    $caDir = $keyDir.'/ca';
+    FileIO::mkdir($caDir);
+
     $nodeNumberStr = null;
     for ($i = 1; $i < $argc; ++$i) {
         if ('--node' === $argv[$i]) {
@@ -44,7 +49,7 @@ try {
             throw new Exception('--node MUST be followed by a number >= 0');
         }
         // Node Key
-        $nodeKeyFile = $baseDir.'/config/node.'.$nodeNumber.'.key';
+        $nodeKeyFile = $keyDir.'/node.'.$nodeNumber.'.key';
         if (!FileIO::exists($nodeKeyFile)) {
             $secretKey = random_bytes(32);
             FileIO::write($nodeKeyFile, sodium_bin2hex($secretKey));
@@ -53,29 +58,24 @@ try {
         exit(0);
     }
 
-    $config = Config::fromFile($baseDir.'/config/config.php');
     // OAuth key
-    $apiKeyFile = $baseDir.'/config/oauth.key';
+    $apiKeyFile = $keyDir.'/oauth.key';
     if (!FileIO::exists($apiKeyFile)) {
         FileIO::write($apiKeyFile, Signer::generateSecretKey());
     }
 
     // Node Key
-    $nodeKeyFile = $baseDir.'/config/node.0.key';
+    $nodeKeyFile = $keyDir.'/node.0.key';
     if (!FileIO::exists($nodeKeyFile)) {
         $secretKey = random_bytes(32);
         FileIO::write($nodeKeyFile, sodium_bin2hex($secretKey));
     }
 
     // OpenVPN CA
-    // NOTE: only created when the ca.crt and ca.key do not yet exist...
-    $vpnCa = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
+    // NOTE: CA certificate and key only created when they do not yet exist...
+    $config = Config::fromFile($baseDir.'/config/config.php');
+    $vpnCa = new VpnCa($caDir, $config->vpnCaPath());
     $vpnCa->initCa($config->caExpiry());
-    // the CA files have 0600 permissions, but should be 0640 so PHP can read
-    // them, requires update to vpn-ca to use mode 0660 or similar so our
-    // umask takes care of it
-    chmod($baseDir.'/config/ca/ca.crt', 0640);
-    chmod($baseDir.'/config/ca/ca.key', 0640);
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 

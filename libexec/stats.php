@@ -27,7 +27,7 @@ try {
     $logger = new NullLogger();
     $connectionManager = new ConnectionManager(
         $config,
-        new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger),
+        new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger),
         $storage,
         $logger
     );

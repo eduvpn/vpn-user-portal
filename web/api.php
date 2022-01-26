@@ -42,8 +42,8 @@ try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage($config->dbConfig($baseDir));
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
-    $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
-    $oauthKey = FileIO::read($baseDir.'/config/oauth.key');
+    $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
+    $oauthKey = FileIO::read($baseDir.'/config/keys/oauth.key');
     $bearerValidator = new VpnBearerValidator(
         new Signer($oauthKey),
         new ClientDb(),
@@ -63,7 +63,7 @@ try {
             $config,
             $storage,
             $serverInfo,
-            new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger), $storage, $logger)
+            new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, $logger)
         )
     );
 

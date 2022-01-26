@@ -40,7 +40,7 @@ try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new Service();
     $storage = new Storage($config->dbConfig($baseDir));
-    $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
+    $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
 
     $sessionExpiry = Expiry::calculate(
         Dt::get(),
@@ -52,7 +52,7 @@ try {
     $oauthServer = new VpnOAuthServer(
         new OAuthStorage($storage->dbPdo(), 'oauth_'),
         new ClientDb(),
-        new Signer(FileIO::read($baseDir.'/config/oauth.key')),
+        new Signer(FileIO::read($baseDir.'/config/keys/oauth.key')),
         $sessionExpiry,
         $config->apiConfig()->tokenExpiry()
     );

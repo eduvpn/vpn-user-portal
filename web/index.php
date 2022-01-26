@@ -87,7 +87,7 @@ try {
 
     $dateTime = Dt::get();
     FileIO::mkdir($baseDir.'/data');
-    $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
+    $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
     $sessionExpiry = Expiry::calculate(
         $dateTime,
         $ca->caCert()->validTo(),
@@ -205,7 +205,7 @@ try {
     $service->addBeforeHook($adminHook);
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
-    $oauthKey = FileIO::read($baseDir.'/config/oauth.key');
+    $oauthKey = FileIO::read($baseDir.'/config/keys/oauth.key');
     $oauthSigner = new Signer($oauthKey);
     $tlsCrypt = new TlsCrypt($baseDir.'/data');
     $serverInfo = new ServerInfo(
@@ -216,7 +216,7 @@ try {
         Signer::publicKeyFromSecretKey($oauthKey)
     );
 
-    $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/vpn-daemon'), $logger);
+    $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
     $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
 
     // portal module

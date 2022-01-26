@@ -42,7 +42,7 @@ try {
     );
 
     $storage = new Storage($config->dbConfig($baseDir));
-    $ca = new VpnCa($baseDir.'/config/ca', $config->vpnCaPath());
+    $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
 
     $service->addModule(
         new NodeApiModule(
