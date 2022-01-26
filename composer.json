@@ -16,6 +16,11 @@
             "Vpn\\Portal\\Tests\\": "tests/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "7.4.0"
+        }
+    },
     "description": "VPN Portal",
     "license": "AGPL-3.0-or-later",
     "name": "vpn/portal",
