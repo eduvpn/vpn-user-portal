@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
-use Vpn\Portal\Base64;
 use Vpn\Portal\Config;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\NodeApiException;
@@ -59,12 +58,8 @@ class NodeApiModule implements ServiceModuleInterface
                     $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s)),
                     'yes' === $request->requirePostParameter('prefer_aes', fn (string $s) => Validator::yesOrNo($s))
                 );
-                $bodyLines = [];
-                foreach ($serverConfigList as $configName => $configFile) {
-                    $bodyLines[] = $configName.':'.Base64::encode($configFile);
-                }
 
-                return new Response(implode("\n", $bodyLines));
+                return new JsonResponse($serverConfigList);
             }
         );
 
