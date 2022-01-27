@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\WireGuard;
 
+use Vpn\Portal\Exception\ServerConfigException;
 use Vpn\Portal\FileIO;
 
 class ServerConfig
@@ -46,12 +47,7 @@ class ServerConfig
             return null;
         }
 
-        $publicKeyFile = sprintf('%s/data/wireguard.%d.public.key', $this->baseDir, $nodeNumber);
-        if (!FileIO::exists($publicKeyFile)) {
-            // XXX what should we do when file exists? compare and scream when
-            // it is not the same anymore?
-            FileIO::write($publicKeyFile, $publicKey);
-        }
+        $this->registerPublicKey($nodeNumber, $publicKey);
 
         return <<< EOF
             [Interface]
@@ -59,5 +55,22 @@ class ServerConfig
             ListenPort = {$this->wgPort}
             PrivateKey = {{PRIVATE_KEY}}
             EOF;
+    }
+
+    private function registerPublicKey(int $nodeNumber, string $publicKey): void
+    {
+        $publicKeyFile = sprintf('%s/data/wireguard.%d.public.key', $this->baseDir, $nodeNumber);
+        if (!FileIO::exists($publicKeyFile)) {
+            // we do not yet know this node's public key, write it
+            FileIO::write($publicKeyFile, $publicKey);
+
+            return;
+        }
+
+        // we already know this node's public key... compare it to what we get,
+        // it MUST be the same!
+        if ($publicKey !== FileIO::read($publicKeyFile)) {
+            throw new ServerConfigException(sprintf('node "%d" already registered a public key, but it does not match anymore, delete the existing public key first from "/etc/vpn-user-portal/keys"', $nodeNumber));
+        }
     }
 }
