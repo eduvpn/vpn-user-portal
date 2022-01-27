@@ -88,11 +88,11 @@ class NodeApiModule implements ServiceModuleInterface
                 $this->logMessage('CONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
             );
 
-            return new Response('OK');
+            return new JsonResponse(['ok' => true]);
         } catch (NodeApiException $e) {
             $this->logger->warning($e->getMessage());
 
-            return new Response('ERR');
+            return new JsonResponse(['ok' => false]);
         }
     }
 
@@ -115,7 +115,7 @@ class NodeApiModule implements ServiceModuleInterface
             $this->logMessage('DISCONNECT', $userId ?? 'N/A', $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
         );
 
-        return new Response('OK');
+        return new JsonResponse(['ok' => true]);
     }
 
     private function verifyConnection(string $profileId, string $commonName): string
