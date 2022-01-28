@@ -16,8 +16,8 @@ use Vpn\Portal\Config;
 use Vpn\Portal\Http\Auth\NodeAuthModule;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\NodeApiModule;
+use Vpn\Portal\Http\NodeApiService;
 use Vpn\Portal\Http\Request;
-use Vpn\Portal\Http\Service;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\ServerConfig as OpenVpnServerConfig;
 use Vpn\Portal\OpenVpn\TlsCrypt;
@@ -33,8 +33,7 @@ $logger = new SysLogger('vpn-user-portal');
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $service = new Service();
-    $service->setAuthModule(
+    $service = new NodeApiService(
         new NodeAuthModule(
             $baseDir,
             'Node API'

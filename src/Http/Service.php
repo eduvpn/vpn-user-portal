@@ -13,22 +13,22 @@ namespace Vpn\Portal\Http;
 
 use Vpn\Portal\Http\Exception\HttpException;
 
-class Service implements ServiceInterface
+abstract class Service implements ServiceInterface
 {
-    private ?AuthModuleInterface $authModule = null;
+    protected AuthModuleInterface $authModule;
 
-    private array $routeList = [];
+    protected array $routeList = [];
 
     /** @var array<HookInterface> */
-    private array $beforeHookList = [];
+    protected array $beforeHookList = [];
 
     /** @var array<string,array<string>> */
-    private array $beforeAuthPathList = [
+    protected array $beforeAuthPathList = [
         'GET' => [],
         'POST' => [],
     ];
 
-    public function setAuthModule(AuthModuleInterface $authModule): void
+    public function __construct(AuthModuleInterface $authModule)
     {
         $this->authModule = $authModule;
     }
@@ -79,12 +79,6 @@ class Service implements ServiceInterface
             return $this->routeList[$pathInfo][$requestMethod]($request);
         }
 
-        // XXX code reaches this from oauth.php, maybe when wrong oauth (refresh) token is provided? the previous
-        // it was probably because the old token endpoint was used? info.json got updated at some point...
-        if (null === $this->authModule) {
-            throw new HttpException('authentication required, but no authentication module loaded', 500);
-        }
-
         // make sure we are authenticated
         if (null === $userInfo = $this->authModule->userInfo($request)) {
             if (null !== $authResponse = $this->authModule->startAuth($request)) {
@@ -102,6 +96,14 @@ class Service implements ServiceInterface
             }
         }
 
+        return $this->getRoutePathCallable($request)($userInfo, $request);
+    }
+
+    protected function getRoutePathCallable(Request $request): callable
+    {
+        $requestMethod = $request->getRequestMethod();
+        $pathInfo = $request->getPathInfo();
+
         if (!\array_key_exists($pathInfo, $this->routeList)) {
             throw new HttpException(sprintf('"%s" not found', $pathInfo), 404);
         }
@@ -109,6 +111,6 @@ class Service implements ServiceInterface
             throw new HttpException(sprintf('method "%s" not allowed', $requestMethod), 405, ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))]);
         }
 
-        return $this->routeList[$pathInfo][$requestMethod]($userInfo, $request);
+        return $this->routeList[$pathInfo][$requestMethod];
     }
 }

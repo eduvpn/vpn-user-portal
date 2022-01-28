@@ -12,37 +12,23 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http;
 
 use fkooman\OAuth\Server\Exception\OAuthException;
+use Vpn\Portal\Http\Auth\NullAuthModule;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\OAuth\ValidatorInterface;
 
-class ApiService implements ServiceInterface
+class ApiService extends Service implements ServiceInterface
 {
     private ValidatorInterface $bearerValidator;
-    private array $routeList = [];
 
     public function __construct(ValidatorInterface $bearerValidator)
     {
+        parent::__construct(new NullAuthModule());
         $this->bearerValidator = $bearerValidator;
     }
 
-    public function get(string $pathInfo, callable $callback): void
+    public function callRoute(callable $c, UserInfo $userInfo, Request $request): Response
     {
-        $this->routeList[$pathInfo]['GET'] = $callback;
-    }
-
-    public function post(string $pathInfo, callable $callback): void
-    {
-        $this->routeList[$pathInfo]['POST'] = $callback;
-    }
-
-    public function postBeforeAuth(string $pathInfo, callable $callback): void
-    {
-        // NOP
-    }
-
-    public function addModule(ServiceModuleInterface $module): void
-    {
-        $module->init($this);
+        return $c($userInfo, $request);
     }
 
     public function run(Request $request): Response
@@ -51,24 +37,21 @@ class ApiService implements ServiceInterface
             $accessToken = $this->bearerValidator->validate();
             $accessToken->scope()->requireAll(['config']);
 
-            $pathInfo = $request->getPathInfo();
-            $requestMethod = $request->getRequestMethod();
-
-            if (!\array_key_exists($pathInfo, $this->routeList)) {
-                return new JsonResponse(['error' => sprintf('"%s" not found', $pathInfo)], [], 404);
-            }
-            if (!\array_key_exists($requestMethod, $this->routeList[$pathInfo])) {
-                return new JsonResponse(['error' => sprintf('method "%s" not allowed', $requestMethod)], ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))], 405);
-            }
-
-            return $this->routeList[$pathInfo][$requestMethod]($accessToken, $request);
+            return $this->getRoutePathCallable($request)($accessToken, $request);
         } catch (OAuthException $e) {
-            $jsonResponse = $e->getJsonResponse();
-
-            // XXX convert to JsonResponse?
-            return new Response($jsonResponse->getBody(), $jsonResponse->getHeaders(), $jsonResponse->getStatusCode());
+            return new Response(
+                $e->getJsonResponse()->getBody(),
+                $e->getJsonResponse()->getHeaders(),
+                $e->getJsonResponse()->getStatusCode()
+            );
         } catch (HttpException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], $e->responseHeaders(), $e->statusCode());
+            return new JsonResponse(
+                [
+                    'error' => $e->getMessage(),
+                ],
+                $e->responseHeaders(),
+                $e->statusCode()
+            );
         }
     }
 }

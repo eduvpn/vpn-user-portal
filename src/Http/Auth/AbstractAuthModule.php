@@ -17,7 +17,7 @@ use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
 
-class AbstractAuthModule implements AuthModuleInterface
+abstract class AbstractAuthModule implements AuthModuleInterface
 {
     public function userInfo(Request $request): ?UserInfo
     {
