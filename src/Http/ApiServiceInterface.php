@@ -13,20 +13,15 @@ namespace Vpn\Portal\Http;
 
 use Closure;
 
-interface ServiceInterface
+interface ApiServiceInterface
 {
     /**
-     * @param Closure(UserInfo,Request):Response $closure
+     * @param Closure(\fkooman\OAuth\Server\AccessToken,Request):Response $closure
      */
     public function get(string $pathInfo, Closure $closure): void;
 
     /**
-     * @param Closure(UserInfo,Request):Response $closure
+     * @param Closure(\fkooman\OAuth\Server\AccessToken,Request):Response $closure
      */
     public function post(string $pathInfo, Closure $closure): void;
-
-    /**
-     * @param Closure(Request):Response $closure
-     */
-    public function postBeforeAuth(string $pathInfo, Closure $closure): void;
 }

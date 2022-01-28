@@ -23,7 +23,7 @@ use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\Validator;
 
-class VpnApiThreeModule implements ServiceModuleInterface
+class VpnApiThreeModule implements ApiServiceModuleInterface
 {
     protected DateTimeImmutable $dateTime;
     private Config $config;
@@ -40,7 +40,7 @@ class VpnApiThreeModule implements ServiceModuleInterface
         $this->dateTime = Dt::get();
     }
 
-    public function init(ServiceInterface $service): void
+    public function init(ApiServiceInterface $service): void
     {
         $service->get(
             '/v3/info',

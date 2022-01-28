@@ -11,31 +11,64 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
+use Closure;
 use fkooman\OAuth\Server\Exception\OAuthException;
-use Vpn\Portal\Http\Auth\NullAuthModule;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\OAuth\ValidatorInterface;
 
-/**
- * Used from "api.php" to handle the OAuth 2 API calls.
- */
-class ApiService extends Service implements ServiceInterface
+class ApiService implements ApiServiceInterface
 {
+    /** @var array<string,array<string,Closure(Request):Response>> */
+    protected array $beforeAuthRouteList = [];
+
+    /** @var array<string,array<string,Closure(\fkooman\OAuth\Server\AccessToken,Request):Response>> */
+    protected array $routeList = [];
+
     private ValidatorInterface $bearerValidator;
 
     public function __construct(ValidatorInterface $bearerValidator)
     {
-        parent::__construct(new NullAuthModule());
         $this->bearerValidator = $bearerValidator;
+    }
+
+    /**
+     * @param Closure(\fkooman\OAuth\Server\AccessToken,Request):Response $closure
+     */
+    public function get(string $pathInfo, Closure $closure): void
+    {
+        $this->routeList[$pathInfo]['GET'] = $closure;
+    }
+
+    /**
+     * @param Closure(\fkooman\OAuth\Server\AccessToken,Request):Response $closure
+     */
+    public function post(string $pathInfo, Closure $closure): void
+    {
+        $this->routeList[$pathInfo]['POST'] = $closure;
+    }
+
+    public function addModule(ApiServiceModuleInterface $module): void
+    {
+        $module->init($this);
     }
 
     public function run(Request $request): Response
     {
+        $requestMethod = $request->getRequestMethod();
+        $pathInfo = $request->getPathInfo();
+
         try {
             $accessToken = $this->bearerValidator->validate();
             $accessToken->scope()->requireAll(['config']);
 
-            return $this->getRoutePathCallable($request)($accessToken, $request);
+            if (!\array_key_exists($pathInfo, $this->routeList)) {
+                throw new HttpException(sprintf('"%s" not found', $pathInfo), 404);
+            }
+            if (!\array_key_exists($requestMethod, $this->routeList[$pathInfo])) {
+                throw new HttpException(sprintf('method "%s" not allowed', $requestMethod), 405, ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))]);
+            }
+
+            return $this->routeList[$pathInfo][$requestMethod]($accessToken, $request);
         } catch (OAuthException $e) {
             return new Response(
                 $e->getJsonResponse()->getBody(),

@@ -11,22 +11,21 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
+use Closure;
 use Vpn\Portal\Http\Exception\HttpException;
 
 abstract class Service implements ServiceInterface
 {
     protected AuthModuleInterface $authModule;
 
+    /** @var array<string,array<string,Closure(Request):Response>> */
+    protected array $beforeAuthRouteList = [];
+
+    /** @var array<string,array<string,Closure(UserInfo,Request):Response>> */
     protected array $routeList = [];
 
     /** @var array<HookInterface> */
     protected array $beforeHookList = [];
-
-    /** @var array<string,array<string>> */
-    protected array $beforeAuthPathList = [
-        'GET' => [],
-        'POST' => [],
-    ];
 
     public function __construct(AuthModuleInterface $authModule)
     {
@@ -38,20 +37,28 @@ abstract class Service implements ServiceInterface
         $this->beforeHookList[] = $beforeHook;
     }
 
-    public function get(string $pathInfo, callable $callback): void
+    /**
+     * @param Closure(UserInfo,Request):Response $closure
+     */
+    public function get(string $pathInfo, Closure $closure): void
     {
-        $this->routeList[$pathInfo]['GET'] = $callback;
+        $this->routeList[$pathInfo]['GET'] = $closure;
     }
 
-    public function post(string $pathInfo, callable $callback): void
+    /**
+     * @param Closure(UserInfo,Request):Response $closure
+     */
+    public function post(string $pathInfo, Closure $closure): void
     {
-        $this->routeList[$pathInfo]['POST'] = $callback;
+        $this->routeList[$pathInfo]['POST'] = $closure;
     }
 
-    public function postBeforeAuth(string $pathInfo, callable $callback): void
+    /**
+     * @param Closure(Request):Response $closure
+     */
+    public function postBeforeAuth(string $pathInfo, Closure $closure): void
     {
-        $this->routeList[$pathInfo]['POST'] = $callback;
-        $this->beforeAuthPathList['POST'][] = $pathInfo;
+        $this->beforeAuthRouteList[$pathInfo]['POST'] = $closure;
     }
 
     public function addModule(ServiceModuleInterface $module): void
@@ -75,8 +82,8 @@ abstract class Service implements ServiceInterface
         // modules can use postBeforeAuth that require no authentication,
         // if the current request is for such a URL, execute the callback
         // immediately
-        if (\array_key_exists($requestMethod, $this->beforeAuthPathList) && \in_array($pathInfo, $this->beforeAuthPathList[$requestMethod], true)) {
-            return $this->routeList[$pathInfo][$requestMethod]($request);
+        if (\array_key_exists($pathInfo, $this->beforeAuthRouteList) && \array_key_exists($requestMethod, $this->beforeAuthRouteList[$pathInfo])) {
+            return $this->beforeAuthRouteList[$pathInfo][$requestMethod]($request);
         }
 
         // make sure we are authenticated
@@ -96,14 +103,6 @@ abstract class Service implements ServiceInterface
             }
         }
 
-        return $this->getRoutePathCallable($request)($userInfo, $request);
-    }
-
-    protected function getRoutePathCallable(Request $request): callable
-    {
-        $requestMethod = $request->getRequestMethod();
-        $pathInfo = $request->getPathInfo();
-
         if (!\array_key_exists($pathInfo, $this->routeList)) {
             throw new HttpException(sprintf('"%s" not found', $pathInfo), 404);
         }
@@ -111,6 +110,6 @@ abstract class Service implements ServiceInterface
             throw new HttpException(sprintf('method "%s" not allowed', $requestMethod), 405, ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))]);
         }
 
-        return $this->routeList[$pathInfo][$requestMethod];
+        return $this->routeList[$pathInfo][$requestMethod]($userInfo, $request);
     }
 }
