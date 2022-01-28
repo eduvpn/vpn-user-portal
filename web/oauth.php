@@ -18,10 +18,9 @@ use Vpn\Portal\Config;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Expiry;
 use Vpn\Portal\FileIO;
-use Vpn\Portal\Http\Auth\NullAuthModule;
 use Vpn\Portal\Http\JsonResponse;
-use Vpn\Portal\Http\OAuthService;
 use Vpn\Portal\Http\OAuthTokenModule;
+use Vpn\Portal\Http\OAuthTokenService;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\OAuth\ClientDb;
 use Vpn\Portal\OAuth\VpnOAuthServer;
@@ -39,11 +38,7 @@ try {
     FileIO::mkdir($baseDir.'/data');
 
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $service = new OAuthService(
-        // the OAuthTokenModule implements its own authentication, it does not
-        // use the built-in authentication mechanism
-        new NullAuthModule()
-    );
+    $service = new OAuthTokenService();
     $storage = new Storage($config->dbConfig($baseDir));
     $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
 

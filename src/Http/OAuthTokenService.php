@@ -11,14 +11,21 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
+use Vpn\Portal\Http\Auth\NullAuthModule;
 use Vpn\Portal\Http\Exception\HttpException;
 
 /**
  * Used from "oauth.php" to handle the OAuth 2 /token calls.
- * XXX rename to OAuthTokenService.
  */
-class OAuthService extends Service implements ServiceInterface
+class OAuthTokenService extends Service implements ServiceInterface
 {
+    public function __construct()
+    {
+        // the OAuthTokenModule implements its own authentication, it does not
+        // use the built-in authentication mechanism
+        parent::__construct(new NullAuthModule());
+    }
+
     public function run(Request $request): Response
     {
         try {
