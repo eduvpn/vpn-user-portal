@@ -21,7 +21,7 @@ abstract class Service implements ServiceInterface
     /** @var array<string,array<string,Closure(Request):Response>> */
     protected array $beforeAuthRouteList = [];
 
-    /** @var array<string,array<string,Closure(UserInfo,Request):Response>> */
+    /** @var array<string,array<string,Closure(Request,UserInfo):Response>> */
     protected array $routeList = [];
 
     /** @var array<HookInterface> */
@@ -38,7 +38,7 @@ abstract class Service implements ServiceInterface
     }
 
     /**
-     * @param Closure(UserInfo,Request):Response $closure
+     * @param Closure(Request,UserInfo):Response $closure
      */
     public function get(string $pathInfo, Closure $closure): void
     {
@@ -46,7 +46,7 @@ abstract class Service implements ServiceInterface
     }
 
     /**
-     * @param Closure(UserInfo,Request):Response $closure
+     * @param Closure(Request,UserInfo):Response $closure
      */
     public function post(string $pathInfo, Closure $closure): void
     {
@@ -96,7 +96,7 @@ abstract class Service implements ServiceInterface
         }
 
         foreach ($this->beforeHookList as $beforeHook) {
-            $hookResponse = $beforeHook->afterAuth($userInfo, $request);
+            $hookResponse = $beforeHook->afterAuth($request, $userInfo);
             // if we get back a Response object, return it immediately
             if ($hookResponse instanceof Response) {
                 return $hookResponse;
@@ -110,6 +110,6 @@ abstract class Service implements ServiceInterface
             throw new HttpException(sprintf('method "%s" not allowed', $requestMethod), 405, ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))]);
         }
 
-        return $this->routeList[$pathInfo][$requestMethod]($userInfo, $request);
+        return $this->routeList[$pathInfo][$requestMethod]($request, $userInfo);
     }
 }

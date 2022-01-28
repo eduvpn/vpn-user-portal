@@ -36,7 +36,7 @@ class PasswdModule implements ServiceModuleInterface
     {
         $service->get(
             '/passwd',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnPortalPasswd',
@@ -50,7 +50,7 @@ class PasswdModule implements ServiceModuleInterface
 
         $service->post(
             '/passwd',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $userPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::userAuthPass($s));
                 $newUserPass = $request->requirePostParameter('newUserPass', fn (string $s) => Validator::userPass($s));
                 $newUserPassConfirm = $request->requirePostParameter('newUserPassConfirm', fn (string $s) => Validator::userPass($s));

@@ -16,12 +16,12 @@ use Closure;
 interface ServiceInterface
 {
     /**
-     * @param Closure(UserInfo,Request):Response $closure
+     * @param Closure(Request,UserInfo):Response $closure
      */
     public function get(string $pathInfo, Closure $closure): void;
 
     /**
-     * @param Closure(UserInfo,Request):Response $closure
+     * @param Closure(Request,UserInfo):Response $closure
      */
     public function post(string $pathInfo, Closure $closure): void;
 

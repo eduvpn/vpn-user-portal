@@ -41,7 +41,7 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $service->post(
             '/server_config',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 // XXX catch exceptions
                 $profileConfigList = $this->config->profileConfigList();
                 $profileIdList = $request->optionalArrayPostParameter('profile_id_list', fn (array $a) => Validator::profileIdList($a));
@@ -65,12 +65,12 @@ class NodeApiModule implements ServiceModuleInterface
 
         $service->post(
             '/connect',
-            fn (UserInfo $userInfo, Request $request): Response => $this->connect($request)
+            fn (Request $request, UserInfo $userInfo): Response => $this->connect($request)
         );
 
         $service->post(
             '/disconnect',
-            fn (UserInfo $userInfo, Request $request): Response => $this->disconnect($request)
+            fn (Request $request, UserInfo $userInfo): Response => $this->disconnect($request)
         );
     }
 

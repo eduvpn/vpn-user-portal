@@ -54,12 +54,12 @@ class VpnPortalModule implements ServiceModuleInterface
     {
         $service->get(
             '/',
-            fn (UserInfo $userInfo, Request $request): Response => new RedirectResponse($request->getRootUri().'home')
+            fn (Request $request, UserInfo $userInfo): Response => new RedirectResponse($request->getRootUri().'home')
         );
 
         $service->get(
             '/home',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $profileConfigList = $this->config->profileConfigList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
@@ -80,7 +80,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/addConfig',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $maxActiveConfigurations = $this->config->maxActiveConfigurations();
                 if (0 === $maxActiveConfigurations) {
                     throw new HttpException('no portal configuration downloads allowed', 403);
@@ -122,7 +122,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/deleteConfig',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->connectionManager->disconnect(
                     $userInfo->userId(),
                     $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s)),
@@ -135,7 +135,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/account',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $profileConfigList = $this->config->profileConfigList();
                 $visibleProfileList = self::filterProfileList($profileConfigList, $userInfo->permissionList());
 
@@ -155,7 +155,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/removeClientAuthorization',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 // XXX make sure authKey belongs to current user!
                 $authKey = $request->requirePostParameter('auth_key', fn (string $s) => Validator::authKey($s));
                 if (null === $this->oauthStorage->getAuthorization($authKey)) {

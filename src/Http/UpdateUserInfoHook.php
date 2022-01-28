@@ -35,7 +35,7 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
         $this->dateTime = Dt::get();
     }
 
-    public function afterAuth(UserInfo $userInfo, Request $request): ?Response
+    public function afterAuth(Request $request, UserInfo $userInfo): ?Response
     {
         // only update the user info once per browser session, not on every
         // request

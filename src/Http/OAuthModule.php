@@ -32,7 +32,7 @@ class OAuthModule implements ServiceModuleInterface
     {
         $service->get(
             '/oauth/authorize',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 try {
                     if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($userInfo->userId())) {
                         // optimization where we do not ask for approval
@@ -54,7 +54,7 @@ class OAuthModule implements ServiceModuleInterface
 
         $service->post(
             '/oauth/authorize',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 try {
                     $authorizeResponse = $this->oauthServer->postAuthorize(
                         $userInfo->userId()

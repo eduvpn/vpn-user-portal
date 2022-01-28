@@ -36,7 +36,7 @@ class LogoutModule implements ServiceModuleInterface
     {
         $service->post(
             '/_logout',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 // destroy our local session before triggering any (external)
                 // mechanism to facilitate logout
                 $this->session->destroy();

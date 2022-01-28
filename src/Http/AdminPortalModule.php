@@ -54,7 +54,7 @@ class AdminPortalModule implements ServiceModuleInterface
     {
         $service->get(
             '/connections',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
 
                 return new HtmlResponse(
@@ -71,7 +71,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/info',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
 
                 // query all nodes to have them report their status info
@@ -101,7 +101,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/users',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
                 $userList = $this->storage->userList();
 
@@ -126,7 +126,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/user',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
 
                 $adminUserId = $userInfo->userId();
@@ -153,7 +153,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/user_disable_account',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
                 $userId = self::validateUser($request, $userInfo);
 
@@ -184,7 +184,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/user_enable_account',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
                 $userId = self::validateUser($request, $userInfo);
 
@@ -199,7 +199,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/user_delete_account',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
                 $userId = self::validateUser($request, $userInfo);
 
@@ -221,7 +221,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/log',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
 
                 return new HtmlResponse(
@@ -241,7 +241,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/stats',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
 
                 // XXX this is not really testable, should base it on
@@ -264,7 +264,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/csv_stats/live',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
                 $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
 
@@ -289,7 +289,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->get(
             '/csv_stats/aggregate',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
                 $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
 
@@ -315,7 +315,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
         $service->post(
             '/log',
-            function (UserInfo $userInfo, Request $request): Response {
+            function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
 
                 $dateTime = new DateTimeImmutable(
