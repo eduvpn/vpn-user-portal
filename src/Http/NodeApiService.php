@@ -11,10 +11,25 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
+use Vpn\Portal\Http\Exception\HttpException;
+
 /**
- * Used from "node-api.php" to handle the OAuth 2 API calls.
+ * Used from "node-api.php" to handle the API calls from "vpn-server-node".
  */
 class NodeApiService extends Service implements ServiceInterface
 {
-    // XXX error handling
+    public function run(Request $request): Response
+    {
+        try {
+            return parent::run($request);
+        } catch (HttpException $e) {
+            return new JsonResponse(
+                [
+                    'error' => $e->getMessage(),
+                ],
+                $e->responseHeaders(),
+                $e->statusCode()
+            );
+        }
+    }
 }
