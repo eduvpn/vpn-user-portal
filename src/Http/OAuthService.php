@@ -13,6 +13,10 @@ namespace Vpn\Portal\Http;
 
 use Vpn\Portal\Http\Exception\HttpException;
 
+/**
+ * Used from "oauth.php" to handle the OAuth 2 /token calls.
+ * XXX rename to OAuthTokenService.
+ */
 class OAuthService extends Service implements ServiceInterface
 {
     public function run(Request $request): Response

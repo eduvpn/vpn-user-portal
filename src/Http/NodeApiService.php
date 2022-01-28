@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
+/**
+ * Used from "node-api.php" to handle the OAuth 2 API calls.
+ */
 class NodeApiService extends Service implements ServiceInterface
 {
+    // XXX error handling
 }

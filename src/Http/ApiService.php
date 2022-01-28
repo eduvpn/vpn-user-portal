@@ -16,6 +16,9 @@ use Vpn\Portal\Http\Auth\NullAuthModule;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\OAuth\ValidatorInterface;
 
+/**
+ * Used from "api.php" to handle the OAuth 2 API calls.
+ */
 class ApiService extends Service implements ServiceInterface
 {
     private ValidatorInterface $bearerValidator;
@@ -24,11 +27,6 @@ class ApiService extends Service implements ServiceInterface
     {
         parent::__construct(new NullAuthModule());
         $this->bearerValidator = $bearerValidator;
-    }
-
-    public function callRoute(callable $c, UserInfo $userInfo, Request $request): Response
-    {
-        return $c($userInfo, $request);
     }
 
     public function run(Request $request): Response

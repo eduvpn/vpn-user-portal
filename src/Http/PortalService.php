@@ -15,6 +15,9 @@ use Vpn\Portal\Http\Auth\NullAuthModule;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\TplInterface;
 
+/**
+ * Used from "index.php".
+ */
 class PortalService extends Service implements ServiceInterface
 {
     private TplInterface $tpl;
