@@ -44,7 +44,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
     {
         $service->get(
             '/v3/info',
-            function (AccessToken $accessToken, Request $request): Response {
+            function (Request $request, AccessToken $accessToken): Response {
                 $profileConfigList = $this->config->profileConfigList();
                 $userPermissions = $this->storage->userPermissionList($accessToken->userId());
                 $userProfileList = [];
@@ -76,7 +76,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         $service->post(
             '/v3/connect',
-            function (AccessToken $accessToken, Request $request): Response {
+            function (Request $request, AccessToken $accessToken): Response {
                 try {
                     // make sure all client configurations / connections initiated
                     // by this client are removed / disconnected
@@ -167,7 +167,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         $service->post(
             '/v3/disconnect',
-            function (AccessToken $accessToken, Request $request): Response {
+            function (Request $request, AccessToken $accessToken): Response {
                 $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
                 return new Response(null, [], 204);

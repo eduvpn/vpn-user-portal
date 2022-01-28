@@ -16,12 +16,12 @@ use Closure;
 interface ApiServiceInterface
 {
     /**
-     * @param Closure(\fkooman\OAuth\Server\AccessToken,Request):Response $closure
+     * @param Closure(Request,\fkooman\OAuth\Server\AccessToken):Response $closure
      */
     public function get(string $pathInfo, Closure $closure): void;
 
     /**
-     * @param Closure(\fkooman\OAuth\Server\AccessToken,Request):Response $closure
+     * @param Closure(Request,\fkooman\OAuth\Server\AccessToken):Response $closure
      */
     public function post(string $pathInfo, Closure $closure): void;
 }

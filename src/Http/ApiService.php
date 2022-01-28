@@ -21,7 +21,7 @@ class ApiService implements ApiServiceInterface
     /** @var array<string,array<string,Closure(Request):Response>> */
     protected array $beforeAuthRouteList = [];
 
-    /** @var array<string,array<string,Closure(\fkooman\OAuth\Server\AccessToken,Request):Response>> */
+    /** @var array<string,array<string,Closure(Request,\fkooman\OAuth\Server\AccessToken):Response>> */
     protected array $routeList = [];
 
     private ValidatorInterface $bearerValidator;
@@ -32,7 +32,7 @@ class ApiService implements ApiServiceInterface
     }
 
     /**
-     * @param Closure(\fkooman\OAuth\Server\AccessToken,Request):Response $closure
+     * @param Closure(Request,\fkooman\OAuth\Server\AccessToken):Response $closure
      */
     public function get(string $pathInfo, Closure $closure): void
     {
@@ -40,7 +40,7 @@ class ApiService implements ApiServiceInterface
     }
 
     /**
-     * @param Closure(\fkooman\OAuth\Server\AccessToken,Request):Response $closure
+     * @param Closure(Request,\fkooman\OAuth\Server\AccessToken):Response $closure
      */
     public function post(string $pathInfo, Closure $closure): void
     {
@@ -68,7 +68,7 @@ class ApiService implements ApiServiceInterface
                 throw new HttpException(sprintf('method "%s" not allowed', $requestMethod), 405, ['Allow' => implode(',', array_keys($this->routeList[$pathInfo]))]);
             }
 
-            return $this->routeList[$pathInfo][$requestMethod]($accessToken, $request);
+            return $this->routeList[$pathInfo][$requestMethod]($request, $accessToken);
         } catch (OAuthException $e) {
             return new Response(
                 $e->getJsonResponse()->getBody(),
