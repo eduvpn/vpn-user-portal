@@ -98,10 +98,8 @@ try {
     }
     $storage = new Storage($config->dbConfig($baseDir));
 
+    // XXX do we need to set the path?
     $cookieOptions = CookieOptions::init()->withPath($request->getRoot());
-    if (!$config->secureCookie()) {
-        $cookieOptions = $cookieOptions->withoutSecure();
-    }
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
     $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config);
 

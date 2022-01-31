@@ -40,11 +40,6 @@ class Config
         return $this->requireInt('maxActiveConfigurations', 3);
     }
 
-    public function secureCookie(): bool
-    {
-        return $this->requireBool('secureCookie', true);
-    }
-
     public function apiConfig(): ApiConfig
     {
         return new ApiConfig($this->s('Api')->toArray());
