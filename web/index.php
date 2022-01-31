@@ -105,18 +105,10 @@ try {
     $cookieBackend = new SeCookie(new Cookie($cookieOptions->withMaxAge(60 * 60 * 24 * 90)->withSameSiteLax()));
     $sessionBackend = new SeSession($cookieOptions->withSameSiteStrict(), $config);
 
-    $service = new PortalService($tpl);
-    $service->addBeforeHook(new CsrfProtectionHook());
-
     switch ($config->authModule()) {
         case 'DbAuthModule':
             $dbCredentialStorage = new DbCredentialValidator($storage);
             $authModule = new UserPassAuthModule($dbCredentialStorage, $sessionBackend, $tpl);
-            // when using local database, users are allowed to change their own
-            // password
-            $service->addModule(
-                new PasswdModule($dbCredentialStorage, $tpl, $storage)
-            );
 
             break;
 
@@ -168,7 +160,17 @@ try {
             throw new RuntimeException('unsupported authentication mechanism');
     }
 
-    $service->setAuthModule($authModule);
+    $service = new PortalService($authModule, $tpl);
+    $service->addBeforeHook(new CsrfProtectionHook());
+
+    if ('DbAuthModule' === $config->authModule()) {
+        $dbCredentialStorage = new DbCredentialValidator($storage);
+        // when using local database, users are allowed to change their own
+        // password
+        $service->addModule(
+            new PasswdModule($dbCredentialStorage, $tpl, $storage)
+        );
+    }
 
     if (null !== $accessPermissionList = $config->accessPermissionList()) {
         // hasAccess

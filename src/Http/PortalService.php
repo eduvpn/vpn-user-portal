@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
-use Vpn\Portal\Http\Auth\NullAuthModule;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\TplInterface;
 
@@ -22,18 +21,10 @@ class PortalService extends Service implements ServiceInterface
 {
     private TplInterface $tpl;
 
-    public function __construct(TplInterface $tpl)
+    public function __construct(AuthModuleInterface $authModule, TplInterface $tpl)
     {
-        // the "real" authentication module will be set later
-        // XXX make a class that crashes and burns when it is has not been replaced!
-        parent::__construct(new NullAuthModule());
+        parent::__construct($authModule);
         $this->tpl = $tpl;
-    }
-
-    public function setAuthModule(AuthModuleInterface $authModule): void
-    {
-        $this->authModule = $authModule;
-        $this->authModule->init($this);
     }
 
     public function run(Request $request): Response
