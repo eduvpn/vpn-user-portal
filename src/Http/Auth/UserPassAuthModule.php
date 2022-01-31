@@ -32,12 +32,12 @@ class UserPassAuthModule extends AbstractAuthModule
 
     public function userInfo(Request $request): ?UserInfo
     {
-        if (null === $authUser = $this->session->get('_form_auth_user')) {
+        if (null === $authUser = $this->session->get('_user_pass_auth_user_id')) {
             return null;
         }
 
         $permissionList = [];
-        if (null !== $sessionValue = $this->session->get('_form_auth_permission_list')) {
+        if (null !== $sessionValue = $this->session->get('_user_pass_auth_permission_list')) {
             $permissionList = Json::decode($sessionValue);
         }
 
@@ -49,12 +49,11 @@ class UserPassAuthModule extends AbstractAuthModule
 
     public function startAuth(Request $request): ?Response
     {
-        // any other URL, enforce authentication
         $responseBody = $this->tpl->render(
-            'formAuthentication',
+            'userPassAuth',
             [
-                '_form_auth_invalid_credentials' => false,
-                '_form_auth_redirect_to' => $request->getUri(),
+                '_user_pass_auth_invalid_credentials' => false,
+                '_user_pass_auth_redirect_to' => $request->getUri(),
                 'showLogoutButton' => false,
             ]
         );

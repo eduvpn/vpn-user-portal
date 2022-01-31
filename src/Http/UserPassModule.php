@@ -16,6 +16,7 @@ use Vpn\Portal\Json;
 use Vpn\Portal\TplInterface;
 use Vpn\Portal\Validator;
 
+// XXX can we merge this with Http/Auth/UserPassAuthModule?!
 class UserPassModule implements ServiceModuleInterface
 {
     protected TplInterface $tpl;
@@ -35,30 +36,31 @@ class UserPassModule implements ServiceModuleInterface
     public function init(ServiceInterface $service): void
     {
         $service->postBeforeAuth(
-            '/_form/auth/verify',
+            '/_user_pass_auth/verify',
             function (Request $request): Response {
-                $this->session->remove('_form_auth_user');
+                $this->session->remove('_user_pass_auth_user_id');
+                $this->session->remove('_user_pass_auth_permission_list');
 
                 $authUser = $request->requirePostParameter('userName', fn (string $s) => Validator::userId($s));
                 $authPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::userAuthPass($s));
-                $redirectTo = $request->requirePostParameter('_form_auth_redirect_to', fn (string $s) => Validator::matchesOrigin($request->getOrigin(), $s));
+                $redirectTo = $request->requirePostParameter('_user_pass_auth_redirect_to', fn (string $s) => Validator::matchesOrigin($request->getOrigin(), $s));
 
                 if (false === $userInfo = $this->credentialValidator->isValid($authUser, $authPass)) {
                     // invalid authentication
                     $responseBody = $this->tpl->render(
-                        'formAuthentication',
+                        'userPassAuth',
                         [
-                            '_form_auth_invalid_credentials' => true,
-                            '_form_auth_invalid_credentials_user' => $authUser,
-                            '_form_auth_redirect_to' => $redirectTo,
+                            '_user_pass_auth_invalid_credentials' => true,
+                            '_user_pass_auth_invalid_credentials_user' => $authUser,
+                            '_user_pass_auth_redirect_to' => $redirectTo,
                             'showLogoutButton' => false,
                         ]
                     );
 
                     return new HtmlResponse($responseBody);
                 }
-                $this->session->set('_form_auth_user', $userInfo->userId());
-                $this->session->set('_form_auth_permission_list', Json::encode($userInfo->permissionList()));
+                $this->session->set('_user_pass_auth_user_id', $userInfo->userId());
+                $this->session->set('_user_pass_auth_permission_list', Json::encode($userInfo->permissionList()));
 
                 return new RedirectResponse($redirectTo);
             }
