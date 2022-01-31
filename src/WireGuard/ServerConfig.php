@@ -21,6 +21,8 @@ class ServerConfig
 
     public function __construct(string $keyDir, int $wgPort)
     {
+        // make sure "keyDir" exists
+        FileIO::mkdir($keyDir);
         $this->keyDir = $keyDir;
         $this->wgPort = $wgPort;
     }
