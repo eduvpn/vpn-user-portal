@@ -54,4 +54,9 @@ class SeSession implements SessionInterface
     {
         $this->session->destroy();
     }
+
+    public function stop(): void
+    {
+        $this->session->stop();
+    }
 }

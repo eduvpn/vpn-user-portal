@@ -243,7 +243,9 @@ try {
     $service->addModule($oauthModule);
     $service->addModule(new LogoutModule($authModule, $sessionBackend));
 
-    $service->run($request)->send();
+    $htmlResponse = $service->run($request);
+    $sessionBackend->stop();
+    $htmlResponse->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());
     $response = new Response($e->getMessage(), ['Content-Type' => 'text/plain'], 500);
