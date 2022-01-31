@@ -28,7 +28,6 @@ class ConnectionManager
      */
     public const DO_NOT_DELETE = 1;
 
-    protected RandomInterface $random;
     protected DateTimeImmutable $dateTime;
     private Config $config;
     private Storage $storage;
@@ -41,7 +40,6 @@ class ConnectionManager
         $this->storage = $storage;
         $this->vpnDaemon = $vpnDaemon;
         $this->logger = $logger;
-        $this->random = new Random();
         $this->dateTime = Dt::get();
     }
 
@@ -192,7 +190,7 @@ class ConnectionManager
         }
 
         if ('openvpn' === $useProto && $profileConfig->oSupport()) {
-            $commonName = Base64::encode($this->random->get(32));
+            $commonName = Base64::encode($this->getRandomBytes());
             $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
             $this->storage->oCertAdd(
                 $userId,
@@ -307,6 +305,11 @@ class ConnectionManager
                 );
             }
         }
+    }
+
+    protected function getRandomBytes(): string
+    {
+        return random_bytes(32);
     }
 
     /**

@@ -23,7 +23,11 @@ class TestConnectionManager extends ConnectionManager
     public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage, LoggerInterface $logger)
     {
         parent::__construct($config, $vpnDaemon, $storage, $logger);
-        $this->random = new TestRandom();
         $this->dateTime = new DateTimeImmutable('2022-01-01T09:00:00+00:00');
+    }
+
+    protected function getRandomBytes(): string
+    {
+        return str_repeat("\x00", 32);
     }
 }
