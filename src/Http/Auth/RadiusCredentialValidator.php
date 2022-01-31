@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http\Auth;
 
 use RuntimeException;
+use Vpn\Portal\Http\Auth\Exception\CredentialValidatorException;
 use Vpn\Portal\Http\Auth\Exception\RadiusException;
 use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\LoggerInterface;
@@ -35,9 +36,9 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
     }
 
     /**
-     * @return false|\Vpn\Portal\Http\UserInfo
+     * @throws \Vpn\Portal\Http\Auth\Exception\CredentialValidatorException
      */
-    public function isValid(string $authUser, string $authPass)
+    public function validate(string $authUser, string $authPass): UserInfo
     {
         // add realm when requested
         if (null !== $radiusRealm = $this->radiusAuthConfig->radiusRealm()) {
@@ -85,7 +86,7 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
 
         if (RADIUS_ACCESS_ACCEPT !== $radiusResponse) {
             // most likely wrong authUser/authPass, not necessarily an error
-            return false;
+            throw new CredentialValidatorException('authentication not accepted');
         }
 
         $permissionList = [];

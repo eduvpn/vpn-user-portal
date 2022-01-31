@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
+use Vpn\Portal\Http\Auth\Exception\CredentialValidatorException;
 use Vpn\Portal\Http\HtmlResponse;
 use Vpn\Portal\Http\RedirectResponse;
 use Vpn\Portal\Http\Request;
@@ -47,8 +48,13 @@ class UserPassAuthModule extends AbstractAuthModule
                 $authPass = $request->requirePostParameter('userPass', fn (string $s) => Validator::userAuthPass($s));
                 $redirectTo = $request->requirePostParameter('_user_pass_auth_redirect_to', fn (string $s) => Validator::matchesOrigin($request->getOrigin(), $s));
 
-                if (false === $userInfo = $this->credentialValidator->isValid($authUser, $authPass)) {
-                    // invalid authentication
+                try {
+                    $userInfo = $this->credentialValidator->validate($authUser, $authPass);
+                    $this->session->set('_user_pass_auth_user_id', $userInfo->userId());
+                    $this->session->set('_user_pass_auth_permission_list', Json::encode($userInfo->permissionList()));
+
+                    return new RedirectResponse($redirectTo);
+                } catch (CredentialValidatorException $e) {
                     $responseBody = $this->tpl->render(
                         'userPassAuth',
                         [
@@ -61,10 +67,6 @@ class UserPassAuthModule extends AbstractAuthModule
 
                     return new HtmlResponse($responseBody);
                 }
-                $this->session->set('_user_pass_auth_user_id', $userInfo->userId());
-                $this->session->set('_user_pass_auth_permission_list', Json::encode($userInfo->permissionList()));
-
-                return new RedirectResponse($redirectTo);
             }
         );
     }

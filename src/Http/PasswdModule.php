@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http;
 
 use Vpn\Portal\Http\Auth\DbCredentialValidator;
+use Vpn\Portal\Http\Auth\Exception\CredentialValidatorException;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\Storage;
 use Vpn\Portal\TplInterface;
@@ -55,7 +56,9 @@ class PasswdModule implements ServiceModuleInterface
                 $newUserPass = $request->requirePostParameter('newUserPass', fn (string $s) => Validator::userPass($s));
                 $newUserPassConfirm = $request->requirePostParameter('newUserPassConfirm', fn (string $s) => Validator::userPass($s));
 
-                if (!$this->dbCredentialValidator->isValid($userInfo->userId(), $userPass)) {
+                try {
+                    $this->dbCredentialValidator->validate($userInfo->userId(), $userPass);
+                } catch (CredentialValidatorException $e) {
                     return new HtmlResponse(
                         $this->tpl->render(
                             'vpnPortalPasswd',

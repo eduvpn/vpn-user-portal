@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http\Auth;
 
 use Vpn\Portal\Exception\LdapClientException;
+use Vpn\Portal\Http\Auth\Exception\CredentialValidatorException;
+use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\LdapAuthConfig;
 use Vpn\Portal\LdapClient;
@@ -35,9 +37,9 @@ class LdapCredentialValidator implements CredentialValidatorInterface
     }
 
     /**
-     * @return false|\Vpn\Portal\Http\UserInfo
+     * @throws \Vpn\Portal\Http\Auth\Exception\CredentialValidatorException
      */
-    public function isValid(string $authUser, string $authPass)
+    public function validate(string $authUser, string $authPass): UserInfo
     {
         // add "realm" after user name if none is specified
         if (null !== $addRealm = $this->ldapAuthConfig->addRealm()) {
@@ -48,8 +50,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
 
         // get bind DN either from template, or from anonymous bind + search
         if (false === $bindDn = $this->getBindDn($authUser)) {
-            // unable to find a DN to bind with...
-            return false;
+            throw new CredentialValidatorException('unable to find a DN to bind with');
         }
 
         try {
@@ -81,7 +82,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
                 sprintf('unable to bind with DN "%s" (%s)', $bindDn, $e->getMessage())
             );
 
-            return false;
+            throw new CredentialValidatorException('unable to bind with DN');
         }
     }
 

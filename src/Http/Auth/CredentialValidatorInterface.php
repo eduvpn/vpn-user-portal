@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
+use Vpn\Portal\Http\UserInfo;
+
 interface CredentialValidatorInterface
 {
     /**
-     * @return false|\Vpn\Portal\Http\UserInfo
+     * @throws \Vpn\Portal\Http\Auth\Exception\CredentialValidatorException
      */
-    public function isValid(string $authUser, string $authPass);
+    public function validate(string $authUser, string $authPass): UserInfo;
 }

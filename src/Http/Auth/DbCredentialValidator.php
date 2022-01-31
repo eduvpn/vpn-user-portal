@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
+use Vpn\Portal\Http\Auth\Exception\CredentialValidatorException;
 use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\Storage;
 
@@ -24,19 +25,18 @@ class DbCredentialValidator implements CredentialValidatorInterface
     }
 
     /**
-     * @return false|\Vpn\Portal\Http\UserInfo
+     * @throws \Vpn\Portal\Http\Auth\Exception\CredentialValidatorException
      */
-    public function isValid(string $authUser, string $authPass)
+    public function validate(string $authUser, string $authPass): UserInfo
     {
         if (null === $passwordHash = $this->storage->localUserPasswordHash($authUser)) {
-            // no such user
-            return false;
+            throw new CredentialValidatorException('no such user');
         }
 
         if (password_verify($authPass, $passwordHash)) {
             return new UserInfo($authUser, []);
         }
 
-        return false;
+        throw new CredentialValidatorException('invalid password');
     }
 }
