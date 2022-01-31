@@ -48,8 +48,8 @@ try {
             $config,
             $storage,
             new ServerConfig(
-                new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data')),
-                new WireGuardServerConfig($baseDir, $config->wireGuardConfig()->listenPort()),
+                new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data/keys')),
+                new WireGuardServerConfig($baseDir.'/data/keys', $config->wireGuardConfig()->listenPort()),
             ),
             $logger
         )

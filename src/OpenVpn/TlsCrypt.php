@@ -20,6 +20,8 @@ class TlsCrypt
 
     public function __construct(string $keyDir)
     {
+        // make sure "keyDir" exists
+        FileIO::mkdir($keyDir);
         $this->keyDir = $keyDir;
     }
 

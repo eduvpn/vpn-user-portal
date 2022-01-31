@@ -53,7 +53,7 @@ try {
     $serverInfo = new ServerInfo(
         $baseDir.'/data',
         $ca,
-        new TlsCrypt($baseDir.'/data'),
+        new TlsCrypt($baseDir.'/data/keys'),
         $config->wireGuardConfig()->listenPort(),
         Signer::publicKeyFromSecretKey($oauthKey)
     );
