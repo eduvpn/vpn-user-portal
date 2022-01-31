@@ -13,9 +13,10 @@ namespace Vpn\Portal\Http;
 
 interface AuthModuleInterface
 {
+    public function init(ServiceInterface $service): void;
+
     public function userInfo(Request $request): ?UserInfo;
 
-    // XXX why ever return null?!
     public function startAuth(Request $request): ?Response;
 
     public function triggerLogout(Request $request): Response;

@@ -33,6 +33,7 @@ class PortalService extends Service implements ServiceInterface
     public function setAuthModule(AuthModuleInterface $authModule): void
     {
         $this->authModule = $authModule;
+        $this->authModule->init($this);
     }
 
     public function run(Request $request): Response

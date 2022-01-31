@@ -30,6 +30,7 @@ abstract class Service implements ServiceInterface
     public function __construct(AuthModuleInterface $authModule)
     {
         $this->authModule = $authModule;
+        $this->authModule->init($this);
     }
 
     public function addBeforeHook(HookInterface $beforeHook): void

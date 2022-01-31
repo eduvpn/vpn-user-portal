@@ -43,7 +43,6 @@ use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\SeCookie;
 use Vpn\Portal\Http\SeSession;
 use Vpn\Portal\Http\UpdateUserInfoHook;
-use Vpn\Portal\Http\UserPassModule;
 use Vpn\Portal\Http\VpnPortalModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\OAuth\ClientDb;
@@ -111,22 +110,12 @@ try {
 
     switch ($config->authModule()) {
         case 'DbAuthModule':
-            $authModule = new UserPassAuthModule($sessionBackend, $tpl);
-            $service->addModule(
-                new UserPassModule(
-                    new DbCredentialValidator($storage),
-                    $sessionBackend,
-                    $tpl
-                )
-            );
+            $dbCredentialStorage = new DbCredentialValidator($storage);
+            $authModule = new UserPassAuthModule($dbCredentialStorage, $sessionBackend, $tpl);
             // when using local database, users are allowed to change their own
             // password
             $service->addModule(
-                new PasswdModule(
-                    new DbCredentialValidator($storage),
-                    $tpl,
-                    $storage
-                )
+                new PasswdModule($dbCredentialStorage, $tpl, $storage)
             );
 
             break;
@@ -137,31 +126,25 @@ try {
             break;
 
         case 'LdapAuthModule':
-            $authModule = new UserPassAuthModule($sessionBackend, $tpl);
-            $service->addModule(
-                new UserPassModule(
-                    new LdapCredentialValidator(
-                        $config->ldapAuthConfig(),
-                        $logger
-                    ),
-                    $sessionBackend,
-                    $tpl
-                )
+            $authModule = new UserPassAuthModule(
+                new LdapCredentialValidator(
+                    $config->ldapAuthConfig(),
+                    $logger
+                ),
+                $sessionBackend,
+                $tpl
             );
 
             break;
 
         case 'RadiusAuthModule':
-            $authModule = new UserPassAuthModule($sessionBackend, $tpl);
-            $service->addModule(
-                new UserPassModule(
-                    new RadiusCredentialValidator(
-                        $logger,
-                        $config->radiusAuthConfig()
-                    ),
-                    $sessionBackend,
-                    $tpl
-                )
+            $authModule = new UserPassAuthModule(
+                new RadiusCredentialValidator(
+                    $logger,
+                    $config->radiusAuthConfig()
+                ),
+                $sessionBackend,
+                $tpl
             );
 
             break;

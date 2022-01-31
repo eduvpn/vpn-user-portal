@@ -15,10 +15,15 @@ use Vpn\Portal\Http\AuthModuleInterface;
 use Vpn\Portal\Http\RedirectResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
+use Vpn\Portal\Http\ServiceInterface;
 use Vpn\Portal\Http\UserInfo;
 
 abstract class AbstractAuthModule implements AuthModuleInterface
 {
+    public function init(ServiceInterface $service): void
+    {
+    }
+
     public function userInfo(Request $request): ?UserInfo
     {
         return null;
