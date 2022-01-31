@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
-use Vpn\Portal\Http\Exception\HttpException;
-use Vpn\Portal\Validator;
-
 /**
  * Protect against *Cross Site Request Forgery* (CSRF) for "POST" requests.
  *
@@ -32,17 +29,10 @@ class CsrfProtectionHook extends AbstractHook implements HookInterface
             return null;
         }
 
-        if (null !== $originHeader = $request->optionalHeader('HTTP_ORIGIN')) {
-            Validator::matchesOrigin($request->getOrigin(), $originHeader);
+        // we require the HTTP_REFERER to be set, if it is not this call
+        // throws a HttpException
+        $request->requireReferrer();
 
-            return null;
-        }
-        if (null !== $referrerHeader = $request->optionalHeader('HTTP_REFERER')) {
-            Validator::matchesOrigin($request->getOrigin(), $referrerHeader);
-
-            return null;
-        }
-
-        throw new HttpException('CSRF protection failed, no HTTP_ORIGIN or HTTP_REFERER header', 400);
+        return null;
     }
 }
