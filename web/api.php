@@ -51,7 +51,7 @@ try {
     );
     $service = new ApiService($bearerValidator);
     $serverInfo = new ServerInfo(
-        $baseDir.'/data',
+        $baseDir.'/data/keys',
         $ca,
         new TlsCrypt($baseDir.'/data/keys'),
         $config->wireGuardConfig()->listenPort(),

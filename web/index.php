@@ -190,11 +190,10 @@ try {
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $oauthKey = FileIO::read($baseDir.'/config/keys/oauth.key');
     $oauthSigner = new Signer($oauthKey);
-    $tlsCrypt = new TlsCrypt($baseDir.'/data/keys');
     $serverInfo = new ServerInfo(
-        $baseDir.'/data',
+        $baseDir.'/data/keys',
         $ca,
-        $tlsCrypt,
+        new TlsCrypt($baseDir.'/data/keys'),
         $config->wireGuardConfig()->listenPort(),
         Signer::publicKeyFromSecretKey($oauthKey)
     );
