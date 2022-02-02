@@ -159,7 +159,7 @@ try {
     }
 
     $service = new PortalService($authModule, $tpl);
-    $service->addBeforeHook(new CsrfProtectionHook());
+    $service->addHook(new CsrfProtectionHook());
 
     if ('DbAuthModule' === $config->authModule()) {
         $dbCredentialStorage = new DbCredentialValidator($storage);
@@ -172,11 +172,11 @@ try {
 
     if (null !== $accessPermissionList = $config->accessPermissionList()) {
         // hasAccess
-        $service->addBeforeHook(new AccessHook($accessPermissionList));
+        $service->addHook(new AccessHook($accessPermissionList));
     }
 
-    $service->addBeforeHook(new DisabledUserHook($storage));
-    $service->addBeforeHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule));
+    $service->addHook(new DisabledUserHook($storage));
+    $service->addHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule));
 
     // isAdmin
     $adminHook = new AdminHook(
@@ -185,7 +185,7 @@ try {
         $tpl
     );
 
-    $service->addBeforeHook($adminHook);
+    $service->addHook($adminHook);
     $oauthClientDb = new ClientDb();
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $oauthKey = FileIO::read($baseDir.'/config/keys/oauth.key');
