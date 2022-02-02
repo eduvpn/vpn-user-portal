@@ -109,11 +109,11 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $vpnProto = self::determineProto($profileConfig, $request->requirePostParameter('preferProto', fn (string $s) => Validator::vpnProto($s)));
                 if ('openvpn' === $vpnProto) {
-                    return $this->getOpenVpnConfig($request->getServerName(), $profileId, $userInfo->userId(), $displayName, $expiresAt, $preferTcp);
+                    return $this->getOpenVpnConfig($request->getServerName(), $profileConfig, $userInfo->userId(), $displayName, $expiresAt, $preferTcp);
                 }
 
                 if ('wireguard' === $vpnProto) {
-                    return $this->getWireGuardConfig($profileId, $userInfo->userId(), $displayName, $expiresAt);
+                    return $this->getWireGuardConfig($profileConfig, $userInfo->userId(), $displayName, $expiresAt);
                 }
 
                 throw new HttpException(sprintf('profile "%s" does not support protocol "%s"', $profileId, $vpnProto), 400);
@@ -228,12 +228,12 @@ class VpnPortalModule implements ServiceModuleInterface
         return $configList;
     }
 
-    private function getWireGuardConfig(string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
+    private function getWireGuardConfig(ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
     {
         $clientConfig = $this->connectionManager->connect(
             $this->serverInfo,
+            $profileConfig,
             $userId,
-            $profileId,
             'wireguard',
             $displayName,
             $expiresAt,
@@ -252,12 +252,13 @@ class VpnPortalModule implements ServiceModuleInterface
         );
     }
 
-    private function getOpenVpnConfig(string $serverName, string $profileId, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp): Response
+    // XXX do we really need serverName here? maybe use something from ServerInfo instead? or perhaps the portal hostname?
+    private function getOpenVpnConfig(string $serverName, ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp): Response
     {
         $clientConfig = $this->connectionManager->connect(
             $this->serverInfo,
+            $profileConfig,
             $userId,
-            $profileId,
             'openvpn',
             $displayName,
             $expiresAt,
@@ -269,7 +270,7 @@ class VpnPortalModule implements ServiceModuleInterface
         // special characters don't work in file names as NetworkManager
         // URL encodes the filename when searching for certificates
         // https://bugzilla.gnome.org/show_bug.cgi?id=795601
-        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, date('Ymd'), str_replace(' ', '_', $displayName));
+        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileConfig->profileId(), date('Ymd'), str_replace(' ', '_', $displayName));
 
         return new Response(
             $clientConfig->get(),

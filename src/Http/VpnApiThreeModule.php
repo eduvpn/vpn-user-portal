@@ -142,8 +142,8 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     // XXX connection manager can also override perhaps?!
                     $clientConfig = $this->connectionManager->connect(
                         $this->serverInfo,
+                        $profileConfig,
                         $accessToken->userId(),
-                        $profileConfig->profileId(),
                         $vpnProto,
                         $accessToken->clientId(),
                         $accessToken->authorizationExpiresAt(),

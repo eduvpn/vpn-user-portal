@@ -161,23 +161,18 @@ class ConnectionManager
         }
     }
 
-    public function connect(ServerInfo $serverInfo, string $userId, string $profileId, string $useProto, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $publicKey, ?string $authKey): ClientConfigInterface
+    public function connect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, string $useProto, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $publicKey, ?string $authKey): ClientConfigInterface
     {
-        if (!$this->config->hasProfile($profileId)) {
-            throw new ConnectionManagerException('profile "'.$profileId.'" does not exist');
-        }
-        $profileConfig = $this->config->profileConfig($profileId);
         $nodeNumber = $this->randomNodeNumber($profileConfig);
-
         if ('openvpn' === $useProto && $profileConfig->oSupport()) {
-            return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $profileId, $displayName, $expiresAt, $preferTcp, $authKey);
+            return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
         }
 
         if ('wireguard' === $useProto && $profileConfig->wSupport()) {
-            return $this->wConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $profileId, $displayName, $expiresAt, $publicKey, $authKey);
+            return $this->wConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $publicKey, $authKey);
         }
 
-        throw new ConnectionManagerException(sprintf('unsupported protocol "%s" for profile "%s"', $useProto, $profileId));
+        throw new ConnectionManagerException(sprintf('unsupported protocol "%s" for profile "%s"', $useProto, $profileConfig->profileId()));
     }
 
     public function disconnect(string $userId, string $profileId, string $connectionId, int $optionFlags = 0): void
@@ -256,7 +251,7 @@ class ConnectionManager
         throw new ConnectionManagerException('no VPN node available');
     }
 
-    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $profileId, string $displayName, DateTimeImmutable $expiresAt, ?string $publicKey, ?string $authKey): WireGuardClientConfig
+    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, ?string $publicKey, ?string $authKey): WireGuardClientConfig
     {
         // make sure the node registered their public key with us
         if (null === $serverPublicKey = $serverInfo->publicKey($nodeNumber)) {
@@ -274,12 +269,12 @@ class ConnectionManager
 
         // XXX we MUST make sure public_key is unique on this server!!!
         // the DB enforces this, but maybe a better error could be given?
-        $this->storage->wPeerAdd($userId, $nodeNumber, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
+        $this->storage->wPeerAdd($userId, $nodeNumber, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
         $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
-        $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
+        $this->storage->clientConnect($userId, $profileConfig->profileId(), 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
 
         $this->logger->info(
-            $this->logMessage('CONNECT', $userId, $profileId, $publicKey, $ipFour, $ipSix)
+            $this->logMessage('CONNECT', $userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix)
         );
 
         return new WireGuardClientConfig(
@@ -294,14 +289,14 @@ class ConnectionManager
         );
     }
 
-    private function oConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $profileId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $authKey): OpenVpnClientConfig
+    private function oConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $authKey): OpenVpnClientConfig
     {
         $commonName = Base64::encode($this->getRandomBytes());
         $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
         $this->storage->oCertAdd(
             $userId,
             $nodeNumber,
-            $profileId,
+            $profileConfig->profileId(),
             $commonName,
             $displayName,
             $this->dateTime,
