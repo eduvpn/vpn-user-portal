@@ -41,7 +41,17 @@ class AdminHook extends AbstractHook implements HookInterface
         $this->templateEngine = $templateEngine;
     }
 
-    public function isAdmin(UserInfo $userInfo): bool
+    public function afterAuth(Request $request, UserInfo &$userInfo): ?Response
+    {
+        if ($isAdmin = $this->isAdmin($userInfo)) {
+            $userInfo->setAdmin($isAdmin);
+            $this->templateEngine->addDefault('isAdmin', $isAdmin);
+        }
+
+        return null;
+    }
+
+    private function isAdmin(UserInfo $userInfo): bool
     {
         if (\in_array($userInfo->userId(), $this->adminUserIdList, true)) {
             return true;
@@ -54,13 +64,5 @@ class AdminHook extends AbstractHook implements HookInterface
         }
 
         return false;
-    }
-
-    public function afterAuth(Request $request, UserInfo &$userInfo): ?Response
-    {
-        // XXX modify userInfo instead
-        $this->templateEngine->addDefault('isAdmin', $this->isAdmin($userInfo));
-
-        return null;
     }
 }

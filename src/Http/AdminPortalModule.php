@@ -33,11 +33,10 @@ class AdminPortalModule implements ServiceModuleInterface
     private ConnectionManager $connectionManager;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
-    private AdminHook $adminHook;
     private ServerInfo $serverInfo;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, VpnDaemon $vpnDaemon, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, AdminHook $adminHook, ServerInfo $serverInfo)
+    public function __construct(Config $config, TplInterface $tpl, VpnDaemon $vpnDaemon, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo)
     {
         $this->config = $config;
         $this->tpl = $tpl;
@@ -45,7 +44,6 @@ class AdminPortalModule implements ServiceModuleInterface
         $this->connectionManager = $connectionManager;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
-        $this->adminHook = $adminHook;
         $this->serverInfo = $serverInfo;
         $this->dateTime = Dt::get();
     }
@@ -349,7 +347,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
     private function requireAdmin(UserInfo $userInfo): void
     {
-        if (!$this->adminHook->isAdmin($userInfo)) {
+        if (!$userInfo->isAdmin()) {
             throw new HttpException('user is not an administrator', 403);
         }
     }

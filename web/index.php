@@ -221,7 +221,6 @@ try {
         $connectionManager,
         $storage,
         $oauthStorage,
-        $adminHook,
         $serverInfo
     );
     $service->addModule($adminPortalModule);

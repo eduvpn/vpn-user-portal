@@ -15,6 +15,8 @@ class UserInfo
 {
     private string $userId;
 
+    private bool $isAdmin = false;
+
     /** @var array<string> */
     private array $permissionList;
 
@@ -30,6 +32,16 @@ class UserInfo
     public function userId(): string
     {
         return $this->userId;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->isAdmin;
+    }
+
+    public function setAdmin(bool $isAdmin): void
+    {
+        $this->isAdmin = $isAdmin;
     }
 
     /**
