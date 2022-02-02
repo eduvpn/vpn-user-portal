@@ -80,6 +80,7 @@ final class VpnApiThreeModuleTest extends TestCase
         $this->dateTime = new DateTimeImmutable('2022-01-01T09:00:00+00:00');
         $tmpDir = sprintf('%s/vpn-user-portal-%s', sys_get_temp_dir(), bin2hex(random_bytes(32)));
         mkdir($tmpDir);
+        copy(\dirname(__DIR__).'/data/tls-crypt-default-wg.key', $tmpDir.'/tls-crypt-default-wg.key');
         copy(\dirname(__DIR__).'/data/tls-crypt-default.key', $tmpDir.'/tls-crypt-default.key');
         copy(\dirname(__DIR__).'/data/wireguard.0.public.key', $tmpDir.'/wireguard.0.public.key');
 
@@ -338,7 +339,7 @@ final class VpnApiThreeModuleTest extends TestCase
 
         $httpResponse = $this->service->run($request);
         static::assertSame(406, $httpResponse->statusCode());
-        static::assertSame('{"error":"profile \"default-wg-only\" does not support OpenVPN"}', $httpResponse->responseBody());
+        static::assertSame('{"error":"profile does not support openvpn, but only openvpn is acceptable for client"}', $httpResponse->responseBody());
     }
 
     public function testNoMoreAvailableWireGuardIp(): void
@@ -362,10 +363,13 @@ final class VpnApiThreeModuleTest extends TestCase
         );
 
         $httpResponse = $this->service->run($request);
-        // as the profile also supports OpenVPN, it really should return an
-        // OpenVPN config...
-        // XXX implement this
-        static::assertSame(500, $httpResponse->statusCode());
-        static::assertSame('{"error":"/connect failed: no free IP address"}', $httpResponse->responseBody());
+
+        // as the IP addresses for WireGuard are depleted, we fall back to OpenVPN
+        static::assertSame(
+            trim(
+                file_get_contents(\dirname(__DIR__).'/data/expected_openvpn_client_config-default-wg.txt')
+            ),
+            $this->service->run($request)->responseBody()
+        );
     }
 }

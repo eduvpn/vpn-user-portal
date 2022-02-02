@@ -17,8 +17,8 @@ use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Exception\ConnectionManagerException;
+use Vpn\Portal\Exception\ProtocolException;
 use Vpn\Portal\Http\Exception\HttpException;
-use Vpn\Portal\ProfileConfig;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\Validator;
@@ -127,24 +127,14 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     $preferTcp = 'on' === $request->optionalPostParameter('tcp_only', fn (string $s) => Validator::onOrOff($s));
                     $preferTcp = $preferTcp || 'yes' === $request->optionalPostParameter('prefer_tcp', fn (string $s) => Validator::yesOrNo($s));
 
-                    $vpnProto = self::determineProto(
-                        $profileConfig,
-                        $request->optionalHeader('HTTP_ACCEPT'),
-                        $publicKey,
-                        $preferTcp
-                    );
-
-                    if ('wireguard' === $vpnProto && null === $publicKey) {
-                        throw new HttpException('missing "public_key" parameter', 400);
-                    }
-
-                    // XXX if proto is wireguard, but it fails, do openvpn if supported
-                    // XXX connection manager can also override perhaps?!
+                    // XXX if public_key is missing when VPN client supports
+                    // WireGuard that is a bug I guess, is the spec clear about
+                    // this?!
                     $clientConfig = $this->connectionManager->connect(
                         $this->serverInfo,
                         $profileConfig,
                         $accessToken->userId(),
-                        $vpnProto,
+                        self::parseMimeType($request->optionalHeader('HTTP_ACCEPT')),
                         $accessToken->clientId(),
                         $accessToken->authorizationExpiresAt(),
                         $preferTcp,
@@ -159,6 +149,8 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                             'Content-Type' => $clientConfig->contentType(),
                         ]
                     );
+                } catch (ProtocolException $e) {
+                    throw new HttpException($e->getMessage(), 406);
                 } catch (ConnectionManagerException $e) {
                     throw new HttpException(sprintf('/connect failed: %s', $e->getMessage()), 500);
                 }
@@ -180,10 +172,14 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
      * mime-type we recognize, otherwise we assume it is garbage and consider
      * it as "not sent".
      *
-     * @return array{0:bool,1:bool}
+     * @return array{wireguard:bool,openvpn:bool}
      */
-    private static function parseMimeType(string $httpAccept): array
+    private static function parseMimeType(?string $httpAccept): array
     {
+        if (null === $httpAccept) {
+            return ['wireguard' => true, 'openvpn' => true];
+        }
+
         $oSupport = false;
         $wSupport = false;
         $takeSerious = false;
@@ -201,75 +197,9 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             }
         }
         if (false === $takeSerious) {
-            return [true, true];
+            return ['wireguard' => true, 'openvpn' => true];
         }
 
-        return [$oSupport, $wSupport];
-    }
-
-    private static function determineProto(ProfileConfig $profileConfig, ?string $httpAccept, ?string $publicKey, bool $preferTcp): string
-    {
-        // figure out which protocols the client supports, if the server also
-        // supports that one, go with it
-        if (null !== $httpAccept) {
-            [$oSupport, $wSupport] = self::parseMimeType($httpAccept);
-            if ($oSupport && false === $wSupport) {
-                if ($profileConfig->oSupport()) {
-                    return 'openvpn';
-                }
-
-                throw new HttpException(sprintf('profile "%s" does not support OpenVPN', $profileConfig->profileId()), 406);
-            }
-
-            if ($wSupport && false === $oSupport) {
-                if ($profileConfig->wSupport()) {
-                    return 'wireguard';
-                }
-
-                throw new HttpException(sprintf('profile "%s" does not support WireGuard', $profileConfig->profileId()), 406);
-            }
-
-            if (false === $oSupport && false === $wSupport) {
-                throw new HttpException('client does not support OpenVPN or WireGuard', 406);
-            }
-        }
-
-        // At this point, the client does not *explicitly* specify their
-        // supported protocols, so we assume both are supported for now...
-
-        // Profile only supports OpenVPN
-        if ($profileConfig->oSupport() && !$profileConfig->wSupport()) {
-            return 'openvpn';
-        }
-
-        // Profile only supports WireGuard
-        if (!$profileConfig->oSupport() && $profileConfig->wSupport()) {
-            return 'wireguard';
-        }
-
-        // Profile supports OpenVPN & WireGuard
-
-        // VPN client prefers connecting over TCP
-        if ($preferTcp) {
-            // but this has only meaning if there are actually TCP ports to
-            // connect to...
-            if (0 !== \count($profileConfig->oExposedTcpPortList()) || 0 !== \count($profileConfig->oTcpPortList())) {
-                return 'openvpn';
-            }
-        }
-
-        // Profile prefers OpenVPN
-        if ('openvpn' === $profileConfig->preferredProto()) {
-            return 'openvpn';
-        }
-
-        // VPN client provides a WireGuard Public Key, server prefers WireGuard
-        if (null !== $publicKey) {
-            return 'wireguard';
-        }
-
-        // Server prefers WireGuard, but VPN client does not provide a
-        // WireGuard Public Key, so use OpenVPN...
-        return 'openvpn';
+        return ['wireguard' => $wSupport, 'openvpn' => $oSupport];
     }
 }

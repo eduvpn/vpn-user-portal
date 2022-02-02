@@ -1,0 +1,46 @@
+# Profile: Default (Prefer WireGuard) (default-wg)
+# Expires: 2022-04-01T09:00:00+00:00
+
+dev tun
+client
+nobind
+remote-cert-tls server
+verb 3
+server-poll-timeout 10
+tls-version-min 1.3
+data-ciphers AES-256-GCM:CHACHA20-POLY1305
+reneg-sec 0
+<ca>
+---CA---
+</ca>
+<cert>
+---CLIENT CERT---
+</cert>
+<key>
+---CLIENT KEY---
+</key>
+<tls-crypt>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+68aa5e93ad89007565bf0fa2cc09b44f
+daae4393a2e47c1493b87812f9a3e0ae
+ef02bf89ff694576b705bc5f48de3f3b
+37d977ecdd429b9ab45657174e600aca
+2e4ba1727ac9bd955cda932f5a108b44
+927c1235361af3aabe338f932ca6ded2
+856bda61ccc17eb39b0bb519a43dbb1f
+a274cd2a2686062f5e81ecd9740ec381
+11cb68920135abd98a9904a3413f2302
+350f3fd9dd03e297c70faf9e99892db8
+569f9f8d6cc3c4834c0d570e1d9df083
+8c4059d9041877f80a1c26df7871a139
+495962f5e5f71e58ce6723fe989350cc
+137f496c7d3e85cbd6bfc732a3f04c02
+ff67a198671d91788b1c9e5db346d78c
+3250e63975aacff8b4690dbc49f56e8b
+-----END OpenVPN Static key V1-----
+</tls-crypt>
+remote vpn.example 1194 udp
+remote vpn.example 1194 tcp

@@ -234,7 +234,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $this->serverInfo,
             $profileConfig,
             $userId,
-            'wireguard',
+            ['wireguard' => true, 'openvpn' => false], // XXX should we really be this strict here? then it is no longer a preference!
             $displayName,
             $expiresAt,
             false,
@@ -259,7 +259,7 @@ class VpnPortalModule implements ServiceModuleInterface
             $this->serverInfo,
             $profileConfig,
             $userId,
-            'openvpn',
+            ['wireguard' => false, 'openvpn' => true],  // XXX should we really be this strict here? then it is no longer a preference!
             $displayName,
             $expiresAt,
             $preferTcp,

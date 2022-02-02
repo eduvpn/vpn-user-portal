@@ -161,18 +161,38 @@ class ConnectionManager
         }
     }
 
-    public function connect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, string $useProto, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $publicKey, ?string $authKey): ClientConfigInterface
+    /**
+     * @param array{wireguard:bool,openvpn:bool} $clientProtoSupport
+     *
+     * @throws \Vpn\Portal\Exception\ProtocolException
+     * @throws \Vpn\Portal\Exception\ConnectionManagerException
+     */
+    public function connect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, array $clientProtoSupport, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $publicKey, ?string $authKey): ClientConfigInterface
     {
+        $useProto = Protocol::determine($profileConfig, $clientProtoSupport, $publicKey, $preferTcp);
         $nodeNumber = $this->randomNodeNumber($profileConfig);
-        if ('openvpn' === $useProto && $profileConfig->oSupport()) {
-            return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
+
+        switch ($useProto) {
+            case 'openvpn':
+                return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
+
+            case 'wireguard':
+                if (null !== $wireGuardClientConfig = $this->wConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $publicKey, $authKey)) {
+                    return $wireGuardClientConfig;
+                }
+
+                // we were unable to find a free IP address for WireGuard,
+                // fallback to OpenVPN if client & protocol support it
+                if ($clientProtoSupport['openvpn'] && $profileConfig->oSupport()) {
+                    return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
+                }
+
+                // no break
+            default:
+                throw new ConnectionManagerException(sprintf('unexpected protocol "%s"', $useProto));
         }
 
-        if ('wireguard' === $useProto && $profileConfig->wSupport()) {
-            return $this->wConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $publicKey, $authKey);
-        }
-
-        throw new ConnectionManagerException(sprintf('unsupported protocol "%s" for profile "%s"', $useProto, $profileConfig->profileId()));
+        // if this throws exception, try the other one...
     }
 
     public function disconnect(string $userId, string $profileId, string $connectionId, int $optionFlags = 0): void
@@ -251,21 +271,33 @@ class ConnectionManager
         throw new ConnectionManagerException('no VPN node available');
     }
 
-    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, ?string $publicKey, ?string $authKey): WireGuardClientConfig
+    /**
+     * @throws \Vpn\Portal\Exception\ConnectionManagerException
+     */
+    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, ?string $publicKey, ?string $authKey): ?WireGuardClientConfig
     {
+        if (!$profileConfig->wSupport()) {
+            throw new ConnectionManagerException('profile does not support wireguard');
+        }
+
         // make sure the node registered their public key with us
         if (null === $serverPublicKey = $serverInfo->publicKey($nodeNumber)) {
             throw new ConnectionManagerException(sprintf('node "%d" did not yet register their WireGuard public key', $nodeNumber));
         }
+
+        if (null === $ipInfo = $this->getIpAddress($profileConfig, $nodeNumber)) {
+            // unable to find a free IP address, give up on this connection
+            // attempt...
+            return null;
+        }
+        $ipFour = $ipInfo['ip_four'];
+        $ipSix = $ipInfo['ip_six'];
 
         $secretKey = null;
         if (null === $publicKey) {
             $secretKey = Key::generate();
             $publicKey = Key::publicKeyFromSecretKey($secretKey);
         }
-
-        // XXX this call can throw a ConnectionManagerException!
-        [$ipFour, $ipSix] = $this->getIpAddress($profileConfig, $nodeNumber);
 
         // XXX we MUST make sure public_key is unique on this server!!!
         // the DB enforces this, but maybe a better error could be given?
@@ -291,6 +323,9 @@ class ConnectionManager
 
     private function oConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $authKey): OpenVpnClientConfig
     {
+        if (!$profileConfig->oSupport()) {
+            throw new ConnectionManagerException('profile does not support openvpn');
+        }
         $commonName = Base64::encode($this->getRandomBytes());
         $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
         $this->storage->oCertAdd(
@@ -317,9 +352,9 @@ class ConnectionManager
     }
 
     /**
-     * @return array{0:string,1:string}
+     * @return ?array{ip_four:string,ip_six:string}
      */
-    private function getIpAddress(ProfileConfig $profileConfig, int $nodeNumber): array
+    private function getIpAddress(ProfileConfig $profileConfig, int $nodeNumber): ?array
     {
         // make a list of all allocated IPv4 addresses (the IPv6 address is
         // based on the IPv4 address)
@@ -328,11 +363,11 @@ class ConnectionManager
         $ipSixInRangeList = $profileConfig->wRangeSix($nodeNumber)->clientIpListSix(\count($ipFourInRangeList));
         foreach ($ipFourInRangeList as $k => $ipFourInRange) {
             if (!\in_array($ipFourInRange, $allocatedIpFourList, true)) {
-                return [$ipFourInRange, $ipSixInRangeList[$k]];
+                return ['ip_four' => $ipFourInRange, 'ip_six' => $ipSixInRangeList[$k]];
             }
         }
 
-        throw new ConnectionManagerException('no free IP address');
+        return null;
     }
 
     /**

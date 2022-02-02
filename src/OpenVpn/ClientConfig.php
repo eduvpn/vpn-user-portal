@@ -45,8 +45,6 @@ class ClientConfig implements ClientConfigInterface
     }
 
     /**
-     * XXX should this thing throw clientconfigexception? or the constructor?
-     *
      * @throws \Vpn\Portal\OpenVpn\Exception\ClientConfigException
      */
     public function get(): string
