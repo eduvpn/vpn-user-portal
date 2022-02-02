@@ -92,7 +92,6 @@ class Tpl implements TplInterface
 
     public function clientIdToDisplayName(string $clientId): string
     {
-        // XXX this should probably not be here...
         $clientDb = new ClientDb();
         if (null === $clientInfo = $clientDb->get($clientId)) {
             return $this->e($clientId);
