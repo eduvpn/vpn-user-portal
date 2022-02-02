@@ -190,6 +190,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         $mimeTypeList = explode(',', $httpAccept);
         foreach ($mimeTypeList as $mimeType) {
+            // XXX do we need to trim mimeType?
             if ('application/x-openvpn-profile' === $mimeType) {
                 $oSupport = true;
                 $takeSerious = true;
@@ -233,12 +234,15 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             }
         }
 
-        // only supports OpenVPN
+        // At this point, the client does not *explicitly* specify their
+        // supported protocols, so we assume both are supported for now...
+
+        // Profile only supports OpenVPN
         if ($profileConfig->oSupport() && !$profileConfig->wSupport()) {
             return 'openvpn';
         }
 
-        // only supports WireGuard
+        // Profile only supports WireGuard
         if (!$profileConfig->oSupport() && $profileConfig->wSupport()) {
             return 'wireguard';
         }
