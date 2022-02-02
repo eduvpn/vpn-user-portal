@@ -167,27 +167,7 @@ class ConnectionManager
             throw new ConnectionManagerException('profile "'.$profileId.'" does not exist');
         }
         $profileConfig = $this->config->profileConfig($profileId);
-
-        // try to find a usable node to connect to, loop over all of them in a
-        // random order until we find one that responds, this algorithm can use
-        // some tweaking, e.g. consider the load of a node instead of just
-        // checking whether it is up
-        $nodeNumber = null;
-        $nodeList = range(0, $profileConfig->nodeCount() - 1);
-        shuffle($nodeList);
-        foreach ($nodeList as $i) {
-            if (null !== $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($i))) {
-                $nodeNumber = $i;
-
-                break;
-            }
-            $this->logger->error(sprintf('VPN node "%d" (%s) is not available', $i, $profileConfig->nodeUrl($i)));
-        }
-        if (null === $nodeNumber) {
-            $this->logger->error('no VPN node available');
-
-            throw new ConnectionManagerException('no VPN node available');
-        }
+        $nodeNumber = $this->randomNodeNumber($profileConfig);
 
         if ('openvpn' === $useProto && $profileConfig->oSupport()) {
             return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $profileId, $displayName, $expiresAt, $preferTcp, $authKey);
@@ -253,6 +233,27 @@ class ConnectionManager
     protected function getRandomBytes(): string
     {
         return random_bytes(32);
+    }
+
+    /**
+     * Try to find a usable node to connect to, loop over all of them in a
+     * random order until we find one that responds. This algorithm can use
+     * some tweaking, e.g. consider the load of a node instead of just checking
+     * whether it is up...
+     */
+    private function randomNodeNumber(ProfileConfig $profileConfig): int
+    {
+        $nodeList = range(0, $profileConfig->nodeCount() - 1);
+        shuffle($nodeList);
+        foreach ($nodeList as $nodeNumber) {
+            if (null !== $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($nodeNumber))) {
+                return $nodeNumber;
+            }
+            $this->logger->error(sprintf('VPN node "%d" running at (%s) is not available', $nodeNumber, $profileConfig->nodeUrl($nodeNumber)));
+        }
+        $this->logger->error('no VPN node available');
+
+        throw new ConnectionManagerException('no VPN node available');
     }
 
     private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $profileId, string $displayName, DateTimeImmutable $expiresAt, ?string $publicKey, ?string $authKey): WireGuardClientConfig
