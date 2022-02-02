@@ -25,7 +25,7 @@ abstract class Service implements ServiceInterface
     protected array $routeList = [];
 
     /** @var array<HookInterface> */
-    protected array $beforeHookList = [];
+    protected array $hookList = [];
 
     public function __construct(AuthModuleInterface $authModule)
     {
@@ -33,9 +33,9 @@ abstract class Service implements ServiceInterface
         $this->authModule->init($this);
     }
 
-    public function addBeforeHook(HookInterface $beforeHook): void
+    public function addHook(HookInterface $serviceHook): void
     {
-        $this->beforeHookList[] = $beforeHook;
+        $this->hookList[] = $serviceHook;
     }
 
     /**
@@ -69,8 +69,8 @@ abstract class Service implements ServiceInterface
 
     public function run(Request $request): Response
     {
-        foreach ($this->beforeHookList as $beforeHook) {
-            $hookResponse = $beforeHook->beforeAuth($request);
+        foreach ($this->hookList as $serviceHook) {
+            $hookResponse = $serviceHook->beforeAuth($request);
             // if we get back a Response object, return it immediately
             if ($hookResponse instanceof Response) {
                 return $hookResponse;
@@ -96,8 +96,8 @@ abstract class Service implements ServiceInterface
             throw new HttpException('unable to authenticate user', 401);
         }
 
-        foreach ($this->beforeHookList as $beforeHook) {
-            $hookResponse = $beforeHook->afterAuth($request, $userInfo);
+        foreach ($this->hookList as $serviceHook) {
+            $hookResponse = $serviceHook->afterAuth($request, $userInfo);
             // if we get back a Response object, return it immediately
             if ($hookResponse instanceof Response) {
                 return $hookResponse;
