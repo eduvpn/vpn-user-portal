@@ -190,68 +190,11 @@ class ConnectionManager
         }
 
         if ('openvpn' === $useProto && $profileConfig->oSupport()) {
-            $commonName = Base64::encode($this->getRandomBytes());
-            $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
-            $this->storage->oCertAdd(
-                $userId,
-                $nodeNumber,
-                $profileId,
-                $commonName,
-                $displayName,
-                $this->dateTime,
-                $expiresAt,
-                $authKey
-            );
-
-            // this thing can throw an ClientConfigException!
-            return new OpenVpnClientConfig(
-                $nodeNumber,
-                $profileConfig,
-                $serverInfo->ca()->caCert(),
-                $serverInfo->tlsCrypt(),
-                $certInfo,
-                $preferTcp,
-                $expiresAt
-            );
+            return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $profileId, $displayName, $expiresAt, $preferTcp, $authKey);
         }
 
         if ('wireguard' === $useProto && $profileConfig->wSupport()) {
-            // WireGuard
-
-            // make sure the node registered their public key with us
-            if (null === $serverPublicKey = $serverInfo->publicKey($nodeNumber)) {
-                throw new ConnectionManagerException(sprintf('node "%d" did not yet register their WireGuard public key', $nodeNumber));
-            }
-
-            $secretKey = null;
-            if (null === $publicKey) {
-                $secretKey = Key::generate();
-                $publicKey = Key::publicKeyFromSecretKey($secretKey);
-            }
-
-            // XXX this call can throw a ConnectionManagerException!
-            [$ipFour, $ipSix] = $this->getIpAddress($profileConfig, $nodeNumber);
-
-            // XXX we MUST make sure public_key is unique on this server!!!
-            // the DB enforces this, but maybe a better error could be given?
-            $this->storage->wPeerAdd($userId, $nodeNumber, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
-            $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
-            $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
-
-            $this->logger->info(
-                $this->logMessage('CONNECT', $userId, $profileId, $publicKey, $ipFour, $ipSix)
-            );
-
-            return new WireGuardClientConfig(
-                $nodeNumber,
-                $profileConfig,
-                $secretKey,
-                $ipFour,
-                $ipSix,
-                $serverPublicKey,
-                $this->config->wireGuardConfig()->listenPort(),
-                $expiresAt
-            );
+            return $this->wConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $profileId, $displayName, $expiresAt, $publicKey, $authKey);
         }
 
         throw new ConnectionManagerException(sprintf('unsupported protocol "%s" for profile "%s"', $useProto, $profileId));
@@ -310,6 +253,71 @@ class ConnectionManager
     protected function getRandomBytes(): string
     {
         return random_bytes(32);
+    }
+
+    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $profileId, string $displayName, DateTimeImmutable $expiresAt, ?string $publicKey, ?string $authKey): WireGuardClientConfig
+    {
+        // make sure the node registered their public key with us
+        if (null === $serverPublicKey = $serverInfo->publicKey($nodeNumber)) {
+            throw new ConnectionManagerException(sprintf('node "%d" did not yet register their WireGuard public key', $nodeNumber));
+        }
+
+        $secretKey = null;
+        if (null === $publicKey) {
+            $secretKey = Key::generate();
+            $publicKey = Key::publicKeyFromSecretKey($secretKey);
+        }
+
+        // XXX this call can throw a ConnectionManagerException!
+        [$ipFour, $ipSix] = $this->getIpAddress($profileConfig, $nodeNumber);
+
+        // XXX we MUST make sure public_key is unique on this server!!!
+        // the DB enforces this, but maybe a better error could be given?
+        $this->storage->wPeerAdd($userId, $nodeNumber, $profileId, $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
+        $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
+        $this->storage->clientConnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
+
+        $this->logger->info(
+            $this->logMessage('CONNECT', $userId, $profileId, $publicKey, $ipFour, $ipSix)
+        );
+
+        return new WireGuardClientConfig(
+            $nodeNumber,
+            $profileConfig,
+            $secretKey,
+            $ipFour,
+            $ipSix,
+            $serverPublicKey,
+            $this->config->wireGuardConfig()->listenPort(),
+            $expiresAt
+        );
+    }
+
+    private function oConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $profileId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $authKey): OpenVpnClientConfig
+    {
+        $commonName = Base64::encode($this->getRandomBytes());
+        $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
+        $this->storage->oCertAdd(
+            $userId,
+            $nodeNumber,
+            $profileId,
+            $commonName,
+            $displayName,
+            $this->dateTime,
+            $expiresAt,
+            $authKey
+        );
+
+        // this thing can throw an ClientConfigException!
+        return new OpenVpnClientConfig(
+            $nodeNumber,
+            $profileConfig,
+            $serverInfo->ca()->caCert(),
+            $serverInfo->tlsCrypt(),
+            $certInfo,
+            $preferTcp,
+            $expiresAt
+        );
     }
 
     /**
