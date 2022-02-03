@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal;
 
 use DateTimeImmutable;
+use RangeException;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
@@ -187,12 +188,11 @@ class ConnectionManager
                     return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
                 }
 
-                // no break
-            default:
-                throw new ConnectionManagerException(sprintf('unexpected protocol "%s"', $useProto));
-        }
+                throw new ConnectionManagerException('unable to connect using wireguard, openvpn fallback not possible');
 
-        // if this throws exception, try the other one...
+            default:
+                throw new RangeException('invalid protocol');
+        }
     }
 
     public function disconnect(string $userId, string $profileId, string $connectionId, int $optionFlags = 0): void
