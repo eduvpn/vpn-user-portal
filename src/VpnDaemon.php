@@ -20,9 +20,6 @@ use Vpn\Portal\HttpClient\HttpClientRequest;
  * easier to use from PHP. Also implements a simple cache for the wPeerList and
  * oConnectionList to prevent the need to query the same node multiple times in
  * case of multi profile setups.
- *
- * XXX should the nodeUrl parameter be needed on all methods or part of
- * the constructor?
  */
 class VpnDaemon
 {
@@ -78,7 +75,6 @@ class VpnDaemon
         }
     }
 
-    // XXX think about adding multiple peers in one call... maybe use JSON content type instead of form encoded?
     public function wPeerAdd(string $nodeUrl, string $publicKey, string $ipFour, string $ipSix): void
     {
         try {
@@ -151,7 +147,6 @@ class VpnDaemon
         }
     }
 
-    // XXX support array for commonName is probably better!
     public function oDisconnectClient(string $nodeUrl, string $commonName): void
     {
         try {
