@@ -129,7 +129,7 @@ class Storage
     /**
      * @return array<string>
      */
-    public function wgGetAllocatedIpFourAddresses(): array
+    public function wgGetAllocatedIpFourAddresses(string $profileId, int $nodeNumber): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -137,8 +137,14 @@ class Storage
                     ip_four
                 FROM
                     wg_peers
+                WHERE
+                    profile_id = :profile_id
+                AND
+                    node_number = :node_number
                 SQL
         );
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->bindValue(':node_number', $nodeNumber, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
