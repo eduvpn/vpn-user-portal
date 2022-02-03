@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.4.2 (...)
-- small fix for APIv3 with multi value `Accept` header
+- small fix for APIv3 with multi value `Accept` header [#63](https://todo.sr.ht/~eduvpn/server/63)
 
 ## 2.4.1 (2022-01-20)
 - update APIv3 support
