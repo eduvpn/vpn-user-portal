@@ -1339,19 +1339,22 @@ class Storage
      */
     private static function permissionListToString(array $permissionList): string
     {
-        // XXX we MUST make sure permissionList does not ever contain a "|"
-        return implode('|', $permissionList);
+        return Json::encode($permissionList);
     }
 
     /**
      * @return array<string>
      */
-    private static function stringToPermissionList(string $string): array
+    private static function stringToPermissionList(string $encodedPermissionList): array
     {
-        if ('' === $string) {
-            return [];
+        $permissionList = [];
+        foreach (Json::decode($encodedPermissionList) as $permission) {
+            if (!\is_string($permission)) {
+                continue;
+            }
+            $permissionList[] = $permission;
         }
 
-        return explode('|', $string);
+        return $permissionList;
     }
 }
