@@ -14,16 +14,18 @@ namespace Vpn\Portal\Http;
 use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
+use Vpn\Portal\ClientConfigInterface;
 use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\HttpException;
-use Vpn\Portal\ProfileConfig;
+use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\Tpl;
 use Vpn\Portal\TplInterface;
 use Vpn\Portal\Validator;
+use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -107,16 +109,20 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileConfig = $this->config->profileConfig($profileId);
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
 
-                $vpnProto = self::determineProto($profileConfig, $request->requirePostParameter('preferProto', fn (string $s) => Validator::vpnProto($s)));
-                if ('openvpn' === $vpnProto) {
-                    return $this->getOpenVpnConfig($request->getServerName(), $profileConfig, $userInfo->userId(), $displayName, $expiresAt, $preferTcp);
-                }
+                $clientProtoSupport = self::clientProtoSupport($request->requirePostParameter('useProto', fn (string $s) => Validator::vpnProto($s)));
+                $clientConfig = $this->connectionManager->connect(
+                    $this->serverInfo,
+                    $profileConfig,
+                    $userInfo->userId(),
+                    $clientProtoSupport,
+                    $displayName,
+                    $expiresAt,
+                    $preferTcp,
+                    null,
+                    null
+                );
 
-                if ('wireguard' === $vpnProto) {
-                    return $this->getWireGuardConfig($profileConfig, $userInfo->userId(), $displayName, $expiresAt);
-                }
-
-                throw new HttpException(sprintf('profile "%s" does not support protocol "%s"', $profileId, $vpnProto), 400);
+                return self::clientConfigResponse($clientConfig, $request->getServerName(), $profileId, $displayName);
             }
         );
 
@@ -228,57 +234,35 @@ class VpnPortalModule implements ServiceModuleInterface
         return $configList;
     }
 
-    private function getWireGuardConfig(ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt): Response
+    private function clientConfigResponse(ClientConfigInterface $clientConfig, string $serverName, string $profileId, string $displayName): Response
     {
-        $clientConfig = $this->connectionManager->connect(
-            $this->serverInfo,
-            $profileConfig,
-            $userId,
-            ['wireguard' => true, 'openvpn' => false], // XXX should we really be this strict here? then it is no longer a preference!
-            $displayName,
-            $expiresAt,
-            false,
-            null,
-            null
-        );
+        if ($clientConfig instanceof WireGuardClientConfig) {
+            return new HtmlResponse(
+                $this->tpl->render(
+                    'vpnPortalWgConfig',
+                    [
+                        'wireGuardClientConfig' => $clientConfig,
+                    ]
+                )
+            );
+        }
 
-        return new HtmlResponse(
-            $this->tpl->render(
-                'vpnPortalWgConfig',
+        if ($clientConfig instanceof OpenVpnClientConfig) {
+            // special characters don't work in file names as NetworkManager
+            // URL encodes the filename when searching for certificates
+            // https://bugzilla.gnome.org/show_bug.cgi?id=795601
+            $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileId, $this->dateTime->format('Ymd'), str_replace(' ', '_', $displayName));
+
+            return new Response(
+                $clientConfig->get(),
                 [
-                    'wireGuardClientConfig' => $clientConfig,
+                    'Content-Type' => $clientConfig->contentType(),
+                    'Content-Disposition' => sprintf('attachment; filename="%s.ovpn"', $clientConfigFile),
                 ]
-            )
-        );
-    }
+            );
+        }
 
-    // XXX do we really need serverName here? maybe use something from ServerInfo instead? or perhaps the portal hostname?
-    private function getOpenVpnConfig(string $serverName, ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp): Response
-    {
-        $clientConfig = $this->connectionManager->connect(
-            $this->serverInfo,
-            $profileConfig,
-            $userId,
-            ['wireguard' => false, 'openvpn' => true],  // XXX should we really be this strict here? then it is no longer a preference!
-            $displayName,
-            $expiresAt,
-            $preferTcp,
-            null,
-            null
-        );
-
-        // special characters don't work in file names as NetworkManager
-        // URL encodes the filename when searching for certificates
-        // https://bugzilla.gnome.org/show_bug.cgi?id=795601
-        $clientConfigFile = sprintf('%s_%s_%s_%s', $serverName, $profileConfig->profileId(), date('Ymd'), str_replace(' ', '_', $displayName));
-
-        return new Response(
-            $clientConfig->get(),
-            [
-                'Content-Type' => $clientConfig->contentType(),
-                'Content-Disposition' => sprintf('attachment; filename="%s.ovpn"', $clientConfigFile),
-            ]
-        );
+        throw new HttpException('unsupported client config format', 500);
     }
 
     /**
@@ -321,18 +305,17 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * Determine the VPN protocol that will be used, based on the user's
-     * preference (if possible).
+     * @return array{wireguard:bool,openvpn:bool}
      */
-    private static function determineProto(ProfileConfig $profileConfig, string $preferProto): string
+    private static function clientProtoSupport(string $useProto): array
     {
-        if ('openvpn' === $preferProto && $profileConfig->oSupport()) {
-            return 'openvpn';
+        if ('openvpn' === $useProto) {
+            return ['wireguard' => false, 'openvpn' => true];
         }
-        if ('wireguard' === $preferProto && $profileConfig->wSupport()) {
-            return 'wireguard';
+        if ('wireguard' === $useProto) {
+            return ['wireguard' => true, 'openvpn' => false];
         }
 
-        return $profileConfig->preferredProto();
+        return ['wireguard' => true, 'openvpn' => true];
     }
 }

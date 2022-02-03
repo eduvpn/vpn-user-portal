@@ -44,9 +44,9 @@
     <fieldset>
         <details>
             <summary><?=$this->t('Advanced'); ?></summary>
-            <label for="preferProto"><?=$this->t('Preferred Protocol'); ?></label>
-            <select name="preferProto" id="preferProto">
-                <option value="default" selected><?=$this->t('Default'); ?></option>
+            <label for="useProto"><?=$this->t('Use Protocol'); ?></label>
+            <select name="useProto" id="useProto">
+                <option value="default" selected><?=$this->t('Profile Default'); ?></option>
                 <option value="openvpn"><?=$this->t('OpenVPN'); ?></option>
                 <option value="wireguard"><?=$this->t('WireGuard'); ?></option>
             </select>
