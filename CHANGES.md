@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.4.2 (...)
+- small fix for APIv3 with multi value `Accept` header
+
 ## 2.4.1 (2022-01-20)
 - update APIv3 support
   - 404 HTTP response code when profile is missing (`/connect`)

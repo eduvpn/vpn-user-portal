@@ -483,6 +483,7 @@ class VpnApiModule implements ServiceModuleInterface
         $takeSerious = false;
         $mimeTypeList = explode(',', $httpAccept);
         foreach ($mimeTypeList as $mimeType) {
+            $mimeType = trim($mimeType);
             if ('application/x-openvpn-profile' === $mimeType) {
                 $oSupport = true;
                 $takeSerious = true;
