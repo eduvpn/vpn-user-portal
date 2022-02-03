@@ -248,7 +248,7 @@
             "dist": {
                 "type": "path",
                 "url": "../vpn-lib-common",
-                "reference": "961db2cc052aecb62c2c15e579c572454f0345df"
+                "reference": "2f70c6f863546c9ee87521a81bd1e24b729f1f06"
             },
             "require": {
                 "ext-curl": "*",
@@ -262,7 +262,7 @@
                 "ircmaxell/password-compat": "^1",
                 "paragonie/constant_time_encoding": "^1|^2",
                 "paragonie/random_compat": ">=1",
-                "php": ">= 5.4",
+                "php": ">= 5.4.8",
                 "psr/log": "^1.0",
                 "symfony/polyfill-php56": "^1"
             },
