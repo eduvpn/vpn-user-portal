@@ -85,4 +85,40 @@ class Protocol
         // WireGuard Public Key, so use OpenVPN...
         return 'openvpn';
     }
+
+    /**
+     * We only take the Accept header serious if we detect at least one
+     * mime-type we recognize, otherwise we assume it is garbage and consider
+     * it as "not sent".
+     *
+     * @return array{wireguard:bool,openvpn:bool}
+     */
+    public static function parseMimeType(?string $httpAccept): array
+    {
+        if (null === $httpAccept) {
+            return ['wireguard' => true, 'openvpn' => true];
+        }
+
+        $oSupport = false;
+        $wSupport = false;
+        $takeSerious = false;
+
+        $mimeTypeList = explode(',', $httpAccept);
+        foreach ($mimeTypeList as $mimeType) {
+            $mimeType = trim($mimeType);
+            if ('application/x-openvpn-profile' === $mimeType) {
+                $oSupport = true;
+                $takeSerious = true;
+            }
+            if ('application/x-wireguard-profile' === $mimeType) {
+                $wSupport = true;
+                $takeSerious = true;
+            }
+        }
+        if (false === $takeSerious) {
+            return ['wireguard' => true, 'openvpn' => true];
+        }
+
+        return ['wireguard' => $wSupport, 'openvpn' => $oSupport];
+    }
 }
