@@ -40,6 +40,9 @@ class Protocol
         }
 
         if ($wSupport && false === $oSupport) {
+            if (null === $publicKey) {
+                throw new ProtocolException('client only supports wireguard, but does not provide a public key');
+            }
             if ($profileConfig->wSupport()) {
                 return 'wireguard';
             }
