@@ -184,11 +184,16 @@ return [
     // do NOT allow any portal configurations downloads, allow VPN apps only
     //'maxActiveConfigurations' => 0,
 
-    // Determine what to log to "syslog"
-    // NOTE: "{{ORIGINATING_IP}}" only works with OpenVPN connections
-    // OPTIONAL, DEFAULT = {{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{IP_FOUR}},{{IP_SIX}}]
-    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{IP_FOUR}},{{IP_SIX}}]',
-    //'connectionLogFormat' => '{{EVENT_TYPE}} {{USER_ID}} ({{PROFILE_ID}}:{{CONNECTION_ID}}) [{{ORIGINATING_IP}} => {{IP_FOUR}},{{IP_SIX}}]',
+    //'Log' => [
+    //    // Write CONNECT/DISCONNECT events to syslog
+    //    // OPTIONAL, DEFAULT = false
+    //    //'syslogConnectionEvents' => true,
+
+    //    // Log the "originating IP", i.e. the IP the VPN client is connecting
+    //    // from. Currently only available for OpenVPN connections.
+    //    // OPTIONAL, DEFAULT = false
+    //    //'originatingIp' => false,
+    //],
 
     //'Api' => [
     //    // Limit the number of active VPN configurations through the API.

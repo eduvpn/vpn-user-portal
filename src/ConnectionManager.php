@@ -14,6 +14,7 @@ namespace Vpn\Portal;
 use DateTimeImmutable;
 use RangeException;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\Cfg\LogConfig;
 use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
@@ -240,11 +241,40 @@ class ConnectionManager
                 // peer was connected to this node, use the information
                 // we got back to call "clientDisconnect"
                 $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
-                $this->logger->info(
-                    $this->logMessage('DISCONNECT', $userId, $profileId, $connectionId, '_', '_')
-                );
+                if ($this->config->logConfig()->syslogConnectionEvents()) {
+                    $this->logger->info(
+                        self::logDisconnect($this->config->logConfig(), $userId, $profileId, $connectionId)
+                    );
+                }
             }
         }
+    }
+
+    public static function logConnect(LogConfig $logConfig, string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, ?string $originatingIp): string
+    {
+        if (!$logConfig->originatingIp() || null === $originatingIp) {
+            $originatingIp = '*';
+        }
+
+        return sprintf(
+            'CONNECT %s (%s:%s) [%s => %s,%s]',
+            $userId,
+            $profileId,
+            $connectionId,
+            $originatingIp,
+            $ipFour,
+            $ipSix
+        );
+    }
+
+    public static function logDisconnect(LogConfig $logConfig, string $userId, string $profileId, string $connectionId): string
+    {
+        return sprintf(
+            'DISCONNECT %s (%s:%s)',
+            $userId,
+            $profileId,
+            $connectionId
+        );
     }
 
     protected function getRandomBytes(): string
@@ -307,9 +337,11 @@ class ConnectionManager
         $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
         $this->storage->clientConnect($userId, $profileConfig->profileId(), 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
 
-        $this->logger->info(
-            $this->logMessage('CONNECT', $userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix)
-        );
+        if ($this->config->logConfig()->syslogConnectionEvents()) {
+            $this->logger->info(
+                self::logConnect($this->config->logConfig(), $userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, null)
+            );
+        }
 
         return new WireGuardClientConfig(
             $nodeNumber,
@@ -385,28 +417,5 @@ class ConnectionManager
         }
 
         return [null, null];
-    }
-
-    private function logMessage(string $eventType, string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix): string
-    {
-        return str_replace(
-            [
-                '{{EVENT_TYPE}}',
-                '{{USER_ID}}',
-                '{{PROFILE_ID}}',
-                '{{CONNECTION_ID}}',
-                '{{IP_FOUR}}',
-                '{{IP_SIX}}',
-            ],
-            [
-                $eventType,
-                $userId,
-                $profileId,
-                $connectionId,
-                $ipFour,
-                $ipSix,
-            ],
-            $this->config->connectionLogFormat()
-        );
     }
 }

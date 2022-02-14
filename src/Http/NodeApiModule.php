@@ -13,6 +13,7 @@ namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\NodeApiException;
 use Vpn\Portal\LoggerInterface;
@@ -84,9 +85,12 @@ class NodeApiModule implements ServiceModuleInterface
             $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
             $userId = $this->verifyConnection($profileId, $commonName);
             $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $this->dateTime);
-            $this->logger->info(
-                $this->logMessage('CONNECT', $userId, $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
-            );
+
+            if ($this->config->logConfig()->syslogConnectionEvents()) {
+                $this->logger->info(
+                    ConnectionManager::logConnect($this->config->logConfig(), $userId, $profileId, $commonName, $ipFour, $ipSix, $originatingIp)
+                );
+            }
 
             return new Response('OK');
         } catch (NodeApiException $e) {
@@ -111,9 +115,12 @@ class NodeApiModule implements ServiceModuleInterface
         if (null !== $userId = $this->storage->oUserIdFromConnectionLog($profileId, $commonName)) {
             $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, $this->dateTime);
         }
-        $this->logger->info(
-            $this->logMessage('DISCONNECT', $userId ?? 'N/A', $profileId, $commonName, $originatingIp, $ipFour, $ipSix)
-        );
+
+        if ($this->config->logConfig()->syslogConnectionEvents()) {
+            $this->logger->info(
+                ConnectionManager::logDisconnect($this->config->logConfig(), $userId ?? 'N/A', $profileId, $commonName)
+            );
+        }
 
         return new Response('OK');
     }
@@ -151,30 +158,5 @@ class NodeApiModule implements ServiceModuleInterface
         }
 
         return false;
-    }
-
-    private function logMessage(string $eventType, string $userId, string $profileId, string $connectionId, string $originatingIp, string $ipFour, string $ipSix): string
-    {
-        return str_replace(
-            [
-                '{{EVENT_TYPE}}',
-                '{{USER_ID}}',
-                '{{PROFILE_ID}}',
-                '{{CONNECTION_ID}}',
-                '{{ORIGINATING_IP}}',
-                '{{IP_FOUR}}',
-                '{{IP_SIX}}',
-            ],
-            [
-                $eventType,
-                $userId,
-                $profileId,
-                $connectionId,
-                $originatingIp,
-                $ipFour,
-                $ipSix,
-            ],
-            $this->config->connectionLogFormat()
-        );
     }
 }
