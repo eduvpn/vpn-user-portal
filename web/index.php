@@ -16,7 +16,7 @@ use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\CookieOptions;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Expiry;

@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
+use Vpn\Portal\Cfg\LdapAuthConfig;
 use Vpn\Portal\Exception\LdapClientException;
 use Vpn\Portal\Http\Auth\Exception\CredentialValidatorException;
 use Vpn\Portal\Http\UserInfo;
-use Vpn\Portal\LdapAuthConfig;
 use Vpn\Portal\LdapClient;
 use Vpn\Portal\LoggerInterface;
 

@@ -13,6 +13,8 @@ namespace Vpn\Portal;
 
 use DateTimeImmutable;
 use RangeException;
+use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;

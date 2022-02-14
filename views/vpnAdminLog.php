@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
-<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
+<?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
 <?php /** @var ?\DateTimeImmutable $date_time */?>
 <?php /** @var ?string $ip_address */?>
 <?php /** @var \DateTimeImmutable $now */?>

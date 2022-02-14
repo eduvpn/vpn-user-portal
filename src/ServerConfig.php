@@ -26,7 +26,7 @@ class ServerConfig
     }
 
     /**
-     * @param array<ProfileConfig> $profileConfigList
+     * @param array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList
      *
      * @return array<string,string>
      */

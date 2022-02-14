@@ -28,7 +28,7 @@ class ServerConfig
     }
 
     /**
-     * @param array<\Vpn\Portal\ProfileConfig> $profileConfigList
+     * @param array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList
      */
     public function get(array $profileConfigList, int $nodeNumber, string $publicKey): ?string
     {

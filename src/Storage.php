@@ -13,6 +13,7 @@ namespace Vpn\Portal;
 
 use DateTimeImmutable;
 use PDO;
+use Vpn\Portal\Cfg\DbConfig;
 
 class Storage
 {

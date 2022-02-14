@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Vpn\Portal\WireGuard;
 
 use DateTimeImmutable;
+use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\ClientConfigInterface;
 use Vpn\Portal\Exception\QrCodeException;
 use Vpn\Portal\Ip;
 use Vpn\Portal\IpNetList;
-use Vpn\Portal\ProfileConfig;
 use Vpn\Portal\QrCode;
 
 /**

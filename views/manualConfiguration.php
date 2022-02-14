@@ -3,7 +3,7 @@
 <?php /** @var int $maxActiveConfigurations */ ?>
 <?php /** @var int $numberOfActivePortalConfigurations */ ?>
 <?php /** @var \DateTimeImmutable $expiryDate */ ?>
-<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */ ?>
+<?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */ ?>
 <?php /** @var array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}> $configList */ ?>
 <h2><?=$this->t('New Configuration'); ?></h2>
 <?php if (0 === $maxActiveConfigurations): ?>

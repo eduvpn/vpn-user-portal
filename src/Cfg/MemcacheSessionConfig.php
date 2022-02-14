@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace Vpn\Portal;
+namespace Vpn\Portal\Cfg;
 
-class RadiusAuthConfig
+class MemcacheSessionConfig
 {
     use ConfigTrait;
 
@@ -28,20 +28,5 @@ class RadiusAuthConfig
     public function serverList(): array
     {
         return $this->requireStringArray('serverList');
-    }
-
-    public function radiusRealm(): ?string
-    {
-        return $this->optionalString('radiusRealm');
-    }
-
-    public function nasIdentifier(): ?string
-    {
-        return $this->optionalString('nasIdentifier');
-    }
-
-    public function permissionAttribute(): ?int
-    {
-        return $this->optionalInt('permissionAttribute');
     }
 }

@@ -14,7 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Expiry;
 use Vpn\Portal\FileIO;

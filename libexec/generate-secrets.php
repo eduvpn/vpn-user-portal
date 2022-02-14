@@ -13,7 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\Signer;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 

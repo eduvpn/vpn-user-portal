@@ -13,7 +13,7 @@ namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Exception\ConnectionManagerException;

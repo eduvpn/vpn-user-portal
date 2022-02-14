@@ -13,12 +13,12 @@ namespace Vpn\Portal\Http\Auth;
 
 use fkooman\SAML\SP\Api\AuthOptions;
 use fkooman\SAML\SP\Api\SamlAuth;
+use Vpn\Portal\Cfg\PhpSamlSpAuthConfig;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\Http\RedirectResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
-use Vpn\Portal\PhpSamlSpAuthConfig;
 
 class PhpSamlSpAuthModule extends AbstractAuthModule
 {

@@ -101,7 +101,7 @@ class Tpl implements TplInterface
     }
 
     /**
-     * @param array<\Vpn\Portal\ProfileConfig> $profileConfigList
+     * @param array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList
      */
     public function profileIdToDisplayName(array $profileConfigList, string $profileId): string
     {

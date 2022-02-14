@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace Vpn\Portal;
+namespace Vpn\Portal\Cfg;
 
-class MellonAuthConfig
+class PhpSamlSpAuthConfig
 {
     use ConfigTrait;
 
@@ -27,11 +27,6 @@ class MellonAuthConfig
         return $this->requireString('userIdAttribute');
     }
 
-    public function nameIdSerialization(): bool
-    {
-        return $this->requireBool('nameIdSerialization', false);
-    }
-
     /**
      * @return array<string>
      */
@@ -40,8 +35,11 @@ class MellonAuthConfig
         return $this->requireStringArray('permissionAttributeList', []);
     }
 
-    public function spEntityId(): string
+    /**
+     * @return ?array<string>
+     */
+    public function authnContext(): ?array
     {
-        return $this->requireString('spEntityId');
+        return $this->optionalStringArray('authnContext');
     }
 }

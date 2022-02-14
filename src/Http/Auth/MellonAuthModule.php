@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
+use Vpn\Portal\Cfg\MellonAuthConfig;
 use Vpn\Portal\Http\RedirectResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
-use Vpn\Portal\MellonAuthConfig;
 
 class MellonAuthModule extends AbstractAuthModule
 {

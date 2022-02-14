@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<array{client_id:string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}> $appUsage */?>
-<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
+<?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<string,array{max_connection_count:int}> $statsMaxConnectionCount */?>
 <?php /** @var array<string,array{unique_user_count:int}> $statsUniqueUserCount */?>
 <?php $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')]); ?>

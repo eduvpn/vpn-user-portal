@@ -14,8 +14,8 @@ namespace Vpn\Portal\Http;
 use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ClientConfigInterface;
-use Vpn\Portal\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\HttpException;
@@ -269,9 +269,9 @@ class VpnPortalModule implements ServiceModuleInterface
      * Filter the list of profiles by checking if the profile should be shown,
      * and that the user has the required permissions in case ACLs are enabled.
      *
-     * @param array<\Vpn\Portal\ProfileConfig> $profileConfigList
+     * @param array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList
      *
-     * @return array<\Vpn\Portal\ProfileConfig>
+     * @return array<\Vpn\Portal\Cfg\ProfileConfig>
      */
     private static function filterProfileList(array $profileConfigList, array $userPermissions): array
     {
@@ -291,7 +291,7 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @param array<\Vpn\Portal\ProfileConfig> $profileConfigList
+     * @param array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList
      */
     private static function isAllowedProfile(array $profileConfigList, string $profileId): bool
     {

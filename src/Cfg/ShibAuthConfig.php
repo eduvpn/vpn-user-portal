@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace Vpn\Portal;
+namespace Vpn\Portal\Cfg;
 
-class WireGuardConfig
+class ShibAuthConfig
 {
     use ConfigTrait;
 
@@ -22,8 +22,16 @@ class WireGuardConfig
         $this->configData = $configData;
     }
 
-    public function listenPort(): int
+    public function userIdAttribute(): string
     {
-        return $this->requireInt('listenPort', 51820);
+        return $this->requireString('userIdAttribute');
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function permissionAttributeList(): array
+    {
+        return $this->requireStringArray('permissionAttributeList', []);
     }
 }

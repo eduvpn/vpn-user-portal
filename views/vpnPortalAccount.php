@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var bool $showPermissions */?>
-<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
+<?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
 <?php /** @var \Vpn\Portal\Http\UserInfo $userInfo */?>
 <?php /** @var array<\fkooman\OAuth\Server\Authorization> $authorizationList */?>
 <?php /** @var string $authModule */?>

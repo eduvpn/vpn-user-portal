@@ -12,10 +12,10 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\Ip;
-use Vpn\Portal\ProfileConfig;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
 use Vpn\Portal\VpnDaemon;

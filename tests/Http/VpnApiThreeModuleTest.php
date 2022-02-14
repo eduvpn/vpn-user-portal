@@ -15,7 +15,7 @@ use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Scope;
 use PHPUnit\Framework\TestCase;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Http\ApiService;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\NullLogger;

@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http\Auth;
 
 use RuntimeException;
+use Vpn\Portal\Cfg\RadiusAuthConfig;
 use Vpn\Portal\Http\Auth\Exception\CredentialValidatorException;
 use Vpn\Portal\Http\Auth\Exception\RadiusException;
 use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\LoggerInterface;
-use Vpn\Portal\RadiusAuthConfig;
 
 /**
  * @psalm-suppress UndefinedConstant

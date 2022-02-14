@@ -15,7 +15,7 @@ use fkooman\SeCookie\CookieOptions;
 use fkooman\SeCookie\MemcacheSessionStorage;
 use fkooman\SeCookie\Session;
 use fkooman\SeCookie\SessionOptions;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 
 class SeSession implements SessionInterface
 {

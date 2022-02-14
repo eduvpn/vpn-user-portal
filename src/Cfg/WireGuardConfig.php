@@ -9,9 +9,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
-namespace Vpn\Portal;
+namespace Vpn\Portal\Cfg;
 
-class MemcacheSessionConfig
+class WireGuardConfig
 {
     use ConfigTrait;
 
@@ -22,11 +22,8 @@ class MemcacheSessionConfig
         $this->configData = $configData;
     }
 
-    /**
-     * @return array<string>
-     */
-    public function serverList(): array
+    public function listenPort(): int
     {
-        return $this->requireStringArray('serverList');
+        return $this->requireInt('listenPort', 51820);
     }
 }

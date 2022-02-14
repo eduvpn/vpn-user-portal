@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\Tests;
 
 use DateTimeImmutable;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Http\VpnApiThreeModule;
 use Vpn\Portal\ServerInfo;

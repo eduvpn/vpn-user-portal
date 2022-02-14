@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Vpn\Portal;
 
+use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\Cfg\ProfileConfig;
+
 class ConfigCheck
 {
     /**

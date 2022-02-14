@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Exception\ProtocolException;
 use Vpn\Portal\Protocol;
 

@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Vpn\Portal\OpenVpn;
 
 use RuntimeException;
+use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\Ip;
 use Vpn\Portal\IpNetList;
 use Vpn\Portal\OpenVpn\CA\CaInterface;
 use Vpn\Portal\OpenVpn\CA\CertInfo;
-use Vpn\Portal\ProfileConfig;
 
 class ServerConfig
 {

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var \Vpn\Portal\ServerInfo $serverInfo */?>
-<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
+<?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<string,null|array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int}> $nodeInfoList */?>
 <?php /** @var string $portalVersion */?>
 <?php /** @var array<string,array<string>> $problemList */?>

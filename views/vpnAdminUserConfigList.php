@@ -4,7 +4,7 @@
 <?php /** @var string $userId */?>
 <?php /** @var bool $isDisabled */?>
 <?php /** @var bool $isSelf */?>
-<?php /** @var array<\Vpn\Portal\ProfileConfig> $profileConfigList */?>
+<?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}> $configList */ ?>
 <?php /** @var string $requestRoot */?>
 <?php /** @var string $authModule */?>

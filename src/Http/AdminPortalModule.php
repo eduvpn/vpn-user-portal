@@ -14,7 +14,7 @@ namespace Vpn\Portal\Http;
 use DateTimeImmutable;
 use DateTimeZone;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConfigCheck;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal;
 
+use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\Exception\ProtocolException;
 
 /**

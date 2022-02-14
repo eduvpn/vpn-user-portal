@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\NodeApiException;
 use Vpn\Portal\LoggerInterface;

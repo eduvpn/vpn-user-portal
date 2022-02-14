@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Vpn\Portal\OpenVpn;
 
 use DateTimeImmutable;
+use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\ClientConfigInterface;
 use Vpn\Portal\OpenVpn\CA\CaInfo;
 use Vpn\Portal\OpenVpn\CA\CertInfo;
 use Vpn\Portal\OpenVpn\Exception\ClientConfigException;
-use Vpn\Portal\ProfileConfig;
 
 class ClientConfig implements ClientConfigInterface
 {
