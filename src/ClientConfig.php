@@ -67,6 +67,11 @@ class ClientConfig
             '</ca>',
         ];
 
+        if (null !== $profileConfig->ldapAuthPlugin()) {
+            $clientConfig[] = 'auth-user-pass';
+            $clientConfig[] = 'auth-nocache';
+        }
+
         if ($profileConfig->tlsOneThree()) {
             // for TLSv1.3 we don't care about the tls-ciphers, they are all
             // fine, let the client choose
