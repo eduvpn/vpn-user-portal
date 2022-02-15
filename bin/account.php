@@ -25,6 +25,8 @@ try {
     $addUser = false;
     $disableUser = false;
     $enableUser = false;
+    $deleteUser = false;
+    $forceAction = false;
 
     $userId = null;
     $userPass = null;
@@ -37,6 +39,12 @@ try {
         }
         if ('--disable' === $argv[$i]) {
             $disableUser = true;
+        }
+        if ('--delete' === $argv[$i]) {
+            $deleteUser = true;
+        }
+        if ('--force' === $argv[$i]) {
+            $forceAction = true;
         }
         if ('--user' === $argv[$i] || '-u' === $argv[$i]) {
             if ($i + 1 < $argc) {
@@ -54,19 +62,22 @@ try {
         }
         if ('--help' === $argv[$i] || '-h' === $argv[$i]) {
             echo 'SYNTAX: '.$argv[0].\PHP_EOL.\PHP_EOL;
-            echo 'Add a new user'.PHP_EOL;
-            echo '  --add [--user USER-ID] [--password PASSWORD]'.PHP_EOL.PHP_EOL;
-            echo 'Enable an Account'.PHP_EOL;
-            echo '  --enable [--user USER-ID]'.PHP_EOL.PHP_EOL;
-            echo 'Disable an Account'.PHP_EOL;
-            echo '  --disable [--user USER-ID]'.PHP_EOL;
+            echo '  ADD Account'.PHP_EOL;
+            echo '    --add [--user USER-ID] [--password PASSWORD]'.PHP_EOL.PHP_EOL;
+            echo '  ENABLE Account'.PHP_EOL;
+            echo '    --enable [--user USER-ID]'.PHP_EOL.PHP_EOL;
+            echo '  DISABLE Account'.PHP_EOL;
+            echo '    --disable [--user USER-ID]'.PHP_EOL.PHP_EOL;
+            echo '  DELETE Account'.PHP_EOL;
+            echo '    --delete [--user USER-ID] [--force]'.PHP_EOL;
 
             exit(0);
         }
     }
 
-    if (!$addUser && !$disableUser && !$enableUser) {
-        throw new RuntimeException('no action provided, see --help');
+    if (!$addUser && !$disableUser && !$enableUser && !$deleteUser) {
+        // by default we do "add"
+        $addUser = true;
     }
 
     // all commands require userId
@@ -114,31 +125,53 @@ try {
         $storage->userEnable($userId);
     }
 
-    if ($disableUser) {
-        $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
+    if ($deleteUser || $disableUser) {
         $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), new NullLogger());
         $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, new NullLogger());
+        if ($deleteUser) {
+            if (!$forceAction) {
+                echo 'Are you sure you want to DELETE user "'.$userId.'"? [y/N]: ';
+                if ('y' !== trim(fgets(\STDIN))) {
+                    exit(0);
+                }
+            }
 
-        $storage->userDisable($userId);
-        $clientAuthorizations = $oauthStorage->getAuthorizations($userId);
-        foreach ($clientAuthorizations as $clientAuthorization) {
-            // delete and disconnect all (active) configurations
-            // for this OAuth client authorization
-            $connectionManager->disconnectByAuthKey($clientAuthorization->authKey());
-            $oauthStorage->deleteAuthorization($clientAuthorization->authKey());
+            // delete and disconnect all (active) VPN configurations
+            // for this user
+            $connectionManager->disconnectByUserId($userId);
+
+            // delete all user data (except log)
+            $storage->userDelete($userId);
+
+            if ('DbAuthModule' === $config->authModule()) {
+                // remove the user from the local database
+                $storage->localUserDelete($userId);
+            }
         }
 
-        // disconnect all connections from manually downloaded VPN
-        // configurations
-        //
-        // OpenVPN: connection will be terminated, and with OpenVPN a
-        // check whether the user is disabled is performed before
-        // allowing a connection
-        //
-        // WireGuard: connection will be terminated, i.e. removed from
-        // daemons, and the peer configuration of disabled users will
-        // NOT be synced with daemon-sync
-        $connectionManager->disconnectByUserId($userId, ConnectionManager::DO_NOT_DELETE);
+        if ($disableUser) {
+            $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
+            $storage->userDisable($userId);
+            $clientAuthorizations = $oauthStorage->getAuthorizations($userId);
+            foreach ($clientAuthorizations as $clientAuthorization) {
+                // delete and disconnect all (active) configurations
+                // for this OAuth client authorization
+                $connectionManager->disconnectByAuthKey($clientAuthorization->authKey());
+                $oauthStorage->deleteAuthorization($clientAuthorization->authKey());
+            }
+
+            // disconnect all connections from manually downloaded VPN
+            // configurations
+            //
+            // OpenVPN: connection will be terminated, and with OpenVPN a
+            // check whether the user is disabled is performed before
+            // allowing a connection
+            //
+            // WireGuard: connection will be terminated, i.e. removed from
+            // daemons, and the peer configuration of disabled users will
+            // NOT be synced with daemon-sync
+            $connectionManager->disconnectByUserId($userId, ConnectionManager::DO_NOT_DELETE);
+        }
     }
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
