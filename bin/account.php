@@ -111,6 +111,9 @@ try {
     $storage = new Storage($config->dbConfig($baseDir));
 
     if ($addUser) {
+        if ('DbAuthModule' !== $config->authModule()) {
+            throw new RuntimeException('users can only be added when using DbAuthModule');
+        }
         if (null === $userPass) {
             echo sprintf('Setting password for user "%s"', $userId).\PHP_EOL;
             // ask for password
