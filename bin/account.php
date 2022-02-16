@@ -21,73 +21,90 @@ use Vpn\Portal\NullLogger;
 use Vpn\Portal\Storage;
 use Vpn\Portal\VpnDaemon;
 
+function showHelp(): void
+{
+    echo '  --add USER-ID [--password PASSWORD]'.PHP_EOL;
+    echo '        Add new *LOCAL* user account'.PHP_EOL;
+    echo '  --enable USER-ID'.PHP_EOL;
+    echo '        (Re)enable user account(*)'.PHP_EOL;
+    echo '  --disable USER-ID'.PHP_EOL;
+    echo '        Disable user account(*)'.PHP_EOL;
+    echo '  --delete USER-ID [--force]'.PHP_EOL;
+    echo '        Delete user account (data)'.PHP_EOL;
+    echo PHP_EOL;
+    echo '(*) Only has effect for accounts that have logged in at least once!'.PHP_EOL;
+}
+
 try {
     $addUser = false;
     $disableUser = false;
     $enableUser = false;
     $deleteUser = false;
     $forceAction = false;
-
     $userId = null;
     $userPass = null;
+
+    // parse CLI flags
     for ($i = 1; $i < $argc; ++$i) {
         if ('--add' === $argv[$i]) {
             $addUser = true;
-        }
-        if ('--enable' === $argv[$i]) {
-            $enableUser = true;
-        }
-        if ('--disable' === $argv[$i]) {
-            $disableUser = true;
-        }
-        if ('--delete' === $argv[$i]) {
-            $deleteUser = true;
-        }
-        if ('--force' === $argv[$i]) {
-            $forceAction = true;
-        }
-        if ('--user' === $argv[$i] || '-u' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $userId = $argv[$i + 1];
             }
 
             continue;
         }
-        if ('--password' === $argv[$i] || '-p' === $argv[$i]) {
+        if ('--enable' === $argv[$i]) {
+            $enableUser = true;
             if ($i + 1 < $argc) {
-                $userPass = $argv[$i + 1];
+                $userId = $argv[++$i];
+            }
+
+            continue;
+        }
+        if ('--disable' === $argv[$i]) {
+            $disableUser = true;
+            if ($i + 1 < $argc) {
+                $userId = $argv[++$i];
+            }
+
+            continue;
+        }
+        if ('--delete' === $argv[$i]) {
+            $deleteUser = true;
+            if ($i + 1 < $argc) {
+                $userId = $argv[++$i];
+            }
+
+            continue;
+        }
+        if ('--force' === $argv[$i]) {
+            $forceAction = true;
+        }
+        if ('--password' === $argv[$i]) {
+            if ($i + 1 < $argc) {
+                $userPass = $argv[++$i];
             }
 
             continue;
         }
         if ('--help' === $argv[$i] || '-h' === $argv[$i]) {
-            echo 'SYNTAX: '.$argv[0].\PHP_EOL.\PHP_EOL;
-            echo '  ADD Account'.PHP_EOL;
-            echo '    --add [--user USER-ID] [--password PASSWORD]'.PHP_EOL.PHP_EOL;
-            echo '  ENABLE Account'.PHP_EOL;
-            echo '    --enable [--user USER-ID]'.PHP_EOL.PHP_EOL;
-            echo '  DISABLE Account'.PHP_EOL;
-            echo '    --disable [--user USER-ID]'.PHP_EOL.PHP_EOL;
-            echo '  DELETE Account'.PHP_EOL;
-            echo '    --delete [--user USER-ID] [--force]'.PHP_EOL;
+            showHelp();
 
             exit(0);
         }
     }
 
     if (!$addUser && !$disableUser && !$enableUser && !$deleteUser) {
-        // by default we do "add"
-        $addUser = true;
+        showHelp();
+
+        throw new RuntimeException('operation must be specified');
     }
 
-    // all commands require userId
-    if (null === $userId) {
-        echo 'User ID: ';
-        $userId = trim(fgets(\STDIN));
-    }
+    if (null === $userId || empty($userId)) {
+        showHelp();
 
-    if (empty($userId)) {
-        throw new RuntimeException('User ID cannot be empty');
+        throw new RuntimeException('USER-ID must be specified');
     }
 
     $config = Config::fromFile($baseDir.'/config/config.php');
