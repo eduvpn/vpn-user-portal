@@ -39,14 +39,17 @@ function getMaxClientLimit(ProfileConfig $profileConfig): int
     return $maxClientLimit;
 }
 
-function showHelp(array $argv): void
+function showHelp(): void
 {
-    echo 'SYNTAX: '.$argv[0].\PHP_EOL.\PHP_EOL;
-    echo '--csv                 use CSV output format (DEFAULT)'.\PHP_EOL;
-    echo '--json                use JSON output format'.\PHP_EOL;
-    echo '--alert [percentage]  only show entries where IP space use is over specified'.\PHP_EOL;
-    echo '                      percentage. The default percentage for --alert is 90 '.\PHP_EOL;
-    echo '--connections         list connected clients (only with --json)'.\PHP_EOL;
+    echo '  --csv'.PHP_EOL;
+    echo '        use CSV output format (DEFAULT)'.\PHP_EOL;
+    echo '  --json'.PHP_EOL;
+    echo '        use JSON output format'.\PHP_EOL;
+    echo '  --alert [PERCENTAGE]'.PHP_EOL;
+    echo '        only show entries where IP space use is over specified'.\PHP_EOL;
+    echo '        percentage. The default percentage for --alert is 90 '.\PHP_EOL;
+    echo '  --connections'.PHP_EOL;
+    echo '        list connected clients (only with --json)'.\PHP_EOL;
 }
 
 function outputConversion(array $outputData, bool $asJson): void
@@ -105,7 +108,7 @@ try {
     }
 
     if ($showHelp) {
-        showHelp($argv);
+        showHelp();
 
         return;
     }
