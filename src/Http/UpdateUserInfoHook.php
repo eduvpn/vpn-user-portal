@@ -55,14 +55,14 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
 
         if (false === $this->storage->userExists($userInfo->userId())) {
             // user does not yet exist in the database, create it
-            $this->storage->userAdd($userInfo->userId(), $this->dateTime, $userInfo->permissionList());
+            $this->storage->userAdd($userInfo, $this->dateTime);
             $this->session->set('_user_info_already_updated', 'yes');
 
             return null;
         }
 
         // update last seen & permissionList
-        $this->storage->userUpdate($userInfo->userId(), $this->dateTime, $userInfo->permissionList());
+        $this->storage->userUpdate($userInfo, $this->dateTime);
         $this->session->set('_user_info_already_updated', 'yes');
 
         return null;

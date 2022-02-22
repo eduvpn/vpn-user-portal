@@ -14,6 +14,7 @@ namespace Vpn\Portal;
 use DateTimeImmutable;
 use PDO;
 use Vpn\Portal\Cfg\DbConfig;
+use Vpn\Portal\Http\UserInfo;
 
 class Storage
 {
@@ -21,7 +22,7 @@ class Storage
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
 
-    public const CURRENT_SCHEMA_VERSION = '2022011901';
+    public const CURRENT_SCHEMA_VERSION = '2022022201';
 
     private PDO $db;
 
@@ -382,6 +383,35 @@ class Storage
         return \is_string($resultColumn) ? $resultColumn : null;
     }
 
+    public function userAdd(UserInfo $userInfo, DateTimeImmutable $lastSeen): void
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    INSERT INTO
+                        users (
+                            user_id,
+                            last_seen,
+                            permission_list,
+                            auth_data,
+                            is_disabled
+                        )
+                    VALUES (
+                        :user_id,
+                        :last_seen,
+                        :permission_list,
+                        :auth_data,
+                        :is_disabled
+                    )
+                SQL
+        );
+        $stmt->bindValue(':user_id', $userInfo->userId(), PDO::PARAM_STR);
+        $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':permission_list', self::permissionListToString($userInfo->permissionList()), PDO::PARAM_STR);
+        $stmt->bindValue(':auth_data', $userInfo->authData(), PDO::PARAM_STR | PDO::PARAM_NULL);
+        $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
+        $stmt->execute();
+    }
+
     /**
      * @return array<array{user_id:string,last_seen:\DateTimeImmutable,permission_list:array<string>,is_disabled:bool}>
      */
@@ -451,10 +481,7 @@ class Storage
         $stmt->execute();
     }
 
-    /**
-     * @param array<string> $permissionList
-     */
-    public function userUpdate(string $userId, DateTimeImmutable $lastSeen, array $permissionList): void
+    public function userUpdate(UserInfo $userInfo, DateTimeImmutable $lastSeen): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -462,14 +489,16 @@ class Storage
                         users
                     SET
                         last_seen = :last_seen,
-                        permission_list = :permission_list
+                        permission_list = :permission_list,
+                        auth_data = :auth_data
                     WHERE
                         user_id = :user_id
                 SQL
         );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $userInfo->userId(), PDO::PARAM_STR);
         $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
+        $stmt->bindValue(':permission_list', self::permissionListToString($userInfo->permissionList()), PDO::PARAM_STR);
+        $stmt->bindValue(':auth_data', $userInfo->authData(), PDO::PARAM_STR | PDO::PARAM_NULL);
 
         $stmt->execute();
     }
@@ -1112,35 +1141,6 @@ class Storage
         $stmt = $this->db->prepare('DELETE FROM oauth_authorizations WHERE expires_at < :date_time');
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
 
-        $stmt->execute();
-    }
-
-    /**
-     * @param array<string> $permissionList
-     */
-    public function userAdd(string $userId, DateTimeImmutable $lastSeen, array $permissionList): void
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                    INSERT INTO
-                        users (
-                            user_id,
-                            last_seen,
-                            permission_list,
-                            is_disabled
-                        )
-                    VALUES (
-                        :user_id,
-                        :last_seen,
-                        :permission_list,
-                        :is_disabled
-                    )
-                SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':permission_list', self::permissionListToString($permissionList), PDO::PARAM_STR);
-        $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
         $stmt->execute();
     }
 
