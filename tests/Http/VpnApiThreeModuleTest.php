@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Http\ApiService;
 use Vpn\Portal\Http\Request;
+use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\NullLogger;
 use Vpn\Portal\OpenVpn\TlsCrypt;
 use Vpn\Portal\ServerInfo;
@@ -89,7 +90,7 @@ final class VpnApiThreeModuleTest extends TestCase
         $this->storage = new Storage($this->config->dbConfig($baseDir));
 
         // XXX the user & authorization MUST exist apparently, this will NOT work with guest usage!
-        $this->storage->userAdd('user_id', $this->dateTime, []);
+        $this->storage->userAdd(new UserInfo('user_id', []), $this->dateTime);
         $oauthStorage = new OAuthStorage($this->storage->dbPdo(), 'oauth_');
         $oauthStorage->storeAuthorization('user_id', 'client_id', new Scope('config'), 'auth_key', $this->dateTime, $this->dateTime->add($this->config->sessionExpiry()));
 
