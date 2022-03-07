@@ -252,7 +252,7 @@ class ServerConfig
                 $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway_ipv6"', (string) $routeIpPrefix);
             } else {
                 // IPv4
-                $routeConfig[] = sprintf('push "route %s %s" net_gateway', $routeIpPrefix->address(), $routeIpPrefix->netmask());
+                $routeConfig[] = sprintf('push "route %s %s net_gateway"', $routeIpPrefix->address(), $routeIpPrefix->netmask());
             }
         }
 
