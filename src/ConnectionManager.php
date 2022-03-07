@@ -181,6 +181,10 @@ class ConnectionManager
                 return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
 
             case 'wireguard':
+                // we know that publicKey is not null here, otherwise Protocol::determine would have errored
+                if (null === $publicKey) {
+                    throw new ConnectionManagerException('unable to connect using wireguard, no public key');
+                }
                 if (null !== $wireGuardClientConfig = $this->wConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $publicKey, $authKey)) {
                     return $wireGuardClientConfig;
                 }
@@ -306,7 +310,7 @@ class ConnectionManager
     /**
      * @throws \Vpn\Portal\Exception\ConnectionManagerException
      */
-    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, ?string $publicKey, ?string $authKey): ?WireGuardClientConfig
+    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, string $publicKey, ?string $authKey): ?WireGuardClientConfig
     {
         if (!$profileConfig->wSupport()) {
             throw new ConnectionManagerException('profile does not support wireguard');
@@ -325,12 +329,6 @@ class ConnectionManager
         $ipFour = $ipInfo['ip_four'];
         $ipSix = $ipInfo['ip_six'];
 
-        $secretKey = null;
-        if (null === $publicKey) {
-            $secretKey = Key::generate();
-            $publicKey = Key::publicKeyFromSecretKey($secretKey);
-        }
-
         // XXX we MUST make sure public_key is unique on this server!!!
         // the DB enforces this, but maybe a better error could be given?
         $this->storage->wPeerAdd($userId, $nodeNumber, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
@@ -346,7 +344,6 @@ class ConnectionManager
         return new WireGuardClientConfig(
             $nodeNumber,
             $profileConfig,
-            $secretKey,
             $ipFour,
             $ipSix,
             $serverPublicKey,

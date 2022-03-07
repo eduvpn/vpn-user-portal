@@ -26,18 +26,17 @@ class ClientConfig implements ClientConfigInterface
 {
     private int $nodeNumber;
     private ProfileConfig $profileConfig;
-    private ?string $privateKey;
+    private ?string $privateKey = null;
     private string $ipFour;
     private string $ipSix;
     private string $serverPublicKey;
     private int $wgPort;
     private DateTimeImmutable $expiresAt;
 
-    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, ?string $privateKey, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort, DateTimeImmutable $expiresAt)
+    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort, DateTimeImmutable $expiresAt)
     {
         $this->nodeNumber = $nodeNumber;
         $this->profileConfig = $profileConfig;
-        $this->privateKey = $privateKey;
         $this->ipFour = $ipFour;
         $this->ipSix = $ipSix;
         $this->serverPublicKey = $serverPublicKey;
@@ -48,6 +47,11 @@ class ClientConfig implements ClientConfigInterface
     public function contentType(): string
     {
         return 'application/x-wireguard-profile';
+    }
+
+    public function setPrivateKey(string $privateKey): void
+    {
+        $this->privateKey = $privateKey;
     }
 
     public function get(): string

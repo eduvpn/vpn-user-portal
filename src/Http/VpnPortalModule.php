@@ -26,6 +26,7 @@ use Vpn\Portal\Tpl;
 use Vpn\Portal\TplInterface;
 use Vpn\Portal\Validator;
 use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
+use Vpn\Portal\WireGuard\Key;
 
 class VpnPortalModule implements ServiceModuleInterface
 {
@@ -109,6 +110,9 @@ class VpnPortalModule implements ServiceModuleInterface
                 $profileConfig = $this->config->profileConfig($profileId);
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
 
+                $secretKey = Key::generate();
+                $publicKey = Key::publicKeyFromSecretKey($secretKey);
+
                 $clientProtoSupport = self::clientProtoSupport($request->requirePostParameter('useProto', fn (string $s) => Validator::vpnProto($s)));
                 $clientConfig = $this->connectionManager->connect(
                     $this->serverInfo,
@@ -118,11 +122,11 @@ class VpnPortalModule implements ServiceModuleInterface
                     $displayName,
                     $expiresAt,
                     $preferTcp,
-                    null,
+                    $publicKey,
                     null
                 );
 
-                return self::clientConfigResponse($clientConfig, $request->getServerName(), $profileId, $displayName);
+                return self::clientConfigResponse($clientConfig, $request->getServerName(), $profileId, $displayName, $secretKey);
             }
         );
 
@@ -234,9 +238,12 @@ class VpnPortalModule implements ServiceModuleInterface
         return $configList;
     }
 
-    private function clientConfigResponse(ClientConfigInterface $clientConfig, string $serverName, string $profileId, string $displayName): Response
+    private function clientConfigResponse(ClientConfigInterface $clientConfig, string $serverName, string $profileId, string $displayName, string $secretKey): Response
     {
         if ($clientConfig instanceof WireGuardClientConfig) {
+            // set private key
+            $clientConfig->setPrivateKey($secretKey);
+
             return new HtmlResponse(
                 $this->tpl->render(
                     'vpnPortalWgConfig',
