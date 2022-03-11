@@ -13,7 +13,6 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Cfg\Config;
-use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\Ip;
 use Vpn\Portal\Storage;
@@ -37,25 +36,6 @@ use Vpn\Portal\VpnDaemon;
  */
 
 $logger = new SysLogger('vpn-user-portal');
-
-/**
- * Determine which nodeUrl this WireGuard peer should be registered at. This
- * is super inefficient!
- * XXX clean this up!
- */
-function determineNodeUrl(ProfileConfig $profileConfig, Ip $ipFour): ?string
-{
-    for ($i = 0; $i <= $profileConfig->nodeCount(); ++$i) {
-        $wRangeFour = $profileConfig->wRangeFour($i);
-        if (in_array($ipFour->address(), $wRangeFour->clientIpListFour(), true)) {
-            return $profileConfig->nodeUrl($i);
-        }
-    }
-
-    // unable to find nodeUrl because the provided IP is not serviced by any
-    // of the nodes of this profile...
-    return null;
-}
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
@@ -112,7 +92,6 @@ try {
 
     // Register WireGuard peers we have in our database, but not in our node(s)
     // everything that is in wPeerListInDatabase, but not in wPeerList needs to be added to the appropriate node
-    // XXX not sure this is the correct order or things, may have to flip the parameters
     $wgPeersToAdd = array_diff(array_keys($wPeerListInDatabase), array_keys($wPeerList));
     foreach ($wgPeersToAdd as $publicKey) {
         // based on the publicKey we can now find the profile + node
@@ -120,9 +99,9 @@ try {
         $profileId = $peerInfo['profile_id'];
         $ipFour = $peerInfo['ip_four'];
         $ipSix = $peerInfo['ip_six'];
-        if (null === $nodeUrl = determineNodeUrl($config->profileConfig($profileId), Ip::fromIp($ipFour))) {
-            continue;
-        }
+        $nodeNumber = $peerInfo['node_number'];
+        $nodeUrl = $config->profileConfig($profileId)->nodeUrl($nodeNumber);
+
         //echo sprintf('**ADD** [%s]: %s (%s,%s)', $nodeUrl, $publicKey, $ipFour, $ipSix).PHP_EOL;
         $vpnDaemon->wPeerAdd(
             $nodeUrl,
