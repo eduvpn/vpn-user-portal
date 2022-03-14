@@ -206,8 +206,8 @@ class VpnDaemon
                     // if the peer does not exist in the database, remove it...
                     foreach ($this->wPeerList($nodeUrl, true) as $publicKey => $wPeerInfo) {
                         if (!\array_key_exists($publicKey, $wPeerListInDatabase)) {
-                            //echo sprintf('**REMOVE** [%s]: %s', $nodeUrl, $publicKey).PHP_EOL;
-                            //XXX we MUST make sure the IP info also matches, otherwise delete it as well
+                            // echo sprintf('**REMOVE** [%s]: %s', $nodeUrl, $publicKey).PHP_EOL;
+                            // XXX we MUST make sure the IP info also matches, otherwise delete it as well
                             $this->wPeerRemove(
                                 $nodeUrl,
                                 $publicKey
@@ -220,7 +220,7 @@ class VpnDaemon
                 if ($profileConfig->oSupport()) {
                     foreach (array_keys($this->oConnectionList($nodeUrl)) as $commonName) {
                         if (!\array_key_exists($commonName, $oCertListInDatabase)) {
-                            //echo sprintf('**DISCONNECT** [%s]: %s', $nodeUrl, $commonName).PHP_EOL;
+                            // echo sprintf('**DISCONNECT** [%s]: %s', $nodeUrl, $commonName).PHP_EOL;
                             $this->oDisconnectClient(
                                 $nodeUrl,
                                 $commonName
@@ -243,7 +243,7 @@ class VpnDaemon
             $nodeNumber = $peerInfo['node_number'];
             $nodeUrl = $config->profileConfig($profileId)->nodeUrl($nodeNumber);
 
-            //echo sprintf('**ADD** [%s]: %s (%s,%s)', $nodeUrl, $publicKey, $ipFour, $ipSix).PHP_EOL;
+            // echo sprintf('**ADD** [%s]: %s (%s,%s)', $nodeUrl, $publicKey, $ipFour, $ipSix).PHP_EOL;
             $this->wPeerAdd(
                 $nodeUrl,
                 $publicKey,

@@ -74,14 +74,7 @@ class ClientConfig implements ClientConfigInterface
             'dev tun',
             'client',
             'nobind',
-
-            // the server can also push these if needed, and it should be up
-            // to the client anyway if this is a good idea or not, e.g. running
-            // in a chroot
-            //'persist-key',
-            //'persist-tun',
             'remote-cert-tls server',
-
             'verb 3',
 
             // wait this long (seconds) before trying the next server in the list
