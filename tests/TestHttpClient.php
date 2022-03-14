@@ -27,6 +27,22 @@ class TestHttpClient implements HttpClientInterface
             );
         }
 
+        if ('http://localhost:41194/w/peer_list?show_all=yes' === $httpClientRequest->requestUrl()) {
+            return new HttpClientResponse(
+                200,
+                '',
+                '{"peer_list": []}'
+            );
+        }
+
+        if ('http://localhost:41194/o/connection_list' === $httpClientRequest->requestUrl()) {
+            return new HttpClientResponse(
+                200,
+                '',
+                '{"connection_list": []}'
+            );
+        }
+
         return new HttpClientResponse(
             404,
             '',
