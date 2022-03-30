@@ -26,10 +26,17 @@ use Vpn\Portal\WireGuard\Key;
  */
 final class VpnDaemonTest extends TestCase
 {
+    private TestHttpClient $httpClient;
+
+    protected function setUp(): void
+    {
+        $this->httpClient = new TestHttpClient();
+    }
+
     public function testNodeInfo(): void
     {
         $vpnDaemon = new VpnDaemon(
-            new TestHttpClient(),
+            $this->httpClient,
             new NullLogger()
         );
         static::assertSame(
@@ -79,9 +86,11 @@ final class VpnDaemonTest extends TestCase
         $storage->wPeerAdd('user_id', 0, 'default', 'My Test', Key::publicKeyFromSecretKey(Key::generate()), '10.43.43.5', 'fd43::5', $dateTime, $dateTime->add($config->sessionExpiry()), null);
 
         $vpnDaemon = new VpnDaemon(
-            new TestHttpClient(),
+            $this->httpClient,
             new NullLogger()
         );
         $vpnDaemon->sync($config, $storage);
+
+        static::assertCount(3, $this->httpClient->logData());
     }
 }

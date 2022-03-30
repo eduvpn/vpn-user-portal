@@ -17,8 +17,21 @@ use Vpn\Portal\HttpClient\HttpClientResponse;
 
 class TestHttpClient implements HttpClientInterface
 {
+    /** @var array<\Vpn\Portal\HttpClient\HttpClientRequest> */
+    private array $logData = [];
+
+    /**
+     * @return array<\Vpn\Portal\HttpClient\HttpClientRequest>
+     */
+    public function logData(): array
+    {
+        return $this->logData;
+    }
+
     public function send(HttpClientRequest $httpClientRequest): HttpClientResponse
     {
+        $this->logData[] = $httpClientRequest;
+
         if ('http://localhost:41194/i/node' === $httpClientRequest->requestUrl()) {
             return new HttpClientResponse(
                 200,
