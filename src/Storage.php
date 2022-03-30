@@ -42,6 +42,11 @@ class Storage implements CredentialValidatorInterface, StorageInterface
         if ('sqlite' === $db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
             $db->exec('PRAGMA foreign_keys = ON');
         }
+        // in PHP < 8.1 the ATTR_STRINGIFY_FETCHES attribute was always true,
+        // but changed to a default of false in 8.1. Setting this option
+        // restores the pre-8.1 behavior.
+        // @see https://www.php.net/manual/en/migration81.incompatible.php
+        $db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
         $this->db = $db;
         $this->migration = new Migration($db, $schemaDir, self::CURRENT_SCHEMA_VERSION);
         $this->sessionExpiry = $sessionExpiry;
