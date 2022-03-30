@@ -91,6 +91,8 @@ final class VpnDaemonTest extends TestCase
         );
         $vpnDaemon->sync($config, $storage);
 
+        // this is not yet super useful test, but the basis is there for more
+        // extensive tests if we run into trouble
         static::assertCount(3, $this->httpClient->logData());
     }
 }
