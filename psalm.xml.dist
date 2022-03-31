@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
-<psalm totallyTyped="false" resolveFromConfigFile="true">
-  <projectFiles>
-    <directory name="bin"/>
-    <directory name="src"/>
-    <directory name="web"/>
-    <ignoreFiles>
-      <directory name="vendor"/>
-    </ignoreFiles>
-  </projectFiles>
-  <issueHandlers>
-    <LessSpecificReturnType errorLevel="info"/>
-  </issueHandlers>
+<psalm
+    errorLevel="2"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+	<directory name="src" />
+	<directory name="web" />
+	<directory name="bin" />
+	<ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
 </psalm>
