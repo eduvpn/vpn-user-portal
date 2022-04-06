@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.5 (...)
+- switch from `psr/log` to `SysLogger` from `vpn-lib-common`
+- source formatting
+
 ## 2.4.4 (2022-04-05)
 - fix PHP 8.1 compatibility
 
