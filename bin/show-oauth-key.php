@@ -21,8 +21,8 @@ try {
         throw new Exception('unable to find "'.$keyFile.'"');
     }
     $secretKey = SecretKey::fromEncodedString(FileIO::readFile($keyFile));
-    echo 'Public Key: '.$secretKey->getPublicKey()->encode().PHP_EOL;
+    echo 'Public Key: '.$secretKey->getPublicKey()->encode().\PHP_EOL;
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
 }

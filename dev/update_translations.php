@@ -55,21 +55,21 @@ foreach ($localeFileList as $localeFile) {
     ksort($deletedList);
 
     // create the locale file
-    $output = '<?php'.PHP_EOL.PHP_EOL.'return ['.PHP_EOL;
+    $output = '<?php'.\PHP_EOL.\PHP_EOL.'return ['.\PHP_EOL;
     foreach ($localeData as $k => $v) {
         $k = quoteStr($k);
         $v = quoteStr($v);
         if (empty($v)) {
-            $output .= sprintf("    //'%s' => '%s',", $k, $v).PHP_EOL;
+            $output .= sprintf("    //'%s' => '%s',", $k, $v).\PHP_EOL;
         } else {
-            $output .= sprintf("    '%s' => '%s',", $k, $v).PHP_EOL;
+            $output .= sprintf("    '%s' => '%s',", $k, $v).\PHP_EOL;
         }
     }
     // add the deleted entries as comments
     foreach ($deletedList as $k => $v) {
         $k = quoteStr($k);
         $v = quoteStr($v);
-        $output .= sprintf("    // [DELETED] '%s' => '%s',", $k, $v).PHP_EOL;
+        $output .= sprintf("    // [DELETED] '%s' => '%s',", $k, $v).\PHP_EOL;
     }
     $output .= '];';
 

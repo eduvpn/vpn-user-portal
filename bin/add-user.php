@@ -31,14 +31,14 @@ try {
             continue;
         }
         if ('--help' === $argv[$i]) {
-            echo 'SYNTAX: '.$argv[0].' [--user USER] [--pass PASS]'.PHP_EOL;
+            echo 'SYNTAX: '.$argv[0].' [--user USER] [--pass PASS]'.\PHP_EOL;
             exit(0);
         }
     }
 
     if (null === $userId) {
         echo 'User ID: ';
-        $userId = trim(fgets(STDIN));
+        $userId = trim(fgets(\STDIN));
     }
 
     if (empty($userId)) {
@@ -46,15 +46,15 @@ try {
     }
 
     if (null === $userPass) {
-        echo sprintf('Setting password for user "%s"', $userId).PHP_EOL;
+        echo sprintf('Setting password for user "%s"', $userId).\PHP_EOL;
         // ask for password
         exec('stty -echo');
         echo 'Password: ';
-        $userPass = trim(fgets(STDIN));
-        echo PHP_EOL.'Password (repeat): ';
-        $userPassRepeat = trim(fgets(STDIN));
+        $userPass = trim(fgets(\STDIN));
+        echo \PHP_EOL.'Password (repeat): ';
+        $userPassRepeat = trim(fgets(\STDIN));
         exec('stty echo');
-        echo PHP_EOL;
+        echo \PHP_EOL;
         if ($userPass !== $userPassRepeat) {
             throw new RuntimeException('specified passwords do not match');
         }
@@ -68,7 +68,7 @@ try {
     $config = Config::fromFile($configFile);
 
     if ('FormPdoAuthentication' !== $config->requireString('authMethod')) {
-        echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->requireString('authMethod')).PHP_EOL;
+        echo sprintf('WARNING: backend "%s" does NOT support adding users!', $config->requireString('authMethod')).\PHP_EOL;
     }
 
     $storage = new Storage(
@@ -78,6 +78,6 @@ try {
     );
     $storage->add($userId, $userPass);
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
 }

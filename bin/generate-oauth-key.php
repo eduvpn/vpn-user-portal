@@ -22,6 +22,6 @@ try {
     $secretKey = SecretKey::generate();
     FileIO::writeFile($keyFile, $secretKey->encode(), 0644);
 } catch (Exception $e) {
-    echo sprintf('ERROR: %s', $e->getMessage()).PHP_EOL;
+    echo sprintf('ERROR: %s', $e->getMessage()).\PHP_EOL;
     exit(1);
 }

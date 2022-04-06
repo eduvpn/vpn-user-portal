@@ -20,14 +20,14 @@ use LC\Portal\Storage;
  */
 function showHelp()
 {
-    echo '  --enable USER-ID'.PHP_EOL;
-    echo '        (Re)enable user account(*)'.PHP_EOL;
-    echo '  --disable USER-ID'.PHP_EOL;
-    echo '        Disable user account(*)'.PHP_EOL;
-    echo '  --delete USER-ID [--force]'.PHP_EOL;
-    echo '        Delete user account (data)'.PHP_EOL;
-    echo PHP_EOL;
-    echo '(*) Only has effect for accounts that have logged in at least once!'.PHP_EOL;
+    echo '  --enable USER-ID'.\PHP_EOL;
+    echo '        (Re)enable user account(*)'.\PHP_EOL;
+    echo '  --disable USER-ID'.\PHP_EOL;
+    echo '        Disable user account(*)'.\PHP_EOL;
+    echo '  --delete USER-ID [--force]'.\PHP_EOL;
+    echo '        Delete user account (data)'.\PHP_EOL;
+    echo \PHP_EOL;
+    echo '(*) Only has effect for accounts that have logged in at least once!'.\PHP_EOL;
 }
 
 try {

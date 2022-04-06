@@ -12,9 +12,12 @@ return PhpCsFixer\Config::create()
             'phpdoc_order' => true,
             'phpdoc_no_empty_return' => false,
             'phpdoc_add_missing_param_annotation' => true,
+            'no_alternative_syntax' => false,
+            'echo_tag_syntax' => ['format' => 'short'],
             'pow_to_exponentiation' => false,
             'strict_comparison' => true,
             'strict_param' => true,
+            'combine_nested_dirname' => false,
             'php_unit_strict' => true,
             'header_comment' => [
                 'header' => <<< 'EOD'

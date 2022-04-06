@@ -23,5 +23,5 @@ foreach ($localeFileList as $localeFile) {
 arsort($translationStats);
 
 foreach ($translationStats as $l => $cnt) {
-    echo $l."\t".sprintf('%3d', $cnt).'%'.PHP_EOL;
+    echo $l."\t".sprintf('%3d', $cnt).'%'.\PHP_EOL;
 }
