@@ -16,11 +16,6 @@
             "LC\\Portal\\Tests\\": "tests/"
         }
     },
-    "config": {
-        "platform": {
-            "php": "5.4.8"
-        }
-    },
     "description": "User and admin portal for Let's Connect! and eduVPN",
     "license": "AGPL-3.0-or-later",
     "name": "lc/vpn-user-portal",
@@ -67,14 +62,12 @@
         "paragonie/constant_time_encoding": "^1.0.3|^2.2.0",
         "paragonie/random_compat": "^1|^2",
         "paragonie/sodium_compat": "^1",
-        "php": ">=5.4.8",
-        "psr/log": "^1"
+        "php": ">=5.4.8"
     },
     "require-dev": {
         "ext-json": "*",
         "fkooman/saml-sp": "^1",
-        "friendsofphp/php-cs-fixer": "^2",
-        "phpunit/phpunit": "^4.8.35|^5|^6|^7"
+        "friendsofphp/php-cs-fixer": "^2"
     },
     "support": {
         "email": "eduvpn@surfnet.nl",

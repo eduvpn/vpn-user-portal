@@ -18,7 +18,7 @@ use LC\Common\Http\Request;
 use LC\Common\Http\Service;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
-use LC\Common\Logger;
+use LC\Common\Log\SysLogger;
 use LC\Portal\BearerAuthenticationHook;
 use LC\Portal\ClientFetcher;
 use LC\Portal\Expiry;
@@ -26,7 +26,7 @@ use LC\Portal\OAuth\BearerValidator;
 use LC\Portal\Storage;
 use LC\Portal\VpnApiModule;
 
-$logger = new Logger('vpn-user-api');
+$logger = new SysLogger('vpn-user-api');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);

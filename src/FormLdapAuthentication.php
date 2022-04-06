@@ -12,8 +12,8 @@ namespace LC\Portal;
 use LC\Common\Config;
 use LC\Common\Http\FormAuthentication;
 use LC\Common\Http\SessionInterface;
+use LC\Common\Log\LoggerInterface;
 use LC\Common\TplInterface;
-use Psr\Log\LoggerInterface;
 
 class FormLdapAuthentication extends FormAuthentication
 {

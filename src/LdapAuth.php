@@ -11,12 +11,12 @@ namespace LC\Portal;
 
 use LC\Common\Http\CredentialValidatorInterface;
 use LC\Common\Http\UserInfo;
+use LC\Common\Log\LoggerInterface;
 use LC\Portal\Exception\LdapClientException;
-use Psr\Log\LoggerInterface;
 
 class LdapAuth implements CredentialValidatorInterface
 {
-    /** @var \Psr\Log\LoggerInterface */
+    /** @var \LC\Common\Log\LoggerInterface */
     private $logger;
 
     /** @var LdapClient */

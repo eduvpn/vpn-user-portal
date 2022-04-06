@@ -29,7 +29,7 @@ use LC\Common\Http\TwoFactorHook;
 use LC\Common\Http\TwoFactorModule;
 use LC\Common\HttpClient\CurlHttpClient;
 use LC\Common\HttpClient\ServerClient;
-use LC\Common\Logger;
+use LC\Common\Log\SysLogger;
 use LC\Portal\AccessHook;
 use LC\Portal\AdminHook;
 use LC\Portal\AdminPortalModule;
@@ -55,7 +55,7 @@ use LC\Portal\TwoFactorEnrollModule;
 use LC\Portal\UpdateSessionInfoHook;
 use LC\Portal\VpnPortalModule;
 
-$logger = new Logger('vpn-user-portal');
+$logger = new SysLogger('vpn-user-portal');
 
 try {
     $request = new Request($_SERVER, $_GET, $_POST);
