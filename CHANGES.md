@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.4.5 (...)
+## 2.4.5 (2022-04-07)
 - switch from `psr/log` to `SysLogger` from `vpn-lib-common`
 - source formatting
 
