@@ -142,11 +142,11 @@ class ConfigCheck
             foreach ($profileConfig->routeList() as $routeIpPrefix) {
                 $routeIp = Ip::fromIpPrefix($routeIpPrefix);
                 if ($routeIp->contains($dnsServerIp)) {
-                    continue;
+                    continue 2;
                 }
-
-                $profileProblemList[] = sprintf('Traffic to DNS server "%s" will not be routed over VPN', $dnsServerIp->address());
             }
+
+            $profileProblemList[] = sprintf('Traffic to DNS server "%s" will not be routed over VPN', $dnsServerIp->address());
         }
     }
 
