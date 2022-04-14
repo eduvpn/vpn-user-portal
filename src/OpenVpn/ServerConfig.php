@@ -249,6 +249,9 @@ class ServerConfig
         foreach ($excludeRouteList->ls() as $routeIpPrefix) {
             if (Ip::IP_6 === $routeIpPrefix->family()) {
                 // IPv6
+                // This is currently not working for all clients, there is an
+                // open issue + PR for it
+                // @see https://community.openvpn.net/openvpn/ticket/1161
                 $routeConfig[] = sprintf('push "route-ipv6 %s net_gateway_ipv6"', (string) $routeIpPrefix);
             } else {
                 // IPv4
