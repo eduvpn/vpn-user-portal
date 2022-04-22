@@ -38,7 +38,7 @@ return [
     //'authModule' => 'ShibAuthModule',       // SAML (Shibboleth)
     //'authModule' => 'MellonAuthModule',     // SAML (mod_auth_mellon)
     //'authModule' => 'PhpSamlSpAuthModule',  // SAML (php-saml-sp)
-
+    //'authModule' => 'OpenIdAuthModule',       // OpenID  (mod_auth_openidc)
     // ** LDAP **
     //'LdapAuthModule' => [
     //    // *** FreeIPA ***
@@ -153,6 +153,28 @@ return [
     //    // AuthnContext required for *all* users
     //    //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
     //],
+
+    // ** OpenID (Mod_auth_openidc) **
+    //'OpenIdAuthModule' => [
+    //    // Default for userIdAttribute is REMOTE_USER, if left empty
+    //    // claims passed needs the foolowing settings on 
+    //    // OIDCPassClaimsAs "headers"
+    //    // OIDCPassUserInfoAs "claims"
+    //    // OIDCRemoteUserClaim sub  *** can be changed as needed sub is used to keey user info out of here
+    //    // OIDCClaimPrefix openid-  *** 
+    //    //   HTTP_ is added by the mod if OIDCPassClaimsAs "headers", and REDIRECT_ if OIDCPassClaimsAs "environment"
+    //    //   openid- with be converted to OPENID_  (apache does not like _, but will convert - to _)
+    //    //   sub is added from OIDCRemoteUserClaim 
+    //    'userIdAttribute' => 'HTTP_OPENID_SUB',
+    //    'permissionAttributeList' => ['HTTP_OPENID_ROLES'],
+    //    // cookieName is need to be deleted on logout. 
+    //    // we ask for it here because it is editable in auth_openidc.conf with OIDCCookie 
+    //    // DEFAULT 'mod_auth_openidc_session'.  if left empty.
+    //    'cookieName' => 'mod_auth_openidc_session',     
+    //    // OIDCRedirectURI as in auth_openidc.conf
+    //    'redirectURI' => ''    
+    //],
+
 
     // List of permissions a user can have that makes them admin
     // OPTIONAL, DEFAULT = []

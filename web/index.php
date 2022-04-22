@@ -31,6 +31,7 @@ use Vpn\Portal\Http\Auth\MellonAuthModule;
 use Vpn\Portal\Http\Auth\PhpSamlSpAuthModule;
 use Vpn\Portal\Http\Auth\RadiusCredentialValidator;
 use Vpn\Portal\Http\Auth\ShibAuthModule;
+use Vpn\Portal\Http\Auth\OpenIdAuthModule;
 use Vpn\Portal\Http\Auth\UserPassAuthModule;
 use Vpn\Portal\Http\CsrfProtectionHook;
 use Vpn\Portal\Http\DisabledUserHook;
@@ -153,6 +154,11 @@ try {
             $authModule = new PhpSamlSpAuthModule($config->phpSamlSpAuthConfig());
 
             break;
+
+        case   'OpenIdAuthModule':
+            $authModule = new OpenIdAuthModule($config->OpenIdAuthConfig());
+    
+            break;            
 
         default:
             throw new RuntimeException('unsupported authentication mechanism');
