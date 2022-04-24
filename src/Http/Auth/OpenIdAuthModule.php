@@ -40,11 +40,7 @@ class OpenIdAuthModule extends AbstractAuthModule
             $permissionList
         );
     }
-    public function cookieName(Request $request): String
-    {
 
-
-    }
     public function triggerLogout(Request $request): Response
    {  
         return new RedirectResponse(

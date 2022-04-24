@@ -36,13 +36,7 @@ class OpenIdAuthConfig
     }
 
 
-    /**
-     * @return string
-     */
-    public function cookieName(): string
-    {
-        return $this->requireString('cookieName') ?: 'mod_auth_openidc_session';
-    }
+
 
     /** 
     * @return string
