@@ -60,7 +60,7 @@ class ServerConfig
             $processConfig['rangeFour'] = $splitRangeFour[$processNumber];
             $processConfig['rangeSix'] = $splitRangeSix[$processNumber];
             $processConfig['tunDev'] = $this->tunDev;
-            $processConfig['proto'] = 'udp6';
+            $processConfig['proto'] = Ip::IP_6 === $profileConfig->oListenOn()->family() ? 'udp6' : 'udp';
             $processConfig['port'] = $udpPort;
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
@@ -73,7 +73,7 @@ class ServerConfig
             $processConfig['rangeFour'] = $splitRangeFour[$processNumber];
             $processConfig['rangeSix'] = $splitRangeSix[$processNumber];
             $processConfig['tunDev'] = $this->tunDev;
-            $processConfig['proto'] = 'tcp6-server';
+            $processConfig['proto'] = Ip::IP_6 === $profileConfig->oListenOn()->family() ? 'tcp6-server' : 'tcp-server';
             $processConfig['port'] = $tcpPort;
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
@@ -157,6 +157,7 @@ class ServerConfig
             sprintf('management /run/openvpn-server/%s-%d.sock unix', $profileConfig->profileId(), $processConfig['processNumber']),
             sprintf('setenv PROFILE_ID %s', $profileConfig->profileId()),
             sprintf('proto %s', $processConfig['proto']),
+            sprintf('local %s', $profileConfig->oListenOn()->address()),
 
             '<ca>',
             $this->ca->caCert()->pemCert(),
