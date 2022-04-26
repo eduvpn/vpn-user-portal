@@ -347,6 +347,11 @@ return [
             // Enable OpenVPN server logging
             // OpenVPN Only, OPTIONAL, DEFAULT = false
             // 'oEnableLog' => true,
+
+            // Listen on a specific IP address only
+            // OPTIONAL, DEFAULT = '::'
+            // 'oListenOn' => '192.0.2.99',
+            // 'oListenOn' => '2001:db8::99',
         ],
     ],
 ];
