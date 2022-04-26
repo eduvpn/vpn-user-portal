@@ -203,6 +203,11 @@ class ProfileConfig
         return $this->requireBool('oEnableLog', false);
     }
 
+    public function oListenOn(): Ip
+    {
+        return Ip::fromIp($this->requireString('oListenOn', '::'));
+    }
+
     /**
      * @return array<string>
      */
