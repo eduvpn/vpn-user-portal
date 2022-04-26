@@ -44,7 +44,7 @@ class OpenIdAuthModule extends AbstractAuthModule
     public function triggerLogout(Request $request): Response
    {  
         return new RedirectResponse(
-            $this->config->redirectURI().'?'.http_build_query(['logout' => $request->getRootUri()])
+            $request->getRootUri().'/openid?'.http_build_query(['logout' => $request->getRootUri()])
         );
    }
 }

@@ -38,14 +38,6 @@ class OpenIdAuthConfig
 
 
 
-    /** 
-    * @return string
-    */
-   public function redirectURI(): string
-   {
-       return $this->requireString('redirectURI') ;
-   }
-
     
 
 }

@@ -165,15 +165,12 @@ return [
     //    //   HTTP_ is added by the mod if OIDCPassClaimsAs "headers", and REDIRECT_ if OIDCPassClaimsAs "environment"
     //    //   openid- with be converted to OPENID_  (apache does not like _, but will convert - to _)
     //    //   sub is added from OIDCRemoteUserClaim 
-    //    'userIdAttribute' => 'HTTP_OPENID_SUB',
+    //    //   the header to be used then is HTTP_OPENID_SUB
+    //    //   the same applies with Roles as is passed in the header with same format HTTP_OPENID_ROLES
+    //    'userIdAttribute' => 'REMOTE_USER',  
     //    'permissionAttributeList' => ['HTTP_OPENID_ROLES'],
-    //    // cookieName is need to be deleted on logout. 
-    //    // we ask for it here because it is editable in auth_openidc.conf with OIDCCookie 
-    //    // DEFAULT 'mod_auth_openidc_session'.  if left empty.
-    //    'cookieName' => 'mod_auth_openidc_session',     
-    //    // OIDCRedirectURI as in auth_openidc.conf
-    //    'redirectURI' => ''    
-    //],
+  
+
 
 
     // List of permissions a user can have that makes them admin
