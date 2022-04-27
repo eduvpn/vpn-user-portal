@@ -170,7 +170,7 @@ return [
 
     // The languages supported by the Portal UI
     // OPTIONAL, DEFAULT = ['en-US']
-    // 'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'ro-RO', 'uk-UA'],
+    // 'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'ro-RO', 'uk-UA', 'sv-SE'],
 
     // The default language of the Portal UI
     // OPTIONAL, DEFAULT = 'en-US'
