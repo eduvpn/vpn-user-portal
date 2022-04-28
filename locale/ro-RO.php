@@ -116,7 +116,7 @@ return [
     'Sign In' => 'Conectare',
     'Sign Out' => 'Deconectare',
     'Stats' => 'Statistici',
-    '<em>Data/Ora</em> trebuie să fie în format UTC.' => '',
+    'The <em>Date/Time</em> MUST be in UTC.' => '<em>Data/Ora</em> trebuie să fie în format UTC.',
     'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => 'Câmpul <em>Dată/Oră</em> acceptă date în formatul <code>Y-m-d H:i:s</code>, de exemplu: <code>2019-12-23 08:00:00</code>',
     'The credentials you provided were not correct.' => 'Numele de utilizator și/sau parola pe care le-ai introdus nu sunt corecte.',
     'The list of applications you authorized to create a VPN connection.' => 'Lista aplicațiilor pe care le-ai autorizat să creeze o conexiune VPN.',
