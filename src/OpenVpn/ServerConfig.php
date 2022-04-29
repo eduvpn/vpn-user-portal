@@ -157,7 +157,6 @@ class ServerConfig
             sprintf('management /run/openvpn-server/%s-%d.sock unix', $profileConfig->profileId(), $processConfig['processNumber']),
             sprintf('setenv PROFILE_ID %s', $profileConfig->profileId()),
             sprintf('proto %s', $processConfig['proto']),
-            sprintf('local %s', $profileConfig->oListenOn()->address()),
 
             '<ca>',
             $this->ca->caCert()->pemCert(),
@@ -172,6 +171,11 @@ class ServerConfig
             $this->tlsCrypt->get($profileConfig->profileId()),
             '</tls-crypt>',
         ];
+
+        // add --local only to the configuration when it is not the default "::"
+        if ('::' !== $oListenOn = $profileConfig->oListenOn()->address()) {
+            $serverConfig[] = sprintf('local %s', $oListenOn);
+        }
 
         if (!$profileConfig->oEnableLog()) {
             $serverConfig[] = 'log /dev/null';
