@@ -1,12 +1,12 @@
 **Summary**: User and admin portal for Let's Connect! and eduVPN 
 
-**Description**: The user and admin portal and API for Let's Connect! and 
-eduVPN allowing for self-management by users and administrative tasks by 
-designated administrators.
+**Description**: The user and admin portal and API for eduVPN / Let's Connect! 
+allowing for self-management by users and administrative tasks by designated 
+administrators.
 
 **License**:  AGPL-3.0-or-later
 
-[![builds.sr.ht status](https://builds.sr.ht/~fkooman/vpn-user-portal.svg)](https://builds.sr.ht/~fkooman/vpn-user-portal?)
+[![builds.sr.ht status](https://builds.sr.ht/~fkooman/vpn-user-portal.svg)](https://builds.sr.ht/~fkooman/vpn-user-portal)
 
 # Introduction
 
@@ -15,7 +15,11 @@ eduVPN software.
 
 # Issue Tracker
 
-Find our issue tracker [here](https://todo.sr.ht/~eduvpn/server).
+Find our issue tracker [here](https://todo.sr.ht/~eduvpn/server). You can also 
+submit an issue through mail. 
+
+Please mention the version of eduVPN / Let's Connect! server you are running 
+and _only_ report issues with the _server_ here!
 
 # Contributing
 
