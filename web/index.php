@@ -28,10 +28,10 @@ use Vpn\Portal\Http\Auth\ClientCertAuthModule;
 use Vpn\Portal\Http\Auth\DbCredentialValidator;
 use Vpn\Portal\Http\Auth\LdapCredentialValidator;
 use Vpn\Portal\Http\Auth\MellonAuthModule;
+use Vpn\Portal\Http\Auth\OpenIdAuthModule;
 use Vpn\Portal\Http\Auth\PhpSamlSpAuthModule;
 use Vpn\Portal\Http\Auth\RadiusCredentialValidator;
 use Vpn\Portal\Http\Auth\ShibAuthModule;
-use Vpn\Portal\Http\Auth\OpenIdAuthModule;
 use Vpn\Portal\Http\Auth\UserPassAuthModule;
 use Vpn\Portal\Http\CsrfProtectionHook;
 use Vpn\Portal\Http\DisabledUserHook;
@@ -155,10 +155,10 @@ try {
 
             break;
 
-        case   'OpenIdAuthModule':
+        case 'OpenIdAuthModule':
             $authModule = new OpenIdAuthModule($config->OpenIdAuthConfig());
-    
-            break;            
+
+            break;
 
         default:
             throw new RuntimeException('unsupported authentication mechanism');

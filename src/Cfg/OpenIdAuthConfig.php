@@ -24,7 +24,7 @@ class OpenIdAuthConfig
 
     public function userIdAttribute(): string
     {
-        return $this->requireString('userIdAttribute') ?: 'REMOTE_USER';
+        return $this->requireString('userIdAttribute', 'REMOTE_USER');
     }
 
     /**
@@ -34,10 +34,4 @@ class OpenIdAuthConfig
     {
         return $this->requireStringArray('permissionAttributeList', []);
     }
-
-
-
-
-    
-
 }
