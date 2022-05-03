@@ -141,7 +141,8 @@ return [
 
     // ** SAML (php-saml-sp) **
     // 'PhpSamlSpAuthModule' => [
-    //    'userIdAttribute' => 'eduPersonTargetedID',
+    //    'userIdAttribute' => 'uid',
+    //    //'userIdAttribute' => 'eduPersonTargetedID',
     //    //'userIdAttribute' => 'eduPersonPrincipalName',
 
     //    // ** AUTHORIZATION | PERMISSIONS **
