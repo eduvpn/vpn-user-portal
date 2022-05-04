@@ -31,6 +31,7 @@ class OpenIdAuthModule extends AbstractAuthModule
         $permissionList = [];
         foreach ($this->config->permissionAttributeList() as $permissionAttribute) {
             if (null !== $permissionAttributeValue = $request->optionalHeader($permissionAttribute)) {
+                // OIDCClaimDelimiter for multi-valued claims (default is ",")
                 $permissionList = array_merge($permissionList, explode(',', $permissionAttributeValue));
             }
         }
@@ -44,7 +45,10 @@ class OpenIdAuthModule extends AbstractAuthModule
     public function triggerLogout(Request $request): Response
     {
         return new RedirectResponse(
-            $request->getRootUri().'/openid?'.http_build_query(['logout' => $request->getRootUri()])
+            // we redirect back to OIDCRedirectURI as defined in the Apache
+            // configuration with the "logout" query parameter
+            // @see https://github.com/zmartzone/mod_auth_openidc/wiki#9-how-do-i-logout-users
+            $request->getRootUri().'redirect_uri?'.http_build_query(['logout' => $request->requireReferrer()])
         );
     }
 }
