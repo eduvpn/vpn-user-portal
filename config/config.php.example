@@ -156,16 +156,16 @@ return [
     //    //'authnContext' => ['urn:oasis:names:tc:SAML:2.0:ac:classes:TimesyncToken'],
     // ],
 
-    // List of permissions a user MUST have in order to get access to the
-    // service
-    // OPTIONAL, DEFAULT = null
-    // 'accessPermissionList' => ['http://eduvpn.org/role/user'],
-
     // ** OpenID Connect (mod_auth_openidc) **
     // 'OidcAuthModule' => [
     //    'userIdAttribute' => 'REMOTE_USER',
     // //   'permissionAttributeList' => [],
     // ],
+
+    // List of permissions a user MUST have in order to get access to the
+    // service
+    // OPTIONAL, DEFAULT = null
+    // 'accessPermissionList' => ['http://eduvpn.org/role/user'],
 
     // List of permissions a user can have that makes them admin
     // OPTIONAL, DEFAULT = []
