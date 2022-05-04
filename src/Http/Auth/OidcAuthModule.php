@@ -11,17 +11,17 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
-use Vpn\Portal\Cfg\OpenIdAuthConfig;
+use Vpn\Portal\Cfg\OidcAuthConfig;
 use Vpn\Portal\Http\RedirectResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
 
-class OpenIdAuthModule extends AbstractAuthModule
+class OidcAuthModule extends AbstractAuthModule
 {
-    private OpenIdAuthConfig $config;
+    private OidcAuthConfig $config;
 
-    public function __construct(OpenIdAuthConfig $config)
+    public function __construct(OidcAuthConfig $config)
     {
         $this->config = $config;
     }

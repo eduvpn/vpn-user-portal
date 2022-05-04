@@ -38,7 +38,7 @@ return [
     // 'authModule' => 'ShibAuthModule',       // SAML (Shibboleth)
     // 'authModule' => 'MellonAuthModule',     // SAML (mod_auth_mellon)
     // 'authModule' => 'PhpSamlSpAuthModule',  // SAML (php-saml-sp)
-    // 'authModule' => 'OpenIdAuthModule',     // OpenID (mod_auth_openidc)
+    // 'authModule' => 'OidcAuthModule',       // OpenID Connect (mod_auth_openidc)
 
     // ** LDAP **
     // 'LdapAuthModule' => [
@@ -161,9 +161,10 @@ return [
     // OPTIONAL, DEFAULT = null
     // 'accessPermissionList' => ['http://eduvpn.org/role/user'],
 
-    // ** OpenID (mod_auth_openidc) **
-    // 'OpenIdAuthModule' => [
+    // ** OpenID Connect (mod_auth_openidc) **
+    // 'OidcAuthModule' => [
     //    'userIdAttribute' => 'REMOTE_USER',
+    // //   'permissionAttributeList' => [],
     // ],
 
     // List of permissions a user can have that makes them admin

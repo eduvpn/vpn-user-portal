@@ -185,9 +185,9 @@ class Config
         return new ShibAuthConfig($this->s('ShibAuthModule')->toArray());
     }
 
-    public function openidAuthConfig(): OpenIdAuthConfig
+    public function oidcAuthConfig(): OidcAuthConfig
     {
-        return new OpenIdAuthConfig($this->s('OpenIdAuthModule')->toArray());
+        return new OidcAuthConfig($this->s('OidcAuthModule')->toArray());
     }
 
     public function radiusAuthConfig(): RadiusAuthConfig

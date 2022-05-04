@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Cfg;
 
-class OpenIdAuthConfig
+class OidcAuthConfig
 {
     use ConfigTrait;
 
