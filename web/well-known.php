@@ -20,17 +20,21 @@ try {
     $request = Request::createFromGlobals();
 
     if (false === $appRoot = getenv('VPN_APP_ROOT')) {
-        $appRootUri = $request->getScheme().'://'.$request->getAuthority();
-    } else {
-        $appRootUri = $request->getScheme().'://'.$request->getAuthority().$appRoot;
+        $appRoot = '';
     }
+    $appRootUri = $request->getScheme().'://'.$request->getAuthority().$appRoot;
+
+    // if VPN_APP_ROOT is _NOT_ set, we assume that we are running in some sort
+    // of development/deployed mode where URL rewriting was NOT used, so we
+    // point directly to the URL paths with their PHP extension
+    $rewriteUrl = '' !== $appRoot;
 
     $jsonData = [
         'api' => [
             'http://eduvpn.org/api#3' => [
-                'api_endpoint' => $appRootUri.'/api/v3',
+                'api_endpoint' => $rewriteUrl ? $appRootUri.'/api/v3' : $appRootUri.'/api.php/v3',
                 'authorization_endpoint' => $appRootUri.'/oauth/authorize',
-                'token_endpoint' => $appRootUri.'/oauth/token',
+                'token_endpoint' => $rewriteUrl ? $appRootUri.'/oauth/token' : $appRootUri.'/oauth.php/token',
             ],
         ],
         'v' => trim(FileIO::read($baseDir.'/VERSION')),
