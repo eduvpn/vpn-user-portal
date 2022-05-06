@@ -121,7 +121,7 @@ return [
     'The credentials you provided were not correct.' => 'Kasutajakonto andmed ei olnud õiged.',
     'The list of applications you authorized to create a VPN connection.' => 'Rakenduste nimekiri, millel oled lubanud VPN ühendust luua.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Samaaegselt ühendatud VPN-klientide arvu maksimum eelmise nädala konkreetsel ajahetkel',
-    // 'The most recent VPN connections with this account.' => '',
+    'The most recent VPN connections with this account.' => 'Selle konto viimane VPNi ühendus',
     'The number of unique users connecting to the VPN service in the last week' => 'VPN teenuse unikaalsete kasutajate arv viimasel nädalal.',
     'The table below shows the per profile VPN usage over the last week.' => 'Alltoodud tabel näitab profiilide kaupa VPN kasutust viimasel nädalal.',
     'There are no results matching your criteria.' => 'Otsingutingimustele vastavaid tulemusi ei leitud.',
