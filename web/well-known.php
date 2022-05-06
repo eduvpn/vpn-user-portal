@@ -25,16 +25,16 @@ try {
     $appRootUri = $request->getScheme().'://'.$request->getAuthority().$appRoot;
 
     // if VPN_APP_ROOT is _NOT_ set, we assume that we are running in some sort
-    // of development/deployed mode where URL rewriting was NOT used, so we
-    // point directly to the URL paths with their PHP extension
-    $rewriteUrl = '' !== $appRoot;
+    // of development/deployed mode where URL rewriting/fancy URLs are NOT
+    // used, so we point directly to the URL paths with their PHP extension
+    $useFancyUrl = '' !== $appRoot;
 
     $jsonData = [
         'api' => [
             'http://eduvpn.org/api#3' => [
-                'api_endpoint' => $rewriteUrl ? $appRootUri.'/api/v3' : $appRootUri.'/api.php/v3',
+                'api_endpoint' => $useFancyUrl ? $appRootUri.'/api/v3' : $appRootUri.'/api.php/v3',
                 'authorization_endpoint' => $appRootUri.'/oauth/authorize',
-                'token_endpoint' => $rewriteUrl ? $appRootUri.'/oauth/token' : $appRootUri.'/oauth.php/token',
+                'token_endpoint' => $useFancyUrl ? $appRootUri.'/oauth/token' : $appRootUri.'/oauth.php/token',
             ],
         ],
         'v' => trim(FileIO::read($baseDir.'/VERSION')),
