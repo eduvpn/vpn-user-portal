@@ -34,7 +34,7 @@ try {
             'http://eduvpn.org/api#3' => [
                 'api_endpoint' => $useFancyUrl ? $appRootUri.'/api/v3' : $appRootUri.'/api.php/v3',
                 'authorization_endpoint' => $appRootUri.'/oauth/authorize',
-                'token_endpoint' => $useFancyUrl ? $appRootUri.'/oauth/token' : $appRootUri.'/oauth.php/token',
+                'token_endpoint' => $useFancyUrl ? $appRootUri.'/oauth/token' : $appRootUri.'/oauth.php/oauth/token',
             ],
         ],
         'v' => trim(FileIO::read($baseDir.'/VERSION')),
