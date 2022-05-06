@@ -28,7 +28,7 @@ class SeSession implements SessionInterface
             $sessionStorage = new MemcacheSessionStorage($config->memcacheSessionConfig()->serverList());
         }
         $this->session = new Session(
-            SessionOptions::init(),
+            SessionOptions::init()->withExpiresIn($config->browserSessionExpiry()),
             $cookieOptions,
             $sessionStorage
         );

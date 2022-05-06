@@ -31,6 +31,11 @@ class Config
         return new DateInterval($this->requireString('sessionExpiry', 'P90D'));
     }
 
+    public function browserSessionExpiry(): DateInterval
+    {
+        return new DateInterval($this->requireString('browserSessionExpiry', 'PT30M'));
+    }
+
     public function caExpiry(): DateInterval
     {
         return new DateInterval($this->requireString('caExpiry', 'P10Y'));
