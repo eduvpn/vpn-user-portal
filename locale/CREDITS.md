@@ -12,3 +12,4 @@
 * `pt_PT`: Raul Ferreira, Marco Teixeira (Universidade do Minho)
 * `es_LA`: Carlos Pedreros (Universidad de La Serena, Chile)
 * `sv_SE`: Jasper Metselaar (Högskolan Dalarna / Dalarna University, Sweden)
+* `af_ZA`: Donald Coetzee (TENET South Africa)

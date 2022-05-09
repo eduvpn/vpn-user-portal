@@ -389,6 +389,7 @@ class Tpl implements TplInterface
             'ro-RO' => 'română',
             'uk-UA' => 'Українська',
             'sv-SE' => 'svenska',
+            'af-ZA' => 'Afrikaans',
         ];
     }
 
