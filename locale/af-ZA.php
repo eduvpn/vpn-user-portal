@@ -128,7 +128,7 @@ return [
     'This server uses an external authentication source. Deleting the account data will not prevent the user from authenticating (again)!' => 'Hierdie bediener gebruik \'n eksterne verifikasiebron. Die gebruiker sal nie verhoed word om (weer) aan te meld as die rekening verwyder word nie!',
     'This user does not have any active configurations.' => 'Die gebruiker het nie aktiewe verstelling nie.',
     'This user does not have any connections.' => 'Die gebruiker het nie huidige verbindings nie.',
-    'To prevent malicious applications from secretly establishing a VPN connection on your behalf, establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => 'U moet eers hierdie toepassing uitdruklik goedkeur om te verhoed dat kwaadwillige VPN-verbindings in die geheim namens jou gemaak word.',
+    'To prevent malicious applications from secretly establishing a VPN connection on your behalf, you have to explicitly approve this application first.' => 'U moet eers hierdie toepassing uitdruklik goedkeur om te verhoed dat kwaadwillige VPN-verbindings in die geheim namens jou gemaak word.',
     'Use Protocol' => 'Gebruiksprotokol',
     'Use the WireGuard app on your mobile device to scan this QR code.' => 'Gebruik die WireGuard-program op U mobile toestel om hierdie QR kode te skandeer.',
     'User ID' => 'Gebruiker-ID',
