@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/*
+ * eduVPN - End-user friendly VPN.
+ *
+ * Copyright: 2016-2022, The Commons Conservancy eduVPN Programme
+ * SPDX-License-Identifier: AGPL-3.0+
+ */
+
 return [
     // Choose the Portal Template to be used (must be installed)
     // OPTIONAL, DEFAULT = null
@@ -178,7 +185,23 @@ return [
 
     // The languages supported by the Portal UI
     // OPTIONAL, DEFAULT = ['en-US']
-    // 'enabledLanguages' => ['en-US', 'ar-MA', 'da-DK', 'de-DE', 'es-LA', 'et-EE', 'fr-FR', 'nb-NO', 'nl-NL', 'pl-PL', 'pt-PT', 'ro-RO', 'uk-UA', 'sv-SE'],
+    // 'enabledLanguages' => [
+    //     'af-ZA',
+    //     'ar-MA',
+    //     'da-DK',
+    //     'de-DE',
+    //     'en-US',
+    //     'es-LA',
+    //     'et-EE',
+    //     'fr-FR',
+    //     'nb-NO',
+    //     'nl-NL',
+    //     'pl-PL',
+    //     'pt-PT',
+    //     'ro-RO',
+    //     'sv-SE',
+    //     'uk-UA',
+    // ],
 
     // The default language of the Portal UI
     // OPTIONAL, DEFAULT = 'en-US'
