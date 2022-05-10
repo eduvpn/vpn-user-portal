@@ -181,9 +181,9 @@ class ConnectionManager
                 return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
 
             case 'wireguard':
-                // we know that publicKey is not null here, otherwise Protocol::determine would have errored
+                // Protocol::determine makes sure a public key was sent by the client, but just in case
                 if (null === $publicKey) {
-                    throw new ConnectionManagerException('unable to connect using wireguard, no public key');
+                    throw new ConnectionManagerException('unable to connect using wireguard, no public key provided by client');
                 }
                 if (null !== $wireGuardClientConfig = $this->wConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $publicKey, $authKey)) {
                     return $wireGuardClientConfig;
