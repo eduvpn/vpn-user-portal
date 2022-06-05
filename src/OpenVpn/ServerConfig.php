@@ -52,6 +52,7 @@ class ServerConfig
         $splitRangeFour = $profileConfig->oRangeFour($nodeNumber)->split($processCount);
         $splitRangeSix = $profileConfig->oRangeSix($nodeNumber)->split($processCount);
         $processConfig = [];
+        $processConfig['listenOn'] = $profileConfig->oListenOn($nodeNumber);
         $profileServerConfig = [];
 
         // XXX what follows is ugly! we should be able to do better! for one make getProcess static
@@ -60,7 +61,7 @@ class ServerConfig
             $processConfig['rangeFour'] = $splitRangeFour[$processNumber];
             $processConfig['rangeSix'] = $splitRangeSix[$processNumber];
             $processConfig['tunDev'] = $this->tunDev;
-            $processConfig['proto'] = Ip::IP_6 === $profileConfig->oListenOn()->family() ? 'udp6' : 'udp';
+            $processConfig['proto'] = Ip::IP_6 === $profileConfig->oListenOn($nodeNumber)->family() ? 'udp6' : 'udp';
             $processConfig['port'] = $udpPort;
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
@@ -73,7 +74,7 @@ class ServerConfig
             $processConfig['rangeFour'] = $splitRangeFour[$processNumber];
             $processConfig['rangeSix'] = $splitRangeSix[$processNumber];
             $processConfig['tunDev'] = $this->tunDev;
-            $processConfig['proto'] = Ip::IP_6 === $profileConfig->oListenOn()->family() ? 'tcp6-server' : 'tcp-server';
+            $processConfig['proto'] = Ip::IP_6 === $profileConfig->oListenOn($nodeNumber)->family() ? 'tcp6-server' : 'tcp-server';
             $processConfig['port'] = $tcpPort;
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
@@ -86,7 +87,7 @@ class ServerConfig
     }
 
     /**
-     * @param array{rangeFour:\Vpn\Portal\Ip,rangeSix:\Vpn\Portal\Ip,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
+     * @param array{rangeFour:\Vpn\Portal\Ip,rangeSix:\Vpn\Portal\Ip,listenOn:\Vpn\Portal\Ip,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
      */
     private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes): string
     {
@@ -173,8 +174,8 @@ class ServerConfig
         ];
 
         // add --local only to the configuration when it is not the default "::"
-        if ('::' !== $oListenOn = $profileConfig->oListenOn()->address()) {
-            $serverConfig[] = sprintf('local %s', $oListenOn);
+        if ('::' !== $listenOn = $processConfig['listenOn']->address()) {
+            $serverConfig[] = sprintf('local %s', $listenOn);
         }
 
         if (!$profileConfig->oEnableLog()) {

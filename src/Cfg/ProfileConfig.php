@@ -203,9 +203,14 @@ class ProfileConfig
         return $this->requireBool('oEnableLog', false);
     }
 
-    public function oListenOn(): Ip
+    public function oListenOn(int $nodeNumber): Ip
     {
-        return Ip::fromIp($this->requireString('oListenOn', '::'));
+        $oListenOnList = $this->requireStringOrStringArray('oListenOn', ['::']);
+        if ($nodeNumber >= \count($oListenOnList)) {
+            throw new ConfigException('"oListenOn" for node "'.$nodeNumber.'" not set');
+        }
+
+        return Ip::fromIp($oListenOnList[$nodeNumber]);
     }
 
     /**
