@@ -3,6 +3,8 @@
 ## 3.0.1 (...)
 - make `oListenOn` accept multiple values 
   ([#75](https://todo.sr.ht/~eduvpn/server/75))
+- update `pt-PT` translation
+- update `ar-MA` translation
 
 ## 3.0.0 (2022-05-18)
 - major changes for 3.x
