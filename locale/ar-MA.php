@@ -100,7 +100,7 @@ return [
     'Please sign in with your username and password.' => 'سجل دخولك من فضلك باستعمال اسم المستخدم وكلمة المرور.',
     'Port' => 'منفذ',
     'Ports' => 'منافذ',
-    'Prefer connecting over TCP (OpenVPN)' => '',
+    // 'Prefer connecting over TCP (OpenVPN)' => '',
     'Preferred Protocol' => 'الميثاق المفضل',
     'Profile' => 'مظهر',
     'Profile Default' => 'مظهر اصلي',
