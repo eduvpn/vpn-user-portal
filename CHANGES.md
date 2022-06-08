@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.1 (...)
+## 3.0.1 (2022-06-08)
 - make `oListenOn` accept multiple values 
   ([#75](https://todo.sr.ht/~eduvpn/server/75))
 - update `pt-PT` translation
