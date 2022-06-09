@@ -61,7 +61,10 @@ class Request
         if ('on' === $this->optionalHeader('HTTPS')) {
             $requestScheme = 'https';
         }
-        if ('https' === $this->optionalHeader('REQUEST_SCHEME')) {
+        elseif ('https' === $this->optionalHeader('REQUEST_SCHEME')) {
+            $requestScheme = 'https';
+        }
+        elseif ('https' === $this->optionalHeader('HTTP_X_FORWARDED_PROTO')) {
             $requestScheme = 'https';
         }
 
@@ -78,8 +81,8 @@ class Request
     {
         // we do NOT care about "userinfo"
         $requestScheme = $this->getScheme();
-        $serverName = $this->requireHeader('SERVER_NAME');
-        $serverPort = (int) $this->requireHeader('SERVER_PORT');
+        $serverPort = $this->getServerPort();
+        $serverName = $this->getServerName();
 
         if ('https' === $requestScheme && 443 === $serverPort) {
             return $serverName;
@@ -117,7 +120,20 @@ class Request
 
     public function getServerName(): string
     {
-        return $this->requireHeader('SERVER_NAME');
+        $serverName = $this->optionalHeader('HTTP_X_FORWARDED_HOST');
+        if ($serverName === null) {
+            $serverName = $this->requireHeader('SERVER_NAME');
+        }
+        return $serverName;
+    }
+
+    public function getServerPort(): int
+    {
+        $serverPort = $this->optionalHeader('HTTP_X_FORWARDED_PORT');
+        if ($serverPort === null) {
+            $serverPort = $this->requireHeader('SERVER_PORT');
+        }
+        return (int) $serverPort;
     }
 
     public function getOrigin(): string
