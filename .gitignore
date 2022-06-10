@@ -5,3 +5,12 @@
 /config/views
 /.phpunit.cache
 /.php-cs-fixer.cache
+
+# Symlinked resources from other repositories.
+/web/css
+/web/img
+/web/fonts
+/views/LC
+/views/eduVPN
+/locale/LC
+/locale/eduVPN
