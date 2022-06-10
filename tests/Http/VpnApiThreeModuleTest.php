@@ -16,6 +16,7 @@ use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Scope;
 use PHPUnit\Framework\TestCase;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\Cfg\HttpRequestConfig;
 use Vpn\Portal\Http\ApiService;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\UserInfo;
@@ -127,7 +128,8 @@ final class VpnApiThreeModuleTest extends TestCase
             ],
             [],
             [],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         static::assertSame(
@@ -150,7 +152,8 @@ final class VpnApiThreeModuleTest extends TestCase
                 // the WireGuard config anyway...
                 'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         $httpResponse = $this->service->run($request);
@@ -172,7 +175,8 @@ final class VpnApiThreeModuleTest extends TestCase
                 // the WireGuard config anyway...
                 'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         $httpResponse = $this->service->run($request);
@@ -191,7 +195,8 @@ final class VpnApiThreeModuleTest extends TestCase
             [
                 'profile_id' => 'default',
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         static::assertSame(
@@ -234,7 +239,8 @@ final class VpnApiThreeModuleTest extends TestCase
             ],
             [],
             [],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         static::assertSame(
@@ -259,7 +265,8 @@ final class VpnApiThreeModuleTest extends TestCase
                 // the WireGuard config anyway...
                 'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         static::assertSame(
@@ -282,7 +289,8 @@ final class VpnApiThreeModuleTest extends TestCase
                 'profile_id' => 'default',
                 'prefer_tcp' => 'yes',
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         static::assertSame(
@@ -312,7 +320,8 @@ final class VpnApiThreeModuleTest extends TestCase
                 'profile_id' => 'default',
                 'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         static::assertSame(
@@ -335,7 +344,8 @@ final class VpnApiThreeModuleTest extends TestCase
             [
                 'profile_id' => 'default-wg-only',
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         $httpResponse = $this->service->run($request);
@@ -354,7 +364,8 @@ final class VpnApiThreeModuleTest extends TestCase
             [
                 'profile_id' => 'default-wg-only',
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         $httpResponse = $this->service->run($request);
@@ -379,7 +390,8 @@ final class VpnApiThreeModuleTest extends TestCase
                 'profile_id' => 'default-wg',
                 'public_key' => Key::publicKeyFromSecretKey(Key::generate()),
             ],
-            []
+            [],
+            new HttpRequestConfig([])
         );
 
         $httpResponse = $this->service->run($request);

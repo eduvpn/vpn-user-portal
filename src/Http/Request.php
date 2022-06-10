@@ -13,8 +13,10 @@ namespace Vpn\Portal\Http;
 
 use Closure;
 use RangeException;
+use Vpn\Portal\Cfg\HttpRequestConfig;
 use Vpn\Portal\Binary;
 use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Ip;
 use Vpn\Portal\Validator;
 
 class Request
@@ -36,22 +38,26 @@ class Request
      * @param array<string,string|string[]> $getData
      * @param array<string,string|string[]> $postData
      * @param array<string,string>          $cookieData
+     * @param HttpRequestConfig             $config
      */
-    public function __construct(array $serverData, array $getData, array $postData, array $cookieData)
+    public function __construct(array $serverData, array $getData, array $postData, array $cookieData, HttpRequestConfig $config)
     {
         $this->serverData = $serverData;
         $this->getData = $getData;
         $this->postData = $postData;
         $this->cookieData = $cookieData;
+        $this->config = $config;
+        $this->reverseProxied = $this->requestFromKnownReverseProxy();
     }
 
-    public static function createFromGlobals(): self
+    public static function createFromGlobals(HttpRequestConfig $config): self
     {
         return new self(
             $_SERVER,
             $_GET,
             $_POST,
-            $_COOKIE
+            $_COOKIE,
+            $config
         );
     }
 
@@ -64,10 +70,12 @@ class Request
         elseif ('https' === $this->optionalHeader('REQUEST_SCHEME')) {
             $requestScheme = 'https';
         }
-        elseif ('https' === $this->optionalHeader('HTTP_X_FORWARDED_PROTO')) {
-            $requestScheme = 'https';
+        elseif ($this->reverseProxied) {
+            $header = $this->config->proxySchemeHeader();
+            if ('https' === $this->optionalHeader($header)) {
+                $requestScheme = 'https';
+            }
         }
-
         return $requestScheme;
     }
 
@@ -120,20 +128,24 @@ class Request
 
     public function getServerName(): string
     {
-        $serverName = $this->optionalHeader('HTTP_X_FORWARDED_HOST');
-        if ($serverName === null) {
-            $serverName = $this->requireHeader('SERVER_NAME');
+        if ($this->reverseProxied) {
+            $host = $this->optionalHeader($this->config->proxyHostHeader());
+            if ($host !== null) {
+                return $host;
+            }
         }
-        return $serverName;
+        return $this->requireHeader('SERVER_NAME');
     }
 
     public function getServerPort(): int
     {
-        $serverPort = $this->optionalHeader('HTTP_X_FORWARDED_PORT');
-        if ($serverPort === null) {
-            $serverPort = $this->requireHeader('SERVER_PORT');
+        if ($this->reverseProxied) {
+            $port = $this->optionalHeader($this->config->proxyPortHeader());
+            if ($port !== null && ctype_digit($port)) {
+                return (int) $port;
+            }
         }
-        return (int) $serverPort;
+        return (int) $this->requireHeader('SERVER_PORT');
     }
 
     public function getOrigin(): string
@@ -162,6 +174,22 @@ class Request
         }
 
         return $requestUri;
+    }
+
+    public function requestFromKnownReverseProxy(): bool
+    {
+        $remote = $this->optionalHeader('REMOTE_ADDR');
+        if ($remote === null) {
+            return false;
+        }
+        $remoteIp = Ip::fromIpPrefix($remote);
+        $proxyRanges = $this->config->proxyList();
+        foreach ($proxyRanges as $range) {
+            if ($range->contains($remoteIp)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
