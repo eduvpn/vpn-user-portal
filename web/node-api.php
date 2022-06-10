@@ -54,7 +54,7 @@ try {
             $logger
         )
     );
-    $request = Request::createFromGlobals();
+    $request = Request::createFromGlobals($config->httpRequestConfig());
     $service->run($request)->send();
 } catch (Exception $e) {
     $logger->error($e->getMessage());

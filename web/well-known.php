@@ -17,7 +17,8 @@ use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
 
 try {
-    $request = Request::createFromGlobals();
+    $config = Config::fromFile($baseDir.'/config/config.php');
+    $request = Request::createFromGlobals($config->httpRequestConfig());
 
     if (false === $appRoot = getenv('VPN_APP_ROOT')) {
         $appRoot = '';

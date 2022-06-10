@@ -37,9 +37,9 @@ umask(0077);
 $logger = new SysLogger('vpn-user-portal');
 
 try {
-    $request = Request::createFromGlobals();
-    FileIO::mkdir($baseDir.'/data');
     $config = Config::fromFile($baseDir.'/config/config.php');
+    $request = Request::createFromGlobals($config->httpRequestConfig());
+    FileIO::mkdir($baseDir.'/data');
     $storage = new Storage($config->dbConfig($baseDir));
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());

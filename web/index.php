@@ -64,7 +64,7 @@ $logger = new SysLogger('vpn-user-portal');
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
-    $request = Request::createFromGlobals();
+    $request = Request::createFromGlobals($config->httpRequestConfig());
 
     // determine perferred UI language
     if (null === $uiLanguage = $request->getCookie('L', fn (string $s) => Validator::languageCode($s))) {
