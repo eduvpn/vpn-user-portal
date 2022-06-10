@@ -5,3 +5,13 @@
 /config/views
 /.phpunit.cache
 /.php-cs-fixer.cache
+
+# ignore symlinks to styling and translation folders
+web/css/eduVPN
+web/css/LC
+web/img/eduVPN
+web/img/LC
+views/eduVPN
+views/LC
+locale/eduVPN
+locale/LC
