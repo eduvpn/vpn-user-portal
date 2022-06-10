@@ -56,6 +56,11 @@ class Config
         return new MemcacheSessionConfig($this->s('MemcacheSessionModule')->toArray());
     }
 
+    public function httpRequestConfig(): HttpRequestConfig
+    {
+        return new HttpRequestConfig($this->s('HttpRequest')->toArray());
+    }
+
     public function vpnCaPath(): string
     {
         return $this->requireString('vpnCaPath', '/usr/bin/vpn-ca');
