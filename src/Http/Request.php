@@ -71,8 +71,8 @@ class Request
             $requestScheme = 'https';
         }
         elseif ($this->reverseProxied) {
-            $header = $this->config->proxySchemeHeader();
-            if ('https' === $this->optionalHeader($header)) {
+            $scheme = $this->optionalHeader($this->config->proxySchemeHeader());
+            if ('https' === $scheme) {
                 $requestScheme = 'https';
             }
         }
@@ -183,9 +183,8 @@ class Request
             return false;
         }
         $remoteIp = Ip::fromIpPrefix($remote);
-        $proxyRanges = $this->config->proxyList();
-        foreach ($proxyRanges as $range) {
-            if ($range->contains($remoteIp)) {
+        foreach ($this->config->proxyList() as $proxyRange) {
+            if ($proxyRange->contains($remoteIp)) {
                 return true;
             }
         }

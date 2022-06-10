@@ -57,11 +57,11 @@ class HttpRequestConfig
         $header = $this->requireString($configField, $default);
 
         // Translate the header into the key that is used in the serverdata.
-	// See: RFC 3875, 4.1.18: "The HTTP header field name is converted to
-	// upper case, has all occurrences of "-" replaced with "_" and has
-	// "HTTP_" prepended to give the meta-variable name."
-	$serverDataKey = 'HTTP_' . strtr(strtoupper($header), '-', '_');
+        // See: RFC 3875, 4.1.18: "The HTTP header field name is converted to
+        // upper case, has all occurrences of "-" replaced with "_" and has
+        // "HTTP_" prepended to give the meta-variable name."
+        $serverDataKey = 'HTTP_' . strtr(strtoupper($header), '-', '_');
 
-	return $serverDataKey;
+        return $serverDataKey;
     }
 }
