@@ -263,6 +263,29 @@ return [
     //    ]
     // ],
 
+    // 'HttpRequest' => [
+    //    // IP-ranges for reverse proxy servers from which to accept
+    //    // proxied requests. These servers are allowed to override request
+    //    // parameters (scheme, host, port) using extra HTTP request headers.
+    //    // OPTIONAL, DEFAULT = []
+    //    'proxyList' => [
+    //        '192.168.1.10/32',
+    //        'fd11::15/128',
+    //    ],
+    //
+    //    // Header containing the original request scheme ('http' or 'https').
+    //    // OPTIONAL, DEFAULT = 'X-Forwarded-Proto'
+    //    'proxySchemeHeader' => 'X-Scheme'
+    //
+    //    // Header containing the original Host: header value.
+    //    // OPTIONAL, DEFAULT = 'X-Forwarded-Host'
+    //    'proxyHostHeader' => 'Host'
+    //
+    //    // Header containing the original request port value.
+    //    // OPTIONAL, DEFAULT = 'X-Forwarded-Port'
+    //    'proxyPortHeader' => 'X-Port'
+    // ],
+
     // VPN Profile List
     'ProfileList' => [
         [
@@ -286,7 +309,7 @@ return [
             // Provide DNS server(s) to the VPN client
             // *Only* used when defaultGateway is true or dnsSearchDomainList
             // are specified
-            // DEFAULT  = []
+            // DEFAULT = []
             'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
 
             // Route client traffic for selected prefixes over the VPN
