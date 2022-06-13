@@ -12,6 +12,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
