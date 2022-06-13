@@ -14,9 +14,9 @@
 
 chdir(__DIR__ . "/../web");
 
-// Extract the normalized path from the request.
+// Extract the path from the request.
 $request = parse_url($_SERVER['REQUEST_URI']);
-$path = preg_replace('!//+!', '/', $request['path']);
+$path = $request['path'];
 
 // Take care of virtual request paths. 
 if ('/.well-known/vpn-user-portal' === $path) {
