@@ -156,6 +156,18 @@ class VpnApiModule implements ServiceModuleInterface
              * @return \LC\Common\Http\Response
              */
             function (Request $request, array $hookData) {
+                // here we should delete the OpenVPN certificate that is
+                // associated with this particular OAuth authorization, but
+                // there are a number of problems with the architecture in 2.x:
+                // 1) the OAuth server does not expose the "auth key"
+                // 2) the database does not store the "auth key" together with
+                //    the certificate, so they are not bound together
+                // 3) the split between vpn-user-portal and vpn-server-api
+                //    makes this extra complicated
+                //
+                // we decided not to implement the 'delete cert' for 2.x server
+                //
+                // @see https://todo.sr.ht/~eduvpn/server/77
                 return new Response(204);
             }
         );
