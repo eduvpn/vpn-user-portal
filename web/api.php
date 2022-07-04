@@ -73,6 +73,7 @@ try {
         new VpnApiThreeModule(
             $config,
             $storage,
+            $oauthStorage,
             $serverInfo,
             $connectionManager
         )

@@ -36,4 +36,9 @@ class ApiConfig
     {
         return $this->requireInt('maxActiveConfigurations', 3);
     }
+
+    public function deleteAuthorizationOnDisconnect(): bool
+    {
+        return $this->requireBool('deleteAuthorizationOnDisconnect', false);
+    }
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\Tests;
 
 use DateTimeImmutable;
+use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Http\VpnApiThreeModule;
@@ -22,7 +23,8 @@ class TestVpnApiThreeModule extends VpnApiThreeModule
 {
     public function __construct(Config $config, Storage $storage, ServerInfo $serverInfo, ConnectionManager $connectionManager)
     {
-        parent::__construct($config, $storage, $serverInfo, $connectionManager);
+        $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
+        parent::__construct($config, $storage, $oauthStorage, $serverInfo, $connectionManager);
         $this->dateTime = new DateTimeImmutable('2022-01-01T09:00:00+00:00');
     }
 }

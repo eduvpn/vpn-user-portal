@@ -13,6 +13,7 @@ namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
+use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
@@ -29,13 +30,15 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
     protected DateTimeImmutable $dateTime;
     private Config $config;
     private Storage $storage;
+    private OAuthStorage $oauthStorage;
     private ServerInfo $serverInfo;
     private ConnectionManager $connectionManager;
 
-    public function __construct(Config $config, Storage $storage, ServerInfo $serverInfo, ConnectionManager $connectionManager)
+    public function __construct(Config $config, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo, ConnectionManager $connectionManager)
     {
         $this->config = $config;
         $this->storage = $storage;
+        $this->oauthStorage = $oauthStorage;
         $this->serverInfo = $serverInfo;
         $this->connectionManager = $connectionManager;
         $this->dateTime = Dt::get();
@@ -162,6 +165,12 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             '/v3/disconnect',
             function (Request $request, AccessToken $accessToken): Response {
                 $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
+
+                // optionally remove the OAuth authorization if so requested by
+                // the server configuration
+                if ($this->config->apiConfig()->deleteAuthorizationOnDisconnect()) {
+                    $this->oauthStorage->deleteAuthorization($accessToken->authKey());
+                }
 
                 return new Response(null, [], 204);
             }
