@@ -228,29 +228,29 @@ class ConnectionManager
         $profileConfig = $this->config->profileConfig($profileId);
 
         switch ($vpnProto) {
-        case 'openvpn':
-            if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                $this->storage->oCertDelete($userId, $connectionId);
-            }
-            $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
-
-            break;
-
-        case 'wireguard':
-            if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                $this->storage->wPeerRemove($userId, $connectionId);
-            }
-            if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId)) {
-                // XXX what if peer was not connected/registered anywhere?
-                // peer was connected to this node, use the information
-                // we got back to call "clientDisconnect"
-                $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
-                if ($this->config->logConfig()->syslogConnectionEvents()) {
-                    $this->logger->info(
-                        self::logDisconnect($this->config->logConfig(), $userId, $profileId, $connectionId)
-                    );
+            case 'openvpn':
+                if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
+                    $this->storage->oCertDelete($userId, $connectionId);
                 }
-            }
+                $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
+
+                break;
+
+            case 'wireguard':
+                if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
+                    $this->storage->wPeerRemove($userId, $connectionId);
+                }
+                if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId)) {
+                    // XXX what if peer was not connected/registered anywhere?
+                    // peer was connected to this node, use the information
+                    // we got back to call "clientDisconnect"
+                    $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
+                    if ($this->config->logConfig()->syslogConnectionEvents()) {
+                        $this->logger->info(
+                            self::logDisconnect($this->config->logConfig(), $userId, $profileId, $connectionId)
+                        );
+                    }
+                }
         }
     }
 

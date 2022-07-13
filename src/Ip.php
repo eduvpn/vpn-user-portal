@@ -253,7 +253,7 @@ class Ip
 
         // make sure we do not specify a "maxNumberOfHosts" that is bigger
         // than the prefix we have
-        $prefixMaxNoOfHosts = gmp_sub(gmp_pow(2, (128 - $this->ipPrefix)), 3);
+        $prefixMaxNoOfHosts = gmp_sub(gmp_pow(2, 128 - $this->ipPrefix), 3);
         if (gmp_cmp($maxNoOfHosts, $prefixMaxNoOfHosts) > 0) {
             throw new IpException(sprintf('prefix "/%d" does not contain "%d" hosts', $this->ipPrefix, $maxNoOfHosts));
         }

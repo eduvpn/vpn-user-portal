@@ -19,7 +19,7 @@ foreach ($localeFileList as $localeFile) {
     if ('empty' === basename($localeFile, '.php')) {
         continue;
     }
-    $translationStats[basename($localeFile, '.php')] = sprintf('%3d', (count($translationList) / $translationCount * 100));
+    $translationStats[basename($localeFile, '.php')] = sprintf('%3d', count($translationList) / $translationCount * 100);
 }
 
 arsort($translationStats);
