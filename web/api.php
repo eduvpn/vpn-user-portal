@@ -22,6 +22,7 @@ use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\VpnApiThreeModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
+use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OAuth\ClientDb;
 use Vpn\Portal\OAuth\VpnBearerValidator;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
@@ -59,12 +60,17 @@ try {
         Signer::publicKeyFromSecretKey($oauthKey)
     );
 
+    $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, $logger);
+    if ($config->logConfig()->syslogConnectionEvents()) {
+        $connectionManager->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
+    }
+
     $service->addModule(
         new VpnApiThreeModule(
             $config,
             $storage,
             $serverInfo,
-            new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, $logger)
+            $connectionManager
         )
     );
 

@@ -13,7 +13,7 @@ namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
 use Vpn\Portal\Cfg\Config;
-use Vpn\Portal\ConnectionManager;
+use Vpn\Portal\ConnectionHookInterface;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\NodeApiException;
 use Vpn\Portal\LoggerInterface;
@@ -29,6 +29,9 @@ class NodeApiModule implements ServiceModuleInterface
     private ServerConfig $serverConfig;
     private LoggerInterface $logger;
 
+    /** @var array<\Vpn\Portal\ConnectionHookInterface> */
+    private array $connectionHookList = [];
+
     public function __construct(Config $config, Storage $storage, ServerConfig $serverConfig, LoggerInterface $logger)
     {
         $this->config = $config;
@@ -36,6 +39,11 @@ class NodeApiModule implements ServiceModuleInterface
         $this->serverConfig = $serverConfig;
         $this->logger = $logger;
         $this->dateTime = Dt::get();
+    }
+
+    public function addConnectionHook(ConnectionHookInterface $connectionHook): void
+    {
+        $this->connectionHookList[] = $connectionHook;
     }
 
     public function init(ServiceInterface $service): void
@@ -86,10 +94,8 @@ class NodeApiModule implements ServiceModuleInterface
             $userId = $this->verifyConnection($profileId, $commonName);
             $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $this->dateTime);
 
-            if ($this->config->logConfig()->syslogConnectionEvents()) {
-                $this->logger->info(
-                    ConnectionManager::logConnect($this->config->logConfig(), $userId, $profileId, $commonName, $ipFour, $ipSix, $originatingIp)
-                );
+            foreach ($this->connectionHookList as $connectionHook) {
+                $connectionHook->connect($userId, $profileId, $commonName, $ipFour, $ipSix, $originatingIp);
             }
 
             return new Response('OK');
@@ -116,10 +122,8 @@ class NodeApiModule implements ServiceModuleInterface
             $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, $this->dateTime);
         }
 
-        if ($this->config->logConfig()->syslogConnectionEvents()) {
-            $this->logger->info(
-                ConnectionManager::logDisconnect($this->config->logConfig(), $userId ?? 'N/A', $profileId, $commonName)
-            );
+        foreach ($this->connectionHookList as $connectionHook) {
+            $connectionHook->disconnect($userId ?? 'N/A', $profileId, $commonName, $ipFour, $ipSix);
         }
 
         return new Response('OK');

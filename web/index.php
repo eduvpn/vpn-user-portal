@@ -46,6 +46,7 @@ use Vpn\Portal\Http\SeSession;
 use Vpn\Portal\Http\UpdateUserInfoHook;
 use Vpn\Portal\Http\VpnPortalModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
+use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OAuth\ClientDb;
 use Vpn\Portal\OAuth\VpnOAuthServer;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
@@ -209,6 +210,9 @@ try {
 
     $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
     $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
+    if ($config->logConfig()->syslogConnectionEvents()) {
+        $connectionManager->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
+    }
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(

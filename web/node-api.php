@@ -18,6 +18,7 @@ use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\NodeApiModule;
 use Vpn\Portal\Http\NodeApiService;
 use Vpn\Portal\Http\Request;
+use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\ServerConfig as OpenVpnServerConfig;
 use Vpn\Portal\OpenVpn\TlsCrypt;
@@ -43,17 +44,19 @@ try {
     $storage = new Storage($config->dbConfig($baseDir));
     $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
 
-    $service->addModule(
-        new NodeApiModule(
-            $config,
-            $storage,
-            new ServerConfig(
-                new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data/keys')),
-                new WireGuardServerConfig($baseDir.'/data/keys', $config->wireGuardConfig()->listenPort()),
-            ),
-            $logger
-        )
+    $nodeApiModule = new NodeApiModule(
+        $config,
+        $storage,
+        new ServerConfig(
+            new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data/keys')),
+            new WireGuardServerConfig($baseDir.'/data/keys', $config->wireGuardConfig()->listenPort()),
+        ),
+        $logger
     );
+    if ($config->logConfig()->syslogConnectionEvents()) {
+        $nodeApiModule->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
+    }
+    $service->addModule($nodeApiModule);
     $request = Request::createFromGlobals();
     $service->run($request)->send();
 } catch (Exception $e) {

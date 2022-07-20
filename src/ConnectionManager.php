@@ -14,7 +14,6 @@ namespace Vpn\Portal;
 use DateTimeImmutable;
 use RangeException;
 use Vpn\Portal\Cfg\Config;
-use Vpn\Portal\Cfg\LogConfig;
 use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
@@ -38,6 +37,9 @@ class ConnectionManager
     private VpnDaemon $vpnDaemon;
     private LoggerInterface $logger;
 
+    /** @var array<ConnectionHookInterface> */
+    private array $connectionHookList = [];
+
     public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage, LoggerInterface $logger)
     {
         $this->config = $config;
@@ -45,6 +47,11 @@ class ConnectionManager
         $this->vpnDaemon = $vpnDaemon;
         $this->logger = $logger;
         $this->dateTime = Dt::get();
+    }
+
+    public function addConnectionHook(ConnectionHookInterface $connectionHook): void
+    {
+        $this->connectionHookList[] = $connectionHook;
     }
 
     /**
@@ -245,45 +252,45 @@ class ConnectionManager
                     // peer was connected to this node, use the information
                     // we got back to call "clientDisconnect"
                     $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
-                    if ($this->config->logConfig()->syslogConnectionEvents()) {
-                        $this->logger->info(
-                            self::logDisconnect($this->config->logConfig(), $userId, $profileId, $connectionId)
-                        );
+
+                    foreach ($this->connectionHookList as $connectionHook) {
+                        [$ipFour, $ipSix] = self::extractAddresses($peerInfo['ip_net']);
+                        $connectionHook->disconnect($userId, $profileId, $connectionId, $ipFour, $ipSix);
                     }
                 }
         }
     }
 
-    public static function logConnect(LogConfig $logConfig, string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, ?string $originatingIp): string
-    {
-        if (!$logConfig->originatingIp() || null === $originatingIp) {
-            $originatingIp = '*';
-        }
-
-        return sprintf(
-            'CONNECT %s (%s:%s) [%s => %s,%s]',
-            $userId,
-            $profileId,
-            $connectionId,
-            $originatingIp,
-            $ipFour,
-            $ipSix
-        );
-    }
-
-    public static function logDisconnect(LogConfig $logConfig, string $userId, string $profileId, string $connectionId): string
-    {
-        return sprintf(
-            'DISCONNECT %s (%s:%s)',
-            $userId,
-            $profileId,
-            $connectionId
-        );
-    }
-
     protected function getRandomBytes(): string
     {
         return random_bytes(32);
+    }
+
+    /**
+     * @param array<string> $ipNet
+     *
+     * @return array{0:string,1:string}
+     */
+    private static function extractAddresses(array $ipNet): array
+    {
+        // the VPN daemon API returns any number of IP addresses, which is not
+        // what we want here. We assume we'll have both an IPv4 and IPv6
+        // address in the result set and return them "in order", just like it
+        // is done for OpenVPN
+        $ipFour = '?';
+        $ipSix = '?';
+        foreach ($ipNet as $ipPrefix) {
+            $clientIp = Ip::fromIpPrefix($ipPrefix);
+            if (Ip::IP_4 === $clientIp->family()) {
+                $ipFour = $clientIp->address();
+
+                continue;
+            }
+
+            $ipSix = $clientIp->address();
+        }
+
+        return [$ipFour, $ipSix];
     }
 
     /**
@@ -335,10 +342,8 @@ class ConnectionManager
         $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
         $this->storage->clientConnect($userId, $profileConfig->profileId(), 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
 
-        if ($this->config->logConfig()->syslogConnectionEvents()) {
-            $this->logger->info(
-                self::logConnect($this->config->logConfig(), $userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, null)
-            );
+        foreach ($this->connectionHookList as $connectionHook) {
+            $connectionHook->connect($userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, null);
         }
 
         return new WireGuardClientConfig(
