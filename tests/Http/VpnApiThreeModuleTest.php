@@ -98,6 +98,7 @@ final class VpnApiThreeModuleTest extends TestCase
             $this->config,
             $this->storage,
             new ServerInfo(
+                'https://vpn.example.org/',
                 $tmpDir,
                 new TestCa(),
                 new TlsCrypt($tmpDir),

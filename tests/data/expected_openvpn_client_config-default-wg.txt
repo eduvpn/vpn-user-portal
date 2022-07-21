@@ -1,3 +1,4 @@
+# Portal: https://vpn.example.org/
 # Profile: Default (Prefer WireGuard) (default-wg)
 # Expires: 2022-04-01T09:00:00+00:00
 
