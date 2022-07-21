@@ -197,6 +197,7 @@ try {
     $oauthKey = FileIO::read($baseDir.'/config/keys/oauth.key');
     $oauthSigner = new Signer($oauthKey);
     $serverInfo = new ServerInfo(
+        $request->getRootUri(),
         $baseDir.'/data/keys',
         $ca,
         new TlsCrypt($baseDir.'/data/keys'),

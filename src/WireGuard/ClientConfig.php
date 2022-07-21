@@ -24,6 +24,7 @@ use Vpn\Portal\QrCode;
  */
 class ClientConfig implements ClientConfigInterface
 {
+    private string $portalUrl;
     private int $nodeNumber;
     private ProfileConfig $profileConfig;
     private ?string $privateKey = null;
@@ -33,8 +34,9 @@ class ClientConfig implements ClientConfigInterface
     private int $wgPort;
     private DateTimeImmutable $expiresAt;
 
-    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort, DateTimeImmutable $expiresAt)
+    public function __construct(string $portalUrl, int $nodeNumber, ProfileConfig $profileConfig, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort, DateTimeImmutable $expiresAt)
     {
+        $this->portalUrl = $portalUrl;
         $this->nodeNumber = $nodeNumber;
         $this->profileConfig = $profileConfig;
         $this->ipFour = $ipFour;
@@ -71,6 +73,7 @@ class ClientConfig implements ClientConfigInterface
         }
 
         $output = [
+            sprintf('# Portal: %s', $this->portalUrl),
             sprintf('# Profile: %s (%s)', $this->profileConfig->displayName(), $this->profileConfig->profileId()),
             sprintf('# Expires: %s', $this->expiresAt->format(DateTimeImmutable::ATOM)),
             '',

@@ -20,6 +20,7 @@ use Vpn\Portal\OpenVpn\Exception\ClientConfigException;
 
 class ClientConfig implements ClientConfigInterface
 {
+    private string $portalUrl;
     private int $nodeNumber;
     private ProfileConfig $profileConfig;
     private CaInfo $caInfo;
@@ -28,8 +29,9 @@ class ClientConfig implements ClientConfigInterface
     private bool $preferTcp;
     private DateTimeImmutable $expiresAt;
 
-    public function __construct(int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $preferTcp, DateTimeImmutable $expiresAt)
+    public function __construct(string $portalUrl, int $nodeNumber, ProfileConfig $profileConfig, CaInfo $caInfo, TlsCrypt $tlsCrypt, CertInfo $certInfo, bool $preferTcp, DateTimeImmutable $expiresAt)
     {
+        $this->portalUrl = $portalUrl;
         $this->nodeNumber = $nodeNumber;
         $this->profileConfig = $profileConfig;
         $this->caInfo = $caInfo;
@@ -67,6 +69,7 @@ class ClientConfig implements ClientConfigInterface
         }
 
         $clientConfig = [
+            sprintf('# Portal: %s', $this->portalUrl),
             sprintf('# Profile: %s (%s)', $this->profileConfig->displayName(), $this->profileConfig->profileId()),
             sprintf('# Expires: %s', $this->expiresAt->format(DateTimeImmutable::ATOM)),
             '',

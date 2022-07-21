@@ -16,19 +16,26 @@ use Vpn\Portal\OpenVpn\TlsCrypt;
 
 class ServerInfo
 {
+    private string $portalUrl;
     private string $keyDir;
     private CaInterface $ca;
     private TlsCrypt $tlsCrypt;
     private int $wgPort;
     private string $oauthPublicKey;
 
-    public function __construct(string $keyDir, CaInterface $ca, TlsCrypt $tlsCrypt, int $wgPort, string $oauthPublicKey)
+    public function __construct(string $portalUrl, string $keyDir, CaInterface $ca, TlsCrypt $tlsCrypt, int $wgPort, string $oauthPublicKey)
     {
+        $this->portalUrl = $portalUrl;
         $this->keyDir = $keyDir;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
         $this->wgPort = $wgPort;
         $this->oauthPublicKey = $oauthPublicKey;
+    }
+
+    public function portalUrl(): string
+    {
+        return $this->portalUrl;
     }
 
     public function ca(): CaInterface

@@ -342,6 +342,7 @@ class ConnectionManager
         }
 
         return new WireGuardClientConfig(
+            $serverInfo->portalUrl(),
             $nodeNumber,
             $profileConfig,
             $ipFour,
@@ -372,6 +373,7 @@ class ConnectionManager
 
         // this thing can throw an ClientConfigException!
         return new OpenVpnClientConfig(
+            $serverInfo->portalUrl(),
             $nodeNumber,
             $profileConfig,
             $serverInfo->ca()->caCert(),

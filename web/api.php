@@ -51,6 +51,7 @@ try {
     );
     $service = new ApiService($bearerValidator);
     $serverInfo = new ServerInfo(
+        $request->getRootUri(),
         $baseDir.'/data/keys',
         $ca,
         new TlsCrypt($baseDir.'/data/keys'),
