@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.2 (...)
+- add Portal URL to manually downloaded configuration file ([#81](https://todo.sr.ht/~eduvpn/server/81))
+- update `ar-MA` translation
+
 ## 3.0.1 (2022-06-08)
 - make `oListenOn` accept multiple values 
   ([#75](https://todo.sr.ht/~eduvpn/server/75))
