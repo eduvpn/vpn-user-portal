@@ -67,9 +67,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
                 // (1) we get the exact same capitalization as in the LDAP
                 // (2) we can take a completely different attribute as the user
                 //     id, e.g. mail, ipaUniqueID, ...
-                if (null !== $directoryUserId = $this->getUserId($baseDn, $userFilter, $userIdAttribute)) {
-                    $userId = $directoryUserId;
-                }
+                $userId = $this->getUserId($baseDn, $userFilter, $userIdAttribute);
             }
 
             return new UserInfo(
@@ -85,7 +83,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
         }
     }
 
-    private function getUserId(string $baseDn, string $userFilter, string $userIdAttribute): ?string
+    private function getUserId(string $baseDn, string $userFilter, string $userIdAttribute): string
     {
         $ldapEntries = $this->ldapClient->search(
             $baseDn,
@@ -95,11 +93,12 @@ class LdapCredentialValidator implements CredentialValidatorInterface
 
         // it turns out that PHP's LDAP client converts the attribute name to
         // lowercase before populating the array...
-        if (isset($ldapEntries[0][strtolower($userIdAttribute)][0])) {
-            return $ldapEntries[0][strtolower($userIdAttribute)][0];
+        if (!isset($ldapEntries[0][strtolower($userIdAttribute)][0])) {
+            // if the userIdAttribute is NOT set, fail, admin configuration error
+            throw new CredentialValidatorException(sprintf('user ID attribute "%s" not available in LDAP response', $userIdAttribute));
         }
 
-        return null;
+        return $ldapEntries[0][strtolower($userIdAttribute)][0];
     }
 
     /**
