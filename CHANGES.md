@@ -3,7 +3,8 @@
 ## 3.0.2 (...)
 - add Portal URL to manually downloaded configuration file ([#81](https://todo.sr.ht/~eduvpn/server/81))
 - update `ar-MA` translation
-- require userIdAttribute to be set in LDAP response ([#83](https://todo.sr.ht/~eduvpn/server/83))
+- require userIdAttribute to be set in LDAP response when requesting it to be
+  used ([#83](https://todo.sr.ht/~eduvpn/server/83))
 
 ## 3.0.1 (2022-06-08)
 - make `oListenOn` accept multiple values 
