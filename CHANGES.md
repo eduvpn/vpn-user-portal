@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.3 (...)
+- proper logging of authentication failures for local database, LDAP and RADIUS
+
 ## 3.0.2 (2022-07-25)
 - add Portal URL to manually downloaded configuration file ([#81](https://todo.sr.ht/~eduvpn/server/81))
 - update `ar-MA` translation
