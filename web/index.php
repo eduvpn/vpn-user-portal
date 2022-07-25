@@ -107,7 +107,7 @@ try {
     switch ($config->authModule()) {
         case 'DbAuthModule':
             $dbCredentialStorage = new DbCredentialValidator($storage);
-            $authModule = new UserPassAuthModule($dbCredentialStorage, $sessionBackend, $tpl);
+            $authModule = new UserPassAuthModule($dbCredentialStorage, $sessionBackend, $tpl, $logger);
 
             break;
 
@@ -123,7 +123,8 @@ try {
                     $logger
                 ),
                 $sessionBackend,
-                $tpl
+                $tpl,
+                $logger
             );
 
             break;
@@ -135,7 +136,8 @@ try {
                     $config->radiusAuthConfig()
                 ),
                 $sessionBackend,
-                $tpl
+                $tpl,
+                $logger
             );
 
             break;

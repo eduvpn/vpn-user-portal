@@ -76,10 +76,10 @@ class LdapCredentialValidator implements CredentialValidatorInterface
             );
         } catch (LdapClientException $e) {
             $this->logger->warning(
-                sprintf('unable to bind with DN "%s" (%s)', $bindDn, $e->getMessage())
+                'LDAP error: '.$e->getMessage()
             );
 
-            throw new CredentialValidatorException('unable to bind with DN');
+            throw new CredentialValidatorException('LDAP error: '.$e->getMessage());
         }
     }
 

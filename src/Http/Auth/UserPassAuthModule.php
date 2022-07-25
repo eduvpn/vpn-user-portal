@@ -20,6 +20,7 @@ use Vpn\Portal\Http\ServiceInterface;
 use Vpn\Portal\Http\SessionInterface;
 use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\Json;
+use Vpn\Portal\LoggerInterface;
 use Vpn\Portal\TplInterface;
 use Vpn\Portal\Validator;
 
@@ -28,12 +29,14 @@ class UserPassAuthModule extends AbstractAuthModule
     protected TplInterface $tpl;
     private CredentialValidatorInterface $credentialValidator;
     private SessionInterface $session;
+    private LoggerInterface $logger;
 
-    public function __construct(CredentialValidatorInterface $credentialValidator, SessionInterface $session, TplInterface $tpl)
+    public function __construct(CredentialValidatorInterface $credentialValidator, SessionInterface $session, TplInterface $tpl, LoggerInterface $logger)
     {
         $this->credentialValidator = $credentialValidator;
         $this->session = $session;
         $this->tpl = $tpl;
+        $this->logger = $logger;
     }
 
     public function init(ServiceInterface $service): void
@@ -55,6 +58,8 @@ class UserPassAuthModule extends AbstractAuthModule
 
                     return new RedirectResponse($redirectTo);
                 } catch (CredentialValidatorException $e) {
+                    $this->logger->warning('Unable to validate credentials: '.$e->getMessage());
+
                     $responseBody = $this->tpl->render(
                         'userPassAuth',
                         [
