@@ -75,11 +75,8 @@ class LdapCredentialValidator implements CredentialValidatorInterface
                 $this->getPermissionList($baseDn, $userFilter, $this->ldapAuthConfig->permissionAttributeList())
             );
         } catch (LdapClientException $e) {
-            $this->logger->warning(
-                'LDAP error: '.$e->getMessage()
-            );
-
-            throw new CredentialValidatorException('LDAP error: '.$e->getMessage());
+            // convert LDAP errors into `CredentialValidatorException`
+            throw new CredentialValidatorException($e->getMessage());
         }
     }
 
