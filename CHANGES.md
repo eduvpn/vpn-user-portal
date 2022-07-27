@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.3 (...)
+## 3.0.3 (2022-07-27)
 - proper logging of authentication failures for local database, LDAP and RADIUS
 
 ## 3.0.2 (2022-07-25)
