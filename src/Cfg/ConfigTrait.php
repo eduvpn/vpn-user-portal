@@ -207,7 +207,7 @@ trait ConfigTrait
     }
 
     /**
-     * @return array<string>
+     * @return ?array<string>
      */
     private function optionalStringOrStringArray(string $k): ?array
     {
