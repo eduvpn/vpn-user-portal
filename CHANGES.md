@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.4 (...)
+- fix handling optional `oListenOn` in multi node setups ([#85](https://todo.sr.ht/~eduvpn/server/85))
+
 ## 3.0.3 (2022-07-27)
 - proper logging of authentication failures for local database, LDAP and RADIUS
 
