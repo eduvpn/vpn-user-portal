@@ -205,7 +205,9 @@ class ProfileConfig
 
     public function oListenOn(int $nodeNumber): Ip
     {
-        $oListenOnList = $this->requireStringOrStringArray('oListenOn', ['::']);
+        if (null === $oListenOnList = $this->optionalStringOrStringArray('oListenOn')) {
+            return Ip::fromIp('::');
+        }
         if ($nodeNumber >= \count($oListenOnList)) {
             throw new ConfigException('"oListenOn" for node "'.$nodeNumber.'" not set');
         }
