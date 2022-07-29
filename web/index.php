@@ -51,6 +51,7 @@ use Vpn\Portal\OAuth\ClientDb;
 use Vpn\Portal\OAuth\VpnOAuthServer;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
+use Vpn\Portal\ScriptConnectionHook;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -212,6 +213,9 @@ try {
     $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
     if ($config->logConfig()->syslogConnectionEvents()) {
         $connectionManager->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
+    }
+    if (null !== $connectScriptPath = $config->connectScriptPath()) {
+        $connectionManager->addConnectionHook(new ScriptConnectionHook($connectScriptPath));
     }
 
     // portal module

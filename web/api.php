@@ -27,6 +27,7 @@ use Vpn\Portal\OAuth\ClientDb;
 use Vpn\Portal\OAuth\VpnBearerValidator;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
+use Vpn\Portal\ScriptConnectionHook;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -63,6 +64,9 @@ try {
     $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, $logger);
     if ($config->logConfig()->syslogConnectionEvents()) {
         $connectionManager->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
+    }
+    if (null !== $connectScriptPath = $config->connectScriptPath()) {
+        $connectionManager->addConnectionHook(new ScriptConnectionHook($connectScriptPath));
     }
 
     $service->addModule(

@@ -118,6 +118,11 @@ class Config
         return $this->requireBool('showPermissions', false);
     }
 
+    public function connectScriptPath(): ?string
+    {
+        return $this->optionalString('connectScriptPath');
+    }
+
     public function wireGuardConfig(): WireGuardConfig
     {
         return new WireGuardConfig($this->s('WireGuard')->toArray());

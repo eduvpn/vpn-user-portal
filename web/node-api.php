@@ -22,6 +22,7 @@ use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\ServerConfig as OpenVpnServerConfig;
 use Vpn\Portal\OpenVpn\TlsCrypt;
+use Vpn\Portal\ScriptConnectionHook;
 use Vpn\Portal\ServerConfig;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -56,6 +57,10 @@ try {
     if ($config->logConfig()->syslogConnectionEvents()) {
         $nodeApiModule->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
     }
+    if (null !== $connectScriptPath = $config->connectScriptPath()) {
+        $nodeApiModule->addConnectionHook(new ScriptConnectionHook($connectScriptPath));
+    }
+
     $service->addModule($nodeApiModule);
     $request = Request::createFromGlobals();
     $service->run($request)->send();
