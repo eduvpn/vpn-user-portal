@@ -15,6 +15,7 @@ use DateTimeImmutable;
 use RangeException;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Cfg\ProfileConfig;
+use Vpn\Portal\Exception\ConnectionHookException;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
@@ -255,7 +256,14 @@ class ConnectionManager
 
                     foreach ($this->connectionHookList as $connectionHook) {
                         [$ipFour, $ipSix] = self::extractAddresses($peerInfo['ip_net']);
-                        $connectionHook->disconnect($userId, $profileId, $connectionId, $ipFour, $ipSix);
+
+                        try {
+                            $connectionHook->disconnect($userId, $profileId, $connectionId, $ipFour, $ipSix);
+                        } catch (ConnectionHookException $e) {
+                            $this->logger->warning(sprintf('%s: %s', \get_class($connectionHook), $e->getMessage()));
+                            // we don't react to this any further, as client
+                            // wants to leave, we can't stop them anyway
+                        }
                     }
                 }
         }
@@ -343,7 +351,11 @@ class ConnectionManager
         $this->storage->clientConnect($userId, $profileConfig->profileId(), 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
 
         foreach ($this->connectionHookList as $connectionHook) {
-            $connectionHook->connect($userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, null);
+            try {
+                $connectionHook->connect($userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, null);
+            } catch (ConnectionHookException $e) {
+                throw new ConnectionManagerException(\get_class($connectionHook).': '.$e->getMessage());
+            }
         }
 
         return new WireGuardClientConfig(

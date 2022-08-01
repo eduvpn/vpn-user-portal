@@ -15,6 +15,7 @@ use DateTimeImmutable;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionHookInterface;
 use Vpn\Portal\Dt;
+use Vpn\Portal\Exception\ConnectionHookException;
 use Vpn\Portal\Http\Exception\NodeApiException;
 use Vpn\Portal\LoggerInterface;
 use Vpn\Portal\ServerConfig;
@@ -95,7 +96,11 @@ class NodeApiModule implements ServiceModuleInterface
             $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $this->dateTime);
 
             foreach ($this->connectionHookList as $connectionHook) {
-                $connectionHook->connect($userId, $profileId, $commonName, $ipFour, $ipSix, $originatingIp);
+                try {
+                    $connectionHook->connect($userId, $profileId, $commonName, $ipFour, $ipSix, $originatingIp);
+                } catch (ConnectionHookException $e) {
+                    throw new NodeApiException(\get_class($connectionHook).': '.$e->getMessage());
+                }
             }
 
             return new Response('OK');
@@ -123,7 +128,13 @@ class NodeApiModule implements ServiceModuleInterface
         }
 
         foreach ($this->connectionHookList as $connectionHook) {
-            $connectionHook->disconnect($userId ?? 'N/A', $profileId, $commonName, $ipFour, $ipSix);
+            try {
+                $connectionHook->disconnect($userId ?? 'N/A', $profileId, $commonName, $ipFour, $ipSix);
+            } catch (ConnectionHookException $e) {
+                $this->logger->warning(sprintf('%s: %s', \get_class($connectionHook), $e->getMessage()));
+                // we don't react to this any further, as client
+                // wants to leave, we can't stop them anyway
+            }
         }
 
         return new Response('OK');

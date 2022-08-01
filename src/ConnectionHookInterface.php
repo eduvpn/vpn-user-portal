@@ -13,7 +13,13 @@ namespace Vpn\Portal;
 
 interface ConnectionHookInterface
 {
+    /**
+     * @throws \Vpn\Portal\Exception\ConnectionHookException
+     */
     public function connect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, ?string $originatingIp): void;
 
+    /**
+     * @throws \Vpn\Portal\Exception\ConnectionHookException
+     */
     public function disconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix): void;
 }
