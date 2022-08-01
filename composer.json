@@ -59,7 +59,9 @@
     },
     "require-dev": {
         "fkooman/saml-sp": "^2",
-        "phpunit/phpunit": "^9"
+        "friendsofphp/php-cs-fixer": "^3",
+        "phpunit/phpunit": "^9",
+        "vimeo/psalm": "^4"
     },
     "suggest": {
         "ext-ldap": "Support LDAP Authentication",
