@@ -1,6 +1,9 @@
-.PHONY: all test fix psalm
+.PHONY: all update test fix psalm
 
-all:	test fix psalm
+all:	update test fix psalm
+
+update:
+	composer update
 
 test:
 	vendor/bin/phpunit
