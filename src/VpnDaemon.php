@@ -34,16 +34,27 @@ class VpnDaemon
     }
 
     /**
-     * @return null|array{load_average:array<float>,cpu_count:int}
+     * @return null|array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int}
      */
     public function nodeInfo(string $nodeUrl): ?array
     {
         try {
-            return Json::decode(
+            $nodeInfo = Json::decode(
                 $this->httpClient->send(
                     new HttpClientRequest('GET', $nodeUrl.'/i/node')
                 )->body()
             );
+
+            // for some reason we decided to have vpn-daemon to return empty
+            // array instead of [0,0,0] for "load_average" and
+            // "rel_load_average" when this information is not available on a
+            // particular platform
+            if (0 === \count($nodeInfo['load_average'])) {
+                $nodeInfo['load_average'] = [0, 0, 0];
+                $nodeInfo['rel_load_average'] = [0, 0, 0];
+            }
+
+            return $nodeInfo;
         } catch (HttpClientException $e) {
             $this->logger->error((string) $e);
 
