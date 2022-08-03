@@ -1,14 +1,11 @@
-.PHONY: all update test fix psalm
+.PHONY: all php-cs-fixer psalm phpunit
 
-all:	update test fix psalm
+all:	php-cs-fixer psalm phpunit
 
-update:
-	composer update
-
-test:
+phpunit:
 	vendor/bin/phpunit
 
-fix:
+php-cs-fixer:
 	vendor/bin/php-cs-fixer fix
 
 psalm:
