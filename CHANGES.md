@@ -7,7 +7,9 @@
 - re-implement the _syslog_ connection logger on top of 
   `ConnectionHookInterface`
 - implement `--list` option for `vpn-user-portal-account` to list user accounts
-
+- (**PREVIEW**) add support for running script/command on client 
+  connect/disconnect ([#84](https://todo.sr.ht/~eduvpn/server/84))
+  
 ## 3.0.3 (2022-07-27)
 - proper logging of authentication failures for local database, LDAP and RADIUS
 
