@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.4 (...)
+## 3.0.4 (2022-08-03)
 - fix handling optional `oListenOn` in multi node setups 
   ([#85](https://todo.sr.ht/~eduvpn/server/85))
 - implement `ConnectionHookInterface` to allow for plugins to respond to client
