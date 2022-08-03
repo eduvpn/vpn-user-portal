@@ -38,3 +38,16 @@ Note, that signing the CLA will not automatically guarantee your contribution
 will be included in the software!
 
 Thanks again for wanting to contribute to eduVPN / Let's Connect!
+
+## Code Quality / Style
+
+If you want to contribute, make sure your code does not throw any (additional) 
+warnings or errors when running [Psalm](https://psalm.dev/), 
+[PHP CS Fixer](https://cs.symfony.com/) and [PHPUnit](https://phpunit.de/).
+
+To run them (all) on your system:
+
+```bash
+$ composer update
+$ make all
+```
