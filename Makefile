@@ -1,4 +1,4 @@
-.PHONY: all php-cs-fixer psalm phpunit
+.PHONY: all php-cs-fixer psalm phpstan phpunit
 
 all:	php-cs-fixer psalm phpunit
 
@@ -10,3 +10,6 @@ php-cs-fixer:
 
 psalm:
 	vendor/bin/psalm
+
+phpstan:
+	vendor/bin/phpstan
