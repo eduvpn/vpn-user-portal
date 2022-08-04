@@ -1,4 +1,4 @@
-.PHONY: all php-cs-fixer psalm phpstan phpunit
+.PHONY: all test php-cs-fixer psalm phpstan phpunit
 
 all:	php-cs-fixer psalm phpunit
 
