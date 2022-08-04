@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.5 (...)
+- [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
+  add support for deleting authorization on APIv3 disconnect call 
+  ([#78](https://todo.sr.ht/~eduvpn/server/78))
+
 ## 3.0.4 (2022-08-03)
 - fix handling optional `oListenOn` in multi node setups 
   ([#85](https://todo.sr.ht/~eduvpn/server/85))
