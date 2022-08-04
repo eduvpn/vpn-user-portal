@@ -2,6 +2,8 @@
 
 all:	php-cs-fixer psalm phpunit
 
+test:	phpunit
+
 phpunit:
 	vendor/bin/phpunit
 
