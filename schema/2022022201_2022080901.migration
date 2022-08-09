@@ -1,0 +1,98 @@
+
+/* certificates */
+ALTER TABLE certificates RENAME TO _certificates;
+
+CREATE TABLE IF NOT EXISTS certificates(
+    portal_number BIGINT NOT NULL DEFAULT 0,
+    node_number BIGINT NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    display_name VARCHAR(255) NOT NULL,
+    common_name VARCHAR(255) UNIQUE NOT NULL,
+    created_at VARCHAR(255) NOT NULL,
+    expires_at VARCHAR(255) NOT NULL,
+    auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
+    user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+INSERT INTO certificates (node_number, profile_id, display_name, common_name, created_at, expires_at, auth_key, user_id) 
+SELECT (node_number, profile_id, display_name, common_name, created_at, expires_at, auth_key, user_id)  FROM _certificates;
+
+DROP TABLE _certificates;
+
+
+
+/* wg_peers */
+ALTER TABLE wg_peers RENAME TO _wg_peers;
+
+CREATE TABLE IF NOT EXISTS wg_peers (
+    portal_number BIGINT NOT NULL DEFAULT 0,
+    node_number BIGINT NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    display_name VARCHAR(255) NOT NULL,
+    public_key VARCHAR(255) NOT NULL UNIQUE,
+    ip_four VARCHAR(255) NOT NULL UNIQUE,
+    ip_six VARCHAR(255) NOT NULL UNIQUE,
+    created_at VARCHAR(255) NOT NULL,
+    expires_at VARCHAR(255) NOT NULL,
+    auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
+    user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+INSERT INTO wg_peers (node_number, profile_id, display_name, public_key, ip_four, ip_six, created_at, expires_at, auth_key, user_id) 
+SELECT (node_number, profile_id, display_name, public_key, ip_four, ip_six, created_at, expires_at, auth_key, user_id)  FROM _wg_peers;
+
+DROP TABLE _wg_peers;
+
+/* connection_log */
+ALTER TABLE connection_log RENAME TO _connection_log;
+
+CREATE TABLE IF NOT EXISTS connection_log(
+    portal_number BIGINT NOT NULL DEFAULT 0,
+    user_id VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    vpn_proto VARCHAR(255) NOT NULL,
+    connection_id VARCHAR(255) NOT NULL,
+    ip_four VARCHAR(255) NOT NULL,
+    ip_six VARCHAR(255) NOT NULL,
+    connected_at VARCHAR(255) NOT NULL,
+    bytes_in BIGINT DEFAULT NULL,
+    bytes_out BIGINT DEFAULT NULL,
+    disconnected_at VARCHAR(255) DEFAULT NULL
+);
+
+INSERT INTO connection_log (user_id, profile_id, vpn_proto , connection_id, ip_four, ip_six, connected_at, bytes_in, bytes_out, disconnected_at) 
+SELECT (user_id, profile_id, vpn_proto , connection_id, ip_four, ip_six, connected_at, bytes_in, bytes_out, disconnected_at)  FROM _connection_log;
+
+DROP TABLE _connection_log;
+
+/* live_stats */
+ALTER TABLE live_stats RENAME TO _live_stats;
+
+CREATE TABLE IF NOT EXISTS live_stats(
+    portal_number BIGINT NOT NULL DEFAULT 0,
+    date_time VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    connection_count BIGINT NOT NULL
+);
+
+INSERT INTO live_stats (date_time, profile_id, connection_count)
+SELECT (date_time, profile_id, connection_count)  FROM _live_stats;
+
+DROP TABLE _live_stats;
+
+
+/* aggregate_stats */
+ALTER TABLE aggregate_stats RENAME TO _aggregate_stats;
+
+CREATE TABLE IF NOT EXISTS aggregate_stats(
+    portal_number BIGINT NOT NULL DEFAULT 0,
+    date VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    max_connection_count BIGINT NOT NULL,
+    unique_user_count BIGINT NOT NULL
+);
+
+INSERT INTO aggregate_stats (date, profile_id, max_connection_count, unique_user_count)
+SELECT (date, profile_id, max_connection_count, unique_user_count)  FROM _aggregate_stats;
+
+DROP TABLE _aggregate_stats;

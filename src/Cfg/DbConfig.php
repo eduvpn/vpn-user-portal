@@ -46,4 +46,10 @@ class DbConfig
     {
         return $this->optionalString('dbPass');
     }
+
+
+    public function portalNumber(): int
+    {
+        return $this->requireInt('portalNumber');
+    }   
 }
