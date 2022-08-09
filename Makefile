@@ -1,13 +1,11 @@
-.PHONY: all test php-cs-fixer psalm phpstan phpunit
+.PHONY: all test fmt psalm phpstan
 
-all:	php-cs-fixer psalm phpunit
+all:	test fmt psalm phpstan
 
-test:	phpunit
-
-phpunit:
+test:
 	vendor/bin/phpunit
 
-php-cs-fixer:
+fmt:
 	vendor/bin/php-cs-fixer fix
 
 psalm:
