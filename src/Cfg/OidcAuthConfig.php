@@ -34,4 +34,19 @@ class OidcAuthConfig
     {
         return $this->requireStringArray('permissionAttributeList', []);
     }
+
+    public function maxActiveConfigurationsArribute(): string
+    {
+        return $this->optionalString('maxActiveConfigurations');
+    }
+
+    public function maxActiveApiConfigurationsAttribute(): string
+    {
+        return $this->optionalString('maxActiveApiConfigurations');
+    }
+
+    public function connectionExpiresAtAttribute(): string
+    {
+        return $this->optionalString('connectionExpiresAt');
+    }
 }

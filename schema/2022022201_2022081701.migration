@@ -1,0 +1,18 @@
+/* users */
+ALTER TABLE users RENAME TO _users;
+
+CREATE TABLE IF NOT EXISTS users(
+    user_id VARCHAR(255) NOT NULL PRIMARY KEY,
+    last_seen VARCHAR(255) NOT NULL,
+    permission_list TEXT NOT NULL,
+    auth_data TEXT DEFAULT NULL,
+    is_disabled BOOLEAN NOT NULL,
+    max_active_configurations VARCHAR(255) NULL,
+    max_active_api_configurations VARCHAR(255) NULL, 
+    connection_expires_at VARCHAR(255) NULL
+);
+
+INSERT INTO users (user_id, last_seen, permission_list, auth_data, is_disabled, max_active_api_configuration, session_expiry, expires_at) 
+SELECT (user_id, last_seen, permission_list, auth_data, is_disabled, max_active_api_configuration, session_expiry, expires_at)  FROM _users;
+
+DROP TABLE _users;

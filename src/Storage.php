@@ -22,7 +22,7 @@ class Storage
     public const EXCLUDE_EXPIRED = 2;
     public const EXCLUDE_DISABLED_USER = 4;
 
-    public const CURRENT_SCHEMA_VERSION = '2022022201';
+    public const CURRENT_SCHEMA_VERSION = '2022081701';
 
     private PDO $db;
 
@@ -395,14 +395,20 @@ class Storage
                             last_seen,
                             permission_list,
                             auth_data,
-                            is_disabled
+                            is_disabled,
+                            max_active_configurations,
+                            max_active_api_configurations,
+                            connection_expires_at
                         )
                     VALUES (
                         :user_id,
                         :last_seen,
                         :permission_list,
                         :auth_data,
-                        :is_disabled
+                        :is_disabled,
+                        :max_active_configurations,
+                        :max_active_api_configurations,
+                        :connection_expires_at
                     )
                 SQL
         );
@@ -411,6 +417,9 @@ class Storage
         $stmt->bindValue(':permission_list', self::permissionListToString($userInfo->permissionList()), PDO::PARAM_STR);
         $stmt->bindValue(':auth_data', $userInfo->authData(), PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
+        $stmt->bindValue(':max_active_configurations', $userInfo->settings('maxActiveConfigurations'), PDO::PARAM_STR);
+        $stmt->bindValue(':max_active_api_configurations', $userInfo->settings('maxActiveApiConfigurations'), PDO::PARAM_STR);
+        $stmt->bindValue(':connection_expires_at', $userInfo->settings('connectionExpiresAt'), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -425,7 +434,10 @@ class Storage
                         user_id,
                         last_seen,
                         permission_list,
-                        is_disabled
+                        is_disabled,
+                        max_active_configurations,
+                        max_active_api_configurations,
+                        connection_expires_at
                     FROM
                         users
                     ORDER BY
@@ -441,6 +453,9 @@ class Storage
                 'last_seen' => Dt::get($resultRow['last_seen']),
                 'permission_list' => self::stringToPermissionList((string) $resultRow['permission_list']),
                 'is_disabled' => (bool) $resultRow['is_disabled'],
+                'max_active_configurations' => (int) $resultRow['max_active_configurations'],
+                'max_active_api_configurations' => (int) $resultRow['max_active_api_configurations'],
+                'connection_expires_at' => $resultRow['connection_expires_at'],
             ];
         }
 
@@ -469,6 +484,41 @@ class Storage
         return self::stringToPermissionList((string) $stmt->fetchColumn());
     }
 
+    /**
+     * @return array<string>
+     */
+    public function userSettings(string $userId): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    SELECT
+                        user_id,
+                        max_active_configurations,
+                        max_active_api_configurations,
+                        connection_expires_at,
+                    FROM
+                        users
+                    WHERE
+                        user_id = :user_id
+                SQL
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $userSettings = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $user_id = (string) $resultRow['user_id'];
+            $userSettings[$user_id] = [
+                'max_active_configurations' => (int) $resultRow['max_active_configurations'],
+                'max_active_api_configurations' => (int) $resultRow['max_active_api_configurations'],
+                'connection_expires_at' =>  $resultRow['connection_expires_at'],
+            ];
+        }
+        return $userSettings;
+    }
+
+
+
     public function userDelete(string $userId): void
     {
         $stmt = $this->db->prepare(
@@ -492,7 +542,10 @@ class Storage
                     SET
                         last_seen = :last_seen,
                         permission_list = :permission_list,
-                        auth_data = :auth_data
+                        auth_data = :auth_data,
+                        max_active_configurations = :max_active_configurations,
+                        max_active_api_configurations = :max_active_api_configurations,
+                        connection_expires_at = :connection_expires_at
                     WHERE
                         user_id = :user_id
                 SQL
@@ -501,7 +554,9 @@ class Storage
         $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':permission_list', self::permissionListToString($userInfo->permissionList()), PDO::PARAM_STR);
         $stmt->bindValue(':auth_data', $userInfo->authData(), PDO::PARAM_STR | PDO::PARAM_NULL);
-
+        $stmt->bindValue(':max_active_configurations', $userInfo->settings('maxActiveConfigurations'), PDO::PARAM_STR);
+        $stmt->bindValue(':max_active_api_configurations', $userInfo->settings('maxActiveApiConfigurations'), PDO::PARAM_STR);
+        $stmt->bindValue(':connection_expires_at', $userInfo->settings('connectionExpiresAt'), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -1096,6 +1151,62 @@ class Storage
     }
 
     /**
+     * Get the non-expired WireGuard and OpenVPN *API* configurations for a
+     * particular user in specific profile.
+     *
+     * @return array<array{profile_id:string,connection_id:string}>
+     */
+    public function activeProfileApiConfigurations(string $userId, $profileId, DateTimeImmutable $dateTime): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    profile_id, common_name AS connection_id, created_at
+                FROM
+                    certificates
+                WHERE
+                    user_id = :user_id
+                AND 
+                    profile_id = :profile_id    
+                AND
+                    auth_key IS NOT NULL
+                AND
+                    expires_at > :date_time
+                UNION
+                SELECT
+                    profile_id, public_key AS connection_id, created_at
+                FROM
+                    wg_peers
+                WHERE
+                    user_id = :user_id
+                AND 
+                    profile_id = :profile_id    
+                AND
+                    auth_key IS NOT NULL
+                AND
+                    expires_at > :date_time
+                ORDER BY
+                    created_at
+                SQL
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->execute();
+
+        $activeApiConfigurations = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $activeApiConfigurations[] = [
+                'profile_id' => (string) $resultRow['profile_id'],
+                'connection_id' => (string) $resultRow['connection_id'],
+            ];
+        }
+
+        return $activeApiConfigurations;
+    }
+
+    /**
      * Get the number of non-expired WireGuard and OpenVPN *portal*
      * configurations for a particular user.
      */
@@ -1131,6 +1242,53 @@ class Storage
         );
 
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Get the number of non-expired WireGuard and OpenVPN *portal*
+     * configurations for a particular user in spcific profile.
+     */
+    public function numberOfActiveProfileConfigurations(string $userId, string $profileId, DateTimeImmutable $dateTime): int
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                        SELECT SUM(c)
+                        FROM (
+                            SELECT
+                                COUNT(public_key) AS c
+                            FROM
+                                wg_peers
+                            WHERE
+                                user_id = :user_id
+                            AND 
+                                profile_id = :profile_id    
+                            AND
+                                auth_key IS NULL
+                            AND
+                                expires_at > :date_time
+                        UNION ALL
+                            SELECT
+                                COUNT(common_name) AS c
+                            FROM
+                                certificates
+                            WHERE
+                                user_id = :user_id
+                            AND 
+                                profile_id = :profile_id      
+                            AND
+                                auth_key IS NULL
+                            AND
+                                expires_at > :date_time
+                        ) AS c
+                SQL
+        );
+
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
 

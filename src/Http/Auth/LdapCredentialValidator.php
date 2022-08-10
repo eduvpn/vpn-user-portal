@@ -69,10 +69,11 @@ class LdapCredentialValidator implements CredentialValidatorInterface
                 //     id, e.g. mail, ipaUniqueID, ...
                 $userId = $this->getUserId($baseDn, $userFilter, $userIdAttribute);
             }
-
+            $settings = [];
+            $settings['permissionList'] = $this->getPermissionList($baseDn, $userFilter, $this->ldapAuthConfig->permissionAttributeList());
             return new UserInfo(
                 $userId,
-                $this->getPermissionList($baseDn, $userFilter, $this->ldapAuthConfig->permissionAttributeList())
+                $settings
             );
         } catch (LdapClientException $e) {
             // convert LDAP errors into `CredentialValidatorException`

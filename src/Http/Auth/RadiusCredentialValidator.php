@@ -102,7 +102,8 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
                 $permissionList[] = $radiusAttribute['data'];
             }
         }
-
-        return new UserInfo($authUser, $permissionList);
+        $settings = [];
+        $settings['permissionList'] = $permissionList;
+        return new UserInfo($authUser, $settings);
     }
 }

@@ -21,6 +21,18 @@ return [
     // 'sessionExpiry' => 'P1D',   // 1 day
     // 'sessionExpiry' => 'PT12H', // 12 hours
 
+
+    // 'User' => [
+    
+    //      'maxActiveConfigurations' => false,
+    //      'maxActiveApiConfigurations' => false,
+
+    //      Connection_Expires_at allow to configure expiry for user connection. 
+    //      does not affect client authorization
+    //      DEFAULT = false
+    //      'connectionExpiresAt' => false,
+    // ],
+
     // Portal Database Configuration
     // NOTE: using any other database than SQLite requires *manual*
     // initialization and migration!
@@ -166,7 +178,10 @@ return [
     // ** OpenID Connect (mod_auth_openidc) **
     // 'OidcAuthModule' => [
     //    'userIdAttribute' => 'REMOTE_USER',
-    // //   'permissionAttributeList' => [],
+    //    'permissionAttributeList' => [],
+    //    'maxActiveConfigurations' => null,
+    //    'maxActiveApiConfigurations' => null,
+    //    'connectionExpiresAt' => null ,
     // ],
 
     // List of permissions a user MUST have in order to get access to the

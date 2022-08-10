@@ -46,9 +46,11 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
             throw new HttpException(sprintf('missing SAML user_id attribute "%s"', $userIdAttribute), 500);
         }
 
+        $settings = [];
+        $settings['permissionList'] = $this->getPermissionList($samlAttributes);
         return new UserInfo(
             $samlAttributes[$userIdAttribute][0],
-            $this->getPermissionList($samlAttributes)
+            $settings
         );
     }
 

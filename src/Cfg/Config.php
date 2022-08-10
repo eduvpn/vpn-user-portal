@@ -210,6 +210,11 @@ class Config
         return new LdapAuthConfig($this->s('LdapAuthModule')->toArray());
     }
 
+    public function userConfig(): UserConfig
+    {
+        return new UserConfig($this->s('User')->toArray());
+    }
+
     /**
      * @psalm-suppress UnresolvableInclude
      */

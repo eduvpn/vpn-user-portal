@@ -86,21 +86,9 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     // by this client are removed / disconnected
                     $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
 
-                    $maxActiveApiConfigurations = $this->config->apiConfig()->maxActiveConfigurations();
-                    if (0 === $maxActiveApiConfigurations) {
-                        throw new HttpException('no API configuration downloads allowed', 403);
-                    }
-                    $activeApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
-                    if (\count($activeApiConfigurations) >= $maxActiveApiConfigurations) {
-                        // we disconnect the client that connected the longest
-                        // time ago, which is first one from the set in
-                        // activeApiConfigurations
-                        $this->connectionManager->disconnect(
-                            $accessToken->userId(),
-                            $activeApiConfigurations[0]['profile_id'],
-                            $activeApiConfigurations[0]['connection_id']
-                        );
-                    }
+
+
+                    // validate user access to requested profile
                     $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                     $profileConfigList = $this->config->profileConfigList();
                     $userPermissions = $this->storage->userPermissionList($accessToken->userId());
@@ -112,7 +100,6 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                                 continue;
                             }
                         }
-
                         $availableProfiles[] = $profileConfig->profileId();
                     }
 
@@ -120,7 +107,85 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         throw new HttpException('no such "profile_id"', 404);
                     }
 
-                    $profileConfig = $this->config->profileConfig($requestedProfileId);
+                    
+                    $userSettings = $this->storage->userSettings($accessToken->userId());  
+                    // user connection_expires_at
+                    if (true === $this->config->userConfig()->connectionExpiresAt()) {
+                        $connectionExpiresAt = $userSettings[$accessToken->userId()]['connection_expires_at'];
+                        if (null ===$connectionExpiresAt) {
+                            $connectionExpiresAt = $accessToken->authorizationExpiresAt();
+                        } 
+                        else {
+                            $connectionExpiresAt = min(Dt::get($connectionExpiresAt),$accessToken->authorizationExpiresAt());
+                        }
+                        $dateTime = Dt::get();
+                        if ($datetime > $connectionExpiresAt) {
+                            throw new HttpException('no API configuration downloads allowed', 403);
+                        }
+                    }    
+                    // user maxActiveApiConfigurations
+                    if (true === $this->config->userConfig()->maxActiveApiConfigurations()) {
+                        $maxActiveUserApiConfigurations = $userSettings[$accessToken->userId()]['max_active_api_configurations'];
+                        if (0 === $maxActiveUserApiConfigurations) {
+                            throw new HttpException('no API configuration downloads allowed', 403);
+                        }             
+                    }        
+                    // profile maxActiveApiConfiguration
+                    $profileConfig = $this->config->profileConfig($requestedProfileId);                      
+                    $maxActiveProfileApiConfigurations = $profileConfig->maxActiveApiConfigurations();
+                    if (0 === $maxActiveProfileApiConfigurations) {
+                        throw new HttpException('no API configuration downloads allowed', 403);
+                    }
+
+                    // global/portal maxActiveApiConfiguration
+                    $maxActiveApiConfigurations = $this->config->apiConfig()->maxActiveConfigurations();   
+                    if (0 === $maxActiveApiConfigurations) {
+                        throw new HttpException('no API configuration downloads allowed', 403);
+                    }
+                    
+                    // check profile connection limit
+                    if (0 < $maxActiveProfileApiConfigurations) {
+                        $activeProfileApiConfigurations = $this->storage->activeProfileApiConfigurations($accessToken->userId(), $requestedProfileId, $this->dateTime);
+                        if (\count($activeProfileApiConfigurations) >= $maxActiveProfileApiConfigurations) {
+                            // we disconnect the client that connected the longest
+                            // time ago, which is first one from the set in
+                            // activeProfileApiConfigurations
+                            $this->connectionManager->disconnect(
+                                $accessToken->userId(),
+                                $activeProfileApiConfigurations[0]['profile_id'],
+                                $activeProfileApiConfigurations[0]['connection_id']
+                            );
+                        }
+                    }                        
+                    // check user connection limit
+                    if (true === $this->config->userConfig()->maxActiveApiConfigurations()) {
+                        if (0 < $maxActiveUserApiConfigurations) {
+                            $activeUserApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
+                            if (\count($activeUserApiConfigurations) >= $maxActiveUserApiConfigurations) {
+                                // we disconnect the client that connected the longest
+                                // time ago, which is first one from the set in
+                                // activeUserApiConfigurations
+                                $this->connectionManager->disconnect(
+                                    $accessToken->userId(),
+                                    $activeProfileApiConfigurations[0]['profile_id'],
+                                    $activeProfileApiConfigurations[0]['connection_id']
+                                );
+                            }
+                        }                       
+                    }
+                    // check global connection limit
+                    $activeApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
+                    if (\count($activeApiConfigurations) >= $maxActiveApiConfigurations) {
+                        // we disconnect the client that connected the longest
+                        // time ago, which is first one from the set in
+                        // activeApiConfigurations
+                        $this->connectionManager->disconnect(
+                            $accessToken->userId(),
+                            $activeApiConfigurations[0]['profile_id'],
+                            $activeApiConfigurations[0]['connection_id']
+                        );
+                    }
+
                     $publicKey = $request->optionalPostParameter('public_key', fn (string $s) => Validator::publicKey($s));
 
                     // still support "tcp_only" as an alias for "prefer_tcp",
@@ -140,7 +205,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         $accessToken->userId(),
                         Protocol::parseMimeType($request->optionalHeader('HTTP_ACCEPT')),
                         $accessToken->clientId(),
-                        $accessToken->authorizationExpiresAt(),
+                        $connectionExpiresAt,
                         $preferTcp,
                         $publicKey,
                         $accessToken->authKey(),
@@ -149,7 +214,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     return new Response(
                         $clientConfig->get(),
                         [
-                            'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                            'Expires' => $connectionExpiresAt->format(DateTimeImmutable::RFC7231),
                             'Content-Type' => $clientConfig->contentType(),
                         ]
                     );

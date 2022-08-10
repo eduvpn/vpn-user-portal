@@ -50,10 +50,11 @@ class MellonAuthModule extends AbstractAuthModule
                 $permissionList = array_merge($permissionList, explode(';', $permissionAttributeValue));
             }
         }
-
+        $settings = [];
+        $settings['permissionList'] = $permissionList;
         return new UserInfo(
             $userId,
-            $permissionList
+            $settings
         );
     }
 

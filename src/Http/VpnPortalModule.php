@@ -84,14 +84,6 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/addConfig',
             function (Request $request, UserInfo $userInfo): Response {
-                $maxActiveConfigurations = $this->config->maxActiveConfigurations();
-                if (0 === $maxActiveConfigurations) {
-                    throw new HttpException('no portal configuration downloads allowed', 403);
-                }
-                $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
-                if ($numberOfActivePortalConfigurations >= $maxActiveConfigurations) {
-                    throw new HttpException('limit of available portal configuration downloads has been reached', 403);
-                }
 
                 $displayName = $request->requirePostParameter('displayName', fn (string $s) => Validator::displayName($s));
                 $preferTcp = 'on' === $request->optionalPostParameter('preferTcp', fn (string $s) => Validator::onOrOff($s));
@@ -107,7 +99,63 @@ class VpnPortalModule implements ServiceModuleInterface
                     throw new HttpException('no permission to download a configuration for this profile', 403);
                 }
 
+                 
+                // user connection_expires_at
+                if (true === $this->config->userConfig()->connectionExpiresAt()) {
+                    $connectionExpiresAt = $userInfo->settings('connectionExpiresAt');
+                    if (null === $connectionExpiresAt) {
+                        $connectionExpiresAt = $this->dateTime->add($this->sessionExpiry);
+                    } 
+                    else {
+                        $connectionExpiresAt = min(Dt::get($connectionExpiresAt),$this->dateTime->add($this->sessionExpiry));
+                    }
+                    $dateTime = Dt::get();
+                    if ($datetime > $connectionExpiresAt) {
+                        throw new HttpException('no API configuration downloads allowed', 403);
+                    }
+                }    
+                // user maxActiveConfiguration
+                if (true === $this->config->userConfig()->maxActiveConfigurations()) {
+                    $maxActiveUserConfigurations = $userInfo->settings('maxActiveConfigurations');
+                    if (0 === $maxActiveUserConfigurations) {
+                        throw new HttpException('no API configuration downloads allowed', 403);
+                    }   
+                }
+                //  profile maxActiveConfiguration
                 $profileConfig = $this->config->profileConfig($profileId);
+                $maxActiveProfileConfigurations = $profileConfig->maxActiveConfigurations();
+                if (0 === $maxActiveProfileConfigurations) {
+                    throw new HttpException('no portal configuration downloads allowed', 403);
+                }
+                // global/portal maxActiveConfiguration
+                $maxActiveConfigurations = $this->config->maxActiveConfigurations();
+                if (0 === $maxActiveConfigurations) {
+                    throw new HttpException('no portal configuration downloads allowed', 403);
+                }
+                // check profile connection limit
+                if ( 0 < $maxActiveProfileConfigurations) {
+                    $numberOfActiveProfilelConfigurations = $this->storage->numberOfActiveProfileConfigurations($userInfo->userId(), $profileId, $this->dateTime);
+                    if ($numberOfActiveProfileConfigurations >= $maxActiveProfileConfigurations) {
+                        throw new HttpException('limit of available portal configuration downloads has been reached', 403);
+                    }
+                }
+               // check user connection limit
+                if (true === $this->config->userConfig()->maxActiveConfigurations()) {
+                    $numberOfActiveUserConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
+                    if ($numberOfActiveUserConfigurations >= $maxActiveUserConfigurations) {
+                        throw new HttpException('limit of available portal configuration downloads has been reached', 403);
+                    }
+                }
+                // check global connection limit
+                $numberOfActivePortalConfigurations = $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime);
+                if ($numberOfActivePortalConfigurations >= $maxActiveConfigurations) {
+                    throw new HttpException('limit of available portal configuration downloads has been reached', 403);
+                }
+
+
+
+
+                
                 $expiresAt = $this->dateTime->add($this->sessionExpiry);
 
                 $secretKey = Key::generate();
