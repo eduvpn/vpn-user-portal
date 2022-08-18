@@ -46,6 +46,12 @@ if (0 === strpos($requestPath, '/api/')) {
     return;
 }
 
+if (0 === strpos($requestPath, '/admin/api/')) {
+    include $webDir.'/admin-api.php';
+
+    return;
+}
+
 // no special handling required, pass on the responsibility for handling the
 // request to the PHP builtin webserver
 return false;

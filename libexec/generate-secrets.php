@@ -26,12 +26,18 @@ try {
     $caDir = $keyDir.'/ca';
     FileIO::mkdir($caDir);
 
+    $generateAdminApiKey = false;
     $nodeNumberStr = null;
     for ($i = 1; $i < $argc; ++$i) {
         if ('--node' === $argv[$i]) {
             if ($i + 1 < $argc) {
                 $nodeNumberStr = $argv[$i + 1];
             }
+
+            continue;
+        }
+        if ('--admin-api' === $argv[$i]) {
+            $generateAdminApiKey = true;
 
             continue;
         }
@@ -69,6 +75,15 @@ try {
     if (!FileIO::exists($nodeKeyFile)) {
         $secretKey = random_bytes(32);
         FileIO::write($nodeKeyFile, sodium_bin2hex($secretKey));
+    }
+
+    // Admin API Key
+    if ($generateAdminApiKey) {
+        $adminApiKeyFile = $keyDir.'/admin-api.key';
+        if (!FileIO::exists($adminApiKeyFile)) {
+            $secretKey = random_bytes(32);
+            FileIO::write($adminApiKeyFile, sodium_bin2hex($secretKey));
+        }
     }
 
     // OpenVPN CA
