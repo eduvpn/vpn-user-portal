@@ -19,7 +19,6 @@ use Vpn\Portal\Exception\ConnectionHookException;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
-use Vpn\Portal\WireGuard\Key;
 
 /**
  * List, add and remove connections.
