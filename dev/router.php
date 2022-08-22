@@ -20,29 +20,30 @@ $webDir = dirname(__DIR__).'/web';
 $requestUri = parse_url($_SERVER['REQUEST_URI']);
 $requestPath = $requestUri['path'];
 
-switch ($requestPath) {
-    case '/.well-known/vpn-user-portal':
-        include $webDir.'/well-known.php';
+if ('/.well-known/vpn-user-portal' === $requestPath) {
+    include $webDir.'/well-known.php';
 
-        break;
-
-    case '/oauth/authorize':
-        include $webDir.'/index.php';
-
-        break;
-
-    case '/oauth/token':
-        include $webDir.'/oauth.php';
-
-        break;
-
-    case '/api':
-        include $webDir.'/api.php';
-
-        break;
-
-    default:
-        // no special handling required. Pass on the responsibility for
-        // handling the request to the PHP builtin webserver
-        return false;
+    return;
 }
+
+if ('/oauth/authorize' === $requestPath) {
+    include $webDir.'/index.php';
+
+    return;
+}
+
+if ('/oauth/token' === $requestPath) {
+    include $webDir.'/oauth.php';
+
+    return;
+}
+
+if (0 === strpos($requestPath, '/api/')) {
+    include $webDir.'/api.php';
+
+    return;
+}
+
+// no special handling required, pass on the responsibility for handling the
+// request to the PHP builtin webserver
+return false;
