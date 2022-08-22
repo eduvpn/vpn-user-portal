@@ -16,23 +16,33 @@ declare(strict_types=1);
  * $ php -S localhost:8082 -t web dev/router.php
  */
 
-chdir(__DIR__.'/../web');
+$webDir = dirname(__DIR__).'/web';
+$requestUri = parse_url($_SERVER['REQUEST_URI']);
+$requestPath = $requestUri['path'];
 
-// Extract the path from the request.
-$request = parse_url($_SERVER['REQUEST_URI']);
-$path = $request['path'];
+switch ($requestPath) {
+    case '/.well-known/vpn-user-portal':
+        include $webDir.'/well-known.php';
 
-// Take care of virtual request paths.
-if ('/.well-known/vpn-user-portal' === $path) {
-    include 'well-known.php';
-} elseif ('/oauth/authorize' === $path) {
-    include 'index.php';
-} elseif ('/oauth/token' === $path) {
-    include 'oauth.php';
-} elseif ('/api' === $path) {
-    include 'api.php';
-} else {
-    // No special handling required. Pass on the responsibility
-    // for handling the request to the PHP builtin webserver.
-    return false;
+        break;
+
+    case '/oauth/authorize':
+        include $webDir.'/index.php';
+
+        break;
+
+    case '/oauth/token':
+        include $webDir.'/oauth.php';
+
+        break;
+
+    case '/api':
+        include $webDir.'/api.php';
+
+        break;
+
+    default:
+        // no special handling required. Pass on the responsibility for
+        // handling the request to the PHP builtin webserver
+        return false;
 }
