@@ -245,4 +245,14 @@ class ProfileConfig
     {
         return \count($this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']));
     }
+
+    public function maxActiveConfigurations(): int
+    {
+        return $this->requireInt('maxActiveConfigurations', -1);
+    }
+
+    public function maxActiveApiConfigurations(): int
+    {
+        return $this->requireInt('maxActiveApiConfigurations', -1);
+    }
 }

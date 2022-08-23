@@ -35,9 +35,11 @@ class ShibAuthModule extends AbstractAuthModule
             }
         }
 
+        $settings = [];
+        $settings['permissionList'] = $permissionList;
         return new UserInfo(
             $request->requireHeader($this->config->userIdAttribute()),
-            $permissionList
+            $settings
         );
     }
 

@@ -86,10 +86,11 @@ class UserPassAuthModule extends AbstractAuthModule
         if (null !== $sessionValue = $this->session->get('_user_pass_auth_permission_list')) {
             $permissionList = Json::decode($sessionValue);
         }
-
+        $settings = [];
+        $settings['permissionList'] = $permissionList;
         return new UserInfo(
             $authUser,
-            $permissionList
+            $settings
         );
     }
 

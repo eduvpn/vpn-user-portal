@@ -36,9 +36,15 @@ class OidcAuthModule extends AbstractAuthModule
             }
         }
 
+        $settings = [];
+        $settings['permissionList'] = $permissionList;
+        $settings['maxActiveConfigurations'] = $request->optionalHeader($this->config->maxActiveConfigurationsArribute());
+        $settings['maxActiveApiConfigurations'] = $request->optionalHeader($this->config->maxActiveApiConfigurationsAttribute());
+        $settings['connectionExpiresAt'] = $request->optionalHeader($this->config->connectionExpiresAtAttribute());
+
         return new UserInfo(
             $request->requireHeader($this->config->userIdAttribute()),
-            $permissionList
+            $settings
         );
     }
 

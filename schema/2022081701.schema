@@ -1,0 +1,75 @@
+CREATE TABLE IF NOT EXISTS users(
+    user_id VARCHAR(255) NOT NULL PRIMARY KEY,
+    last_seen VARCHAR(255) NOT NULL,
+    permission_list TEXT NOT NULL,
+    auth_data TEXT DEFAULT NULL,
+    is_disabled BOOLEAN NOT NULL,
+    max_active_configurations VARCHAR(255) NULL,
+    max_active_api_configurations VARCHAR(255) NULL,    
+    connection_expires_at VARCHAR(255)  NULL 
+);
+CREATE TABLE IF NOT EXISTS local_users (
+    user_id VARCHAR(255) NOT NULL PRIMARY KEY,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at VARCHAR(255) NOT NULL,
+    UNIQUE(user_id)
+);
+CREATE TABLE IF NOT EXISTS oauth_authorizations (
+    auth_key VARCHAR(255) NOT NULL PRIMARY KEY,
+    client_id VARCHAR(255) NOT NULL,
+    scope VARCHAR(255) NOT NULL,
+    authorized_at VARCHAR(255) NOT NULL,
+    expires_at VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE(auth_key)
+);
+CREATE TABLE IF NOT EXISTS oauth_refresh_token_log (
+    auth_key VARCHAR(255) NOT NULL REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
+    refresh_token_id VARCHAR(255) NOT NULL,
+    UNIQUE(auth_key, refresh_token_id)
+);
+CREATE TABLE IF NOT EXISTS certificates(
+    node_number BIGINT NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    display_name VARCHAR(255) NOT NULL,
+    common_name VARCHAR(255) UNIQUE NOT NULL,
+    created_at VARCHAR(255) NOT NULL,
+    expires_at VARCHAR(255) NOT NULL,
+    auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
+    user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS wg_peers (
+    node_number BIGINT NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    display_name VARCHAR(255) NOT NULL,
+    public_key VARCHAR(255) NOT NULL UNIQUE,
+    ip_four VARCHAR(255) NOT NULL UNIQUE,
+    ip_six VARCHAR(255) NOT NULL UNIQUE,
+    created_at VARCHAR(255) NOT NULL,
+    expires_at VARCHAR(255) NOT NULL,
+    auth_key VARCHAR(255) REFERENCES oauth_authorizations(auth_key) ON DELETE CASCADE,
+    user_id VARCHAR(255) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS connection_log(
+    user_id VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    vpn_proto VARCHAR(255) NOT NULL,
+    connection_id VARCHAR(255) NOT NULL,
+    ip_four VARCHAR(255) NOT NULL,
+    ip_six VARCHAR(255) NOT NULL,
+    connected_at VARCHAR(255) NOT NULL,
+    bytes_in BIGINT DEFAULT NULL,
+    bytes_out BIGINT DEFAULT NULL,
+    disconnected_at VARCHAR(255) DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS live_stats(
+    date_time VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    connection_count BIGINT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS aggregate_stats(
+    date VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    max_connection_count BIGINT NOT NULL,
+    unique_user_count BIGINT NOT NULL
+);
