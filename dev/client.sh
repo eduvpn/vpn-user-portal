@@ -1,8 +1,10 @@
 #!/bin/sh
 
-SERVER="http://localhost:8082"
-BROWSER=/usr/bin/firefox
-#BROWSER=open    # macOS
+#BROWSER=xdg-open	# Linux
+BROWSER=open		# macOS
+
+WEB_PORTAL_URL="http://localhost:8082"
+#WEB_PORTAL_URL="https://vpn.tuxed.net"
 
 PORT=12345
 REDIRECT_URI=http://127.0.0.1:${PORT}/callback
@@ -13,9 +15,8 @@ CODE_VERIFIER=$(openssl rand -base64 32 | tr '/+' '_-' | tr -d '=' | tr -d '\n')
 CODE_CHALLENGE=$(echo -n "${CODE_VERIFIER}" | openssl sha256 -binary | base64 | tr '/+' '_-' | tr -d '=' | tr -d '\n')
 
 # figure out "authorize endpoint"
-AUTHZ_URL="${SERVER}/.well-known/vpn-user-portal"
-echo ${AUTHZ_URL}
-SERVER_INFO=$(curl -s "${AUTHZ_URL}")
+WELL_KNOWN_URL="${WEB_PORTAL_URL}/.well-known/vpn-user-portal"
+SERVER_INFO=$(curl -s "${WELL_KNOWN_URL}")
 AUTHZ_ENDPOINT=$(echo "${SERVER_INFO}" | jq -r '.api."http://eduvpn.org/api#3".authorization_endpoint')
 TOKEN_ENDPOINT=$(echo "${SERVER_INFO}" | jq -r '.api."http://eduvpn.org/api#3".token_endpoint')
 AUTHZ_URL="${AUTHZ_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}&state=${STATE}&code_challenge_method=S256&code_challenge=${CODE_CHALLENGE}"
@@ -42,6 +43,7 @@ then
     echo "ERROR: ${ERROR}"
     exit 1
 fi
+
 RESPONSE_STATE=$(echo "${RESPONSE}" | cut -d '?' -f 2 | cut -d ' ' -f 1 | tr '&' '\n' | grep ^state | cut -d '=' -f 2)
 RESPONSE_CODE=$(echo "${RESPONSE}" | cut -d '?' -f 2 | cut -d ' ' -f 1 | tr '&' '\n' | grep ^code | cut -d '=' -f 2)
 
@@ -53,6 +55,8 @@ fi
 
 # use response code to obtain access token
 TOKEN_RESPONSE=$(curl -s -d 'grant_type=authorization_code' -d "client_id=${CLIENT_ID}" -d "code=${RESPONSE_CODE}" -d "code_verifier=${CODE_VERIFIER}" -d "redirect_uri=${REDIRECT_URI}" "${TOKEN_ENDPOINT}")
+echo ${TOKEN_RESPONSE}
+
 BEARER_TOKEN=$(echo "${TOKEN_RESPONSE}" | jq -r '.access_token')
 echo ${BEARER_TOKEN}
 #API_BASE_URI=$(echo "${SERVER_INFO}" | jq -r '.api."http://eduvpn.org/api#3".api_endpoint')
