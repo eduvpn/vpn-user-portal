@@ -1,7 +1,10 @@
 #!/bin/sh
 
-#BROWSER=xdg-open	# Linux
-BROWSER=open		# macOS
+if [ "Darwin" == "$(uname)" ]; then
+    BROWSER=open        # macOS
+else
+    BROWSER=xdg-open	# other
+fi
 
 WEB_PORTAL_URL="http://localhost:8082"
 #WEB_PORTAL_URL="https://vpn.tuxed.net"
@@ -14,9 +17,9 @@ STATE=$(openssl rand -base64 32 | tr '/+' '_-' | tr -d '=' | tr -d '\n')
 CODE_VERIFIER=$(openssl rand -base64 32 | tr '/+' '_-' | tr -d '=' | tr -d '\n')
 CODE_CHALLENGE=$(echo -n "${CODE_VERIFIER}" | openssl sha256 -binary | base64 | tr '/+' '_-' | tr -d '=' | tr -d '\n')
 
-# figure out "authorize endpoint"
-WELL_KNOWN_URL="${WEB_PORTAL_URL}/.well-known/vpn-user-portal"
-SERVER_INFO=$(curl -s "${WELL_KNOWN_URL}")
+SERVER_INFO_URL="${WEB_PORTAL_URL}/.well-known/vpn-user-portal"
+SERVER_INFO=$(curl -s "${SERVER_INFO_URL}")
+
 AUTHZ_ENDPOINT=$(echo "${SERVER_INFO}" | jq -r '.api."http://eduvpn.org/api#3".authorization_endpoint')
 TOKEN_ENDPOINT=$(echo "${SERVER_INFO}" | jq -r '.api."http://eduvpn.org/api#3".token_endpoint')
 AUTHZ_URL="${AUTHZ_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}&state=${STATE}&code_challenge_method=S256&code_challenge=${CODE_CHALLENGE}"
@@ -55,31 +58,22 @@ fi
 
 # use response code to obtain access token
 TOKEN_RESPONSE=$(curl -s -d 'grant_type=authorization_code' -d "client_id=${CLIENT_ID}" -d "code=${RESPONSE_CODE}" -d "code_verifier=${CODE_VERIFIER}" -d "redirect_uri=${REDIRECT_URI}" "${TOKEN_ENDPOINT}")
-echo ${TOKEN_RESPONSE}
-
 BEARER_TOKEN=$(echo "${TOKEN_RESPONSE}" | jq -r '.access_token')
-echo ${BEARER_TOKEN}
-#API_BASE_URI=$(echo "${SERVER_INFO}" | jq -r '.api."http://eduvpn.org/api#3".api_endpoint')
+API_ENDPOINT=$(echo "${SERVER_INFO}" | jq -r '.api."http://eduvpn.org/api#3".api_endpoint')
+PROFILE_ID_LIST=$(curl -s -H "Authorization: Bearer ${BEARER_TOKEN}" "${API_ENDPOINT}/info" | jq -r '.info.profile_list[].profile_id' | xargs)
+for PROFILE_ID in ${PROFILE_ID_LIST}; do
+    O_CFG_FILE=$(echo "${WEB_PORTAL_URL}_${PROFILE_ID}.o.conf" | sed 's/[^a-zA-Z0-9.-]/_/g')
+    W_CFG_FILE=$(echo "${WEB_PORTAL_URL}_${PROFILE_ID}.w.conf" | sed 's/[^a-zA-Z0-9.-]/_/g')
+    
+    curl -o "${O_CFG_FILE}" -s -d "profile_id=${PROFILE_ID}" -H "Accept: application/x-openvpn-profile" -H "Authorization: Bearer ${BEARER_TOKEN}" "${API_ENDPOINT}/connect"
 
-## try to fetch the profile_list
-#PROFILE_ID_LIST=$(curl -s -H "Authorization: Bearer ${BEARER_TOKEN}" "${API_BASE_URI}/profile_list" | jq -r '.profile_list.data[].profile_id' | xargs)
-#for PROFILE_ID in ${PROFILE_ID_LIST}
-#do
-#    # fetch OpenVPN config files for each server/profile available to us
-#    CONF_FILE=$(echo "${SERVER}_${PROFILE_ID}.ovpn" | sed 's/[^a-zA-Z0-9.-]/_/g')
-#    echo ${CONF_FILE}
-#    curl -o "${CONF_FILE}" -s -H "Authorization: Bearer ${BEARER_TOKEN}" "${API_BASE_URI}/profile_config?profile_id=${PROFILE_ID}"
-##    cat ${CONF_FILE}
-#    # add cert / key to it
-#    CERT=$(jq -r '.create_keypair.data.certificate' < "${KEY_FILE}")
-#    KEY=$(jq -r '.create_keypair.data.private_key' < "${KEY_FILE}")
-
-#    echo "" >> "${CONF_FILE}"
-#    echo "<cert>${CERT}</cert><key>${KEY}</key>" >> "${CONF_FILE}"
+    # TODO: add the secret key to the wireguard config
+    SECRET_KEY=$(wg genkey)
+    PUBLIC_KEY=$(echo ${SECRET_KEY} | wg pubkey)
+    curl -o "${W_CFG_FILE}" -s --data-urlencode "public_key=${PUBLIC_KEY}" -d "profile_id=${PROFILE_ID}" -H "Accept: application/x-wireguard-profile" -H "Authorization: Bearer ${BEARER_TOKEN}" "${API_ENDPOINT}/connect"
 
 #    # add the configuration to NetworkManager
-#    nmcli connection import type openvpn file "${CONF_FILE}"
-#    rm ${CONF_FILE}
-#done
-## delete key 
-#rm "${KEY_FILE}"
+#    nmcli connection import type openvpn file "${O_CFG_FILE}"
+#    rm ${O_CFG_FILE}
+#    rm ${W_CFG_FILE}
+done
