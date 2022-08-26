@@ -40,6 +40,7 @@ if ('/oauth/token' === $requestPath) {
 
 if (0 === strpos($requestPath, '/api/')) {
     $_SERVER['PATH_INFO'] = substr($_SERVER['PATH_INFO'], 4);
+
     include $webDir.'/api.php';
 
     return;
