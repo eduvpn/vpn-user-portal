@@ -14,6 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\Crypto\HmacKey;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 
@@ -28,6 +29,7 @@ try {
 
     $generateAdminApiKey = false;
     $nodeNumberStr = null;
+    $generateHmac = false;
     for ($i = 1; $i < $argc; ++$i) {
         if ('--node' === $argv[$i]) {
             if ($i + 1 < $argc) {
@@ -41,8 +43,13 @@ try {
 
             continue;
         }
+        if ('--hmac' === $argv[$i]) {
+            $generateHmac = true;
+
+            continue;
+        }
         if ('--help' === $argv[$i]) {
-            echo 'SYNTAX: '.$argv[0].' [--node NODE_NUMBER] [--admin-api]'.\PHP_EOL;
+            echo 'SYNTAX: '.$argv[0].' [--node NODE_NUMBER] [--admin-api] [--hmac]'.\PHP_EOL;
 
             exit(0);
         }
@@ -62,6 +69,14 @@ try {
         }
 
         exit(0);
+    }
+
+    // HMAC key
+    if ($generateHmac) {
+        $hmacKeyFile = $keyDir.'/hmac.key';
+        if (!FileIO::exists($hmacKeyFile)) {
+            FileIO::write($hmacKeyFile, HmacKey::generate()->encode());
+        }
     }
 
     // OAuth key
