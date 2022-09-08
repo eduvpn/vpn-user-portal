@@ -18,6 +18,7 @@ use Vpn\Portal\Protocol;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ProtocolTest extends TestCase

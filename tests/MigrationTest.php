@@ -19,6 +19,7 @@ use Vpn\Portal\Migration;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class MigrationTest extends TestCase

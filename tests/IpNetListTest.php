@@ -17,6 +17,7 @@ use Vpn\Portal\IpNetList;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class IpNetListTest extends TestCase

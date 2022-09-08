@@ -19,6 +19,7 @@ use Vpn\Portal\Expiry;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ExpiryTest extends TestCase

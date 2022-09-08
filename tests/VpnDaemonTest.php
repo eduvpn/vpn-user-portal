@@ -22,6 +22,7 @@ use Vpn\Portal\WireGuard\Key;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class VpnDaemonTest extends TestCase

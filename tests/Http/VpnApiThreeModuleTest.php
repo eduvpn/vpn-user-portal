@@ -28,6 +28,7 @@ use Vpn\Portal\WireGuard\Key;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class VpnApiThreeModuleTest extends TestCase

@@ -17,6 +17,7 @@ use Vpn\Portal\Validator;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ValidatorTest extends TestCase

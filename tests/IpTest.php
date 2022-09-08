@@ -17,6 +17,7 @@ use Vpn\Portal\Ip;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class IpTest extends TestCase

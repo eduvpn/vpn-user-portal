@@ -16,6 +16,7 @@ use Vpn\Portal\WireGuard\Key;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class KeyTest extends TestCase

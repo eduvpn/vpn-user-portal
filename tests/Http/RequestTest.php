@@ -18,6 +18,7 @@ use Vpn\Portal\Http\Request;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class RequestTest extends TestCase
