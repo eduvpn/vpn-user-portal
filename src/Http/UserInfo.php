@@ -58,6 +58,11 @@ class UserInfo
         return $this->permissionList;
     }
 
+    public function setAuthData(string $authData): void
+    {
+        $this->authData = $authData;
+    }
+
     public function authData(): ?string
     {
         return $this->authData;
