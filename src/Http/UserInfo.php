@@ -45,9 +45,9 @@ class UserInfo
         return $this->isAdmin;
     }
 
-    public function setAdmin(bool $isAdmin): void
+    public function makeAdmin(): void
     {
-        $this->isAdmin = $isAdmin;
+        $this->isAdmin = true;
     }
 
     /**

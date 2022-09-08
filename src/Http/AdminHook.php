@@ -43,9 +43,9 @@ class AdminHook extends AbstractHook implements HookInterface
 
     public function afterAuth(Request $request, UserInfo &$userInfo): ?Response
     {
-        if ($isAdmin = $this->isAdmin($userInfo)) {
-            $userInfo->setAdmin($isAdmin);
-            $this->templateEngine->addDefault('isAdmin', $isAdmin);
+        if ($this->isAdmin($userInfo)) {
+            $userInfo->makeAdmin();
+            $this->templateEngine->addDefault('isAdmin', true);
         }
 
         return null;
