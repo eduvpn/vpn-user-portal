@@ -126,7 +126,7 @@ try {
 
     if ($listUsers) {
         foreach ($storage->userList() as $userInfo) {
-            echo $userInfo['user_id'].PHP_EOL;
+            echo $userInfo->userId().PHP_EOL;
         }
 
         exit(0);

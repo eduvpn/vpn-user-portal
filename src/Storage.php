@@ -415,7 +415,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,last_seen:\DateTimeImmutable,permission_list:array<string>,is_disabled:bool,auth_data:?string}>
+     * @return array<\Vpn\Portal\Http\UserInfo>
      */
     public function userList(): array
     {
@@ -423,7 +423,6 @@ class Storage
             <<< 'SQL'
                     SELECT
                         user_id,
-                        last_seen,
                         permission_list,
                         auth_data,
                         is_disabled
@@ -437,13 +436,12 @@ class Storage
 
         $userList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $userList[] = [
-                'user_id' => (string) $resultRow['user_id'],
-                'last_seen' => Dt::get($resultRow['last_seen']),
-                'permission_list' => self::stringToPermissionList((string) $resultRow['permission_list']),
-                'is_disabled' => (bool) $resultRow['is_disabled'],
-                'auth_data' => null === $resultRow['auth_data'] ? null : (string) $resultRow['auth_data'],
-            ];
+            $userList[] = new UserInfo(
+                (string) $resultRow['user_id'],
+                self::stringToPermissionList((string) $resultRow['permission_list']),
+                null === $resultRow['auth_data'] ? null : (string) $resultRow['auth_data'],
+                (bool) $resultRow['is_disabled']
+            );
         }
 
         return $userList;

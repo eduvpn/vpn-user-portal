@@ -22,14 +22,17 @@ class UserInfo
 
     private ?string $authData;
 
+    private bool $isDisabled;
+
     /**
      * @param array<string> $permissionList
      */
-    public function __construct(string $userId, array $permissionList, ?string $authData = null)
+    public function __construct(string $userId, array $permissionList, ?string $authData = null, bool $isDisabled = false)
     {
         $this->userId = $userId;
         $this->permissionList = $permissionList;
         $this->authData = $authData;
+        $this->isDisabled = $isDisabled;
     }
 
     public function userId(): string
@@ -58,5 +61,10 @@ class UserInfo
     public function authData(): ?string
     {
         return $this->authData;
+    }
+
+    public function isDisabled(): bool
+    {
+        return $this->isDisabled;
     }
 }

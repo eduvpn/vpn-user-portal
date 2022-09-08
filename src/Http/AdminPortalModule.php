@@ -105,9 +105,9 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 $listUsers = $request->optionalQueryParameter('list_users', fn (string $s) => Validator::listUsers($s));
                 if ('disabled' === $listUsers) {
-                    $userList = array_filter($userList, fn ($v) => $v['is_disabled']);
+                    $userList = array_filter($userList, fn (UserInfo $v) => $v->isDisabled());
                 } elseif ('active' === $listUsers) {
-                    $userList = array_filter($userList, fn ($v) => !$v['is_disabled']);
+                    $userList = array_filter($userList, fn (UserInfo $v) => !$v->isDisabled());
                 }
 
                 return new HtmlResponse(

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /** @var \Vpn\Portal\Tpl $this */?>
-<?php /** @var array<array{user_id:string,last_seen:\DateTimeImmutable,permission_list:array<string>,is_disabled:bool}> $userList */?>
+<?php /** @var array<\Vpn\Portal\Http\UserInfo> $userList */?>
 <?php /** @var string $requestRoot */?>
 <?php /** @var ?string $listUsers */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
@@ -19,11 +19,11 @@
         <tr><th><?=$this->t('User ID'); ?></th></th><th></th></tr>
     </thead>
     <tbody>
-        <?php foreach ($userList as $user): ?>
+        <?php foreach ($userList as $userInfo): ?>
             <tr>
-                <td><a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($user['user_id'], 'rawurlencode'); ?>" title="<?=$this->e($user['user_id']); ?>"><?=$this->etr($user['user_id'], 50); ?></a></td>
+                <td><a href="<?=$this->e($requestRoot); ?>user?user_id=<?=$this->e($userInfo->userId(), 'rawurlencode'); ?>" title="<?=$this->e($userInfo->userId()); ?>"><?=$this->etr($userInfo->userId(), 50); ?></a></td>
                 <td class="text-right">
-                    <?php if ($user['is_disabled']): ?>
+                    <?php if ($userInfo->isDisabled()): ?>
                         <span class="error"><?=$this->t('Disabled'); ?></span>
                     <?php else: ?>
                         <span class="success"><?=$this->t('Active'); ?></span>
