@@ -35,6 +35,11 @@ class UserInfo
         $this->isDisabled = $isDisabled;
     }
 
+    public function setUserId(string $userId): void
+    {
+        $this->userId = $userId;
+    }
+
     public function userId(): string
     {
         return $this->userId;
