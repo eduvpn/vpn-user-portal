@@ -415,7 +415,7 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,last_seen:\DateTimeImmutable,permission_list:array<string>,is_disabled:bool}>
+     * @return array<array{user_id:string,last_seen:\DateTimeImmutable,permission_list:array<string>,is_disabled:bool,auth_data:?string}>
      */
     public function userList(): array
     {
@@ -425,6 +425,7 @@ class Storage
                         user_id,
                         last_seen,
                         permission_list,
+                        auth_data,
                         is_disabled
                     FROM
                         users
@@ -441,6 +442,7 @@ class Storage
                 'last_seen' => Dt::get($resultRow['last_seen']),
                 'permission_list' => self::stringToPermissionList((string) $resultRow['permission_list']),
                 'is_disabled' => (bool) $resultRow['is_disabled'],
+                'auth_data' => null === $resultRow['auth_data'] ? null : (string) $resultRow['auth_data'],
             ];
         }
 
