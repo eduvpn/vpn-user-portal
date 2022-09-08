@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.6 (...)
+- [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
+  implement "Admin API" support ([#16](https://todo.sr.ht/~eduvpn/server/16))
+
 ## 3.0.5 (2022-08-15)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
   add support for deleting authorization on APIv3 disconnect call 
