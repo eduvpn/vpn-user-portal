@@ -469,6 +469,33 @@ class Storage
         return self::stringToPermissionList((string) $stmt->fetchColumn());
     }
 
+    public function userAuthData(string $userId): ?string
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                    SELECT
+                        auth_data
+                    FROM
+                        users
+                    WHERE
+                        user_id = :user_id
+                SQL
+        );
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+
+        if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            // user does not exist
+            return null;
+        }
+
+        if (null === $resultRow['auth_data']) {
+            return null;
+        }
+
+        return (string) $resultRow['auth_data'];
+    }
+
     public function userDelete(string $userId): void
     {
         $stmt = $this->db->prepare(

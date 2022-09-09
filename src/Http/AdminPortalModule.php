@@ -141,6 +141,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'profileConfigList' => $this->config->profileConfigList(),
                             'configList' => VpnPortalModule::filterConfigList($this->storage, $userId),
                             'isDisabled' => $this->storage->userIsDisabled($userId),
+                            'authData' => $this->storage->userAuthData($userId),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
                             'userConnectionLogEntries' => $this->storage->getConnectionLogForUser($userId),
                         ]

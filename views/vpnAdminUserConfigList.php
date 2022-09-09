@@ -2,6 +2,7 @@
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<array{profile_id:string,ip_four:string,ip_six:string,connected_at:\DateTimeImmutable,disconnected_at:?\DateTimeImmutable}> $userConnectionLogEntries */ ?>
 <?php /** @var string $userId */?>
+<?php /** @var ?string $authData */?>
 <?php /** @var bool $isDisabled */?>
 <?php /** @var bool $isSelf */?>
 <?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
@@ -10,9 +11,18 @@
 <?php /** @var string $authModule */?>
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
 <?php $this->start('content'); ?>
-    <p>
-        <?=$this->t('Managing user <code>%userId%</code>.'); ?>
-    </p>
+    <table class="tbl">
+        <tr>
+            <th><?=$this->t('User ID'); ?></th>
+            <td><code><?=$this->e($userId); ?></code></td>
+        </tr>
+<?php if (null !== $authData): ?>
+        <tr>
+            <th><?=$this->t('Authentication Data'); ?></th>
+            <td><code><?=$this->e($authData); ?></code></td>
+        </tr>
+<?php endif; ?>
+    </table>
 
 <?php if ($isSelf): ?>
         <p class="warning"><?=$this->t('You cannot manage your own user account.'); ?></p>
