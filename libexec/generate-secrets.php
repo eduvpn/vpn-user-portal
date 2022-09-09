@@ -42,7 +42,7 @@ try {
             continue;
         }
         if ('--help' === $argv[$i]) {
-            echo 'SYNTAX: '.$argv[0].' [--node NODE_NUMBER]'.\PHP_EOL;
+            echo 'SYNTAX: '.$argv[0].' [--node NODE_NUMBER] [--admin-api]'.\PHP_EOL;
 
             exit(0);
         }
