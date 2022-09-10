@@ -21,6 +21,8 @@ return [
     // 'sessionExpiry' => 'P1D',   // 1 day
     // 'sessionExpiry' => 'PT12H', // 12 hours
 
+    // 'portalNumber' => 0,
+    
     // Portal Database Configuration
     // NOTE: using any other database than SQLite requires *manual*
     // initialization and migration!

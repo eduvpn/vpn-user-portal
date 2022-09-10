@@ -169,6 +169,7 @@ class Config
             array_merge(
                 [
                     'baseDir' => $baseDir,
+                    'portalNumber' => $this->portalNumber(),
                 ],
                 $this->s('Db')->toArray()
             )
@@ -221,4 +222,9 @@ class Config
 
         return new self(require $configFile);
     }
+
+    public function portalNumber(): int
+    {
+        return $this->requireInt('portalNumber', 0);
+    }   
 }

@@ -5,11 +5,16 @@
 <?php /** @var array<string,null|array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int}> $nodeInfoList */?>
 <?php /** @var string $portalVersion */?>
 <?php /** @var array<string,array<string>> $problemList */?>
+<?php /** @var string $portalNumber */?>
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Server'); ?></h2>
     <table class="tbl">
         <tbody>
+            <tr>
+                <th><?=$this->t('Portal Number'); ?></th>
+                <td><?=$this->e((string) $portalNumber); ?></td>
+            </tr>
             <tr>
                 <th><?=$this->t('Version'); ?></th>
                 <td>v<?=$this->e($portalVersion); ?></td>

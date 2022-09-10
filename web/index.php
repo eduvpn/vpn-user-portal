@@ -84,6 +84,7 @@ try {
             'authModule' => $config->authModule(),
             'isAdmin' => false,
             'showLogoutButton' => true,
+            'portalNumber' => $config->portalNumber(),
         ]
     );
 

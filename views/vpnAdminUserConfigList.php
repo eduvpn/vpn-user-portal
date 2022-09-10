@@ -59,11 +59,14 @@
     <?php else: ?>
         <table class="tbl">
             <thead>
-                <tr><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires On'); ?></th></tr>
+                <tr><th><?=$this->t('Portal'); ?></th><th><?=$this->t('Profile'); ?></th><th><?=$this->t('Name'); ?></th><th><?=$this->t('Expires On'); ?></th></tr>
             </thead>
             <tbody>
             <?php foreach ($configList as $configEntry): ?>
                 <tr>
+                    <td>
+                        <span title="<?=$this->e((string) $configEntry['portal_number']); ?>"><?=$this->e((string) $configEntry['portal_number']); ?></span>
+                    </td>
                     <td>
                         <span title="<?=$this->e($configEntry['profile_id']); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $configEntry['profile_id']); ?></span>
                     </td>
@@ -89,6 +92,7 @@
     <table class="tbl">
         <thead>
             <tr>
+                <th><?=$this->t('Portal'); ?></th>
                 <th><?=$this->t('Profile'); ?></th>
                 <th><?=$this->t('Connected'); ?></th>
                 <th><?=$this->t('Disconnected'); ?></th>
@@ -97,6 +101,7 @@
         <tbody>
 <?php foreach ($userConnectionLogEntries as $logEntry): ?>
             <tr>
+                <td title="<?=$this->e((string) $logEntry['portal_number']); ?>"><?=$this->e((string) $logEntry['portal_number']); ?></td>
                 <td title="<?=$this->e($logEntry['profile_id']); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $logEntry['profile_id']); ?></td>
                 <td title="IPv4: <?=$this->e($logEntry['ip_four']); ?>, IPv6: <?=$this->e($logEntry['ip_six']); ?>"><?=$this->d($logEntry['connected_at']); ?></td>
                 <td>
