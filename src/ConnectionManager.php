@@ -72,8 +72,8 @@ class ConnectionManager
                 $oCertListByProfileId = $this->storage->oCertListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
 
                 $oConnectionList = [];
-                for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-                    $oConnectionList = array_merge($oConnectionList, $this->vpnDaemon->oConnectionList($profileConfig->nodeUrl($i)));
+                foreach ($profileConfig->onNode() as $nodeNumber) {
+                    $oConnectionList = array_merge($oConnectionList, $this->vpnDaemon->oConnectionList($profileConfig->nodeUrl($nodeNumber)));
                 }
 
                 foreach ($oCertListByProfileId as $certInfo) {
@@ -96,8 +96,8 @@ class ConnectionManager
                 // WireGuard
                 $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
                 $wPeerList = [];
-                for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-                    $wPeerList = array_merge($wPeerList, $this->vpnDaemon->wPeerList($profileConfig->nodeUrl($i), false));
+                foreach ($profileConfig->onNode() as $nodeNumber) {
+                    $wPeerList = array_merge($wPeerList, $this->vpnDaemon->wPeerList($profileConfig->nodeUrl($nodeNumber), false));
                 }
 
                 foreach ($wPeerListByProfileId as $peerInfo) {
@@ -308,7 +308,7 @@ class ConnectionManager
      */
     private function randomNodeNumber(ProfileConfig $profileConfig): int
     {
-        $nodeList = range(0, $profileConfig->nodeCount() - 1);
+        $nodeList = $profileConfig->onNode();
         shuffle($nodeList);
         foreach ($nodeList as $nodeNumber) {
             if (null !== $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($nodeNumber))) {

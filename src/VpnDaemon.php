@@ -211,8 +211,8 @@ class VpnDaemon
         // WireGuard peers in the node(s)
         $wPeerList = [];
         foreach ($config->profileConfigList() as $profileConfig) {
-            for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-                $nodeUrl = $profileConfig->nodeUrl($i);
+            foreach ($profileConfig->onNode() as $nodeNumber) {
+                $nodeUrl = $profileConfig->nodeUrl($nodeNumber);
                 if ($profileConfig->wSupport()) {
                     // if the peer does not exist in the database, remove it...
                     foreach ($this->wPeerList($nodeUrl, true) as $publicKey => $wPeerInfo) {

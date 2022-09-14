@@ -75,8 +75,8 @@ class AdminPortalModule implements ServiceModuleInterface
                 // query all nodes to have them report their status info
                 $nodeInfoList = [];
                 foreach ($this->config->profileConfigList() as $profileConfig) {
-                    for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-                        $nodeUrl = $profileConfig->nodeUrl($i);
+                    foreach ($profileConfig->onNode() as $nodeNumber) {
+                        $nodeUrl = $profileConfig->nodeUrl($nodeNumber);
                         if (!\array_key_exists($nodeUrl, $nodeInfoList)) {
                             $nodeInfoList[$nodeUrl] = $this->vpnDaemon->nodeInfo($nodeUrl);
                         }

@@ -112,15 +112,15 @@
 <?php endif; ?>
 
             <tr><th><?=$this->t('Hostname'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e($profileConfig->hostName($i)); ?></code></span>
-<?php endfor; ?>
+<?php foreach ($profileConfig->onNode() as $nodeNumber): ?>
+            <span class="plain"><code><?=$this->e($profileConfig->hostName($nodeNumber)); ?></code></span>
+<?php endforeach; ?>
             </td></tr>
-<?php if (1 !== $profileConfig->nodeCount() || 'http://localhost:41194' !== $profileConfig->nodeUrl(0)): ?>
+<?php if (1 !== count($profileConfig->onNode()) || 'http://localhost:41194' !== $profileConfig->nodeUrl(reset($profileConfig->onNode()))): ?>
             <tr><th><?=$this->t('Node URL'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e($profileConfig->nodeUrl($i)); ?></code></span>
-<?php endfor; ?>
+<?php foreach ($profileConfig->onNode() as $nodeNumber): ?>
+            <span class="plain"><code><?=$this->e($profileConfig->nodeUrl($nodeNumber)); ?></code></span>
+<?php endforeach; ?>
             </td></tr>
 <?php endif; ?>
 
@@ -195,14 +195,14 @@
             </tr>
 <?php endif; ?>
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e((string) $profileConfig->oRangeFour($i)); ?></code></span>
-<?php endfor; ?>
+<?php foreach ($profileConfig->onNode() as $nodeNumber): ?>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->oRangeFour($nodeNumber)); ?></code></span>
+<?php endforeach; ?>
             </td></tr>
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e((string) $profileConfig->oRangeSix($i)); ?></code></span>
-<?php endfor; ?>
+<?php foreach ($profileConfig->onNode() as $nodeNumber): ?>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->oRangeSix($nodeNumber)); ?></code></span>
+<?php endforeach; ?>
             </td></tr>
 <?php if (0 !== count($profileConfig->oUdpPortList()) || 0 !== count($profileConfig->oTcpPortList())): ?>
             <tr><th><?=$this->t('Ports'); ?></th>
@@ -234,14 +234,14 @@
 <?php if ($profileConfig->wSupport()):?>
         <tr><th colspan="2" class="wireguard"><?=$this->t('WireGuard'); ?></th>
             <tr><th><?=$this->t('IPv4 Prefix'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e((string) $profileConfig->wRangeFour($i)); ?></code></span>
-<?php endfor; ?>
+<?php foreach ($profileConfig->onNode() as $nodeNumber): ?>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->wRangeFour($nodeNumber)); ?></code></span>
+<?php endforeach; ?>
             </td></tr>
             <tr><th><?=$this->t('IPv6 Prefix'); ?></th><td>
-<?php for ($i = 0; $i < $profileConfig->nodeCount(); ++$i): ?>
-            <span class="plain"><code><?=$this->e((string) $profileConfig->wRangeSix($i)); ?></code></span>
-<?php endfor; ?>
+<?php foreach ($profileConfig->onNode() as $nodeNumber): ?>
+            <span class="plain"><code><?=$this->e((string) $profileConfig->wRangeSix($nodeNumber)); ?></code></span>
+<?php endforeach; ?>
             </td></tr>
 <?php endif; ?>
 

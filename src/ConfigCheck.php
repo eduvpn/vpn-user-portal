@@ -65,8 +65,8 @@ class ConfigCheck
         // collect all ports per unique nodeUrl and report duplicate ones
         $udpPortList = $profileConfig->oUdpPortList();
         $tcpPortList = $profileConfig->oTcpPortList();
-        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-            $nodeUrl = $profileConfig->nodeUrl($i);
+        foreach ($profileConfig->onNode() as $nodeNumber) {
+            $nodeUrl = $profileConfig->nodeUrl($nodeNumber);
             if (!\array_key_exists($nodeUrl, $usedUdpPortList)) {
                 $usedUdpPortList[$nodeUrl] = [];
             }
@@ -95,8 +95,8 @@ class ConfigCheck
 
     private static function verifyNonLocalNodeUrlHasTls(ProfileConfig $profileConfig, array &$profileProblemList): void
     {
-        for ($i = 0; $i < $profileConfig->nodeCount(); ++$i) {
-            $nodeUrl = $profileConfig->nodeUrl($i);
+        foreach ($profileConfig->onNode() as $nodeNumber) {
+            $nodeUrl = $profileConfig->nodeUrl($nodeNumber);
             $nodeUrlScheme = parse_url($nodeUrl, PHP_URL_SCHEME);
             if ('https' === $nodeUrlScheme) {
                 return;
@@ -170,14 +170,14 @@ class ConfigCheck
         // to find offending ranges, but string search in config file should
         // work as well...
         $profileRangeList = [];
-        for ($n = 0; $n < $profileConfig->nodeCount(); ++$n) {
+        foreach ($profileConfig->onNode() as $nodeNumber) {
             if ($profileConfig->oSupport()) {
-                $profileRangeList[] = $profileConfig->oRangeFour($n);
-                $profileRangeList[] = $profileConfig->oRangeSix($n);
+                $profileRangeList[] = $profileConfig->oRangeFour($nodeNumber);
+                $profileRangeList[] = $profileConfig->oRangeSix($nodeNumber);
             }
             if ($profileConfig->wSupport()) {
-                $profileRangeList[] = $profileConfig->wRangeFour($n);
-                $profileRangeList[] = $profileConfig->wRangeSix($n);
+                $profileRangeList[] = $profileConfig->wRangeFour($nodeNumber);
+                $profileRangeList[] = $profileConfig->wRangeSix($nodeNumber);
             }
         }
 

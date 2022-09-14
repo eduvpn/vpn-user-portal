@@ -156,6 +156,35 @@ trait ConfigTrait
     }
 
     /**
+     * @return ?array<int>
+     */
+    private function optionalIntOrIntArray(string $k): ?array
+    {
+        if (!\array_key_exists($k, $this->configData)) {
+            return null;
+        }
+        $this->configData[$k] = (array) $this->configData[$k];
+
+        return $this->requireIntArray($k);
+    }
+
+    /**
+     * @return array<int>
+     */
+    private function requireIntOrIntArray(string $k, ?array $d = null): array
+    {
+        if (null === $v = $this->optionalIntOrIntArray($k)) {
+            if (null !== $d) {
+                return $d;
+            }
+
+            throw new ConfigException('key "'.$k.'" not available');
+        }
+
+        return $v;
+    }
+
+    /**
      * @return array<string>
      */
     private function optionalStringArray(string $k): ?array

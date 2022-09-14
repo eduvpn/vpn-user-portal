@@ -37,12 +37,13 @@ class ProfileConfig
 
     public function hostName(int $nodeNumber): string
     {
+        $nodeIndex = $this->nodeNumberToIndex($nodeNumber);
         $hostNameList = $this->requireStringOrStringArray('hostName');
-        if ($nodeNumber >= \count($hostNameList)) {
+        if ($nodeIndex >= \count($hostNameList)) {
             throw new ConfigException('"hostName" for node "'.$nodeNumber.'" not set');
         }
 
-        return $hostNameList[$nodeNumber];
+        return $hostNameList[$nodeIndex];
     }
 
     public function defaultGateway(): bool
@@ -92,12 +93,13 @@ class ProfileConfig
 
     public function nodeUrl(int $nodeNumber): string
     {
+        $nodeIndex = $this->nodeNumberToIndex($nodeNumber);
         $nodeUrlList = $this->requireStringOrStringArray('nodeUrl', ['http://localhost:41194']);
-        if ($nodeNumber >= \count($nodeUrlList)) {
+        if ($nodeIndex >= \count($nodeUrlList)) {
             throw new ConfigException('"nodeUrl" for node "'.$nodeNumber.'" not set');
         }
 
-        return $nodeUrlList[$nodeNumber];
+        return $nodeUrlList[$nodeIndex];
     }
 
     public function preferredProto(): string
@@ -123,42 +125,46 @@ class ProfileConfig
 
     public function wRangeFour(int $nodeNumber): Ip
     {
+        $nodeIndex = $this->nodeNumberToIndex($nodeNumber);
         $wRangeFourList = $this->requireStringOrStringArray('wRangeFour');
-        if ($nodeNumber >= \count($wRangeFourList)) {
+        if ($nodeIndex >= \count($wRangeFourList)) {
             throw new ConfigException('"wRangeFour" for node "'.$nodeNumber.'" not set');
         }
 
-        return Ip::fromIpPrefix($wRangeFourList[$nodeNumber]);
+        return Ip::fromIpPrefix($wRangeFourList[$nodeIndex]);
     }
 
     public function wRangeSix(int $nodeNumber): Ip
     {
+        $nodeIndex = $this->nodeNumberToIndex($nodeNumber);
         $wRangeSixList = $this->requireStringOrStringArray('wRangeSix');
-        if ($nodeNumber >= \count($wRangeSixList)) {
+        if ($nodeIndex >= \count($wRangeSixList)) {
             throw new ConfigException('"wRangeSix" for node "'.$nodeNumber.'" not set');
         }
 
-        return Ip::fromIpPrefix($wRangeSixList[$nodeNumber]);
+        return Ip::fromIpPrefix($wRangeSixList[$nodeIndex]);
     }
 
     public function oRangeFour(int $nodeNumber): Ip
     {
+        $nodeIndex = $this->nodeNumberToIndex($nodeNumber);
         $oRangeFourList = $this->requireStringOrStringArray('oRangeFour');
-        if ($nodeNumber >= \count($oRangeFourList)) {
+        if ($nodeIndex >= \count($oRangeFourList)) {
             throw new ConfigException('"oRangeFour" for node "'.$nodeNumber.'" not set');
         }
 
-        return Ip::fromIpPrefix($oRangeFourList[$nodeNumber]);
+        return Ip::fromIpPrefix($oRangeFourList[$nodeIndex]);
     }
 
     public function oRangeSix(int $nodeNumber): Ip
     {
+        $nodeIndex = $this->nodeNumberToIndex($nodeNumber);
         $oRangeSixList = $this->requireStringOrStringArray('oRangeSix');
-        if ($nodeNumber >= \count($oRangeSixList)) {
+        if ($nodeIndex >= \count($oRangeSixList)) {
             throw new ConfigException('"oRangeSix" for node "'.$nodeNumber.'" not set');
         }
 
-        return Ip::fromIpPrefix($oRangeSixList[$nodeNumber]);
+        return Ip::fromIpPrefix($oRangeSixList[$nodeIndex]);
     }
 
     /**
@@ -208,11 +214,12 @@ class ProfileConfig
         if (null === $oListenOnList = $this->optionalStringOrStringArray('oListenOn')) {
             return Ip::fromIp('::');
         }
-        if ($nodeNumber >= \count($oListenOnList)) {
+        $nodeIndex = $this->nodeNumberToIndex($nodeNumber);
+        if ($nodeIndex >= \count($oListenOnList)) {
             throw new ConfigException('"oListenOn" for node "'.$nodeNumber.'" not set');
         }
 
-        return Ip::fromIp($oListenOnList[$nodeNumber]);
+        return Ip::fromIp($oListenOnList[$nodeIndex]);
     }
 
     /**
@@ -241,8 +248,49 @@ class ProfileConfig
         return null !== $this->optionalStringOrStringArray('wRangeFour') && null !== $this->optionalStringOrStringArray('wRangeSix');
     }
 
-    public function nodeCount(): int
+    /**
+     * Configuration option to allow specifying the "nodeNumber"(s) the VPN
+     * profile is deployed on.
+     *
+     * @return array<int>
+     */
+    public function onNode(): array
+    {
+        return $this->requireIntOrIntArray('onNode', range(0, $this->nodeCount() - 1));
+    }
+
+    private function nodeCount(): int
     {
         return \count($this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']));
+    }
+
+    /**
+     * Convert nodeNumber to nodeIndex. Each node has a unique "nodeNumber",
+     * but as not all profiles necessarily are deployed on all nodes we need
+     * to convert the nodeNumber to the index of the various profile
+     * configuration options to find the "right" value for the node.
+     *
+     * For example: a VPN service has 4 nodes, and profile "employees" only
+     * needs to be deployed on node 2 and 3. In the configuration the "onNode"
+     * option MUST then be set to '[2, 3]'.
+     * This allows us to keep configuration values like e.g. "wRangeSix"
+     * 0-indexed and we don't need to set the key of the option to the node,
+     * e.g.:
+     *
+     *     [2 => '10.10.10.10/24', 3 => '10.10.11.0/24']
+     *
+     * This is due to a bug that unfortuantely made it to the production
+     * release and we can't break existing installations :-(
+     *
+     * @see https://todo.sr.ht/~eduvpn/server/90
+     */
+    private function nodeNumberToIndex(int $nodeNumber): int
+    {
+        $nodeIndex = array_search($nodeNumber, $this->onNode(), true);
+        if (!\is_int($nodeIndex) || $nodeIndex < 0 || $nodeIndex > $this->nodeCount() - 1) {
+            throw new ConfigException(sprintf('configuration for nodeNumber "%d" does not exist', $nodeNumber));
+        }
+
+        return $nodeIndex;
     }
 }
