@@ -69,4 +69,69 @@ final class ProfileConfigTest extends TestCase
         static::assertSame('10.0.0.0/24', (string) $p->wRangeSix(2));
         static::assertSame('10.0.1.0/24', (string) $p->wRangeSix(3));
     }
+
+    public function testOListenOn(): void
+    {
+        $p = new ProfileConfig(
+            [
+                'profileId' => 'default',
+                'displayName' => 'Default',
+                'hostName' => 'vpn.example',
+                'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
+                'wRangeFour' => '10.43.43.0/24',
+                'wRangeSix' => 'fd43::/64',
+                'oRangeFour' => '10.42.42.0/24',
+                'oRangeSix' => 'fd42::/64',
+            ]
+        );
+        static::assertSame('::', $p->oListenOn(0)->address());
+
+        $p = new ProfileConfig(
+            [
+                'profileId' => 'default',
+                'displayName' => 'Default',
+                'hostName' => 'vpn.example',
+                'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
+                'wRangeFour' => '10.43.43.0/24',
+                'wRangeSix' => 'fd43::/64',
+                'oRangeFour' => '10.42.42.0/24',
+                'oRangeSix' => 'fd42::/64',
+                'oListenOn' => '10.0.99.99',
+            ]
+        );
+        static::assertSame('10.0.99.99', $p->oListenOn(0)->address());
+
+        $p = new ProfileConfig(
+            [
+                'profileId' => 'default',
+                'displayName' => 'Default',
+                'hostName' => ['vpn1.example', 'vpn2.example'],
+                'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
+                'wRangeFour' => ['10.43.43.0/24', '10.44.44.0/24'],
+                'wRangeSix' => ['fd43::/64', 'fd44::/64'],
+                'oRangeFour' => ['10.42.42.0/24', '10.45.45.0/24'],
+                'oRangeSix' => ['fd42::/64', 'fd45::/64'],
+                'oListenOn' => ['10.0.99.99', '10.0.99.100'],
+                'nodeUrl' => ['http://node1.example', 'http://node2.example'],
+            ]
+        );
+        static::assertSame('10.0.99.99', $p->oListenOn(0)->address());
+        static::assertSame('10.0.99.100', $p->oListenOn(1)->address());
+
+        $p = new ProfileConfig(
+            [
+                'profileId' => 'default',
+                'displayName' => 'Default',
+                'hostName' => ['vpn1.example', 'vpn2.example'],
+                'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
+                'wRangeFour' => ['10.43.43.0/24', '10.44.44.0/24'],
+                'wRangeSix' => ['fd43::/64', 'fd44::/64'],
+                'oRangeFour' => ['10.42.42.0/24', '10.45.45.0/24'],
+                'oRangeSix' => ['fd42::/64', 'fd45::/64'],
+                'nodeUrl' => ['http://node1.example', 'http://node2.example'],
+            ]
+        );
+        static::assertSame('::', $p->oListenOn(0)->address());
+        static::assertSame('::', $p->oListenOn(1)->address());
+    }
 }
