@@ -116,7 +116,7 @@
             <span class="plain"><code><?=$this->e($profileConfig->hostName($nodeNumber)); ?></code></span>
 <?php endforeach; ?>
             </td></tr>
-<?php if (1 !== count($profileConfig->onNode()) || 'http://localhost:41194' !== $profileConfig->nodeUrl(reset($profileConfig->onNode()))): ?>
+<?php if (1 !== count($profileConfig->onNode()) || 'http://localhost:41194' !== $profileConfig->nodeUrl($profileConfig->onNode()[0])): ?>
             <tr><th><?=$this->t('Node URL'); ?></th><td>
 <?php foreach ($profileConfig->onNode() as $nodeNumber): ?>
             <span class="plain"><code><?=$this->e($profileConfig->nodeUrl($nodeNumber)); ?></code></span>
