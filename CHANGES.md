@@ -5,6 +5,10 @@
   implement "Admin API" support ([#16](https://todo.sr.ht/~eduvpn/server/16))
 - fix multi node deployments when profile is not installed on all nodes 
   ([#90](https://todo.sr.ht/~eduvpn/server/90))
+- simplify `.well-known` handling code in development setup
+- add additional `ProfileConfig` tests
+- add simple shell script client `dev/api_client.sh` for API testing /
+  development
 
 ## 3.0.5 (2022-08-15)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
