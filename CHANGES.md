@@ -3,6 +3,8 @@
 ## 3.0.6 (...)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
   implement "Admin API" support ([#16](https://todo.sr.ht/~eduvpn/server/16))
+- fix multi node deployments when profile is not installed on all nodes 
+  ([#90](https://todo.sr.ht/~eduvpn/server/90))
 
 ## 3.0.5 (2022-08-15)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
