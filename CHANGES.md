@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.6 (...)
+## 3.0.6 (2022-09-19)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
   implement "Admin API" support ([#16](https://todo.sr.ht/~eduvpn/server/16))
 - fix multi node deployments when profile is not installed on all nodes 
