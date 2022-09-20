@@ -106,7 +106,7 @@ class ConfigCheck
                 return;
             }
 
-            $profileProblemList[] = 'Node URL "%s" is not using https';
+            $profileProblemList[] = sprintf('Node URL "%s" is not using https', $nodeUrl);
         }
     }
 
