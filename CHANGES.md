@@ -2,6 +2,7 @@
 
 ## 3.0.7 (...)
 - fix warning message for non-https node URL ([#93](https://todo.sr.ht/~eduvpn/server/93))
+- update `nl-NL` translation
 
 ## 3.0.6 (2022-09-19)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
