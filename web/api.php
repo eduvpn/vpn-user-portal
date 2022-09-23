@@ -20,16 +20,19 @@ use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\ApiService;
+use Vpn\Portal\Http\GuestApiService;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\VpnApiThreeModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OAuth\NullAccessTokenVerifier;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
 use Vpn\Portal\ScriptConnectionHook;
 use Vpn\Portal\ServerInfo;
+use Vpn\Portal\ServerList;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
 use Vpn\Portal\VpnDaemon;
@@ -47,14 +50,27 @@ try {
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
     $oauthKey = FileIO::read($baseDir.'/config/keys/oauth.key');
-    $bearerValidator = new BearerValidator(
-        new Signer($oauthKey),
-        new LocalAccessTokenVerifier(
-            new ClientDb(),
-            $oauthStorage
-        )
-    );
-    $service = new ApiService($bearerValidator);
+
+    [,,$localKeyId] = explode('.', $oauthKey, 4);
+
+    if ($config->apiConfig()->enableGuestAccess()) {
+        $serverList = new ServerList($baseDir.'/data', $config->apiConfig());
+        $bearerValidator = new BearerValidator(
+            new Signer($oauthKey, $serverList),
+            new NullAccessTokenVerifier()
+        );
+        $service = new GuestApiService($bearerValidator, $serverList, $storage, $oauthStorage, $localKeyId);
+    } else {
+        $bearerValidator = new BearerValidator(
+            new Signer($oauthKey),
+            new LocalAccessTokenVerifier(
+                new ClientDb(),
+                $oauthStorage
+            )
+        );
+        $service = new ApiService($bearerValidator);
+    }
+
     $serverInfo = new ServerInfo(
         $request->getRootUri(),
         $baseDir.'/data/keys',
