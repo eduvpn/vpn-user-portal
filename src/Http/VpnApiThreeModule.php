@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
-use fkooman\OAuth\Server\AccessToken;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
@@ -48,9 +47,9 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
     {
         $service->get(
             '/v3/info',
-            function (Request $request, AccessToken $accessToken): Response {
+            function (Request $request, ApiUserInfo $userInfo): Response {
                 $profileConfigList = $this->config->profileConfigList();
-                $userPermissions = $this->storage->userPermissionList($accessToken->userId());
+                $userPermissions = $this->storage->userPermissionList($userInfo->userId());
                 $userProfileList = [];
                 foreach ($profileConfigList as $profileConfig) {
                     if (null !== $aclPermissionList = $profileConfig->aclPermissionList()) {
@@ -80,30 +79,30 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         $service->post(
             '/v3/connect',
-            function (Request $request, AccessToken $accessToken): Response {
+            function (Request $request, ApiUserInfo $userInfo): Response {
                 try {
                     // make sure all client configurations / connections initiated
                     // by this client are removed / disconnected
-                    $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
+                    $this->connectionManager->disconnectByAuthKey($userInfo->accessToken()->authKey());
 
                     $maxActiveApiConfigurations = $this->config->apiConfig()->maxActiveConfigurations();
                     if (0 === $maxActiveApiConfigurations) {
                         throw new HttpException('no API configuration downloads allowed', 403);
                     }
-                    $activeApiConfigurations = $this->storage->activeApiConfigurations($accessToken->userId(), $this->dateTime);
+                    $activeApiConfigurations = $this->storage->activeApiConfigurations($userInfo->userId(), $this->dateTime);
                     if (\count($activeApiConfigurations) >= $maxActiveApiConfigurations) {
                         // we disconnect the client that connected the longest
                         // time ago, which is first one from the set in
                         // activeApiConfigurations
                         $this->connectionManager->disconnect(
-                            $accessToken->userId(),
+                            $userInfo->userId(),
                             $activeApiConfigurations[0]['profile_id'],
                             $activeApiConfigurations[0]['connection_id']
                         );
                     }
                     $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                     $profileConfigList = $this->config->profileConfigList();
-                    $userPermissions = $this->storage->userPermissionList($accessToken->userId());
+                    $userPermissions = $this->storage->userPermissionList($userInfo->userId());
                     $availableProfiles = [];
                     foreach ($profileConfigList as $profileConfig) {
                         if (null !== $aclPermissionList = $profileConfig->aclPermissionList()) {
@@ -137,19 +136,19 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     $clientConfig = $this->connectionManager->connect(
                         $this->serverInfo,
                         $profileConfig,
-                        $accessToken->userId(),
+                        $userInfo->userId(),
                         Protocol::parseMimeType($request->optionalHeader('HTTP_ACCEPT')),
-                        $accessToken->clientId(),
-                        $accessToken->authorizationExpiresAt(),
+                        $userInfo->accessToken()->clientId(),
+                        $userInfo->accessToken()->authorizationExpiresAt(),
                         $preferTcp,
                         $publicKey,
-                        $accessToken->authKey(),
+                        $userInfo->accessToken()->authKey(),
                     );
 
                     return new Response(
                         $clientConfig->get(),
                         [
-                            'Expires' => $accessToken->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
+                            'Expires' => $userInfo->accessToken()->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
                             'Content-Type' => $clientConfig->contentType(),
                         ]
                     );
@@ -163,13 +162,13 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
 
         $service->post(
             '/v3/disconnect',
-            function (Request $request, AccessToken $accessToken): Response {
-                $this->connectionManager->disconnectByAuthKey($accessToken->authKey());
+            function (Request $request, ApiUserInfo $userInfo): Response {
+                $this->connectionManager->disconnectByAuthKey($userInfo->accessToken()->authKey());
 
                 // optionally remove the OAuth authorization if so requested by
                 // the server configuration
                 if ($this->config->apiConfig()->deleteAuthorizationOnDisconnect()) {
-                    $this->oauthStorage->deleteAuthorization($accessToken->authKey());
+                    $this->oauthStorage->deleteAuthorization($userInfo->accessToken()->authKey());
                 }
 
                 return new Response(null, [], 204);
