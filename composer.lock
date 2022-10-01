@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "fkooman/oauth2-server",
-            "version": "7.0.0",
+            "version": "7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "b76d3088e96293ccc11c0ba1e1ff3818090d5586"
+                "reference": "b2828f5c2c48b69240fe25b96cd839684411e5d9"
             },
             "require": {
                 "ext-date": "*",
@@ -27,7 +27,10 @@
             },
             "require-dev": {
                 "ext-pdo_sqlite": "*",
-                "phpunit/phpunit": "^9"
+                "friendsofphp/php-cs-fixer": "^3",
+                "phpstan/phpstan": "^1",
+                "phpunit/phpunit": "^9",
+                "vimeo/psalm": "^4"
             },
             "type": "library",
             "autoload": {
@@ -54,7 +57,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2022-01-04T09:13:30+00:00"
+            "time": "2022-10-01T12:01:02+00:00"
         },
         {
             "name": "fkooman/secookie",
