@@ -48,8 +48,7 @@ final class VerifierTest extends TestCase
         );
 
         $this->expectException(MinisignException::class);
-        $this->expectExceptionMessage('expected signature algorithm "Ed", got "ED"');
-
+        $this->expectExceptionMessage('signature has invalid algorithm');
         $signatureVerifier->verifyDetached(
             file_get_contents(__DIR__.'/minisign.pub'),
             file_get_contents(__DIR__.'/minisign.pub.minihsig')

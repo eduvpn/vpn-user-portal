@@ -18,12 +18,10 @@ use Vpn\Portal\Crypto\Minisign\Exception\MinisignException;
 
 class Signature
 {
-    private const SUPPORTED_SIGNATURE_ALGOS = ['Ed', 'ED'];
     private const KEY_ID_LENGTH = 8;
     private const SIGNATURE_ALGO_LENGTH = 2;
     private const SIGNATURE_LENGTH = 64;
 
-    private string $signatureAlgo;
     private string $keyId;
     private string $rawSignature;
 
@@ -35,18 +33,15 @@ class Signature
         // 00000030  22 10 0b 86 2c 70 b7 88  1b 24 bf d8 76 4f 67 7a  |"...,p?..$??vOgz|
         // 00000040  d5 6a 29 92 94 59 1f fb  24 02                    |?j)..Y.?$.|
         // 0000004a
-        $rawSignature = Base64::decode($encodedSignature);
-        if (self::SIGNATURE_ALGO_LENGTH + self::KEY_ID_LENGTH + self::SIGNATURE_LENGTH !== Binary::safeStrlen($rawSignature)) {
-            throw new MinisignException('invalid signature length');
+        $decodedSignature = Base64::decode($encodedSignature);
+        if (self::SIGNATURE_ALGO_LENGTH + self::KEY_ID_LENGTH + self::SIGNATURE_LENGTH !== Binary::safeStrlen($decodedSignature)) {
+            throw new MinisignException('signature has invalid length');
         }
-        $signatureAlgo = Binary::safeSubstr($rawSignature, 0, self::SIGNATURE_ALGO_LENGTH);
-        if (!\in_array($signatureAlgo, self::SUPPORTED_SIGNATURE_ALGOS, true)) {
-            throw new MinisignException('invalid signature algorithm');
+        if ('Ed' !== Binary::safeSubstr($decodedSignature, 0, self::SIGNATURE_ALGO_LENGTH)) {
+            throw new MinisignException('signature has invalid algorithm');
         }
-
-        $this->signatureAlgo = $signatureAlgo;
-        $this->keyId = Binary::safeSubstr($rawSignature, self::SIGNATURE_ALGO_LENGTH, self::KEY_ID_LENGTH);
-        $this->rawSignature = Binary::safeSubstr($rawSignature, self::SIGNATURE_ALGO_LENGTH + self::KEY_ID_LENGTH);
+        $this->keyId = Binary::safeSubstr($decodedSignature, self::SIGNATURE_ALGO_LENGTH, self::KEY_ID_LENGTH);
+        $this->rawSignature = Binary::safeSubstr($decodedSignature, self::SIGNATURE_ALGO_LENGTH + self::KEY_ID_LENGTH);
     }
 
     public static function fromString(string $signatureFileContent): self
@@ -72,7 +67,6 @@ class Signature
         $f = new SplFileObject($fileName);
         // we want to get the *second* line from the file
         $f->seek(1);
-
         $secondLine = $f->current();
         if (!\is_string($secondLine)) {
             // couldn't get the second line
@@ -81,11 +75,6 @@ class Signature
 
         // trim the line as to not trip up the Base64 decoder
         return new self(trim($secondLine));
-    }
-
-    public function signatureAlgo(): string
-    {
-        return $this->signatureAlgo;
     }
 
     public function raw(): string

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Crypto\Minisign;
 
-use Vpn\Portal\Crypto\Minisign\Exception\MinisignException;
 use Vpn\Portal\Crypto\VerifierInterface;
 
 /**
@@ -38,10 +37,9 @@ class Verifier implements VerifierInterface
      */
     public function verifyDetached(string $plainText, string $signatureString): bool
     {
+        // when/if implementing "hashed" version, we need
+        // sodium_crypto_generichash($plainText, '', 64)
         $signatureObj = Signature::fromString($signatureString);
-        if ('Ed' !== $signatureObj->signatureAlgo()) {
-            throw new MinisignException(sprintf('expected signature algorithm "Ed", got "%s"', $signatureObj->signatureAlgo()));
-        }
         foreach ($this->publicKeyList as $publicKey) {
             if ($signatureObj->keyId() === $publicKey->keyId()) {
                 // found the public key!
@@ -55,31 +53,4 @@ class Verifier implements VerifierInterface
 
         return false;
     }
-
-//    /**
-//     * Verify a detached signature (hashed).
-//     */
-//    public function verifyDetachedHashed(string $plainText, SignatureInterface $signatureObj): bool
-//    {
-//        if ('ED' !== $signatureObj->signatureAlgo()) {
-//            throw new MinisignException(sprintf('expected signature algorithm "ED", got "%s"', $signatureObj->signatureAlgo()));
-//        }
-
-//        foreach ($this->publicKeyList as $publicKey) {
-//            if ($signatureObj->keyId() === $publicKey->keyId()) {
-//                // found the public key!
-//                return sodium_crypto_sign_verify_detached(
-//                    $signatureObj->raw(),
-//                    sodium_crypto_generichash(
-//                        $plainText,
-//                        '',
-//                        64
-//                    ),
-//                    $publicKey->raw()
-//                );
-//            }
-//        }
-
-//        return false;
-//    }
 }
