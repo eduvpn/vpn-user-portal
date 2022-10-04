@@ -13,8 +13,8 @@ namespace Vpn\Portal\Http;
 
 use Closure;
 use fkooman\OAuth\Server\Exception\OAuthException;
+use fkooman\OAuth\Server\ValidatorInterface;
 use Vpn\Portal\Http\Exception\HttpException;
-use Vpn\Portal\OAuth\ValidatorInterface;
 
 class ApiService implements ApiServiceInterface
 {
