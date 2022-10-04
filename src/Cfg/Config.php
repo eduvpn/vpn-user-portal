@@ -123,11 +123,6 @@ class Config
         return $this->optionalString('connectScriptPath');
     }
 
-    public function hmacUserId(): bool
-    {
-        return $this->requireBool('hmacUserId', false);
-    }
-
     public function wireGuardConfig(): WireGuardConfig
     {
         return new WireGuardConfig($this->s('WireGuard')->toArray());

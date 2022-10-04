@@ -18,7 +18,6 @@ use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\CookieOptions;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
-use Vpn\Portal\Crypto\HmacKey;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Expiry;
 use Vpn\Portal\FileIO;
@@ -36,7 +35,6 @@ use Vpn\Portal\Http\Auth\ShibAuthModule;
 use Vpn\Portal\Http\Auth\UserPassAuthModule;
 use Vpn\Portal\Http\CsrfProtectionHook;
 use Vpn\Portal\Http\DisabledUserHook;
-use Vpn\Portal\Http\HmacUserIdHook;
 use Vpn\Portal\Http\LogoutModule;
 use Vpn\Portal\Http\OAuthModule;
 use Vpn\Portal\Http\PasswdModule;
@@ -171,9 +169,6 @@ try {
     }
 
     $service = new PortalService($authModule, $tpl);
-    if ($config->hmacUserId()) {
-        $service->addHook(new HmacUserIdHook(HmacKey::load(FileIO::read($baseDir.'/config/keys/hmac.key'))));
-    }
     $service->addHook(new CsrfProtectionHook());
 
     if ('DbAuthModule' === $config->authModule()) {
