@@ -16,7 +16,7 @@ use DateTimeImmutable;
 use fkooman\OAuth\Server\AccessToken;
 use fkooman\OAuth\Server\Http\Request;
 use fkooman\OAuth\Server\Scope;
-use Vpn\Portal\OAuth\ValidatorInterface;
+use fkooman\OAuth\Server\ValidatorInterface;
 
 class TestValidator implements ValidatorInterface
 {
