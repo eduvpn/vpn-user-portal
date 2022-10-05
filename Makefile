@@ -1,4 +1,4 @@
-.PHONY: all test fmt psalm phpstan
+.PHONY: all test fmt psalm phpstan sloc
 
 all:	test fmt psalm phpstan
 
@@ -13,3 +13,6 @@ psalm:
 
 phpstan:
 	vendor/bin/phpstan
+
+sloc:
+	vendor/bin/phploc src web libexec bin
