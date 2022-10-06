@@ -1,8 +1,14 @@
 # Changelog
 
 ## 3.0.7 (...)
-- fix warning message for non-https node URL ([#93](https://todo.sr.ht/~eduvpn/server/93))
+- fix warning message for non-https node URL 
+  ([#93](https://todo.sr.ht/~eduvpn/server/93))
 - update `nl-NL` translation
+- update for `fkooman/oauth2-server` 7.1
+- implement `HmacUserIdHook` to obscure user IDs
+- add [minisign](https://jedisct1.github.io/minisign/) compatible signature
+  verifier
+- introduce `ApiUserInfo` that wraps the OAuth access token
 
 ## 3.0.6 (2022-09-19)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
