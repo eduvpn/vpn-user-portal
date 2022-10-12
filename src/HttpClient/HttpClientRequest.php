@@ -44,11 +44,11 @@ class HttpClientRequest
     public function __toString(): string
     {
         if ('GET' === $this->requestMethod()) {
-            return 'GET'.' '.$this->requestUrl().' ['.implode(',', $this->requestHeaders).']';
+            return 'GET '.$this->requestUrl().' ['.implode(',', $this->requestHeaders).']';
         }
 
         if ('POST' === $this->requestMethod()) {
-            return 'POST'.' '.$this->requestUrl().' ['.$this->postParameters().'], ['.implode(',', $this->requestHeaders).']';
+            return 'POST '.$this->requestUrl().' ['.$this->postParameters().'], ['.implode(',', $this->requestHeaders).']';
         }
 
         return 'unsupported request method';
