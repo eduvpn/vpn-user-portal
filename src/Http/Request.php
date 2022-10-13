@@ -32,10 +32,10 @@ class Request
     private $cookieData;
 
     /**
-     * @param array<string,mixed>           $serverData
-     * @param array<string,string|string[]> $getData
-     * @param array<string,string|string[]> $postData
-     * @param array<string,string>          $cookieData
+     * @param array<string,mixed>  $serverData
+     * @param array<mixed>         $getData
+     * @param array<mixed>         $postData
+     * @param array<string,string> $cookieData
      */
     public function __construct(array $serverData, array $getData, array $postData, array $cookieData)
     {
