@@ -9,7 +9,8 @@
 - add [minisign](https://jedisct1.github.io/minisign/) compatible signature
   verifier
 - introduce `ApiUserInfo` that wraps the OAuth access token
-- enable `iss` query parameter support for OAuth callbacks
+- enable `iss` query parameter support for OAuth callbacks with 
+  `fkooman/oauth2-server` 7.2
 
 ## 3.0.6 (2022-09-19)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
