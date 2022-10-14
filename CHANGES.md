@@ -10,7 +10,7 @@
   verifier
 - introduce `ApiUserInfo` that wraps the OAuth access token
 - enable `iss` query parameter support for OAuth callbacks with 
-  `fkooman/oauth2-server` 7.2
+  `fkooman/oauth2-server` 7.2 ([#91](https://todo.sr.ht/~eduvpn/server/91))
 
 ## 3.0.6 (2022-09-19)
 - [PREVIEW](https://github.com/eduvpn/documentation/blob/v3/PREVIEW_FEATURES.md): 
