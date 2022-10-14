@@ -56,6 +56,7 @@ try {
         $sessionExpiry,
         $config->apiConfig()->tokenExpiry()
     );
+    $oauthServer->setIssuerIdentity($request->getOrigin().'/');
 
     $oauthModule = new OAuthTokenModule(
         $oauthServer

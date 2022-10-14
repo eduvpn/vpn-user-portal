@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f4e1fe1a9172c06a43898b2617163a1",
+    "content-hash": "5475680799445863e10c18993f61d83e",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
-            "version": "7.1.0",
+            "version": "7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "b2828f5c2c48b69240fe25b96cd839684411e5d9"
+                "reference": "dedb78ebb37d72ae6c5fb8ece41faba52a60a68f"
             },
             "require": {
                 "ext-date": "*",
@@ -28,6 +28,7 @@
             "require-dev": {
                 "ext-pdo_sqlite": "*",
                 "friendsofphp/php-cs-fixer": "^3",
+                "phploc/phploc": "^7",
                 "phpstan/phpstan": "^1",
                 "phpunit/phpunit": "^9",
                 "vimeo/psalm": "^4"
@@ -57,7 +58,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2022-10-01T12:01:02+00:00"
+            "time": "2022-10-14T12:27:00+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -1617,16 +1618,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.8.8",
+            "version": "1.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "08310ce271984587e2a4cda94e1ac66510a6ea07"
+                "reference": "3a72d9d9f2528fbd50c2d8fcf155fd9f74ade3f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/08310ce271984587e2a4cda94e1ac66510a6ea07",
-                "reference": "08310ce271984587e2a4cda94e1ac66510a6ea07",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3a72d9d9f2528fbd50c2d8fcf155fd9f74ade3f2",
+                "reference": "3a72d9d9f2528fbd50c2d8fcf155fd9f74ade3f2",
                 "shasum": ""
             },
             "require": {
@@ -1656,7 +1657,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.8.8"
+                "source": "https://github.com/phpstan/phpstan/tree/1.8.9"
             },
             "funding": [
                 {
@@ -1672,7 +1673,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-06T12:51:57+00:00"
+            "time": "2022-10-13T13:40:18+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
