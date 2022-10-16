@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.4.6 (...)
+- update `uk_UA` translation
+- enable `iss` query parameter support for OAuth callbacks with 
+  `fkooman/oauth2-server` 6.1 ([#91](https://todo.sr.ht/~eduvpn/server/91))
+
 ## 2.4.5 (2022-04-07)
 - switch from `psr/log` to `SysLogger` from `vpn-lib-common`
 - source formatting
