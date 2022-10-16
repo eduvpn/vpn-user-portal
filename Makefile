@@ -3,16 +3,16 @@
 all:	test fmt psalm phpstan
 
 test:
-	vendor/bin/phpunit
+	vendor/bin/put
 
 fmt:
-	vendor/bin/php-cs-fixer fix
+	php-cs-fixer fix
 
 psalm:
-	vendor/bin/psalm
+	psalm
 
 phpstan:
-	vendor/bin/phpstan
+	phpstan
 
 sloc:
-	vendor/bin/phploc src web libexec bin
+	phploc src web libexec bin

@@ -1,13 +1,12 @@
 image: debian/stable
 packages:
   - composer
-  - unzip
   - php-curl
-  - php-dom
   - php-date
   - php-mbstring
   - php-pdo-sqlite
   - php-intl
+  - php-dom
   - php-gmp
 sources:
   -  https://git.sr.ht/~fkooman/vpn-user-portal
@@ -17,4 +16,4 @@ tasks:
       composer update
   - build: |
       cd vpn-user-portal
-      vendor/bin/phpunit
+      vendor/bin/put

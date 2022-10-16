@@ -24,8 +24,10 @@
     "description": "VPN Portal",
     "license": "AGPL-3.0-or-later",
     "name": "vpn/portal",
-    "prefer-stable": true,
     "repositories": [
+        {
+            "packagist.org": false
+        },
         {
             "type": "vcs",
             "url": "https://git.sr.ht/~fkooman/php-oauth2-server"
@@ -37,6 +39,10 @@
         {
             "type": "vcs",
             "url": "https://git.sr.ht/~fkooman/php-saml-sp"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.sr.ht/~fkooman/put"
         }
     ],
     "require": {
@@ -58,12 +64,8 @@
         "php": ">=7.4"
     },
     "require-dev": {
-        "fkooman/saml-sp": "^2",
-        "friendsofphp/php-cs-fixer": "^3",
-        "phploc/phploc": "^7",
-        "phpstan/phpstan": "^1",
-        "phpunit/phpunit": "^9",
-        "vimeo/psalm": "^4"
+        "fkooman/put": "^0",
+        "fkooman/saml-sp": "^2"
     },
     "suggest": {
         "ext-ldap": "Support LDAP Authentication",
