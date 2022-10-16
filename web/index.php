@@ -346,6 +346,7 @@ try {
         $clientFetcher,
         new PublicSigner($secretKey->getPublicKey(), $secretKey)
     );
+    $oauthServer->setIssuerIdentity($request->getScheme().'://'.$request->getAuthority().'/');
     $oauthServer->setAccessTokenExpiry(new DateInterval($config->s('Api')->requireString('tokenExpiry', 'PT1H')));
     $oauthModule = new OAuthModule(
         $tpl,
