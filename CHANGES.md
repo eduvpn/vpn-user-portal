@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.4.6 (...)
+## 2.4.6 (2022-10-17)
 - update `uk_UA` translation
 - enable `iss` query parameter support for OAuth callbacks with 
   `fkooman/oauth2-server` 6.1 ([#91](https://todo.sr.ht/~eduvpn/server/91))
