@@ -100,7 +100,6 @@ final class ProtocolTest extends TestCase
                     [
                         'profileId' => 'prefer-openvpn',
                         'displayName' => 'Both (Prefer OpenVPN)',
-                        'protoList' => ['openvpn', 'wireguard'],
                         'preferredProto' => 'openvpn',
                         'hostName' => 'vpn.example.org',
                         'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
@@ -114,7 +113,6 @@ final class ProtocolTest extends TestCase
                     [
                         'profileId' => 'prefer-wireguard',
                         'displayName' => 'Both (Prefer WireGuard)',
-                        'protoList' => ['openvpn', 'wireguard'],
                         'preferredProto' => 'wireguard',
                         'hostName' => 'vpn.example.org',
                         'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
@@ -128,7 +126,6 @@ final class ProtocolTest extends TestCase
                     [
                         'profileId' => 'wireguard-only',
                         'displayName' => 'WireGuard Only',
-                        'protoList' => ['wireguard'],
                         'hostName' => 'vpn.example.org',
                         'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
                         'wRangeFour' => '10.45.198.0/24',
@@ -137,7 +134,6 @@ final class ProtocolTest extends TestCase
                     [
                         'profileId' => 'openvpn-only',
                         'displayName' => 'OpenVPN Only',
-                        'protoList' => ['openvpn'],
                         'hostName' => 'vpn.example.org',
                         'dnsServerList' => ['9.9.9.9', '2620:fe::fe'],
                         'oRangeFour' => '172.18.135.0/24',
