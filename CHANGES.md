@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.1.0 (...)
+## 3.1.0 (2022-10-24)
 - fix warning message for non-https node URL 
   ([#93](https://todo.sr.ht/~eduvpn/server/93))
 - update `nl-NL` translation
@@ -10,7 +10,7 @@
   `fkooman/oauth2-server` 7.2 ([#91](https://todo.sr.ht/~eduvpn/server/91))
 - implement 
   [Guest Access](https://github.com/eduvpn/documentation/blob/v3/GUEST_ACCESS.md) 
-  support
+  support ([#17](https://todo.sr.ht/~eduvpn/server/17))
   - implement `HmacUserIdHook` to obscure user IDs 
     ([#89](https://todo.sr.ht/~eduvpn/server/89))
   - add [minisign](https://jedisct1.github.io/minisign/) compatible 
