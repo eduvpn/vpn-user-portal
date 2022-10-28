@@ -75,7 +75,7 @@ return [
     'Issues' => 'Problemer',
     'Live' => 'Sanntid',
     'Log' => 'Logg',
-    'Max #Connections' => 'Maksimum #Frobindelser',
+    'Max #Connections' => 'Maksimum #Forbindelser',
     'More' => 'Mer',
     'N/A' => 'N/A',
     'Name' => 'Navn',
