@@ -14,7 +14,7 @@ use fkooman\Jwt\Exception\JwtException;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
 use fkooman\Jwt\Keys\EdDSA\SecretKey;
 use fkooman\OAuth\Server\SignerInterface;
-use ParagonIE\ConstantTime\Base64UrlSafe;
+use LC\Common\Base64UrlSafe;
 
 /**
  * JWT Signer, using EdDSA (Ed25519) algorithm.

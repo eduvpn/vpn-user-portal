@@ -10,7 +10,7 @@
 namespace LC\Portal\Federation;
 
 use Exception;
-use ParagonIE\ConstantTime\Base64;
+use LC\Common\Base64;
 
 /**
  * Validate Signify/Minisign signatures.
@@ -43,7 +43,7 @@ class Minisign
     public static function verify($messageText, $messageSignature, array $encodedPublicKeyList)
     {
         $signatureData = self::getLine($messageSignature, 1);
-        $msgSig = Base64::decode($signatureData, true);
+        $msgSig = Base64::decode($signatureData);
         // <signature_algorithm> || <key_id> || <signature>
         //    signature_algorithm: Ed
         //    key_id: 8 random bytes, matching the public key
@@ -79,7 +79,7 @@ class Minisign
         //    key_id: 8 random bytes
         //    public_key: Ed25519 public key
         foreach ($encodedPublicKeyList as $encodedPublicKey) {
-            $publicKey = Base64::decode($encodedPublicKey, true);
+            $publicKey = Base64::decode($encodedPublicKey);
             if (\strlen(self::SIGNIFY_ALGO_DESCRIPTION) + self::SIGNIFY_KEY_ID_LENGTH + self::ED_PUBLIC_KEY_LENGTH !== \strlen($publicKey)) {
                 throw new Exception('invalid public key (not long enough)');
             }

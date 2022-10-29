@@ -16,6 +16,11 @@
             "LC\\Portal\\Tests\\": "tests/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "5.4.8"
+        }
+    },
     "description": "User and admin portal for Let's Connect! and eduVPN",
     "license": "AGPL-3.0-or-later",
     "name": "lc/vpn-user-portal",
@@ -44,6 +49,10 @@
         {
             "type": "vcs",
             "url": "https://git.sr.ht/~fkooman/php-secookie"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.sr.ht/~fkooman/put"
         }
     ],
     "require": {
@@ -59,18 +68,17 @@
         "fkooman/secookie": "^5",
         "fkooman/sqlite-migrate": "^0",
         "lc/common": "v2.x-dev",
-        "paragonie/constant_time_encoding": "^1.0.3|^2.2.0",
         "paragonie/random_compat": "^1|^2",
         "paragonie/sodium_compat": "^1",
         "php": ">=5.4.8"
     },
     "require-dev": {
         "ext-json": "*",
-        "fkooman/saml-sp": "^1",
-        "friendsofphp/php-cs-fixer": "^2"
+        "fkooman/put": "^0",
+        "fkooman/saml-sp": "^1"
     },
     "support": {
-        "email": "eduvpn@surfnet.nl",
+        "email": "eduvpn-support@lists.geant.org",
         "source": "https://git.sr.ht/~fkooman/vpn-user-portal"
     },
     "type": "project"

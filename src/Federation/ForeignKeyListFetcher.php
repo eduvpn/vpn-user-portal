@@ -12,11 +12,11 @@ namespace LC\Portal\Federation;
 use DateTime;
 use Exception;
 use fkooman\Jwt\Keys\EdDSA\PublicKey;
+use LC\Common\Base64UrlSafe;
 use LC\Common\FileIO;
 use LC\Common\HttpClient\HttpClientInterface;
 use LC\Common\Json;
 use LC\Portal\OAuth\PublicSigner;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 
 class ForeignKeyListFetcher
 {
