@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * eduVPN - End-user friendly VPN.
+ *
+ * Copyright: 2016-2019, The Commons Conservancy eduVPN Programme
+ * SPDX-License-Identifier: AGPL-3.0+
+ */
+
 return [
     '"Delete User Data" will only delete the account data of the user, but NOT log them out if they are currently logged in, nor prevent the user from logging in again!' => '"Видалити облікові дані користувача" видалить лише дані облікового запису користувача, але НЕ виведе його із системи, якщо він у даний момент увійшов до системи, і не завадить йому увійти до системи знову!',
     '"Delete User" will only delete the account and associated data of the user, but NOT log the user out if they are currently logged in!' => '"Видалити користувача" видаляє лише обліковий запис та пов’язані з ним дані користувача, але НЕ виведе користувача із системи, якщо він на даний момент увійшов до системи!',

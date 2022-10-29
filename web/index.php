@@ -232,7 +232,7 @@ try {
             $service->addBeforeHook('auth', $formPdoAuthentication);
             $service->addModule($formPdoAuthentication);
             break;
-         default:
+        default:
             // try to dynamically load the authentication mechanism
             $authClass = sprintf('LC\Portal\%s', $authMethod);
             if (!class_exists($authClass)) {
