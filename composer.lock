@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be27293573e2c28c0d68dc1cbb784135",
+    "content-hash": "539081d37e0ea6a2e40ff8c26a09c026",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -105,6 +105,54 @@
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
             "time": "2022-10-28T14:00:22+00:00"
+        },
+        {
+            "name": "fkooman/otp-verifier",
+            "version": "0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.sr.ht/~fkooman/php-otp-verifier",
+                "reference": "274d3516521d6c59d5a96260a05f504307531cd6"
+            },
+            "require": {
+                "ext-date": "*",
+                "ext-hash": "*",
+                "ext-pdo": "*",
+                "ext-spl": "*",
+                "paragonie/random_compat": ">=1",
+                "php": ">= 5.4",
+                "symfony/polyfill-php56": "^1"
+            },
+            "require-dev": {
+                "ext-sqlite3": "*",
+                "fkooman/put": "^0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fkooman\\Otp\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "fkooman\\Otp\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "Small OTP verification library",
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.sr.ht/~fkooman/php-otp-verifier"
+            },
+            "time": "2022-10-28T13:54:31+00:00"
         },
         {
             "name": "fkooman/secookie",
