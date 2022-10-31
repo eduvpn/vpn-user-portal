@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.0 (2022-10-31)
+- drop `paragonie/constant_time_encoding` dependency
+- switch to new version of php-cs-fixer
+- add Makefile
+- switch from PHPUnit to `fkooman/put`
+
 ## 2.4.6 (2022-10-17)
 - update `uk_UA` translation
 - enable `iss` query parameter support for OAuth callbacks with 
