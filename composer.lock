@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "539081d37e0ea6a2e40ff8c26a09c026",
+    "content-hash": "640e767c9ecae02bb34994ed04e483b6",
     "packages": [
         {
             "name": "fkooman/jwt",
@@ -808,7 +808,7 @@
     "stability-flags": {
         "lc/common": 20
     },
-    "prefer-stable": true,
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "ext-curl": "*",

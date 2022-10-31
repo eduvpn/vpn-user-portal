@@ -24,7 +24,6 @@
     "description": "User and admin portal for Let's Connect! and eduVPN",
     "license": "AGPL-3.0-or-later",
     "name": "lc/vpn-user-portal",
-    "prefer-stable": true,
     "repositories": [
         {
             "type": "path",
