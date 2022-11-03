@@ -36,6 +36,8 @@ final class RequestTest extends TestCase
 
         static::expectException(HttpException::class);
         static::expectExceptionMessage('invalid value for "xyz"');
-        $r->requirePostParameter('xyz', function ($s): void { throw new RangeException(); });
+        $r->requirePostParameter('xyz', function ($s): void {
+            throw new RangeException();
+        });
     }
 }

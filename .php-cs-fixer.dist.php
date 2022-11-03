@@ -6,13 +6,8 @@ $config = new PhpCsFixer\Config();
 
 return $config->setRules(
     [
-        '@PhpCsFixer' => true,
-        '@PhpCsFixer:risky' => true,
-        '@PHP74Migration' => true,
-        '@PHP74Migration:risky' => true,
-        '@PHPUnit84Migration:risky' => true,
-        'no_alternative_syntax' => false,
-        'echo_tag_syntax' => ['format' => 'short'],
+        '@PER' => true,
+        '@PER:risky' => true,
         'header_comment' => [
             'header' => <<< 'EOD'
                 eduVPN - End-user friendly VPN.
