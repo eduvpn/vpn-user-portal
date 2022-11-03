@@ -18,6 +18,7 @@ use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\Validator;
+use RuntimeException;
 
 class NodeAuthModule extends AbstractAuthModule
 {
@@ -52,11 +53,23 @@ class NodeAuthModule extends AbstractAuthModule
             return null;
         }
 
-        if (!hash_equals(FileIO::read($nodeKeyFile), $userAuthToken)) {
+        $nodeKey = self::verifyNodeKey(FileIO::read($nodeKeyFile));
+        if (!hash_equals($nodeKey, $userAuthToken)) {
             return null;
         }
 
         return new UserInfo($nodeNumber, []);
+    }
+
+    public static function verifyNodeKey(string $nodeKey): string
+    {
+        // remove leading/trailing whitespace
+        $nodeKey = trim($nodeKey);
+        if (1 !== preg_match('/^[a-f0-9]{64}$/', $nodeKey)) {
+            throw new RuntimeException('invalid node key, MUST be 64 hex chars');
+        }
+
+        return $nodeKey;
     }
 
     public function startAuth(Request $request): ?Response
