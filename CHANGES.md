@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.1 (...)
+- verify and trim node keys before allowing them 
+  ([#100](https://todo.sr.ht/~eduvpn/server/100))
+- fix `nb-NO` translation typo
+
 ## 3.1.0 (2022-10-24)
 - fix warning message for non-https node URL 
   ([#93](https://todo.sr.ht/~eduvpn/server/93))
