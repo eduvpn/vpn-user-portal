@@ -38,7 +38,7 @@ class AdminApiAuthModule extends AbstractAuthModule
         if (0 !== strpos($authHeader, 'Bearer ')) {
             return null;
         }
-        $userAuthToken = Binary::safeSubstr($authHeader, 7);
+        $userAuthToken = substr($authHeader, 7);
 
         if (!hash_equals(FileIO::read($this->adminApiKeyFile), $userAuthToken)) {
             return null;

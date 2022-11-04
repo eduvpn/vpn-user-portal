@@ -45,7 +45,7 @@ class NodeAuthModule extends AbstractAuthModule
         if (0 !== strpos($authHeader, 'Bearer ')) {
             return null;
         }
-        $userAuthToken = Binary::safeSubstr($authHeader, 7);
+        $userAuthToken = substr($authHeader, 7);
 
         // get the node key for this node number
         $nodeKeyFile = sprintf('%s/config/keys/node.%d.key', $this->baseDir, $nodeNumber);

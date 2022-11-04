@@ -22,7 +22,7 @@ class HmacKey
 
     private function __construct(string $hmacKey)
     {
-        if (self::KEY_LEN !== Binary::safeStrlen($hmacKey)) {
+        if (self::KEY_LEN !== strlen($hmacKey)) {
             throw new CryptoException('invalid key length');
         }
 

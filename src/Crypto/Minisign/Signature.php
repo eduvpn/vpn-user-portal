@@ -34,14 +34,14 @@ class Signature
         // 00000040  d5 6a 29 92 94 59 1f fb  24 02                    |?j)..Y.?$.|
         // 0000004a
         $decodedSignature = Base64::decode($encodedSignature);
-        if (self::SIGNATURE_ALGO_LENGTH + self::KEY_ID_LENGTH + self::SIGNATURE_LENGTH !== Binary::safeStrlen($decodedSignature)) {
+        if (self::SIGNATURE_ALGO_LENGTH + self::KEY_ID_LENGTH + self::SIGNATURE_LENGTH !== strlen($decodedSignature)) {
             throw new MinisignException('signature has invalid length');
         }
-        if ('Ed' !== Binary::safeSubstr($decodedSignature, 0, self::SIGNATURE_ALGO_LENGTH)) {
+        if ('Ed' !== substr($decodedSignature, 0, self::SIGNATURE_ALGO_LENGTH)) {
             throw new MinisignException('signature has invalid algorithm');
         }
-        $this->keyId = Binary::safeSubstr($decodedSignature, self::SIGNATURE_ALGO_LENGTH, self::KEY_ID_LENGTH);
-        $this->rawSignature = Binary::safeSubstr($decodedSignature, self::SIGNATURE_ALGO_LENGTH + self::KEY_ID_LENGTH);
+        $this->keyId = substr($decodedSignature, self::SIGNATURE_ALGO_LENGTH, self::KEY_ID_LENGTH);
+        $this->rawSignature = substr($decodedSignature, self::SIGNATURE_ALGO_LENGTH + self::KEY_ID_LENGTH);
     }
 
     public static function fromString(string $signatureFileContent): self

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2b0ddb1c8c0cdc85e1901e816c141b1",
+    "content-hash": "c405591b99bba83ba4e70744f495e3c1",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
@@ -213,7 +213,6 @@
         "ext-gmp": "*",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",

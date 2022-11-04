@@ -258,13 +258,13 @@ class Tpl implements TplInterface
             throw new RangeException('"maxLen" must be >= 3');
         }
 
-        $strLen = Binary::safeStrlen($inputString);
+        $strLen = strlen($inputString);
         if ($strLen <= $maxLen) {
             return $inputString;
         }
 
-        $partOne = Binary::safeSubstr($inputString, 0, (int) ceil(($maxLen - 1) / 2));
-        $partTwo = Binary::safeSubstr($inputString, (int) -floor(($maxLen - 1) / 2));
+        $partOne = substr($inputString, 0, (int) ceil(($maxLen - 1) / 2));
+        $partTwo = substr($inputString, (int) -floor(($maxLen - 1) / 2));
 
         return $this->e($partOne.'…'.$partTwo, $cb);
     }

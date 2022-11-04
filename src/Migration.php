@@ -161,7 +161,7 @@ class Migration
     private static function runQueries(PDO $db, array $queryList): void
     {
         foreach ($queryList as $dbQuery) {
-            if (0 === Binary::safeStrlen(trim($dbQuery))) {
+            if (0 === strlen(trim($dbQuery))) {
                 // ignore empty line(s)
                 continue;
             }

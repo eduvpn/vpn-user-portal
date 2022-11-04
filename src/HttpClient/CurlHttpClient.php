@@ -50,7 +50,7 @@ class CurlHttpClient implements HttpClientInterface
             function ($curlChannel, string $headerLine) use (&$headerList): int {
                 $headerList .= $headerLine;
 
-                return Binary::safeStrlen($headerLine);
+                return strlen($headerLine);
             },
         ];
 

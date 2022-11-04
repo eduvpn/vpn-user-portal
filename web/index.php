@@ -20,6 +20,7 @@ use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Crypto\HmacKey;
 use Vpn\Portal\Dt;
+use Vpn\Portal\Environment;
 use Vpn\Portal\Expiry;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\AccessHook;
@@ -67,6 +68,7 @@ umask(0077);
 $logger = new SysLogger('vpn-user-portal');
 
 try {
+    Environment::verify();
     $config = Config::fromFile($baseDir.'/config/config.php');
     $request = Request::createFromGlobals();
 

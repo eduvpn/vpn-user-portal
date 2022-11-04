@@ -35,14 +35,14 @@ class PublicKey
         // 00000020  c1 b1 fc 63 45 86 9e e5  bf d6                    |???cE..??|
         // 0000002a
         $publicKey = Base64::decode($encodedPublicKey);
-        if (self::KEY_ALGO_LENGTH + self::KEY_ID_LENGTH + self::PUBLIC_KEY_LENGTH !== Binary::safeStrlen($publicKey)) {
+        if (self::KEY_ALGO_LENGTH + self::KEY_ID_LENGTH + self::PUBLIC_KEY_LENGTH !== strlen($publicKey)) {
             throw new MinisignException('public key has invalid length');
         }
-        if ('Ed' !== Binary::safeSubstr($publicKey, 0, self::KEY_ALGO_LENGTH)) {
+        if ('Ed' !== substr($publicKey, 0, self::KEY_ALGO_LENGTH)) {
             throw new MinisignException('public key has invalid algorithm');
         }
-        $this->keyId = Binary::safeSubstr($publicKey, self::KEY_ALGO_LENGTH, self::KEY_ID_LENGTH);
-        $this->publicKey = Binary::safeSubstr($publicKey, self::KEY_ALGO_LENGTH + self::KEY_ID_LENGTH);
+        $this->keyId = substr($publicKey, self::KEY_ALGO_LENGTH, self::KEY_ID_LENGTH);
+        $this->publicKey = substr($publicKey, self::KEY_ALGO_LENGTH + self::KEY_ID_LENGTH);
     }
 
     public static function fromFile(string $fileName): self

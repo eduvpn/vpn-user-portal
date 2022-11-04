@@ -139,7 +139,7 @@ class ServerList implements PublicKeySourceInterface
                 if (0 !== strpos($publicKey, 'k7.pub.')) {
                     continue;
                 }
-                if ($keyId !== Binary::safeSubstr($publicKey, 7, 16)) {
+                if ($keyId !== substr($publicKey, 7, 16)) {
                     continue;
                 }
                 if (!\array_key_exists('base_url', $serverInfo) || !\is_string($serverInfo['base_url'])) {

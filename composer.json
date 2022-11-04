@@ -52,7 +52,6 @@
         "ext-gmp": "*",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",

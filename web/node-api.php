@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\Environment;
 use Vpn\Portal\Http\Auth\NodeAuthModule;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\NodeApiModule;
@@ -34,6 +35,7 @@ umask(0077);
 $logger = new SysLogger('vpn-user-portal');
 
 try {
+    Environment::verify();
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new NodeApiService(
         new NodeAuthModule(

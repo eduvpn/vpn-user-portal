@@ -137,12 +137,12 @@ class Request
 
         // trim the query string (if any)
         if (false !== $queryStart = strpos($requestUri, '?')) {
-            $requestUri = Binary::safeSubstr($requestUri, 0, $queryStart);
+            $requestUri = substr($requestUri, 0, $queryStart);
         }
 
         // remove the VPN_APP_ROOT (if any)
         if (null !== $appRoot = $this->optionalHeader('VPN_APP_ROOT')) {
-            $requestUri = Binary::safeSubstr($requestUri, Binary::safeStrlen($appRoot));
+            $requestUri = substr($requestUri, strlen($appRoot));
         }
 
         return $requestUri;
