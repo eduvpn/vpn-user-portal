@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.1.1 (...)
+## 3.1.1 (2022-11-04)
 - verify and trim node keys before allowing them 
   ([#100](https://todo.sr.ht/~eduvpn/server/100))
 - fix `nb-NO` translation typo
