@@ -9,15 +9,19 @@
 
 namespace Vpn\Portal;
 
-use RuntimeException;
-
 class Environment
 {
-    public static function verify(): void
+    /**
+     * @return array<string>
+     */
+    public static function verify(): array
     {
+        $problemList = [];
         // @see https://www.php.net/manual/en/mbstring.configuration.php#ini.mbstring.func-overload
         if (false !== ini_get('mbstring.func_overload')) {
-            throw new RuntimeException('"mbstring.func_overload" MUST NOT be enabled');
+            $problemList[] = '"mbstring.func_overload" MUST NOT be enabled';
         }
+
+        return $problemList;
     }
 }

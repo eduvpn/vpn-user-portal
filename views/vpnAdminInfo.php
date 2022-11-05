@@ -4,7 +4,8 @@
 <?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<string,null|array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int}> $nodeInfoList */?>
 <?php /** @var string $portalVersion */?>
-<?php /** @var array<string,array<string>> $problemList */?>
+<?php /** @var array<string> $serverProblemList */?>
+<?php /** @var array<string,array<string>> $profileProblemList */?>
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Server'); ?></h2>
@@ -50,6 +51,18 @@
 <?php endforeach; ?>
                 </td>
             </tr>
+
+<?php if (0 !== count($serverProblemList)): ?>
+            <tr>
+                <th><?=$this->t('Issues'); ?></th>
+                <td>
+<?php foreach ($serverProblemList as $p):?>
+                        <span class="warning"><?=$this->e($p); ?></span>
+<?php endforeach; ?>
+                </td>
+            </tr>
+<?php endif; ?>
+
         </tbody>
     </table>
 
@@ -245,14 +258,14 @@
             </td></tr>
 <?php endif; ?>
 
-<?php if (array_key_exists($profileConfig->profileId(), $problemList) && 0 !== count($problemList[$profileConfig->profileId()])): ?>
+<?php if (array_key_exists($profileConfig->profileId(), $profileProblemList) && 0 !== count($profileProblemList[$profileConfig->profileId()])): ?>
             <tr>
                 <th colspan="2" class="issues"><?=$this->t('Issues'); ?></th>
             </tr>
             <tr>
                 <th></th>
                 <td>
-<?php foreach ($problemList[$profileConfig->profileId()] as $p):?>
+<?php foreach ($profileProblemList[$profileConfig->profileId()] as $p):?>
                         <span class="warning"><?=$this->e($p); ?></span>
 <?php endforeach; ?>
                 </td>

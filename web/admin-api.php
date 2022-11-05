@@ -16,7 +16,6 @@ use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
-use Vpn\Portal\Environment;
 use Vpn\Portal\Expiry;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\AdminApiModule;
@@ -40,7 +39,6 @@ umask(0077);
 $logger = new SysLogger('vpn-user-portal');
 
 try {
-    Environment::verify();
     $adminApiKeyFile = sprintf('%s/config/keys/admin-api.key', $baseDir);
     if (!FileIO::exists($adminApiKeyFile)) {
         throw new Exception('no admin API key set, admin API disabled');

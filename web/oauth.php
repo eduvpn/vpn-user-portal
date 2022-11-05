@@ -16,7 +16,6 @@ use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Dt;
-use Vpn\Portal\Environment;
 use Vpn\Portal\Expiry;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\JsonResponse;
@@ -35,7 +34,6 @@ umask(0077);
 $logger = new SysLogger('vpn-user-portal');
 
 try {
-    Environment::verify();
     $request = Request::createFromGlobals();
     FileIO::mkdir($baseDir.'/data');
 

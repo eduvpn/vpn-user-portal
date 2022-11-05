@@ -18,6 +18,7 @@ use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConfigCheck;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
+use Vpn\Portal\Environment;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
@@ -90,7 +91,8 @@ class AdminPortalModule implements ServiceModuleInterface
                             'nodeInfoList' => $nodeInfoList,
                             'profileConfigList' => $this->config->profileConfigList(),
                             'serverInfo' => $this->serverInfo,
-                            'problemList' => ConfigCheck::verify($this->config),
+                            'serverProblemList' => Environment::verify(),
+                            'profileProblemList' => ConfigCheck::verify($this->config),
                         ]
                     )
                 );
