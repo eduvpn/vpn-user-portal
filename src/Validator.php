@@ -21,11 +21,6 @@ use RangeException;
  */
 class Validator
 {
-    private const REGEXP_USER_ID = '/^.+$/';
-    private const REGEXP_USER_AUTH_PASS = '/^.+$/';
-    private const REGEXP_USER_PASS = '/^.{8,}$/';
-    private const REGEXP_DISPLAY_NAME = '/^.+$/';
-
     /** @see https://lore.kernel.org/wireguard/X+UkseUOEY1sVDEe@zx2c4.com/ */
     private const REGEXP_CONNECTION_ID = '/^[A-Za-z0-9+\\/]{42}[A|E|I|M|Q|U|Y|c|g|k|o|s|w|4|8|0]=$/';
     private const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
@@ -37,7 +32,7 @@ class Validator
      */
     public static function displayName(string $displayName): void
     {
-        self::re($displayName, self::REGEXP_DISPLAY_NAME, __FUNCTION__);
+        self::utfString($displayName, 1, 255);
     }
 
     /**
@@ -53,7 +48,7 @@ class Validator
      */
     public static function userId(string $userId): void
     {
-        self::re($userId, self::REGEXP_USER_ID, __FUNCTION__);
+        self::utfString($userId, 1, 255);
     }
 
     /**
@@ -61,7 +56,7 @@ class Validator
      */
     public static function userPass(string $userPass): void
     {
-        self::re($userPass, self::REGEXP_USER_PASS, __FUNCTION__);
+        self::utfString($userPass, 8, 255);
     }
 
     /**
@@ -98,7 +93,7 @@ class Validator
      */
     public static function userAuthPass(string $userAuthPass): void
     {
-        self::re($userAuthPass, self::REGEXP_USER_AUTH_PASS, __FUNCTION__);
+        self::utfString($userAuthPass, 1, 255);
     }
 
     /**
@@ -245,6 +240,25 @@ class Validator
     public static function inSet(string $setNeedle, array $setHaystack): void
     {
         if (!\in_array($setNeedle, $setHaystack, true)) {
+            throw new RangeException();
+        }
+    }
+
+    /**
+     * @psalm-param positive-int $minLen
+     * @psalm-param positive-int $maxLen
+     * @throws \RangeException
+     */
+    private static function utfString(string $inputStr, int $minLen, int $maxLen): void
+    {
+        // make sure we have valid UTF-8
+        if (false === mb_check_encoding($inputStr, 'UTF-8')) {
+            throw new RangeException();
+        }
+
+        // make sure we have a valid number of *characters*, not *bytes*
+        $strLen = mb_strlen($inputStr, 'UTF-8');
+        if ($minLen > $strLen || $maxLen < $strLen) {
             throw new RangeException();
         }
     }

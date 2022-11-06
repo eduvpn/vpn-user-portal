@@ -27,4 +27,22 @@ final class ValidatorTest extends TestCase
         $this->expectException(RangeException::class);
         Validator::publicKey('EtPxdnGP+KCS7tVBohNgt5lcXF7XubTDKr6QdwuyGU=');
     }
+
+    public function testDisplayNameNonUtf(): void
+    {
+        $this->expectException(RangeException::class);
+        Validator::displayName(mb_convert_encoding('€', 'utf-16', 'utf-8'));
+    }
+
+    public function testDisplayNameTooShort(): void
+    {
+        $this->expectException(RangeException::class);
+        Validator::displayName('');
+    }
+
+    public function testDisplayNameTooLong(): void
+    {
+        $this->expectException(RangeException::class);
+        Validator::displayName(str_repeat('€', 256));
+    }
 }
