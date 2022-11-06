@@ -43,6 +43,6 @@ final class ValidatorTest extends TestCase
     public function testDisplayNameTooLong(): void
     {
         $this->expectException(RangeException::class);
-        Validator::displayName(str_repeat('€', 256));
+        Validator::displayName(str_repeat('€', 65));
     }
 }

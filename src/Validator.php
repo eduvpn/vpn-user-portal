@@ -32,7 +32,7 @@ class Validator
      */
     public static function displayName(string $displayName): void
     {
-        self::utfString($displayName, 1, 255);
+        self::utfString($displayName, 1, 64);
     }
 
     /**
