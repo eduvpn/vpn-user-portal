@@ -40,7 +40,7 @@ class Validator
      */
     public static function authKey(string $authKey): void
     {
-        self::re($authKey, self::REGEXP_AUTH_KEY, __FUNCTION__);
+        self::re($authKey, self::REGEXP_AUTH_KEY);
     }
 
     /**
@@ -64,7 +64,7 @@ class Validator
      */
     public static function connectionId(string $connectionId): void
     {
-        self::re($connectionId, self::REGEXP_CONNECTION_ID, __FUNCTION__);
+        self::re($connectionId, self::REGEXP_CONNECTION_ID);
     }
 
     /**
@@ -74,7 +74,7 @@ class Validator
      */
     public static function publicKey(string $publicKey): void
     {
-        self::re($publicKey, self::REGEXP_CONNECTION_ID, __FUNCTION__);
+        self::re($publicKey, self::REGEXP_CONNECTION_ID);
     }
 
     /**
@@ -85,7 +85,7 @@ class Validator
      */
     public static function commonName(string $commonName): void
     {
-        self::re($commonName, self::REGEXP_CONNECTION_ID, __FUNCTION__);
+        self::re($commonName, self::REGEXP_CONNECTION_ID);
     }
 
     /**
@@ -101,7 +101,7 @@ class Validator
      */
     public static function serverName(string $serverName): void
     {
-        self::re($serverName, self::REGEXP_SERVER_NAME, __FUNCTION__);
+        self::re($serverName, self::REGEXP_SERVER_NAME);
     }
 
     /**
@@ -109,7 +109,7 @@ class Validator
      */
     public static function profileId(string $profileId): void
     {
-        self::re($profileId, self::REGEXP_PROFILE_ID, __FUNCTION__);
+        self::re($profileId, self::REGEXP_PROFILE_ID);
     }
 
     /**
@@ -120,7 +120,7 @@ class Validator
     public static function profileIdList(array $profileIdList): void
     {
         foreach ($profileIdList as $profileId) {
-            self::re($profileId, self::REGEXP_PROFILE_ID, __FUNCTION__);
+            self::re($profileId, self::REGEXP_PROFILE_ID);
         }
     }
 
@@ -266,7 +266,7 @@ class Validator
     /**
      * @throws \RangeException
      */
-    private static function re(string $inputStr, string $regExp, string $errorKey): void
+    private static function re(string $inputStr, string $regExp): void
     {
         if (1 !== preg_match($regExp, $inputStr)) {
             throw new RangeException();
