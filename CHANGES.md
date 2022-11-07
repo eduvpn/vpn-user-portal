@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.1.2 (...)
+## 3.1.2 (2022-11-07)
 - make sure `mbstring.func_overload` PHP option is not enabled, show on "Info"
   page if it is
 - do proper UTF-8 validation and introduce maximum length of some user provided 
