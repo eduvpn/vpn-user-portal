@@ -3,7 +3,6 @@
 /config/*.php
 /config/keys
 /config/views
-/.phpunit.cache
 /.php-cs-fixer.cache
 
 # ignore symlinks to styling and translation folders
