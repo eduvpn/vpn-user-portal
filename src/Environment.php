@@ -18,7 +18,7 @@ class Environment
     {
         $problemList = [];
         // @see https://www.php.net/manual/en/mbstring.configuration.php#ini.mbstring.func-overload
-        if (false !== ini_get('mbstring.func_overload')) {
+        if (false !== (bool) ini_get('mbstring.func_overload')) {
             $problemList[] = '"mbstring.func_overload" MUST NOT be enabled';
         }
 
