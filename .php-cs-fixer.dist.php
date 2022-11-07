@@ -12,7 +12,7 @@ return $config->setRules(
             'header' => <<< 'EOD'
                 eduVPN - End-user friendly VPN.
 
-                Copyright: 2016-2022, The Commons Conservancy eduVPN Programme
+                Copyright: 2014-2022, The Commons Conservancy eduVPN Programme
                 SPDX-License-Identifier: AGPL-3.0+
                 EOD,
         ],
