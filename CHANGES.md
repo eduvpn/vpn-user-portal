@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.2 (...)
+- make sure `mbstring.func_overload` PHP option is not enabled, show on "Info"
+  page if it is
+- do proper UTF-8 validation and introduce maximum length of some user provided 
+  inputs
+
 ## 3.1.1 (2022-11-04)
 - verify and trim node keys before allowing them 
   ([#100](https://todo.sr.ht/~eduvpn/server/100))
