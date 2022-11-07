@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.3 (2022-11-07)
+- fix (C) year
+- cast `ini_get` return value for `mbstring.func_overload` to bool
+
 ## 3.1.2 (2022-11-07)
 - make sure `mbstring.func_overload` PHP option is not enabled, show on "Info"
   page if it is
