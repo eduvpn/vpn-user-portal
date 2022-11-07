@@ -110,11 +110,11 @@
     "packages-dev": [
         {
             "name": "fkooman/put",
-            "version": "0.3.2",
+            "version": "0.3.3",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/put",
-                "reference": "97205bddbd4224364e7514ac698abc6f27b83353"
+                "reference": "b844f69a80c14fb7ff8e9c3919b2a85eb2dd37f4"
             },
             "require": {
                 "php": ">=5.4"
@@ -144,7 +144,7 @@
                 }
             ],
             "description": "PHP Unit Testing for Minimalists",
-            "time": "2022-10-27T16:03:13+00:00"
+            "time": "2022-11-07T09:40:25+00:00"
         },
         {
             "name": "fkooman/saml-sp",
