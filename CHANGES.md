@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.4 (...)
+- fix OpenVPN special port handling 
+  ([#101](https://todo.sr.ht/~eduvpn/server/101))
+
 ## 3.1.3 (2022-11-07)
 - fix (C) year
 - cast `ini_get` return value for `mbstring.func_overload` to bool
