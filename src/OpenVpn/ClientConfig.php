@@ -139,8 +139,12 @@ class ClientConfig implements ClientConfigInterface
         $clientPortList = [];
 
         // remove specialPortList entries from portList
-        $normalAvailablePortList = array_diff($availablePortList, $specialPortList);
-        $specialAvailablePortList = array_intersect($availablePortList, $specialPortList);
+        $normalAvailablePortList = array_values(
+            array_diff($availablePortList, $specialPortList)
+        );
+        $specialAvailablePortList = array_values(
+            array_intersect($availablePortList, $specialPortList)
+        );
 
         // add a normal port (if available)
         if (0 !== \count($normalAvailablePortList)) {
