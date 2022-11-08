@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.1.4 (...)
+## 3.1.4 (2022-11-08)
 - fix OpenVPN special port handling 
   ([#101](https://todo.sr.ht/~eduvpn/server/101))
 
