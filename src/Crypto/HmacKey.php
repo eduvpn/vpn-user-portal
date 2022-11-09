@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Vpn\Portal\Crypto;
 
 use Vpn\Portal\Base64UrlSafe;
-use Vpn\Portal\Binary;
 use Vpn\Portal\Crypto\Exception\CryptoException;
 
 class HmacKey

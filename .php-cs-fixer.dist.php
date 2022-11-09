@@ -10,6 +10,10 @@ return $config->setRules(
         '@PER:risky' => true,
         '@PHP74Migration' => true,
         '@PHP74Migration:risky' => true,
+
+        // Unused use statements must be removed.
+        'no_unused_imports' => true,
+
         'header_comment' => [
             'header' => <<< 'EOD'
                 eduVPN - End-user friendly VPN.

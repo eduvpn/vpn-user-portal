@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Vpn\Portal\HttpClient;
 
 use RuntimeException;
-use Vpn\Portal\Binary;
 use Vpn\Portal\HttpClient\Exception\HttpClientException;
 
 class CurlHttpClient implements HttpClientInterface

@@ -13,7 +13,6 @@ namespace Vpn\Portal\Http;
 
 use Closure;
 use RangeException;
-use Vpn\Portal\Binary;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\Validator;
 

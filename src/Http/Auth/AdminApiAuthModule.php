@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
-use Vpn\Portal\Binary;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;

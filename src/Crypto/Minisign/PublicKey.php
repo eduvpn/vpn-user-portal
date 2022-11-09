@@ -13,7 +13,6 @@ namespace Vpn\Portal\Crypto\Minisign;
 
 use SplFileObject;
 use Vpn\Portal\Base64;
-use Vpn\Portal\Binary;
 use Vpn\Portal\Crypto\Minisign\Exception\MinisignException;
 
 /**
