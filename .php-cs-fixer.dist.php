@@ -8,6 +8,8 @@ return $config->setRules(
     [
         '@PER' => true,
         '@PER:risky' => true,
+        '@PHP74Migration' => true,
+        '@PHP74Migration:risky' => true,
         'header_comment' => [
             'header' => <<< 'EOD'
                 eduVPN - End-user friendly VPN.
