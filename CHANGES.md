@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.5 (...)
+- fix application stats on "Stats" admin page 
+  ([#102](https://todo.sr.ht/~eduvpn/server/102))
+- prevent *local* revoked clients from using API in "Guest Usage" scenario 
+  ([#103](https://todo.sr.ht/~eduvpn/server/103))
+
 ## 3.1.4 (2022-11-08)
 - fix OpenVPN special port handling 
   ([#101](https://todo.sr.ht/~eduvpn/server/101))
