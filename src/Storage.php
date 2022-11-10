@@ -1356,7 +1356,7 @@ class Storage
             <<< 'SQL'
                     SELECT
                         client_id,
-                        COUNT(DISTINCT client_id) AS client_count
+                        COUNT(client_id) AS client_count
                     FROM
                         oauth_authorizations
                     GROUP BY
