@@ -13,6 +13,7 @@ namespace Vpn\Portal\Http;
 
 use Closure;
 use DateTimeImmutable;
+use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\ValidatorInterface;
@@ -117,6 +118,21 @@ class GuestApiService implements ApiServiceInterface
 
             // make sure the authorization exists locally
             if (null === $this->oauthStorage->getAuthorization($accessToken->authKey())) {
+                // authorization does NOT exist (yet)
+                if ($this->localKeyId === $keyId) {
+                    // we have a *local* user, the authorization MUST exist,
+                    // so bail out here
+                    // @see fkooman/oauth2-server,src/LocalAccessTokenVerifier.php
+                    throw new InvalidTokenException(
+                        sprintf(
+                            'authorization for client "%s" with scope "%s" no longer exists',
+                            $accessToken->clientId(),
+                            (string) $accessToken->scope()
+                        )
+                    );
+                }
+
+                // this is *Guest* user, add the authorization
                 $this->oauthStorage->storeAuthorization(
                     $userId,
                     $accessToken->clientId(),
