@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.1.5 (...)
+## 3.1.5 (2022-11-11)
 - fix application stats on "Stats" admin page 
   ([#102](https://todo.sr.ht/~eduvpn/server/102))
 - prevent *local* revoked clients from using API in "Guest Usage" scenario 
