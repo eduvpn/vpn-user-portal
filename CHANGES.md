@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.6 (...)
+- enforce format of remote user IDs for guest users 
+  ([#104](https://todo.sr.ht/~eduvpn/server/104))
+
 ## 3.1.5 (2022-11-11)
 - fix application stats on "Stats" admin page 
   ([#102](https://todo.sr.ht/~eduvpn/server/102))

@@ -17,10 +17,12 @@ use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\ValidatorInterface;
+use Vpn\Portal\Base64UrlSafe;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\ServerList;
 use Vpn\Portal\Storage;
+use SodiumException;
 
 class GuestApiService implements ApiServiceInterface
 {
@@ -68,6 +70,19 @@ class GuestApiService implements ApiServiceInterface
         $module->init($this);
     }
 
+    public static function validateGuestUserId(string $guestUserId): void
+    {
+        try {
+            // make sure the userId has the correct length/format
+            $rawGuestUserId = Base64UrlSafe::decode($guestUserId);
+            if (32 !== strlen($rawGuestUserId)) {
+                throw new HttpException('[Guest]: User ID has invalid length', 500);
+            }
+        } catch (SodiumException $e) {
+            throw new HttpException('[Guest]: User ID has invalid encoding', 500);
+        }
+    }
+
     public function run(Request $request): Response
     {
         $requestMethod = $request->getRequestMethod();
@@ -78,6 +93,7 @@ class GuestApiService implements ApiServiceInterface
             $accessToken->scope()->requireAll(['config']);
 
             $userId = $accessToken->userId();
+            self::validateGuestUserId($userId);
 
             if (null === $rawAccessToken = $accessToken->raw()) {
                 throw new HttpException('unable to get "raw" access token', 500);
