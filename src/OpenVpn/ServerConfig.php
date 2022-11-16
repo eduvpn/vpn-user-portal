@@ -199,7 +199,7 @@ class ServerConfig
         $serverConfig = array_merge($serverConfig, self::getRoutes($profileConfig));
 
         // DNS
-        $serverConfig = array_merge($serverConfig, self::getDns($profileConfig));
+        $serverConfig = array_merge($serverConfig, self::getDns($profileConfig, $rangeFourIp, $rangeSixIp));
 
         return implode(PHP_EOL, $serverConfig);
     }
@@ -271,7 +271,7 @@ class ServerConfig
     /**
      * @return array<string>
      */
-    private static function getDns(ProfileConfig $profileConfig): array
+    private static function getDns(ProfileConfig $profileConfig, Ip $rangeFourIp, Ip $rangeSixIp): array
     {
         $dnsServerList = $profileConfig->dnsServerList();
 
@@ -281,6 +281,13 @@ class ServerConfig
         // search domains specified
         if ($profileConfig->defaultGateway() || 0 !== \count($profileConfig->dnsSearchDomainList())) {
             foreach ($dnsServerList as $dnsAddress) {
+                // convert "placeholders" with first host in the prefix
+                if ('@GW4@' === $dnsAddress) {
+                    $dnsAddress = $rangeFourIp->firstHost();
+                }
+                if ('@GW6@' === $dnsAddress) {
+                    $dnsAddress = $rangeSixIp->firstHost();
+                }
                 $dnsEntries[] = sprintf('push "dhcp-option DNS %s"', $dnsAddress);
             }
         }

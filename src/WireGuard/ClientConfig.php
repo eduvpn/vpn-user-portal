@@ -82,9 +82,11 @@ class ClientConfig implements ClientConfigInterface
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
-        $output[] = 'Address = '.$this->ipFour.'/'.$this->profileConfig->wRangeFour($this->nodeNumber)->prefix().','.$this->ipSix.'/'.$this->profileConfig->wRangeSix($this->nodeNumber)->prefix();
+        $ipFour = Ip::fromIp($this->ipFour, $this->profileConfig->wRangeFour($this->nodeNumber)->prefix());
+        $ipSix = Ip::fromIp($this->ipSix, $this->profileConfig->wRangeSix($this->nodeNumber)->prefix());
+        $output[] = sprintf('Address = %s,%s', (string) $ipFour, (string) $ipSix);
 
-        $dnsEntries = $this->getDns($this->profileConfig);
+        $dnsEntries = $this->getDns($this->profileConfig, $ipFour, $ipSix);
         if (0 !== \count($dnsEntries)) {
             $output[] = 'DNS = '.implode(',', $dnsEntries);
         }
@@ -109,9 +111,18 @@ class ClientConfig implements ClientConfigInterface
     /**
      * @return array<string>
      */
-    private static function getDns(ProfileConfig $profileConfig): array
+    private static function getDns(ProfileConfig $profileConfig, Ip $ipFour, Ip $ipSix): array
     {
-        $dnsServerList = $profileConfig->dnsServerList();
+        $dnsServerList = [];
+        foreach ($profileConfig->dnsServerList() as $dnsAddress) {
+            if ('@GW4@' === $dnsAddress) {
+                $dnsAddress = $ipFour->firstHost();
+            }
+            if ('@GW6@' === $dnsAddress) {
+                $dnsAddress = $ipSix->firstHost();
+            }
+            $dnsServerList[] = $dnsAddress;
+        }
         $dnsEntries = [];
 
         // push DNS servers when default gateway is set, or there are some
