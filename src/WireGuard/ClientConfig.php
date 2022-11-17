@@ -58,6 +58,9 @@ class ClientConfig implements ClientConfigInterface
 
     public function get(): string
     {
+        $ipFour = Ip::fromIp($this->ipFour, $this->profileConfig->wRangeFour($this->nodeNumber)->prefix());
+        $ipSix = Ip::fromIp($this->ipSix, $this->profileConfig->wRangeSix($this->nodeNumber)->prefix());
+
         $routeList = new IpNetList();
         if ($this->profileConfig->defaultGateway()) {
             $routeList->add(Ip::fromIpPrefix('0.0.0.0/0'));
@@ -72,6 +75,13 @@ class ClientConfig implements ClientConfigInterface
             $routeList->remove(Ip::fromIpPrefix($routeIpPrefix));
         }
 
+        // we always want to add the gateway IP to the list of "AllowedIPs",
+        // even if "routeList" is empty. Has no effect when "defaultGateway" is
+        // is set to true as the gateway IPs are contained in `0.0.0.0/0` and
+        // `::/0`
+        $routeList->add(Ip::fromIp($ipFour->network()->firstHost()));
+        $routeList->add(Ip::fromIp($ipSix->network()->firstHost()));
+
         $output = [
             sprintf('# Portal: %s', $this->portalUrl),
             sprintf('# Profile: %s (%s)', $this->profileConfig->displayName(), $this->profileConfig->profileId()),
@@ -82,8 +92,6 @@ class ClientConfig implements ClientConfigInterface
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;
         }
-        $ipFour = Ip::fromIp($this->ipFour, $this->profileConfig->wRangeFour($this->nodeNumber)->prefix());
-        $ipSix = Ip::fromIp($this->ipSix, $this->profileConfig->wRangeSix($this->nodeNumber)->prefix());
         $output[] = sprintf('Address = %s,%s', (string) $ipFour, (string) $ipSix);
 
         $dnsEntries = $this->getDns($this->profileConfig, $ipFour, $ipSix);
