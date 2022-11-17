@@ -138,6 +138,9 @@ class ConfigCheck
         }
 
         foreach ($profileConfig->dnsServerList() as $dnsServer) {
+            if (in_array($dnsServer, ['@GW4@', '@GW6@'], true)) {
+                continue;
+            }
             $dnsServerIp = Ip::fromIp($dnsServer);
             foreach ($profileConfig->routeList() as $routeIpPrefix) {
                 $routeIp = Ip::fromIpPrefix($routeIpPrefix);
