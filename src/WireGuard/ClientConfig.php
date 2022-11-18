@@ -75,13 +75,6 @@ class ClientConfig implements ClientConfigInterface
             $routeList->remove(Ip::fromIpPrefix($routeIpPrefix));
         }
 
-        // we always want to add the gateway IP to the list of "AllowedIPs",
-        // even if "routeList" is empty. Has no effect when "defaultGateway" is
-        // is set to true as the gateway IPs are contained in `0.0.0.0/0` and
-        // `::/0`
-        $routeList->add(Ip::fromIp($ipFour->network()->firstHost()));
-        $routeList->add(Ip::fromIp($ipSix->network()->firstHost()));
-
         $output = [
             sprintf('# Portal: %s', $this->portalUrl),
             sprintf('# Profile: %s (%s)', $this->profileConfig->displayName(), $this->profileConfig->profileId()),
