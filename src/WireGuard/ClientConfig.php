@@ -94,7 +94,9 @@ class ClientConfig implements ClientConfigInterface
         $output[] = '';
         $output[] = '[Peer]';
         $output[] = 'PublicKey = '.$this->serverPublicKey;
-        $output[] = 'AllowedIPs = '.implode(',', $routeList->ls());
+        if (0 !== count($routeList->ls())) {
+            $output[] = 'AllowedIPs = '.implode(',', $routeList->ls());
+        }
         $output[] = 'Endpoint = '.$this->profileConfig->hostName($this->nodeNumber).':'.(string) $this->wgPort;
 
         return implode("\n", $output);
