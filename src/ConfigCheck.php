@@ -139,6 +139,8 @@ class ConfigCheck
 
         foreach ($profileConfig->dnsServerList() as $dnsServer) {
             if (in_array($dnsServer, ['@GW4@', '@GW6@'], true)) {
+                // the '@GW4@' and '@GW6@' templates are *always* "routed" over
+                // the VPN
                 continue;
             }
             $dnsServerIp = Ip::fromIp($dnsServer);
