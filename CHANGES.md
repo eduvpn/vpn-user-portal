@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.1.7 (...)
+## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 
   ([#107](https://todo.sr.ht/~eduvpn/server/107))
 - add network prefix to `AllowedIPs` by default for WireGuard client 
