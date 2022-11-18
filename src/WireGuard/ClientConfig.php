@@ -70,6 +70,13 @@ class ClientConfig implements ClientConfigInterface
         foreach ($this->profileConfig->routeList() as $routeIpPrefix) {
             $routeList->add(Ip::fromIpPrefix($routeIpPrefix));
         }
+        // add our own interface prefix to "AllowedIPs" for clients.
+        // Client-to-client won't work with the firewall we deploy by default,
+        // but at least this allows for it and we'll get the same behavior as
+        // with OpenVPN
+        $routeList->add($ipFour->network());
+        $routeList->add($ipSix->network());
+
         // remove the prefixes we don't want
         foreach ($this->profileConfig->excludeRouteList() as $routeIpPrefix) {
             $routeList->remove(Ip::fromIpPrefix($routeIpPrefix));

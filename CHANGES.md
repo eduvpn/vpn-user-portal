@@ -3,6 +3,8 @@
 ## 3.1.7 (...)
 - fix `ConfigCheck` with DNS template variables 
   ([#107](https://todo.sr.ht/~eduvpn/server/107))
+- add network prefix to `AllowedIPs` by default for WireGuard client 
+  configuration ([#108](https://todo.sr.ht/~eduvpn/server/108)) 
 
 ## 3.1.6 (2022-11-17)
 - enforce format of remote user IDs for guest users 
