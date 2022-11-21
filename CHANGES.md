@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.8 (...)
+- implement tool to generate (reverse) DNS zone files
+  ([#25](https://todo.sr.ht/~eduvpn/server/25))
+
 ## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 
   ([#107](https://todo.sr.ht/~eduvpn/server/107))
