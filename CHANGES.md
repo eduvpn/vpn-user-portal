@@ -1,8 +1,11 @@
 # Changelog
 
 ## 3.1.8 (...)
-- implement tool to generate (reverse) DNS zone files
+- (re)implement tool to generate (reverse) DNS zone files
   ([#25](https://todo.sr.ht/~eduvpn/server/25))
+- (re)implement "Static Permissions" for cases where your authentication 
+  backend does not (adequately)
+  ([#18](https://todo.sr.ht/~eduvpn/server/18)) 
 
 ## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 
