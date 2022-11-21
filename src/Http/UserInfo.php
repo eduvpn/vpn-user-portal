@@ -63,6 +63,14 @@ class UserInfo
         return $this->permissionList;
     }
 
+    /**
+     * @param array<string> $permissionList
+     */
+    public function setPermissionList(array $permissionList): void
+    {
+        $this->permissionList = $permissionList;
+    }
+
     public function setAuthData(string $authData): void
     {
         $this->authData = $authData;
