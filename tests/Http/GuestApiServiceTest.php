@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Tests;
 
-use Vpn\Portal\Http\GuestApiService;
-use Vpn\Portal\Http\Exception\HttpException;
 use PHPUnit\Framework\TestCase;
+use Vpn\Portal\Http\Exception\HttpException;
+use Vpn\Portal\Http\GuestApiService;
 
 class GuestApiServiceTest extends TestCase
 {

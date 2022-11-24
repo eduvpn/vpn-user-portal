@@ -13,6 +13,10 @@ return $config->setRules(
 
         // Unused use statements must be removed.
         'no_unused_imports' => true,
+        // Ordering use statements.
+        'ordered_imports' => true,
+        // Orders the elements of classes/interfaces/traits/enums.
+        'ordered_class_elements' => true,
 
         'header_comment' => [
             'header' => <<< 'EOD'

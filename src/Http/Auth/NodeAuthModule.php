@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
+use RuntimeException;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\UserInfo;
 use Vpn\Portal\Validator;
-use RuntimeException;
 
 class NodeAuthModule extends AbstractAuthModule
 {

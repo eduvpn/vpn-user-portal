@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Vpn\Portal\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Vpn\Portal\OpenVpn\ServerConfig;
 use Vpn\Portal\Cfg\ProfileConfig;
+use Vpn\Portal\OpenVpn\ServerConfig;
 use Vpn\Portal\OpenVpn\TlsCrypt;
 
 /**

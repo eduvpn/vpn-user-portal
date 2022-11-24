@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Vpn\Portal\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Vpn\Portal\DnsZoneGenerator;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\DnsZoneGenerator;
 
 /**
  * @internal

@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Vpn\Portal\WireGuard\ClientConfig;
 use DateTimeImmutable;
+use PHPUnit\Framework\TestCase;
 use Vpn\Portal\Cfg\ProfileConfig;
+use Vpn\Portal\WireGuard\ClientConfig;
 
 /**
  * @internal

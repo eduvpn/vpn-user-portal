@@ -17,12 +17,12 @@ use fkooman\OAuth\Server\Exception\InvalidTokenException;
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\ValidatorInterface;
+use SodiumException;
 use Vpn\Portal\Base64UrlSafe;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\ServerList;
 use Vpn\Portal\Storage;
-use SodiumException;
 
 class GuestApiService implements ApiServiceInterface
 {
