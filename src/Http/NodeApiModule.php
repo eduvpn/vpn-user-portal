@@ -115,7 +115,6 @@ class NodeApiModule implements ServiceModuleInterface
     {
         $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
         $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::commonName($s));
-        $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
         $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
         $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
         $bytesIn = (int) $request->requirePostParameter('bytes_in', fn (string $s) => Validator::nonNegativeInt($s));
