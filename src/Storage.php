@@ -897,10 +897,6 @@ class Storage
                         bytes_out = :bytes_out,
                         disconnected_at = :disconnected_at
                     WHERE
-                        user_id = :user_id
-                    AND
-                        profile_id = :profile_id
-                    AND
                         connection_id = :connection_id
                     AND
                         disconnected_at IS NULL
