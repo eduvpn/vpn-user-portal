@@ -251,7 +251,7 @@ class ConnectionManager
                     // XXX what if peer was not connected/registered anywhere?
                     // peer was connected to this node, use the information
                     // we got back to call "clientDisconnect"
-                    $this->storage->clientDisconnect($userId, $profileId, $connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
+                    $this->storage->clientDisconnect($connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
 
                     foreach ($this->connectionHookList as $connectionHook) {
                         [$ipFour, $ipSix] = self::extractAddresses($peerInfo['ip_net']);

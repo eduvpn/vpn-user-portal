@@ -124,7 +124,7 @@ class NodeApiModule implements ServiceModuleInterface
         // try to find the "open" connection in the connection_log table, i.e.
         // where "disconnected_at IS NULL", if found "close" the connection
         if (null !== $userId = $this->storage->oUserIdFromConnectionLog($profileId, $commonName)) {
-            $this->storage->clientDisconnect($userId, $profileId, $commonName, $bytesIn, $bytesOut, $this->dateTime);
+            $this->storage->clientDisconnect($commonName, $bytesIn, $bytesOut, $this->dateTime);
         }
 
         foreach ($this->connectionHookList as $connectionHook) {

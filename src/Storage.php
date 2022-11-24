@@ -885,7 +885,7 @@ class Storage
         return (int) $resultColumn;
     }
 
-    public function clientDisconnect(string $userId, string $profileId, string $connectionId, int $bytesIn, int $bytesOut, DateTimeImmutable $disconnectedAt): void
+    public function clientDisconnect(string $connectionId, int $bytesIn, int $bytesOut, DateTimeImmutable $disconnectedAt): void
     {
         // XXX make sure the entry with disconnected_at IS NULL exists, otherwise scream
         $stmt = $this->db->prepare(
@@ -907,8 +907,6 @@ class Storage
                 SQL
         );
 
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->bindValue(':disconnected_at', $disconnectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->bindValue(':bytes_in', $bytesIn, PDO::PARAM_INT);
