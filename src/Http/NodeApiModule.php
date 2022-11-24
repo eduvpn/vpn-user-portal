@@ -113,26 +113,34 @@ class NodeApiModule implements ServiceModuleInterface
 
     public function disconnect(Request $request): Response
     {
-        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
         $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::commonName($s));
-        $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
-        $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
         $bytesIn = (int) $request->requirePostParameter('bytes_in', fn (string $s) => Validator::nonNegativeInt($s));
         $bytesOut = (int) $request->requirePostParameter('bytes_out', fn (string $s) => Validator::nonNegativeInt($s));
+        $this->storage->clientDisconnect($commonName, $bytesIn, $bytesOut, $this->dateTime);
 
-        // try to find the "open" connection in the connection_log table, i.e.
-        // where "disconnected_at IS NULL", if found "close" the connection
-        if (null !== $userId = $this->storage->oUserIdFromConnectionLog($profileId, $commonName)) {
-            $this->storage->clientDisconnect($commonName, $bytesIn, $bytesOut, $this->dateTime);
-        }
+        // run "disconnect" hooks if we have them...
+        if (0 !== count($this->connectionHookList)) {
+            // get information about the connection from the 'connection_log'
+            // table
+            if (null === $connectionLogInfo = $this->storage->connectionLogInfo($commonName)) {
+                $this->logger->warning(sprintf('we were unable to find an open connection for "%s" in the "connection_log" table', $commonName));
 
-        foreach ($this->connectionHookList as $connectionHook) {
-            try {
-                $connectionHook->disconnect($userId ?? 'N/A', $profileId, $commonName, $ipFour, $ipSix);
-            } catch (ConnectionHookException $e) {
-                $this->logger->warning(sprintf('%s: %s', \get_class($connectionHook), $e->getMessage()));
-                // we don't react to this any further, as client
-                // wants to leave, we can't stop them anyway
+                return new Response('OK');
+            }
+            foreach ($this->connectionHookList as $connectionHook) {
+                try {
+                    $connectionHook->disconnect(
+                        $connectionLogInfo['user_id'],
+                        $connectionLogInfo['profile_id'],
+                        $commonName,
+                        $connectionLogInfo['ip_four'],
+                        $connectionLogInfo['ip_six']
+                    );
+                } catch (ConnectionHookException $e) {
+                    $this->logger->warning(sprintf('%s: %s', \get_class($connectionHook), $e->getMessage()));
+                    // we don't react to this any further, as client
+                    // wants to leave, we can't stop them anyway
+                }
             }
         }
 

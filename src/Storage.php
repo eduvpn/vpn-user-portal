@@ -910,32 +910,40 @@ class Storage
         $stmt->execute();
     }
 
-    public function oUserIdFromConnectionLog(string $profileId, string $commonName): ?string
+    /**
+     * @return ?array{user_id:string,profile_id:string,ip_four:string,ip_six:string}
+     */
+    public function connectionLogInfo(string $connectionId): ?array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
-                        user_id
+                        user_id,
+                        profile_id,
+                        ip_four,
+                        ip_six
                     FROM
                         connection_log
                     WHERE
-                        profile_id = :profile_id
-                    AND
                         connection_id = :connection_id
                     AND
                         disconnected_at IS NULL
                 SQL
         );
 
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':connection_id', $commonName, PDO::PARAM_STR);
+        $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->execute();
 
-        if (false === $resultColumn = $stmt->fetchColumn(0)) {
+        if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
             return null;
         }
 
-        return (string) $resultColumn;
+        return [
+            'user_id' => (string) $resultRow['user_id'],
+            'profile_id' => (string) $resultRow['profile_id'],
+            'ip_four' => (string) $resultRow['ip_four'],
+            'ip_six' => (string) $resultRow['ip_six'],
+        ];
     }
 
     /**
