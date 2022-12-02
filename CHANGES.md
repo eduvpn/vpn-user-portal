@@ -6,6 +6,7 @@
 - (re)implement "Static Permissions" for cases where your authentication 
   backend does not (adequately)
   ([#18](https://todo.sr.ht/~eduvpn/server/18)) 
+- update for vpn-daemon `/w/remove_peer` changes (v3.0.2)
 
 ## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 

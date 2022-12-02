@@ -112,18 +112,23 @@ class VpnDaemon
     public function wPeerRemove(string $nodeUrl, string $publicKey): ?array
     {
         try {
-            return Json::decode(
-                $this->httpClient->send(
-                    new HttpClientRequest(
-                        'POST',
-                        $nodeUrl.'/w/remove_peer',
-                        [],
-                        [
-                            'public_key' => $publicKey,
-                        ]
-                    )
-                )->body()
+            $httpResponse = $this->httpClient->send(
+                new HttpClientRequest(
+                    'POST',
+                    $nodeUrl.'/w/remove_peer',
+                    [],
+                    [
+                        'public_key' => $publicKey,
+                    ]
+                )
             );
+
+            if (200 === $httpResponse->statusCode()) {
+                return Json::decode($httpResponse->body());
+            }
+
+            // response was probably 204 ("No Content"), but not an error
+            return null;
         } catch (HttpClientException $e) {
             $this->logger->error((string) $e);
 
