@@ -43,9 +43,6 @@ class Tpl implements TplInterface
     /** @var array<string,callable> */
     private array $callbackList = [];
 
-    /** @var array<string,string> */
-    private array $profileConfigDisplayNameCache = [];
-
     /**
      * @param array<string,mixed> $templateVariables
      */
@@ -105,19 +102,11 @@ class Tpl implements TplInterface
      */
     public function profileIdToDisplayName(array $profileConfigList, string $profileId): string
     {
-        if (\array_key_exists($profileId, $this->profileConfigDisplayNameCache)) {
-            return $this->e($this->profileConfigDisplayNameCache[$profileId]);
-        }
-
         foreach ($profileConfigList as $profileConfig) {
             if ($profileId === $profileConfig->profileId()) {
-                $this->profileConfigDisplayNameCache[$profileId] = $profileConfig->displayName();
-
                 return $this->e($profileConfig->displayName());
             }
         }
-
-        $this->profileConfigDisplayNameCache[$profileId] = $profileId;
 
         return $this->e($profileId);
     }
