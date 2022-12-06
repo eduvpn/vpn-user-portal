@@ -222,10 +222,10 @@ class ConnectionManager
             // (if we are not prevented)
             if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
                 if ('openvpn' === $vpnProto) {
-                    $this->storage->oCertDelete($userId, $connectionId);
+                    $this->storage->oCertDelete($connectionId);
                 }
                 if ('wireguard' === $vpnProto) {
-                    $this->storage->wPeerRemove($userId, $connectionId);
+                    $this->storage->wPeerRemove($connectionId);
                 }
             }
 
@@ -237,7 +237,7 @@ class ConnectionManager
         switch ($vpnProto) {
             case 'openvpn':
                 if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                    $this->storage->oCertDelete($userId, $connectionId);
+                    $this->storage->oCertDelete($connectionId);
                 }
                 $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
 
@@ -245,7 +245,7 @@ class ConnectionManager
 
             case 'wireguard':
                 if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                    $this->storage->wPeerRemove($userId, $connectionId);
+                    $this->storage->wPeerRemove($connectionId);
                 }
                 if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId)) {
                     // XXX what if peer was not connected/registered anywhere?

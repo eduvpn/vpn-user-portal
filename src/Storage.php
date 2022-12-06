@@ -109,7 +109,7 @@ class Storage
         $stmt->execute();
     }
 
-    public function wPeerRemove(string $userId, string $publicKey): void
+    public function wPeerRemove(string $publicKey): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
@@ -117,13 +117,9 @@ class Storage
                 FROM
                     wg_peers
                 WHERE
-                    user_id = :user_id
-                AND
                     public_key = :public_key
                 SQL
         );
-
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
         $stmt->execute();
     }
@@ -702,19 +698,16 @@ class Storage
         ];
     }
 
-    public function oCertDelete(string $userId, string $commonName): void
+    public function oCertDelete(string $commonName): void
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     DELETE FROM
                         certificates
                     WHERE
-                        user_id = :user_id
-                    AND
                         common_name = :common_name
                 SQL
         );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->execute();
     }
