@@ -32,4 +32,9 @@ class NullLogger implements LoggerInterface
     {
         // NOP
     }
+
+    public function debug(string $logMessage): void
+    {
+        // NOP
+    }
 }

@@ -41,4 +41,9 @@ class SysLogger implements LoggerInterface
     {
         syslog(LOG_INFO, $logMessage);
     }
+
+    public function debug(string $logMessage): void
+    {
+        syslog(LOG_DEBUG, $logMessage);
+    }
 }
