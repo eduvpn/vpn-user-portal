@@ -32,11 +32,9 @@ class NodeAuthModule extends AbstractAuthModule
 
     public function userInfo(Request $request): ?UserInfo
     {
-        if (null === $nodeNumber = $request->optionalHeader('HTTP_X_NODE_NUMBER')) {
+        if (null === $nodeNumber = $request->optionalHeader('HTTP_X_NODE_NUMBER', fn (string $s) => Validator::nodeNumber($s))) {
             return null;
         }
-        // make sure nodeNumber is int >= 0
-        Validator::nodeNumber($nodeNumber);
 
         if (null === $authHeader = $request->optionalHeader('HTTP_AUTHORIZATION')) {
             return null;

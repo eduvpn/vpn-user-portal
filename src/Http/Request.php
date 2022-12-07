@@ -254,8 +254,10 @@ class Request
         }
     }
 
-    // XXX introduce validator function as well?!
-    public function requireHeader(string $headerKey): string
+    /**
+     * @param ?Closure(string):void $c
+     */
+    public function requireHeader(string $headerKey, ?Closure $c = null): string
     {
         if (!\array_key_exists($headerKey, $this->serverData)) {
             throw new HttpException(sprintf('missing request header "%s"', $headerKey), 400);
@@ -265,17 +267,27 @@ class Request
             throw new HttpException(sprintf('value of request header "%s" MUST be string', $headerKey), 400);
         }
 
+        if (null !== $c) {
+            try {
+                $c($this->serverData[$headerKey]);
+            } catch (RangeException $e) {
+                throw new HttpException(sprintf('invalid value for "%s"', $headerKey), 400);
+            }
+        }
+
         return $this->serverData[$headerKey];
     }
 
-    // XXX introduce validator function as well?!
-    public function optionalHeader(string $headerKey): ?string
+    /**
+     * @param ?Closure(string):void $c
+     */
+    public function optionalHeader(string $headerKey, ?Closure $c = null): ?string
     {
         if (!\array_key_exists($headerKey, $this->serverData)) {
             return null;
         }
 
-        return $this->requireHeader($headerKey);
+        return $this->requireHeader($headerKey, $c);
     }
 
     /**
