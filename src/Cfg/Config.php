@@ -153,21 +153,21 @@ class Config
     /**
      * Return the list of all UNIQUE "nodeUrls" used by the profile(s).
      *
-     * @return array<string>
+     * @return array<int,string>
      */
-    public function nodeUrlList(): array
+    public function nodeNumberUrlList(): array
     {
-        $nodeUrlList = [];
+        $nodeNumberUrlList = [];
         foreach ($this->profileConfigList() as $profileConfig) {
             foreach ($profileConfig->onNode() as $nodeNumber) {
                 $nodeUrl = $profileConfig->nodeUrl($nodeNumber);
-                if (!in_array($nodeUrl, $nodeUrlList, true)) {
-                    $nodeUrlList[] = $nodeUrl;
+                if (!in_array($nodeUrl, $nodeNumberUrlList, true)) {
+                    $nodeNumberUrlList[$nodeNumber] = $nodeUrl;
                 }
             }
         }
 
-        return $nodeUrlList;
+        return $nodeNumberUrlList;
     }
 
     /**
