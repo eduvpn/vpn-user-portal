@@ -25,6 +25,7 @@ class ConfigCheck
         $usedRangeList = [];
         $usedUdpPortList = [];
         $usedTcpPortList = [];
+        $nodeProfileMapping = [];
 
         foreach ($config->profileConfigList() as $profileConfig) {
             $profileProblemList = [];
@@ -36,7 +37,7 @@ class ConfigCheck
             self::verifyNonLocalNodeUrlHasTls($profileConfig, $profileProblemList);
             self::verifyUniqueOpenVpnPortsPerNode($profileConfig, $usedUdpPortList, $usedTcpPortList, $profileProblemList);
             self::verifyRouteListIsEmptyWithDefaultGateway($profileConfig, $profileProblemList);
-
+            self::verifyNodeNumberUrlConsistency($profileConfig, $nodeProfileMapping, $profileProblemList);
             $issueList[$profileConfig->profileId()] = $profileProblemList;
         }
 
@@ -194,5 +195,49 @@ class ConfigCheck
             }
             $usedRangeList[] = $profileRange;
         }
+    }
+
+    /**
+     * @param array<string,array<int, string>> $profileNodeNumberUrlListMapping
+     * @param array<string> $profileProblemList
+     */
+    private static function verifyNodeNumberUrlConsistency(ProfileConfig $profileConfig, array &$profileNodeNumberUrlListMapping, array &$profileProblemList): void
+    {
+        // make sure onNode does not contain the same nodeNumber > 1
+        if (array_values($profileConfig->onNode()) !== array_values(array_unique($profileConfig->onNode()))) {
+            $profileProblemList[] = sprintf('onNode repeats nodeNumbers: [%s]', implode(',', $profileConfig->onNode()));
+
+            return;
+        }
+
+        // verify nodeNumber(s) and nodeUrl(s)
+        $nodeUrlList = [];
+        foreach ($profileConfig->onNode() as $nodeNumber) {
+            if ($nodeNumber < 0) {
+                $profileProblemList[] = 'nodeNumber(s) MUST be >= 0';
+
+                return;
+            }
+            $nodeUrl = $profileConfig->nodeUrl($nodeNumber);
+            if (in_array($nodeUrl, $nodeUrlList, true)) {
+                $profileProblemList[] = sprintf('duplidate nodeUrl "%s"', $nodeUrl);
+
+                return;
+            }
+            $nodeUrlList[$nodeNumber] = $nodeUrl;
+        }
+
+        // make sure no other profile has our nodeUrl under a different nodeNumber
+        foreach ($profileNodeNumberUrlListMapping as $profileId => $nodeNumberUrlList) {
+            foreach ($nodeUrlList as $nodeNumber => $nodeUrl) {
+                if (array_key_exists($nodeNumber, $nodeNumberUrlList)) {
+                    if ($nodeNumberUrlList[$nodeNumber] !== $nodeUrl) {
+                        $profileProblemList[] = sprintf('profile "%s" already defines nodeNumber "%d" with nodeUrl "%s"', $profileId, $nodeNumber, $nodeNumberUrlList[$nodeNumber]);
+                    }
+                }
+            }
+        }
+
+        $profileNodeNumberUrlListMapping[$profileConfig->profileId()] = $nodeUrlList;
     }
 }
