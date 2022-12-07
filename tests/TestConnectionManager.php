@@ -14,15 +14,20 @@ namespace Vpn\Portal\Tests;
 use DateTimeImmutable;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
-use Vpn\Portal\LoggerInterface;
+use Vpn\Portal\NullLogger;
 use Vpn\Portal\Storage;
 use Vpn\Portal\VpnDaemon;
 
 class TestConnectionManager extends ConnectionManager
 {
-    public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage, LoggerInterface $logger)
+    public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage)
     {
-        parent::__construct($config, $vpnDaemon, $storage, $logger);
+        parent::__construct(
+            $config,
+            $vpnDaemon,
+            $storage,
+            new NullLogger()
+        );
         $this->dateTime = new DateTimeImmutable('2022-01-01T09:00:00+00:00');
     }
 

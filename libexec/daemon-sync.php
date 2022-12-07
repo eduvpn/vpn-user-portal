@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -24,7 +25,8 @@ try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage($config->dbConfig($baseDir));
     $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
-    $vpnDaemon->sync($config, $storage);
+    $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
+    $connectionManager->sync();
 } catch (Exception $e) {
     echo 'ERROR: '.$e->getMessage().\PHP_EOL;
 
