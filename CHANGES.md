@@ -7,6 +7,11 @@
   backend does not (adequately)
   ([#18](https://todo.sr.ht/~eduvpn/server/18)) 
 - update for vpn-daemon `/w/remove_peer` changes (v3.0.2)
+- add some tests to verify `nodeNumber`, `nodeUrl` and `onNode` profile 
+  configuration file
+- show `nodeNumber` on Info page for the node(s)
+- add `LoggerInterface::debug`
+- remove silly `Tpl::profileIdToDisplayName` cache
 
 ## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 
