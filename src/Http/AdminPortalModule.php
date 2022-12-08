@@ -156,27 +156,16 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
                 $userId = self::validateUser($request, $userInfo);
-
                 $this->storage->userDisable($userId);
-                $clientAuthorizations = $this->oauthStorage->getAuthorizations($userId);
-                foreach ($clientAuthorizations as $clientAuthorization) {
-                    // delete and disconnect all (active) configurations
-                    // for this OAuth client authorization
-                    $this->connectionManager->disconnectByAuthKey($clientAuthorization->authKey());
+
+                // delete and disconnect all (active) VPN configurations
+                // for this user
+                $this->connectionManager->disconnectByUserId($userId);
+
+                // revoke all OAuth authorizations
+                foreach ($this->oauthStorage->getAuthorizations($userId) as $clientAuthorization) {
                     $this->oauthStorage->deleteAuthorization($clientAuthorization->authKey());
                 }
-
-                // disconnect all connections from manually downloaded VPN
-                // configurations
-                //
-                // OpenVPN: connection will be terminated, and with OpenVPN a
-                // check whether the user is disabled is performed before
-                // allowing a connection
-                //
-                // WireGuard: connection will be terminated, i.e. removed from
-                // daemons, and the peer configuration of disabled users will
-                // NOT be synced with daemon-sync
-                $this->connectionManager->disconnectByUserId($userId, ConnectionManager::DO_NOT_DELETE);
 
                 return new RedirectResponse($request->getRootUri().'user?user_id='.$userId);
             }

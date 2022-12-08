@@ -25,12 +25,6 @@ use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
  */
 class ConnectionManager
 {
-    /**
-     * Used to indicate the certificate/peer should NOT be deleted, e.g. when
-     * an account is disabled.
-     */
-    public const DO_NOT_DELETE = 1;
-
     protected DateTimeImmutable $dateTime;
     private Config $config;
     private Storage $storage;
@@ -149,15 +143,14 @@ class ConnectionManager
         }
     }
 
-    public function disconnectByUserId(string $userId, int $optionFlags = 0): void
+    public function disconnectByUserId(string $userId): void
     {
         // OpenVPN
         foreach ($this->storage->oCertListByUserId($userId) as $oCertInfo) {
             $this->disconnect(
                 $userId,
                 $oCertInfo['profile_id'],
-                $oCertInfo['common_name'],
-                $optionFlags
+                $oCertInfo['common_name']
             );
         }
 
@@ -166,8 +159,7 @@ class ConnectionManager
             $this->disconnect(
                 $userId,
                 $wPeerInfo['profile_id'],
-                $wPeerInfo['public_key'],
-                $optionFlags
+                $wPeerInfo['public_key']
             );
         }
     }
@@ -209,7 +201,7 @@ class ConnectionManager
         }
     }
 
-    public function disconnect(string $userId, string $profileId, string $connectionId, int $optionFlags = 0): void
+    public function disconnect(string $userId, string $profileId, string $connectionId): void
     {
         [$vpnProto, $nodeNumber] = $this->determineVpnProtoNodeNumber($userId, $profileId, $connectionId);
         if (null === $vpnProto || null === $nodeNumber) {
@@ -219,14 +211,11 @@ class ConnectionManager
 
         if (!$this->config->hasProfile($profileId)) {
             // profile no longer exists, simply delete the configuration
-            // (if we are not prevented)
-            if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                if ('openvpn' === $vpnProto) {
-                    $this->storage->oCertDelete($connectionId);
-                }
-                if ('wireguard' === $vpnProto) {
-                    $this->storage->wPeerRemove($connectionId);
-                }
+            if ('openvpn' === $vpnProto) {
+                $this->storage->oCertDelete($connectionId);
+            }
+            if ('wireguard' === $vpnProto) {
+                $this->storage->wPeerRemove($connectionId);
             }
 
             return;
@@ -236,17 +225,13 @@ class ConnectionManager
 
         switch ($vpnProto) {
             case 'openvpn':
-                if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                    $this->storage->oCertDelete($connectionId);
-                }
+                $this->storage->oCertDelete($connectionId);
                 $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
 
                 break;
 
             case 'wireguard':
-                if (0 === (self::DO_NOT_DELETE & $optionFlags)) {
-                    $this->storage->wPeerRemove($connectionId);
-                }
+                $this->storage->wPeerRemove($connectionId);
                 if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId)) {
                     // XXX what if peer was not connected/registered anywhere?
                     // peer was connected to this node, use the information
