@@ -149,12 +149,12 @@ class NodeApiModule implements ServiceModuleInterface
 
     private function verifyConnection(string $profileId, string $commonName): string
     {
-        if (null === $userInfo = $this->storage->oUserInfoByProfileIdAndCommonName($profileId, $commonName)) {
+        if (null === $oCertInfo = $this->storage->oCertInfo($commonName)) {
             throw new NodeApiException(sprintf('unable to find certificate with CN "%s" in the database', $commonName));
         }
 
-        $userId = $userInfo['user_id'];
-        if ($userInfo['user_is_disabled']) {
+        $userId = $oCertInfo['user_id'];
+        if ($oCertInfo['user_is_disabled']) {
             throw new NodeApiException(sprintf('account "%s" has been disabled', $userId));
         }
 

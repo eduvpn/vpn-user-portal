@@ -664,27 +664,27 @@ class Storage
     }
 
     /**
-     * @return ?array{user_id:string,user_is_disabled:bool}
+     * @return ?array{user_id:string,user_is_disabled:bool,profile_id:string,node_number:int}
      */
-    public function oUserInfoByProfileIdAndCommonName(string $profileId, string $commonName): ?array
+    public function oCertInfo(string $commonName): ?array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
                         u.user_id AS user_id,
-                        u.is_disabled AS user_is_disabled
+                        u.is_disabled AS user_is_disabled,
+                        c.profile_id,
+                        c.node_number
                     FROM
-                        users u, certificates c
+                        users u,
+                        certificates c
                     WHERE
                         u.user_id = c.user_id
-                    AND
-                        c.profile_id = :profile_id
                     AND
                         c.common_name = :common_name
                 SQL
         );
 
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->bindValue(':common_name', $commonName, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -695,6 +695,8 @@ class Storage
         return [
             'user_id' => (string) $resultRow['user_id'],
             'user_is_disabled' => (bool) $resultRow['user_is_disabled'],
+            'profile_id' => (string) $resultRow['profile_id'],
+            'node_number' => (int) $resultRow['node_number'],
         ];
     }
 
