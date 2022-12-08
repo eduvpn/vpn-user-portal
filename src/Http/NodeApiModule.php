@@ -158,6 +158,12 @@ class NodeApiModule implements ServiceModuleInterface
             throw new NodeApiException(sprintf('account "%s" has been disabled', $userId));
         }
 
+        // make sure the profileId the client connects to matches the one in
+        // the certificate
+        if ($profileId !== $oCertInfo['profile_id']) {
+            throw new NodeApiException(sprintf('certificate "%s" for profile "%s" can not be used with profile "%s"', $commonName, $oCertInfo['profile_id'], $profileId));
+        }
+
         $profileConfig = $this->config->profileConfig($profileId);
         if (null !== $profilePermissionList = $profileConfig->aclPermissionList()) {
             // ACL is enabled for this profile
