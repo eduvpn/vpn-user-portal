@@ -88,11 +88,12 @@ class NodeApiModule implements ServiceModuleInterface
     {
         try {
             $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
+            $nodeNumber = (int) $request->requireHeader('HTTP_X_NODE_NUMBER', fn (string $s) => Validator::nodeNumber($s));
             $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::commonName($s));
             $originatingIp = $request->requirePostParameter('originating_ip', fn (string $s) => Validator::ipAddress($s));
             $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
             $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
-            $userId = $this->verifyConnection($profileId, $commonName);
+            $userId = $this->verifyConnection($profileId, $nodeNumber, $commonName);
             $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $this->dateTime);
 
             foreach ($this->connectionHookList as $connectionHook) {
@@ -147,7 +148,7 @@ class NodeApiModule implements ServiceModuleInterface
         return new Response('OK');
     }
 
-    private function verifyConnection(string $profileId, string $commonName): string
+    private function verifyConnection(string $profileId, int $nodeNumber, string $commonName): string
     {
         if (null === $oCertInfo = $this->storage->oCertInfo($commonName)) {
             throw new NodeApiException(sprintf('unable to find certificate with CN "%s" in the database', $commonName));
@@ -162,6 +163,12 @@ class NodeApiModule implements ServiceModuleInterface
         // the certificate
         if ($profileId !== $oCertInfo['profile_id']) {
             throw new NodeApiException(sprintf('certificate "%s" for profile "%s" can not be used with profile "%s"', $commonName, $oCertInfo['profile_id'], $profileId));
+        }
+
+        // make sure the nodeNumber the client connects to matches the one in
+        // the certificate
+        if ($nodeNumber !== $oCertInfo['node_number']) {
+            throw new NodeApiException(sprintf('certificate "%s" for node "%d" can not be used with node "%d"', $commonName, $oCertInfo['node_number'], $nodeNumber));
         }
 
         $profileConfig = $this->config->profileConfig($profileId);
