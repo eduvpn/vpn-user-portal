@@ -17,9 +17,7 @@ use Vpn\Portal\HttpClient\HttpClientRequest;
 
 /**
  * Class interfacing with vpn-daemon and preparing the response data to be
- * easier to use from PHP. Also implements a simple cache for the wPeerList and
- * oConnectionList to prevent the need to query the same node multiple times in
- * case of multi profile setups.
+ * easier to use from PHP.
  */
 class VpnDaemon
 {
@@ -62,6 +60,11 @@ class VpnDaemon
     }
 
     /**
+     * @param bool $showAll also include peers that were never seen, or did not
+     *   perform a handshake in the last 3 minutes
+     *
+     * @see https://git.sr.ht/~fkooman/vpn-daemon#peer-list
+     *
      * @return array<string,array{public_key:string,ip_net:array<string>,last_handshake_time:?string,bytes_in:int,bytes_out:int}>
      */
     public function wPeerList(string $nodeUrl, bool $showAll): array
