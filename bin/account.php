@@ -17,8 +17,8 @@ use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\HttpClient\CurlHttpClient;
-use Vpn\Portal\NullLogger;
 use Vpn\Portal\Storage;
+use Vpn\Portal\SysLogger;
 use Vpn\Portal\VpnDaemon;
 
 function showHelp(): void
@@ -47,6 +47,8 @@ function requireUserId(?string $userId): string
 
     return $userId;
 }
+
+$logger = new SysLogger('vpn-user-portal');
 
 try {
     $addUser = false;
@@ -175,8 +177,8 @@ try {
 
     if ($deleteUser) {
         $userId = requireUserId($userId);
-        $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), new NullLogger());
-        $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, new NullLogger());
+        $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
+        $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
         if (!$forceAction) {
             echo 'Are you sure you want to DELETE user "'.$userId.'"? [y/N]: ';
             if ('y' !== trim(fgets(\STDIN))) {
@@ -201,8 +203,8 @@ try {
 
     if ($disableUser) {
         $userId = requireUserId($userId);
-        $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), new NullLogger());
-        $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, new NullLogger());
+        $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
+        $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
         $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
         $storage->userDisable($userId);
 

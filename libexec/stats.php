@@ -16,15 +16,15 @@ use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\HttpClient\CurlHttpClient;
-use Vpn\Portal\NullLogger;
 use Vpn\Portal\Storage;
+use Vpn\Portal\SysLogger;
 use Vpn\Portal\VpnDaemon;
+
+$logger = new SysLogger('vpn-user-portal');
 
 try {
     $config = Config::fromFile($baseDir.'/config/config.php');
     $storage = new Storage($config->dbConfig($baseDir));
-
-    $logger = new NullLogger();
     $connectionManager = new ConnectionManager(
         $config,
         new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger),
