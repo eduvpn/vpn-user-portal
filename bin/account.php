@@ -14,6 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\HttpClient\CurlHttpClient;
@@ -175,10 +176,12 @@ try {
         exit(0);
     }
 
+    $connectionHooks = ConnectionHooks::init($config, $storage, $logger);
+
     if ($deleteUser) {
         $userId = requireUserId($userId);
         $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
-        $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
+        $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $connectionHooks, $logger);
         if (!$forceAction) {
             echo 'Are you sure you want to DELETE user "'.$userId.'"? [y/N]: ';
             if ('y' !== trim(fgets(\STDIN))) {
@@ -204,7 +207,7 @@ try {
     if ($disableUser) {
         $userId = requireUserId($userId);
         $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
-        $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
+        $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $connectionHooks, $logger);
         $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
         $storage->userDisable($userId);
 

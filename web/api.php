@@ -17,6 +17,7 @@ use fkooman\OAuth\Server\LocalAccessTokenVerifier;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\ApiService;
@@ -25,12 +26,10 @@ use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\VpnApiThreeModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
-use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OAuth\ClientDb;
 use Vpn\Portal\OAuth\NullAccessTokenVerifier;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
-use Vpn\Portal\ScriptConnectionHook;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\ServerList;
 use Vpn\Portal\Storage;
@@ -80,13 +79,7 @@ try {
         Signer::publicKeyFromSecretKey($oauthKey)
     );
 
-    $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, $logger);
-    if ($config->logConfig()->syslogConnectionEvents()) {
-        $connectionManager->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
-    }
-    if (null !== $connectScriptPath = $config->connectScriptPath()) {
-        $connectionManager->addConnectionHook(new ScriptConnectionHook($connectScriptPath));
-    }
+    $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, ConnectionHooks::init($config, $storage, $logger), $logger);
 
     $service->addModule(
         new VpnApiThreeModule(

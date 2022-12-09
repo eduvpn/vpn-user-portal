@@ -109,6 +109,35 @@ class Storage
         $stmt->execute();
     }
 
+    /**
+     * @return ?array{ip_four:string,ip_six:string}
+     */
+    public function wPeerInfo(string $publicKey): ?array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    ip_four,
+                    ip_six
+                FROM
+                    wg_peers
+                WHERE
+                    public_key = :public_key
+                SQL
+        );
+        $stmt->bindValue(':public_key', $publicKey, PDO::PARAM_STR);
+        $stmt->execute();
+
+        if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            return null;
+        }
+
+        return [
+            'ip_four' => (string) $resultRow['ip_four'],
+            'ip_six' => (string) $resultRow['ip_six'],
+        ];
+    }
+
     public function wPeerRemove(string $publicKey): void
     {
         $stmt = $this->db->prepare(
@@ -905,18 +934,12 @@ class Storage
         $stmt->execute();
     }
 
-    /**
-     * @return ?array{user_id:string,profile_id:string,ip_four:string,ip_six:string}
-     */
-    public function connectionLogInfo(string $connectionId): ?array
+    public function userIdFromConnectionLog(string $connectionId): ?string
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
-                        user_id,
-                        profile_id,
-                        ip_four,
-                        ip_six
+                        user_id
                     FROM
                         connection_log
                     WHERE
@@ -929,16 +952,11 @@ class Storage
         $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->execute();
 
-        if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if (false === $userId = $stmt->fetch(PDO::FETCH_COLUMN)) {
             return null;
         }
 
-        return [
-            'user_id' => (string) $resultRow['user_id'],
-            'profile_id' => (string) $resultRow['profile_id'],
-            'ip_four' => (string) $resultRow['ip_four'],
-            'ip_six' => (string) $resultRow['ip_six'],
-        ];
+        return (string) $userId;
     }
 
     /**

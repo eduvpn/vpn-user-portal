@@ -11,11 +11,8 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
-use DateTimeImmutable;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionHookInterface;
-use Vpn\Portal\Dt;
-use Vpn\Portal\Exception\ConnectionHookException;
 use Vpn\Portal\Http\Exception\NodeApiException;
 use Vpn\Portal\LoggerInterface;
 use Vpn\Portal\ServerConfig;
@@ -24,27 +21,19 @@ use Vpn\Portal\Validator;
 
 class NodeApiModule implements ServiceModuleInterface
 {
-    protected DateTimeImmutable $dateTime;
     private Config $config;
     private Storage $storage;
     private ServerConfig $serverConfig;
     private LoggerInterface $logger;
+    private ConnectionHookInterface $connectionHook;
 
-    /** @var array<\Vpn\Portal\ConnectionHookInterface> */
-    private array $connectionHookList = [];
-
-    public function __construct(Config $config, Storage $storage, ServerConfig $serverConfig, LoggerInterface $logger)
+    public function __construct(Config $config, Storage $storage, ServerConfig $serverConfig, ConnectionHookInterface $connectionHook, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->storage = $storage;
         $this->serverConfig = $serverConfig;
         $this->logger = $logger;
-        $this->dateTime = Dt::get();
-    }
-
-    public function addConnectionHook(ConnectionHookInterface $connectionHook): void
-    {
-        $this->connectionHookList[] = $connectionHook;
+        $this->connectionHook = $connectionHook;
     }
 
     public function init(ServiceInterface $service): void
@@ -94,15 +83,7 @@ class NodeApiModule implements ServiceModuleInterface
             $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
             $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
             $userId = $this->verifyConnection($profileId, $nodeNumber, $commonName);
-            $this->storage->clientConnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $this->dateTime);
-
-            foreach ($this->connectionHookList as $connectionHook) {
-                try {
-                    $connectionHook->connect($userId, $profileId, $commonName, $ipFour, $ipSix, $originatingIp);
-                } catch (ConnectionHookException $e) {
-                    throw new NodeApiException(\get_class($connectionHook).': '.$e->getMessage());
-                }
-            }
+            $this->connectionHook->connect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $originatingIp);
 
             return new Response('OK');
         } catch (NodeApiException $e) {
@@ -114,36 +95,23 @@ class NodeApiModule implements ServiceModuleInterface
 
     public function disconnect(Request $request): Response
     {
+        $profileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
         $commonName = $request->requirePostParameter('common_name', fn (string $s) => Validator::commonName($s));
+        $ipFour = $request->requirePostParameter('ip_four', fn (string $s) => Validator::ipFour($s));
+        $ipSix = $request->requirePostParameter('ip_six', fn (string $s) => Validator::ipSix($s));
         $bytesIn = (int) $request->requirePostParameter('bytes_in', fn (string $s) => Validator::nonNegativeInt($s));
         $bytesOut = (int) $request->requirePostParameter('bytes_out', fn (string $s) => Validator::nonNegativeInt($s));
-        $this->storage->clientDisconnect($commonName, $bytesIn, $bytesOut, $this->dateTime);
+        // because OpenVPN disconnects are only triggered after the client
+        // disconnects from the OpenVPN server process, we can't always use
+        // the "certificates" table to find the user_id from there as the
+        // certificate might have been deleted already in ConnectionManager
+        if (null === $userId = $this->storage->userIdFromConnectionLog($commonName)) {
+            $this->logger->warning(sprintf('unable to find user belonging to CN "%s"', $commonName));
 
-        // run "disconnect" hooks if we have them...
-        if (0 !== count($this->connectionHookList)) {
-            // get information about the connection from the 'connection_log'
-            // table
-            if (null === $connectionLogInfo = $this->storage->connectionLogInfo($commonName)) {
-                $this->logger->warning(sprintf('we were unable to find an open connection for "%s" in the "connection_log" table', $commonName));
-
-                return new Response('OK');
-            }
-            foreach ($this->connectionHookList as $connectionHook) {
-                try {
-                    $connectionHook->disconnect(
-                        $connectionLogInfo['user_id'],
-                        $connectionLogInfo['profile_id'],
-                        $commonName,
-                        $connectionLogInfo['ip_four'],
-                        $connectionLogInfo['ip_six']
-                    );
-                } catch (ConnectionHookException $e) {
-                    $this->logger->warning(sprintf('%s: %s', \get_class($connectionHook), $e->getMessage()));
-                    // we don't react to this any further, as client
-                    // wants to leave, we can't stop them anyway
-                }
-            }
+            return new Response('OK');
         }
+
+        $this->connectionHook->disconnect($userId, $profileId, $commonName, $ipFour, $ipSix, $bytesIn, $bytesOut);
 
         return new Response('OK');
     }

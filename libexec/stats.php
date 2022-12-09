@@ -13,6 +13,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\HttpClient\CurlHttpClient;
@@ -29,6 +30,7 @@ try {
         $config,
         new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger),
         $storage,
+        ConnectionHooks::init($config, $storage, $logger),
         $logger
     );
 

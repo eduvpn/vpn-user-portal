@@ -15,6 +15,7 @@ use DateInterval;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\Http\NodeApiModule;
 use Vpn\Portal\Http\NodeApiService;
 use Vpn\Portal\Http\Request;
@@ -85,6 +86,7 @@ final class NodeApiModuleTest extends TestCase
                 new OpenVpnServerConfig(new TestCa(), new TlsCrypt($baseDir.'/data/keys')),
                 new WireGuardServerConfig($baseDir.'/data/keys', $this->config->wireGuardConfig()->listenPort()),
             ),
+            new ConnectionHooks(new NullLogger()),
             new NullLogger()
         );
         $this->service = new NodeApiService(

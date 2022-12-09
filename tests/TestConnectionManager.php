@@ -13,6 +13,7 @@ namespace Vpn\Portal\Tests;
 
 use DateTimeImmutable;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\NullLogger;
 use Vpn\Portal\Storage;
@@ -26,6 +27,7 @@ class TestConnectionManager extends ConnectionManager
             $config,
             $vpnDaemon,
             $storage,
+            new ConnectionHooks(new NullLogger()),
             new NullLogger()
         );
         $this->dateTime = new DateTimeImmutable('2022-01-01T09:00:00+00:00');

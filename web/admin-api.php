@@ -14,6 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Expiry;
@@ -24,10 +25,8 @@ use Vpn\Portal\Http\Auth\AdminApiAuthModule;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\HttpClient\CurlHttpClient;
-use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
-use Vpn\Portal\ScriptConnectionHook;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -66,13 +65,7 @@ try {
         Signer::publicKeyFromSecretKey($oauthKey)
     );
 
-    $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, $logger);
-    if ($config->logConfig()->syslogConnectionEvents()) {
-        $connectionManager->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
-    }
-    if (null !== $connectScriptPath = $config->connectScriptPath()) {
-        $connectionManager->addConnectionHook(new ScriptConnectionHook($connectScriptPath));
-    }
+    $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, ConnectionHooks::init($config, $storage, $logger), $logger);
 
     $sessionExpiry = Expiry::calculate(
         $dateTime,

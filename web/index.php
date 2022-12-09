@@ -17,6 +17,7 @@ use fkooman\OAuth\Server\Signer;
 use fkooman\SeCookie\Cookie;
 use fkooman\SeCookie\CookieOptions;
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Crypto\HmacKey;
 use Vpn\Portal\Dt;
@@ -49,12 +50,10 @@ use Vpn\Portal\Http\StaticPermissionHook;
 use Vpn\Portal\Http\UpdateUserInfoHook;
 use Vpn\Portal\Http\VpnPortalModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
-use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OAuth\ClientDb;
 use Vpn\Portal\OAuth\VpnOAuthServer;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
-use Vpn\Portal\ScriptConnectionHook;
 use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -219,13 +218,7 @@ try {
     );
 
     $vpnDaemon = new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger);
-    $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, $logger);
-    if ($config->logConfig()->syslogConnectionEvents()) {
-        $connectionManager->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
-    }
-    if (null !== $connectScriptPath = $config->connectScriptPath()) {
-        $connectionManager->addConnectionHook(new ScriptConnectionHook($connectScriptPath));
-    }
+    $connectionManager = new ConnectionManager($config, $vpnDaemon, $storage, ConnectionHooks::init($config, $storage, $logger), $logger);
 
     // portal module
     $vpnPortalModule = new VpnPortalModule(

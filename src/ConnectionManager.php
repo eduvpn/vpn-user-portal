@@ -15,7 +15,6 @@ use DateTimeImmutable;
 use RangeException;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Cfg\ProfileConfig;
-use Vpn\Portal\Exception\ConnectionHookException;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use Vpn\Portal\WireGuard\ClientConfig as WireGuardClientConfig;
@@ -27,25 +26,19 @@ class ConnectionManager
 {
     protected DateTimeImmutable $dateTime;
     private Config $config;
-    private Storage $storage;
     private VpnDaemon $vpnDaemon;
+    private Storage $storage;
+    private ConnectionHookInterface $connectionHook;
     private LoggerInterface $logger;
 
-    /** @var array<ConnectionHookInterface> */
-    private array $connectionHookList = [];
-
-    public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage, LoggerInterface $logger)
+    public function __construct(Config $config, VpnDaemon $vpnDaemon, Storage $storage, ConnectionHookInterface $connectionHook, LoggerInterface $logger)
     {
         $this->config = $config;
-        $this->storage = $storage;
         $this->vpnDaemon = $vpnDaemon;
+        $this->storage = $storage;
+        $this->connectionHook = $connectionHook;
         $this->logger = $logger;
         $this->dateTime = Dt::get();
-    }
-
-    public function addConnectionHook(ConnectionHookInterface $connectionHook): void
-    {
-        $this->connectionHookList[] = $connectionHook;
     }
 
     /**
@@ -231,25 +224,21 @@ class ConnectionManager
                 break;
 
             case 'wireguard':
-                $this->storage->wPeerRemove($connectionId);
-                if (null !== $peerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId)) {
-                    // XXX what if peer was not connected/registered anywhere?
-                    // peer was connected to this node, use the information
-                    // we got back to call "clientDisconnect"
-                    $this->storage->clientDisconnect($connectionId, $peerInfo['bytes_in'], $peerInfo['bytes_out'], $this->dateTime);
+                if (null === $dbPeerInfo = $this->storage->wPeerInfo($connectionId)) {
+                    $this->logger->warning(sprintf('unable to find public key "%s" in wg_peers', $connectionId));
 
-                    foreach ($this->connectionHookList as $connectionHook) {
-                        [$ipFour, $ipSix] = self::extractAddresses($peerInfo['ip_net']);
-
-                        try {
-                            $connectionHook->disconnect($userId, $profileId, $connectionId, $ipFour, $ipSix);
-                        } catch (ConnectionHookException $e) {
-                            $this->logger->warning(sprintf('%s: %s', \get_class($connectionHook), $e->getMessage()));
-                            // we don't react to this any further, as client
-                            // wants to leave, we can't stop them anyway
-                        }
-                    }
+                    return;
                 }
+                $this->storage->wPeerRemove($connectionId);
+
+                $bytesIn = 0;
+                $bytesOut = 0;
+                if (null !== $daemonPeerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId)) {
+                    $bytesIn = $daemonPeerInfo['bytes_in'];
+                    $bytesOut = $daemonPeerInfo['bytes_out'];
+                }
+
+                $this->connectionHook->disconnect($userId, $profileId, $connectionId, $dbPeerInfo['ip_four'], $dbPeerInfo['ip_six'], $bytesIn, $bytesOut);
         }
     }
 
@@ -346,33 +335,6 @@ class ConnectionManager
     }
 
     /**
-     * @param array<string> $ipNet
-     *
-     * @return array{0:string,1:string}
-     */
-    private static function extractAddresses(array $ipNet): array
-    {
-        // the VPN daemon API returns any number of IP addresses, which is not
-        // what we want here. We assume we'll have both an IPv4 and IPv6
-        // address in the result set and return them "in order", just like it
-        // is done for OpenVPN
-        $ipFour = '?';
-        $ipSix = '?';
-        foreach ($ipNet as $ipPrefix) {
-            $clientIp = Ip::fromIpPrefix($ipPrefix);
-            if (Ip::IP_4 === $clientIp->family()) {
-                $ipFour = $clientIp->address();
-
-                continue;
-            }
-
-            $ipSix = $clientIp->address();
-        }
-
-        return [$ipFour, $ipSix];
-    }
-
-    /**
      * Try to find a usable node to connect to, loop over all of them in a
      * random order until we find one that responds. This algorithm can use
      * some tweaking, e.g. consider the load of a node instead of just checking
@@ -419,15 +381,7 @@ class ConnectionManager
         // the DB enforces this, but maybe a better error could be given?
         $this->storage->wPeerAdd($userId, $nodeNumber, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
         $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
-        $this->storage->clientConnect($userId, $profileConfig->profileId(), 'wireguard', $publicKey, $ipFour, $ipSix, $this->dateTime);
-
-        foreach ($this->connectionHookList as $connectionHook) {
-            try {
-                $connectionHook->connect($userId, $profileConfig->profileId(), $publicKey, $ipFour, $ipSix, null);
-            } catch (ConnectionHookException $e) {
-                throw new ConnectionManagerException(\get_class($connectionHook).': '.$e->getMessage());
-            }
-        }
+        $this->connectionHook->connect($userId, $profileConfig->profileId(), 'wireguard', $publicKey, $ipFour, $ipSix, null);
 
         return new WireGuardClientConfig(
             $serverInfo->portalUrl(),

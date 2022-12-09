@@ -16,10 +16,10 @@ interface ConnectionHookInterface
     /**
      * @throws \Vpn\Portal\Exception\ConnectionHookException
      */
-    public function connect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, ?string $originatingIp): void;
+    public function connect(string $userId, string $profileId, string $vpnProto, string $connectionId, string $ipFour, string $ipSix, ?string $originatingIp): void;
 
     /**
      * @throws \Vpn\Portal\Exception\ConnectionHookException
      */
-    public function disconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix): void;
+    public function disconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, int $bytesIn, int $bytesOut): void;
 }

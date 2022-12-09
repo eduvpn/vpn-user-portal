@@ -15,6 +15,9 @@ use RuntimeException;
 use SplFileInfo;
 use Vpn\Portal\Exception\ConnectionHookException;
 
+/**
+ * Run a script on connect/disconnect events.
+ */
 class ScriptConnectionHook implements ConnectionHookInterface
 {
     private string $scriptPath;
@@ -27,12 +30,13 @@ class ScriptConnectionHook implements ConnectionHookInterface
     /**
      * @throws \Vpn\Portal\Exception\ConnectionHookException
      */
-    public function connect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, ?string $originatingIp): void
+    public function connect(string $userId, string $profileId, string $vpnProto, string $connectionId, string $ipFour, string $ipSix, ?string $originatingIp): void
     {
         $envVarList = [
             'EVENT' => 'C',
             'USER_ID' => $userId,
             'PROFILE_ID' => $profileId,
+            'PROTO' => $vpnProto,
             'CONNECTION_ID' => $connectionId,
             'IP_FOUR' => $ipFour,
             'IP_SIX' => $ipSix,
@@ -53,7 +57,7 @@ class ScriptConnectionHook implements ConnectionHookInterface
     /**
      * @throws \Vpn\Portal\Exception\ConnectionHookException
      */
-    public function disconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix): void
+    public function disconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, int $bytesIn, int $bytesOut): void
     {
         $envVarList = [
             'EVENT' => 'D',
@@ -62,6 +66,8 @@ class ScriptConnectionHook implements ConnectionHookInterface
             'CONNECTION_ID' => $connectionId,
             'IP_FOUR' => $ipFour,
             'IP_SIX' => $ipSix,
+            'BYTES_IN' => (string) $bytesIn,
+            'BYTES_OUT' => (string) $bytesOut,
         ];
 
         $this->exec(

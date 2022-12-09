@@ -14,6 +14,7 @@ $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Cfg\ProfileConfig;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\Json;
@@ -118,6 +119,7 @@ try {
         $config,
         new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger),
         $storage,
+        ConnectionHooks::init($config, $storage, $logger),
         $logger
     );
 

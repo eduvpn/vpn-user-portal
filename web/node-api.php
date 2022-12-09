@@ -13,16 +13,15 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Cfg\Config;
+use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\Http\Auth\NodeAuthModule;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\NodeApiModule;
 use Vpn\Portal\Http\NodeApiService;
 use Vpn\Portal\Http\Request;
-use Vpn\Portal\LogConnectionHook;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\ServerConfig as OpenVpnServerConfig;
 use Vpn\Portal\OpenVpn\TlsCrypt;
-use Vpn\Portal\ScriptConnectionHook;
 use Vpn\Portal\ServerConfig;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -52,14 +51,9 @@ try {
             new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data/keys')),
             new WireGuardServerConfig($baseDir.'/data/keys', $config->wireGuardConfig()->listenPort()),
         ),
+        ConnectionHooks::init($config, $storage, $logger),
         $logger
     );
-    if ($config->logConfig()->syslogConnectionEvents()) {
-        $nodeApiModule->addConnectionHook(new LogConnectionHook($logger, $config->logConfig()));
-    }
-    if (null !== $connectScriptPath = $config->connectScriptPath()) {
-        $nodeApiModule->addConnectionHook(new ScriptConnectionHook($connectScriptPath));
-    }
 
     $service->addModule($nodeApiModule);
     $request = Request::createFromGlobals();
