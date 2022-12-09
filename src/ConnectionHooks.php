@@ -44,13 +44,14 @@ class ConnectionHooks implements ConnectionHookInterface
         }
     }
 
-    public function disconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, int $bytesIn, int $bytesOut): void
+    public function disconnect(string $userId, string $profileId, string $vpnProto, string $connectionId, string $ipFour, string $ipSix, int $bytesIn, int $bytesOut): void
     {
         foreach ($this->connectionHookList as $connectionHook) {
             try {
                 $connectionHook->disconnect(
                     $userId,
                     $profileId,
+                    $vpnProto,
                     $connectionId,
                     $ipFour,
                     $ipSix,

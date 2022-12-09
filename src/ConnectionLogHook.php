@@ -33,7 +33,7 @@ class ConnectionLogHook implements ConnectionHookInterface
         $this->storage->clientConnect($userId, $profileId, $vpnProto, $connectionId, $ipFour, $ipSix, $this->dateTime);
     }
 
-    public function disconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, int $bytesIn, int $bytesOut): void
+    public function disconnect(string $userId, string $profileId, string $vpnProto, string $connectionId, string $ipFour, string $ipSix, int $bytesIn, int $bytesOut): void
     {
         $this->storage->clientDisconnect($connectionId, $bytesIn, $bytesOut, $this->dateTime);
     }

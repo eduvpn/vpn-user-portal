@@ -57,12 +57,13 @@ class ScriptConnectionHook implements ConnectionHookInterface
     /**
      * @throws \Vpn\Portal\Exception\ConnectionHookException
      */
-    public function disconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix, int $bytesIn, int $bytesOut): void
+    public function disconnect(string $userId, string $profileId, string $vpnProto, string $connectionId, string $ipFour, string $ipSix, int $bytesIn, int $bytesOut): void
     {
         $envVarList = [
             'EVENT' => 'D',
             'USER_ID' => $userId,
             'PROFILE_ID' => $profileId,
+            'PROTO' => $vpnProto,
             'CONNECTION_ID' => $connectionId,
             'IP_FOUR' => $ipFour,
             'IP_SIX' => $ipSix,

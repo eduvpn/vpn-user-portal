@@ -238,7 +238,7 @@ class ConnectionManager
                     $bytesOut = $daemonPeerInfo['bytes_out'];
                 }
 
-                $this->connectionHook->disconnect($userId, $profileId, $connectionId, $dbPeerInfo['ip_four'], $dbPeerInfo['ip_six'], $bytesIn, $bytesOut);
+                $this->connectionHook->disconnect($userId, $profileId, 'wireguard', $connectionId, $dbPeerInfo['ip_four'], $dbPeerInfo['ip_six'], $bytesIn, $bytesOut);
         }
     }
 

@@ -111,7 +111,7 @@ class NodeApiModule implements ServiceModuleInterface
             return new Response('OK');
         }
 
-        $this->connectionHook->disconnect($userId, $profileId, $commonName, $ipFour, $ipSix, $bytesIn, $bytesOut);
+        $this->connectionHook->disconnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $bytesIn, $bytesOut);
 
         return new Response('OK');
     }
