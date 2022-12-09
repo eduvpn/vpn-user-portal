@@ -13,6 +13,9 @@
 - add `LoggerInterface::debug`
 - remove silly `Tpl::profileIdToDisplayName` cache
 - refactor connect/disconnect event hooks
+- make `VPN_PROTO` available on connect/disconnect in `ScriptConnectionHook`
+- make `VPN_BYTES_IN` and `VPN_BYTES_OUT` available on disconnect  in 
+  `ScriptConnectionHook`
 
 ## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 
