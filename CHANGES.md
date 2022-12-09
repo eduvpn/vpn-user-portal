@@ -12,6 +12,7 @@
 - show `nodeNumber` on Info page for the node(s)
 - add `LoggerInterface::debug`
 - remove silly `Tpl::profileIdToDisplayName` cache
+- refactor connect/disconnect event hooks
 
 ## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 
