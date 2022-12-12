@@ -106,7 +106,7 @@ class NodeApiModule implements ServiceModuleInterface
         // the "certificates" table to find the user_id from there as the
         // certificate might have been deleted already in ConnectionManager
         if (null === $userId = $this->storage->userIdFromConnectionLog($commonName)) {
-            $this->logger->warning(sprintf('unable to find open connection for CN "%s"', $commonName));
+            $this->logger->info(sprintf('no open connection for CN "%s"', $commonName));
 
             return new Response('OK');
         }
