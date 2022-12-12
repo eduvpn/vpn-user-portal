@@ -276,32 +276,6 @@ class AdminPortalModule implements ServiceModuleInterface
             }
         );
 
-        $service->get(
-            '/csv_stats/aggregate',
-            function (Request $request, UserInfo $userInfo): Response {
-                $this->requireAdmin($userInfo);
-                $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
-
-                $csvString = 'Date,#Unique Users,Max #Connections'.PHP_EOL;
-                foreach ($this->storage->statsGetAggregate($profileId) as $statsEntry) {
-                    $csvString .= sprintf(
-                        '%s,%d,%d',
-                        $statsEntry['date'],
-                        $statsEntry['unique_user_count'],
-                        $statsEntry['max_connection_count']
-                    ).PHP_EOL;
-                }
-
-                return new Response(
-                    $csvString,
-                    [
-                        'Content-Type' => 'text/csv',
-                        'Content-Disposition' => sprintf('attachment; filename="%s_aggregate_stats.csv"', $profileId),
-                    ]
-                );
-            }
-        );
-
         $service->post(
             '/log',
             function (Request $request, UserInfo $userInfo): Response {

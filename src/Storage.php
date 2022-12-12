@@ -1302,67 +1302,6 @@ class Storage
     }
 
     /**
-     * @return array<array{date:string,unique_user_count:int,max_connection_count:int}>
-     */
-    public function statsGetAggregate(string $profileId): array
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                    SELECT
-                        date,
-                        unique_user_count,
-                        max_connection_count
-                    FROM
-                        aggregate_stats
-                    WHERE
-                        profile_id = :profile_id
-                SQL
-        );
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->execute();
-        $statsData = [];
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $statsData[] = [
-                'date' => (string) $resultRow['date'],
-                'unique_user_count' => (int) $resultRow['unique_user_count'],
-                'max_connection_count' => (int) $resultRow['max_connection_count'],
-            ];
-        }
-
-        return $statsData;
-    }
-
-    public function statsAggregate(DateTimeImmutable $dateTime): void
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                INSERT INTO
-                    aggregate_stats
-                SELECT
-                    DATE(l.date_time) AS date,
-                    l.profile_id AS profile_id,
-                    MAX(l.connection_count) AS max_connection_count,
-                    COUNT(DISTINCT c.user_id) AS unique_user_count
-                FROM
-                    live_stats l
-                LEFT JOIN
-                    connection_log c
-                ON
-                    DATE(l.date_time) = DATE(c.connected_at)
-                AND
-                    l.profile_id = c.profile_id
-                WHERE
-                    l.date_time < :date_time
-                GROUP BY
-                    date,
-                    l.profile_id
-                SQL
-        );
-        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    /**
      * @return array<array{client_id:string,client_count:int}>
      */
     public function appUsage(): array

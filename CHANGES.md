@@ -16,6 +16,8 @@
 - make `VPN_PROTO` available on connect/disconnect in `ScriptConnectionHook`
 - make `VPN_BYTES_IN` and `VPN_BYTES_OUT` available on disconnect  in 
   `ScriptConnectionHook`
+- remove "Aggregate Stats" for now until we are able to fix it 
+  ([#112](https://todo.sr.ht/~eduvpn/server/112))
 
 ## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 

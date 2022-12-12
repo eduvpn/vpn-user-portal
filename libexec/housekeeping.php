@@ -24,9 +24,6 @@ try {
     $oneWeekAgo = Dt::get('today -1 week', new DateTimeZone('UTC'));
     $startOfTheDay = Dt::get('today', new DateTimeZone('UTC'));
 
-    // aggregate old entries from the connection statistics
-    $storage->statsAggregate($oneWeekAgo);
-
     // remove old entries from the connection statistics
     $storage->cleanLiveStats($oneWeekAgo);
 
