@@ -94,9 +94,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         // we disconnect the client that connected the longest
                         // time ago, which is first one from the set in
                         // activeApiConfigurations
-                        $this->connectionManager->disconnect(
-                            $userInfo->userId(),
-                            $activeApiConfigurations[0]['profile_id'],
+                        $this->connectionManager->disconnectByConnectionId(
                             $activeApiConfigurations[0]['connection_id']
                         );
                     }

@@ -117,44 +117,77 @@ class ConnectionManager
      */
     public function disconnectByAuthKey(string $authKey): void
     {
-        // OpenVPN
-        foreach ($this->storage->oCertListByAuthKey($authKey) as $oCertInfo) {
-            $this->disconnect(
+        foreach ($this->storage->oCertInfoListByAuthKey($authKey) as $oCertInfo) {
+            $this->oDisconnect(
                 $oCertInfo['user_id'],
                 $oCertInfo['profile_id'],
+                $oCertInfo['node_number'],
                 $oCertInfo['common_name']
             );
         }
 
-        // WireGuard
-        foreach ($this->storage->wPeerListByAuthKey($authKey) as $wPeerInfo) {
-            $this->disconnect(
+        foreach ($this->storage->wPeerInfoListByAuthKey($authKey) as $wPeerInfo) {
+            $this->wDisconnect(
                 $wPeerInfo['user_id'],
                 $wPeerInfo['profile_id'],
-                $wPeerInfo['public_key']
+                $wPeerInfo['node_number'],
+                $wPeerInfo['public_key'],
+                $wPeerInfo['ip_four'],
+                $wPeerInfo['ip_six']
             );
         }
     }
 
     public function disconnectByUserId(string $userId): void
     {
-        // OpenVPN
-        foreach ($this->storage->oCertListByUserId($userId) as $oCertInfo) {
-            $this->disconnect(
+        foreach ($this->storage->oCertInfoListByUserId($userId) as $oCertInfo) {
+            $this->oDisconnect(
                 $userId,
                 $oCertInfo['profile_id'],
+                $oCertInfo['node_number'],
                 $oCertInfo['common_name']
             );
         }
 
-        // WireGuard
-        foreach ($this->storage->wPeerListByUserId($userId) as $wPeerInfo) {
-            $this->disconnect(
+        foreach ($this->storage->wPeerInfoListByUserId($userId) as $wPeerInfo) {
+            $this->wDisconnect(
                 $userId,
                 $wPeerInfo['profile_id'],
-                $wPeerInfo['public_key']
+                $wPeerInfo['node_number'],
+                $wPeerInfo['public_key'],
+                $wPeerInfo['ip_four'],
+                $wPeerInfo['ip_six']
             );
         }
+    }
+
+    public function disconnectByConnectionId(string $connectionId): void
+    {
+        if (null !== $wPeerInfo = $this->storage->wPeerInfo($connectionId)) {
+            $this->wDisconnect(
+                $wPeerInfo['user_id'],
+                $wPeerInfo['profile_id'],
+                $wPeerInfo['node_number'],
+                $connectionId,
+                $wPeerInfo['ip_four'],
+                $wPeerInfo['ip_six']
+            );
+
+            return;
+        }
+
+        if (null !== $oCertInfo = $this->storage->oCertInfo($connectionId)) {
+            $this->oDisconnect(
+                $oCertInfo['user_id'],
+                $oCertInfo['profile_id'],
+                $oCertInfo['node_number'],
+                $connectionId
+            );
+
+            return;
+        }
+
+        $this->logger->warning(sprintf('unable to find public key or common name "%s"', $connectionId));
     }
 
     /**
@@ -191,54 +224,6 @@ class ConnectionManager
 
             default:
                 throw new RangeException('invalid protocol');
-        }
-    }
-
-    public function disconnect(string $userId, string $profileId, string $connectionId): void
-    {
-        [$vpnProto, $nodeNumber] = $this->determineVpnProtoNodeNumber($userId, $profileId, $connectionId);
-        if (null === $vpnProto || null === $nodeNumber) {
-            // can't find the connection, nothing we can do
-            return;
-        }
-
-        if (!$this->config->hasProfile($profileId)) {
-            // profile no longer exists, simply delete the configuration
-            if ('openvpn' === $vpnProto) {
-                $this->storage->oCertDelete($connectionId);
-            }
-            if ('wireguard' === $vpnProto) {
-                $this->storage->wPeerRemove($connectionId);
-            }
-
-            return;
-        }
-
-        $profileConfig = $this->config->profileConfig($profileId);
-
-        switch ($vpnProto) {
-            case 'openvpn':
-                $this->storage->oCertDelete($connectionId);
-                $this->vpnDaemon->oDisconnectClient($profileConfig->nodeUrl($nodeNumber), $connectionId);
-
-                break;
-
-            case 'wireguard':
-                if (null === $dbPeerInfo = $this->storage->wPeerInfo($connectionId)) {
-                    $this->logger->warning(sprintf('unable to find public key "%s" in wg_peers', $connectionId));
-
-                    return;
-                }
-                $this->storage->wPeerRemove($connectionId);
-
-                $bytesIn = 0;
-                $bytesOut = 0;
-                if (null !== $daemonPeerInfo = $this->vpnDaemon->wPeerRemove($profileConfig->nodeUrl($nodeNumber), $connectionId)) {
-                    $bytesIn = $daemonPeerInfo['bytes_in'];
-                    $bytesOut = $daemonPeerInfo['bytes_out'];
-                }
-
-                $this->connectionHook->disconnect($userId, $profileId, 'wireguard', $connectionId, $dbPeerInfo['ip_four'], $dbPeerInfo['ip_six'], $bytesIn, $bytesOut);
         }
     }
 
@@ -332,6 +317,47 @@ class ConnectionManager
     protected function getRandomBytes(): string
     {
         return random_bytes(32);
+    }
+
+    private function wDisconnect(string $userId, string $profileId, int $nodeNumber, string $publicKey, string $ipFour, string $ipSix): void
+    {
+        if (null === $nodeUrl = $this->nodeUrl($nodeNumber)) {
+            $this->logger->warning(sprintf('node "%d" does not exist (anymore)', $nodeNumber));
+
+            return;
+        }
+
+        $this->storage->wPeerRemove($publicKey);
+        $bytesIn = 0;
+        $bytesOut = 0;
+        if (null !== $daemonPeerInfo = $this->vpnDaemon->wPeerRemove($nodeUrl, $publicKey)) {
+            $bytesIn = $daemonPeerInfo['bytes_in'];
+            $bytesOut = $daemonPeerInfo['bytes_out'];
+        }
+
+        $this->connectionHook->disconnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, $bytesIn, $bytesOut);
+    }
+
+    private function oDisconnect(string $userId, string $profileId, int $nodeNumber, string $commonName): void
+    {
+        if (null === $nodeUrl = $this->nodeUrl($nodeNumber)) {
+            $this->logger->warning(sprintf('node "%d" does not exist (anymore)', $nodeNumber));
+
+            return;
+        }
+
+        $this->storage->oCertDelete($commonName);
+        $this->vpnDaemon->oDisconnectClient($nodeUrl, $commonName);
+    }
+
+    private function nodeUrl(int $nodeNumber): ?string
+    {
+        $nodeNumberUrlList = $this->config->nodeNumberUrlList();
+        if (array_key_exists($nodeNumber, $nodeNumberUrlList)) {
+            return $nodeNumberUrlList[$nodeNumber];
+        }
+
+        return null;
     }
 
     /**
@@ -443,20 +469,5 @@ class ConnectionManager
         }
 
         return null;
-    }
-
-    /**
-     * @return array{0:?string,1:?int}
-     */
-    private function determineVpnProtoNodeNumber(string $userId, string $profileId, string $connectionId): array
-    {
-        if (null !== $nodeNumber = $this->storage->wNodeNumber($userId, $profileId, $connectionId)) {
-            return ['wireguard', $nodeNumber];
-        }
-        if (null !== $nodeNumber = $this->storage->oNodeNumber($userId, $profileId, $connectionId)) {
-            return ['openvpn', $nodeNumber];
-        }
-
-        return [null, null];
     }
 }

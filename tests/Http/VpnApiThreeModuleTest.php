@@ -208,10 +208,11 @@ final class VpnApiThreeModuleTest extends TestCase
                 [
                     'user_id' => 'user_id',
                     'profile_id' => 'default',
+                    'node_number' => 0,
                     'common_name' => 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
                 ],
             ],
-            $this->storage->oCertListByAuthKey('auth_key')
+            $this->storage->oCertInfoListByAuthKey('auth_key')
         );
     }
 
@@ -223,10 +224,11 @@ final class VpnApiThreeModuleTest extends TestCase
                 [
                     'user_id' => 'user_id',
                     'profile_id' => 'default',
+                    'node_number' => 0,
                     'common_name' => 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
                 ],
             ],
-            $this->storage->oCertListByAuthKey('auth_key')
+            $this->storage->oCertInfoListByAuthKey('auth_key')
         );
 
         $request = new Request(
@@ -244,7 +246,7 @@ final class VpnApiThreeModuleTest extends TestCase
             $this->service->run($request)->statusCode()
         );
 
-        static::assertEmpty($this->storage->oCertListByAuthKey('auth_key'));
+        static::assertEmpty($this->storage->oCertInfoListByAuthKey('auth_key'));
     }
 
     public function testConnectWireGuard(): void

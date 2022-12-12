@@ -110,13 +110,16 @@ class Storage
     }
 
     /**
-     * @return ?array{ip_four:string,ip_six:string}
+     * @return ?array{user_id:string,profile_id:string,node_number:int,ip_four:string,ip_six:string}
      */
     public function wPeerInfo(string $publicKey): ?array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                 SELECT
+                    user_id,
+                    profile_id,
+                    node_number,
                     ip_four,
                     ip_six
                 FROM
@@ -133,6 +136,9 @@ class Storage
         }
 
         return [
+            'user_id' => (string) $resultRow['user_id'],
+            'profile_id' => (string) $resultRow['profile_id'],
+            'node_number' => (int) $resultRow['node_number'],
             'ip_four' => (string) $resultRow['ip_four'],
             'ip_six' => (string) $resultRow['ip_six'],
         ];
@@ -178,16 +184,19 @@ class Storage
     }
 
     /**
-     * @return array<array{profile_id:string,display_name:string,public_key:string,expires_at:\DateTimeImmutable,auth_key:?string}>
+     * @return array<array{profile_id:string,node_number:int,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
-    public function wPeerListByUserId(string $userId): array
+    public function wPeerInfoListByUserId(string $userId): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                 SELECT
                     profile_id,
+                    node_number,
                     display_name,
                     public_key,
+                    ip_four,
+                    ip_six,
                     expires_at,
                     auth_key
                 FROM
@@ -202,31 +211,37 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        $peerList = [];
+        $wPeerInfoList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $peerList[] = [
+            $wPeerInfoList[] = [
                 'profile_id' => (string) $resultRow['profile_id'],
+                'node_number' => (int) $resultRow['node_number'],
                 'display_name' => (string) $resultRow['display_name'],
                 'public_key' => (string) $resultRow['public_key'],
+                'ip_four' => (string) $resultRow['ip_four'],
+                'ip_six' => (string) $resultRow['ip_six'],
                 'expires_at' => Dt::get($resultRow['expires_at']),
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
             ];
         }
 
-        return $peerList;
+        return $wPeerInfoList;
     }
 
     /**
-     * @return array<array{user_id:string,profile_id:string,public_key:string}>
+     * @return array<array{user_id:string,profile_id:string,node_number:int,public_key:string,ip_four:string,ip_six:string}>
      */
-    public function wPeerListByAuthKey(string $authKey): array
+    public function wPeerInfoListByAuthKey(string $authKey): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                 SELECT
                     user_id,
                     profile_id,
-                    public_key
+                    node_number,
+                    public_key,
+                    ip_four,
+                    ip_six
                 FROM
                     wg_peers
                 WHERE
@@ -235,16 +250,20 @@ class Storage
         );
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
-        $peerList = [];
+
+        $wPeerInfoList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $peerList[] = [
+            $wPeerInfoList[] = [
                 'user_id' => (string) $resultRow['user_id'],
                 'profile_id' => (string) $resultRow['profile_id'],
+                'node_number' => (int) $resultRow['node_number'],
                 'public_key' => (string) $resultRow['public_key'],
+                'ip_four' => (string) $resultRow['ip_four'],
+                'ip_six' => (string) $resultRow['ip_six'],
             ];
         }
 
-        return $peerList;
+        return $wPeerInfoList;
     }
 
     /**
@@ -579,15 +598,16 @@ class Storage
     }
 
     /**
-     * @return array<array{user_id:string,profile_id:string,common_name:string}>
+     * @return array<array{user_id:string,profile_id:string,node_number:int,common_name:string}>
      */
-    public function oCertListByAuthKey(string $authKey): array
+    public function oCertInfoListByAuthKey(string $authKey): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
                         user_id,
                         profile_id,
+                        node_number,
                         common_name
                     FROM
                         certificates
@@ -598,16 +618,17 @@ class Storage
         $stmt->bindValue(':auth_key', $authKey, PDO::PARAM_STR);
         $stmt->execute();
 
-        $certList = [];
+        $oCertInfoList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $certList[] = [
+            $oCertInfoList[] = [
                 'user_id' => (string) $resultRow['user_id'],
                 'profile_id' => (string) $resultRow['profile_id'],
+                'node_number' => (int) $resultRow['node_number'],
                 'common_name' => (string) $resultRow['common_name'],
             ];
         }
 
-        return $certList;
+        return $oCertInfoList;
     }
 
     /**
@@ -655,14 +676,15 @@ class Storage
     }
 
     /**
-     * @return array<array{profile_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}>
+     * @return array<array{profile_id:string,node_number:int,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}>
      */
-    public function oCertListByUserId(string $userId): array
+    public function oCertInfoListByUserId(string $userId): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
                         profile_id,
+                        node_number,
                         common_name,
                         display_name,
                         expires_at,
@@ -678,10 +700,11 @@ class Storage
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
 
-        $certList = [];
+        $oCertInfoList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $certList[] = [
+            $oCertInfoList[] = [
                 'profile_id' => (string) $resultRow['profile_id'],
+                'node_number' => (int) $resultRow['node_number'],
                 'common_name' => (string) $resultRow['common_name'],
                 'display_name' => (string) $resultRow['display_name'],
                 'expires_at' => Dt::get($resultRow['expires_at']),
@@ -689,7 +712,7 @@ class Storage
             ];
         }
 
-        return $certList;
+        return $oCertInfoList;
     }
 
     /**
@@ -849,64 +872,6 @@ class Storage
         $stmt->bindValue(':ip_six', $ipSix, PDO::PARAM_STR);
         $stmt->bindValue(':connected_at', $connectedAt->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
         $stmt->execute();
-    }
-
-    public function wNodeNumber(string $userId, string $profileId, string $connectionId): ?int
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                SELECT
-                    node_number
-                FROM
-                    wg_peers
-                WHERE
-                    user_id = :user_id
-                AND
-                    profile_id = :profile_id
-                AND
-                    public_key = :public_key
-                SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':public_key', $connectionId, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        if (false === $resultColumn = $stmt->fetchColumn(0)) {
-            return null;
-        }
-
-        return (int) $resultColumn;
-    }
-
-    public function oNodeNumber(string $userId, string $profileId, string $connectionId): ?int
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                SELECT
-                    node_number
-                FROM
-                    certificates
-                WHERE
-                    user_id = :user_id
-                AND
-                    profile_id = :profile_id
-                AND
-                    common_name = :common_name
-                SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->bindValue(':common_name', $connectionId, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        if (false === $resultColumn = $stmt->fetchColumn(0)) {
-            return null;
-        }
-
-        return (int) $resultColumn;
     }
 
     public function clientDisconnect(string $connectionId, int $bytesIn, int $bytesOut, DateTimeImmutable $disconnectedAt): void

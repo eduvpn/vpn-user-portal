@@ -133,9 +133,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->post(
             '/deleteConfig',
             function (Request $request, UserInfo $userInfo): Response {
-                $this->connectionManager->disconnect(
-                    $userInfo->userId(),
-                    $request->requirePostParameter('profileId', fn (string $s) => Validator::profileId($s)),
+                $this->connectionManager->disconnectByConnectionId(
                     $request->requirePostParameter('connectionId', fn (string $s) => Validator::connectionId($s))
                 );
 
@@ -211,26 +209,26 @@ class VpnPortalModule implements ServiceModuleInterface
     public static function filterConfigList(Storage $storage, string $userId): array
     {
         $configList = [];
-        foreach ($storage->oCertListByUserId($userId) as $oCert) {
-            if (null !== $oCert['auth_key']) {
+        foreach ($storage->oCertInfoListByUserId($userId) as $oCertInfo) {
+            if (null !== $oCertInfo['auth_key']) {
                 continue;
             }
             $configList[] = array_merge(
-                $oCert,
+                $oCertInfo,
                 [
-                    'connection_id' => $oCert['common_name'],
+                    'connection_id' => $oCertInfo['common_name'],
                 ]
             );
         }
 
-        foreach ($storage->wPeerListByUserId($userId) as $wPeer) {
-            if (null !== $wPeer['auth_key']) {
+        foreach ($storage->wPeerInfoListByUserId($userId) as $wPeerInfo) {
+            if (null !== $wPeerInfo['auth_key']) {
                 continue;
             }
             $configList[] = array_merge(
-                $wPeer,
+                $wPeerInfo,
                 [
-                    'connection_id' => $wPeer['public_key'],
+                    'connection_id' => $wPeerInfo['public_key'],
                 ]
             );
         }

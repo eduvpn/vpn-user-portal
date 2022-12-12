@@ -76,7 +76,6 @@
             <td><span title="<?=$this->d($configItem['expires_at']); ?>"><?=$this->d($configItem['expires_at'], 'Y-m-d'); ?></span></td>
             <td class="text-right">
                 <form class="frm" method="post" action="deleteConfig">
-                    <input type="hidden" name="profileId" value="<?=$this->e($configItem['profile_id']); ?>">
                     <input type="hidden" name="connectionId" value="<?=$this->e($configItem['connection_id']); ?>">
                     <button class="warning" type="submit"><?=$this->t('Delete'); ?></button>
                 </form>
