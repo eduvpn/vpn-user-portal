@@ -37,7 +37,7 @@ class ConnectionHooks implements ConnectionHookInterface
             try {
                 $connectionHook->connect($userId, $profileId, $vpnProto, $connectionId, $ipFour, $ipSix, $originatingIp);
             } catch (ConnectionHookException $e) {
-                $this->logger->warning(sprintf('[%s,%s] %s', __METHOD__, $connectionHook::class, $e->getMessage()));
+                $this->logger->warning(sprintf('[%s,%s] %s', __METHOD__, get_class($connectionHook), $e->getMessage()));
 
                 throw $e;
             }
@@ -60,7 +60,7 @@ class ConnectionHooks implements ConnectionHookInterface
                 );
             } catch (ConnectionHookException $e) {
                 // we can't do anything, so log it, but let it go...
-                $this->logger->warning(sprintf('[%s,%s] %s', __METHOD__, $connectionHook::class, $e->getMessage()));
+                $this->logger->warning(sprintf('[%s,%s] %s', __METHOD__, get_class($connectionHook), $e->getMessage()));
             }
         }
     }
