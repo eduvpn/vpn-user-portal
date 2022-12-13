@@ -382,16 +382,6 @@ class ConnectionManager
         $this->vpnDaemon->oDisconnectClient($nodeUrl, $commonName);
     }
 
-    private function nodeUrl(int $nodeNumber): ?string
-    {
-        $nodeNumberUrlList = $this->config->nodeNumberUrlList();
-        if (array_key_exists($nodeNumber, $nodeNumberUrlList)) {
-            return $nodeNumberUrlList[$nodeNumber];
-        }
-
-        return null;
-    }
-
     private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, string $publicKey, ?string $authKey): ?WireGuardClientConfig
     {
         $nodeNumberList = $profileConfig->onNode();
@@ -481,6 +471,17 @@ class ConnectionManager
 
         // we found no node that is up
         throw new ConnectionManagerException('no VPN node available');
+    }
+
+
+    private function nodeUrl(int $nodeNumber): ?string
+    {
+        $nodeNumberUrlList = $this->config->nodeNumberUrlList();
+        if (array_key_exists($nodeNumber, $nodeNumberUrlList)) {
+            return $nodeNumberUrlList[$nodeNumber];
+        }
+
+        return null;
     }
 
     /**
