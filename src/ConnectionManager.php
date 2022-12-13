@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Vpn\Portal;
 
 use DateTimeImmutable;
-use RangeException;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\Exception\ConnectionManagerException;
@@ -193,39 +192,18 @@ class ConnectionManager
 
     /**
      * @param array{wireguard:bool,openvpn:bool} $clientProtoSupport
-     *
-     * @throws \Vpn\Portal\Exception\ProtocolException
-     * @throws \Vpn\Portal\Exception\ConnectionManagerException
      */
     public function connect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, array $clientProtoSupport, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $publicKey, ?string $authKey): ClientConfigInterface
     {
-        $useProto = Protocol::determine($profileConfig, $clientProtoSupport, $publicKey, $preferTcp);
-        $nodeNumber = $this->randomNodeNumber($profileConfig);
-
-        switch ($useProto) {
-            case 'openvpn':
-                return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
-
-            case 'wireguard':
-                // Protocol::determine makes sure a public key was sent by the client, but just in case
-                if (null === $publicKey) {
-                    throw new ConnectionManagerException('unable to connect using wireguard, no public key provided by client');
+        if ('wireguard' === Protocol::determine($profileConfig, $clientProtoSupport, $publicKey, $preferTcp)) {
+            if (null !== $publicKey) {
+                if (null !== $wireGuardConfig = $this->wConnect($serverInfo, $profileConfig, $userId, $displayName, $expiresAt, $publicKey, $authKey)) {
+                    return $wireGuardConfig;
                 }
-                if (null !== $wireGuardClientConfig = $this->wConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $publicKey, $authKey)) {
-                    return $wireGuardClientConfig;
-                }
-
-                // we were unable to find a free IP address for WireGuard,
-                // fallback to OpenVPN if client & protocol support it
-                if ($clientProtoSupport['openvpn'] && $profileConfig->oSupport()) {
-                    return $this->oConnect($serverInfo, $profileConfig, $nodeNumber, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
-                }
-
-                throw new ConnectionManagerException('unable to connect using wireguard, openvpn fallback not possible');
-
-            default:
-                throw new RangeException('invalid protocol');
+            }
         }
+
+        return $this->oConnect($serverInfo, $profileConfig, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
     }
 
     /**
@@ -414,102 +392,101 @@ class ConnectionManager
         return null;
     }
 
-    /**
-     * Try to find a usable node to connect to, loop over all of them in a
-     * random order until we find one that responds. This algorithm can use
-     * some tweaking, e.g. consider the load of a node instead of just checking
-     * whether it is up...
-     */
-    private function randomNodeNumber(ProfileConfig $profileConfig): int
+    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, string $publicKey, ?string $authKey): ?WireGuardClientConfig
     {
-        $nodeList = $profileConfig->onNode();
-        shuffle($nodeList);
-        foreach ($nodeList as $nodeNumber) {
-            if (null !== $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($nodeNumber))) {
-                return $nodeNumber;
-            }
-            $this->logger->error(sprintf('VPN node "%d" running at (%s) is not available', $nodeNumber, $profileConfig->nodeUrl($nodeNumber)));
-        }
-        $this->logger->error('no VPN node available');
+        $nodeNumberList = $profileConfig->onNode();
+        shuffle($nodeNumberList);
 
+        foreach ($nodeNumberList as $nodeNumber) {
+            if (null === $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($nodeNumber))) {
+                // node not available, try next
+                $this->logger->error(sprintf('node "%d" (%s) is not available', $nodeNumber, $profileConfig->nodeUrl($nodeNumber)));
+
+                continue;
+            }
+            if (null === $serverPublicKey = $serverInfo->publicKey($nodeNumber)) {
+                // node's public key not known, try next
+                $this->logger->error(sprintf('public key of node "%d" (%s) is not set', $nodeNumber, $profileConfig->nodeUrl($nodeNumber)));
+
+                continue;
+            }
+            [$ipFour, $ipSix, $err] = $this->getIpAddress($profileConfig, $nodeNumber);
+            if (null !== $err) {
+                // no free IP address available on this node, try next
+                $this->logger->warning(sprintf('no free IP address available on node "%d" (%s)', $nodeNumber, $profileConfig->nodeUrl($nodeNumber)));
+
+                continue;
+            }
+
+            $this->storage->wPeerAdd($userId, $nodeNumber, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
+            $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
+            $this->connectionHook->connect($userId, $profileConfig->profileId(), 'wireguard', $publicKey, $ipFour, $ipSix, null);
+
+            return new WireGuardClientConfig(
+                $serverInfo->portalUrl(),
+                $nodeNumber,
+                $profileConfig,
+                $ipFour,
+                $ipSix,
+                $serverPublicKey,
+                $this->config->wireGuardConfig()->listenPort(),
+                $expiresAt
+            );
+        }
+
+        // we found no suitable node to connect to...
+        $this->logger->error(sprintf('unable to find a suitable node to connect to for profile "%s"', $profileConfig->profileId()));
+
+        return null;
+    }
+
+    private function oConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $authKey): OpenVpnClientConfig
+    {
+        $nodeNumberList = $profileConfig->onNode();
+        shuffle($nodeNumberList);
+
+        foreach ($nodeNumberList as $nodeNumber) {
+            if (null === $this->vpnDaemon->nodeInfo($profileConfig->nodeUrl($nodeNumber))) {
+                // node not available, try next
+                $this->logger->error(sprintf('node "%d" (%s) is not available', $nodeNumber, $profileConfig->nodeUrl($nodeNumber)));
+
+                continue;
+            }
+
+            $commonName = Base64::encode($this->getRandomBytes());
+            $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
+            $this->storage->oCertAdd(
+                $userId,
+                $nodeNumber,
+                $profileConfig->profileId(),
+                $commonName,
+                $displayName,
+                $this->dateTime,
+                $expiresAt,
+                $authKey
+            );
+
+            // this thing can throw an ClientConfigException!
+            return new OpenVpnClientConfig(
+                $serverInfo->portalUrl(),
+                $nodeNumber,
+                $profileConfig,
+                $serverInfo->ca()->caCert(),
+                $serverInfo->tlsCrypt(),
+                $certInfo,
+                $preferTcp,
+                $expiresAt
+            );
+        }
+
+        // we found no node that is up
         throw new ConnectionManagerException('no VPN node available');
     }
 
     /**
-     * @throws \Vpn\Portal\Exception\ConnectionManagerException
+     * @return array{0:string,1:string,2:?string}
      */
-    private function wConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, string $publicKey, ?string $authKey): ?WireGuardClientConfig
-    {
-        if (!$profileConfig->wSupport()) {
-            throw new ConnectionManagerException('profile does not support wireguard');
-        }
-
-        // make sure the node registered their public key with us
-        if (null === $serverPublicKey = $serverInfo->publicKey($nodeNumber)) {
-            throw new ConnectionManagerException(sprintf('node "%d" did not yet register their WireGuard public key', $nodeNumber));
-        }
-
-        if (null === $ipInfo = $this->getIpAddress($profileConfig, $nodeNumber)) {
-            // unable to find a free IP address, give up on this connection
-            // attempt...
-            return null;
-        }
-        $ipFour = $ipInfo['ip_four'];
-        $ipSix = $ipInfo['ip_six'];
-
-        // XXX we MUST make sure public_key is unique on this server!!!
-        // the DB enforces this, but maybe a better error could be given?
-        $this->storage->wPeerAdd($userId, $nodeNumber, $profileConfig->profileId(), $displayName, $publicKey, $ipFour, $ipSix, $this->dateTime, $expiresAt, $authKey);
-        $this->vpnDaemon->wPeerAdd($profileConfig->nodeUrl($nodeNumber), $publicKey, $ipFour, $ipSix);
-        $this->connectionHook->connect($userId, $profileConfig->profileId(), 'wireguard', $publicKey, $ipFour, $ipSix, null);
-
-        return new WireGuardClientConfig(
-            $serverInfo->portalUrl(),
-            $nodeNumber,
-            $profileConfig,
-            $ipFour,
-            $ipSix,
-            $serverPublicKey,
-            $this->config->wireGuardConfig()->listenPort(),
-            $expiresAt
-        );
-    }
-
-    private function oConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, int $nodeNumber, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $authKey): OpenVpnClientConfig
-    {
-        if (!$profileConfig->oSupport()) {
-            throw new ConnectionManagerException('profile does not support openvpn');
-        }
-        $commonName = Base64::encode($this->getRandomBytes());
-        $certInfo = $serverInfo->ca()->clientCert($commonName, $profileConfig->profileId(), $expiresAt);
-        $this->storage->oCertAdd(
-            $userId,
-            $nodeNumber,
-            $profileConfig->profileId(),
-            $commonName,
-            $displayName,
-            $this->dateTime,
-            $expiresAt,
-            $authKey
-        );
-
-        // this thing can throw an ClientConfigException!
-        return new OpenVpnClientConfig(
-            $serverInfo->portalUrl(),
-            $nodeNumber,
-            $profileConfig,
-            $serverInfo->ca()->caCert(),
-            $serverInfo->tlsCrypt(),
-            $certInfo,
-            $preferTcp,
-            $expiresAt
-        );
-    }
-
-    /**
-     * @return ?array{ip_four:string,ip_six:string}
-     */
-    private function getIpAddress(ProfileConfig $profileConfig, int $nodeNumber): ?array
+    private function getIpAddress(ProfileConfig $profileConfig, int $nodeNumber): array
     {
         // make a list of all allocated IPv4 addresses (the IPv6 address is
         // based on the IPv4 address)
@@ -518,10 +495,10 @@ class ConnectionManager
         $ipSixInRangeList = $profileConfig->wRangeSix($nodeNumber)->clientIpListSix(\count($ipFourInRangeList));
         foreach ($ipFourInRangeList as $k => $ipFourInRange) {
             if (!\in_array($ipFourInRange, $allocatedIpFourList, true)) {
-                return ['ip_four' => $ipFourInRange, 'ip_six' => $ipSixInRangeList[$k]];
+                return [$ipFourInRange, $ipSixInRangeList[$k], null];
             }
         }
 
-        return null;
+        return ['', '', 'unable to find a free IP address'];
     }
 }
