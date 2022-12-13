@@ -18,10 +18,6 @@ use Vpn\Portal\Http\UserInfo;
 
 class Storage
 {
-    public const INCLUDE_EXPIRED = 1;
-    public const EXCLUDE_EXPIRED = 2;
-    public const EXCLUDE_DISABLED_USER = 4;
-
     public const CURRENT_SCHEMA_VERSION = '2022022201';
 
     private PDO $db;
@@ -264,67 +260,6 @@ class Storage
         }
 
         return $wPeerInfoList;
-    }
-
-    /**
-     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string}>
-     */
-    public function wPeerListByProfileId(string $profileId, int $returnSet): array
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                SELECT
-                    node_number,
-                    u.user_id,
-                    profile_id,
-                    display_name,
-                    public_key,
-                    ip_four,
-                    ip_six,
-                    expires_at,
-                    auth_key,
-                    u.is_disabled AS user_is_disabled
-                FROM
-                    wg_peers w,
-                    users u
-                WHERE
-                    profile_id = :profile_id
-                AND
-                    u.user_id = w.user_id
-                SQL
-        );
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
-        $stmt->execute();
-        $peerList = [];
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $expiresAt = Dt::get($resultRow['expires_at']);
-            if (self::EXCLUDE_EXPIRED & $returnSet) {
-                // exclude disabled configurations
-                if ($expiresAt <= Dt::get()) {
-                    continue;
-                }
-            }
-            if (self::EXCLUDE_DISABLED_USER & $returnSet) {
-                // exclude peer configurations for disabled users
-                if (1 === (int) $resultRow['user_is_disabled']) {
-                    continue;
-                }
-            }
-            $publicKey = (string) $resultRow['public_key'];
-            $peerList[$publicKey] = [
-                'node_number' => (int) $resultRow['node_number'],
-                'user_id' => (string) $resultRow['user_id'],
-                'profile_id' => (string) $resultRow['profile_id'],
-                'display_name' => (string) $resultRow['display_name'],
-                'public_key' => $publicKey,
-                'ip_four' => (string) $resultRow['ip_four'],
-                'ip_six' => (string) $resultRow['ip_six'],
-                'expires_at' => $expiresAt,
-                'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
-            ];
-        }
-
-        return $peerList;
     }
 
     public function localUserExists(string $authUser): bool
@@ -632,43 +567,89 @@ class Storage
     }
 
     /**
-     * @return array<string,array{user_id:string,common_name:string,display_name:string,expires_at:\DateTimeImmutable,auth_key:?string}>
+     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
      */
-    public function oCertListByProfileId(string $profileId, int $returnSet): array
+    public function wPeerList(): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    node_number,
+                    u.user_id AS user_id,
+                    profile_id,
+                    display_name,
+                    public_key,
+                    ip_four,
+                    ip_six,
+                    expires_at,
+                    auth_key,
+                    u.is_disabled AS user_is_disabled
+                FROM
+                    wg_peers w,
+                    users u
+                WHERE
+                    u.user_id = w.user_id
+                SQL
+        );
+        $stmt->execute();
+
+        $peerList = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $publicKey = (string) $resultRow['public_key'];
+            $peerList[$publicKey] = [
+                'node_number' => (int) $resultRow['node_number'],
+                'user_id' => (string) $resultRow['user_id'],
+                'profile_id' => (string) $resultRow['profile_id'],
+                'display_name' => (string) $resultRow['display_name'],
+                'public_key' => $publicKey,
+                'ip_four' => (string) $resultRow['ip_four'],
+                'ip_six' => (string) $resultRow['ip_six'],
+                'expires_at' => Dt::get($resultRow['expires_at']),
+                'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
+                'user_is_disabled' => (bool) $resultRow['user_is_disabled'],
+            ];
+        }
+
+        return $peerList;
+    }
+
+    /**
+     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,common_name:string,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
+     */
+    public function oCertList(): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
-                        user_id,
-                        common_name,
+                        node_number,
+                        u.user_id AS user_id,
+                        profile_id,
                         display_name,
+                        common_name,
                         expires_at,
-                        auth_key
+                        auth_key,
+                        u.is_disabled AS user_is_disabled
                     FROM
-                        certificates
+                        certificates c,
+                        users u
                     WHERE
-                        profile_id = :profile_id
+                        u.user_id = c.user_id
                 SQL
         );
-        $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
         $stmt->execute();
 
         $certList = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $expiresAt = Dt::get($resultRow['expires_at']);
-            if (self::EXCLUDE_EXPIRED === $returnSet) {
-                if ($expiresAt <= Dt::get()) {
-                    continue;
-                }
-            }
-
             $commonName = (string) $resultRow['common_name'];
             $certList[$commonName] = [
+                'node_number' => (int) $resultRow['node_number'],
                 'user_id' => (string) $resultRow['user_id'],
-                'common_name' => $commonName,
+                'profile_id' => (string) $resultRow['profile_id'],
                 'display_name' => (string) $resultRow['display_name'],
-                'expires_at' => $expiresAt,
+                'common_name' => $commonName,
+                'expires_at' => Dt::get($resultRow['expires_at']),
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
+                'user_is_disabled' => (bool) $resultRow['user_is_disabled'],
             ];
         }
 
@@ -899,12 +880,22 @@ class Storage
         $stmt->execute();
     }
 
-    public function userIdFromConnectionLog(string $connectionId): ?string
+    /**
+     * Retrieve information about an *open* VPN connection, i.e. where
+     * "disconnected_at" is not yet set.
+     *
+     * @return ?array{user_id:string,profile_id:string,vpn_proto:string,ip_four:string,ip_six:string}
+     */
+    public function openConnectionInfo(string $connectionId): ?array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
-                        user_id
+                        user_id,
+                        profile_id,
+                        vpn_proto,
+                        ip_four,
+                        ip_six
                     FROM
                         connection_log
                     WHERE
@@ -917,11 +908,17 @@ class Storage
         $stmt->bindValue(':connection_id', $connectionId, PDO::PARAM_STR);
         $stmt->execute();
 
-        if (false === $userId = $stmt->fetch(PDO::FETCH_COLUMN)) {
+        if (false === $resultRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
             return null;
         }
 
-        return (string) $userId;
+        return [
+            'user_id' => (string) $resultRow['user_id'],
+            'profile_id' => (string) $resultRow['profile_id'],
+            'vpn_proto' => (string) $resultRow['vpn_proto'],
+            'ip_four' => (string) $resultRow['ip_four'],
+            'ip_six' => (string) $resultRow['ip_six'],
+        ];
     }
 
     /**

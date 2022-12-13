@@ -42,64 +42,65 @@ class ConnectionManager
     }
 
     /**
+     * Retrieve a list of all current OpenVPN and WireGuard connections, sorted
+     * by profile.
+     *
+     * XXX: loop over connections instead of database row, as there are
+     * typically way less connections than entries in the database
+     *
      * @return array<string,array<array{user_id:string,connection_id:string,display_name:string,ip_list:array<string>,vpn_proto:string,auth_key:?string}>>
      */
     public function get(): array
     {
+        $wPeerListFromDb = $this->storage->wPeerList();
+        $oCertListFromDb = $this->storage->oCertList();
+
+        // retrieve a list of all active OpenVPN and WireGuard connections from
+        // all daemons
+        $wPeerListFromDaemon = [];
+        $oCertListFromDaemon = [];
+        foreach ($this->config->nodeNumberUrlList() as $nodeUrl) {
+            $wPeerListFromDaemon = array_merge($wPeerListFromDaemon, $this->vpnDaemon->wPeerList($nodeUrl, false));
+            $oCertListFromDaemon = array_merge($oCertListFromDaemon, $this->vpnDaemon->oConnectionList($nodeUrl));
+        }
+
         $connectionList = [];
-        // keep the record of all nodeUrls we talked to so we only hit them
-        // once... multiple profiles can have the same nodeUrl if the run
-        // on the same machine/VM
+        // we need to create an empty structure here with all profiles,
+        // otherwise the "Connections" admin page does not show all profiles
+        // XXX figure out if we can be smarter here
         foreach ($this->config->profileConfigList() as $profileConfig) {
-            $profileId = $profileConfig->profileId();
-            $connectionList[$profileId] = [];
+            $connectionList[$profileConfig->profileId()] = [];
+        }
 
-            if ($profileConfig->oSupport()) {
-                // OpenVPN
-                $oCertListByProfileId = $this->storage->oCertListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
-
-                $oConnectionList = [];
-                foreach ($profileConfig->onNode() as $nodeNumber) {
-                    $oConnectionList = array_merge($oConnectionList, $this->vpnDaemon->oConnectionList($profileConfig->nodeUrl($nodeNumber)));
-                }
-
-                foreach ($oCertListByProfileId as $certInfo) {
-                    if (\array_key_exists($certInfo['common_name'], $oConnectionList)) {
-                        // found it!
-                        $commonName = $certInfo['common_name'];
-                        $connectionList[$profileId][] = [
-                            'user_id' => $certInfo['user_id'],
-                            'connection_id' => $certInfo['common_name'],
-                            'display_name' => $certInfo['display_name'],
-                            'ip_list' => [$oConnectionList[$commonName]['ip_four'], $oConnectionList[$commonName]['ip_six']],
-                            'vpn_proto' => 'openvpn',
-                            'auth_key' => $certInfo['auth_key'],
-                        ];
-                    }
-                }
+        // WireGuard
+        foreach ($wPeerListFromDb as $peerInfo) {
+            $publicKey = $peerInfo['public_key'];
+            $profileId = $peerInfo['profile_id'];
+            if (\array_key_exists($publicKey, $wPeerListFromDaemon)) {
+                $connectionList[$profileId][] = [
+                    'user_id' => $peerInfo['user_id'],
+                    'connection_id' => $publicKey,
+                    'display_name' => $peerInfo['display_name'],
+                    'ip_list' => [$peerInfo['ip_four'], $peerInfo['ip_six']],
+                    'vpn_proto' => 'wireguard',
+                    'auth_key' => $peerInfo['auth_key'],
+                ];
             }
+        }
 
-            if ($profileConfig->wSupport()) {
-                // WireGuard
-                $wPeerListByProfileId = $this->storage->wPeerListByProfileId($profileId, Storage::INCLUDE_EXPIRED);
-                $wPeerList = [];
-                foreach ($profileConfig->onNode() as $nodeNumber) {
-                    $wPeerList = array_merge($wPeerList, $this->vpnDaemon->wPeerList($profileConfig->nodeUrl($nodeNumber), false));
-                }
-
-                foreach ($wPeerListByProfileId as $peerInfo) {
-                    if (\array_key_exists($peerInfo['public_key'], $wPeerList)) {
-                        // found it!
-                        $connectionList[$profileId][] = [
-                            'user_id' => $peerInfo['user_id'],
-                            'connection_id' => $peerInfo['public_key'],
-                            'display_name' => $peerInfo['display_name'],
-                            'ip_list' => [$peerInfo['ip_four'], $peerInfo['ip_six']],
-                            'vpn_proto' => 'wireguard',
-                            'auth_key' => $peerInfo['auth_key'],
-                        ];
-                    }
-                }
+        // OpenVPN
+        foreach ($oCertListFromDb as $certInfo) {
+            $commonName = $certInfo['common_name'];
+            $profileId = $certInfo['profile_id'];
+            if (\array_key_exists($commonName, $oCertListFromDaemon)) {
+                $connectionList[$profileId][] = [
+                    'user_id' => $certInfo['user_id'],
+                    'connection_id' => $commonName,
+                    'display_name' => $certInfo['display_name'],
+                    'ip_list' => [$oCertListFromDaemon[$commonName]['ip_four'], $oCertListFromDaemon[$commonName]['ip_six']],
+                    'vpn_proto' => 'openvpn',
+                    'auth_key' => $certInfo['auth_key'],
+                ];
             }
         }
 
@@ -228,95 +229,148 @@ class ConnectionManager
     }
 
     /**
-     * This method is responsible for three things:
-     * 1. (Re)add WireGuard peers when they are missing, e.g. after a node reboot
-     * 2. Delete WireGuard peers with expired configurations
-     * 3. Disconnect OpenVPN clients with expired certificates.
-     *
-     * It will first figure out which peers/clients should be there and
-     * remove/disconnect the ones that should NOT be there (anymore). It will
-     * then add the WG peers that should (still) be there.
-     *
-     * Due to the architecture, e.g. multiple profiles can use the same vpn-daemon,
-     * profiles can have multiple vpn-daemons and the vpn-daemon has no concept of
-     * "profiles" the administration is a bit complicated...
+     * Synchronize the state between the database and the VPN daemon.
      */
     public function sync(): void
     {
-        // Obtain a list of all WireGuard/OpenVPN peers/clients that we have in the
-        // database
-        $wPeerListInDatabase = [];
-        $oCertListInDatabase = [];
-        foreach ($this->config->profileConfigList() as $profileConfig) {
-            if ($profileConfig->wSupport()) {
-                $wPeerListInDatabase = array_merge($wPeerListInDatabase, $this->storage->wPeerListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED | Storage::EXCLUDE_DISABLED_USER));
-            }
-            if ($profileConfig->oSupport()) {
-                $oCertListInDatabase = array_merge($oCertListInDatabase, $this->storage->oCertListByProfileId($profileConfig->profileId(), Storage::EXCLUDE_EXPIRED));
-            }
-        }
-
-        // Remove/Disconnect WireGuard/OpenVPN peers/client that we no longer have
-        // in our database (or are expired) and obtain a list of *configured*
-        // WireGuard peers in the node(s)
-        $wPeerList = [];
-        foreach ($this->config->profileConfigList() as $profileConfig) {
-            foreach ($profileConfig->onNode() as $nodeNumber) {
-                $nodeUrl = $profileConfig->nodeUrl($nodeNumber);
-                if ($profileConfig->wSupport()) {
-                    // if the peer does not exist in the database, remove it...
-                    foreach ($this->vpnDaemon->wPeerList($nodeUrl, true) as $publicKey => $wPeerInfo) {
-                        if (!\array_key_exists($publicKey, $wPeerListInDatabase)) {
-                            // echo sprintf('**REMOVE** [%s]: %s', $nodeUrl, $publicKey).PHP_EOL;
-                            // XXX we MUST make sure the IP info also matches, otherwise delete it as well
-                            $this->vpnDaemon->wPeerRemove(
-                                $nodeUrl,
-                                $publicKey
-                            );
-                            // XXX should we *continue* here? otherwise it still gets added to wPeerList...
-                        }
-                        $wPeerList[$publicKey] = $wPeerInfo;
-                    }
-                }
-                if ($profileConfig->oSupport()) {
-                    foreach (array_keys($this->vpnDaemon->oConnectionList($nodeUrl)) as $commonName) {
-                        if (!\array_key_exists($commonName, $oCertListInDatabase)) {
-                            // echo sprintf('**DISCONNECT** [%s]: %s', $nodeUrl, $commonName).PHP_EOL;
-                            $this->vpnDaemon->oDisconnectClient(
-                                $nodeUrl,
-                                $commonName
-                            );
-                        }
-                    }
-                }
-            }
-        }
-
-        // Register WireGuard peers we have in our database, but not in our node(s)
-        // everything that is in wPeerListInDatabase, but not in wPeerList needs to be added to the appropriate node
-        $wgPeersToAdd = array_diff(array_keys($wPeerListInDatabase), array_keys($wPeerList));
-        foreach ($wgPeersToAdd as $publicKey) {
-            // based on the publicKey we can now find the profile + node
-            $peerInfo = $wPeerListInDatabase[$publicKey];
-            $profileId = $peerInfo['profile_id'];
-            $ipFour = $peerInfo['ip_four'];
-            $ipSix = $peerInfo['ip_six'];
-            $nodeNumber = $peerInfo['node_number'];
-            $nodeUrl = $this->config->profileConfig($profileId)->nodeUrl($nodeNumber);
-
-            // echo sprintf('**ADD** [%s]: %s (%s,%s)', $nodeUrl, $publicKey, $ipFour, $ipSix).PHP_EOL;
-            $this->vpnDaemon->wPeerAdd(
-                $nodeUrl,
-                $publicKey,
-                $ipFour,
-                $ipSix
-            );
-        }
+        $this->oSync();
+        $this->wSync();
     }
 
     protected function getRandomBytes(): string
     {
         return random_bytes(32);
+    }
+
+    /**
+     * Filter all OpenVPN certificates in the database and ONLY return the ones
+     * that should be allowed to connect.
+     *
+     * (1) User MUST NOT be disabled
+     * (2) Certificate MUST NOT have expired
+     * (3) Profile MUST still exist
+     * (4) Node MUST still exist
+     *
+     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,common_name:string,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
+     */
+    private function oFilterDb(): array
+    {
+        $oCertList = $this->storage->oCertList();
+        $oFilteredCertList = [];
+        foreach ($oCertList as $commonName => $oCertInfo) {
+            if ($oCertInfo['user_is_disabled']) {
+                continue;
+            }
+            if ($oCertInfo['expires_at'] <= $this->dateTime) {
+                continue;
+            }
+            $profileId = $oCertInfo['profile_id'];
+            if (!$this->config->hasProfile($profileId)) {
+                continue;
+            }
+            $profileConfig = $this->config->profileConfig($profileId);
+            $nodeNumber = $oCertInfo['node_number'];
+            if (!in_array($nodeNumber, $profileConfig->onNode())) {
+                continue;
+            }
+            $oFilteredCertList[$commonName] = $oCertInfo;
+        }
+
+        return $oFilteredCertList;
+    }
+
+    /**
+     * Filter all WireGuard peers in the database and ONLY return the ones
+     * that should be allowed to connect.
+     *
+     * (1) User MUST NOT be disabled
+     * (2) Peer MUST NOT have expired
+     * (3) Profile MUST still exist
+     * (4) Node MUST still exist
+     * (5) IPv4 address MUST belong to prefix of Profile (+Node)
+     * (6) IPv6 address MUST belong to prefix of Profile (+Node)
+     *
+     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
+     */
+    private function wFilterDb(): array
+    {
+        $wPeerList = $this->storage->wPeerList();
+        $wFilteredPeerList = [];
+        foreach ($wPeerList as $publicKey => $wPeerInfo) {
+            if ($wPeerInfo['user_is_disabled']) {
+                continue;
+            }
+            if ($wPeerInfo['expires_at'] <= $this->dateTime) {
+                continue;
+            }
+            $profileId = $wPeerInfo['profile_id'];
+            if (!$this->config->hasProfile($profileId)) {
+                continue;
+            }
+            $profileConfig = $this->config->profileConfig($profileId);
+            $nodeNumber = $wPeerInfo['node_number'];
+            if (!in_array($nodeNumber, $profileConfig->onNode())) {
+                continue;
+            }
+            $ipFour = Ip::fromIp($wPeerInfo['ip_four']);
+            if (!$profileConfig->wRangeFour($nodeNumber)->contains($ipFour)) {
+                continue;
+            }
+            $ipSix = Ip::fromIp($wPeerInfo['ip_six']);
+            if (!$profileConfig->wRangeSix($nodeNumber)->contains($ipSix)) {
+                continue;
+            }
+
+            $wFilteredPeerList[$publicKey] = $wPeerInfo;
+        }
+
+        return $wFilteredPeerList;
+    }
+
+    private function oSync(): void
+    {
+        $oCertListFromDb = $this->oFilterDb();
+        foreach ($this->config->nodeNumberUrlList() as $nodeUrl) {
+            foreach (array_keys($this->vpnDaemon->oConnectionList($nodeUrl)) as $commonName) {
+                if (!\array_key_exists($commonName, $oCertListFromDb)) {
+                    $this->logger->debug(sprintf('%s: disconnecting client with common name "%s"', __METHOD__, $commonName));
+                    $this->vpnDaemon->oDisconnectClient($nodeUrl, $commonName);
+                }
+            }
+        }
+    }
+
+    private function wSync(): void
+    {
+        $wPeerListFromDb = $this->wFilterDb();
+        $connectedPublicKeyList = [];
+        foreach ($this->config->nodeNumberUrlList() as $nodeNumber => $nodeUrl) {
+            foreach (array_keys($this->vpnDaemon->wPeerList($nodeUrl, true)) as $publicKey) {
+                if (!\array_key_exists($publicKey, $wPeerListFromDb)) {
+                    $this->logger->debug(sprintf('%s: unregistering peer with public key "%s"', __METHOD__, $publicKey));
+                    if (null !== $openConnectionInfo = $this->storage->openConnectionInfo($publicKey)) {
+                        $this->wDisconnect($openConnectionInfo['user_id'], $openConnectionInfo['profile_id'], $nodeNumber, $publicKey, $openConnectionInfo['ip_four'], $openConnectionInfo['ip_six']);
+                    }
+                    // XXX should we log when there is no open connection for this public key in the connection_log table?
+
+                    continue;
+                }
+                $connectedPublicKeyList[] = $publicKey;
+            }
+        }
+
+        foreach ($wPeerListFromDb as $publicKey => $wPeerInfo) {
+            if (in_array($publicKey, $connectedPublicKeyList, true)) {
+                continue;
+            }
+            $this->logger->debug(sprintf('%s: registering peer with public key "%s"', __METHOD__, $publicKey));
+            $this->vpnDaemon->wPeerAdd(
+                $this->config->profileConfig($wPeerInfo['profile_id'])->nodeUrl($wPeerInfo['node_number']),
+                $publicKey,
+                $wPeerInfo['ip_four'],
+                $wPeerInfo['ip_six']
+            );
+        }
     }
 
     private function wDisconnect(string $userId, string $profileId, int $nodeNumber, string $publicKey, string $ipFour, string $ipSix): void

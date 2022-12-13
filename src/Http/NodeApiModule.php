@@ -105,13 +105,13 @@ class NodeApiModule implements ServiceModuleInterface
         // disconnects from the OpenVPN server process, we can't always use
         // the "certificates" table to find the user_id from there as the
         // certificate might have been deleted already in ConnectionManager
-        if (null === $userId = $this->storage->userIdFromConnectionLog($commonName)) {
+        if (null === $openConnectionInfo = $this->storage->openConnectionInfo($commonName)) {
             $this->logger->info(sprintf('no open connection for CN "%s"', $commonName));
 
             return new Response('OK');
         }
 
-        $this->connectionHook->disconnect($userId, $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $bytesIn, $bytesOut);
+        $this->connectionHook->disconnect($openConnectionInfo['user_id'], $profileId, 'openvpn', $commonName, $ipFour, $ipSix, $bytesIn, $bytesOut);
 
         return new Response('OK');
     }
