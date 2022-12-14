@@ -80,6 +80,29 @@ class LdapCredentialValidator implements CredentialValidatorInterface
         }
     }
 
+    public function userExists(string $authUser): bool
+    {
+        // add "realm" after user name if none is specified
+        if (null !== $addRealm = $this->ldapAuthConfig->addRealm()) {
+            if (false === strpos($authUser, '@')) {
+                $authUser .= '@'.$addRealm;
+            }
+        }
+
+        // we can't bind with user's credentials as we don't have them at this
+        // stage, so do an (anonymous) bind
+        $this->ldapClient->bind();
+
+        // determine the baseDn from bindDnTemplate
+        if (null === $bindDnTemplate = $this->ldapAuthConfig->bindDnTemplate()) {
+            throw new CredentialValidatorException('no bindDnTemplate set');
+        }
+        $baseDn = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $bindDnTemplate);
+        $ldapEntries = $this->ldapClient->search($baseDn, '(objectClass=*)');
+
+        return isset($ldapEntries[0]['dn']);
+    }
+
     private function getUserId(string $baseDn, string $userFilter, string $userIdAttribute): string
     {
         $ldapEntries = $this->ldapClient->search(
