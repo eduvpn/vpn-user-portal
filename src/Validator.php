@@ -247,6 +247,7 @@ class Validator
     /**
      * @psalm-param positive-int $minLen
      * @psalm-param positive-int $maxLen
+     *
      * @throws \RangeException
      */
     private static function utfString(string $inputStr, int $minLen, int $maxLen): void

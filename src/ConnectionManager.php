@@ -487,6 +487,7 @@ class ConnectionManager
     /**
      * Get a free IPv4 and IPv6 address for a specific node belonging to a
      * profile.
+     *
      * @return array{0:string,1:string,2:?string}
      */
     private function getIpAddress(ProfileConfig $profileConfig, int $nodeNumber): array

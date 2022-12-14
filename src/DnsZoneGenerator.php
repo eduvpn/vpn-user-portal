@@ -90,6 +90,7 @@ class DnsZoneGenerator
 
     /**
      * Generate name to IP mapping.
+     *
      * @return array<string, array{string,string}>
      */
     public static function generateMapping(Config $config): array
