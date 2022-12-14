@@ -13,9 +13,17 @@
 - add `LoggerInterface::debug`
 - remove silly `Tpl::profileIdToDisplayName` cache
 - refactor connect/disconnect event hooks
+- write to `connection_log` table from `ConnectionLogHook`
 - make `VPN_PROTO` available on connect/disconnect in `ScriptConnectionHook`
 - make `VPN_BYTES_IN` and `VPN_BYTES_OUT` available on disconnect  in 
   `ScriptConnectionHook`
+- cleanup "daemon-sync" to make sure the correct connect/disconnect events are
+  triggered in all cases
+- make "daemon-sync" delete certificates/peers that no longer match the 
+  configuration on "apply changes" 
+  ([#96](https://todo.sr.ht/~eduvpn/server/96))
+- try all nodes when attempting to connect with WireGuard and the first node 
+  ran out of free IP addresses ([#110](https://todo.sr.ht/~eduvpn/server/110))
 - remove "Aggregate Stats" for now until we are able to fix it 
   ([#112](https://todo.sr.ht/~eduvpn/server/112))
 
