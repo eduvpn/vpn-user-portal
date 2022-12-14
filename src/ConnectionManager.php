@@ -473,7 +473,6 @@ class ConnectionManager
         throw new ConnectionManagerException('no VPN node available');
     }
 
-
     private function nodeUrl(int $nodeNumber): ?string
     {
         $nodeNumberUrlList = $this->config->nodeNumberUrlList();
