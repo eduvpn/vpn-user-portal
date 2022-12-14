@@ -207,6 +207,16 @@ class ConnectionManager
     }
 
     /**
+     * Remove all peers and certificates from the database that should no
+     * longer be there.
+     */
+    public function cleanDb(): void
+    {
+        $this->wRemoveInvalidPeersDb();
+        $this->oDeleteInvalidCertsDb();
+    }
+
+    /**
      * Synchronize the state between the database and the VPN daemon.
      */
     public function sync(): void
@@ -471,6 +481,37 @@ class ConnectionManager
 
         // we found no node that is up
         throw new ConnectionManagerException('no VPN node available');
+    }
+
+    /**
+     * Remove all WireGuard peers from the DB that should no longer be there.
+     */
+    private function wRemoveInvalidPeersDb(): void
+    {
+        $wPeerList = $this->storage->wPeerList();
+        $wFilteredPeerList = $this->wFilterDb();
+        foreach ($wPeerList as $publicKey => $wPeerInfo) {
+            if (!array_key_exists($publicKey, $wFilteredPeerList)) {
+                $this->logger->debug(sprintf('%s: removing peer with public key "%s" from database', __METHOD__, $publicKey));
+                $this->storage->wPeerRemove($publicKey);
+            }
+        }
+    }
+
+    /**
+     * Delete all OpenVPN certificates from the DB that should no longer be
+     * there.
+     */
+    private function oDeleteInvalidCertsDb(): void
+    {
+        $oCertList = $this->storage->oCertList();
+        $oFilteredCertList = $this->oFilterDb();
+        foreach ($oCertList as $commonName => $oCertInfo) {
+            if (!array_key_exists($commonName, $oFilteredCertList)) {
+                $this->logger->debug(sprintf('%s: deleting client with common name "%s" from database', __METHOD__, $commonName));
+                $this->storage->oCertDelete($commonName);
+            }
+        }
     }
 
     private function nodeUrl(int $nodeNumber): ?string
