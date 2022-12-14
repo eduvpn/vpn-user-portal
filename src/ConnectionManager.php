@@ -485,17 +485,19 @@ class ConnectionManager
     }
 
     /**
+     * Get a free IPv4 and IPv6 address for a specific node belonging to a
+     * profile.
      * @return array{0:string,1:string,2:?string}
      */
     private function getIpAddress(ProfileConfig $profileConfig, int $nodeNumber): array
     {
         // make a list of all allocated IPv4 addresses (the IPv6 address is
         // based on the IPv4 address)
-        $allocatedIpFourList = $this->storage->wgGetAllocatedIpFourAddresses($profileConfig->profileId(), $nodeNumber);
+        $wAllocatedIpFourList = $this->storage->wAllocatedIpFourList($profileConfig->profileId(), $nodeNumber);
         $ipFourInRangeList = $profileConfig->wRangeFour($nodeNumber)->clientIpListFour();
         $ipSixInRangeList = $profileConfig->wRangeSix($nodeNumber)->clientIpListSix(\count($ipFourInRangeList));
         foreach ($ipFourInRangeList as $k => $ipFourInRange) {
-            if (!\in_array($ipFourInRange, $allocatedIpFourList, true)) {
+            if (!\in_array($ipFourInRange, $wAllocatedIpFourList, true)) {
                 return [$ipFourInRange, $ipSixInRangeList[$k], null];
             }
         }

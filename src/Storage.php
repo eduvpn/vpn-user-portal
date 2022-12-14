@@ -156,9 +156,12 @@ class Storage
     }
 
     /**
+     * Get a list of IPv4 addresses already in use by a specific node belonging
+     * to a profile.
+     *
      * @return array<string>
      */
-    public function wgGetAllocatedIpFourAddresses(string $profileId, int $nodeNumber): array
+    public function wAllocatedIpFourList(string $profileId, int $nodeNumber): array
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
