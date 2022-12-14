@@ -13,6 +13,7 @@ namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
+use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
@@ -32,14 +33,16 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
     private OAuthStorage $oauthStorage;
     private ServerInfo $serverInfo;
     private ConnectionManager $connectionManager;
+    private Signer $signer;
 
-    public function __construct(Config $config, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo, ConnectionManager $connectionManager)
+    public function __construct(Config $config, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo, ConnectionManager $connectionManager, Signer $signer)
     {
         $this->config = $config;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
         $this->serverInfo = $serverInfo;
         $this->connectionManager = $connectionManager;
+        $this->signer = $signer;
         $this->dateTime = Dt::get();
     }
 
@@ -148,6 +151,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         [
                             'Expires' => $userInfo->accessToken()->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
                             'Content-Type' => $clientConfig->contentType(),
+                            'X-Api-Config-Sig' => $this->signer->sign(sodium_crypto_generichash($clientConfig->get())),
                         ]
                     );
                 } catch (ProtocolException $e) {

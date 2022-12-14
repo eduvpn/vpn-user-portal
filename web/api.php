@@ -87,7 +87,8 @@ try {
             $storage,
             $oauthStorage,
             $serverInfo,
-            $connectionManager
+            $connectionManager,
+            new Signer($oauthKey)
         )
     );
 

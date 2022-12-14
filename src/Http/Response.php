@@ -40,6 +40,14 @@ class Response
         return $this->responseBody;
     }
 
+    /**
+     * @return array<string,string>
+     */
+    public function responseHeaders(): array
+    {
+        return $this->responseHeaders;
+    }
+
     public function send(): void
     {
         http_response_code($this->statusCode);
