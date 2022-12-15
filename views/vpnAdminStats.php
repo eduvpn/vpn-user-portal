@@ -39,6 +39,9 @@
         <td>
             <form class="frm" method="get" action="csv_stats/live"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('#Connections in 5 minute intervals'); ?>"><?=$this->t('Live'); ?></button></form>
             </td>
+            <td>
+            <form class="frm" method="get" action="csv_stats/aggregate"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('#Unique users and max #connections per day'); ?>"><?=$this->t('Aggregated'); ?></button></form>
+        </td>
     </tr>
 <?php endforeach; ?>
 </tbody>
