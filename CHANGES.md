@@ -24,7 +24,7 @@
   ([#96](https://todo.sr.ht/~eduvpn/server/96))
 - try all nodes when attempting to connect with WireGuard and the first node 
   ran out of free IP addresses ([#110](https://todo.sr.ht/~eduvpn/server/110))
-- remove "Aggregate Stats" for now until we are able to fix it 
+- fix "Aggregate Stats" inefficient `LEFT JOIN` query
   ([#112](https://todo.sr.ht/~eduvpn/server/112))
 
 ## 3.1.7 (2022-11-18)
