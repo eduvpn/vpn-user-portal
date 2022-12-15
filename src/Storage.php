@@ -1304,23 +1304,29 @@ class Storage
                 INSERT INTO
                     aggregate_stats
                 SELECT
-                    DATE(l.date_time) AS date,
-                    l.profile_id AS profile_id,
-                    MAX(l.connection_count) AS max_connection_count,
-                    COUNT(DISTINCT c.user_id) AS unique_user_count
+                    DATE(date_time) AS date,
+                    profile_id,
+                    MAX(connection_count) AS max_connection_count,
+                    (
+                        SELECT
+                            COUNT(DISTINCT user_id) AS unique_user_count
+                        FROM
+                            connection_log c
+                        WHERE
+                            DATE(l.date_time) = DATE(c.connected_at)
+                        AND
+                            l.profile_id = c.profile_id
+                        GROUP BY
+                            DATE(c.connected_at),
+                            profile_id
+                    ) AS unique_user_count
                 FROM
                     live_stats l
-                LEFT JOIN
-                    connection_log c
-                ON
-                    DATE(l.date_time) = DATE(c.connected_at)
-                AND
-                    l.profile_id = c.profile_id
                 WHERE
-                    l.date_time < :date_time
+                    date <= :date_time
                 GROUP BY
                     date,
-                    l.profile_id
+                    profile_id
                 SQL
         );
         $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
