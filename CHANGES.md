@@ -26,6 +26,7 @@
   ran out of free IP addresses ([#110](https://todo.sr.ht/~eduvpn/server/110))
 - fix "Aggregate Stats" inefficient `LEFT JOIN` query
   ([#112](https://todo.sr.ht/~eduvpn/server/112))
+- sort/group "Aggregate Stats"
 
 ## 3.1.7 (2022-11-18)
 - fix `ConfigCheck` with DNS template variables 
