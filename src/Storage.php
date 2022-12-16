@@ -1327,7 +1327,7 @@ class Storage
                 FROM
                     live_stats l
                 WHERE
-                    date <= :date_time
+                    date < :date_time
                 GROUP BY
                     date,
                     profile_id
