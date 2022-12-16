@@ -11,7 +11,7 @@
   configuration file
 - show `nodeNumber` on Info page for the node(s)
 - add `LoggerInterface::debug`
-- remove silly `Tpl::profileIdToDisplayName` cache
+- remove `Tpl::profileIdToDisplayName` "cache"
 - refactor connect/disconnect event hooks
 - write to `connection_log` table from `ConnectionLogHook`
 - make `VPN_PROTO` available on connect/disconnect in `ScriptConnectionHook`
