@@ -1281,6 +1281,10 @@ class Storage
                         aggregate_stats
                     WHERE
                         profile_id = :profile_id
+                    ORDER BY
+                        date
+                    GROUP BY
+                        date
                 SQL
         );
         $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
