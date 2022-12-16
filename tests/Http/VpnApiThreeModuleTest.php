@@ -112,8 +112,7 @@ final class VpnApiThreeModuleTest extends TestCase
                     new TestHttpClient(),
                     new NullLogger()
                 ),
-                $this->storage,
-                new NullLogger()
+                $this->storage
             )
         );
         $this->service = new ApiService(new TestValidator());
