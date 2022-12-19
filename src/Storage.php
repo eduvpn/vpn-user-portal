@@ -1281,9 +1281,9 @@ class Storage
                         aggregate_stats
                     WHERE
                         profile_id = :profile_id
-                    ORDER BY
-                        date
                     GROUP BY
+                        date
+                    ORDER BY
                         date
                 SQL
         );
