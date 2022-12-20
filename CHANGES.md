@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.1 (...)
+- fix SQL query for exporting "Aggregate Stats"
+
 ## 3.2.0 (2022-12-16)
 - (re)implement tool to generate (reverse) DNS zone files
   ([#25](https://todo.sr.ht/~eduvpn/server/25))
