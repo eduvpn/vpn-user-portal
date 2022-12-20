@@ -335,8 +335,8 @@ class ConnectionManager
         foreach ($this->config->nodeNumberUrlList() as $nodeNumber => $nodeUrl) {
             foreach (array_keys($this->vpnDaemon->wPeerList($nodeUrl, true)) as $publicKey) {
                 if (!\array_key_exists($publicKey, $wPeerListFromDb)) {
-                    $this->logger->debug(sprintf('%s: unregistering peer with public key "%s"', __METHOD__, $publicKey));
                     if (null !== $openConnectionInfo = $this->storage->openConnectionInfo($publicKey)) {
+                        $this->logger->debug(sprintf('%s: removing peer [%s,%d,%s]', __METHOD__, $openConnectionInfo['profile_id'], $nodeNumber, $publicKey));
                         $this->wDisconnect($openConnectionInfo['user_id'], $openConnectionInfo['profile_id'], $nodeNumber, $publicKey, $openConnectionInfo['ip_four'], $openConnectionInfo['ip_six']);
                     }
                     // XXX should we log when there is no open connection for this public key in the connection_log table?
@@ -351,7 +351,7 @@ class ConnectionManager
             if (in_array($publicKey, $connectedPublicKeyList, true)) {
                 continue;
             }
-            $this->logger->debug(sprintf('%s: registering peer with public key "%s"', __METHOD__, $publicKey));
+            $this->logger->debug(sprintf('%s: adding peer [%s,%d,%s]', __METHOD__, $wPeerInfo['profile_id'], $wPeerInfo['node_number'], $publicKey));
             $this->vpnDaemon->wPeerAdd(
                 $this->config->profileConfig($wPeerInfo['profile_id'])->nodeUrl($wPeerInfo['node_number']),
                 $publicKey,
