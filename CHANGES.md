@@ -3,6 +3,7 @@
 ## 3.2.1 (...)
 - fix SQL query for exporting "Aggregate Stats"
 - make log of adding/removing peers during sync more informative
+- add name of server to aggregate/live stats file downloads
 
 ## 3.2.0 (2022-12-16)
 - (re)implement tool to generate (reverse) DNS zone files

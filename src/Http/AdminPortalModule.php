@@ -270,7 +270,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $csvString,
                     [
                         'Content-Type' => 'text/csv',
-                        'Content-Disposition' => sprintf('attachment; filename="%s_live_stats.csv"', $profileId),
+                        'Content-Disposition' => sprintf('attachment; filename="%s_%s_live_stats.csv"', $request->getServerName(), $profileId),
                     ]
                 );
             }
@@ -296,7 +296,7 @@ class AdminPortalModule implements ServiceModuleInterface
                     $csvString,
                     [
                         'Content-Type' => 'text/csv',
-                        'Content-Disposition' => sprintf('attachment; filename="%s_aggregate_stats.csv"', $profileId),
+                        'Content-Disposition' => sprintf('attachment; filename="%s_%s_aggregate_stats.csv"', $request->getServerName(), $profileId),
                     ]
                 );
             }
