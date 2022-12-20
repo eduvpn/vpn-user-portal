@@ -1275,8 +1275,8 @@ class Storage
             <<< 'SQL'
                     SELECT
                         date,
-                        MAX(unique_user_count),
-                        MAX(max_connection_count)
+                        MAX(unique_user_count) AS unique_user_count,
+                        MAX(max_connection_count) AS max_connection_count
                     FROM
                         aggregate_stats
                     WHERE
