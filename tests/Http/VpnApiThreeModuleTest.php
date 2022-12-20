@@ -206,7 +206,7 @@ final class VpnApiThreeModuleTest extends TestCase
             [
                 'Expires' => 'Fri, 01 Apr 2022 09:00:00 GMT',
                 'Content-Type' => 'application/x-openvpn-profile',
-                'X-Api-Config-Sig' => 'v7.TUuaHeqpfURSUR_x.gL7aTM-pr8d9UugR-fwhZLhwMgijreIyfsaE-7Z8jF0.FLJhDU7s42V-0Ah3jRbJEp1dsYEMM0LI4nK0ahX1Xnbz0c79BYJe1aLfnxPIaTdDwqltt7um2dFZWLdLEUMICg',
+                'X-Api-Sig' => 'v7.TUuaHeqpfURSUR_x.gL7aTM-pr8d9UugR-fwhZLhwMgijreIyfsaE-7Z8jF0.FLJhDU7s42V-0Ah3jRbJEp1dsYEMM0LI4nK0ahX1Xnbz0c79BYJe1aLfnxPIaTdDwqltt7um2dFZWLdLEUMICg',
             ],
             $httpResponse->responseHeaders()
         );

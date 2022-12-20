@@ -151,7 +151,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         [
                             'Expires' => $userInfo->accessToken()->authorizationExpiresAt()->format(DateTimeImmutable::RFC7231),
                             'Content-Type' => $clientConfig->contentType(),
-                            'X-Api-Config-Sig' => $this->signer->sign(sodium_crypto_generichash($clientConfig->get())),
+                            'X-Api-Sig' => $this->signer->sign(sodium_crypto_generichash($clientConfig->get())),
                         ]
                     );
                 } catch (ProtocolException $e) {
