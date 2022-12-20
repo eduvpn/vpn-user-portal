@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.2.1 (...)
+## 3.2.1 (2022-12-20)
 - fix SQL query for exporting "Aggregate Stats"
 - make log of adding/removing peers during sync more informative
 - add name of server to aggregate/live stats file downloads
