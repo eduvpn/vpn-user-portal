@@ -1007,9 +1007,12 @@ class Storage
         return $logEntries;
     }
 
+    /**
+     * Delete the entries from the log where the *DISCONNECT* time is before
+     * the provided date.
+     */
     public function cleanConnectionLog(DateTimeImmutable $dateTime): void
     {
-        // XXX test this!
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     DELETE FROM
