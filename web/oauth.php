@@ -37,6 +37,26 @@ try {
     $request = Request::createFromGlobals();
     FileIO::mkdir($baseDir.'/data');
 
+    // workaround for macOS/iOS client on server upgrade trying to use the old
+    // 2.x OAuth token endpoint on 3.x server
+    // @see https://github.com/eduvpn/apple/issues/487
+    if ('/token' === $request->getPathInfo()) {
+        // with 2.x PATH_INFO is "/token", for 3.x it is "/oauth/token"
+        $httpResponse = new JsonResponse(
+            [
+                'error' => 'invalid_grant',
+            ],
+            [
+                'Cache-Control' => 'no-store',
+                'Pragma' => 'no-cache',
+            ],
+            400
+        );
+        $httpResponse->send();
+
+        exit(0);
+    }
+
     $config = Config::fromFile($baseDir.'/config/config.php');
     $service = new OAuthTokenService();
     $storage = new Storage($config->dbConfig($baseDir));
