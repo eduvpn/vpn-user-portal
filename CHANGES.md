@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.2 (...)
+- fix for [bug](https://github.com/eduvpn/apple/issues/487) in iOS/macOS app 
+  regarding OAuth token refreshing after server upgrade from 2.x to 3.x
+
 ## 3.2.1 (2022-12-20)
 - fix SQL query for exporting "Aggregate Stats"
 - make log of adding/removing peers during sync more informative
