@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.2.2 (...)
+## 3.2.2 (2022-12-22)
 - fix for [bug](https://github.com/eduvpn/apple/issues/487) in iOS/macOS app 
   regarding OAuth token refreshing after server upgrade from 2.x to 3.x
 
