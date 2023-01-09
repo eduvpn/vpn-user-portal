@@ -12,6 +12,7 @@ declare(strict_types=1);
 return [
     '#Active Connections' => '#Aktiivsed ühendused',
     '#Connections in 5 minute intervals' => '#Ühendused 5-minutiliste intervallidega',
+    // '#Unique Guest Users' => '',
     '#Unique Users' => '#Unikaalsed kasutajad',
     '#Unique users and max #connections per day' => '#Unikaalsed kasutajad ja #ühendusi päevas',
     'ACL Permission List' => 'ACL õiguste loend',
@@ -122,6 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Rakenduste nimekiri, millel oled lubanud VPN ühendust luua.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Samaaegselt ühendatud VPN-klientide arvu maksimum eelmise nädala konkreetsel ajahetkel',
     'The most recent VPN connections with this account.' => 'Selle konto viimane VPNi ühendus',
+    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'VPN teenuse unikaalsete kasutajate arv viimasel nädalal.',
     'The table below shows the per profile VPN usage over the last week.' => 'Alltoodud tabel näitab profiilide kaupa VPN kasutust viimasel nädalal.',
     'There are no results matching your criteria.' => 'Otsingutingimustele vastavaid tulemusi ei leitud.',

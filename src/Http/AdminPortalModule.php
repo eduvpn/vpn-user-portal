@@ -244,6 +244,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'profileConfigList' => $this->config->profileConfigList(),
                             'statsMaxConnectionCount' => $this->storage->statsGetLiveMaxConnectionCount(),
                             'statsUniqueUserCount' => $this->storage->statsGetUniqueUsers($oneWeekAgo),
+                            'statsUniqueGuestUserCount' => $this->config->apiConfig()->enableGuestAccess() ? $this->storage->statsGetUniqueGuestUsers($oneWeekAgo) : null,
                             'appUsage' => self::appUsage($this->storage->appUsage()),
                         ]
                     )

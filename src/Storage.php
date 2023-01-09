@@ -1270,6 +1270,39 @@ class Storage
     }
 
     /**
+     * @return array<string,array{unique_user_count:int}>
+     */
+    public function statsGetUniqueGuestUsers(DateTimeImmutable $dateTime): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    profile_id,
+                    COUNT(DISTINCT user_id) AS unique_user_count
+                FROM
+                    connection_log
+                WHERE
+                    connected_at >= :date_time
+                AND
+                    user_id LIKE '%@%'
+                GROUP BY
+                    profile_id
+
+                SQL
+        );
+        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->execute();
+        $statsData = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $statsData[(string) $resultRow['profile_id']] = [
+                'unique_user_count' => (int) $resultRow['unique_user_count'],
+            ];
+        }
+
+        return $statsData;
+    }
+
+    /**
      * @return array<array{date:string,unique_user_count:int,max_connection_count:int}>
      */
     public function statsGetAggregate(string $profileId): array

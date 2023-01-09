@@ -12,6 +12,7 @@ declare(strict_types=1);
 return [
     '#Active Connections' => '#Aktiewe verbindings',
     '#Connections in 5 minute intervals' => '#Verbindings met 5 minute tussenposes',
+    // '#Unique Guest Users' => '',
     '#Unique Users' => '#Unieke gebruikers',
     '#Unique users and max #connections per day' => '#Unieke gebruikers en maksimum #verbindings per dag',
     'ACL Permission List' => 'ACL-Toestemmingslys',
@@ -122,6 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Die lys van programme wat goedgekeur is om \'n VPN-verbinding te gebruik.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Die maksimum gelyktydigverbonde VPN-klante op \'n bepaalde tydperk in die afgelope week',
     'The most recent VPN connections with this account.' => 'Die onlangse VPN-verbindings met hierdie rekening.',
+    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Die aantal unieke gebruikers wat na die VPN-diens gekoppel het in die afgelope week',
     'The table below shows the per profile VPN usage over the last week.' => 'Die tabel hieronder toon die VPN-gebruik per profiel vir die afgelope week.',
     'There are no results matching your criteria.' => 'Daar is geen resultate wat by jou kriteria pas nie.',
