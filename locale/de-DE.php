@@ -5,14 +5,14 @@ declare(strict_types=1);
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2014-2022, The Commons Conservancy eduVPN Programme
+ * Copyright: 2014-2023, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 return [
     '#Active Connections' => 'Aktive Verbindungen',
     '#Connections in 5 minute intervals' => 'Verbindungen im 5-Minuten-Takt',
-    // '#Unique Guest Users' => '',
+    //'#Unique Guest Users' => '',
     '#Unique Users' => 'Eindeutige Nutzende',
     '#Unique users and max #connections per day' => 'Eindeutige Nutzende und maximale Anzahl von Verbindungen pro Tag',
     'ACL Permission List' => 'ACL Berechtigungsliste',
@@ -27,7 +27,7 @@ return [
     'Application Usage' => 'Anwendungsnutzung',
     'Approve' => 'Genehmigen',
     'Approve Application' => 'Genehmige Anwendung',
-    // 'Authentication Data' => '',
+    //'Authentication Data' => '',
     'Authorized Applications' => 'Autorsierte Anwendungen',
     'Authorized On' => 'Autorisiert am',
     'Available Profiles' => 'Verfügbare Profile',
@@ -123,7 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Liste der Anwendungen, welche Du erlaubst um eine VPN-Verbindung herzustellen.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Die maximale Anzahl der gleichzeitig verbundenen VPN Clients zu einem bestimmten Zeitpunkt in der letzten Woche.',
     'The most recent VPN connections with this account.' => 'Die letzte aktive VPN Verbindungen mit diesem Beutzerkonto.',
-    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
+    //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Die Anzahl der Benutzenden, die sich in der letzten Woche mit dem VPN Dienst verbunden haben.',
     'The table below shows the per profile VPN usage over the last week.' => 'Die folgende Tabelle zeigt die VPN Nutzung pro Profil der letzten Woche an.',
     'There are no results matching your criteria.' => 'Keine Ergebnisse zu diesem Kriterium.',

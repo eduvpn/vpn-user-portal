@@ -5,14 +5,14 @@ declare(strict_types=1);
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2014-2022, The Commons Conservancy eduVPN Programme
+ * Copyright: 2014-2023, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 return [
     '#Active Connections' => '#Aktiva anslutningar',
     '#Connections in 5 minute intervals' => '#Anslutningar inom 5 minuters intervall',
-    // '#Unique Guest Users' => '',
+    //'#Unique Guest Users' => '',
     '#Unique Users' => '#Unika användare',
     '#Unique users and max #connections per day' => '#Unika användare och max #anslutningar per dag',
     'ACL Permission List' => 'ACL behörighetslista',
@@ -27,7 +27,7 @@ return [
     'Application Usage' => 'Användning av program',
     'Approve' => 'Tillåt',
     'Approve Application' => 'Tillåt program',
-    // 'Authentication Data' => '',
+    //'Authentication Data' => '',
     'Authorized Applications' => 'Auktoriserade program',
     'Authorized On' => 'Auktoriserad den',
     'Available Profiles' => 'Tillgängliga profiler',
@@ -123,7 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Listan över program som du har auktoriserat för att skapa en VPN-anslutning.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Det maximala antalet samtidigt anslutna VPN-klienter vid en viss tidpunkt under den senaste veckan',
     'The most recent VPN connections with this account.' => 'De senaste VPN-anslutningarna för det här kontot.',
-    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
+    //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Antalet unika användare som anslutit sig till VPN-tjänsten under den senaste veckan',
     'The table below shows the per profile VPN usage over the last week.' => 'Tabellen nedan visar VPN-användningen per profil under den senaste veckan.',
     'There are no results matching your criteria.' => 'Det finns inga resultat som matchar dina kriterier.',

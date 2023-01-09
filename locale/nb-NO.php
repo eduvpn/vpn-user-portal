@@ -5,14 +5,14 @@ declare(strict_types=1);
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2014-2022, The Commons Conservancy eduVPN Programme
+ * Copyright: 2014-2023, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 return [
     '#Active Connections' => '#Aktive tilkoblinger',
     '#Connections in 5 minute intervals' => '#Forbindelser i 5 minutters intervaller',
-    // '#Unique Guest Users' => '',
+    //'#Unique Guest Users' => '',
     '#Unique Users' => '#Unike brukere',
     '#Unique users and max #connections per day' => '#Unike brukere og maks #forbindelser per dag',
     'ACL Permission List' => 'ACL tillatt liste',
@@ -27,7 +27,7 @@ return [
     'Application Usage' => 'Applikasjonsbruk',
     'Approve' => 'Tillat',
     'Approve Application' => 'Tillat applikasjon',
-    // 'Authentication Data' => '',
+    //'Authentication Data' => '',
     'Authorized Applications' => 'Autoriserte applikasjoner',
     'Authorized On' => 'Autorisert den',
     'Available Profiles' => 'Tilgjengelige profiler',
@@ -123,7 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Liste over applikasjoner du har tillatt å opprette en VPN-tilkobling.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Maksimalt antall samtidig oppkoblede VPN klienter i løpet av den siste uken',
     'The most recent VPN connections with this account.' => 'De siste VPN oppkoblingene med denne kontoen',
-    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
+    //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Antall unike brukere koblet til denne VPN tjenesten siste uke',
     'The table below shows the per profile VPN usage over the last week.' => 'Tabellen under viser bruk per profil siste uke',
     'There are no results matching your criteria.' => 'Ingen treff på dette søket.',

@@ -5,14 +5,14 @@ declare(strict_types=1);
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2014-2022, The Commons Conservancy eduVPN Programme
+ * Copyright: 2014-2023, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 return [
     '#Active Connections' => 'عدد الاتصالات النشطة',
     '#Connections in 5 minute intervals' => 'عدد الاتصالات في فواصل 5 دقائق',
-    // '#Unique Guest Users' => '',
+    //'#Unique Guest Users' => '',
     '#Unique Users' => 'عدد المستخدمين الفرادى',
     '#Unique users and max #connections per day' => 'عدد المستخدمين الفرادى واقصى عدد الاتصالات في اليوم',
     'ACL Permission List' => 'قائمة الصلاحيات',
@@ -27,7 +27,7 @@ return [
     'Application Usage' => 'استخدام التطبيق',
     'Approve' => 'وافق',
     'Approve Application' => 'الموافقة على التطبيق',
-    // 'Authentication Data' => '',
+    //'Authentication Data' => '',
     'Authorized Applications' => 'التطبيقات المسموحة',
     'Authorized On' => 'مسموحة في',
     'Available Profiles' => 'مظاهر متاحة',
@@ -123,7 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'لائحة التطبيقات المخولة لانشاء اتصال بالشبكة الخاصة الافتراضية.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'اقصى عدد عملاء الشبكة الخاصة الافتراضية المتصلة في آن واحد خلال الاسبوع الماضي',
     'The most recent VPN connections with this account.' => 'أحدث اتصالات الشبكة الخاصة الافتراضية من هذا الحساب.',
-    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
+    //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'عدد المستخدمين الفرادى الذين اتصلوا بخدمة الشبكة الخاصة الافتراضية في الاسبوع الماضي',
     'The table below shows the per profile VPN usage over the last week.' => 'يوضح الجدول ادناه استخدام الشبكة الخاصة الافتراضية حسب كل مظهر خلال الاسبوع الماضي.',
     'There are no results matching your criteria.' => 'لا توجد نتائج مطابقة لهذه المعايير.',

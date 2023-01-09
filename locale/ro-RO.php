@@ -5,14 +5,14 @@ declare(strict_types=1);
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2014-2022, The Commons Conservancy eduVPN Programme
+ * Copyright: 2014-2023, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 return [
     '#Active Connections' => 'Numărul de conexiuni active',
     '#Connections in 5 minute intervals' => 'Conexiuni la intervale de 5 minute',
-    // '#Unique Guest Users' => '',
+    //'#Unique Guest Users' => '',
     '#Unique Users' => '#Utilizatori unici',
     '#Unique users and max #connections per day' => '#Utilizatori unici și conexiunile maxime pe zi',
     'ACL Permission List' => 'Lista de permisiuni (ACL)',
@@ -27,7 +27,7 @@ return [
     'Application Usage' => 'Aplicații utilizate',
     'Approve' => 'Permite',
     'Approve Application' => 'Aprobă aplicația',
-    // 'Authentication Data' => '',
+    //'Authentication Data' => '',
     'Authorized Applications' => 'Aplicații autorizate',
     'Authorized On' => 'Autorizat pe',
     'Available Profiles' => 'Profiluri disponibile',
@@ -123,7 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Lista aplicațiilor pe care le-ai autorizat să creeze o conexiune VPN.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Numărul maxim de clienți VPN conectați simultan la un moment dat în ultima săptămână',
     'The most recent VPN connections with this account.' => 'Cele mai recente conexiuni VPN cu acest cont.',
-    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
+    //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Numărul de utilizatori unici care s-au conectat la serviciul VPN în ultima săptămână',
     'The table below shows the per profile VPN usage over the last week.' => 'Tabelul de mai jos afisează utilizarea VPN pe fiecare profil în ultima săptămână.',
     'There are no results matching your criteria.' => 'Nu există rezultate care să corespundă criteriilor tale.',

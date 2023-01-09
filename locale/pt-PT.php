@@ -5,14 +5,14 @@ declare(strict_types=1);
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2014-2022, The Commons Conservancy eduVPN Programme
+ * Copyright: 2014-2023, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 return [
     '#Active Connections' => '# Ligações ativas',
     '#Connections in 5 minute intervals' => 'Ligações em intervalos de 5 minutos',
-    // '#Unique Guest Users' => '',
+    //'#Unique Guest Users' => '',
     '#Unique Users' => 'Utilizadores Únicos',
     '#Unique users and max #connections per day' => 'Utilizadores únicos e # máximo de ligações por dia',
     'ACL Permission List' => 'Lista de Acesso ACL',
@@ -27,7 +27,7 @@ return [
     'Application Usage' => 'Uso da Aplicação',
     'Approve' => 'Aprove',
     'Approve Application' => 'Aprove Aplicação',
-    // 'Authentication Data' => '',
+    //'Authentication Data' => '',
     'Authorized Applications' => 'Aplicações Autorizadas',
     'Authorized On' => 'Autorizada em',
     'Available Profiles' => 'Perfis Disponíveis',
@@ -123,7 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'A lista de aplicações que autorizou a criar ligações VPN.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'O número máximo de clientes VPN ligados simultaneamente num determinado momento durante a semana passada',
     'The most recent VPN connections with this account.' => 'As ligações VPN mais recentes com esta conta.',
-    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
+    //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'O número de utilizadores únicos ligados ao serviço VPN na semana passada',
     'The table below shows the per profile VPN usage over the last week.' => 'A tabela abaixo mostra a utilização de VPN por perfil durante a semana passada',
     'There are no results matching your criteria.' => 'Não há resultados que satisfaçam os seus critérios',

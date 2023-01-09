@@ -5,14 +5,14 @@ declare(strict_types=1);
 /*
  * eduVPN - End-user friendly VPN.
  *
- * Copyright: 2014-2022, The Commons Conservancy eduVPN Programme
+ * Copyright: 2014-2023, The Commons Conservancy eduVPN Programme
  * SPDX-License-Identifier: AGPL-3.0+
  */
 
 return [
     '#Active Connections' => '#Активні з’єднання.',
     '#Connections in 5 minute intervals' => '#З’єднання з інтервалом у 5 хвилин',
-    // '#Unique Guest Users' => '',
+    //'#Unique Guest Users' => '',
     '#Unique Users' => '#Унікальні користувачі',
     '#Unique users and max #connections per day' => '#Унікальні користувачі та максимальна кількість #з’єднань за день',
     'ACL Permission List' => 'Список дозволів ACL',
@@ -27,7 +27,7 @@ return [
     'Application Usage' => 'Використання додатку',
     'Approve' => 'Підтвердити',
     'Approve Application' => 'Підтвердити додаток',
-    // 'Authentication Data' => '',
+    //'Authentication Data' => '',
     'Authorized Applications' => 'Авторизовати додаток',
     'Authorized On' => 'Авторизований на',
     'Available Profiles' => 'Доступні профілі',
@@ -123,7 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Список програм, яким ви надали дозвіл на створення VPN-з’єднання.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Максимальна кількість одночасно підключених VPN-клієнтів у певний момент часу за останній тиждень',
     'The most recent VPN connections with this account.' => 'Останні VPN-з’єднання з цим обліковим записом',
-    // 'The number of unique guest users connecting to the VPN service in the last week' => '',
+    //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Кількість унікальних користувачів, які підключилися до послуги VPN за останній тиждень',
     'The table below shows the per profile VPN usage over the last week.' => 'У таблиці нижче показано використання VPN для кожного профілю за останній тиждень',
     'There are no results matching your criteria.' => 'Немає результатів, що відповідають вашим критеріям.',
