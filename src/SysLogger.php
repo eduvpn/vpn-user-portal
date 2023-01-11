@@ -17,7 +17,7 @@ class SysLogger implements LoggerInterface
 {
     public function __construct(string $appName)
     {
-        if (false === openlog($appName, LOG_PERROR | LOG_ODELAY, LOG_USER)) {
+        if (false === openlog($appName, LOG_ODELAY, LOG_USER)) {
             throw new RuntimeException('unable to open syslog');
         }
     }
