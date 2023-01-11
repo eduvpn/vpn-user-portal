@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.3 (...)
+- do not write `syslog` output to `stderr` 
+  ([#117](https://todo.sr.ht/~eduvpn/server/117))
+- show number of unique guest users on "Stats" page if "Guest Access" is 
+  enabled
+
 ## 3.2.2 (2022-12-22)
 - fix for [bug](https://github.com/eduvpn/apple/issues/487) in iOS/macOS app 
   regarding OAuth token refreshing after server upgrade from 2.x to 3.x
