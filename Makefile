@@ -1,4 +1,6 @@
-.PHONY: all test fmt psalm phpstan sloc
+HTTP_PORT ?= 8082
+
+.PHONY: all test fmt psalm phpstan sloc dev
 
 all:	test fmt psalm phpstan
 
@@ -16,3 +18,6 @@ phpstan:
 
 sloc:
 	phploc src web libexec bin
+
+dev:
+	@php -S localhost:$(HTTP_PORT) -t web dev/router.php
