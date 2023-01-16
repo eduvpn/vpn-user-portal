@@ -246,6 +246,7 @@ class AdminPortalModule implements ServiceModuleInterface
                             'statsUniqueUserCount' => $this->storage->statsGetUniqueUsers($oneWeekAgo),
                             'statsUniqueGuestUserCount' => $this->config->apiConfig()->enableGuestAccess() ? $this->storage->statsGetUniqueGuestUsers($oneWeekAgo) : null,
                             'appUsage' => self::appUsage($this->storage->appUsage()),
+                            'hasAggregateStats' => 'sqlite' === $this->storage->driverName(),
                         ]
                     )
                 );

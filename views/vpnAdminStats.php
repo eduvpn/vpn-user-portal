@@ -5,6 +5,7 @@
 <?php /** @var array<string,array{max_connection_count:int}> $statsMaxConnectionCount */?>
 <?php /** @var array<string,array{unique_user_count:int}> $statsUniqueUserCount */?>
 <?php /** @var ?array<string,array{unique_user_count:int}> $statsUniqueGuestUserCount */?>
+<?php /** @var bool $hasAggregateStats */?>
 <?php $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')]); ?>
 <?php $this->start('content'); ?>
 <h2><?=$this->t('Profile Usage'); ?></h2>
@@ -49,9 +50,11 @@
         <td>
             <form class="frm" method="get" action="csv_stats/live"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('#Connections in 5 minute intervals'); ?>"><?=$this->t('Live'); ?></button></form>
             </td>
+<?php if ($hasAggregateStats): ?>
             <td>
             <form class="frm" method="get" action="csv_stats/aggregate"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('#Unique users and max #connections per day'); ?>"><?=$this->t('Aggregated'); ?></button></form>
         </td>
+<?php endif; ?>
     </tr>
 <?php endforeach; ?>
 </tbody>

@@ -59,6 +59,11 @@ class Storage
         return $this->db;
     }
 
+    public function driverName(): string
+    {
+        return $this->db->getAttribute(PDO::ATTR_DRIVER_NAME);
+    }
+
     public function wPeerAdd(string $userId, int $nodeNumber, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, DateTimeImmutable $expiresAt, ?string $authKey): void
     {
         $stmt = $this->db->prepare(
@@ -1342,7 +1347,7 @@ class Storage
         // the query below only works on SQLite. It breaks on PostgreSQL and
         // MariaDB/MySQL.
         // @see https://todo.sr.ht/~eduvpn/server/118
-        if ('sqlite' !== $this->db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+        if ('sqlite' !== $this->driverName()) {
             return;
         }
 
