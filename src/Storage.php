@@ -1339,6 +1339,13 @@ class Storage
 
     public function statsAggregate(DateTimeImmutable $dateTime): void
     {
+        // the query below only works on SQLite. It breaks on PostgreSQL and
+        // MariaDB/MySQL.
+        // @see https://todo.sr.ht/~eduvpn/server/118
+        if ('sqlite' !== $this->db->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+            return;
+        }
+
         $stmt = $this->db->prepare(
             <<< 'SQL'
                 INSERT INTO
