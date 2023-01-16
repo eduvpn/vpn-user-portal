@@ -75,7 +75,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.eduvpn.app.macos',
-                ['org.eduvpn.app:/api/callback', 'http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
+                ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'eduVPN for macOS',
                 true
@@ -84,7 +84,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.letsconnect-vpn.app.macos',
-                ['org.letsconnect-vpn.app:/api/callback', 'http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
+                ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'Let\'s Connect! for macOS',
                 true
@@ -93,7 +93,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.eduvpn.app.linux',
-                ['org.eduvpn.app:/api/callback', 'http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
+                ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'eduVPN for Linux',
                 true
@@ -102,7 +102,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.letsconnect-vpn.app.linux',
-                ['org.letsconnect-vpn.app:/api/callback', 'http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
+                ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'Let\'s Connect! for Linux',
                 true
