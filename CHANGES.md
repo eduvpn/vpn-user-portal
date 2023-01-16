@@ -5,6 +5,7 @@
   ([#117](https://todo.sr.ht/~eduvpn/server/117))
 - show number of unique guest users on "Stats" page if "Guest Access" is 
   enabled
+- add [govVPN](https://govroam.nl/diensten2/govvpn/) OAuth client registrations
 
 ## 3.2.2 (2022-12-22)
 - fix for [bug](https://github.com/eduvpn/apple/issues/487) in iOS/macOS app 
