@@ -39,7 +39,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.eduvpn.app.android',
-                ['org.eduvpn.app:/api/callback', 'https://android.app.eduvpn.org/api/callback'],
+                ['org.eduvpn.app:/api/callback'],
                 null,
                 'eduVPN for Android',
                 true
@@ -48,7 +48,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.letsconnect-vpn.app.android',
-                ['org.letsconnect-vpn.app:/api/callback', 'https://android.app.letsconnect-vpn.org/api/callback'],
+                ['org.letsconnect-vpn.app:/api/callback'],
                 null,
                 'Let\'s Connect! for Android',
                 true
@@ -57,7 +57,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.eduvpn.app.ios',
-                ['org.eduvpn.app.ios:/api/callback', 'https://ios.app.eduvpn.org/auth/app/redirect/'],
+                ['org.eduvpn.app.ios:/api/callback'],
                 null,
                 'eduVPN for iOS',
                 true
