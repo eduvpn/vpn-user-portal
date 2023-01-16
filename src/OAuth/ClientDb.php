@@ -33,6 +33,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.eduvpn.app.android',
+                // should have been org.eduvpn.app.android:/api/callback
                 ['org.eduvpn.app:/api/callback'],
                 null,
                 'eduVPN for Android',
@@ -82,6 +83,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.letsconnect-vpn.app.android',
+                // should have been org.eduvpn.app.android:/api/callback
                 ['org.letsconnect-vpn.app:/api/callback'],
                 null,
                 'Let\'s Connect! for Android',
@@ -131,6 +133,7 @@ class ClientDb extends SimpleClientDb
         $this->add(
             new ClientInfo(
                 'org.govvpn.app.android',
+                // should have been org.eduvpn.app.android:/api/callback
                 ['org.govvpn.app:/api/callback'],
                 null,
                 'govVPN for Android',
