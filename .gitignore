@@ -8,10 +8,14 @@
 # ignore symlinks to styling and translation folders
 web/css/eduVPN
 web/css/LC
+web/css/govVPN
 web/img/eduVPN
 web/img/LC
+web/img/govVPN
 web/fonts
 views/eduVPN
 views/LC
+views/govVPN
 locale/eduVPN
 locale/LC
+locale/govVPN
