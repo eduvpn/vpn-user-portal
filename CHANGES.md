@@ -5,6 +5,8 @@
   ([#117](https://todo.sr.ht/~eduvpn/server/117))
 - show number of unique guest users on "Stats" page if "Guest Access" is 
   enabled
+- disable "Aggregate Stats" for now on systems that do not use SQLite as the 
+  database ([#118](https://todo.sr.ht/~eduvpn/server/118))
 - add [govVPN](https://govroam.nl/diensten2/govvpn/) OAuth client registrations
 
 ## 3.2.2 (2022-12-22)
