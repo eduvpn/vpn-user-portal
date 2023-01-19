@@ -20,6 +20,7 @@ $scriptConnectionHook = new ScriptConnectionHook(
 $scriptConnectionHook->connect(
     'user_id',
     'profile_id',
+    'openvpn',
     'connection_id',
     '10.0.0.99',
     'fd99::99',
@@ -29,7 +30,10 @@ $scriptConnectionHook->connect(
 $scriptConnectionHook->disconnect(
     'user_id',
     'profile_id',
+    'openvpn',
     'connection_id',
     '10.0.0.99',
-    'fd99::99'
+    'fd99::99',
+    12345,
+    54321
 );
