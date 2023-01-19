@@ -11,8 +11,8 @@
 - New database schema (`2023011801`). See 
   [migration](https://github.com/eduvpn/documentation/blob/v3/DATABASE.md#database-migration) 
   if your portal/controller is using MariaDB/MySQL, or PostgreSQL. For the 
-  default SQLite, the migration is performed automatically (
-  [#48](https://todo.sr.ht/~eduvpn/server/48), 
+  default SQLite, the migration is performed automatically 
+  ([#48](https://todo.sr.ht/~eduvpn/server/48), 
   [#51](https://todo.sr.ht/~eduvpn/server/51), 
   [#53](https://todo.sr.ht/~eduvpn/server/53), 
   [#65](https://todo.sr.ht/~eduvpn/server/65), 
