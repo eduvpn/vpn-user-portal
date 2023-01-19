@@ -1211,12 +1211,10 @@ class Storage
     }
 
     /**
-     * @return array<string,array{max_connection_count:int}>
+     * @return array<string,int>
      */
     public function statsGetLiveMaxConnectionCount(): array
     {
-        // XXX housekeeping will remove all entries older than 1 week, so I
-        // guess we do not have to limit here...
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
@@ -1231,9 +1229,9 @@ class Storage
         $stmt->execute();
         $statsData = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
-            $statsData[(string) $resultRow['profile_id']] = [
-                'max_connection_count' => (int) $resultRow['max_connection_count'],
-            ];
+            $profileId = (string) $resultRow['profile_id'];
+            $maxConnectionCount = (int) $resultRow['max_connection_count'];
+            $statsData[$profileId] = $maxConnectionCount;
         }
 
         return $statsData;

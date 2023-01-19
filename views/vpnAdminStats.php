@@ -2,7 +2,7 @@
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var array<array{client_id:string,client_count:int,client_count_rel:float,client_count_rel_pct:int,slice_no:int,path_data:string}> $appUsage */?>
 <?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<string,array{max_connection_count:int}> $statsMaxConnectionCount */?>
+<?php /** @var array<string,int> $statsMaxConnectionCount */?>
 <?php /** @var array<string,array{unique_user_count:int}> $statsUniqueUserCount */?>
 <?php /** @var ?array<string,array{unique_user_count:int}> $statsUniqueGuestUserCount */?>
 <?php $this->layout('base', ['activeItem' => 'stats', 'pageTitle' => $this->t('Stats')]); ?>
@@ -44,7 +44,7 @@
 <?php if (!array_key_exists($profileConfig->profileId(), $statsMaxConnectionCount)): ?>
         <td>0</td>
 <?php else: ?>
-        <td><?=$this->e((string) $statsMaxConnectionCount[$profileConfig->profileId()]['max_connection_count']); ?></td>
+        <td><?=$this->e((string) $statsMaxConnectionCount[$profileConfig->profileId()]); ?></td>
 <?php endif; ?>
         <td>
             <form class="frm" method="get" action="csv_stats/live"><input type="hidden" name="profile_id" value="<?=$this->e($profileConfig->profileId()); ?>"><button title="<?=$this->t('#Connections in 5 minute intervals'); ?>"><?=$this->t('Live'); ?></button></form>
