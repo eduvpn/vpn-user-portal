@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal;
 
+use DateInterval;
 use DateTimeImmutable;
 use PDO;
 use Vpn\Portal\Cfg\DbConfig;
@@ -18,7 +19,7 @@ use Vpn\Portal\Http\UserInfo;
 
 class Storage
 {
-    public const CURRENT_SCHEMA_VERSION = '2022022201';
+    public const CURRENT_SCHEMA_VERSION = '2023011801';
 
     private PDO $db;
 
@@ -57,11 +58,6 @@ class Storage
     public function dbPdo(): PDO
     {
         return $this->db;
-    }
-
-    public function driverName(): string
-    {
-        return $this->db->getAttribute(PDO::ATTR_DRIVER_NAME);
     }
 
     public function wPeerAdd(string $userId, int $nodeNumber, string $profileId, string $displayName, string $publicKey, string $ipFour, string $ipSix, DateTimeImmutable $createdAt, DateTimeImmutable $expiresAt, ?string $authKey): void
@@ -1308,7 +1304,7 @@ class Storage
     }
 
     /**
-     * @return array<array{date:string,unique_user_count:int,max_connection_count:int}>
+     * @return array<array{date:string,unique_user_count:int,unique_guest_user_count:int,max_connection_count:int}>
      */
     public function statsGetAggregate(string $profileId): array
     {
@@ -1317,6 +1313,7 @@ class Storage
                     SELECT
                         date,
                         MAX(unique_user_count) AS unique_user_count,
+                        MAX(unique_guest_user_count) AS unique_guest_user_count,
                         MAX(max_connection_count) AS max_connection_count
                     FROM
                         aggregate_stats
@@ -1335,6 +1332,7 @@ class Storage
             $statsData[] = [
                 'date' => (string) $resultRow['date'],
                 'unique_user_count' => (int) $resultRow['unique_user_count'],
+                'unique_guest_user_count' => (int) $resultRow['unique_guest_user_count'],
                 'max_connection_count' => (int) $resultRow['max_connection_count'],
             ];
         }
@@ -1342,47 +1340,152 @@ class Storage
         return $statsData;
     }
 
-    public function statsAggregate(DateTimeImmutable $dateTime): void
+    /**
+     * Get yesterday's maximum number of concurrent client connections per
+     * profile.
+     *
+     * @return array<string,int>
+     */
+    public function statsYesterdayMaxConnectionCount(DateTimeImmutable $dateTime): array
     {
-        // the query below only works on SQLite. It breaks on PostgreSQL and
-        // MariaDB/MySQL.
-        // @see https://todo.sr.ht/~eduvpn/server/118
-        if ('sqlite' !== $this->driverName()) {
-            return;
-        }
-
         $stmt = $this->db->prepare(
             <<< 'SQL'
-                INSERT INTO
-                    aggregate_stats
                 SELECT
-                    DATE(date_time) AS date,
                     profile_id,
-                    MAX(connection_count) AS max_connection_count,
-                    (
-                        SELECT
-                            COUNT(DISTINCT user_id) AS unique_user_count
-                        FROM
-                            connection_log c
-                        WHERE
-                            DATE(l.date_time) = DATE(c.connected_at)
-                        AND
-                            l.profile_id = c.profile_id
-                        GROUP BY
-                            DATE(c.connected_at),
-                            profile_id
-                    ) AS unique_user_count
+                    MAX(connection_count) AS max_connection_count
                 FROM
-                    live_stats l
+                    live_stats
                 WHERE
-                    DATE(date_time) < :date_time
+                    date_time >= :from_date
+                AND
+                    date_time < :until_date
                 GROUP BY
-                    DATE(date_time),
                     profile_id
                 SQL
         );
-        $stmt->bindValue(':date_time', $dateTime->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
+        $stmt->bindValue(':from_date', $dateTime->sub(new DateInterval('P1D'))->format('Y-m-d'), PDO::PARAM_STR);
+        $stmt->bindValue(':until_date', $dateTime->format('Y-m-d'), PDO::PARAM_STR);
         $stmt->execute();
+
+        $maxConnectionCountList = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $maxConnectionCountList[(string) $resultRow['profile_id']] = (int) $resultRow['max_connection_count'];
+        }
+
+        return $maxConnectionCountList;
+    }
+
+    /**
+     * Get yesterday's number of unique users that connected to the VPN per
+     * profile.
+     *
+     * @return array<string,int>
+     */
+    public function statsYesterdayUniqueUserCount(DateTimeImmutable $dateTime): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    profile_id,
+                    COUNT(DISTINCT user_id) AS unique_user_count
+                FROM
+                    connection_log
+                WHERE
+                    connected_at >= :from_date
+                AND
+                    connected_at < :until_date
+                GROUP BY
+                    profile_id
+                SQL
+        );
+        $stmt->bindValue(':from_date', $dateTime->sub(new DateInterval('P1D'))->format('Y-m-d'), PDO::PARAM_STR);
+        $stmt->bindValue(':until_date', $dateTime->format('Y-m-d'), PDO::PARAM_STR);
+        $stmt->execute();
+
+        $uniqueUserCountList = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $uniqueUserCountList[(string) $resultRow['profile_id']] = (int) $resultRow['unique_user_count'];
+        }
+
+        return $uniqueUserCountList;
+    }
+
+    /**
+     * Get yesterday's number of unique guest users that connected to the VPN
+     * per profile.
+     *
+     * @return array<string,int>
+     */
+    public function statsYesterdayUniqueGuestUserCount(DateTimeImmutable $dateTime): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    profile_id,
+                    COUNT(DISTINCT user_id) AS unique_user_count
+                FROM
+                    connection_log
+                WHERE
+                    connected_at >= :from_date
+                AND
+                    connected_at < :until_date
+                AND
+                    user_id LIKE '%@%'
+                GROUP BY
+                    profile_id
+                SQL
+        );
+        $stmt->bindValue(':from_date', $dateTime->sub(new DateInterval('P1D'))->format('Y-m-d'), PDO::PARAM_STR);
+        $stmt->bindValue(':until_date', $dateTime->format('Y-m-d'), PDO::PARAM_STR);
+        $stmt->execute();
+
+        $uniqueUserCountList = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $resultRow) {
+            $uniqueUserCountList[(string) $resultRow['profile_id']] = (int) $resultRow['unique_user_count'];
+        }
+
+        return $uniqueUserCountList;
+    }
+
+    public function statsAggregate(DateTimeImmutable $dateTime): void
+    {
+        // collect everything we want to put in the aggregate_stats table
+        // clever solutions with JOINs or sub queries are either too slow or
+        // don't work on all databases... enough is enough!
+        //
+        // @see https://todo.sr.ht/~eduvpn/server/118
+        // @see https://todo.sr.ht/~eduvpn/server/112
+        // @see https://todo.sr.ht/~eduvpn/server/48
+        // @see https://todo.sr.ht/~eduvpn/server/53
+        $statsMaxConnectionCount = $this->statsYesterdayMaxConnectionCount($dateTime);
+        $statsUniqueUserCount = $this->statsYesterdayUniqueUserCount($dateTime);
+        $statsUniqueGuestUserCount = $this->statsYesterdayUniqueGuestUserCount($dateTime);
+
+        foreach ($statsMaxConnectionCount as $profileId => $maxConnectionCount) {
+            $uniqueUserCount = 0;
+            $uniqueGuestUserCount = 0;
+            if (array_key_exists($profileId, $statsUniqueUserCount)) {
+                $uniqueUserCount = $statsUniqueUserCount[$profileId];
+            }
+            if (array_key_exists($profileId, $statsUniqueGuestUserCount)) {
+                $uniqueGuestUserCount = $statsUniqueGuestUserCount[$profileId];
+            }
+
+            $stmt = $this->db->prepare(
+                <<< 'SQL'
+                        INSERT INTO
+                            aggregate_stats (date, profile_id, max_connection_count, unique_user_count, unique_guest_user_count)
+                        VALUES
+                            (:date, :profile_id, :max_connection_count, :unique_user_count, :unique_guest_user_count)
+                    SQL
+            );
+            $stmt->bindValue(':date', $dateTime->sub(new DateInterval('P1D'))->format('Y-m-d'), PDO::PARAM_STR);
+            $stmt->bindValue(':profile_id', $profileId, PDO::PARAM_STR);
+            $stmt->bindValue(':max_connection_count', $maxConnectionCount, PDO::PARAM_INT);
+            $stmt->bindValue(':unique_user_count', $uniqueUserCount, PDO::PARAM_INT);
+            $stmt->bindValue(':unique_guest_user_count', $uniqueGuestUserCount, PDO::PARAM_INT);
+            $stmt->execute();
+        }
     }
 
     /**

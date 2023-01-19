@@ -246,7 +246,6 @@ class AdminPortalModule implements ServiceModuleInterface
                             'statsUniqueUserCount' => $this->storage->statsGetUniqueUsers($oneWeekAgo),
                             'statsUniqueGuestUserCount' => $this->config->apiConfig()->enableGuestAccess() ? $this->storage->statsGetUniqueGuestUsers($oneWeekAgo) : null,
                             'appUsage' => self::appUsage($this->storage->appUsage()),
-                            'hasAggregateStats' => 'sqlite' === $this->storage->driverName(),
                         ]
                     )
                 );
@@ -284,18 +283,8 @@ class AdminPortalModule implements ServiceModuleInterface
                 $this->requireAdmin($userInfo);
                 $profileId = $request->requireQueryParameter('profile_id', fn (string $s) => Validator::profileId($s));
 
-                $csvString = 'Date,#Unique Users,Max #Connections'.PHP_EOL;
-                foreach ($this->storage->statsGetAggregate($profileId) as $statsEntry) {
-                    $csvString .= sprintf(
-                        '%s,%d,%d',
-                        $statsEntry['date'],
-                        $statsEntry['unique_user_count'],
-                        $statsEntry['max_connection_count']
-                    ).PHP_EOL;
-                }
-
                 return new Response(
-                    $csvString,
+                    $this->aggregateStatsCsvString($profileId),
                     [
                         'Content-Type' => 'text/csv',
                         'Content-Disposition' => sprintf('attachment; filename="%s_%s_aggregate_stats.csv"', $request->getServerName(), $profileId),
@@ -361,6 +350,36 @@ class AdminPortalModule implements ServiceModuleInterface
         }
 
         return $userId;
+    }
+
+    private function aggregateStatsCsvString(string $profileId): string
+    {
+        if ($this->config->apiConfig()->enableGuestAccess()) {
+            $csvString = 'Date,#Unique Users,#Unique Guest Users,Max #Connections'.PHP_EOL;
+            foreach ($this->storage->statsGetAggregate($profileId) as $statsEntry) {
+                $csvString .= sprintf(
+                    '%s,%d,%d,%d',
+                    $statsEntry['date'],
+                    $statsEntry['unique_user_count'],
+                    $statsEntry['unique_guest_user_count'],
+                    $statsEntry['max_connection_count']
+                ).PHP_EOL;
+            }
+
+            return $csvString;
+        }
+
+        $csvString = 'Date,#Unique Users,Max #Connections'.PHP_EOL;
+        foreach ($this->storage->statsGetAggregate($profileId) as $statsEntry) {
+            $csvString .= sprintf(
+                '%s,%d,%d',
+                $statsEntry['date'],
+                $statsEntry['unique_user_count'],
+                $statsEntry['max_connection_count']
+            ).PHP_EOL;
+        }
+
+        return $csvString;
     }
 
     /**

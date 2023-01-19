@@ -1,0 +1,11 @@
+ALTER TABLE aggregate_stats RENAME TO _aggregate_stats;
+CREATE TABLE IF NOT EXISTS aggregate_stats(
+    date VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(255) NOT NULL,
+    max_connection_count BIGINT NOT NULL,
+    unique_user_count BIGINT NOT NULL,
+    unique_guest_user_count BIGINT NOT NULL
+);
+INSERT INTO aggregate_stats (date, profile_id, max_connection_count, unique_user_count, unique_guest_user_count) SELECT date, profile_id, max_connection_count, unique_user_count, 0 FROM _aggregate_stats;
+DROP TABLE _aggregate_stats;
+CREATE INDEX IF NOT EXISTS connection_log_connected_at ON connection_log(connected_at);

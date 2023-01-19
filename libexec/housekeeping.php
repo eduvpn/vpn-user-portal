@@ -29,7 +29,7 @@ try {
 
     // aggregate old entries from the connection statistics
     $startTime = time();
-    $storage->statsAggregate($oneWeekAgo);
+    $storage->statsAggregate($startOfTheDay);
     $elapsedTime = time() - $startTime;
     if ($elapsedTime > 5) {
         $logger->warning(sprintf('generating aggregate statistics took %ds', $elapsedTime));

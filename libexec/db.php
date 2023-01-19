@@ -18,6 +18,7 @@ use Vpn\Portal\Storage;
 
 try {
     $doInit = false;
+    $initVersion = null;
     $doMigrate = false;
     $dbDsn = null;
     $dbUser = null;
@@ -25,6 +26,14 @@ try {
     for ($i = 1; $i < $argc; ++$i) {
         if ('--init' === $argv[$i]) {
             $doInit = true;
+
+            continue;
+        }
+
+        if ('--init-version' === $argv[$i]) {
+            if ($i + 1 < $argc) {
+                $initVersion = $argv[$i + 1];
+            }
 
             continue;
         }
@@ -58,7 +67,7 @@ try {
             continue;
         }
         if ('--help' === $argv[$i]) {
-            echo 'SYNTAX: '.$argv[0].' [--init] [--migrate] [--dsn DSN] [--user USER] [--pass PASS]'.\PHP_EOL;
+            echo 'SYNTAX: '.$argv[0].' [--init] [--init-version VERSION] [--migrate] [--dsn DSN] [--user USER] [--pass PASS]'.\PHP_EOL;
 
             exit(0);
         }
@@ -102,7 +111,7 @@ try {
     Migration::run(
         $db,
         $dbConfig->schemaDir(),
-        Storage::CURRENT_SCHEMA_VERSION,
+        $initVersion ?? Storage::CURRENT_SCHEMA_VERSION,
         $doInit,
         $doMigrate
     );
