@@ -19,7 +19,7 @@ $baseDir = dirname(__DIR__);
  * last two weeks. It runs quite slow to import all the data, but works well!
  */
 
-use Vpn\Portal\Config;
+use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Storage;
 
@@ -70,8 +70,6 @@ foreach ($config->profileConfigList() as $profileConfig) {
 
         // disconnect
         $storage->clientDisconnect(
-            'user'.$userNo,
-            $profileConfig->profileId(),
             $conId,
             random_int(0, 2 ** 13),
             random_int(0, 2 ** 13),
