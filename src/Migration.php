@@ -64,7 +64,7 @@ class Migration
                 if ($fromVersion === $currentVersion && $fromVersion !== $schemaVersion) {
                     // get the queries before we start the transaction as we
                     // ONLY want to deal with "PDOExceptions" once the
-                    // transacation started...
+                    // transaction started...
                     $queryList = self::getQueriesFromFile(self::getNameForDriver($db, sprintf('%s/%s.migration', $schemaDir, $migrationVersion)));
 
                     try {
@@ -120,6 +120,9 @@ class Migration
     private static function getNameForDriver(PDO $db, string $fileName): string
     {
         $driverName = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if (!is_string($driverName)) {
+            throw new MigrationException('unable to determine database driver');
+        }
         if (file_exists($fileName.'.'.$driverName)) {
             return $fileName.'.'.$driverName;
         }
@@ -189,15 +192,16 @@ class Migration
     }
 
     /**
-     * @return array<string>
+     * @return array{0:string,1:string}
      */
     private static function validateMigrationVersion(string $migrationVersion): array
     {
         if (1 !== preg_match('/^[0-9]{10}_[0-9]{10}$/', $migrationVersion)) {
             throw new RangeException('migrationVersion must be two times a 10 digit string separated by an underscore');
         }
+        [$fromVersion, $toVersion] = explode('_', $migrationVersion, 2);
 
-        return explode('_', $migrationVersion, 2);
+        return [$fromVersion, $toVersion];
     }
 
     private static function dbBeginTransaction(PDO $db): void
