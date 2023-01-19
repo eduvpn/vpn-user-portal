@@ -3,11 +3,21 @@
 ## 3.2.3 (...)
 - do not write `syslog` output to `stderr` 
   ([#117](https://todo.sr.ht/~eduvpn/server/117))
-- show number of unique guest users on "Stats" page if "Guest Access" is 
-  enabled
-- disable "Aggregate Stats" for now on systems that do not use SQLite as the 
-  database ([#118](https://todo.sr.ht/~eduvpn/server/118))
 - add [govVPN](https://govroam.nl/diensten2/govvpn/) OAuth client registrations
+- add "#Unique Guest Users" to the last week's "Stats"
+- add "#Unique Guest Users" to the "Aggregated Stats"
+- "Aggregated Stats" will now contain data starting "yesterday" instead of 
+  "one week ago"
+- New database schema (`2023011801`). See 
+  [migration](https://github.com/eduvpn/documentation/blob/v3/DATABASE.md#database-migration) 
+  if your portal/controller is using MariaDB/MySQL, or PostgreSQL. For the 
+  default SQLite, the migration is performed automatically (
+  [#48](https://todo.sr.ht/~eduvpn/server/48), 
+  [#51](https://todo.sr.ht/~eduvpn/server/51), 
+  [#53](https://todo.sr.ht/~eduvpn/server/53), 
+  [#65](https://todo.sr.ht/~eduvpn/server/65), 
+  [#112](https://todo.sr.ht/~eduvpn/server/112), 
+  [#118](https://todo.sr.ht/~eduvpn/server/118))
 
 ## 3.2.2 (2022-12-22)
 - fix for [bug](https://github.com/eduvpn/apple/issues/487) in iOS/macOS app 
