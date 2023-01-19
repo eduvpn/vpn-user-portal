@@ -28,12 +28,7 @@ try {
     $startOfTheDay = Dt::get('today', new DateTimeZone('UTC'));
 
     // aggregate old entries from the connection statistics
-    $startTime = time();
     $storage->statsAggregate($startOfTheDay);
-    $elapsedTime = time() - $startTime;
-    if ($elapsedTime > 5) {
-        $logger->warning(sprintf('generating aggregate statistics took %ds', $elapsedTime));
-    }
 
     // remove old entries from the connection statistics
     $storage->cleanLiveStats($oneWeekAgo);
