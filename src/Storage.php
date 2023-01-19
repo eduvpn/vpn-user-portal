@@ -1239,6 +1239,8 @@ class Storage
 
     /**
      * @return array<string,array{unique_user_count:int}>
+     *
+     * @deprecated merge with statsYesterdayUniqueGuestUserCount
      */
     public function statsGetUniqueUsers(DateTimeImmutable $dateTime): array
     {
@@ -1270,6 +1272,8 @@ class Storage
 
     /**
      * @return array<string,array{unique_user_count:int}>
+     *
+     * @deprecated merge with statsYesterdayUniqueUserCount
      */
     public function statsGetUniqueGuestUsers(DateTimeImmutable $dateTime): array
     {
@@ -1445,16 +1449,11 @@ class Storage
         return $uniqueUserCountList;
     }
 
+    /**
+     * Collect everything we want to put in the "aggregate_stats" table.
+     */
     public function statsAggregate(DateTimeImmutable $dateTime): void
     {
-        // collect everything we want to put in the aggregate_stats table
-        // clever solutions with JOINs or sub queries are either too slow or
-        // don't work on all databases... enough is enough!
-        //
-        // @see https://todo.sr.ht/~eduvpn/server/118
-        // @see https://todo.sr.ht/~eduvpn/server/112
-        // @see https://todo.sr.ht/~eduvpn/server/48
-        // @see https://todo.sr.ht/~eduvpn/server/53
         $statsMaxConnectionCount = $this->statsYesterdayMaxConnectionCount($dateTime);
         $statsUniqueUserCount = $this->statsYesterdayUniqueUserCount($dateTime);
         $statsUniqueGuestUserCount = $this->statsYesterdayUniqueGuestUserCount($dateTime);

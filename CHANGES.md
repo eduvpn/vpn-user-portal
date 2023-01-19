@@ -8,16 +8,15 @@
 - add "#Unique Guest Users" to the "Aggregated Stats"
 - "Aggregated Stats" will now contain data starting "yesterday" instead of 
   "one week ago"
-- New database schema (`2023011801`). See 
-  [migration](https://github.com/eduvpn/documentation/blob/v3/DATABASE.md#database-migration) 
-  if your portal/controller is using MariaDB/MySQL, or PostgreSQL. For the 
-  default SQLite, the migration is performed automatically 
-  ([#48](https://todo.sr.ht/~eduvpn/server/48), 
-  [#51](https://todo.sr.ht/~eduvpn/server/51), 
-  [#53](https://todo.sr.ht/~eduvpn/server/53), 
-  [#65](https://todo.sr.ht/~eduvpn/server/65), 
-  [#112](https://todo.sr.ht/~eduvpn/server/112), 
-  [#118](https://todo.sr.ht/~eduvpn/server/118))
+- Various database fixes
+  - Fix long standing issue with MariaDB/MySQL with "Aggregate Stats" ([#53](https://todo.sr.ht/~eduvpn/server/53))
+  - Fix PostgreSQL again with "Aggregate Stats" ([#118](https://todo.sr.ht/~eduvpn/server/118))
+  - Add index on `connection_log` table to make generating "Aggregate Stats" 
+    fast ([#112](https://todo.sr.ht/~eduvpn/server/112))
+  - **NOTE**: a database 
+    [migration](https://github.com/eduvpn/documentation/blob/v3/DATABASE.md#database-migration) 
+    is necessary. This is done automatically with SQLite. If you switched to 
+    using MariaDB/MySQL, or PostgreSQL you MUST do this manually! 
 
 ## 3.2.2 (2022-12-22)
 - fix for [bug](https://github.com/eduvpn/apple/issues/487) in iOS/macOS app 
