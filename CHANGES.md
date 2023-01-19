@@ -3,7 +3,6 @@
 ## 3.2.3 (...)
 - do not write `syslog` output to `stderr` 
   ([#117](https://todo.sr.ht/~eduvpn/server/117))
-- add [govVPN](https://govroam.nl/diensten2/govvpn/) OAuth client registrations
 - add "#Unique Guest Users" to the last week's "Stats"
 - add "#Unique Guest Users" to the "Aggregated Stats"
 - "Aggregated Stats" will now contain data starting "yesterday" instead of 

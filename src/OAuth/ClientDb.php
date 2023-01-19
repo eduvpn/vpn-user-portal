@@ -117,55 +117,5 @@ class ClientDb extends SimpleClientDb
                 true
             )
         );
-
-        //
-        // govVPN
-        //
-        $this->add(
-            new ClientInfo(
-                'org.govvpn.app.windows',
-                ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
-                null,
-                'govVPN for Windows',
-                true
-            )
-        );
-        $this->add(
-            new ClientInfo(
-                'org.govvpn.app.android',
-                // should have been org.eduvpn.app.android:/api/callback
-                ['org.govvpn.app:/api/callback'],
-                null,
-                'govVPN for Android',
-                true
-            )
-        );
-        $this->add(
-            new ClientInfo(
-                'org.govvpn.app.ios',
-                ['org.govvpn.app.ios:/api/callback'],
-                null,
-                'govVPN for iOS',
-                true
-            )
-        );
-        $this->add(
-            new ClientInfo(
-                'org.govvpn.app.macos',
-                ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
-                null,
-                'govVPN for macOS',
-                true
-            )
-        );
-        $this->add(
-            new ClientInfo(
-                'org.govvpn.app.linux',
-                ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
-                null,
-                'govVPN for Linux',
-                true
-            )
-        );
     }
 }

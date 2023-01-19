@@ -26,10 +26,6 @@ class ClientDbTest extends TestCase
         $clientInfo = $clientDb->get('org.letsconnect-vpn.app.windows');
         $this->assertSame('org.letsconnect-vpn.app.windows', $clientInfo->clientId());
         $this->assertSame('Let\'s Connect! for Windows', $clientInfo->displayName());
-
-        $clientInfo = $clientDb->get('org.govvpn.app.windows');
-        $this->assertSame('org.govvpn.app.windows', $clientInfo->clientId());
-        $this->assertSame('govVPN for Windows', $clientInfo->displayName());
     }
 
     public function testAndroid(): void
@@ -44,11 +40,6 @@ class ClientDbTest extends TestCase
         $this->assertSame('org.letsconnect-vpn.app.android', $clientInfo->clientId());
         $this->assertSame('Let\'s Connect! for Android', $clientInfo->displayName());
         $this->assertTrue($clientInfo->isValidRedirectUri('org.letsconnect-vpn.app:/api/callback'));
-
-        $clientInfo = $clientDb->get('org.govvpn.app.android');
-        $this->assertSame('org.govvpn.app.android', $clientInfo->clientId());
-        $this->assertSame('govVPN for Android', $clientInfo->displayName());
-        $this->assertTrue($clientInfo->isValidRedirectUri('org.govvpn.app:/api/callback'));
     }
 
     public function testiOS(): void
@@ -63,10 +54,5 @@ class ClientDbTest extends TestCase
         $this->assertSame('org.letsconnect-vpn.app.ios', $clientInfo->clientId());
         $this->assertSame('Let\'s Connect! for iOS', $clientInfo->displayName());
         $this->assertTrue($clientInfo->isValidRedirectUri('org.letsconnect-vpn.app.ios:/api/callback'));
-
-        $clientInfo = $clientDb->get('org.govvpn.app.ios');
-        $this->assertSame('org.govvpn.app.ios', $clientInfo->clientId());
-        $this->assertSame('govVPN for iOS', $clientInfo->displayName());
-        $this->assertTrue($clientInfo->isValidRedirectUri('org.govvpn.app.ios:/api/callback'));
     }
 }
