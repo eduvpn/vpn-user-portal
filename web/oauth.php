@@ -22,7 +22,7 @@ use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\OAuthTokenModule;
 use Vpn\Portal\Http\OAuthTokenService;
 use Vpn\Portal\Http\Request;
-use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OAuth\VpnClientDb;
 use Vpn\Portal\OAuth\VpnOAuthServer;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\Storage;
@@ -71,7 +71,7 @@ try {
     // OAuth module
     $oauthServer = new VpnOAuthServer(
         new OAuthStorage($storage->dbPdo(), 'oauth_'),
-        new ClientDb(),
+        new VpnClientDb(),
         new Signer(FileIO::read($baseDir.'/config/keys/oauth.key')),
         $sessionExpiry,
         $config->apiConfig()->tokenExpiry()

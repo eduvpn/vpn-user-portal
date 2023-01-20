@@ -14,7 +14,7 @@ namespace Vpn\Portal\OAuth;
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\SimpleClientDb;
 
-class ClientDb extends SimpleClientDb
+class VpnClientDb extends SimpleClientDb
 {
     public function __construct()
     {

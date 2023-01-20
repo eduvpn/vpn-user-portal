@@ -50,7 +50,7 @@ use Vpn\Portal\Http\StaticPermissionHook;
 use Vpn\Portal\Http\UpdateUserInfoHook;
 use Vpn\Portal\Http\VpnPortalModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
-use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OAuth\VpnClientDb;
 use Vpn\Portal\OAuth\VpnOAuthServer;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
@@ -204,7 +204,7 @@ try {
     );
 
     $service->addHook($adminHook);
-    $oauthClientDb = new ClientDb();
+    $oauthClientDb = new VpnClientDb();
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $oauthKey = FileIO::read($baseDir.'/config/keys/oauth.key');
     $oauthSigner = new Signer($oauthKey);

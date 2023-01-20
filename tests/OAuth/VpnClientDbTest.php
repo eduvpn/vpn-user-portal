@@ -12,13 +12,13 @@ declare(strict_types=1);
 namespace Vpn\Portal\OAuth\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OAuth\VpnClientDb;
 
-class ClientDbTest extends TestCase
+class VpnClientDbTest extends TestCase
 {
     public function testWindows(): void
     {
-        $clientDb = new ClientDb();
+        $clientDb = new VpnClientDb();
         $clientInfo = $clientDb->get('org.eduvpn.app.windows');
         $this->assertSame('org.eduvpn.app.windows', $clientInfo->clientId());
         $this->assertSame('eduVPN for Windows', $clientInfo->displayName());
@@ -30,7 +30,7 @@ class ClientDbTest extends TestCase
 
     public function testAndroid(): void
     {
-        $clientDb = new ClientDb();
+        $clientDb = new VpnClientDb();
         $clientInfo = $clientDb->get('org.eduvpn.app.android');
         $this->assertSame('org.eduvpn.app.android', $clientInfo->clientId());
         $this->assertSame('eduVPN for Android', $clientInfo->displayName());
@@ -44,7 +44,7 @@ class ClientDbTest extends TestCase
 
     public function testiOS(): void
     {
-        $clientDb = new ClientDb();
+        $clientDb = new VpnClientDb();
         $clientInfo = $clientDb->get('org.eduvpn.app.ios');
         $this->assertSame('org.eduvpn.app.ios', $clientInfo->clientId());
         $this->assertSame('eduVPN for iOS', $clientInfo->displayName());

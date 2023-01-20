@@ -26,8 +26,8 @@ use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\VpnApiThreeModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
-use Vpn\Portal\OAuth\ClientDb;
 use Vpn\Portal\OAuth\NullAccessTokenVerifier;
+use Vpn\Portal\OAuth\VpnClientDb;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
 use Vpn\Portal\ServerInfo;
@@ -63,7 +63,7 @@ try {
         $bearerValidator = new BearerValidator(
             new Signer($oauthKey),
             new LocalAccessTokenVerifier(
-                new ClientDb(),
+                new VpnClientDb(),
                 $oauthStorage
             )
         );
