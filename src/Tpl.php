@@ -15,7 +15,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use RangeException;
 use Vpn\Portal\Exception\TplException;
-use Vpn\Portal\OAuth\ClientDb;
+use Vpn\Portal\OAuth\VpnClientDb;
 
 class Tpl implements TplInterface
 {
@@ -89,7 +89,7 @@ class Tpl implements TplInterface
 
     public function clientIdToDisplayName(string $clientId): string
     {
-        $clientDb = new ClientDb();
+        $clientDb = new VpnClientDb();
         if (null === $clientInfo = $clientDb->get($clientId)) {
             return $this->e($clientId);
         }
