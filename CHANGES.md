@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.2.3 (...)
+## 3.3.0 (2023-01-20)
 - do not write `syslog` output to `stderr` 
   ([#117](https://todo.sr.ht/~eduvpn/server/117))
 - add "#Unique Guest Users" to the last week's "Stats"
