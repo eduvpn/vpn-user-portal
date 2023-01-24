@@ -34,6 +34,7 @@ class ConfigCheck
             self::verifyRangeOverlap($profileConfig, $usedRangeList, $profileProblemList);
             self::verifyRoutesAndExcludeRoutesAreNormalized($profileConfig, $profileProblemList);
             self::verifyDnsRouteIsPushedWhenNotDefaultGateway($profileConfig, $profileProblemList);
+            self::verifyDnsHasSearchDomainWhenNotDefaultGateway($profileConfig, $profileProblemList);
             self::verifyNonLocalNodeUrlHasTls($profileConfig, $profileProblemList);
             self::verifyUniqueOpenVpnPortsPerNode($profileConfig, $usedUdpPortList, $usedTcpPortList, $profileProblemList);
             self::verifyRouteListIsEmptyWithDefaultGateway($profileConfig, $profileProblemList);
@@ -125,6 +126,21 @@ class ConfigCheck
             if (!$ip->equals($ip->network())) {
                 $profileProblemList[] = sprintf('"excludeRouteList" entry "%s" is not normalized, expecting "%s"', (string) $ip, (string) $ip->network());
             }
+        }
+    }
+
+    private static function verifyDnsHasSearchDomainWhenNotDefaultGateway(ProfileConfig $profileConfig, array &$profileProblemList): void
+    {
+        if ($profileConfig->defaultGateway()) {
+            return;
+        }
+
+        if (0 === \count($profileConfig->dnsServerList())) {
+            return;
+        }
+
+        if (0 === count($profileConfig->dnsSearchDomainList())) {
+            $profileProblemList[] = 'for profiles without "defaultGateway" DNS will be ignored if no "dnsSearchDomainList" is set';
         }
     }
 
