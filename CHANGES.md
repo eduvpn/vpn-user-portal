@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.1 (...)
+- warn when DNS search domain is not set, while DNS is provided, but not 
+  default gateway ([#120](https://todo.sr.ht/~eduvpn/server/120))
+- if DNS is not used in split-tunnel scenario do not warn on "Info" page if 
+  DNS traffic is not sent over VPN
+- switch to [Argon2id](https://en.wikipedia.org/wiki/Argon2) hashes for 
+  local account passwords
+
 ## 3.3.0 (2023-01-20)
 - do not write `syslog` output to `stderr` 
   ([#117](https://todo.sr.ht/~eduvpn/server/117))
