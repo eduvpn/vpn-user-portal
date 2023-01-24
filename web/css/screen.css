@@ -428,45 +428,65 @@ ul.appUsage li {
   border-radius: 1em;
 }
 
-/* @see https://learnui.design/tools/data-color-picker.html#palette */
+/* @see https://iamkate.com/data/12-bit-rainbow/ */
 .pieColor1 {
-  fill: #003f5c;
-  background-color: #003f5c;
+  fill: #817;
+  background-color: #817;
 }
 
 .pieColor2 {
-  fill: #2f4b7c;
-  background-color: #2f4b7c;
+  fill: #a35;
+  background-color: #a35;
 }
 
 .pieColor3 {
-  fill: #665191;
-  background-color: #665191;
+  fill: #c66;
+  background-color: #c66;
 }
 
 .pieColor4 {
-  fill: #a05195;
-  background-color: #a05195;
+  fill: #e94;
+  background-color: #e94;
 }
 
 .pieColor5 {
-  fill: #d45087;
-  background-color: #d45087;
+  fill: #ed0;
+  background-color: #ed0;
 }
 
 .pieColor6 {
-  fill: #f95d6a;
-  background-color: #f95d6a;
+  fill: #9d5;
+  background-color: #9d5;
 }
 
 .pieColor7 {
-  fill: #ff7c43;
-  background-color: #ff7c43;
+  fill: #4d8;
+  background-color: #4d8;
 }
 
 .pieColor8 {
-  fill: #ffa600;
-  background-color: #ffa600;
+  fill: #2cb;
+  background-color: #2cb;
+}
+
+.pieColor9 {
+  fill: #0bc;
+  background-color: #0bc;
+}
+
+.pieColor10 {
+  fill: #09c;
+  background-color: #09c;
+}
+
+.pieColor11 {
+  fill: #36b;
+  background-color: #36b;
+}
+
+.pieColor12 {
+  fill: #639;
+  background-color: #639;
 }
 
 blockquote {
