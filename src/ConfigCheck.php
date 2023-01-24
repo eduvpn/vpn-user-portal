@@ -138,6 +138,13 @@ class ConfigCheck
             return;
         }
 
+        // if no DNS search domain is set in the scenario where the profile is
+        // not the default gateway, DNS provided through VPN won't be used
+        // anyway
+        if (0 === count($profileConfig->dnsSearchDomainList())) {
+            return;
+        }
+
         foreach ($profileConfig->dnsServerList() as $dnsServer) {
             if (in_array($dnsServer, ['@GW4@', '@GW6@'], true)) {
                 // the '@GW4@' and '@GW6@' templates are *always* "routed" over
