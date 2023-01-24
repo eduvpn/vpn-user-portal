@@ -1,9 +1,10 @@
 # Changelog
 
 ## 3.3.1 (...)
-- warn when DNS search domain is not set, while DNS is provided, but not 
-  default gateway ([#120](https://todo.sr.ht/~eduvpn/server/120))
-- if DNS is not used in split-tunnel scenario do not warn on "Info" page if 
+- on "Info" page warn when DNS search domain is not set for a profile, while 
+  DNS is provided, but not default gateway 
+  ([#120](https://todo.sr.ht/~eduvpn/server/120))
+- on "Info" page if DNS is not used in split-tunnel scenario do not warn when 
   DNS traffic is not sent over VPN
 - switch to [Argon2id](https://en.wikipedia.org/wiki/Argon2) hashes for 
   local account passwords
