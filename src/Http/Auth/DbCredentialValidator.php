@@ -33,6 +33,10 @@ class DbCredentialValidator implements CredentialValidatorInterface
             throw new CredentialValidatorException('no such user');
         }
 
+        // even though we switched to libsodium `sodium_crypto_pwhash_str` to
+        // generate the password hashes, we can keep using PHP's
+        // password_verify to both verify the "legacy" bcrypt hashes and the
+        // new Argon2ID hashes
         if (password_verify($authPass, $passwordHash)) {
             return new UserInfo($authUser, []);
         }

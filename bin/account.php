@@ -17,6 +17,7 @@ use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
+use Vpn\Portal\Http\PasswdModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
@@ -158,12 +159,7 @@ try {
         if (empty($userPass)) {
             throw new RuntimeException('Password cannot be empty');
         }
-
-        $passwordHash = password_hash($userPass, \PASSWORD_DEFAULT);
-        if (!is_string($passwordHash)) {
-            throw new RuntimeException('unable to calculate password hash');
-        }
-        $storage->localUserAdd($userId, $passwordHash, Dt::get());
+        $storage->localUserAdd($userId, PasswdModule::generatePasswordHash($userPass), Dt::get());
 
         exit(0);
     }

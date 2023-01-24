@@ -13,7 +13,6 @@ namespace Vpn\Portal\Http;
 
 use Vpn\Portal\Http\Auth\DbCredentialValidator;
 use Vpn\Portal\Http\Auth\Exception\CredentialValidatorException;
-use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\Storage;
 use Vpn\Portal\TplInterface;
 use Vpn\Portal\Validator;
@@ -82,14 +81,19 @@ class PasswdModule implements ServiceModuleInterface
                     );
                 }
 
-                $passwordHash = password_hash($newUserPass, PASSWORD_DEFAULT);
-                if (!\is_string($passwordHash)) {
-                    throw new HttpException('unable to generate password hash', 500);
-                }
-                $this->storage->localUserUpdatePassword($userInfo->userId(), $passwordHash);
+                $this->storage->localUserUpdatePassword($userInfo->userId(), self::generatePasswordHash($newUserPass));
 
                 return new RedirectResponse($request->getRootUri().'account');
             }
+        );
+    }
+
+    public static function generatePasswordHash(string $userPass): string
+    {
+        return sodium_crypto_pwhash_str(
+            $userPass,
+            SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+            SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE
         );
     }
 }
