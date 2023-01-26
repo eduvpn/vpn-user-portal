@@ -9,6 +9,7 @@
 - switch to [Argon2id](https://en.wikipedia.org/wiki/Argon2) hashes for 
   local account passwords
 - switch to new color palette for "App Usage" on "Stats" page
+- show number of users on "Users" page
 
 ## 3.3.0 (2023-01-20)
 - do not write `syslog` output to `stderr` 

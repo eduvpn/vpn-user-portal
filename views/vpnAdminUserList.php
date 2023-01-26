@@ -6,13 +6,13 @@
 <?php $this->layout('base', ['activeItem' => 'users', 'pageTitle' => $this->t('Users')]); ?>
 <?php $this->start('content'); ?>
 <?php if (null === $listUsers || 'all' === $listUsers): ?>
-    <p class="filter"><?=$this->t('All'); ?> │ <a href="?list_users=active"><?=$this->t('Active'); ?></a> │ <a href="?list_users=disabled"><?=$this->t('Disabled'); ?></a></p>
+    <p class="filter"><?=$this->t('All'); ?> (<?=$this->e((string)count($userList));?>) │ <a href="?list_users=active"><?=$this->t('Active'); ?></a> │ <a href="?list_users=disabled"><?=$this->t('Disabled'); ?></a></p>
 <?php endif; ?>
 <?php if ('active' === $listUsers) : ?>
-    <p class="filter"><a href="?list_users=all"><?=$this->t('All'); ?></a> │ <?=$this->t('Active'); ?> │ <a href="?list_users=disabled"><?=$this->t('Disabled'); ?></a></p>
+    <p class="filter"><a href="?list_users=all"><?=$this->t('All'); ?></a> │ <?=$this->t('Active'); ?> (<?=$this->e((string)count($userList));?>) │ <a href="?list_users=disabled"><?=$this->t('Disabled'); ?></a></p>
 <?php endif; ?>
 <?php if ('disabled' === $listUsers) : ?>
-    <p class="filter    "><a href="?list_users=all"><?=$this->t('All'); ?></a> │ <a href="?list_users=active"><?=$this->t('Active'); ?></a> │ <?=$this->t('Disabled'); ?></p>
+    <p class="filter    "><a href="?list_users=all"><?=$this->t('All'); ?></a> │ <a href="?list_users=active"><?=$this->t('Active'); ?></a> │ <?=$this->t('Disabled'); ?> (<?=$this->e((string)count($userList));?>)</p>
 <?php endif; ?>
 <table class="tbl">
     <thead>
