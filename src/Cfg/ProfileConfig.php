@@ -259,6 +259,28 @@ class ProfileConfig
         return $this->requireIntOrIntArray('onNode', range(0, $this->nodeCount() - 1));
     }
 
+    /**
+     * Determine the maximum number of VPN clients that can connect to this
+     * profile taking into considetation OpenVPN/WireGuard and the node(s).
+     */
+    public function maxClientLimit(): int
+    {
+        $maxClientLimit = 0;
+        // OpenVPN can have multiple processes, that reduces the number of IP
+        // addresses available for VPN clients...
+        $oProcessCount = $this->oSupport() ? (count($this->oUdpPortList()) + count($this->oTcpPortList())) : 0;
+        foreach ($this->onNode() as $nodeNumber) {
+            if ($this->oSupport()) {
+                $maxClientLimit += ((int) 2 ** (32 - $this->oRangeFour($nodeNumber)->prefix())) - 3 * $oProcessCount;
+            }
+            if ($this->wSupport()) {
+                $maxClientLimit += ((int) 2 ** (32 - $this->wRangeFour($nodeNumber)->prefix())) - 3;
+            }
+        }
+
+        return $maxClientLimit;
+    }
+
     private function nodeCount(): int
     {
         return \count($this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']));

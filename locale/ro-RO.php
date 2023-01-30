@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 return [
-    '#Active Connections' => 'Numărul de conexiuni active',
+    //'#Active (Max #Available) Connections' => '',
     '#Connections in 5 minute intervals' => 'Conexiuni la intervale de 5 minute',
     //'#Unique Guest Users' => '',
     '#Unique Users' => '#Utilizatori unici',
@@ -123,6 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Lista aplicațiilor pe care le-ai autorizat să creeze o conexiune VPN.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Numărul maxim de clienți VPN conectați simultan la un moment dat în ultima săptămână',
     'The most recent VPN connections with this account.' => 'Cele mai recente conexiuni VPN cu acest cont.',
+    //'The number of currently connected VPN clients, and the maximum possible number of connected VPN clients based on available IP-space for this profile.' => '',
     //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Numărul de utilizatori unici care s-au conectat la serviciul VPN în ultima săptămână',
     'The table below shows the per profile VPN usage over the last week.' => 'Tabelul de mai jos afisează utilizarea VPN pe fiecare profil în ultima săptămână.',

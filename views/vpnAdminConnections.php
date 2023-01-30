@@ -10,14 +10,21 @@
         <thead>
             <tr>
                 <th><?=$this->t('Profile'); ?></th>
-                <th><?=$this->t('#Active Connections'); ?></th>
+                <th title="<?=$this->t('The number of currently connected VPN clients, and the maximum possible number of connected VPN clients based on available IP-space for this profile.');?>"><?=$this->t('#Active (Max #Available) Connections'); ?></th>
             </tr>
         </thead>
         <tbody>
     <?php foreach ($profileConnectionList as $profileId => $connectionList): ?>
         <tr>
             <td><a title="<?=$this->e($profileId); ?>" href="#<?=$this->e($profileId); ?>"><?=$this->profileIdToDisplayName($profileConfigList, $profileId); ?></a></td>
-            <td><?=count($connectionList); ?></td>
+            <td>
+            <?=$this->e((string)count($connectionList)); ?>
+<?php if(null === $maxClientLimit = $this->maxClientLimit($profileConfigList, $profileId)): ?>
+            (<?=$this->t('N/A');?>)
+<?php else: ?>
+            (<?=$this->e((string)$maxClientLimit);?>)
+<?php endif;?>
+            </td>'#Actieve verbindingen
         </tr>
     <?php endforeach; ?>
         </tbody>

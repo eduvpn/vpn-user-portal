@@ -111,6 +111,20 @@ class Tpl implements TplInterface
         return $this->e($profileId);
     }
 
+    /**
+     * @param array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList
+     */
+    public function maxClientLimit(array $profileConfigList, string $profileId): ?int
+    {
+        foreach ($profileConfigList as $profileConfig) {
+            if ($profileId === $profileConfig->profileId()) {
+                return $profileConfig->maxClientLimit();
+            }
+        }
+
+        return null;
+    }
+
     public function uiLanguage(): string
     {
         return $this->uiLanguage;

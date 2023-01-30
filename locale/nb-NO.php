@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 return [
-    '#Active Connections' => '#Aktive tilkoblinger',
+    //'#Active (Max #Available) Connections' => '',
     '#Connections in 5 minute intervals' => '#Forbindelser i 5 minutters intervaller',
     //'#Unique Guest Users' => '',
     '#Unique Users' => '#Unike brukere',
@@ -123,6 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'Liste over applikasjoner du har tillatt å opprette en VPN-tilkobling.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Maksimalt antall samtidig oppkoblede VPN klienter i løpet av den siste uken',
     'The most recent VPN connections with this account.' => 'De siste VPN oppkoblingene med denne kontoen',
+    //'The number of currently connected VPN clients, and the maximum possible number of connected VPN clients based on available IP-space for this profile.' => '',
     //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Antall unike brukere koblet til denne VPN tjenesten siste uke',
     'The table below shows the per profile VPN usage over the last week.' => 'Tabellen under viser bruk per profil siste uke',

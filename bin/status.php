@@ -13,7 +13,6 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use Vpn\Portal\Cfg\Config;
-use Vpn\Portal\Cfg\ProfileConfig;
 use Vpn\Portal\ConnectionHooks;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\HttpClient\CurlHttpClient;
@@ -21,24 +20,6 @@ use Vpn\Portal\Json;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
 use Vpn\Portal\VpnDaemon;
-
-function getMaxClientLimit(ProfileConfig $profileConfig): int
-{
-    $maxClientLimit = 0;
-    // OpenVPN can have multiple processes, that reduces the number of IP
-    // addresses available for VPN clients...
-    $oProcessCount = $profileConfig->oSupport() ? (count($profileConfig->oUdpPortList()) + count($profileConfig->oTcpPortList())) : 0;
-    foreach ($profileConfig->onNode() as $nodeNumber) {
-        if ($profileConfig->oSupport()) {
-            $maxClientLimit += ((int) 2 ** (32 - $profileConfig->oRangeFour($nodeNumber)->prefix())) - 3 * $oProcessCount;
-        }
-        if ($profileConfig->wSupport()) {
-            $maxClientLimit += ((int) 2 ** (32 - $profileConfig->wRangeFour($nodeNumber)->prefix())) - 3;
-        }
-    }
-
-    return $maxClientLimit;
-}
 
 function showHelp(): void
 {
@@ -134,7 +115,7 @@ try {
             ];
         }
         $activeConnectionCount = count($displayConnectionInfo);
-        $profileMaxClientLimit = getMaxClientLimit($config->profileConfig($profileId));
+        $profileMaxClientLimit = $config->profileConfig($profileId)->maxClientLimit();
         $percentInUse = floor($activeConnectionCount / $profileMaxClientLimit * 100);
         if ($alertOnly && $alertPercentage > $percentInUse) {
             continue;
@@ -142,6 +123,8 @@ try {
         $outputRow = [
             'profile_id' => $profileId,
             'active_connection_count' => $activeConnectionCount,
+            // the name is not super helpful, should be
+            // max_allowed_connection_count or something...
             'max_connection_count' => $profileMaxClientLimit,
             'percentage_in_use' => $percentInUse,
         ];

@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 return [
-    '#Active Connections' => 'Nombre de connexions actives',
+    //'#Active (Max #Available) Connections' => '',
     '#Connections in 5 minute intervals' => 'Nombre de connexions dans un intervalle de 5 minutes',
     //'#Unique Guest Users' => '',
     '#Unique Users' => 'Nombre d\'utilisateurs uniques',
@@ -123,6 +123,7 @@ return [
     'The list of applications you authorized to create a VPN connection.' => 'La liste des applications que vous avez autorisé à créer des connexions VPN.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Le nombre maximum de clients VPN connectés simultanément à un moment donné dans le courant de la semaine dernière',
     'The most recent VPN connections with this account.' => 'La connexion VPN la plus récente de ce compte.',
+    //'The number of currently connected VPN clients, and the maximum possible number of connected VPN clients based on available IP-space for this profile.' => '',
     //'The number of unique guest users connecting to the VPN service in the last week' => '',
     'The number of unique users connecting to the VPN service in the last week' => 'Le nombre d\'utilisateurs uniques connectés simultanément au service VPN dans le courant de la semaine dernière',
     'The table below shows the per profile VPN usage over the last week.' => 'Le tableau ce-dessous montre l\'usage par profil dans le courant de la semaine dernière.',
