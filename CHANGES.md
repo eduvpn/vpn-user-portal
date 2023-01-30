@@ -10,6 +10,8 @@
   local account passwords
 - switch to new color palette for "App Usage" on "Stats" page
 - show number of users on "Users" page
+- expose `created_at` from `Storage::oCertList` and `Storage::wPeerList`
+  ([#121](https://todo.sr.ht/~eduvpn/server/121))
 
 ## 3.3.0 (2023-01-20)
 - do not write `syslog` output to `stderr` 
