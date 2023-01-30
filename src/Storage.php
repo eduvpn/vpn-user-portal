@@ -571,7 +571,7 @@ class Storage
     }
 
     /**
-     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
+     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,created_at:\DateTimeImmutable,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
      */
     public function wPeerList(): array
     {
@@ -585,6 +585,7 @@ class Storage
                     public_key,
                     ip_four,
                     ip_six,
+                    created_at,
                     expires_at,
                     auth_key,
                     u.is_disabled AS user_is_disabled
@@ -608,6 +609,7 @@ class Storage
                 'public_key' => $publicKey,
                 'ip_four' => (string) $resultRow['ip_four'],
                 'ip_six' => (string) $resultRow['ip_six'],
+                'created_at' => Dt::get($resultRow['created_at']),
                 'expires_at' => Dt::get($resultRow['expires_at']),
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
                 'user_is_disabled' => (bool) $resultRow['user_is_disabled'],
@@ -618,7 +620,7 @@ class Storage
     }
 
     /**
-     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,common_name:string,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
+     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,common_name:string,created_at:\DateTimeImmutable,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
      */
     public function oCertList(): array
     {
@@ -630,6 +632,7 @@ class Storage
                         profile_id,
                         display_name,
                         common_name,
+                        created_at,
                         expires_at,
                         auth_key,
                         u.is_disabled AS user_is_disabled
@@ -651,6 +654,7 @@ class Storage
                 'profile_id' => (string) $resultRow['profile_id'],
                 'display_name' => (string) $resultRow['display_name'],
                 'common_name' => $commonName,
+                'created_at' => Dt::get($resultRow['created_at']),
                 'expires_at' => Dt::get($resultRow['expires_at']),
                 'auth_key' => null === $resultRow['auth_key'] ? null : (string) $resultRow['auth_key'],
                 'user_is_disabled' => (bool) $resultRow['user_is_disabled'],
