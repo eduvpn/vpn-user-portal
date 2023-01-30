@@ -12,6 +12,8 @@
 - show number of users on "Users" page
 - expose `created_at` from `Storage::oCertList` and `Storage::wPeerList`
   ([#121](https://todo.sr.ht/~eduvpn/server/121))
+- expose the max #available connections per profile on "Connections" page 
+  ([#122](https://todo.sr.ht/~eduvpn/server/122))
 
 ## 3.3.0 (2023-01-20)
 - do not write `syslog` output to `stderr` 
