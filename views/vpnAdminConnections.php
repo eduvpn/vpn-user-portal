@@ -24,7 +24,7 @@
 <?php else: ?>
             (<?=$this->e((string)$maxClientLimit);?>)
 <?php endif;?>
-            </td>'#Actieve verbindingen
+            </td>
         </tr>
     <?php endforeach; ?>
         </tbody>
