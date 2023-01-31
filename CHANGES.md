@@ -14,6 +14,8 @@
   ([#121](https://todo.sr.ht/~eduvpn/server/121))
 - expose the max #available connections per profile on "Connections" page 
   ([#122](https://todo.sr.ht/~eduvpn/server/122))
+- make it possible to add additional OAuth API clients 
+  ([#119](https://todo.sr.ht/~eduvpn/server/119))
 
 ## 3.3.0 (2023-01-20)
 - do not write `syslog` output to `stderr` 
