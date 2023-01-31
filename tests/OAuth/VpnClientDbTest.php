@@ -18,7 +18,7 @@ class VpnClientDbTest extends TestCase
 {
     public function testWindows(): void
     {
-        $clientDb = new VpnClientDb();
+        $clientDb = new VpnClientDb(__DIR__.'/does_not_exist.json');
         $clientInfo = $clientDb->get('org.eduvpn.app.windows');
         $this->assertSame('org.eduvpn.app.windows', $clientInfo->clientId());
         $this->assertSame('eduVPN for Windows', $clientInfo->displayName());
@@ -30,7 +30,7 @@ class VpnClientDbTest extends TestCase
 
     public function testAndroid(): void
     {
-        $clientDb = new VpnClientDb();
+        $clientDb = new VpnClientDb(__DIR__.'/does_not_exist.json');
         $clientInfo = $clientDb->get('org.eduvpn.app.android');
         $this->assertSame('org.eduvpn.app.android', $clientInfo->clientId());
         $this->assertSame('eduVPN for Android', $clientInfo->displayName());
@@ -44,7 +44,7 @@ class VpnClientDbTest extends TestCase
 
     public function testiOS(): void
     {
-        $clientDb = new VpnClientDb();
+        $clientDb = new VpnClientDb(__DIR__.'/does_not_exist.json');
         $clientInfo = $clientDb->get('org.eduvpn.app.ios');
         $this->assertSame('org.eduvpn.app.ios', $clientInfo->clientId());
         $this->assertSame('eduVPN for iOS', $clientInfo->displayName());
@@ -54,5 +54,14 @@ class VpnClientDbTest extends TestCase
         $this->assertSame('org.letsconnect-vpn.app.ios', $clientInfo->clientId());
         $this->assertSame('Let\'s Connect! for iOS', $clientInfo->displayName());
         $this->assertTrue($clientInfo->isValidRedirectUri('org.letsconnect-vpn.app.ios:/api/callback'));
+    }
+
+    public function testJsonFile(): void
+    {
+        $clientDb = new VpnClientDb(__DIR__.'/oauth_client_db.json');
+        $clientInfo = $clientDb->get('foo');
+        $this->assertNotNull($clientInfo);
+        $this->assertSame('foo', $clientInfo->clientId());
+        $this->assertSame(['https://foo.example.org/callback'], $clientInfo->redirectUriList());
     }
 }

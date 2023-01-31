@@ -13,10 +13,29 @@ namespace Vpn\Portal\OAuth;
 
 use fkooman\OAuth\Server\ClientInfo;
 use fkooman\OAuth\Server\SimpleClientDb;
+use Vpn\Portal\FileIO;
+use Vpn\Portal\Json;
 
 class VpnClientDb extends SimpleClientDb
 {
-    public function __construct()
+    public function __construct(string $jsonClientDbFile)
+    {
+        $this->defaultClientRegistration();
+        $this->fromJsonFile($jsonClientDbFile);
+    }
+
+    private function fromJsonFile(string $jsonClientDbFile): void
+    {
+        if (!FileIO::exists($jsonClientDbFile)) {
+            return;
+        }
+        $clientDbData = Json::decode(FileIO::read($jsonClientDbFile));
+        foreach ($clientDbData as $clientInfoData) {
+            $this->add(ClientInfo::fromData($clientInfoData));
+        }
+    }
+
+    private function defaultClientRegistration(): void
     {
         //
         // eduVPN

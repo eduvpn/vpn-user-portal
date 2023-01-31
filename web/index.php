@@ -204,7 +204,7 @@ try {
     );
 
     $service->addHook($adminHook);
-    $oauthClientDb = new VpnClientDb();
+    $oauthClientDb = new VpnClientDb($baseDir.'/config/oauth_client_db.json');
     $oauthStorage = new OAuthStorage($storage->dbPdo(), 'oauth_');
     $oauthKey = FileIO::read($baseDir.'/config/keys/oauth.key');
     $oauthSigner = new Signer($oauthKey);

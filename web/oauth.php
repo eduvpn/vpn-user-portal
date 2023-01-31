@@ -71,7 +71,7 @@ try {
     // OAuth module
     $oauthServer = new VpnOAuthServer(
         new OAuthStorage($storage->dbPdo(), 'oauth_'),
-        new VpnClientDb(),
+        new VpnClientDb($baseDir.'/config/oauth_client_db.json'),
         new Signer(FileIO::read($baseDir.'/config/keys/oauth.key')),
         $sessionExpiry,
         $config->apiConfig()->tokenExpiry()

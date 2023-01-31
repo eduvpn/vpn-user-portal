@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2b0ddb1c8c0cdc85e1901e816c141b1",
+    "content-hash": "4566e6702749e2fd15681db57a02dc67",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
-            "version": "7.4.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "ba9dc95fd94aeddd94999db583969ea9e67a281e"
+                "reference": "477e32a4d5b417d1ac5763a0ab75ba3ca10f40b0"
             },
             "require": {
                 "ext-date": "*",
@@ -28,6 +28,7 @@
                 "ext-pdo_sqlite": "*",
                 "fkooman/put": "^0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -53,7 +54,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2023-01-03T08:21:38+00:00"
+            "time": "2023-01-31T07:52:03+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -197,7 +198,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fkooman/oauth2-server": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

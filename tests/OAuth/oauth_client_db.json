@@ -1,0 +1,14 @@
+[
+    {
+        "client_id": "foo",
+        "redirect_uris": [
+            "https://foo.example.org/callback"
+        ]
+    },
+    {
+        "client_id": "bar",
+        "redirect_uris": [
+            "https://bar.example.org/callback"
+        ]
+    }
+]

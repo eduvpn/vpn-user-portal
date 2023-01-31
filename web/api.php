@@ -63,7 +63,7 @@ try {
         $bearerValidator = new BearerValidator(
             new Signer($oauthKey),
             new LocalAccessTokenVerifier(
-                new VpnClientDb(),
+                new VpnClientDb($baseDir.'/config/oauth_client_db.json'),
                 $oauthStorage
             )
         );

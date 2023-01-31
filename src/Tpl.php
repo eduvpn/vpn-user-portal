@@ -13,6 +13,7 @@ namespace Vpn\Portal;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use fkooman\OAuth\Server\ClientDbInterface;
 use RangeException;
 use Vpn\Portal\Exception\TplException;
 use Vpn\Portal\OAuth\VpnClientDb;
@@ -43,6 +44,8 @@ class Tpl implements TplInterface
     /** @var array<string,callable> */
     private array $callbackList = [];
 
+    private ClientDbInterface $clientDb;
+
     /**
      * @param array<string,mixed> $templateVariables
      */
@@ -53,6 +56,7 @@ class Tpl implements TplInterface
         $this->uiLanguage = $uiLanguage;
         $this->assetDir = $baseDir.'/web';
         $this->templateVariables = $templateVariables;
+        $this->clientDb = new VpnClientDb($baseDir.'/config/oauth_client_db.json');
     }
 
     /**
@@ -89,8 +93,7 @@ class Tpl implements TplInterface
 
     public function clientIdToDisplayName(string $clientId): string
     {
-        $clientDb = new VpnClientDb();
-        if (null === $clientInfo = $clientDb->get($clientId)) {
+        if (null === $clientInfo = $this->clientDb->get($clientId)) {
             return $this->e($clientId);
         }
 
