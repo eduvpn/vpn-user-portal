@@ -161,9 +161,14 @@ class ConnectionManager
         }
     }
 
-    public function disconnectByConnectionId(string $connectionId): void
+    public function disconnectByConnectionId(string $userId, string $connectionId): void
     {
         if (null !== $wPeerInfo = $this->storage->wPeerInfo($connectionId)) {
+            if ($userId !== $wPeerInfo['user_id']) {
+                // connectionId does not belong to user
+                return;
+            }
+
             $this->wDisconnect(
                 $wPeerInfo['user_id'],
                 $wPeerInfo['profile_id'],
@@ -177,6 +182,10 @@ class ConnectionManager
         }
 
         if (null !== $oCertInfo = $this->storage->oCertInfo($connectionId)) {
+            if ($userId !== $oCertInfo['user_id']) {
+                // connectionId does not belong to user
+                return;
+            }
             $this->oDisconnect(
                 $oCertInfo['user_id'],
                 $oCertInfo['profile_id'],

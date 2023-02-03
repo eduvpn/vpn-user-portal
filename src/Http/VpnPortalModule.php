@@ -134,6 +134,7 @@ class VpnPortalModule implements ServiceModuleInterface
             '/deleteConfig',
             function (Request $request, UserInfo $userInfo): Response {
                 $this->connectionManager->disconnectByConnectionId(
+                    $userInfo->userId(),
                     $request->requirePostParameter('connectionId', fn (string $s) => Validator::connectionId($s))
                 );
 

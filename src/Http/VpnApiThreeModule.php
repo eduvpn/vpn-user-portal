@@ -95,6 +95,7 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                         // time ago, which is first one from the set in
                         // activeApiConfigurations
                         $this->connectionManager->disconnectByConnectionId(
+                            $userInfo->userId(),
                             $activeApiConfigurations[0]['connection_id']
                         );
                     }
