@@ -40,6 +40,11 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
      */
     public function validate(string $authUser, string $authPass): UserInfo
     {
+        // make sure authUser does not contain "\x00" string
+        if (false !== strpos($authUser, "\x00")) {
+            throw new CredentialValidatorException('"authUser" contains "\x00"');
+        }
+
         // add realm when requested
         if (null !== $radiusRealm = $this->radiusAuthConfig->radiusRealm()) {
             $authUser = sprintf('%s@%s', $authUser, $radiusRealm);
