@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4566e6702749e2fd15681db57a02dc67",
+    "content-hash": "085f5a80403c7e46e995f85f8b332a8e",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
-            "version": "dev-main",
+            "version": "7.5.0",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "477e32a4d5b417d1ac5763a0ab75ba3ca10f40b0"
+                "reference": "acb092fb108db86405201aae512d82d808a6bca3"
             },
             "require": {
                 "ext-date": "*",
@@ -28,7 +28,6 @@
                 "ext-pdo_sqlite": "*",
                 "fkooman/put": "^0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -54,7 +53,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2023-01-31T07:52:03+00:00"
+            "time": "2023-02-06T13:04:29+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -144,11 +143,11 @@
         },
         {
             "name": "fkooman/saml-sp",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "d66cd488e205958849c7f0bdf6c5310259563d23"
+                "reference": "aa6f1b7954388c036008c786aa1cc33973a1ade5"
             },
             "require": {
                 "ext-curl": "*",
@@ -193,14 +192,12 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2022-11-07T12:03:51+00:00"
+            "time": "2023-02-01T12:23:55+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fkooman/oauth2-server": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
