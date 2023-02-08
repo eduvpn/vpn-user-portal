@@ -11,7 +11,10 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
+use DomainException;
 use fkooman\SeCookie\CookieOptions;
+use fkooman\SeCookie\FileSessionStorage;
+use fkooman\SeCookie\JsonSerializer;
 use fkooman\SeCookie\MemcacheSessionStorage;
 use fkooman\SeCookie\Session;
 use fkooman\SeCookie\SessionOptions;
@@ -23,10 +26,20 @@ class SeSession implements SessionInterface
 
     public function __construct(CookieOptions $cookieOptions, Config $config)
     {
-        $sessionStorage = null;
-        if ('MemcacheSessionModule' === $config->sessionModule()) {
-            $sessionStorage = new MemcacheSessionStorage($config->memcacheSessionConfig()->serverList());
+        switch($config->sessionModule()) {
+            case 'FileSessionModule':
+                $sessionStorage = new FileSessionStorage(null, new JsonSerializer());
+                break;
+            case 'MemcacheSessionModule':
+                $sessionStorage = new MemcacheSessionStorage(
+                    $config->memcacheSessionConfig()->serverList(),
+                    new JsonSerializer()
+                );
+                break;
+            default:
+                throw new DomainException(sprintf('session module "%s" not supported', $config->sessionModule()));
         }
+
         $this->session = new Session(
             SessionOptions::init()->withExpiresIn($config->browserSessionExpiry()),
             $cookieOptions,
