@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.5.1 (2023-02-09)
+- also escape shorter than maxLen string in `Tpl::etr`
+
 ## 2.5.0 (2022-10-31)
 - drop `paragonie/constant_time_encoding` dependency
 - switch to new version of php-cs-fixer
