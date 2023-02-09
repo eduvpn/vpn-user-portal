@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.3.1 (...)
+## 3.3.1 (2023-02-09)
 - on "Info" page warn when DNS search domain is not set for a profile, while 
   DNS is provided, but not default gateway 
   ([#120](https://todo.sr.ht/~eduvpn/server/120))
@@ -16,7 +16,7 @@
   ([#122](https://todo.sr.ht/~eduvpn/server/122))
 - make it possible to add additional OAuth API clients 
   ([#119](https://todo.sr.ht/~eduvpn/server/119))
-- various fixes for issues found by security audit
+- various fixes for issues found by security audit (details forthcoming)
 
 ## 3.3.0 (2023-01-20)
 - do not write `syslog` output to `stderr` 
