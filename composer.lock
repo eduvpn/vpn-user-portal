@@ -643,11 +643,11 @@
     "packages-dev": [
         {
             "name": "fkooman/put",
-            "version": "0.3.2",
+            "version": "0.3.3",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/put",
-                "reference": "97205bddbd4224364e7514ac698abc6f27b83353"
+                "reference": "b844f69a80c14fb7ff8e9c3919b2a85eb2dd37f4"
             },
             "require": {
                 "php": ">=5.4"
@@ -677,15 +677,15 @@
                 }
             ],
             "description": "PHP Unit Testing for Minimalists",
-            "time": "2022-10-27T16:03:13+00:00"
+            "time": "2022-11-07T09:40:25+00:00"
         },
         {
             "name": "fkooman/saml-sp",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "97cdf19cd2e0530b03f7f6f50b79bd6631fc2f40"
+                "reference": "e44650e01f2520dc71fa7de0924d403105a5fa6d"
             },
             "require": {
                 "ext-curl": "*",
@@ -732,7 +732,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2022-10-31T17:51:42+00:00"
+            "time": "2023-02-01T12:10:17+00:00"
         }
     ],
     "aliases": [],
