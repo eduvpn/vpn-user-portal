@@ -16,6 +16,9 @@
   ([#122](https://todo.sr.ht/~eduvpn/server/122))
 - make it possible to add additional OAuth API clients 
   ([#119](https://todo.sr.ht/~eduvpn/server/119))
+- switch session storage to use JSON instead of PHP serialization
+  - this will log everyone out of the portal (if they are currently logged in),
+    will NOT affect VPN sessions
 - various fixes for issues found by security audit (details forthcoming)
 
 ## 3.3.0 (2023-01-20)
