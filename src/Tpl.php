@@ -324,7 +324,7 @@ class Tpl implements TplInterface
 
         $strLen = mb_strlen($inputString);
         if ($strLen <= $maxLen) {
-            return $inputString;
+            return $this->e($inputString);
         }
 
         $partOne = mb_substr($inputString, 0, (int) ceil(($maxLen - 1) / 2));
