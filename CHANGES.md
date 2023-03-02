@@ -19,7 +19,13 @@
 - switch session storage to use JSON instead of PHP serialization
   - this will log everyone out of the portal (if they are currently logged in),
     will NOT affect VPN sessions
-- various fixes for issues found by security audit (details forthcoming)
+- various fixes for issues found by security audit
+  - DEC-02-004 WP1: Stored XSS via VPN-configuration display-name (High)
+  - DEC-02-006 WP1: Stored XSS via null byte truncation in Radius auth (High)
+  - DEC-02-007 WP1: Client disconnection via absent access control (Medium)
+  - DEC-02-008 WP1: Bypassing connection threshold with race conditions (Low)
+  - DEC-02-001 WP1: Trim function does not HTML-escape short strings (Medium)
+  - DEC-02-005 WP3: Unnecessary use of unserialize() for cookie storage (Low)
 
 ## 3.3.0 (2023-01-20)
 - do not write `syslog` output to `stderr` 
