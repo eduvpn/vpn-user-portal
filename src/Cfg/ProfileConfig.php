@@ -145,6 +145,11 @@ class ProfileConfig
         return Ip::fromIpPrefix($wRangeSixList[$nodeIndex]);
     }
 
+    public function wKillSwitch(): bool
+    {
+        return $this->requireBool('wKillSwitch', true);
+    }
+
     public function oRangeFour(int $nodeNumber): Ip
     {
         $nodeIndex = $this->nodeNumberToIndex($nodeNumber);

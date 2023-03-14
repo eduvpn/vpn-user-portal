@@ -63,8 +63,7 @@ class ClientConfig implements ClientConfigInterface
 
         $routeList = new IpNetList();
         if ($this->profileConfig->defaultGateway()) {
-            $routeList->add(Ip::fromIpPrefix('0.0.0.0/0'));
-            $routeList->add(Ip::fromIpPrefix('::/0'));
+            self::addDefaultRoute($routeList, $this->profileConfig->wKillSwitch());
         }
         // add the (additional) prefixes we want
         foreach ($this->profileConfig->routeList() as $routeIpPrefix) {
@@ -116,6 +115,23 @@ class ClientConfig implements ClientConfigInterface
         } catch (QrCodeException $e) {
             return null;
         }
+    }
+
+    private static function addDefaultRoute(IpNetList &$routeList, bool $wKillSwitch): void
+    {
+        if ($wKillSwitch) {
+            $routeList->add(Ip::fromIpPrefix('0.0.0.0/0'));
+            $routeList->add(Ip::fromIpPrefix('::/0'));
+        }
+
+        // specifying the default routes like this disables the blocking of
+        // "untunneled traffic" a.k.a. "kill-switch" for "defaultGateway" VPNs
+        // on Windows and possibly other platforms
+        // @see https://github.com/WireGuard/wireguard-windows/blob/master/docs/netquirk.md#firewall-considerations-for-0-allowed-ips
+        $routeList->add(Ip::fromIpPrefix('0.0.0.0/1'));
+        $routeList->add(Ip::fromIpPrefix('128.0.0.0/1'));
+        $routeList->add(Ip::fromIpPrefix('::/1'));
+        $routeList->add(Ip::fromIpPrefix('8000::/1'));
     }
 
     /**
