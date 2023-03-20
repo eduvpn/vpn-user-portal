@@ -34,7 +34,7 @@ function showHelp(): void
     echo '  --delete USER-ID [--force]'.PHP_EOL;
     echo '        Delete user account (data)'.PHP_EOL;
     echo '  --list'.PHP_EOL;
-    echo '        List user accounts(*)'.PHP_EOL;
+    echo '        List user accounts'.PHP_EOL;
     echo PHP_EOL;
     echo '(*) Only for accounts that have logged in at least once!'.PHP_EOL;
 }
@@ -111,7 +111,6 @@ try {
 
             continue;
         }
-
         if ('--help' === $argv[$i] || '-h' === $argv[$i]) {
             showHelp();
 
@@ -129,6 +128,16 @@ try {
     $storage = new Storage($config->dbConfig($baseDir));
 
     if ($listUsers) {
+        if ('DbAuthModule' === $config->authModule()) {
+            // list local user accounts
+            foreach ($storage->localUserList() as $userId) {
+                echo $userId.PHP_EOL;
+            }
+
+            exit(0);
+        }
+
+        // list users that ever authenticated
         foreach ($storage->userList() as $userInfo) {
             echo $userInfo->userId().PHP_EOL;
         }

@@ -266,6 +266,25 @@ class Storage
         return $wPeerInfoList;
     }
 
+    /**
+     * @return array<string>
+     */
+    public function localUserList(): array
+    {
+        $stmt = $this->db->prepare(
+            <<< 'SQL'
+                SELECT
+                    user_id
+                FROM
+                    local_users
+                SQL
+        );
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
     public function localUserExists(string $authUser): bool
     {
         $stmt = $this->db->prepare(
