@@ -43,49 +43,49 @@ final class ProtocolTest extends TestCase
     public function testDetermineHappy(): void
     {
         // Client Supports OpenVPN & WireGuard
-        static::assertSame('openvpn', Protocol::determine(self::getConfig()->profileConfig('prefer-openvpn'), self::PROTO_BOTH, self::PUBLIC_KEY, false));
-        static::assertSame('wireguard', Protocol::determine(self::getConfig()->profileConfig('prefer-wireguard'), self::PROTO_BOTH, self::PUBLIC_KEY, false));
-        static::assertSame('wireguard', Protocol::determine(self::getConfig()->profileConfig('wireguard-only'), self::PROTO_BOTH, self::PUBLIC_KEY, false));
-        static::assertSame('openvpn', Protocol::determine(self::getConfig()->profileConfig('openvpn-only'), self::PROTO_BOTH, self::PUBLIC_KEY, false));
+        static::assertSame(['openvpn', 'wireguard'], Protocol::determine(self::getConfig()->profileConfig('prefer-openvpn'), self::PROTO_BOTH, self::PUBLIC_KEY, false));
+        static::assertSame(['wireguard', 'openvpn'], Protocol::determine(self::getConfig()->profileConfig('prefer-wireguard'), self::PROTO_BOTH, self::PUBLIC_KEY, false));
+        static::assertSame(['wireguard'], Protocol::determine(self::getConfig()->profileConfig('wireguard-only'), self::PROTO_BOTH, self::PUBLIC_KEY, false));
+        static::assertSame(['openvpn'], Protocol::determine(self::getConfig()->profileConfig('openvpn-only'), self::PROTO_BOTH, self::PUBLIC_KEY, false));
         // test "preferTcp" on profile that supports both OpenVPN & WireGuard, but prefers WireGuard
-        static::assertSame('openvpn', Protocol::determine(self::getConfig()->profileConfig('prefer-wireguard'), self::PROTO_BOTH, self::PUBLIC_KEY, true));
+        static::assertSame(['openvpn', 'wireguard'], Protocol::determine(self::getConfig()->profileConfig('prefer-wireguard'), self::PROTO_BOTH, self::PUBLIC_KEY, true));
 
         // Client Supports WireGuard
-        static::assertSame('wireguard', Protocol::determine(self::getConfig()->profileConfig('prefer-openvpn'), self::PROTO_WIREGUARD_ONLY, self::PUBLIC_KEY, false));
-        static::assertSame('wireguard', Protocol::determine(self::getConfig()->profileConfig('prefer-wireguard'), self::PROTO_WIREGUARD_ONLY, self::PUBLIC_KEY, false));
-        static::assertSame('wireguard', Protocol::determine(self::getConfig()->profileConfig('wireguard-only'), self::PROTO_WIREGUARD_ONLY, self::PUBLIC_KEY, false));
+        static::assertSame(['wireguard'], Protocol::determine(self::getConfig()->profileConfig('prefer-openvpn'), self::PROTO_WIREGUARD_ONLY, self::PUBLIC_KEY, false));
+        static::assertSame(['wireguard'], Protocol::determine(self::getConfig()->profileConfig('prefer-wireguard'), self::PROTO_WIREGUARD_ONLY, self::PUBLIC_KEY, false));
+        static::assertSame(['wireguard'], Protocol::determine(self::getConfig()->profileConfig('wireguard-only'), self::PROTO_WIREGUARD_ONLY, self::PUBLIC_KEY, false));
 
         // Client Supports OpenVPN
-        static::assertSame('openvpn', Protocol::determine(self::getConfig()->profileConfig('prefer-openvpn'), self::PROTO_OPENVPN_ONLY, null, false));
-        static::assertSame('openvpn', Protocol::determine(self::getConfig()->profileConfig('prefer-wireguard'), self::PROTO_OPENVPN_ONLY, null, false));
-        static::assertSame('openvpn', Protocol::determine(self::getConfig()->profileConfig('openvpn-only'), self::PROTO_OPENVPN_ONLY, null, false));
+        static::assertSame(['openvpn'], Protocol::determine(self::getConfig()->profileConfig('prefer-openvpn'), self::PROTO_OPENVPN_ONLY, null, false));
+        static::assertSame(['openvpn'], Protocol::determine(self::getConfig()->profileConfig('prefer-wireguard'), self::PROTO_OPENVPN_ONLY, null, false));
+        static::assertSame(['openvpn'], Protocol::determine(self::getConfig()->profileConfig('openvpn-only'), self::PROTO_OPENVPN_ONLY, null, false));
     }
 
     public function testDetermineClientSupportsNoProtocol(): void
     {
         $this->expectException(ProtocolException::class);
-        $this->expectExceptionMessage('neither wireguard, nor openvpn supported by client');
+        $this->expectExceptionMessage('no common VPN protocol support between client and server profile');
         Protocol::determine(self::getConfig()->profileConfig('prefer-openvpn'), self::PROTO_NONE, self::PUBLIC_KEY, false);
     }
 
     public function testDetermineWireGuardOnlyClientOpenVpnOnlyProfile(): void
     {
         $this->expectException(ProtocolException::class);
-        $this->expectExceptionMessage('profile does not support wireguard, but only wireguard is acceptable for client');
+        $this->expectExceptionMessage('no common VPN protocol support between client and server profile');
         Protocol::determine(self::getConfig()->profileConfig('openvpn-only'), self::PROTO_WIREGUARD_ONLY, self::PUBLIC_KEY, false);
     }
 
     public function testDetermineOpenVpnOnlyClientWireGuardOnlyProfile(): void
     {
         $this->expectException(ProtocolException::class);
-        $this->expectExceptionMessage('profile does not support openvpn, but only openvpn is acceptable for client');
+        $this->expectExceptionMessage('no common VPN protocol support between client and server profile');
         Protocol::determine(self::getConfig()->profileConfig('wireguard-only'), self::PROTO_OPENVPN_ONLY, null, false);
     }
 
     public function testDetermineWireGuardOnlyWithoutPublicKey(): void
     {
         $this->expectException(ProtocolException::class);
-        $this->expectExceptionMessage('client only supports wireguard, but does not provide a public key');
+        $this->expectExceptionMessage('no common VPN protocol support between client and server profile');
         Protocol::determine(self::getConfig()->profileConfig('wireguard-only'), self::PROTO_WIREGUARD_ONLY, null, false);
     }
 

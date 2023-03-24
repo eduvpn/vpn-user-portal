@@ -22,77 +22,43 @@ class Protocol
 {
     /**
      * @param array{wireguard:bool,openvpn:bool} $clientProtoSupport
+     *
+     * @return array<string>
      */
-    public static function determine(ProfileConfig $profileConfig, array $clientProtoSupport, ?string $publicKey, bool $preferTcp): string
+    public static function determine(ProfileConfig $profileConfig, array $clientProtoSupport, ?string $publicKey, bool $preferTcp): array
     {
-        $wSupport = $clientProtoSupport['wireguard'];
-        $oSupport = $clientProtoSupport['openvpn'];
-
-        if (false === $oSupport && false === $wSupport) {
-            throw new ProtocolException('neither wireguard, nor openvpn supported by client');
+        // figure out common VPN protocols between client and profile
+        $commonProtoList = [];
+        if ($clientProtoSupport['wireguard'] && null !== $publicKey && $profileConfig->wSupport()) {
+            $commonProtoList[] = 'wireguard';
+        }
+        if ($clientProtoSupport['openvpn'] && $profileConfig->oSupport()) {
+            $commonProtoList[] = 'openvpn';
+        }
+        if (0 === count($commonProtoList)) {
+            throw new ProtocolException('no common VPN protocol support between client and server profile');
+        }
+        if (1 === count($commonProtoList)) {
+            // only one protocol in common, use it
+            return $commonProtoList;
         }
 
-        if ($oSupport && false === $wSupport) {
-            if ($profileConfig->oSupport()) {
-                return 'openvpn';
-            }
+        // both WireGuard and OpenVPN supported by client and profile...
 
-            throw new ProtocolException('profile does not support openvpn, but only openvpn is acceptable for client');
-        }
-
-        if ($wSupport && false === $oSupport) {
-            if (null === $publicKey) {
-                throw new ProtocolException('client only supports wireguard, but does not provide a public key');
-            }
-            if ($profileConfig->wSupport()) {
-                return 'wireguard';
-            }
-
-            throw new ProtocolException('profile does not support wireguard, but only wireguard is acceptable for client');
-        }
-
-        // At this point, the client does not *explicitly* specify their
-        // supported protocols, so we assume both are supported...
-
-        // Profile only supports OpenVPN
-        if ($profileConfig->oSupport() && !$profileConfig->wSupport()) {
-            return 'openvpn';
-        }
-
-        // Profile only supports WireGuard
-        if (!$profileConfig->oSupport() && $profileConfig->wSupport()) {
-            // client MUST have provided a public key
-            if (null === $publicKey) {
-                throw new ProtocolException('unable to connect using wireguard, no public key provided by client');
-            }
-
-            return 'wireguard';
-        }
-
-        // Profile supports OpenVPN & WireGuard
-
-        // VPN client prefers connecting over TCP
         if ($preferTcp) {
-            // but this has only meaning if there are actually TCP ports to
-            // connect to...
+            // VPN client prefers connecting over TCP, make sure OpenVPN has
+            // some TCP ports available, if it does, prefer OpenVPN
             if (0 !== \count($profileConfig->oExposedTcpPortList()) || 0 !== \count($profileConfig->oTcpPortList())) {
-                return 'openvpn';
+                return ['openvpn', 'wireguard'];
             }
         }
 
-        // Profile prefers OpenVPN
         if ('openvpn' === $profileConfig->preferredProto()) {
-            return 'openvpn';
+            return ['openvpn', 'wireguard'];
         }
 
-        // VPN client provides a WireGuard Public Key, server prefers WireGuard
-        if (null !== $publicKey) {
-            return 'wireguard';
-        }
-
-        // Server prefers WireGuard, but VPN client does not provide a
-        // WireGuard Public Key, so use OpenVPN...
-        return 'openvpn';
+        // profile prefers WireGuard
+        return ['wireguard', 'openvpn'];
     }
 
     /**

@@ -204,15 +204,29 @@ class ConnectionManager
      */
     public function connect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, array $clientProtoSupport, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $publicKey, ?string $authKey): ClientConfigInterface
     {
-        if ('wireguard' === Protocol::determine($profileConfig, $clientProtoSupport, $publicKey, $preferTcp)) {
-            if (null !== $publicKey) {
-                if (null !== $wireGuardConfig = $this->wConnect($serverInfo, $profileConfig, $userId, $displayName, $expiresAt, $publicKey, $authKey)) {
+        foreach (Protocol::determine($profileConfig, $clientProtoSupport, $publicKey, $preferTcp) as $vpnProto) {
+            switch($vpnProto) {
+                case 'wireguard':
+                    /**
+                     * Protocol::determine makes sure $publicKey is NOT null.
+                     *
+                     * @var string $publicKey
+                     */
+                    if (null === $wireGuardConfig = $this->wConnect($serverInfo, $profileConfig, $userId, $displayName, $expiresAt, $publicKey, $authKey)) {
+                        break;
+                    }
+
                     return $wireGuardConfig;
-                }
+                case 'openvpn':
+                    if (null === $openVpnConfig = $this->oConnect($serverInfo, $profileConfig, $userId, $displayName, $expiresAt, $preferTcp, $authKey)) {
+                        break;
+                    }
+
+                    return $openVpnConfig;
             }
         }
 
-        return $this->oConnect($serverInfo, $profileConfig, $userId, $displayName, $expiresAt, $preferTcp, $authKey);
+        throw new ConnectionManagerException('unable to connect using any of the common supported VPN protocols');
     }
 
     /**
@@ -449,7 +463,7 @@ class ConnectionManager
         return null;
     }
 
-    private function oConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $authKey): OpenVpnClientConfig
+    private function oConnect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $authKey): ?OpenVpnClientConfig
     {
         $nodeNumberList = $profileConfig->onNode();
         shuffle($nodeNumberList);
@@ -488,8 +502,10 @@ class ConnectionManager
             );
         }
 
-        // we found no node that is up
-        throw new ConnectionManagerException('no VPN node available');
+        // we found no suitable node to connect to...
+        $this->logger->error(sprintf('unable to find a suitable node to connect to for profile "%s"', $profileConfig->profileId()));
+
+        return null;
     }
 
     /**

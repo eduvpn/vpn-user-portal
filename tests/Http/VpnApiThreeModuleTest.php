@@ -343,7 +343,7 @@ final class VpnApiThreeModuleTest extends TestCase
 
         $httpResponse = $this->service->run($request);
         static::assertSame(406, $httpResponse->statusCode());
-        static::assertSame('{"error":"profile does not support openvpn, but only openvpn is acceptable for client"}', $httpResponse->responseBody());
+        static::assertSame('{"error":"no common VPN protocol support between client and server profile"}', $httpResponse->responseBody());
     }
 
     public function testNoPubKeyToWireGuardOnlyProfile(): void
@@ -362,7 +362,7 @@ final class VpnApiThreeModuleTest extends TestCase
 
         $httpResponse = $this->service->run($request);
         static::assertSame(406, $httpResponse->statusCode());
-        static::assertSame('{"error":"unable to connect using wireguard, no public key provided by client"}', $httpResponse->responseBody());
+        static::assertSame('{"error":"no common VPN protocol support between client and server profile"}', $httpResponse->responseBody());
     }
 
     public function testNoMoreAvailableWireGuardIp(): void
