@@ -2,7 +2,8 @@
 
 ## 3.3.3 (...)
 - cleanup VPN protocol selection negotiation 
-  ([#128](https://todo.sr.ht/~eduvpn/server/128))
+  ([#128](https://todo.sr.ht/~eduvpn/server/128), 
+  [#113](https://todo.sr.ht/~eduvpn/server/113))
 
 ## 3.3.2 (2023-03-22)
 - make `vpn-user-portal-account --list` also show local users when 
