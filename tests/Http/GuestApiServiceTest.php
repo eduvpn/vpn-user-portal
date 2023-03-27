@@ -15,6 +15,11 @@ use PHPUnit\Framework\TestCase;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\Http\GuestApiService;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class GuestApiServiceTest extends TestCase
 {
     public function testValidateGuestUserIdInvalidEncoding(): void

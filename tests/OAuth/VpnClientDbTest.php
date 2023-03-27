@@ -14,6 +14,11 @@ namespace Vpn\Portal\OAuth\Tests;
 use PHPUnit\Framework\TestCase;
 use Vpn\Portal\OAuth\VpnClientDb;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class VpnClientDbTest extends TestCase
 {
     public function testWindows(): void

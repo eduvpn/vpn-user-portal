@@ -19,3 +19,4 @@ views/govVPN
 locale/eduVPN
 locale/LC
 locale/govVPN
+/.phpunit.cache
