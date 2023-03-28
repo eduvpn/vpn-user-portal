@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.3.3 (...)
+## 3.3.3 (2023-03-28)
 - cleanup VPN protocol selection negotiation 
   ([#128](https://todo.sr.ht/~eduvpn/server/128), 
   [#113](https://todo.sr.ht/~eduvpn/server/113))
