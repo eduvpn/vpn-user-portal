@@ -15,8 +15,6 @@ $baseDir = dirname(__DIR__);
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use fkooman\OAuth\Server\Signer;
 use Vpn\Portal\Cfg\Config;
-use Vpn\Portal\Dt;
-use Vpn\Portal\Expiry;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Http\JsonResponse;
 use Vpn\Portal\Http\OAuthTokenModule;
@@ -62,18 +60,11 @@ try {
     $storage = new Storage($config->dbConfig($baseDir));
     $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
 
-    $sessionExpiry = Expiry::calculate(
-        Dt::get(),
-        $ca->caCert()->validTo(),
-        $config->sessionExpiry()
-    );
-
     // OAuth module
     $oauthServer = new VpnOAuthServer(
         new OAuthStorage($storage->dbPdo(), 'oauth_'),
         new VpnClientDb($baseDir.'/config/oauth_client_db.json'),
         new Signer(FileIO::read($baseDir.'/config/keys/oauth.key')),
-        $sessionExpiry,
         $config->apiConfig()->tokenExpiry()
     );
     $oauthServer->setIssuerIdentity($request->getOrigin().'/');

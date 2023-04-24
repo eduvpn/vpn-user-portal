@@ -14,6 +14,7 @@ namespace Vpn\Portal\Http;
 use fkooman\OAuth\Server\Exception\OAuthException;
 use fkooman\OAuth\Server\Http\Response as OAuthResponse;
 use fkooman\OAuth\Server\OAuthServer;
+use Vpn\Portal\Expiry;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\TplInterface;
 
@@ -21,11 +22,13 @@ class OAuthModule implements ServiceModuleInterface
 {
     private OAuthServer $oauthServer;
     private TplInterface $tpl;
+    private Expiry $sessionExpiry;
 
-    public function __construct(OAuthServer $oauthServer, TplInterface $tpl)
+    public function __construct(OAuthServer $oauthServer, TplInterface $tpl, Expiry $sessionExpiry)
     {
         $this->oauthServer = $oauthServer;
         $this->tpl = $tpl;
+        $this->sessionExpiry = $sessionExpiry;
     }
 
     public function init(ServiceInterface $service): void
@@ -34,7 +37,7 @@ class OAuthModule implements ServiceModuleInterface
             '/oauth/authorize',
             function (Request $request, UserInfo $userInfo): Response {
                 try {
-                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($userInfo->userId())) {
+                    if ($authorizeResponse = $this->oauthServer->getAuthorizeResponse($userInfo->userId(), null, $this->sessionExpiry->expiresIn())) {
                         // optimization where we do not ask for approval
                         return $this->prepareReturnResponse($authorizeResponse);
                     }
@@ -57,7 +60,9 @@ class OAuthModule implements ServiceModuleInterface
             function (Request $request, UserInfo $userInfo): Response {
                 try {
                     $authorizeResponse = $this->oauthServer->postAuthorize(
-                        $userInfo->userId()
+                        $userInfo->userId(),
+                        null,
+                        $this->sessionExpiry->expiresIn()
                     );
 
                     return $this->prepareReturnResponse($authorizeResponse);

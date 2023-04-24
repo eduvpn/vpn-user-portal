@@ -14,17 +14,45 @@ namespace Vpn\Portal;
 use DateInterval;
 use DateTimeImmutable;
 
+/**
+ * Determine the "Session Expiry", i.e. when the OAuth authorization and
+ * VPN configuration files expire and for the client to restart the
+ * authorization process, or the user to return to the portal to obtain a new
+ * configuration file.
+ */
 class Expiry
 {
-    public static function calculate(DateTimeImmutable $dateTime, DateTimeImmutable $caExpiresAt, DateInterval $sessionExpiry): DateInterval
-    {
-        $expiresAt = $dateTime->add($sessionExpiry);
+    private DateInterval $sessionExpiry;
+    private DateTimeImmutable $dateTime;
+    private DateTimeImmutable $caExpiresAt;
 
-        // make sure we never expire after the CA
-        if ($expiresAt > $caExpiresAt) {
-            return $dateTime->diff($caExpiresAt);
+    public function __construct(DateInterval $sessionExpiry, DateTimeImmutable $dateTime, DateTimeImmutable $caExpiresAt)
+    {
+        $this->sessionExpiry = $sessionExpiry;
+        $this->dateTime = $dateTime;
+        $this->caExpiresAt = $caExpiresAt;
+    }
+
+    public function expiresAt(): DateTimeImmutable
+    {
+        return $this->clampToCa();
+    }
+
+    public function expiresIn(): DateInterval
+    {
+        return $this->dateTime->diff($this->clampToCa());
+    }
+
+    /**
+     * Make sure that whatever sessionExpiry we have it never outlives the CA.
+     */
+    private function clampToCa(): DateTimeImmutable
+    {
+        $expiresAt = $this->dateTime->add($this->sessionExpiry);
+        if ($expiresAt > $this->caExpiresAt) {
+            return $this->caExpiresAt;
         }
 
-        return $sessionExpiry;
+        return $expiresAt;
     }
 }

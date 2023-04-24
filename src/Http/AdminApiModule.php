@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
-use DateInterval;
 use DateTimeImmutable;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
 use Vpn\Portal\Exception\ConnectionManagerException;
 use Vpn\Portal\Exception\ProtocolException;
+use Vpn\Portal\Expiry;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\Protocol;
 use Vpn\Portal\ServerInfo;
@@ -33,9 +33,9 @@ class AdminApiModule implements ServiceModuleInterface
     private Storage $storage;
     private ServerInfo $serverInfo;
     private ConnectionManager $connectionManager;
-    private DateInterval $sessionExpiry;
+    private Expiry $sessionExpiry;
 
-    public function __construct(Config $config, Storage $storage, ServerInfo $serverInfo, ConnectionManager $connectionManager, DateInterval $sessionExpiry)
+    public function __construct(Config $config, Storage $storage, ServerInfo $serverInfo, ConnectionManager $connectionManager, Expiry $sessionExpiry)
     {
         $this->config = $config;
         $this->storage = $storage;
@@ -68,7 +68,6 @@ class AdminApiModule implements ServiceModuleInterface
 
                     $profileConfig = $this->config->profileConfig($requestedProfileId);
                     $preferTcp = 'yes' === $request->optionalPostParameter('prefer_tcp', fn (string $s) => Validator::yesOrNo($s));
-                    $sessionExpiry = $this->dateTime->add($this->sessionExpiry);
                     if (null === $displayName = $request->optionalPostParameter('display_name', fn (string $s) => Validator::displayName($s))) {
                         $displayName = 'Admin API';
                     }
@@ -80,7 +79,7 @@ class AdminApiModule implements ServiceModuleInterface
                         $userInfo->userId(),
                         Protocol::parseMimeType($request->optionalHeader('HTTP_ACCEPT')),
                         $displayName,
-                        $sessionExpiry,
+                        $this->sessionExpiry->expiresAt(),
                         $preferTcp,
                         Key::publicKeyFromSecretKey($secretKey),
                         null
@@ -93,7 +92,7 @@ class AdminApiModule implements ServiceModuleInterface
                     return new Response(
                         $clientConfig->get(),
                         [
-                            'Expires' => $sessionExpiry->format(DateTimeImmutable::RFC7231),
+                            'Expires' => $this->sessionExpiry->expiresAt()->format(DateTimeImmutable::RFC7231),
                             'Content-Type' => $clientConfig->contentType(),
                         ]
                     );

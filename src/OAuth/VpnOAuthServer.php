@@ -22,10 +22,9 @@ use fkooman\OAuth\Server\StorageInterface;
  */
 class VpnOAuthServer extends OAuthServer
 {
-    public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, SignerInterface $signer, DateInterval $refreshTokenExpiry, DateInterval $accessTokenExpiry)
+    public function __construct(StorageInterface $storage, ClientDbInterface $clientDb, SignerInterface $signer, DateInterval $accessTokenExpiry)
     {
         parent::__construct($storage, $clientDb, $signer);
-        $this->refreshTokenExpiry = $refreshTokenExpiry;
         $this->accessTokenExpiry = $accessTokenExpiry;
     }
 }

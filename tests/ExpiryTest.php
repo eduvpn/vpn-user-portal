@@ -36,8 +36,9 @@ final class ExpiryTest extends TestCase
 
         foreach ($dataSet as $dataPoint) {
             $dateTime = Dt::get($dataPoint[1]);
-            $expiryInterval = Expiry::calculate($dateTime, Dt::get($dataPoint[2]), new DateInterval($dataPoint[3]));
-            static::assertSame($dataPoint[0], $dateTime->add($expiryInterval)->format(DateTimeImmutable::ATOM));
+            $e = new Expiry(new DateInterval($dataPoint[3]), $dateTime, Dt::get($dataPoint[2]));
+            static::assertSame($dataPoint[0], $dateTime->add($e->expiresIn())->format(DateTimeImmutable::ATOM));
+            static::assertSame($dataPoint[0], $e->expiresAt()->format(DateTimeImmutable::ATOM));
         }
     }
 }

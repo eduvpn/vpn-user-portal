@@ -67,10 +67,10 @@ try {
 
     $connectionManager = new ConnectionManager($config, new VpnDaemon(new CurlHttpClient($baseDir.'/config/keys/vpn-daemon'), $logger), $storage, ConnectionHooks::init($config, $storage, $logger), $logger);
 
-    $sessionExpiry = Expiry::calculate(
+    $sessionExpiry = new Expiry(
+        $config->sessionExpiry(),
         $dateTime,
-        $ca->caCert()->validTo(),
-        $config->sessionExpiry()
+        $ca->caCert()->validTo()
     );
 
     $service->addModule(

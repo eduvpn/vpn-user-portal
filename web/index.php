@@ -92,13 +92,13 @@ try {
     $dateTime = Dt::get();
     FileIO::mkdir($baseDir.'/data');
     $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
-    $sessionExpiry = Expiry::calculate(
+    $sessionExpiry = new Expiry(
+        $config->sessionExpiry(),
         $dateTime,
-        $ca->caCert()->validTo(),
-        $config->sessionExpiry()
+        $ca->caCert()->validTo()
     );
 
-    if ($dateTime->add(new DateInterval('PT30M')) >= $dateTime->add($sessionExpiry)) {
+    if ($dateTime->add(new DateInterval('PT30M')) >= $sessionExpiry->expiresAt()) {
         throw new RuntimeException('sessionExpiry MUST be > PT30M');
     }
     $storage = new Storage($config->dbConfig($baseDir));
@@ -249,14 +249,14 @@ try {
         $oauthStorage,
         $oauthClientDb,
         $oauthSigner,
-        $sessionExpiry,
         $config->apiConfig()->tokenExpiry()
     );
     $oauthServer->setIssuerIdentity($request->getOrigin().'/');
 
     $oauthModule = new OAuthModule(
         $oauthServer,
-        $tpl
+        $tpl,
+        $sessionExpiry
     );
     $service->addModule($oauthModule);
     $service->addModule(new LogoutModule($authModule, $sessionBackend));

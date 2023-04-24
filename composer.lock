@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fffeaf713fe829f8fd2210f479429b7f",
+    "content-hash": "9d86e7b6fcb361231236539b9d7b405e",
     "packages": [
         {
             "name": "fkooman/oauth2-server",
-            "version": "7.5.3",
+            "version": "7.6.0",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "7a85ec46ba515b91c171439567a417c81fa5f51f"
+                "reference": "c441b8d79d86ddd8a7945d34813eb2e4d71b749e"
             },
             "require": {
                 "ext-date": "*",
@@ -53,7 +53,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2023-03-02T09:37:20+00:00"
+            "time": "2023-04-12T18:24:59+00:00"
         },
         {
             "name": "fkooman/secookie",
@@ -106,11 +106,11 @@
     "packages-dev": [
         {
             "name": "fkooman/put",
-            "version": "0.3.3",
+            "version": "0.3.4",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/put",
-                "reference": "b844f69a80c14fb7ff8e9c3919b2a85eb2dd37f4"
+                "reference": "6223f7dbe81967657eebed7e27ae969ed515ec21"
             },
             "require": {
                 "php": ">=5.4"
@@ -140,7 +140,7 @@
                 }
             ],
             "description": "PHP Unit Testing for Minimalists",
-            "time": "2022-11-07T09:40:25+00:00"
+            "time": "2023-04-11T15:03:00+00:00"
         },
         {
             "name": "fkooman/saml-sp",

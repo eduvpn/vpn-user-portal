@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http;
 
-use DateInterval;
 use DateTimeImmutable;
 use fkooman\OAuth\Server\PdoStorage as OAuthStorage;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\ClientConfigInterface;
 use Vpn\Portal\ConnectionManager;
 use Vpn\Portal\Dt;
+use Vpn\Portal\Expiry;
 use Vpn\Portal\Http\Exception\HttpException;
 use Vpn\Portal\OpenVpn\ClientConfig as OpenVpnClientConfig;
 use Vpn\Portal\ServerInfo;
@@ -38,9 +38,9 @@ class VpnPortalModule implements ServiceModuleInterface
     private Storage $storage;
     private OAuthStorage $oauthStorage;
     private ServerInfo $serverInfo;
-    private DateInterval $sessionExpiry;
+    private Expiry $sessionExpiry;
 
-    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo, DateInterval $sessionExpiry)
+    public function __construct(Config $config, TplInterface $tpl, CookieInterface $cookie, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo, Expiry $sessionExpiry)
     {
         $this->config = $config;
         $this->tpl = $tpl;
@@ -73,7 +73,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'maxActiveConfigurations' => $this->config->maxActiveConfigurations(),
                             'numberOfActivePortalConfigurations' => $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime),
                             'profileConfigList' => $visibleProfileList,
-                            'expiryDate' => $this->dateTime->add($this->sessionExpiry)->format('Y-m-d'),
+                            'expiryDate' => $this->sessionExpiry->expiresAt()->format('Y-m-d'),
                             'configList' => self::filterConfigList($this->storage, $userInfo->userId()),
                         ]
                     )
@@ -108,8 +108,6 @@ class VpnPortalModule implements ServiceModuleInterface
                 }
 
                 $profileConfig = $this->config->profileConfig($profileId);
-                $expiresAt = $this->dateTime->add($this->sessionExpiry);
-
                 $secretKey = Key::generate();
                 $publicKey = Key::publicKeyFromSecretKey($secretKey);
 
@@ -120,7 +118,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $userInfo->userId(),
                     $clientProtoSupport,
                     $displayName,
-                    $expiresAt,
+                    $this->sessionExpiry->expiresAt(),
                     $preferTcp,
                     $publicKey,
                     null
