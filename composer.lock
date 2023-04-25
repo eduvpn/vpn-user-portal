@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "fkooman/oauth2-server",
-            "version": "7.6.0",
+            "version": "7.6.1",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-oauth2-server",
-                "reference": "c441b8d79d86ddd8a7945d34813eb2e4d71b749e"
+                "reference": "cdd06a46e06325d1e4bd5565f93ba74bd15a9385"
             },
             "require": {
                 "ext-date": "*",
@@ -53,7 +53,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-oauth2-server"
             },
-            "time": "2023-04-12T18:24:59+00:00"
+            "time": "2023-04-24T20:58:23+00:00"
         },
         {
             "name": "fkooman/secookie",
