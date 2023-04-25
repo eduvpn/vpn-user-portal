@@ -99,9 +99,6 @@ try {
         $ca->caCert()->validTo()
     );
 
-    if ($dateTime->add(new DateInterval('PT30M')) >= $sessionExpiry->expiresAt()) {
-        throw new RuntimeException('sessionExpiry MUST be > PT30M');
-    }
     $storage = new Storage($config->dbConfig($baseDir));
 
     // XXX do we need to set the path?
