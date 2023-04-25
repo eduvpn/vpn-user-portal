@@ -73,7 +73,7 @@ class VpnPortalModule implements ServiceModuleInterface
                             'maxActiveConfigurations' => $this->config->maxActiveConfigurations(),
                             'numberOfActivePortalConfigurations' => $this->storage->numberOfActivePortalConfigurations($userInfo->userId(), $this->dateTime),
                             'profileConfigList' => $visibleProfileList,
-                            'expiryDate' => $this->sessionExpiry->expiresAt()->format('Y-m-d'),
+                            'expiryDate' => $this->sessionExpiry->expiresAt($userInfo)->format('Y-m-d'),
                             'configList' => self::filterConfigList($this->storage, $userInfo->userId()),
                         ]
                     )
@@ -118,7 +118,7 @@ class VpnPortalModule implements ServiceModuleInterface
                     $userInfo->userId(),
                     $clientProtoSupport,
                     $displayName,
-                    $this->sessionExpiry->expiresAt(),
+                    $this->sessionExpiry->expiresAt($userInfo),
                     $preferTcp,
                     $publicKey,
                     null

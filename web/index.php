@@ -94,6 +94,7 @@ try {
     $ca = new VpnCa($baseDir.'/config/keys/ca', $config->vpnCaPath());
     $sessionExpiry = new Expiry(
         $config->sessionExpiry(),
+        $config->supportedSessionExpiry(),
         $dateTime,
         $ca->caCert()->validTo()
     );

@@ -69,6 +69,7 @@ try {
 
     $sessionExpiry = new Expiry(
         $config->sessionExpiry(),
+        [], // Admin API always uses the default sessionExpiry (for now)
         $dateTime,
         $ca->caCert()->validTo()
     );

@@ -13,6 +13,7 @@ namespace Vpn\Portal;
 
 use DateInterval;
 use DateTimeImmutable;
+use Vpn\Portal\Http\UserInfo;
 
 /**
  * Determine the "Session Expiry", i.e. when the OAuth authorization and
@@ -22,33 +23,51 @@ use DateTimeImmutable;
  */
 class Expiry
 {
-    private DateInterval $sessionExpiry;
+    private DateInterval $defaultSessionExpiry;
+
+    /** @var array<string> */
+    private array $supportedSessionExpiry;
+
     private DateTimeImmutable $dateTime;
+
     private DateTimeImmutable $caExpiresAt;
 
-    public function __construct(DateInterval $sessionExpiry, DateTimeImmutable $dateTime, DateTimeImmutable $caExpiresAt)
+    /**
+     * @param array<string> $supportedSessionExpiry
+     */
+    public function __construct(DateInterval $defaultSessionExpiry, array $supportedSessionExpiry, DateTimeImmutable $dateTime, DateTimeImmutable $caExpiresAt)
     {
-        $this->sessionExpiry = $sessionExpiry;
+        $this->defaultSessionExpiry = $defaultSessionExpiry;
+        $this->supportedSessionExpiry = $supportedSessionExpiry;
         $this->dateTime = $dateTime;
         $this->caExpiresAt = $caExpiresAt;
     }
 
-    public function expiresAt(): DateTimeImmutable
+    public function expiresAt(?UserInfo $userInfo = null): DateTimeImmutable
     {
-        return $this->clampToCa();
+        if(null !== $userInfo) {
+            $userSessionExpiry = $userInfo->sessionExpiry();
+            if(1 === count($userSessionExpiry)) {
+                if(in_array($userSessionExpiry[0], $this->supportedSessionExpiry, true)) {
+                    return $this->clampToCa(new DateInterval($userSessionExpiry[0]));
+                }
+            }
+        }
+
+        return $this->clampToCa($this->defaultSessionExpiry);
     }
 
-    public function expiresIn(): DateInterval
+    public function expiresIn(?UserInfo $userInfo = null): DateInterval
     {
-        return $this->dateTime->diff($this->clampToCa());
+        return $this->dateTime->diff($this->expiresAt($userInfo));
     }
 
     /**
-     * Make sure that whatever sessionExpiry we have it never outlives the CA.
+     * Make sure that whatever sessionExpiry we have, it never outlives the CA.
      */
-    private function clampToCa(): DateTimeImmutable
+    private function clampToCa(DateInterval $sessionExpiry): DateTimeImmutable
     {
-        $expiresAt = $this->dateTime->add($this->sessionExpiry);
+        $expiresAt = $this->dateTime->add($sessionExpiry);
         if ($expiresAt > $this->caExpiresAt) {
             return $this->caExpiresAt;
         }

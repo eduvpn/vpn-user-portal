@@ -33,6 +33,30 @@ class Config
         return new DateInterval($this->requireString('sessionExpiry', self::SESSION_EXPIRY_DEFAULT));
     }
 
+    /**
+     * List of supported "sessionExpiry" values that can be provided as values
+     * of "permissionAttributeList" through user authentication/authorization
+     * which override the default "sessionExpiry" on a per user basis.
+     *
+     * NOTE: the default "sessionExpiry" is always included in the list of
+     * accepted values
+     *
+     * @return array<string>
+     */
+    public function supportedSessionExpiry(): array
+    {
+        return array_values(
+            array_unique(
+                array_merge(
+                    [
+                        $this->requireString('sessionExpiry', self::SESSION_EXPIRY_DEFAULT),
+                    ],
+                    $this->requireStringArray('supportedSessionExpiry', [])
+                )
+            )
+        );
+    }
+
     public function browserSessionExpiry(): DateInterval
     {
         return new DateInterval($this->requireString('browserSessionExpiry', 'PT30M'));

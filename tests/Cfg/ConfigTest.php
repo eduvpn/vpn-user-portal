@@ -75,4 +75,44 @@ final class ConfigTest extends TestCase
             $c->nodeNumberUrlList()
         );
     }
+
+    public function testDefaultSupportedSessionExpiry(): void
+    {
+        $c = new Config([]);
+        $this->assertSame(['P90D'], $c->supportedSessionExpiry());
+    }
+
+    public function testSupportedSessionExpiry(): void
+    {
+        $c = new Config(
+            [
+                'supportedSessionExpiry' => ['PT12H', 'P1Y'],
+            ]
+        );
+        $this->assertSame(
+            [
+                'P90D',
+                'PT12H',
+                'P1Y',
+            ],
+            $c->supportedSessionExpiry()
+        );
+    }
+
+    public function testDuplicateSupportedSessionExpiry(): void
+    {
+        $c = new Config(
+            [
+                'supportedSessionExpiry' => ['PT12H', 'P90D', 'P1Y'],
+            ]
+        );
+        $this->assertSame(
+            [
+                'P90D',
+                'PT12H',
+                'P1Y',
+            ],
+            $c->supportedSessionExpiry()
+        );
+    }
 }
