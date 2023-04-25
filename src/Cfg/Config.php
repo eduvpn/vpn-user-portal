@@ -19,6 +19,8 @@ class Config
 {
     use ConfigTrait;
 
+    private const SESSION_EXPIRY_DEFAULT = 'P90D';
+
     private array $configData;
 
     public function __construct(array $configData)
@@ -28,7 +30,7 @@ class Config
 
     public function sessionExpiry(): DateInterval
     {
-        return new DateInterval($this->requireString('sessionExpiry', 'P90D'));
+        return new DateInterval($this->requireString('sessionExpiry', self::SESSION_EXPIRY_DEFAULT));
     }
 
     public function browserSessionExpiry(): DateInterval
