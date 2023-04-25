@@ -13,6 +13,8 @@ namespace Vpn\Portal\Http;
 
 class UserInfo
 {
+    private const SESSION_EXPIRY_PREFIX = 'https://eduvpn.org/expiry#';
+
     private string $userId;
 
     private bool $isAdmin = false;
@@ -84,5 +86,20 @@ class UserInfo
     public function isDisabled(): bool
     {
         return $this->isDisabled;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function sessionExpiry(): array
+    {
+        $sessionExpiryList = [];
+        foreach($this->permissionList as $userPermission) {
+            if(0 === strpos($userPermission, self::SESSION_EXPIRY_PREFIX)) {
+                $sessionExpiryList[] = substr($userPermission, strlen(self::SESSION_EXPIRY_PREFIX));
+            }
+        }
+
+        return $sessionExpiryList;
     }
 }
