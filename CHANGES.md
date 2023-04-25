@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.4 (2023-04-25)
+- implement support for user specific "Session Expiry" 
+  ([#88](https://todo.sr.ht/~eduvpn/server/88))
+
 ## 3.3.3 (2023-03-28)
 - cleanup VPN protocol selection negotiation 
   ([#128](https://todo.sr.ht/~eduvpn/server/128), 
