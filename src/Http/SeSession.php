@@ -26,15 +26,17 @@ class SeSession implements SessionInterface
 
     public function __construct(CookieOptions $cookieOptions, Config $config)
     {
-        switch($config->sessionModule()) {
+        switch ($config->sessionModule()) {
             case 'FileSessionModule':
                 $sessionStorage = new FileSessionStorage(null, new JsonSerializer());
+
                 break;
             case 'MemcacheSessionModule':
                 $sessionStorage = new MemcacheSessionStorage(
                     $config->memcacheSessionConfig()->serverList(),
                     new JsonSerializer()
                 );
+
                 break;
             default:
                 throw new DomainException(sprintf('session module "%s" not supported', $config->sessionModule()));

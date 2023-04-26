@@ -45,10 +45,10 @@ class Expiry
 
     public function expiresAt(?UserInfo $userInfo = null): DateTimeImmutable
     {
-        if(null !== $userInfo) {
+        if (null !== $userInfo) {
             $userSessionExpiry = $userInfo->sessionExpiry();
-            if(1 === count($userSessionExpiry)) {
-                if(in_array($userSessionExpiry[0], $this->supportedSessionExpiry, true)) {
+            if (1 === count($userSessionExpiry)) {
+                if (in_array($userSessionExpiry[0], $this->supportedSessionExpiry, true)) {
                     return $this->clampToCa(new DateInterval($userSessionExpiry[0]));
                 }
             }

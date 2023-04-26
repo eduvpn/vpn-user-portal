@@ -37,19 +37,23 @@ try {
         if ('--forward' === $arg) {
             $forwardDns = true;
             $reverseDns = false;
+
             continue;
         }
         if ('--reverse' === $arg) {
             $forwardDns = false;
             $reverseDns = true;
+
             continue;
         }
         if ('-4' === $arg) {
             $ipProto = DnsZoneGenerator::IP_FOUR;
+
             continue;
         }
         if ('-6' === $arg) {
             $ipProto = DnsZoneGenerator::IP_SIX;
+
             continue;
         }
         if ('-h' === $arg || '--help' === $arg) {

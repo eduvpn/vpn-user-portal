@@ -205,7 +205,7 @@ class ConnectionManager
     public function connect(ServerInfo $serverInfo, ProfileConfig $profileConfig, string $userId, array $clientProtoSupport, string $displayName, DateTimeImmutable $expiresAt, bool $preferTcp, ?string $publicKey, ?string $authKey): ClientConfigInterface
     {
         foreach (Protocol::determine($profileConfig, $clientProtoSupport, $publicKey, $preferTcp) as $vpnProto) {
-            switch($vpnProto) {
+            switch ($vpnProto) {
                 case 'wireguard':
                     /**
                      * Protocol::determine makes sure $publicKey is NOT null.

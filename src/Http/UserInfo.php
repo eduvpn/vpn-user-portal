@@ -94,8 +94,8 @@ class UserInfo
     public function sessionExpiry(): array
     {
         $sessionExpiryList = [];
-        foreach($this->permissionList as $userPermission) {
-            if(0 === strpos($userPermission, self::SESSION_EXPIRY_PREFIX)) {
+        foreach ($this->permissionList as $userPermission) {
+            if (0 === strpos($userPermission, self::SESSION_EXPIRY_PREFIX)) {
                 $sessionExpiryList[] = substr($userPermission, strlen(self::SESSION_EXPIRY_PREFIX));
             }
         }
