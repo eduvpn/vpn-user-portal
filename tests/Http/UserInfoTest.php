@@ -63,4 +63,34 @@ final class UserInfoTest extends TestCase
             $userInfo->sessionExpiry()
         );
     }
+
+    public function testIsAdminPermission(): void
+    {
+        $userInfo = new UserInfo(
+            'foo',
+            [
+                'https://eduvpn.org/role/admin',
+            ]
+        );
+        $this->assertTrue($userInfo->hasAdminRole());
+    }
+
+    public function testIsNotAdminPermission(): void
+    {
+        $userInfo = new UserInfo(
+            'foo',
+            [
+                'https://eduvpn.org/role/xyz',
+            ]
+        );
+        $this->assertFalse($userInfo->hasAdminRole());
+    }
+
+    public function testIsAdminMakeAdmin(): void
+    {
+        $userInfo = new UserInfo('foo', []);
+        $this->assertFalse($userInfo->hasAdminRole());
+        $userInfo->makeAdmin();
+        $this->assertTrue($userInfo->hasAdminRole());
+    }
 }

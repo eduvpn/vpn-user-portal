@@ -14,6 +14,7 @@ namespace Vpn\Portal\Http;
 class UserInfo
 {
     private const SESSION_EXPIRY_PREFIX = 'https://eduvpn.org/expiry#';
+    private const ADMIN_PERMISSION = 'https://eduvpn.org/role/admin';
 
     private string $userId;
 
@@ -45,16 +46,6 @@ class UserInfo
     public function userId(): string
     {
         return $this->userId;
-    }
-
-    public function isAdmin(): bool
-    {
-        return $this->isAdmin;
-    }
-
-    public function makeAdmin(): void
-    {
-        $this->isAdmin = true;
     }
 
     /**
@@ -101,5 +92,29 @@ class UserInfo
         }
 
         return $sessionExpiryList;
+    }
+
+    /**
+     * This method SHOULD NOT be used in the future because we'll use the role
+     * based method to determine who is admin.
+     */
+    public function makeAdmin(): void
+    {
+        $this->isAdmin = true;
+    }
+
+    public function hasAdminRole(): bool
+    {
+        if ($this->isAdmin) {
+            return true;
+        }
+
+        foreach ($this->permissionList as $userPermission) {
+            if (self::ADMIN_PERMISSION === $userPermission) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

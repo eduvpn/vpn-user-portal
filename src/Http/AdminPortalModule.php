@@ -329,7 +329,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
     private function requireAdmin(UserInfo $userInfo): void
     {
-        if (!$userInfo->isAdmin()) {
+        if (!$userInfo->hasAdminRole()) {
             throw new HttpException('user is not an administrator', 403);
         }
     }

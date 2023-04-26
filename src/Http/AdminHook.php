@@ -19,6 +19,11 @@ use Vpn\Portal\TplInterface;
  *
  * It also augments the template engine with a boolean indicating whether the
  * user is "Admin", to show the admin portal options.
+ *
+ * Future versions would use the UserInfo object directly to determine whether
+ * a user is an admin based on the permissions, either obtained through the IdM
+ * or through the static permissions file. The only thing it would do is set
+ * the template `isAdmin` key to true if the user is a designated admin.
  */
 class AdminHook extends AbstractHook implements HookInterface
 {
@@ -53,6 +58,12 @@ class AdminHook extends AbstractHook implements HookInterface
 
     private function isAdmin(UserInfo $userInfo): bool
     {
+        // we check whether the user is already a designated admin
+        // because of the standardized admin role...
+        if ($userInfo->hasAdminRole()) {
+            return true;
+        }
+
         if (\in_array($userInfo->userId(), $this->adminUserIdList, true)) {
             return true;
         }
