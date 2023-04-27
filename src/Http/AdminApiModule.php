@@ -51,7 +51,7 @@ class AdminApiModule implements ServiceModuleInterface
             '/v1/create',
             function (Request $request, UserInfo $userInfo): Response {
                 try {
-                    if (!$this->storage->userExists($userInfo->userId())) {
+                    if (null === $this->storage->userInfo($userInfo->userId())) {
                         $this->storage->userAdd($userInfo, $this->dateTime);
                     }
 

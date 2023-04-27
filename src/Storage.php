@@ -449,34 +449,15 @@ class Storage
         return $userList;
     }
 
-    /**
-     * @return array<string>
-     */
-    public function userPermissionList(string $userId): array
+    public function userInfo(string $userId): ?UserInfo
     {
         $stmt = $this->db->prepare(
             <<< 'SQL'
                     SELECT
-                        permission_list
-                    FROM
-                        users
-                    WHERE
-                        user_id = :user_id
-                SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        // XXX what if user does not (yet) exist, later also for guest scenario?
-        return self::stringToPermissionList((string) $stmt->fetchColumn());
-    }
-
-    public function userAuthData(string $userId): ?string
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                    SELECT
-                        auth_data
+                        user_id,
+                        permission_list,
+                        auth_data,
+                        is_disabled
                     FROM
                         users
                     WHERE
@@ -491,11 +472,12 @@ class Storage
             return null;
         }
 
-        if (null === $resultRow['auth_data']) {
-            return null;
-        }
-
-        return (string) $resultRow['auth_data'];
+        return new UserInfo(
+            (string) $resultRow['user_id'],
+            self::stringToPermissionList((string) $resultRow['permission_list']),
+            null === $resultRow['auth_data'] ? null : (string) $resultRow['auth_data'],
+            (bool) $resultRow['is_disabled']
+        );
     }
 
     public function userDelete(string $userId): void
@@ -804,45 +786,6 @@ class Storage
         );
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
         $stmt->execute();
-    }
-
-    public function userExists(string $userId): bool
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                    SELECT
-                        COUNT(user_id)
-                    FROM
-                        users
-                    WHERE
-                        user_id = :user_id
-                SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return 1 === (int) $stmt->fetchColumn(0);
-    }
-
-    public function userIsDisabled(string $userId): bool
-    {
-        $stmt = $this->db->prepare(
-            <<< 'SQL'
-                    SELECT
-                        is_disabled
-                    FROM
-                        users
-                    WHERE
-                        user_id = :user_id
-                SQL
-        );
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-
-        // because the user always exists, this will always return something,
-        // this is why we don't need to distinguish between a successful fetch
-        // or not, a bit ugly!
-        return (bool) $stmt->fetchColumn(0);
     }
 
     public function clientConnect(string $userId, string $profileId, string $vpnProto, string $connectionId, string $ipFour, string $ipSix, DateTimeImmutable $connectedAt): void

@@ -29,8 +29,10 @@ class DisabledUserHook extends AbstractHook implements HookInterface
 
     public function afterAuth(Request $request, UserInfo &$userInfo): ?Response
     {
-        if ($this->storage->userIsDisabled($userInfo->userId())) {
-            throw new HttpException('your account has been disabled by an administrator', 403);
+        if (null !== $dbUserInfo = $this->storage->userInfo($userInfo->userId())) {
+            if ($dbUserInfo->isDisabled()) {
+                throw new HttpException('your account has been disabled by an administrator', 403);
+            }
         }
 
         return null;

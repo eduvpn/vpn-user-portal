@@ -142,8 +142,10 @@ class NodeApiModule implements ServiceModuleInterface
         $profileConfig = $this->config->profileConfig($profileId);
         if (null !== $profilePermissionList = $profileConfig->aclPermissionList()) {
             // ACL is enabled for this profile
-            $userPermissionList = $this->storage->userPermissionList($userId);
-            if (false === self::hasPermission($userPermissionList, $profilePermissionList)) {
+            if (null === $userInfo = $this->storage->userInfo($userId)) {
+                throw new NodeApiException(sprintf('account "%s" does not exist', $userId));
+            }
+            if (false === self::hasPermission($userInfo->permissionList(), $profilePermissionList)) {
                 throw new NodeApiException(sprintf('account "%s" has insufficient permissions to access profile "%s"', $userId, $profileId));
             }
         }

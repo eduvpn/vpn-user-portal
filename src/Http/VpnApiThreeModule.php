@@ -49,12 +49,14 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
             '/v3/info',
             function (Request $request, ApiUserInfo $userInfo): Response {
                 $profileConfigList = $this->config->profileConfigList();
-                $userPermissions = $this->storage->userPermissionList($userInfo->userId());
+                if (null === $dbUserInfo = $this->storage->userInfo($userInfo->userId())) {
+                    throw new HttpException(sprintf('user "%s" no longer exists', $userInfo->userId()), 500);
+                }
                 $userProfileList = [];
                 foreach ($profileConfigList as $profileConfig) {
                     if (null !== $aclPermissionList = $profileConfig->aclPermissionList()) {
                         // is the user member of the aclPermissionList?
-                        if (!VpnPortalModule::isMember($aclPermissionList, $userPermissions)) {
+                        if (!VpnPortalModule::isMember($aclPermissionList, $dbUserInfo->permissionList())) {
                             continue;
                         }
                     }
@@ -101,12 +103,14 @@ class VpnApiThreeModule implements ApiServiceModuleInterface
                     }
                     $requestedProfileId = $request->requirePostParameter('profile_id', fn (string $s) => Validator::profileId($s));
                     $profileConfigList = $this->config->profileConfigList();
-                    $userPermissions = $this->storage->userPermissionList($userInfo->userId());
+                    if (null === $dbUserInfo = $this->storage->userInfo($userInfo->userId())) {
+                        throw new HttpException(sprintf('user "%s" no longer exists', $userInfo->userId()), 500);
+                    }
                     $availableProfiles = [];
                     foreach ($profileConfigList as $profileConfig) {
                         if (null !== $aclPermissionList = $profileConfig->aclPermissionList()) {
                             // is the user member of the userPermissions?
-                            if (!VpnPortalModule::isMember($aclPermissionList, $userPermissions)) {
+                            if (!VpnPortalModule::isMember($aclPermissionList, $dbUserInfo->permissionList())) {
                                 continue;
                             }
                         }

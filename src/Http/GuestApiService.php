@@ -123,12 +123,13 @@ class GuestApiService implements ApiServiceInterface
             // time...
 
             // make sure the user exists
-            if (!$this->storage->userExists($userId)) {
-                $this->storage->userAdd(new UserInfo($userId, []), $this->dateTime);
+            if (null === $dbUserInfo = $this->storage->userInfo($userId)) {
+                $dbUserInfo = new UserInfo($userId, []);
+                $this->storage->userAdd($dbUserInfo, $this->dateTime);
             }
 
             // make sure the user account is NOT disabled
-            if ($this->storage->userIsDisabled($userId)) {
+            if ($dbUserInfo->isDisabled()) {
                 throw new HttpException('account disabled', 403);
             }
 

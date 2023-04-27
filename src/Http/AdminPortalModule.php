@@ -130,7 +130,7 @@ class AdminPortalModule implements ServiceModuleInterface
 
                 $adminUserId = $userInfo->userId();
                 $userId = $request->requireQueryParameter('user_id', fn (string $s) => Validator::userId($s));
-                if (!$this->storage->userExists($userId)) {
+                if (null === $managedUserInfo = $this->storage->userInfo($userId)) {
                     throw new HttpException('account does not exist', 404);
                 }
 
@@ -141,8 +141,8 @@ class AdminPortalModule implements ServiceModuleInterface
                             'userId' => $userId,
                             'profileConfigList' => $this->config->profileConfigList(),
                             'configList' => VpnPortalModule::filterConfigList($this->storage, $userId),
-                            'isDisabled' => $this->storage->userIsDisabled($userId),
-                            'authData' => $this->storage->userAuthData($userId),
+                            'isDisabled' => $managedUserInfo->isDisabled(),
+                            'authData' => $managedUserInfo->authData(),
                             'isSelf' => $adminUserId === $userId, // the admin is viewing their own account
                             'userConnectionLogEntries' => $this->storage->getConnectionLogForUser($userId),
                         ]
@@ -341,7 +341,7 @@ class AdminPortalModule implements ServiceModuleInterface
     private function validateUser(Request $request, UserInfo $userInfo): string
     {
         $userId = $request->requirePostParameter('user_id', fn (string $s) => Validator::userId($s));
-        if (!$this->storage->userExists($userId)) {
+        if (null === $this->storage->userInfo($userId)) {
             throw new HttpException('account does not exist', 404);
         }
 

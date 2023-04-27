@@ -48,7 +48,7 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
         // only update the user info once per browser session, not on every
         // request
         if ('yes' === $this->session->get('_user_info_already_updated')) {
-            if (false === $this->storage->userExists($userInfo->userId())) {
+            if (null === $this->storage->userInfo($userInfo->userId())) {
                 // user was deleted (by admin) during the active session, so
                 // we force a logout
                 $this->session->destroy();
@@ -61,7 +61,7 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
             return null;
         }
 
-        if (false === $this->storage->userExists($userInfo->userId())) {
+        if (null === $this->storage->userInfo($userInfo->userId())) {
             // user does not yet exist in the database, create it
             $this->storage->userAdd($userInfo, $this->dateTime);
             $this->session->set('_user_info_already_updated', 'yes');
