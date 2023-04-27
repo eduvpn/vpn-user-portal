@@ -41,6 +41,10 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
 
     public function afterAuth(Request $request, UserInfo &$userInfo): ?Response
     {
+        // add the "static" permissions obtained from
+        // config/static_permissions.json
+        $this->addStaticPermissions($userInfo);
+
         // only update the user info once per browser session, not on every
         // request
         if ('yes' === $this->session->get('_user_info_already_updated')) {
@@ -56,10 +60,6 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
 
             return null;
         }
-
-        // add the "static" permissions obtained
-        // from config/static_permissions.json
-        $this->addStaticPermissions($userInfo);
 
         if (false === $this->storage->userExists($userInfo->userId())) {
             // user does not yet exist in the database, create it
@@ -94,6 +94,8 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
                 $permissionList[] = $permissionId;
             }
         }
+
+        $permissionList = array_values(array_unique($permissionList));
         $userInfo->setPermissionList($permissionList);
     }
 }
