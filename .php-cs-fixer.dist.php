@@ -21,6 +21,8 @@ return $config->setRules(
         'single_space_around_construct' => true,
         // An empty line feed must precede any configured statement.
         'blank_line_before_statement' => true,
+        // Functions should be used with $strict param set to true.
+        'strict_param' => true,
         // Annotations in PHPDoc should be grouped together so that annotations
         // of the same type immediately follow each other. Annotations of a
         // different type are separated by a single blank line.

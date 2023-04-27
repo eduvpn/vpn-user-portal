@@ -281,7 +281,7 @@ class ConnectionManager
             }
             $profileConfig = $this->config->profileConfig($profileId);
             $nodeNumber = $oCertInfo['node_number'];
-            if (!in_array($nodeNumber, $profileConfig->onNode())) {
+            if (!in_array($nodeNumber, $profileConfig->onNode(), true)) {
                 continue;
             }
             $oFilteredCertList[$commonName] = $oCertInfo;
@@ -320,7 +320,7 @@ class ConnectionManager
             }
             $profileConfig = $this->config->profileConfig($profileId);
             $nodeNumber = $wPeerInfo['node_number'];
-            if (!in_array($nodeNumber, $profileConfig->onNode())) {
+            if (!in_array($nodeNumber, $profileConfig->onNode(), true)) {
                 continue;
             }
             $ipFour = Ip::fromIp($wPeerInfo['ip_four']);
