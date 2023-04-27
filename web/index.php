@@ -46,7 +46,6 @@ use Vpn\Portal\Http\Request;
 use Vpn\Portal\Http\Response;
 use Vpn\Portal\Http\SeCookie;
 use Vpn\Portal\Http\SeSession;
-use Vpn\Portal\Http\StaticPermissionHook;
 use Vpn\Portal\Http\UpdateUserInfoHook;
 use Vpn\Portal\Http\VpnPortalModule;
 use Vpn\Portal\HttpClient\CurlHttpClient;
@@ -173,9 +172,6 @@ try {
         $service->addHook(new HmacUserIdHook(HmacKey::load(FileIO::read($baseDir.'/config/keys/hmac.key'))));
     }
     $service->addHook(new CsrfProtectionHook());
-    if (FileIO::exists($baseDir.'/config/static_permissions.json')) {
-        $service->addHook(new StaticPermissionHook($baseDir.'/config/static_permissions.json'));
-    }
 
     if ('DbAuthModule' === $config->authModule()) {
         $dbCredentialStorage = new DbCredentialValidator($storage);
@@ -192,7 +188,7 @@ try {
     }
 
     $service->addHook(new DisabledUserHook($storage));
-    $service->addHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule));
+    $service->addHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule, $baseDir.'/config/static_permissions.json'));
 
     // isAdmin
     $adminHook = new AdminHook(
