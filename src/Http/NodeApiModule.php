@@ -55,7 +55,9 @@ class NodeApiModule implements ServiceModuleInterface
                     $profileConfigList,
                     (int) $userInfo->userId(), // userId = nodeNumber
                     $request->requirePostParameter('public_key', fn (string $s) => Validator::publicKey($s)),
-                    'yes' === $request->requirePostParameter('prefer_aes', fn (string $s) => Validator::yesOrNo($s))
+                    'yes' === $request->requirePostParameter('prefer_aes', fn (string $s) => Validator::yesOrNo($s)),
+                    $request->requirePostParameter('vpn_user', fn (string $s) => Validator::vpnUser($s)),
+                    $request->requirePostParameter('vpn_group', fn (string $s) => Validator::vpnGroup($s))
                 );
 
                 return new JsonResponse($serverConfigList);

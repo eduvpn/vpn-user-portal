@@ -189,7 +189,9 @@ final class ServerConfigTest extends TestCase
                     ],
                 ),
                 0,
-                false
+                false,
+                'openvpn',
+                'openvpn'
             )
         );
     }

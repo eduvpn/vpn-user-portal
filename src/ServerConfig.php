@@ -30,12 +30,12 @@ class ServerConfig
      *
      * @return array<string,string>
      */
-    public function get(array $profileConfigList, int $nodeNumber, string $publicKey, bool $cpuHasAes): array
+    public function get(array $profileConfigList, int $nodeNumber, string $publicKey, bool $cpuHasAes, string $vpnUser, string $vpnGroup): array
     {
         $serverConfig = [];
         foreach ($profileConfigList as $profileConfig) {
             if ($profileConfig->oSupport()) {
-                $serverConfig = array_merge($serverConfig, $this->openVpnServerConfig->getProfile($profileConfig, $nodeNumber, $cpuHasAes));
+                $serverConfig = array_merge($serverConfig, $this->openVpnServerConfig->getProfile($profileConfig, $nodeNumber, $cpuHasAes, $vpnUser, $vpnGroup));
             }
         }
 

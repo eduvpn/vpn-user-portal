@@ -20,8 +20,6 @@ use Vpn\Portal\OpenVpn\CA\CertInfo;
 
 class ServerConfig
 {
-    public const VPN_USER = 'openvpn';
-    public const VPN_GROUP = 'openvpn';
     public const LIBEXEC_DIR = '/usr/libexec/vpn-server-node';
 
     private CaInterface $ca;
@@ -37,7 +35,7 @@ class ServerConfig
     /**
      * @return array<string,string>
      */
-    public function getProfile(ProfileConfig $profileConfig, int $nodeNumber, bool $preferAes): array
+    public function getProfile(ProfileConfig $profileConfig, int $nodeNumber, bool $preferAes, string $vpnUser, string $vpnGroup): array
     {
         $certInfo = $this->ca->serverCert($profileConfig->hostName($nodeNumber), $profileConfig->profileId());
 
@@ -65,7 +63,7 @@ class ServerConfig
             $processConfig['port'] = $udpPort;
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
-            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $preferAes);
+            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $preferAes, $vpnUser, $vpnGroup);
             ++$processNumber;
             ++$this->tunDev;
         }
@@ -78,7 +76,7 @@ class ServerConfig
             $processConfig['port'] = $tcpPort;
             $processConfig['processNumber'] = $processNumber;
             $configName = sprintf('%s-%d.conf', $profileConfig->profileId(), $processNumber);
-            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $preferAes);
+            $profileServerConfig[$configName] = $this->getProcess($profileConfig, $processConfig, $certInfo, $preferAes, $vpnUser, $vpnGroup);
             ++$processNumber;
             ++$this->tunDev;
         }
@@ -89,7 +87,7 @@ class ServerConfig
     /**
      * @param array{rangeFour:\Vpn\Portal\Ip,rangeSix:\Vpn\Portal\Ip,listenOn:\Vpn\Portal\Ip,tunDev:int,proto:string,port:int,processNumber:int} $processConfig
      */
-    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes): string
+    private function getProcess(ProfileConfig $profileConfig, array $processConfig, CertInfo $certInfo, bool $preferAes, string $vpnUser, string $vpnGroup): string
     {
         $rangeFourIp = $processConfig['rangeFour'];
         $rangeSixIp = $processConfig['rangeSix'];
@@ -99,8 +97,8 @@ class ServerConfig
             '# OpenVPN Server Config | Automatically Generated | Do NOT modify!',
             'verb 3',
             'dev-type tun',
-            sprintf('user %s', self::VPN_USER),
-            sprintf('group %s', self::VPN_GROUP),
+            sprintf('user %s', $vpnUser),
+            sprintf('group %s', $vpnGroup),
             'topology subnet',
             'persist-key',
             'persist-tun',

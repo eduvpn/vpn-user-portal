@@ -26,6 +26,7 @@ class Validator
     private const REGEXP_AUTH_KEY = '/^[A-Za-z0-9-_]+$/';
     private const REGEXP_PROFILE_ID = '/^[a-zA-Z0-9-.]+$/';
     private const REGEXP_SERVER_NAME = '/^[a-zA-Z0-9-.]+$/';
+    private const REGEXP_VPN_USER_GROUP = '/^[_a-zA-Z0-9]+$/';
 
     /**
      * @throws \RangeException
@@ -172,6 +173,16 @@ class Validator
     public static function vpnProto(string $vpnProto): void
     {
         self::inSet($vpnProto, ['openvpn', 'wireguard', 'default']);
+    }
+
+    public static function vpnUser(string $vpnUser): void
+    {
+        self::re($vpnUser, self::REGEXP_VPN_USER_GROUP);
+    }
+
+    public static function vpnGroup(string $vpnGroup): void
+    {
+        self::re($vpnGroup, self::REGEXP_VPN_USER_GROUP);
     }
 
     public static function onOrOff(string $onOrOff): void
