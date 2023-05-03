@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.5 (...)
+- no longer have a minimum value for `sessionExpiry`, previously it was `PT30M`
+- move `StaticPermissionHook` functionality to `UpdateUserInfoHook`
+- always fetch static permissions
+- consolidate various `Storage::user*` methods
+- allow node(s) to specify OpenVPN user/group
+  ([#133](https://todo.sr.ht/~eduvpn/server/133))
+
 ## 3.3.4 (2023-04-25)
 - implement support for user specific "Session Expiry" 
   ([#88](https://todo.sr.ht/~eduvpn/server/88))
