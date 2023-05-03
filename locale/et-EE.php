@@ -73,7 +73,7 @@ return [
     'IPv6 Prefix' => 'IPv6 prefiks',
     'Import or copy/paste this configuration to your WireGuard application.' => 'Impordi või lõika-ja-kleebi see seadistus oma WireGuard rakendusse.',
     'Info' => 'Info',
-    'Issues' => 'Teemad',
+    'Issues' => 'Probleeme',
     'Live' => 'Käigus',
     'Log' => 'Logi',
     'Max #Connections' => 'Maksimaalselt #ühendusi',

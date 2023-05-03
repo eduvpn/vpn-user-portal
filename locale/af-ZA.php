@@ -73,7 +73,7 @@ return [
     'IPv6 Prefix' => 'IPv6-voorvoegsel',
     'Import or copy/paste this configuration to your WireGuard application.' => 'Voer in of kopieer/plak hierdie instellings na jou WireGuard-program.',
     'Info' => 'Inligting',
-    'Issues' => 'Kwessies',
+    'Issues' => 'Probleme',
     'Live' => 'Lewendig',
     'Log' => 'Log',
     'Max #Connections' => 'Maksimum #Verbindings',
