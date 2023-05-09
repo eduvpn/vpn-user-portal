@@ -72,6 +72,13 @@ class LdapClient
         if (false === $searchResource) {
             throw new LdapClientException(sprintf('LDAP error: (%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
         }
+        if (is_array($searchResource)) {
+            // ldap_search can return array when doing parallel search, as we
+            // don't do that this should not occur, but just making sure and
+            // to silence vimeo/psalm
+            // @see https://www.php.net/ldap_search
+            throw new LdapClientException('multiple results returned, expecting only one');
+        }
 
         $ldapEntries = ldap_get_entries($this->ldapResource, $searchResource);
         if (false === $ldapEntries) {
