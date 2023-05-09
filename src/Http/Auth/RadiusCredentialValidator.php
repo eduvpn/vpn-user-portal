@@ -52,7 +52,11 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
 
         $radiusAuth = radius_auth_open();
         foreach ($this->radiusAuthConfig->serverList() as $radiusServer) {
-            [$radiusHost, $radiusPort, $radiusSecret] = explode(':', $radiusServer, 3);
+            $radiusInfo = explode(':', $radiusServer, 3);
+            if (3 !== count($radiusInfo)) {
+                throw new RadiusException('invalid RADIUS `serverList` entry, format: `host:port:secret`');
+            }
+            [$radiusHost, $radiusPort, $radiusSecret] = $radiusInfo;
             if (false === radius_add_server(
                 $radiusAuth,
                 $radiusHost,
