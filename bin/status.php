@@ -106,6 +106,7 @@ try {
 
     $outputData = [];
     foreach ($connectionManager->get() as $profileId => $connectionInfoList) {
+        $profileConfig = $config->profileConfig($profileId);
         $displayConnectionInfo = [];
         foreach ($connectionInfoList as $connectionInfo) {
             $displayConnectionInfo[] = [
@@ -115,8 +116,18 @@ try {
             ];
         }
         $activeConnectionCount = count($displayConnectionInfo);
-        $profileMaxClientLimit = $config->profileConfig($profileId)->maxClientLimit();
+        $profileMaxClientLimit = $profileConfig->maxClientLimit();
         $percentInUse = floor($activeConnectionCount / $profileMaxClientLimit * 100);
+
+        // determine the number of WireGuard IPs that are already allocated for
+        // a profile
+        $wAllocatedIpCount = 0;
+        if ($profileConfig->wSupport()) {
+            foreach ($profileConfig->onNode() as $nodeNumber) {
+                $wAllocatedIpCount += count($storage->wAllocatedIpFourList($profileId, $nodeNumber));
+            }
+        }
+
         if ($alertOnly && $alertPercentage > $percentInUse) {
             continue;
         }
@@ -127,6 +138,7 @@ try {
             // max_allowed_connection_count or something...
             'max_connection_count' => $profileMaxClientLimit,
             'percentage_in_use' => $percentInUse,
+            'wireguard_allocated_ip_count' => $wAllocatedIpCount,
         ];
         if ($asJson) {
             if ($includeConnections) {
