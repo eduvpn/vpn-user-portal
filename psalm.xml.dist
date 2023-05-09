@@ -1,15 +1,21 @@
 <?xml version="1.0"?>
-<psalm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://getpsalm.org/schema/config" errorLevel="2" resolveFromConfigFile="true" xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd">
-  <projectFiles>
-    <directory name="src"/>
-    <directory name="bin"/>
-    <directory name="web"/>
-    <directory name="libexec"/>
-    <directory name="views"/>
-    <ignoreFiles>
-      <directory name="vendor"/>
-      <directory name="views/eduVPN"/>
-      <directory name="views/LC"/>
-    </ignoreFiles>
-  </projectFiles>
+<psalm
+    errorLevel="2"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    findUnusedCode="false"
+    findUnusedBaselineEntry="true"
+>
+    <projectFiles>
+        <directory name="src" />
+        <directory name="bin"/>
+        <directory name="web"/>
+        <directory name="libexec"/>
+        <directory name="views"/>
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
 </psalm>
