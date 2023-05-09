@@ -42,10 +42,11 @@ class HttpClientResponse
     public function header(string $headerKey): ?string
     {
         foreach (explode("\n", $this->headerList) as $headerLine) {
-            if (false === strpos($headerLine, ':')) {
+            $keyValue = explode(':', $headerLine, 2);
+            if (2 !== count($keyValue)) {
                 continue;
             }
-            [$k, $v] = explode(':', $headerLine, 2);
+            [$k, $v] = $keyValue;
             if (strtolower(trim($headerKey)) === strtolower(trim($k))) {
                 return trim($v);
             }
