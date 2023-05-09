@@ -199,9 +199,11 @@ class Migration
         if (1 !== preg_match('/^[0-9]{10}_[0-9]{10}$/', $migrationVersion)) {
             throw new RangeException('migrationVersion must be two times a 10 digit string separated by an underscore');
         }
-        [$fromVersion, $toVersion] = explode('_', $migrationVersion, 2);
 
-        return [$fromVersion, $toVersion];
+        return [
+            substr($migrationVersion, 0, 10),
+            substr($migrationVersion, 11),
+        ];
     }
 
     private static function dbBeginTransaction(PDO $db): void
