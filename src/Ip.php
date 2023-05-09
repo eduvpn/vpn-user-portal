@@ -52,12 +52,12 @@ class Ip
 
     public static function fromIpPrefix(string $ipAddressPrefix): self
     {
-        if (false === strpos($ipAddressPrefix, '/')) {
+        $ipAddressPrefixArray = explode('/', $ipAddressPrefix, 2);
+        if (2 !== count($ipAddressPrefixArray)) {
             // no prefix specified
             return self::fromIp($ipAddressPrefix);
         }
-
-        [$ipAddress, $ipPrefix] = explode('/', $ipAddressPrefix, 2);
+        [$ipAddress, $ipPrefix] = $ipAddressPrefixArray;
 
         return self::fromIp($ipAddress, (int) $ipPrefix);
     }
