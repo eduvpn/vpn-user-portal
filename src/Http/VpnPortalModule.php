@@ -203,7 +203,7 @@ class VpnPortalModule implements ServiceModuleInterface
     }
 
     /**
-     * @return array<array{profile_id:string,display_name:string,expires_at:\DateTimeImmutable,connection_id:string}>
+     * @return list<array{auth_key: null, connection_id: string, display_name: string, expires_at: DateTimeImmutable, ip_four?: string, ip_six?: string, node_number: int, profile_id: string}>
      */
     public static function filterConfigList(Storage $storage, string $userId): array
     {
@@ -212,10 +212,12 @@ class VpnPortalModule implements ServiceModuleInterface
             if (null !== $oCertInfo['auth_key']) {
                 continue;
             }
+            $connectionId = $oCertInfo['common_name'];
+            unset($oCertInfo['common_name']);
             $configList[] = array_merge(
                 $oCertInfo,
                 [
-                    'connection_id' => $oCertInfo['common_name'],
+                    'connection_id' => $connectionId,
                 ]
             );
         }
@@ -224,10 +226,12 @@ class VpnPortalModule implements ServiceModuleInterface
             if (null !== $wPeerInfo['auth_key']) {
                 continue;
             }
+            $connectionId = $wPeerInfo['public_key'];
+            unset($wPeerInfo['public_key']);
             $configList[] = array_merge(
                 $wPeerInfo,
                 [
-                    'connection_id' => $wPeerInfo['public_key'],
+                    'connection_id' => $connectionId,
                 ]
             );
         }

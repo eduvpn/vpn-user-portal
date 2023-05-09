@@ -42,16 +42,35 @@ class VpnDaemon
                 )->body()
             );
 
+            $loadAvg = [0, 0, 0];
+            $relLoadAvg = [0, 0, 0];
+            $cpuCount = 0;
+
             // for some reason we decided to have vpn-daemon to return empty
             // array instead of [0,0,0] for "load_average" and
             // "rel_load_average" when this information is not available on a
             // particular platform
-            if (0 === \count($nodeInfo['load_average'])) {
-                $nodeInfo['load_average'] = [0, 0, 0];
-                $nodeInfo['rel_load_average'] = [0, 0, 0];
+            if (array_key_exists('load_average', $nodeInfo)) {
+                if (3 === count($nodeInfo['load_average'])) {
+                    $loadAvg = $nodeInfo['load_average'];
+                }
             }
 
-            return $nodeInfo;
+            if (array_key_exists('rel_load_average', $nodeInfo)) {
+                if (3 === count($nodeInfo['rel_load_average'])) {
+                    $relLoadAvg = $nodeInfo['rel_load_average'];
+                }
+            }
+
+            if (array_key_exists('cpu_count', $nodeInfo)) {
+                $cpuCount = $nodeInfo['cpu_count'];
+            }
+
+            return [
+                'rel_load_average' => $relLoadAvg,
+                'load_average' => $loadAvg,
+                'cpu_count' => $cpuCount,
+            ];
         } catch (HttpClientException $e) {
             $this->logger->error((string) $e);
 

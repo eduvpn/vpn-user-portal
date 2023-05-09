@@ -262,7 +262,7 @@ class ConnectionManager
      * (3) Profile MUST still exist
      * (4) Node MUST still exist
      *
-     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,common_name:string,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
+     * @return array<string, array{auth_key: null|string, common_name: string, created_at: DateTimeImmutable, display_name: string, expires_at: DateTimeImmutable, node_number: int, profile_id: string, user_id: string}>
      */
     private function oFilterDb(): array
     {
@@ -272,6 +272,7 @@ class ConnectionManager
             if ($oCertInfo['user_is_disabled']) {
                 continue;
             }
+            unset($oCertInfo['user_is_disabled']);
             if ($oCertInfo['expires_at'] <= $this->dateTime) {
                 continue;
             }
@@ -301,7 +302,7 @@ class ConnectionManager
      * (5) IPv4 address MUST belong to prefix of Profile (+Node)
      * (6) IPv6 address MUST belong to prefix of Profile (+Node)
      *
-     * @return array<string,array{node_number:int,user_id:string,profile_id:string,display_name:string,public_key:string,ip_four:string,ip_six:string,expires_at:\DateTimeImmutable,auth_key:?string,user_is_disabled:bool}>
+     * @return array<string, array{auth_key: null|string, created_at: DateTimeImmutable, display_name: string, expires_at: DateTimeImmutable, ip_four: string, ip_six: string, node_number: int, profile_id: string, public_key: string, user_id: string}>
      */
     private function wFilterDb(): array
     {
@@ -311,6 +312,7 @@ class ConnectionManager
             if ($wPeerInfo['user_is_disabled']) {
                 continue;
             }
+            unset($wPeerInfo['user_is_disabled']);
             if ($wPeerInfo['expires_at'] <= $this->dateTime) {
                 continue;
             }
