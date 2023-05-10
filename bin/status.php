@@ -36,6 +36,10 @@ function showHelp(): void
 
 function outputConversion(array $outputData, bool $asJson): void
 {
+    if (0 === count($outputData)) {
+        return;
+    }
+
     // JSON
     if ($asJson) {
         echo Json::encodePretty($outputData);
@@ -44,9 +48,6 @@ function outputConversion(array $outputData, bool $asJson): void
     }
 
     // CSV
-    if (0 === count($outputData)) {
-        return;
-    }
     $headerKeys = array_keys($outputData[0]);
     echo implode(',', $headerKeys).\PHP_EOL;
     foreach ($outputData as $outputRow) {
