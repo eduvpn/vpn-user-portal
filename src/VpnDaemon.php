@@ -31,7 +31,7 @@ class VpnDaemon
     }
 
     /**
-     * @return null|array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int,node_uptime:string}
+     * @return null|array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int,node_uptime:int}
      */
     public function nodeInfo(string $nodeUrl): ?array
     {
@@ -45,7 +45,7 @@ class VpnDaemon
             $loadAvg = [0, 0, 0];
             $relLoadAvg = [0, 0, 0];
             $cpuCount = 0;
-            $nodeUptime = 'N/A';
+            $nodeUptime = 0;
 
             // for some reason we decided to have vpn-daemon to return empty
             // array instead of [0,0,0] for "load_average" and
@@ -68,7 +68,7 @@ class VpnDaemon
             }
 
             if (array_key_exists('node_uptime', $nodeInfo)) {
-                $nodeUptime = self::uptimeToHuman($nodeInfo['node_uptime']);
+                $nodeUptime = $nodeInfo['node_uptime'];
             }
 
             return [
@@ -207,30 +207,5 @@ class VpnDaemon
         } catch (HttpClientException $e) {
             $this->logger->error((string) $e);
         }
-    }
-
-    private static function uptimeToHuman(int $uptimeInSeconds): string
-    {
-        $numberOfDays = 0;
-        $numberOfHours = 0;
-        $numberOfMinutes = 0;
-        $numberOfSeconds = 0;
-
-        while ($uptimeInSeconds >= 86400) {
-            $numberOfDays++;
-            $uptimeInSeconds -= 86400;
-        }
-
-        while ($uptimeInSeconds >= 3600) {
-            $numberOfHours++;
-            $uptimeInSeconds -= 3600;
-        }
-
-        while ($uptimeInSeconds >= 60) {
-            $numberOfMinutes++;
-            $uptimeInSeconds -= 60;
-        }
-
-        return sprintf('%dd%dh%dm%ds', $numberOfDays, $numberOfHours, $numberOfMinutes, $uptimeInSeconds);
     }
 }

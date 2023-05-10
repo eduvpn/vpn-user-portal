@@ -48,7 +48,7 @@ final class VpnDaemonTest extends TestCase
                     0.63,
                 ],
                 'cpu_count' => 2,
-                'node_uptime' => '0d3h25m45s',
+                'node_uptime' => 12345,
             ],
             $vpnDaemon->nodeInfo('http://localhost:41194')
         );
