@@ -2,7 +2,7 @@
 <?php /** @var \Vpn\Portal\Tpl $this */?>
 <?php /** @var \Vpn\Portal\ServerInfo $serverInfo */?>
 <?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
-<?php /** @var array<array{node_number:int,node_url:string,node_info:?array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int}}> $nodeInfoList */?>
+<?php /** @var array<array{node_number:int,node_url:string,node_info:?array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int,node_uptime:string}}> $nodeInfoList */?>
 <?php /** @var string $portalVersion */?>
 <?php /** @var array<string> $serverProblemList */?>
 <?php /** @var array<string,array<string>> $profileProblemList */?>
@@ -34,9 +34,9 @@
             <span class="error" title="<?=$this->e($nodeInfo['node_url']); ?>"><small>#<?=$this->e((string)$nodeInfo['node_number']); ?></small><br><?=$this->t('Offline'); ?><br><small><?=$this->t('CPU Usage:'); ?> <?=$this->t('N/A'); ?></small></span>
 <?php else: ?>
 <?php if ($nodeInfo['node_info']['rel_load_average'][0] >= 75): ?>
-            <span class="warning" title="<?=$this->e($nodeInfo['node_url']); ?> [<?=implode(', ', $nodeInfo['node_info']['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['node_info']['cpu_count']); ?>">
+            <span class="warning" title="<?=$this->e($nodeInfo['node_url']); ?> [<?=implode(', ', $nodeInfo['node_info']['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['node_info']['cpu_count']); ?> Uptime=<?=$this->e($nodeInfo['node_info']['node_uptime']);?>">
 <?php else: ?>
-            <span class="success" title="<?=$this->e($nodeInfo['node_url']); ?> [<?=implode(', ', $nodeInfo['node_info']['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['node_info']['cpu_count']); ?>">
+            <span class="success" title="<?=$this->e($nodeInfo['node_url']); ?> [<?=implode(', ', $nodeInfo['node_info']['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['node_info']['cpu_count']); ?> Uptime=<?=$this->e($nodeInfo['node_info']['node_uptime']);?>">
 <?php endif; ?>
             <small>#<?=$this->e((string)$nodeInfo['node_number']); ?></small><br><?=$this->t('Online'); ?>
 <?php if (0 === strpos($nodeInfo['node_url'], 'https://')): ?>
