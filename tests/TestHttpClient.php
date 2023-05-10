@@ -36,7 +36,7 @@ class TestHttpClient implements HttpClientInterface
             return new HttpClientResponse(
                 200,
                 '',
-                '{"rel_load_average":[24,25,31],"load_average":[0.48,0.5,0.63],"cpu_count":2}'
+                '{"rel_load_average":[24,25,31],"load_average":[0.48,0.5,0.63],"cpu_count":2,"node_uptime":12345}'
             );
         }
 
