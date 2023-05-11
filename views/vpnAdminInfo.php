@@ -34,9 +34,9 @@
             <span class="error" title="<?=$this->e($nodeInfo['node_url']); ?>"><small>#<?=$this->e((string)$nodeInfo['node_number']); ?></small><br><?=$this->t('Offline'); ?><br><small><?=$this->t('CPU Usage:'); ?> <?=$this->t('N/A'); ?></small></span>
 <?php else: ?>
 <?php if ($nodeInfo['node_info']['rel_load_average'][0] >= 75): ?>
-            <span class="warning" title="<?=$this->e($nodeInfo['node_url']); ?> [<?=implode(', ', $nodeInfo['node_info']['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['node_info']['cpu_count']); ?> Uptime=<?=$this->uptimeToHuman($nodeInfo['node_info']['node_uptime']);?>">
+            <span class="warning" title="<?=$this->e($nodeInfo['node_url']); ?> [<?=implode(', ', $nodeInfo['node_info']['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['node_info']['cpu_count']); ?>">
 <?php else: ?>
-            <span class="success" title="<?=$this->e($nodeInfo['node_url']); ?> [<?=implode(', ', $nodeInfo['node_info']['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['node_info']['cpu_count']); ?> Uptime=<?=$this->uptimeToHuman($nodeInfo['node_info']['node_uptime']);?>">
+            <span class="success" title="<?=$this->e($nodeInfo['node_url']); ?> [<?=implode(', ', $nodeInfo['node_info']['rel_load_average']); ?>] #CPU=<?=$this->e((string) $nodeInfo['node_info']['cpu_count']); ?>">
 <?php endif; ?>
             <small>#<?=$this->e((string)$nodeInfo['node_number']); ?></small><br><?=$this->t('Online'); ?>
 <?php if (0 === strpos($nodeInfo['node_url'], 'https://')): ?>

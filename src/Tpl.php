@@ -399,31 +399,6 @@ class Tpl implements TplInterface
         ];
     }
 
-    public function uptimeToHuman(int $uptimeInSeconds): string
-    {
-        $numberOfDays = 0;
-        $numberOfHours = 0;
-        $numberOfMinutes = 0;
-        $numberOfSeconds = 0;
-
-        while ($uptimeInSeconds >= 86400) {
-            $numberOfDays++;
-            $uptimeInSeconds -= 86400;
-        }
-
-        while ($uptimeInSeconds >= 3600) {
-            $numberOfHours++;
-            $uptimeInSeconds -= 3600;
-        }
-
-        while ($uptimeInSeconds >= 60) {
-            $numberOfMinutes++;
-            $uptimeInSeconds -= 60;
-        }
-
-        return $this->e(sprintf('%dd%dh%dm%ds', $numberOfDays, $numberOfHours, $numberOfMinutes, $uptimeInSeconds));
-    }
-
     public function textDir(): string
     {
         if (\in_array($this->uiLanguage, ['ar-MA'], true)) {
