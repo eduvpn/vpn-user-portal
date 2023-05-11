@@ -7,6 +7,12 @@
 - consolidate various `Storage::user*` methods
 - allow node(s) to specify OpenVPN user/group
   ([#133](https://todo.sr.ht/~eduvpn/server/133))
+- fix various static code analysis warnings
+- `vpn-user-portal-status` now also shows the number of allocated IP addresses
+  for WireGuard (and the number of still free addresses) 
+  ([#4](https://todo.sr.ht/~eduvpn/server/4))
+- do not show empty array when using `--alert` and `--json` with 
+  `vpn-user-portal-status` and there is nothing to alert about
 
 ## 3.3.4 (2023-04-25)
 - implement support for user specific "Session Expiry" 
