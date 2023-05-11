@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.3.5 (...)
+## 3.3.5 (2023-05-11)
 - no longer have a minimum value for `sessionExpiry`, previously it was `PT30M`
 - move `StaticPermissionHook` functionality to `UpdateUserInfoHook`
 - always fetch static permissions
