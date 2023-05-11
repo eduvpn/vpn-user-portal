@@ -140,7 +140,7 @@ try {
             'max_connection_count' => $profileMaxClientLimit,
             'percentage_in_use' => $percentInUse,
             'wireguard_allocated_ip_count' => $wAllocatedIpCount,
-            'wireguard_available_ip_count' => $profileConfig->wMaxClientLimit(),
+            'wireguard_free_ip_count' => $profileConfig->wMaxClientLimit() - $wAllocatedIpCount,
         ];
         if ($asJson) {
             if ($includeConnections) {
