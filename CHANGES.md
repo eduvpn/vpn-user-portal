@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.6 (...)
+- consider allocated WireGuard IPs for alerting 
+  ([#134](https://todo.sr.ht/~eduvpn/server/134))
+
 ## 3.3.5 (2023-05-11)
 - no longer have a minimum value for `sessionExpiry`, previously it was `PT30M`
 - move `StaticPermissionHook` functionality to `UpdateUserInfoHook`
