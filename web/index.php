@@ -230,7 +230,6 @@ try {
     $adminPortalModule = new AdminPortalModule(
         $config,
         $tpl,
-        $vpnDaemon,
         $connectionManager,
         $storage,
         $oauthStorage,

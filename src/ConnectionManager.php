@@ -41,6 +41,23 @@ class ConnectionManager
     }
 
     /**
+     * @return array<array{node_number:int,node_url:string,node_info:?array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int,node_uptime:int}}>
+     */
+    public function nodeInfo(): array
+    {
+        $nodeInfoList = [];
+        foreach ($this->config->nodeNumberUrlList() as $nodeNumber => $nodeUrl) {
+            $nodeInfoList[] = [
+                'node_number' => $nodeNumber,
+                'node_url' => $nodeUrl,
+                'node_info' => $this->vpnDaemon->nodeInfo($nodeUrl),
+            ];
+        }
+
+        return $nodeInfoList;
+    }
+
+    /**
      * Retrieve a list of all current OpenVPN and WireGuard connections, sorted
      * by profile.
      *

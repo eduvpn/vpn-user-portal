@@ -24,24 +24,21 @@ use Vpn\Portal\ServerInfo;
 use Vpn\Portal\Storage;
 use Vpn\Portal\TplInterface;
 use Vpn\Portal\Validator;
-use Vpn\Portal\VpnDaemon;
 
 class AdminPortalModule implements ServiceModuleInterface
 {
     private Config $config;
     private TplInterface $tpl;
-    private VpnDaemon $vpnDaemon;
     private ConnectionManager $connectionManager;
     private Storage $storage;
     private OAuthStorage $oauthStorage;
     private ServerInfo $serverInfo;
     private DateTimeImmutable $dateTime;
 
-    public function __construct(Config $config, TplInterface $tpl, VpnDaemon $vpnDaemon, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo)
+    public function __construct(Config $config, TplInterface $tpl, ConnectionManager $connectionManager, Storage $storage, OAuthStorage $oauthStorage, ServerInfo $serverInfo)
     {
         $this->config = $config;
         $this->tpl = $tpl;
-        $this->vpnDaemon = $vpnDaemon;
         $this->connectionManager = $connectionManager;
         $this->storage = $storage;
         $this->oauthStorage = $oauthStorage;
@@ -73,21 +70,11 @@ class AdminPortalModule implements ServiceModuleInterface
             function (Request $request, UserInfo $userInfo): Response {
                 $this->requireAdmin($userInfo);
 
-                // query all nodes to have them report their status info
-                $nodeInfoList = [];
-                foreach ($this->config->nodeNumberUrlList() as $nodeNumber => $nodeUrl) {
-                    $nodeInfoList[] = [
-                        'node_number' => $nodeNumber,
-                        'node_url' => $nodeUrl,
-                        'node_info' => $this->vpnDaemon->nodeInfo($nodeUrl),
-                    ];
-                }
-
                 return new HtmlResponse(
                     $this->tpl->render(
                         'vpnAdminInfo',
                         [
-                            'nodeInfoList' => $nodeInfoList,
+                            'nodeInfoList' => $this->connectionManager->nodeInfo(),
                             'profileConfigList' => $this->config->profileConfigList(),
                             'serverInfo' => $this->serverInfo,
                             'serverProblemList' => Environment::verify(),
