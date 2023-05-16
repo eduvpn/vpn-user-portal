@@ -129,9 +129,20 @@ try {
             }
         }
 
-        if ($alertOnly && $alertPercentage > $percentInUse) {
-            continue;
+        $wPercentageAllocated = 0;
+        if (0 !== $profileConfig->wMaxClientLimit()) {
+            $wPercentageAllocated = floor($wAllocatedIpCount / $profileConfig->wMaxClientLimit() * 100);
         }
+
+        if ($alertOnly) {
+            // only add a profile to the output if it has more active
+            // connections or more allocated WireGuard IPs than indicated by
+            // the percentage indicated together with the `--alert` flag
+            if ($alertPercentage > $percentInUse && $alertPercentage > $wPercentageAllocated) {
+                continue;
+            }
+        }
+
         $outputRow = [
             'profile_id' => $profileId,
             'active_connection_count' => $activeConnectionCount,
@@ -141,6 +152,7 @@ try {
             'percentage_in_use' => $percentInUse,
             'wireguard_allocated_ip_count' => $wAllocatedIpCount,
             'wireguard_free_ip_count' => $profileConfig->wMaxClientLimit() - $wAllocatedIpCount,
+            'wireguard_percentage_allocated' => $wPercentageAllocated,
         ];
         if ($asJson) {
             if ($includeConnections) {
