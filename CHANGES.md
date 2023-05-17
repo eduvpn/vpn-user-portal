@@ -3,6 +3,8 @@
 ## 3.3.6 (...)
 - consider allocated WireGuard IPs for alerting 
   ([#134](https://todo.sr.ht/~eduvpn/server/134))
+- implement freeing WireGuard IPs for VPN clients that are unresponsive 
+  ([#4](https://todo.sr.ht/~eduvpn/server/4))
 
 ## 3.3.5 (2023-05-11)
 - no longer have a minimum value for `sessionExpiry`, previously it was `PT30M`
