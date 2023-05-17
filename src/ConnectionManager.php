@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal;
 
+use DateInterval;
 use DateTimeImmutable;
 use Vpn\Portal\Cfg\Config;
 use Vpn\Portal\Cfg\ProfileConfig;
@@ -372,19 +373,52 @@ class ConnectionManager
 
     private function wSync(): void
     {
+        $appGoneInterval = $this->config->apiConfig()->appGoneInterval();
+        $appGoneCutoffMoment = $this->dateTime->sub($appGoneInterval);
+
         $wPeerListFromDb = $this->wFilterDb();
         $connectedPublicKeyList = [];
         foreach ($this->config->nodeNumberUrlList() as $nodeNumber => $nodeUrl) {
-            foreach (array_keys($this->vpnDaemon->wPeerList($nodeUrl, true)) as $publicKey) {
+            $nodeUptime = new DateInterval('PT0S');
+            if (null !== $nodeInfo = $this->vpnDaemon->nodeInfo($nodeUrl)) {
+                $nodeUptime = new DateInterval('PT'.$nodeInfo['node_uptime'].'S');
+            }
+            // we require the node to be up at least "appGoneInterval" before
+            // checking whether API clients are "gone"
+            $nodeHasAdequateUptime = $this->dateTime->sub($nodeUptime)->add($appGoneInterval) < $this->dateTime;
+            foreach ($this->vpnDaemon->wPeerList($nodeUrl, true) as $publicKey => $wPeerInfo) {
                 if (!\array_key_exists($publicKey, $wPeerListFromDb)) {
-                    if (null !== $openConnectionInfo = $this->storage->openConnectionInfo($publicKey)) {
-                        $this->logger->debug(sprintf('%s: removing peer [%s,%d,%s]', __METHOD__, $openConnectionInfo['profile_id'], $nodeNumber, $publicKey));
-                        $this->wDisconnect($openConnectionInfo['user_id'], $openConnectionInfo['profile_id'], $nodeNumber, $publicKey, $openConnectionInfo['ip_four'], $openConnectionInfo['ip_six']);
-                    }
-                    // XXX should we log when there is no open connection for this public key in the connection_log table?
+                    $this->wSyncDisconnect($nodeNumber, $publicKey, 'public key not in database');
 
                     continue;
                 }
+                if ($nodeHasAdequateUptime) {
+                    $wPeerDbInfo = $wPeerListFromDb[$publicKey];
+                    if (null !== $wPeerDbInfo['auth_key']) {
+                        // WireGuard configuration was issued to an API client
+                        if ($wPeerDbInfo['created_at'] < $appGoneCutoffMoment) {
+                            // configuration must have been created before the
+                            // cutoff
+                            if (null === $lastHandshakeTime = $wPeerInfo['last_handshake_time']) {
+                                $this->wSyncDisconnect($nodeNumber, $publicKey, 'no handshake since node boot');
+                                // make sure it does not get added again in
+                                // next section
+                                unset($wPeerListFromDb[$publicKey]);
+
+                                continue;
+                            }
+                            if (new DateTimeImmutable($lastHandshakeTime) < $appGoneCutoffMoment) {
+                                $this->wSyncDisconnect($nodeNumber, $publicKey, 'handshake too long ago');
+                                // make sure it does not get added again in
+                                // next section
+                                unset($wPeerListFromDb[$publicKey]);
+
+                                continue;
+                            }
+                        }
+                    }
+                }
+
                 $connectedPublicKeyList[] = $publicKey;
             }
         }
@@ -401,6 +435,20 @@ class ConnectionManager
                 $wPeerInfo['ip_six']
             );
         }
+    }
+
+    /**
+     * Remove/disconnect a peer during "sync" stage based on various criteria.
+     *
+     * @see ConnectionManager::wSync()
+     */
+    private function wSyncDisconnect(int $nodeNumber, string $publicKey, string $disconnectReason): void
+    {
+        if (null !== $openConnectionInfo = $this->storage->openConnectionInfo($publicKey)) {
+            $this->logger->debug(sprintf('%s: removing peer (reason: %s) [%s,%d,%s]', __METHOD__, $disconnectReason, $openConnectionInfo['profile_id'], $nodeNumber, $publicKey));
+            $this->wDisconnect($openConnectionInfo['user_id'], $openConnectionInfo['profile_id'], $nodeNumber, $publicKey, $openConnectionInfo['ip_four'], $openConnectionInfo['ip_six']);
+        }
+        // XXX should we log when there is no open connection for this public key in the connection_log table?
     }
 
     private function wDisconnect(string $userId, string $profileId, int $nodeNumber, string $publicKey, string $ipFour, string $ipSix): void

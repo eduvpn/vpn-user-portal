@@ -71,6 +71,6 @@ final class ConnectionManagerTest extends TestCase
 
         // this is not yet super useful test, but the basis is there for more
         // extensive tests if we run into trouble
-        static::assertCount(3, $this->httpClient->logData());
+        static::assertCount(4, $this->httpClient->logData());
     }
 }

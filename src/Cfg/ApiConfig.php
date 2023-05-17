@@ -19,6 +19,7 @@ class ApiConfig
     use ConfigTrait;
 
     public const DEFAULT_TOKEN_EXPIRY = 'PT1H';
+    public const DEFAULT_APP_GONE_INTERVAL = 'PT72H';
     public const DEFAULT_GUEST_ACCESS_SERVER_LIST_URL = 'https://disco.eduvpn.org/v2/server_list.json';
     public const DEFAULT_GUEST_ACCESS_SERVER_LIST_SIGNATURE_URL = 'https://disco.eduvpn.org/v2/server_list.json.minisig';
     public const DEFAULT_GUEST_ACCESS_PUBLIC_KEY_LIST = [
@@ -44,6 +45,18 @@ class ApiConfig
     public function maxActiveConfigurations(): int
     {
         return $this->requireInt('maxActiveConfigurations', 3);
+    }
+
+    /**
+     * The interval after which to consider an API client gone without
+     * any activity.
+     *
+     * This is used to clean up WireGuard IP allocations for clients that are
+     * most likely permanently gone and did not call the "/disconnect" API.
+     */
+    public function appGoneInterval(): DateInterval
+    {
+        return new DateInterval($this->requireString('appGoneInterval', self::DEFAULT_APP_GONE_INTERVAL));
     }
 
     public function deleteAuthorizationOnDisconnect(): bool
