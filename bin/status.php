@@ -65,16 +65,10 @@ try {
     $includeConnections = false; // only for JSON
     $searchForPercentage = false;
     $showHelp = false;
-    $showNodeInfo = false;
     foreach ($argv as $arg) {
         if ('--alert' === $arg) {
             $alertOnly = true;
             $searchForPercentage = true;
-
-            continue;
-        }
-        if ('--node-info' === $arg) {
-            $showNodeInfo = true;
 
             continue;
         }
@@ -110,11 +104,6 @@ try {
         ConnectionHooks::init($config, $storage, $logger),
         $logger
     );
-
-    if ($showNodeInfo) {
-        echo Json::encodePretty($connectionManager->nodeInfo());
-        exit(0);
-    }
 
     $outputData = [];
     foreach ($connectionManager->get() as $profileId => $connectionInfoList) {
