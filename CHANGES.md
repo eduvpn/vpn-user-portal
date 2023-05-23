@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.3.6 (...)
+## 3.3.6 (2023-05-23)
 - consider allocated WireGuard IPs for alerting 
   ([#134](https://todo.sr.ht/~eduvpn/server/134))
 - implement freeing WireGuard IPs for VPN clients that are unresponsive 
