@@ -144,11 +144,11 @@
         },
         {
             "name": "fkooman/saml-sp",
-            "version": "2.1.2",
+            "version": "2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://git.sr.ht/~fkooman/php-saml-sp",
-                "reference": "4fd7f4c042e7090abf2e10b7d43a54865ffb8064"
+                "reference": "fe06745fbc7840defbbe2330a32f07d9348090cd"
             },
             "require": {
                 "ext-curl": "*",
@@ -193,7 +193,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.sr.ht/~fkooman/php-saml-sp"
             },
-            "time": "2023-05-15T11:19:04+00:00"
+            "time": "2023-06-08T15:13:24+00:00"
         }
     ],
     "aliases": [],
