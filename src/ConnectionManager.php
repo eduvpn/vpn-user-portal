@@ -137,7 +137,6 @@ class ConnectionManager
     {
         foreach ($this->storage->oCertInfoListByAuthKey($authKey) as $oCertInfo) {
             $this->oDisconnect(
-                $oCertInfo['user_id'],
                 $oCertInfo['profile_id'],
                 $oCertInfo['node_number'],
                 $oCertInfo['common_name']
@@ -160,7 +159,6 @@ class ConnectionManager
     {
         foreach ($this->storage->oCertInfoListByUserId($userId) as $oCertInfo) {
             $this->oDisconnect(
-                $userId,
                 $oCertInfo['profile_id'],
                 $oCertInfo['node_number'],
                 $oCertInfo['common_name']
@@ -205,7 +203,6 @@ class ConnectionManager
                 return;
             }
             $this->oDisconnect(
-                $oCertInfo['user_id'],
                 $oCertInfo['profile_id'],
                 $oCertInfo['node_number'],
                 $connectionId
@@ -470,7 +467,7 @@ class ConnectionManager
         $this->connectionHook->disconnect($userId, $profileId, 'wireguard', $publicKey, $ipFour, $ipSix, $bytesIn, $bytesOut);
     }
 
-    private function oDisconnect(string $userId, string $profileId, int $nodeNumber, string $commonName): void
+    private function oDisconnect(string $profileId, int $nodeNumber, string $commonName): void
     {
         if (null === $nodeUrl = $this->nodeUrl($nodeNumber)) {
             $this->logger->warning(sprintf('node "%d" does not exist (anymore)', $nodeNumber));
