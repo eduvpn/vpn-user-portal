@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal\OAuth;
 
 use fkooman\OAuth\Server\ClientInfo;
+use fkooman\OAuth\Server\Scope;
 use fkooman\OAuth\Server\SimpleClientDb;
 use Vpn\Portal\FileIO;
 use Vpn\Portal\Json;
@@ -46,7 +47,8 @@ class VpnClientDb extends SimpleClientDb
                 ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'eduVPN for Windows',
-                true
+                true,
+                new Scope('config')
             )
         );
         $this->add(
@@ -56,7 +58,8 @@ class VpnClientDb extends SimpleClientDb
                 ['org.eduvpn.app:/api/callback'],
                 null,
                 'eduVPN for Android',
-                true
+                true,
+                new Scope('config')
             )
         );
         $this->add(
@@ -65,7 +68,8 @@ class VpnClientDb extends SimpleClientDb
                 ['org.eduvpn.app.ios:/api/callback'],
                 null,
                 'eduVPN for iOS',
-                true
+                true,
+                new Scope('config')
             )
         );
         $this->add(
@@ -74,7 +78,8 @@ class VpnClientDb extends SimpleClientDb
                 ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'eduVPN for macOS',
-                true
+                true,
+                new Scope('config')
             )
         );
         $this->add(
@@ -83,7 +88,8 @@ class VpnClientDb extends SimpleClientDb
                 ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'eduVPN for Linux',
-                true
+                true,
+                new Scope('config')
             )
         );
 
@@ -96,7 +102,8 @@ class VpnClientDb extends SimpleClientDb
                 ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'Let\'s Connect! for Windows',
-                true
+                true,
+                new Scope('config')
             )
         );
         $this->add(
@@ -106,7 +113,8 @@ class VpnClientDb extends SimpleClientDb
                 ['org.letsconnect-vpn.app:/api/callback'],
                 null,
                 'Let\'s Connect! for Android',
-                true
+                true,
+                new Scope('config')
             )
         );
         $this->add(
@@ -115,7 +123,8 @@ class VpnClientDb extends SimpleClientDb
                 ['org.letsconnect-vpn.app.ios:/api/callback'],
                 null,
                 'Let\'s Connect! for iOS',
-                true
+                true,
+                new Scope('config')
             )
         );
         $this->add(
@@ -124,7 +133,8 @@ class VpnClientDb extends SimpleClientDb
                 ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'Let\'s Connect! for macOS',
-                true
+                true,
+                new Scope('config')
             )
         );
         $this->add(
@@ -133,7 +143,8 @@ class VpnClientDb extends SimpleClientDb
                 ['http://127.0.0.1:{PORT}/callback', 'http://[::1]:{PORT}/callback'],
                 null,
                 'Let\'s Connect! for Linux',
-                true
+                true,
+                new Scope('config')
             )
         );
     }
