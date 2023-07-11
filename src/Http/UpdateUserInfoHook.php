@@ -14,6 +14,7 @@ namespace Vpn\Portal\Http;
 use DateTimeImmutable;
 use Vpn\Portal\Dt;
 use Vpn\Portal\FileIO;
+use Vpn\Portal\Ip;
 use Vpn\Portal\Json;
 use Vpn\Portal\Storage;
 
@@ -29,13 +30,15 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
     private Storage $storage;
     private AuthModuleInterface $authModule;
     private string $staticPermissionFile;
+    private string $ipSourcePermissionFile;
 
-    public function __construct(SessionInterface $session, Storage $storage, AuthModuleInterface $authModule, string $staticPermissionFile)
+    public function __construct(SessionInterface $session, Storage $storage, AuthModuleInterface $authModule, string $staticPermissionFile, string $ipSourcePermissionFile)
     {
         $this->session = $session;
         $this->storage = $storage;
         $this->authModule = $authModule;
         $this->staticPermissionFile = $staticPermissionFile;
+        $this->ipSourcePermissionFile = $ipSourcePermissionFile;
         $this->dateTime = Dt::get();
     }
 
@@ -44,6 +47,8 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
         // add the "static" permissions obtained from
         // config/static_permissions.json
         $this->addStaticPermissions($userInfo);
+
+        $this->addIpSourcePermissions($request, $userInfo);
 
         // only update the user info once per browser session, not on every
         // request
@@ -74,6 +79,27 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
         $this->session->set('_user_info_already_updated', 'yes');
 
         return null;
+    }
+
+    private function addIpSourcePermissions(Request $request, UserInfo &$userInfo): void
+    {
+        if (!FileIO::exists($this->ipSourcePermissionFile)) {
+            return;
+        }
+        $remoteAddr = Ip::fromIp($request->requireHeader('REMOTE_ADDR'));
+        $permissionData = Json::decode(FileIO::read($this->ipSourcePermissionFile));
+        $permissionList = $userInfo->permissionList();
+        foreach ($permissionData as $permissionId => $ipPrefixList) {
+            foreach ($ipPrefixList as $ipPrefix) {
+                $ip = Ip::fromIpPrefix($ipPrefix);
+                if ($ip->contains($remoteAddr)) {
+                    $permissionList[] = $permissionId;
+                }
+            }
+        }
+
+        $permissionList = array_values(array_unique($permissionList));
+        $userInfo->setPermissionList($permissionList);
     }
 
     private function addStaticPermissions(UserInfo &$userInfo): void

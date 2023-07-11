@@ -188,7 +188,7 @@ try {
     }
 
     $service->addHook(new DisabledUserHook($storage));
-    $service->addHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule, $baseDir.'/config/static_permissions.json'));
+    $service->addHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule, $baseDir.'/config/static_permissions.json', $baseDir.'/config/ip_source_permissions.json'));
 
     // isAdmin
     $adminHook = new AdminHook(
