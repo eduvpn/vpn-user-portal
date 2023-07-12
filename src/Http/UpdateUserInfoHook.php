@@ -13,8 +13,6 @@ namespace Vpn\Portal\Http;
 
 use DateTimeImmutable;
 use Vpn\Portal\Dt;
-use Vpn\Portal\FileIO;
-use Vpn\Portal\Json;
 use Vpn\Portal\Storage;
 
 /**
@@ -28,14 +26,16 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
     private SessionInterface $session;
     private Storage $storage;
     private AuthModuleInterface $authModule;
-    private string $staticPermissionFile;
 
-    public function __construct(SessionInterface $session, Storage $storage, AuthModuleInterface $authModule, string $staticPermissionFile)
+    /** @var array<\Vpn\Portal\PermissionSourceInterface> */
+    private array $permissionSourceList;
+
+    public function __construct(SessionInterface $session, Storage $storage, AuthModuleInterface $authModule, array $permissionSourceList)
     {
         $this->session = $session;
         $this->storage = $storage;
         $this->authModule = $authModule;
-        $this->staticPermissionFile = $staticPermissionFile;
+        $this->permissionSourceList = $permissionSourceList;
         $this->dateTime = Dt::get();
     }
 
@@ -57,9 +57,14 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
             return null;
         }
 
-        // add the "static" permissions obtained from
-        // config/static_permissions.json
-        $this->addStaticPermissions($userInfo);
+        // loop over registered additional permission sources and add the
+        // obtained permissions to the user object
+        $permissionList = $userInfo->permissionList();
+        foreach ($this->permissionSourceList as $permissionSource) {
+            $permissionList = array_merge($permissionList, $permissionSource->get($userInfo->userId()));
+        }
+        $permissionList = array_values(array_unique($permissionList));
+        $userInfo->setPermissionList($permissionList);
 
         if (null === $this->storage->userInfo($userInfo->userId())) {
             // user does not yet exist in the database, create it
@@ -74,28 +79,5 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
         $this->session->set('_user_info_already_updated', 'yes');
 
         return null;
-    }
-
-    private function addStaticPermissions(UserInfo &$userInfo): void
-    {
-        if (!FileIO::exists($this->staticPermissionFile)) {
-            return;
-        }
-        $permissionData = Json::decode(FileIO::read($this->staticPermissionFile));
-        $permissionList = $userInfo->permissionList();
-        foreach ($permissionData as $permissionId => $userIdList) {
-            if (!is_string($permissionId)) {
-                continue;
-            }
-            if (!is_array($userIdList)) {
-                continue;
-            }
-            if (in_array($userInfo->userId(), $userIdList, true)) {
-                $permissionList[] = $permissionId;
-            }
-        }
-
-        $permissionList = array_values(array_unique($permissionList));
-        $userInfo->setPermissionList($permissionList);
     }
 }

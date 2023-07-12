@@ -1,0 +1,9 @@
+{
+    "example-permission": [
+        "foo",
+        "bar"
+    ],
+    "other-example-permission": [
+        "bar"
+    ]
+}

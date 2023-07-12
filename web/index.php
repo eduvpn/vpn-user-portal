@@ -54,6 +54,7 @@ use Vpn\Portal\OAuth\VpnOAuthServer;
 use Vpn\Portal\OpenVpn\CA\VpnCa;
 use Vpn\Portal\OpenVpn\TlsCrypt;
 use Vpn\Portal\ServerInfo;
+use Vpn\Portal\StaticPermissionSource;
 use Vpn\Portal\Storage;
 use Vpn\Portal\SysLogger;
 use Vpn\Portal\Tpl;
@@ -188,7 +189,10 @@ try {
     }
 
     $service->addHook(new DisabledUserHook($storage));
-    $service->addHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule, $baseDir.'/config/static_permissions.json'));
+    $permissionSourceList = [
+        new StaticPermissionSource($baseDir.'/config/static_permissions.json'),
+    ];
+    $service->addHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule, $permissionSourceList));
 
     // isAdmin
     $adminHook = new AdminHook(
