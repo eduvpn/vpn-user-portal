@@ -188,11 +188,11 @@ try {
         $service->addHook(new AccessHook($accessPermissionList));
     }
 
-    $service->addHook(new DisabledUserHook($storage));
     $permissionSourceList = [
         new StaticPermissionSource($baseDir.'/config/static_permissions.json'),
     ];
     $service->addHook(new UpdateUserInfoHook($sessionBackend, $storage, $authModule, $permissionSourceList));
+    $service->addHook(new DisabledUserHook());
 
     // isAdmin
     $adminHook = new AdminHook(
