@@ -44,7 +44,7 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
         // only update the user info once per browser session, not on every
         // request
         if ('yes' === $this->session->get('_user_info_already_updated')) {
-            if (null === $this->storage->userInfo($userInfo->userId())) {
+            if (null === $dbUserInfo = $this->storage->userInfo($userInfo->userId())) {
                 // user was deleted (by admin) during the active session, so
                 // we force a logout
                 $this->session->destroy();
@@ -53,6 +53,9 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
                 // I do not know why this works...
                 return $this->authModule->triggerLogout($request);
             }
+            // use the user's information from the database so we restore all
+            // the (extra) permissions we obtained during login
+            $userInfo = $dbUserInfo;
 
             return null;
         }
