@@ -383,6 +383,7 @@ class Tpl implements TplInterface
         return [
             'en-US' => 'English',
             'ar-MA' => 'العربية',
+	    'ca-ES' => 'Català',
             'da-DK' => 'Dansk',
             'de-DE' => 'Deutsch',
             'es-LA' => 'español',
