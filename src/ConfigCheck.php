@@ -30,6 +30,7 @@ class ConfigCheck
         foreach ($config->profileConfigList() as $profileConfig) {
             $profileProblemList = [];
 
+            self::verifyNotSupportedConfigKeys($profileConfig, $profileProblemList);
             self::verifyDefaultGatewayHasDnsServerList($profileConfig, $profileProblemList);
             self::verifyRangeOverlap($profileConfig, $usedRangeList, $profileProblemList);
             self::verifyRoutesAndExcludeRoutesAreNormalized($profileConfig, $profileProblemList);
@@ -45,6 +46,14 @@ class ConfigCheck
         // make sure IP space is big enough for OpenVPN/WireGuard
 
         return $issueList;
+    }
+
+    private static function verifyNotSupportedConfigKeys(ProfileConfig $profileConfig, array &$profileProblemList): void
+    {
+        $unsupportedConfigKeys = $profileConfig->unsupportedConfigKeys();
+        foreach ($unsupportedConfigKeys as $unsupportedConfigKey) {
+            $profileProblemList[] = 'configuration key "'.$unsupportedConfigKey.'" not supported';
+        }
     }
 
     private static function verifyRouteListIsEmptyWithDefaultGateway(ProfileConfig $profileConfig, array &$profileProblemList): void

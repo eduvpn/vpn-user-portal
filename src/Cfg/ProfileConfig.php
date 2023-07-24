@@ -295,6 +295,52 @@ class ProfileConfig
         return $maxClientLimit;
     }
 
+    /**
+     * Get a list of configuration keys NOT supported in order to warn the
+     * admins on the "Info" page about it.
+     *
+     * @return array<string>
+     */
+    public function unsupportedConfigKeys(): array
+    {
+        $supportedKeys = [
+            'defaultGateway',
+            'displayName',
+            'dnsSearchDomainList',
+            'dnsServerList',
+            'excludeRouteList',
+            'hostName',
+            'nodeUrl',
+            'oBlockLan',
+            'oEnableLog',
+            'oExposedTcpPortList',
+            'oExposedUdpPortList',
+            'onNode',
+            'oRangeFour',
+            'oRangeSix',
+            'oTcpPortList',
+            'oUdpPortList',
+            'profileId',
+            'routeList',
+            'wRangeFour',
+            'wRangeSix',
+            'aclPermissionList',
+            'oListenOn',
+            'oRangeFour',
+            'preferredProto',
+            'wRangeFour',
+        ];
+
+        $unsupportedKeys = [];
+        foreach (array_keys($this->configData) as $configKey) {
+            if (!in_array($configKey, $supportedKeys, true)) {
+                $unsupportedKeys[] = $configKey;
+            }
+        }
+
+        return $unsupportedKeys;
+    }
+
     private function nodeCount(): int
     {
         return \count($this->requireStringOrStringArray('nodeUrl', ['http://127.0.0.1:41194']));
