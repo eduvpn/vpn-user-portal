@@ -4,8 +4,7 @@
 <?php /** @var array<\Vpn\Portal\Cfg\ProfileConfig> $profileConfigList */?>
 <?php /** @var array<array{node_number:int,node_url:string,node_info:?array{rel_load_average:array<int>,load_average:array<float>,cpu_count:int,node_uptime:int}}> $nodeInfoList */?>
 <?php /** @var string $portalVersion */?>
-<?php /** @var array<string> $serverProblemList */?>
-<?php /** @var array<string,array<string>> $profileProblemList */?>
+<?php /** @var array{global_problems:array<string>,profile_problems:array<string,array<string>>} $problemList */?>
 <?php $this->layout('base', ['activeItem' => 'info', 'pageTitle' => $this->t('Info')]); ?>
 <?php $this->start('content'); ?>
     <h2><?=$this->t('Server'); ?></h2>
@@ -52,11 +51,11 @@
                 </td>
             </tr>
 
-<?php if (0 !== count($serverProblemList)): ?>
+<?php if (0 !== count($problemList['global_problems'])): ?>
             <tr>
                 <th><?=$this->t('Issues'); ?></th>
                 <td>
-<?php foreach ($serverProblemList as $p):?>
+<?php foreach ($problemList['global_problems'] as $p):?>
                         <span class="warning"><?=$this->e($p); ?></span>
 <?php endforeach; ?>
                 </td>
@@ -258,14 +257,14 @@
             </td></tr>
 <?php endif; ?>
 
-<?php if (array_key_exists($profileConfig->profileId(), $profileProblemList) && 0 !== count($profileProblemList[$profileConfig->profileId()])): ?>
+<?php if (array_key_exists($profileConfig->profileId(), $problemList['profile_problems']) && 0 !== count($problemList['profile_problems'][$profileConfig->profileId()])): ?>
             <tr>
                 <th colspan="2" class="issues"><?=$this->t('Issues'); ?></th>
             </tr>
             <tr>
                 <th></th>
                 <td>
-<?php foreach ($profileProblemList[$profileConfig->profileId()] as $p):?>
+<?php foreach ($problemList['profile_problems'][$profileConfig->profileId()] as $p):?>
                         <span class="warning"><?=$this->e($p); ?></span>
 <?php endforeach; ?>
                 </td>

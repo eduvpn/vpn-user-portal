@@ -17,38 +17,61 @@ use Vpn\Portal\Cfg\ProfileConfig;
 class ConfigCheck
 {
     /**
-     * @return array<string,array<string>>
+     * @return array{global_problems:array<string>,profile_problems:array<string,array<string>>}
      */
     public static function verify(Config $config): array
     {
-        $issueList = [];
         $usedRangeList = [];
         $usedUdpPortList = [];
         $usedTcpPortList = [];
         $nodeProfileMapping = [];
+        $globalProblemList = [];
+        $profileProblemList = [];
 
+        // global issues
+        self::verifyMbStringFuncOverload($globalProblemList);
+        self::verifyNotSupportedConfigKeys($config, $globalProblemList);
+
+        // per profile issues
         foreach ($config->profileConfigList() as $profileConfig) {
-            $profileProblemList = [];
-
-            self::verifyNotSupportedConfigKeys($profileConfig, $profileProblemList);
-            self::verifyDefaultGatewayHasDnsServerList($profileConfig, $profileProblemList);
-            self::verifyRangeOverlap($profileConfig, $usedRangeList, $profileProblemList);
-            self::verifyRoutesAndExcludeRoutesAreNormalized($profileConfig, $profileProblemList);
-            self::verifyDnsRouteIsPushedWhenNotDefaultGateway($profileConfig, $profileProblemList);
-            self::verifyDnsHasSearchDomainWhenNotDefaultGateway($profileConfig, $profileProblemList);
-            self::verifyNonLocalNodeUrlHasTls($profileConfig, $profileProblemList);
-            self::verifyUniqueOpenVpnPortsPerNode($profileConfig, $usedUdpPortList, $usedTcpPortList, $profileProblemList);
-            self::verifyRouteListIsEmptyWithDefaultGateway($profileConfig, $profileProblemList);
-            self::verifyNodeNumberUrlConsistency($profileConfig, $nodeProfileMapping, $profileProblemList);
-            $issueList[$profileConfig->profileId()] = $profileProblemList;
+            $problemList = [];
+            self::verifyNotSupportedProfileConfigKeys($profileConfig, $problemList);
+            self::verifyDefaultGatewayHasDnsServerList($profileConfig, $problemList);
+            self::verifyRangeOverlap($profileConfig, $usedRangeList, $problemList);
+            self::verifyRoutesAndExcludeRoutesAreNormalized($profileConfig, $problemList);
+            self::verifyDnsRouteIsPushedWhenNotDefaultGateway($profileConfig, $problemList);
+            self::verifyDnsHasSearchDomainWhenNotDefaultGateway($profileConfig, $problemList);
+            self::verifyNonLocalNodeUrlHasTls($profileConfig, $problemList);
+            self::verifyUniqueOpenVpnPortsPerNode($profileConfig, $usedUdpPortList, $usedTcpPortList, $problemList);
+            self::verifyRouteListIsEmptyWithDefaultGateway($profileConfig, $problemList);
+            self::verifyNodeNumberUrlConsistency($profileConfig, $nodeProfileMapping, $problemList);
+            $profileProblemList[$profileConfig->profileId()] = $problemList;
         }
 
         // make sure IP space is big enough for OpenVPN/WireGuard
-
-        return $issueList;
+        return [
+            'global_problems' => $globalProblemList,
+            'profile_problems' => $profileProblemList,
+        ];
     }
 
-    private static function verifyNotSupportedConfigKeys(ProfileConfig $profileConfig, array &$profileProblemList): void
+    private static function verifyMbStringFuncOverload(array &$globalProblemList): void
+    {
+        // @see https://www.php.net/manual/en/mbstring.configuration.php#ini.mbstring.func-overload
+        if (false !== (bool) ini_get('mbstring.func_overload')) {
+            $globalProblemList[] = '"mbstring.func_overload" MUST NOT be enabled';
+        }
+    }
+
+    private static function verifyNotSupportedConfigKeys(Config $config, array &$globalProblemList): void
+    {
+        $unsupportedConfigKeys = $config->unsupportedConfigKeys();
+        foreach ($unsupportedConfigKeys as $unsupportedConfigKey) {
+            $globalProblemList[] = 'configuration key "'.$unsupportedConfigKey.'" not supported';
+        }
+    }
+
+    private static function verifyNotSupportedProfileConfigKeys(ProfileConfig $profileConfig, array &$profileProblemList): void
     {
         $unsupportedConfigKeys = $profileConfig->unsupportedConfigKeys();
         foreach ($unsupportedConfigKeys as $unsupportedConfigKey) {

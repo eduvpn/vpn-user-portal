@@ -267,4 +267,53 @@ class Config
 
         return new self(require $configFile);
     }
+
+    /**
+     * Get a list of configuration keys NOT supported in order to warn the
+     * admins on the "Info" page about it.
+     *
+     * @return array<string>
+     */
+    public function unsupportedConfigKeys(): array
+    {
+        $supportedKeys = [
+            'accessPermissionList',
+            'adminPermissionList',
+            'adminUserIdList',
+            'Api',
+            'authModule',
+            'browserSessionExpiry',
+            'caExpiry',
+            'connectScriptPath',
+            'Db',
+            'defaultLanguage',
+            'enabledLanguages',
+            'LdapAuthModule',
+            'Log',
+            'maxActiveConfigurations',
+            'MellonAuthModule',
+            'MemcacheSessionModule',
+            'OidcAuthModule',
+            'PhpSamlSpAuthModule',
+            'ProfileList',
+            'RadiusAuthModule',
+            'sessionExpiry',
+            'sessionModule',
+            'ShibAuthModule',
+            'showPermissions',
+            'styleName',
+            'supportedSessionExpiry',
+            'vpnCaPath',
+            'WireGuard',
+        ];
+
+        $unsupportedKeys = [];
+        foreach (array_keys($this->configData) as $configKey) {
+            if (!in_array($configKey, $supportedKeys, true)) {
+                $unsupportedKeys[] = $configKey;
+            }
+        }
+
+        return $unsupportedKeys;
+    }
 }
