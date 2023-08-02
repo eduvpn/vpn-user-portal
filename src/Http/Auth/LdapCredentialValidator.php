@@ -40,6 +40,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
      */
     public function validate(string $authUser, string $authPass): UserInfo
     {
+
         // add "realm" after user name if none is specified
         if (null !== $addRealm = $this->ldapAuthConfig->addRealm()) {
             if (false === strpos($authUser, '@')) {
@@ -47,18 +48,17 @@ class LdapCredentialValidator implements CredentialValidatorInterface
             }
         }
 
-        // get bind DN either from template, or from anonymous bind + search
-        if (false === $bindDn = $this->getBindDn($authUser)) {
-            throw new CredentialValidatorException('unable to find a DN to bind with');
-        }
-
         try {
-            $this->ldapClient->bind($bindDn, $authPass);
+            // get bind DN either from template, or from anonymous bind + search
+            if (false === $bindDn = $this->getBindDn($authUser)) {
+                throw new CredentialValidatorException('unable to find a DN to bind with');
+            }
 
+            $this->ldapClient->bind($bindDn, $authPass);
             $baseDn = $this->ldapAuthConfig->baseDn() ?? $bindDn;
-            $userFilter = '(objectClass=*)';
+            $userFilter = null;
             if (null !== $userFilterTemplate = $this->ldapAuthConfig->userFilterTemplate()) {
-                $userFilter = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $userFilterTemplate);
+                $userFilter = str_replace('{{UID}}', LdapClient::escapeFilter($authUser), $userFilterTemplate);
             }
 
             $userId = $authUser;
@@ -80,7 +80,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
         }
     }
 
-    private function getUserId(string $baseDn, string $userFilter, string $userIdAttribute): string
+    private function getUserId(string $baseDn, ?string $userFilter, string $userIdAttribute): string
     {
         $ldapEntries = $this->ldapClient->search(
             $baseDn,
@@ -88,14 +88,11 @@ class LdapCredentialValidator implements CredentialValidatorInterface
             [$userIdAttribute]
         );
 
-        // it turns out that PHP's LDAP client converts the attribute name to
-        // lowercase before populating the array...
-        if (!isset($ldapEntries[0][strtolower($userIdAttribute)][0])) {
-            // if the userIdAttribute is NOT set, fail, admin configuration error
+        if (!isset($ldapEntries['result'][$userIdAttribute][0])) {
             throw new CredentialValidatorException(sprintf('user ID attribute "%s" not available in LDAP response', $userIdAttribute));
         }
 
-        return $ldapEntries[0][strtolower($userIdAttribute)][0];
+        return $ldapEntries['result'][$userIdAttribute][0];
     }
 
     /**
@@ -117,19 +114,19 @@ class LdapCredentialValidator implements CredentialValidatorInterface
 
             return false;
         }
-        $userFilter = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $userFilterTemplate);
+        $userFilter = str_replace('{{UID}}', LdapClient::escapeFilter($authUser), $userFilterTemplate);
         if (null === $baseDn = $this->ldapAuthConfig->baseDn()) {
             $this->logger->error('"baseDn" not set, unable to search for DN');
 
             return false;
         }
         $ldapEntries = $this->ldapClient->search($baseDn, $userFilter);
-        if (!isset($ldapEntries[0]['dn'])) {
+        if (!isset($ldapEntries['dn'])) {
             // unable to find an entry in this baseDn with this filter
             return false;
         }
 
-        return $ldapEntries[0]['dn'];
+        return $ldapEntries['dn'];
     }
 
     /**
@@ -137,7 +134,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
      *
      * @return array<string>
      */
-    private function getPermissionList(string $baseDn, string $userFilter, array $permissionAttributeList): array
+    private function getPermissionList(string $baseDn, ?string $userFilter, array $permissionAttributeList): array
     {
         if (0 === \count($permissionAttributeList)) {
             return [];
@@ -150,14 +147,10 @@ class LdapCredentialValidator implements CredentialValidatorInterface
         );
 
         $permissionList = [];
-        foreach ($permissionAttributeList as $permissionAttribute) {
-            // it turns out that PHP's LDAP client converts the attribute name to
-            // lowercase before populating the array...
-            if (isset($ldapEntries[0][strtolower($permissionAttribute)][0])) {
-                $permissionList = array_merge($permissionList, \array_slice($ldapEntries[0][strtolower($permissionAttribute)], 1));
-            }
+        foreach ($ldapEntries['result'] as $attributeName => $attributeValueList) {
+            $permissionList = array_merge($permissionList, $attributeValueList);
         }
 
-        return $permissionList;
+        return array_values(array_unique($permissionList));
     }
 }
