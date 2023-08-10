@@ -13,5 +13,5 @@
 * `es_LA`: Carlos Pedreros (Universidad de La Serena, Chile)
 * `sv_SE`: Jasper Metselaar (Högskolan Dalarna / Dalarna University, Sweden)
 * `af_ZA`: Donald Coetzee (TENET South Africa)
-* `cs_CS`: Michal Drobny, Roman Mariancik and Ivo Durnik (ICS MUNI Czech republic)
+* `cs_CZ`: Michal Drobny, Roman Mariancik and Ivo Durnik (ICS MUNI Czech republic)
 * `sk_SK`: Michal Drobny, Roman Mariancik and Ivo Durnik (ICS MUNI Czech republic)
