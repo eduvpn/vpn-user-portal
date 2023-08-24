@@ -141,11 +141,8 @@ class ClientConfig implements ClientConfigInterface
             $dnsEntries = array_merge($dnsEntries, $dnsServerList);
         }
 
-        // provide connection specific DNS domains to use for querying
-        // the DNS server when default gateway is not true
-        if (!$profileConfig->defaultGateway() && 0 !== \count($dnsServerList)) {
-            $dnsEntries = array_merge($dnsEntries, $profileConfig->dnsSearchDomainList());
-        }
+        // provide "search domains" to the VPN client
+        $dnsEntries = array_merge($dnsEntries, $profileConfig->dnsSearchDomainList());
 
         return $dnsEntries;
     }

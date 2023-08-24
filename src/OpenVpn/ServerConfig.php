@@ -296,12 +296,9 @@ class ServerConfig
             $dnsEntries[] = 'push "block-outside-dns"';
         }
 
-        // provide connection specific DNS domains to use for querying
-        // the DNS server when default gateway is not true
-        if (!$profileConfig->defaultGateway() && 0 !== \count($dnsServerList)) {
-            foreach ($profileConfig->dnsSearchDomainList() as $dnsSearchDomain) {
-                $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsSearchDomain);
-            }
+        // provide "search domains" to the VPN client
+        foreach ($profileConfig->dnsSearchDomainList() as $dnsSearchDomain) {
+            $dnsEntries[] = sprintf('push "dhcp-option DOMAIN-SEARCH %s"', $dnsSearchDomain);
         }
 
         return $dnsEntries;
