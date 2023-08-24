@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.3.7 (...)
+- update `fkooman/oauth2-server` dependency
+- allow search domains for VPN connections where all traffic is sent over the
+  VPN ([#152](https://todo.sr.ht/~eduvpn/server/152))
+- improve `LdapClient`
+- Added catalan (`ca-ES`) translation for the user portal
+- show unsupported configuration keys used in the configuration file
+  ([#147](https://todo.sr.ht/~eduvpn/server/147))
+- remove database query from `DisabledUserHook`
+- refactor permission sources
+- only fetch static permissions once during a session, not on every page load
+- limit allowed OAuth scopes for the VPN clients to only `config`
+- `ConnectionManager:oDisconnect` does not use `userId` parameter, remove it
+- update translations of "Issues" in various languages
+
 ## 3.3.6 (2023-05-23)
 - consider allocated WireGuard IPs for alerting 
   ([#134](https://todo.sr.ht/~eduvpn/server/134))
