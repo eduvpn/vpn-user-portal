@@ -265,7 +265,7 @@ class ProfileConfig
      */
     public function maxClientLimit(): int
     {
-        return $this->oMaxClientLimit()+$this->wMaxClientLimit();
+        return $this->oMaxClientLimit() + $this->wMaxClientLimit();
     }
 
     public function oMaxClientLimit(): int

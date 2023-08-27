@@ -65,10 +65,10 @@ class DnsZoneGenerator
         if (self::IP_FOUR === $ipProto || self::IP_BOTH === $ipProto) {
             foreach ($reverseFour as $ipFourOrigin => $ipEntryList) {
                 asort($ipEntryList, SORT_NATURAL);
-                $output.= sprintf('$ORIGIN %s', $ipFourOrigin).\PHP_EOL;
+                $output .= sprintf('$ORIGIN %s', $ipFourOrigin).\PHP_EOL;
                 foreach ($ipEntryList as $ipEntry => $hostName) {
                     $ipLast = explode('.', $ipEntry)[3];
-                    $output.= sprintf('%-8s IN PTR %s', $ipLast, $hostName).\PHP_EOL;
+                    $output .= sprintf('%-8s IN PTR %s', $ipLast, $hostName).\PHP_EOL;
                 }
             }
         }
@@ -77,10 +77,10 @@ class DnsZoneGenerator
         if (self::IP_SIX === $ipProto || self::IP_BOTH === $ipProto) {
             foreach ($reverseSix as $ipSixOrigin => $ipEntryList) {
                 asort($ipEntryList, SORT_NATURAL);
-                $output.= sprintf('$ORIGIN %s', $ipSixOrigin).\PHP_EOL;
+                $output .= sprintf('$ORIGIN %s', $ipSixOrigin).\PHP_EOL;
                 foreach ($ipEntryList as $ipEntry => $hostName) {
                     $ipLast = implode('.', str_split(strrev(substr(bin2hex(inet_pton($ipEntry)), 16)), 1));
-                    $output.= sprintf('%s IN PTR %s', $ipLast, $hostName).\PHP_EOL;
+                    $output .= sprintf('%s IN PTR %s', $ipLast, $hostName).\PHP_EOL;
                 }
             }
         }
@@ -104,7 +104,7 @@ class DnsZoneGenerator
                         self::forOpenvpn(
                             $profileConfig->oRangeFour($nodeNumber),
                             $profileConfig->oRangeSix($nodeNumber),
-                            count($profileConfig->oUdpPortList())+count($profileConfig->oTcpPortList())
+                            count($profileConfig->oUdpPortList()) + count($profileConfig->oTcpPortList())
                         ),
                     );
                 }
