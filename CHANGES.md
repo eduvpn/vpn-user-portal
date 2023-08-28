@@ -14,6 +14,8 @@
 - limit allowed OAuth scopes for the VPN clients to only `config`
 - `ConnectionManager:oDisconnect` does not use `userId` parameter, remove it
 - update translations of "Issues" in various languages
+- **EXPIRMENTAL** support to make it possible to configure WireGuard MTU 
+  ([#151](https://todo.sr.ht/~eduvpn/server/151))
 
 ## 3.3.6 (2023-05-23)
 - consider allocated WireGuard IPs for alerting 
