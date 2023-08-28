@@ -84,7 +84,7 @@ final class NodeApiModuleTest extends TestCase
             $this->storage,
             new ServerConfig(
                 new OpenVpnServerConfig(new TestCa(), new TlsCrypt($baseDir.'/data/keys')),
-                new WireGuardServerConfig($baseDir.'/data/keys', $this->config->wireGuardConfig()->listenPort()),
+                new WireGuardServerConfig($baseDir.'/data/keys', $this->config->wireGuardConfig()),
             ),
             new ConnectionHooks(new NullLogger()),
             new NullLogger()

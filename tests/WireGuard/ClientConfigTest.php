@@ -14,6 +14,7 @@ namespace Vpn\Portal\Tests;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Vpn\Portal\Cfg\ProfileConfig;
+use Vpn\Portal\Cfg\WireGuardConfig;
 use Vpn\Portal\WireGuard\ClientConfig;
 
 /**
@@ -41,7 +42,7 @@ final class ClientConfigTest extends TestCase
             '10.42.42.5',
             'fd42::5',
             'Ul2qef/xiidFPn8Wi8+3rvzpHLG4irsrUOxmAXTXWFw=',
-            443,
+            new WireGuardConfig(['listenPort' => 443]),
             new DateTimeImmutable('2022-11-11T11:11:11+00:00')
         );
 

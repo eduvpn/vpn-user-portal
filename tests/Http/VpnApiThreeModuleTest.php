@@ -103,7 +103,7 @@ final class VpnApiThreeModuleTest extends TestCase
                 $tmpDir,
                 new TestCa(),
                 new TlsCrypt($tmpDir),
-                $this->config->wireGuardConfig()->listenPort(),
+                $this->config->wireGuardConfig(),
                 'gc6RjjPtIKeflbOun+dyAssnsdXzD6bmWisbxJrZiB0=',
             ),
             new TestConnectionManager(
