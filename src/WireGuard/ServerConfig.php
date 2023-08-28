@@ -52,6 +52,16 @@ class ServerConfig
 
         $this->registerPublicKey($nodeNumber, $publicKey);
 
+        if (null !== $useMtu = $this->wgConfig->useMtu()) {
+            return <<< EOF
+                [Interface]
+                MTU = {$useMtu}
+                Address = {$ipList}
+                ListenPort = {$this->wgConfig->listenPort()}
+                PrivateKey = {{PRIVATE_KEY}}
+                EOF;
+        }
+
         return <<< EOF
             [Interface]
             Address = {$ipList}

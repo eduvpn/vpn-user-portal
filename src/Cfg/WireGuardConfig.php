@@ -22,6 +22,11 @@ class WireGuardConfig
         $this->configData = $configData;
     }
 
+    public function useMtu(): ?int
+    {
+        return $this->optionalInt('useMtu');
+    }
+
     public function listenPort(): int
     {
         return $this->requireInt('listenPort', 51820);
