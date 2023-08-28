@@ -49,7 +49,7 @@ try {
         $storage,
         new ServerConfig(
             new OpenVpnServerConfig($ca, new TlsCrypt($baseDir.'/data/keys')),
-            new WireGuardServerConfig($baseDir.'/data/keys', $config->wireGuardConfig()->listenPort()),
+            new WireGuardServerConfig($baseDir.'/data/keys', $config->wireGuardConfig()),
         ),
         ConnectionHooks::init($config, $storage, $logger),
         $logger

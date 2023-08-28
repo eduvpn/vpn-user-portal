@@ -11,20 +11,21 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\WireGuard;
 
+use Vpn\Portal\Cfg\WireGuardConfig;
 use Vpn\Portal\Exception\ServerConfigException;
 use Vpn\Portal\FileIO;
 
 class ServerConfig
 {
     private string $keyDir;
-    private int $wgPort;
+    private WireGuardConfig $wgConfig;
 
-    public function __construct(string $keyDir, int $wgPort)
+    public function __construct(string $keyDir, WireGuardConfig $wgConfig)
     {
         // make sure "keyDir" exists
         FileIO::mkdir($keyDir);
         $this->keyDir = $keyDir;
-        $this->wgPort = $wgPort;
+        $this->wgConfig = $wgConfig;
     }
 
     /**
@@ -54,7 +55,7 @@ class ServerConfig
         return <<< EOF
             [Interface]
             Address = {$ipList}
-            ListenPort = {$this->wgPort}
+            ListenPort = {$this->wgConfig->listenPort()}
             PrivateKey = {{PRIVATE_KEY}}
             EOF;
     }
