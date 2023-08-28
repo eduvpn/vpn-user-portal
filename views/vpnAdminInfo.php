@@ -82,7 +82,7 @@
                 <th><?=$this->t('WireGuard'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Port'); ?></dt><dd><code><?=$this->e((string) $serverInfo->wgPort()); ?></code></dd>
+                        <dt><?=$this->t('Port'); ?></dt><dd><code><?=$this->e((string) $serverInfo->wgConfig()->listenPort()); ?></code></dd>
                     </dl>
                 </td>
             </tr>

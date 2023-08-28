@@ -516,7 +516,7 @@ class ConnectionManager
                 $ipFour,
                 $ipSix,
                 $serverPublicKey,
-                $this->config->wireGuardConfig()->listenPort(),
+                $this->config->wireGuardConfig(),
                 $expiresAt
             );
         }

@@ -211,7 +211,7 @@ try {
         $baseDir.'/data/keys',
         $ca,
         new TlsCrypt($baseDir.'/data/keys'),
-        $config->wireGuardConfig()->listenPort(),
+        $config->wireGuardConfig(),
         Signer::publicKeyFromSecretKey($oauthKey)
     );
 

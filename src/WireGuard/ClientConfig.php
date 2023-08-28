@@ -13,6 +13,7 @@ namespace Vpn\Portal\WireGuard;
 
 use DateTimeImmutable;
 use Vpn\Portal\Cfg\ProfileConfig;
+use Vpn\Portal\Cfg\WireGuardConfig;
 use Vpn\Portal\ClientConfigInterface;
 use Vpn\Portal\Exception\QrCodeException;
 use Vpn\Portal\Ip;
@@ -31,10 +32,10 @@ class ClientConfig implements ClientConfigInterface
     private string $ipFour;
     private string $ipSix;
     private string $serverPublicKey;
-    private int $wgPort;
+    private WireGuardConfig $wgConfig;
     private DateTimeImmutable $expiresAt;
 
-    public function __construct(string $portalUrl, int $nodeNumber, ProfileConfig $profileConfig, string $ipFour, string $ipSix, string $serverPublicKey, int $wgPort, DateTimeImmutable $expiresAt)
+    public function __construct(string $portalUrl, int $nodeNumber, ProfileConfig $profileConfig, string $ipFour, string $ipSix, string $serverPublicKey, WireGuardConfig $wgConfig, DateTimeImmutable $expiresAt)
     {
         $this->portalUrl = $portalUrl;
         $this->nodeNumber = $nodeNumber;
@@ -42,7 +43,7 @@ class ClientConfig implements ClientConfigInterface
         $this->ipFour = $ipFour;
         $this->ipSix = $ipSix;
         $this->serverPublicKey = $serverPublicKey;
-        $this->wgPort = $wgPort;
+        $this->wgConfig = $wgConfig;
         $this->expiresAt = $expiresAt;
     }
 
@@ -104,7 +105,7 @@ class ClientConfig implements ClientConfigInterface
         if (0 !== count($routeList->ls())) {
             $output[] = 'AllowedIPs = '.implode(',', $routeList->ls());
         }
-        $output[] = 'Endpoint = '.$this->profileConfig->hostName($this->nodeNumber).':'.(string) $this->wgPort;
+        $output[] = 'Endpoint = '.$this->profileConfig->hostName($this->nodeNumber).':'.(string) $this->wgConfig->listenPort();
 
         return implode("\n", $output);
     }

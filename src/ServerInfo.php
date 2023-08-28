@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Vpn\Portal;
 
+use Vpn\Portal\Cfg\WireGuardConfig;
 use Vpn\Portal\OpenVpn\CA\CaInterface;
 use Vpn\Portal\OpenVpn\TlsCrypt;
 
@@ -20,16 +21,16 @@ class ServerInfo
     private string $keyDir;
     private CaInterface $ca;
     private TlsCrypt $tlsCrypt;
-    private int $wgPort;
+    private WireGuardConfig $wgConfig;
     private string $oauthPublicKey;
 
-    public function __construct(string $portalUrl, string $keyDir, CaInterface $ca, TlsCrypt $tlsCrypt, int $wgPort, string $oauthPublicKey)
+    public function __construct(string $portalUrl, string $keyDir, CaInterface $ca, TlsCrypt $tlsCrypt, WireGuardConfig $wgConfig, string $oauthPublicKey)
     {
         $this->portalUrl = $portalUrl;
         $this->keyDir = $keyDir;
         $this->ca = $ca;
         $this->tlsCrypt = $tlsCrypt;
-        $this->wgPort = $wgPort;
+        $this->wgConfig = $wgConfig;
         $this->oauthPublicKey = $oauthPublicKey;
     }
 
@@ -58,9 +59,9 @@ class ServerInfo
         return FileIO::read($publicKeyFile);
     }
 
-    public function wgPort(): int
+    public function wgConfig(): WireGuardConfig
     {
-        return $this->wgPort;
+        return $this->wgConfig;
     }
 
     public function oauthPublicKey(): string
