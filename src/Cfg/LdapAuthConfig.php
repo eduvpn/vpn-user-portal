@@ -27,6 +27,21 @@ class LdapAuthConfig
         return $this->requireString('ldapUri');
     }
 
+    public function tlsCa(): ?string
+    {
+        return $this->optionalString('tlsCa');
+    }
+
+    public function tlsCert(): ?string
+    {
+        return $this->optionalString('tlsCert');
+    }
+
+    public function tlsKey(): ?string
+    {
+        return $this->optionalString('tlsKey');
+    }
+
     public function bindDnTemplate(): ?string
     {
         return $this->optionalString('bindDnTemplate');

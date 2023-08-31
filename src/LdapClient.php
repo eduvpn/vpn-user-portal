@@ -16,29 +16,38 @@ use Vpn\Portal\Exception\LdapClientException;
 
 class LdapClient
 {
-    private const CONNECTION_OPTIONS = [
-        LDAP_OPT_PROTOCOL_VERSION => 3,
-        LDAP_OPT_REFERRALS => 0,
-        // make sure we use at least TLSv1.2, unfortunately there's no constant
-        // yet for TLSv1.3 exposed in PHP
-        LDAP_OPT_X_TLS_PROTOCOL_MIN => LDAP_OPT_X_TLS_PROTOCOL_TLS1_2,
-    ];
-
     /** @var resource */
     private $ldapResource;
 
-    public function __construct(string $ldapUri)
+    public function __construct(string $ldapUri, ?string $tlsCa = null, ?string $tlsCert = null, ?string $tlsKey = null)
     {
         if (!extension_loaded('ldap')) {
             throw new RuntimeException('"ldap" PHP extension not available');
         }
-        if (false === $ldapResource = ldap_connect($ldapUri)) {
-            throw new LdapClientException(sprintf('unacceptable LDAP URI "%s"', $ldapUri));
+
+        $ldapOptions = [
+            LDAP_OPT_PROTOCOL_VERSION => 3,
+            LDAP_OPT_REFERRALS => 0,
+        ];
+
+        if (null !== $tlsCa) {
+            $ldapOptions[LDAP_OPT_X_TLS_CACERTFILE] = $tlsCa;
         }
-        foreach (self::CONNECTION_OPTIONS as $k => $v) {
-            if (!ldap_set_option($ldapResource, $k, $v)) {
+        if (null !== $tlsCert) {
+            $ldapOptions[LDAP_OPT_X_TLS_CERTFILE] = $tlsCert;
+        }
+        if (null !== $tlsKey) {
+            $ldapOptions[LDAP_OPT_X_TLS_KEYFILE] = $tlsKey;
+        }
+
+        foreach ($ldapOptions as $k => $v) {
+            if (!ldap_set_option(null, $k, $v)) {
                 throw new LdapClientException(sprintf('unable to set LDAP option "%d"', $k));
             }
+        }
+
+        if (false === $ldapResource = ldap_connect($ldapUri)) {
+            throw new LdapClientException(sprintf('invalid LDAP URI "%s"', $ldapUri));
         }
         $this->ldapResource = $ldapResource;
     }

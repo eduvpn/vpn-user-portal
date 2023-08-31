@@ -31,7 +31,10 @@ class LdapCredentialValidator implements CredentialValidatorInterface
         $this->ldapAuthConfig = $ldapAuthConfig;
         $this->logger = $logger;
         $this->ldapClient = new LdapClient(
-            $ldapAuthConfig->ldapUri()
+            $ldapAuthConfig->ldapUri(),
+            $ldapAuthConfig->tlsCa(),
+            $ldapAuthConfig->tlsCert(),
+            $ldapAuthConfig->tlsKey()
         );
     }
 

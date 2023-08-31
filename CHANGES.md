@@ -16,6 +16,8 @@
 - update translations of "Issues" in various languages
 - **EXPERIMENTAL** support to make it possible to configure WireGuard MTU 
   ([#151](https://todo.sr.ht/~eduvpn/server/151))
+- add TLS configuration for the LDAP client, allow specifying CA, client 
+  certificate and key
 
 ## 3.3.6 (2023-05-23)
 - consider allocated WireGuard IPs for alerting 
