@@ -5,7 +5,7 @@
 - allow search domains for VPN connections where all traffic is sent over the
   VPN ([#152](https://todo.sr.ht/~eduvpn/server/152))
 - improve `LdapClient`
-- Added catalan (`ca-ES`) translation for the user portal
+- Added Catalan (`ca-ES`) translation for the user portal
 - show unsupported configuration keys used in the configuration file
   ([#147](https://todo.sr.ht/~eduvpn/server/147))
 - remove database query from `DisabledUserHook`
@@ -14,7 +14,7 @@
 - limit allowed OAuth scopes for the VPN clients to only `config`
 - `ConnectionManager:oDisconnect` does not use `userId` parameter, remove it
 - update translations of "Issues" in various languages
-- **EXPIRMENTAL** support to make it possible to configure WireGuard MTU 
+- **EXPERIMENTAL** support to make it possible to configure WireGuard MTU 
   ([#151](https://todo.sr.ht/~eduvpn/server/151))
 
 ## 3.3.6 (2023-05-23)
