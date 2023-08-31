@@ -64,7 +64,7 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
         // obtained permissions to the user object
         $permissionList = $userInfo->permissionList();
         foreach ($this->permissionSourceList as $permissionSource) {
-            $permissionList = array_merge($permissionList, $permissionSource->get($userInfo->userId()));
+            $permissionList = array_merge($permissionList, $permissionSource->attributesForUser($userInfo->userId()));
         }
         $permissionList = array_values(array_unique($permissionList));
         $userInfo->setPermissionList($permissionList);

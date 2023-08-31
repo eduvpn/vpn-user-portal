@@ -14,7 +14,12 @@ namespace Vpn\Portal;
 interface PermissionSourceInterface
 {
     /**
+     * Get current attributes for users directly from the source.
+     *
+     * If no attributes are available, or the user no longer exists, an empty
+     * array is returned.
+     *
      * @return array<string>
      */
-    public function get(string $userId): array;
+    public function attributesForUser(string $userId): array;
 }
