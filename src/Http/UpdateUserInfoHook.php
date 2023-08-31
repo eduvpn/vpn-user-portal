@@ -53,16 +53,21 @@ class UpdateUserInfoHook extends AbstractHook implements HookInterface
                 // I do not know why this works...
                 return $this->authModule->triggerLogout($request);
             }
-            // use the user's information from the database so we restore all
-            // the (extra) permissions we obtained during login
+
+            // here we take the information from the DB as it may also contain
+            // permissions obtained from the additional permission source(s)
+            // XXX: is this more than just permissions? I guess not, so we could
+            // simply override the permissions without needing to replace the
+            // entire object
             $userInfo = $dbUserInfo;
 
             return null;
         }
 
+        $permissionList = $userInfo->rawPermissionList();
+
         // loop over registered additional permission sources and add the
         // obtained permissions to the user object
-        $permissionList = $userInfo->permissionList();
         foreach ($this->permissionSourceList as $permissionSource) {
             $permissionList = array_merge($permissionList, $permissionSource->attributesForUser($userInfo->userId()));
         }

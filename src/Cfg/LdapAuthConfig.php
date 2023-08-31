@@ -47,19 +47,19 @@ class LdapAuthConfig
         return $this->optionalString('bindDnTemplate');
     }
 
-    public function baseDn(): ?string
+    public function baseDn(): string
     {
-        return $this->optionalString('baseDn');
+        return $this->requireString('baseDn');
     }
 
-    public function userFilterTemplate(): ?string
+    public function userFilterTemplate(): string
     {
-        return $this->optionalString('userFilterTemplate');
+        return $this->requireString('userFilterTemplate');
     }
 
-    public function userIdAttribute(): ?string
+    public function userIdAttribute(): string
     {
-        return $this->optionalString('userIdAttribute');
+        return $this->requireString('userIdAttribute');
     }
 
     public function addRealm(): ?string

@@ -59,7 +59,7 @@ class UpdateUserInfoHookTest extends TestCase
             $userInfo
         );
 
-        $this->assertSame(['example-permission'], $userInfo->permissionList());
+        $this->assertSame(['S!isMemberOf!example-permission', 'example-permission'], $userInfo->permissionList());
     }
 
     public function testStaticPermissionSourceNoPermission(): void
@@ -75,12 +75,22 @@ class UpdateUserInfoHookTest extends TestCase
 
     public function testStaticPermissionSourceExistingPermission(): void
     {
-        $userInfo = new UserInfo('foo', ['p1', 'p2']);
+        $userInfo = new UserInfo('foo', ['A!xyz!p1', 'A!def!p2']);
         $this->updateUserInfoHook->afterAuth(
             new Request([], [], [], []),
             $userInfo
         );
 
-        $this->assertSame(['p1', 'p2', 'example-permission'], $userInfo->permissionList());
+        $this->assertSame(
+            [
+                'A!xyz!p1',
+                'p1',
+                'A!def!p2',
+                'p2',
+                'S!isMemberOf!example-permission',
+                'example-permission',
+            ],
+            $userInfo->permissionList()
+        );
     }
 }

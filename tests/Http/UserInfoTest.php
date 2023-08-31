@@ -52,7 +52,7 @@ final class UserInfoTest extends TestCase
             'foo',
             [
                 'https://eduvpn.org/expiry#P1Y',
-                'https://eduvpn.org/expiry#PT12H',
+                'A!eduPersonEntitlement!https://eduvpn.org/expiry#PT12H',
             ]
         );
         $this->assertSame(
@@ -62,5 +62,18 @@ final class UserInfoTest extends TestCase
             ],
             $userInfo->sessionExpiry()
         );
+    }
+
+    public function testPermissionListPrefixContext(): void
+    {
+        $userInfo = new UserInfo(
+            'foo',
+            [
+                'A!xyz!foo',
+                'S!isMemberOf!bar',
+            ]
+        );
+        $this->assertSame(['A!xyz!foo', 'foo', 'S!isMemberOf!bar', 'bar'], $userInfo->permissionList());
+        $this->assertSame(['A!xyz!foo', 'S!isMemberOf!bar'], $userInfo->rawPermissionList());
     }
 }

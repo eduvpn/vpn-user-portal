@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Vpn\Portal;
 
 use RuntimeException;
+use UnexpectedValueException;
 use Vpn\Portal\Exception\LdapClientException;
 
 class LdapClient
@@ -28,6 +29,9 @@ class LdapClient
         $ldapOptions = [
             LDAP_OPT_PROTOCOL_VERSION => 3,
             LDAP_OPT_REFERRALS => 0,
+            // make sure we use at least TLSv1.2, unfortunately there's no constant
+            // yet for TLSv1.3 exposed in PHP
+            LDAP_OPT_X_TLS_PROTOCOL_MIN => LDAP_OPT_X_TLS_PROTOCOL_TLS1_2,
         ];
 
         if (null !== $tlsCa) {
@@ -49,6 +53,7 @@ class LdapClient
         if (false === $ldapResource = ldap_connect($ldapUri)) {
             throw new LdapClientException(sprintf('invalid LDAP URI "%s"', $ldapUri));
         }
+        
         $this->ldapResource = $ldapResource;
     }
 
@@ -60,7 +65,7 @@ class LdapClient
     public function bind(?string $bindUser = null, ?string $bindPass = null): void
     {
         if (!ldap_bind($this->ldapResource, $bindUser, $bindPass)) {
-            throw new LdapClientException(sprintf('LDAP error: (%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
+            throw new LdapClientException(sprintf('(%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
         }
     }
 
@@ -77,9 +82,9 @@ class LdapClient
     /**
      * @param array<string> $attributeList
      *
-     * @return array{dn:string,result:array<string,array<string>>}
+     * @return ?array{dn:string,result:array<string,array<string>>}
      */
-    public function search(string $baseDn, ?string $searchFilter, array $attributeList = []): array
+    public function search(string $baseDn, ?string $searchFilter, array $attributeList = []): ?array
     {
         // for efficienty purposes, if the of requested attributes is empty,
         // we simply request 'dn', even though it is always part of the
@@ -102,51 +107,50 @@ class LdapClient
             10                                  // timelimit
         );
         if (false === $searchResource) {
-            throw new LdapClientException(sprintf('LDAP error: (%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
+            throw new LdapClientException(sprintf('(%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
         }
+
         if (is_array($searchResource)) {
             // ldap_search can return array when doing parallel search, as we
             // don't do that this should not occur, but just making sure and
             // to silence vimeo/psalm
             // @see https://www.php.net/ldap_search
-            throw new LdapClientException('multiple results returned, expecting only one');
+            throw new UnexpectedValueException('we only expected 1 result from ldap_search');
         }
 
-        $ldapEntries = ldap_get_entries($this->ldapResource, $searchResource);
-        if (false === $ldapEntries) {
-            throw new LdapClientException(sprintf('LDAP error: (%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
+        if (0 === $resultCount = ldap_count_entries($this->ldapResource, $searchResource)) {
+            // no results for this search
+            return null;
         }
 
-        // parse the results and return them in a format we can easily use
-        if (!isset($ldapEntries['count']) || 1 !== $ldapEntries['count']) {
-            throw new LdapClientException(sprintf('expected exactly 1 result, not less, not more, we got "%d"', $ldapEntries['count']));
+        if (1 !== $resultCount) {
+            throw new LdapClientException(sprintf('we require exactly 1 result, got %d results', $resultCount));
         }
 
-        if (!isset($ldapEntries[0]['dn']) || !is_string($ldapEntries[0]['dn'])) {
-            throw new LdapClientException('no "dn" in the result or not `string`');
+        if (false === $ldapEntry = ldap_first_entry($this->ldapResource, $searchResource)) {
+            throw new LdapClientException(sprintf('(%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
         }
 
-        $resultData = [
-            'dn' => $ldapEntries[0]['dn'],
-        ];
+        if (false === $entryDn = ldap_get_dn($this->ldapResource, $ldapEntry)) {
+            throw new LdapClientException('unable to determine "dn"');
+        }
 
         $attributeNameValues = [];
         foreach ($attributeList as $attributeName) {
             if ('dn' === $attributeName) {
-                // we always have dn (see above), so if this is (also)
-                // explicitly requested we ignore it
                 continue;
             }
-
-            if (isset($ldapEntries[0][strtolower($attributeName)][0])) {
-                if (!array_key_exists($attributeName, $attributeNameValues)) {
-                    $attributeNameValues[$attributeName] = [];
-                }
-                $attributeNameValues[$attributeName] = array_merge($attributeNameValues[$attributeName], array_slice($ldapEntries[0][strtolower($attributeName)], 1));
+            if (false === $attributeValues = ldap_get_values($this->ldapResource, $ldapEntry, $attributeName)) {
+                // we do not have this attribute
+                continue;
             }
+            unset($attributeValues['count']);
+            $attributeNameValues[$attributeName] = array_values($attributeValues);
         }
-        $resultData['result'] = $attributeNameValues;
 
-        return $resultData;
+        return [
+            'dn' => $entryDn,
+            'result' => $attributeNameValues,
+        ];
     }
 }

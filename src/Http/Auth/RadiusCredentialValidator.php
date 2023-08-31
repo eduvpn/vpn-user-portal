@@ -108,10 +108,13 @@ class RadiusCredentialValidator implements CredentialValidatorInterface
                 if ($permissionAttribute !== $radiusAttribute['attr']) {
                     continue;
                 }
-                $permissionList[] = $radiusAttribute['data'];
+                $permissionList[(string) $permissionAttribute] = $radiusAttribute['data'];
             }
         }
 
-        return new UserInfo($authUser, $permissionList);
+        return new UserInfo(
+            $authUser,
+            AbstractAuthModule::flattenPermissionList($permissionList)
+        );
     }
 }

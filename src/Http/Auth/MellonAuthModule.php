@@ -47,13 +47,13 @@ class MellonAuthModule extends AbstractAuthModule
         $permissionList = [];
         foreach ($permissionAttributeList as $permissionAttribute) {
             if (null !== $permissionAttributeValue = $request->optionalHeader($permissionAttribute)) {
-                $permissionList = array_merge($permissionList, explode(';', $permissionAttributeValue));
+                $permissionList[$permissionAttribute] = explode(';', $permissionAttributeValue);
             }
         }
 
         return new UserInfo(
             $userId,
-            $permissionList
+            AbstractAuthModule::flattenPermissionList($permissionList)
         );
     }
 

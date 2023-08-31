@@ -31,13 +31,13 @@ class ShibAuthModule extends AbstractAuthModule
         $permissionList = [];
         foreach ($this->config->permissionAttributeList() as $permissionAttribute) {
             if (null !== $permissionAttributeValue = $request->optionalHeader($permissionAttribute)) {
-                $permissionList = array_merge($permissionList, explode(';', $permissionAttributeValue));
+                $permissionList[$permissionAttribute] = explode(';', $permissionAttributeValue);
             }
         }
 
         return new UserInfo(
             $request->requireHeader($this->config->userIdAttribute()),
-            $permissionList
+            AbstractAuthModule::flattenPermissionList($permissionList)
         );
     }
 

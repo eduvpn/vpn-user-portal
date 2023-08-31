@@ -30,15 +30,19 @@ class OidcAuthModule extends AbstractAuthModule
     {
         $permissionList = [];
         foreach ($this->config->permissionAttributeList() as $permissionAttribute) {
-            if (null !== $permissionAttributeValue = $request->optionalHeader($permissionAttribute)) {
-                // OIDCClaimDelimiter for multi-valued claims (default is ",")
-                $permissionList = array_merge($permissionList, explode(',', $permissionAttributeValue));
+            // mod_openidc_auth adds the "OIDC_CLAIM_" prefix, test for that as
+            // well if the admin did not specifically add that
+            foreach (['', 'OIDC_CLAIM_'] as $claimPrefix) {
+                if (null !== $permissionAttributeValue = $request->optionalHeader($claimPrefix.$permissionAttribute)) {
+                    // OIDCClaimDelimiter for multi-valued claims (default is ",")
+                    $permissionList[$permissionAttribute] = explode(',', $permissionAttributeValue);
+                }
             }
         }
 
         return new UserInfo(
             $request->requireHeader($this->config->userIdAttribute()),
-            $permissionList
+            AbstractAuthModule::flattenPermissionList($permissionList)
         );
     }
 

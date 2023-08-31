@@ -410,7 +410,7 @@ class Storage
         );
         $stmt->bindValue(':user_id', $userInfo->userId(), PDO::PARAM_STR);
         $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':permission_list', self::permissionListToString($userInfo->permissionList()), PDO::PARAM_STR);
+        $stmt->bindValue(':permission_list', self::permissionListToString($userInfo->rawPermissionList()), PDO::PARAM_STR);
         $stmt->bindValue(':auth_data', $userInfo->authData(), PDO::PARAM_STR | PDO::PARAM_NULL);
         $stmt->bindValue(':is_disabled', false, PDO::PARAM_BOOL);
         $stmt->execute();
@@ -510,7 +510,7 @@ class Storage
         );
         $stmt->bindValue(':user_id', $userInfo->userId(), PDO::PARAM_STR);
         $stmt->bindValue(':last_seen', $lastSeen->format(DateTimeImmutable::ATOM), PDO::PARAM_STR);
-        $stmt->bindValue(':permission_list', self::permissionListToString($userInfo->permissionList()), PDO::PARAM_STR);
+        $stmt->bindValue(':permission_list', self::permissionListToString($userInfo->rawPermissionList()), PDO::PARAM_STR);
         $stmt->bindValue(':auth_data', $userInfo->authData(), PDO::PARAM_STR | PDO::PARAM_NULL);
 
         $stmt->execute();

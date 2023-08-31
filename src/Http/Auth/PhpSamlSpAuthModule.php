@@ -48,7 +48,7 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
 
         return new UserInfo(
             $samlAttributes[$userIdAttribute][0],
-            $this->getPermissionList($samlAttributes)
+            AbstractAuthModule::flattenPermissionList($samlAttributes, $this->config->permissionAttributeList())
         );
     }
 
@@ -72,22 +72,5 @@ class PhpSamlSpAuthModule extends AbstractAuthModule
         }
 
         return $authOptions;
-    }
-
-    /**
-     * @param array<string,array<string>> $samlAttributes
-     *
-     * @return array<string>
-     */
-    private function getPermissionList(array $samlAttributes): array
-    {
-        $permissionList = [];
-        foreach ($this->config->permissionAttributeList() as $permissionAttribute) {
-            if (\array_key_exists($permissionAttribute, $samlAttributes)) {
-                $permissionList = array_merge($permissionList, $samlAttributes[$permissionAttribute]);
-            }
-        }
-
-        return $permissionList;
     }
 }

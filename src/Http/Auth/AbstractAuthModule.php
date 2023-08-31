@@ -41,4 +41,30 @@ abstract class AbstractAuthModule implements AuthModuleInterface
         // SAML authentication to override this method
         return new RedirectResponse($request->requireReferrer());
     }
+
+    /**
+     * @param array<string,array<string>> $attributeNameValueList
+     * @param ?array<string> $attributeNameFilter
+     *
+     * @return array<string>
+     */
+    public static function flattenPermissionList(array $attributeNameValueList, ?array $attributeNameFilter = null, string $authPrefix = 'A'): array
+    {
+        $permissionList = [];
+        foreach ($attributeNameValueList as $attributeName => $attributeValueList) {
+            if (null !== $attributeNameFilter && !in_array($attributeName, $attributeNameFilter, true)) {
+                continue;
+            }
+
+            $permissionList = array_merge(
+                $permissionList,
+                array_map(
+                    fn (string $attributeValue): string => sprintf('%s!%s!%s', $authPrefix, $attributeName, $attributeValue),
+                    $attributeValueList
+                )
+            );
+        }
+
+        return $permissionList;
+    }
 }

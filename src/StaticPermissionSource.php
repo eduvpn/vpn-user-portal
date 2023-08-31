@@ -11,13 +11,17 @@ declare(strict_types=1);
 
 namespace Vpn\Portal;
 
+use Vpn\Portal\Http\Auth\AbstractAuthModule;
+
 class StaticPermissionSource implements PermissionSourceInterface
 {
     private string $staticPermissionFile;
+    private string $attributeName;
 
-    public function __construct(string $staticPermissionFile)
+    public function __construct(string $staticPermissionFile, string $attributeName = 'isMemberOf')
     {
         $this->staticPermissionFile = $staticPermissionFile;
+        $this->attributeName = $attributeName;
     }
 
     /**
@@ -48,6 +52,12 @@ class StaticPermissionSource implements PermissionSourceInterface
             }
         }
 
-        return array_values(array_unique($permissionList));
+        return AbstractAuthModule::flattenPermissionList(
+            [
+                $this->attributeName => array_values(array_unique($permissionList)),
+            ],
+            null,
+            'S'
+        );
     }
 }
