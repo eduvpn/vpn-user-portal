@@ -52,10 +52,10 @@ class ServerConfig
 
         $this->registerPublicKey($nodeNumber, $publicKey);
 
-        if (null !== $useMtu = $this->wgConfig->useMtu()) {
+        if (null !== $setMtu = $this->wgConfig->setMtu()) {
             return <<< EOF
                 [Interface]
-                MTU = {$useMtu}
+                MTU = {$setMtu}
                 Address = {$ipList}
                 ListenPort = {$this->wgConfig->listenPort()}
                 PrivateKey = {{PRIVATE_KEY}}

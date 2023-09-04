@@ -90,8 +90,8 @@ class ClientConfig implements ClientConfigInterface
             '',
         ];
         $output[] = '[Interface]';
-        if (null !== $useMtu = $this->wgConfig->useMtu()) {
-            $output[] = 'MTU = '.(string) $useMtu;
+        if (null !== $setMtu = $this->wgConfig->setMtu()) {
+            $output[] = 'MTU = '.(string) $setMtu;
         }
         if (null !== $this->privateKey) {
             $output[] = 'PrivateKey = '.$this->privateKey;
