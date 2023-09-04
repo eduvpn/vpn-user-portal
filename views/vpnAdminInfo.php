@@ -83,7 +83,9 @@
                 <td>
                     <dl>
                         <dt><?=$this->t('Port'); ?></dt><dd><code><?=$this->e((string) $serverInfo->wgConfig()->listenPort()); ?></code></dd>
-                        <dt><?=$this->t('MTU'); ?></dt><dd><code><?=$this->e((string) $serverInfo->wgConfig()->setMtu()); ?></code></dd>
+<?php if (null !== $useMtu = $serverInfo->wgConfig()->useMtu()): ?>
+                        <dt><?=$this->t('MTU'); ?></dt><dd><code><?=$this->e((string) $useMtu); ?></code></dd>
+<?php endif; ?>
                     </dl>
                 </td>
             </tr>
