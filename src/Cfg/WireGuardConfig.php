@@ -22,9 +22,9 @@ class WireGuardConfig
         $this->configData = $configData;
     }
 
-    public function useMtu(): ?int
+    public function setMtu(): int
     {
-        return $this->optionalInt('useMtu');
+        return $this->requireInt('setMtu', 1392);
     }
 
     public function listenPort(): int

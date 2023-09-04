@@ -14,8 +14,9 @@
 - limit allowed OAuth scopes for the VPN clients to only `config`
 - `ConnectionManager:oDisconnect` does not use `userId` parameter, remove it
 - update translations of "Issues" in various languages
-- **EXPERIMENTAL** support to make it possible to configure WireGuard MTU 
+- make it possible to configure WireGuard interface MTU 
   ([#151](https://todo.sr.ht/~eduvpn/server/151))
+  - set default WireGuard interface MTU to 1392
 - add TLS configuration for the LDAP client, allow specifying CA, client 
   certificate and key ([#154](https://todo.sr.ht/~eduvpn/server/154))
 
