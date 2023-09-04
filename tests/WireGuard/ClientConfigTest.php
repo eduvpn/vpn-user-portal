@@ -53,6 +53,7 @@ final class ClientConfigTest extends TestCase
                 # Expires: 2022-11-11T11:11:11+00:00
 
                 [Interface]
+                MTU = 1392
                 Address = 10.42.42.5/24,fd42::5/64
                 DNS = 10.42.42.1,9.9.9.9,fd42::1
 
