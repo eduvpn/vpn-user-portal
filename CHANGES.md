@@ -4,7 +4,6 @@
 - update `fkooman/oauth2-server` dependency (7.7.0, 7.8.0)
 - allow search domains for VPN connections where all traffic is sent over the
   VPN ([#152](https://todo.sr.ht/~eduvpn/server/152))
-- improve `LdapClient`
 - Added Catalan (`ca-ES`) translation for the user portal
 - show unsupported configuration keys used in the configuration file
   ([#147](https://todo.sr.ht/~eduvpn/server/147))
@@ -14,10 +13,13 @@
 - limit allowed OAuth scopes for the VPN clients to only `config`
 - `ConnectionManager:oDisconnect` does not use `userId` parameter, remove it
 - update translations of "Issues" in various languages
+- LDAP improvements
+  - always require `userIdAttribute` to be set ([announcement](https://lists.geant.org/sympa/arc/eduvpn-deploy/2023-08/msg00004.html))
+  - add TLS configuration for the LDAP client, allow specifying CA, client 
+    certificate and key ([#154](https://todo.sr.ht/~eduvpn/server/154))
 - **EXPERIMENTAL** support to make it possible to configure WireGuard MTU 
-  ([#151](https://todo.sr.ht/~eduvpn/server/151))
-- add TLS configuration for the LDAP client, allow specifying CA, client 
-  certificate and key ([#154](https://todo.sr.ht/~eduvpn/server/154))
+  ([#151](https://todo.sr.ht/~eduvpn/server/151), 
+  [documentation](https://docs.eduvpn.org/server/v3/wireguard.html#mtu))
 
 ## 3.3.6 (2023-05-23)
 - consider allocated WireGuard IPs for alerting 

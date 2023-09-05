@@ -21,9 +21,7 @@ use Vpn\Portal\LoggerInterface;
 class LdapCredentialValidator implements CredentialValidatorInterface
 {
     private LdapAuthConfig $ldapAuthConfig;
-
     private LoggerInterface $logger;
-
     private LdapClient $ldapClient;
 
     public function __construct(LdapAuthConfig $ldapAuthConfig, LoggerInterface $logger)
@@ -39,43 +37,39 @@ class LdapCredentialValidator implements CredentialValidatorInterface
     }
 
     /**
-     * @throws \Vpn\Portal\Http\Auth\Exception\CredentialValidatorException
+     * Validate a user's credentials are return the (normalized) internal
+     * user ID to use.
      */
     public function validate(string $authUser, string $authPass): UserInfo
     {
-
-        // add "realm" after user name if none is specified
-        if (null !== $addRealm = $this->ldapAuthConfig->addRealm()) {
-            if (false === strpos($authUser, '@')) {
-                $authUser .= '@'.$addRealm;
-            }
-        }
+        $bindDn = $this->authUserToDn($authUser);
 
         try {
-            // get bind DN either from template, or from anonymous bind + search
-            if (false === $bindDn = $this->getBindDn($authUser)) {
-                throw new CredentialValidatorException('unable to find a DN to bind with');
-            }
-
             $this->ldapClient->bind($bindDn, $authPass);
-            $baseDn = $this->ldapAuthConfig->baseDn() ?? $bindDn;
-            $userFilter = null;
-            if (null !== $userFilterTemplate = $this->ldapAuthConfig->userFilterTemplate()) {
-                $userFilter = str_replace('{{UID}}', LdapClient::escapeFilter($authUser), $userFilterTemplate);
-            }
 
-            $userId = $authUser;
-            if (null !== $userIdAttribute = $this->ldapAuthConfig->userIdAttribute()) {
-                // normalize the userId by querying it from the LDAP, benefits:
-                // (1) we get the exact same capitalization as in the LDAP
-                // (2) we can take a completely different attribute as the user
-                //     id, e.g. mail, ipaUniqueID, ...
-                $userId = $this->getUserId($baseDn, $userFilter, $userIdAttribute);
+            // we "normalize" the `userId` by also requesting the
+            // `userIdAttribute` from the directory together with the
+            // permission attribute(s) in order to be able to uniquely identify
+            // the user as LDAP authentication is "case insenstive"
+            $userIdAttribute = $this->ldapAuthConfig->userIdAttribute();
+            $attributeNameValueList = $this->attributesForDn(
+                $bindDn,
+                array_merge(
+                    [$userIdAttribute],
+                    $this->ldapAuthConfig->permissionAttributeList()
+                )
+            );
+
+            // update userId with the "normalized" value from the LDAP
+            // server
+            if (!isset($attributeNameValueList[$userIdAttribute][0])) {
+                throw new CredentialValidatorException(sprintf('unable to find userIdAttribute (=%s) in LDAP result', $userIdAttribute));
             }
+            $userId = $attributeNameValueList[$userIdAttribute][0];
 
             return new UserInfo(
                 $userId,
-                $this->getPermissionList($baseDn, $userFilter, $this->ldapAuthConfig->permissionAttributeList())
+                self::flattenPermissionList($attributeNameValueList, $this->ldapAuthConfig->permissionAttributeList())
             );
         } catch (LdapClientException $e) {
             // convert LDAP errors into `CredentialValidatorException`
@@ -83,77 +77,85 @@ class LdapCredentialValidator implements CredentialValidatorInterface
         }
     }
 
-    private function getUserId(string $baseDn, ?string $userFilter, string $userIdAttribute): string
+    private function authUserToDn(string $authUser): string
     {
-        $ldapEntries = $this->ldapClient->search(
-            $baseDn,
-            $userFilter,
-            [$userIdAttribute]
-        );
+        try {
+            // add "realm" after user name if none is specified
+            if (null !== $addRealm = $this->ldapAuthConfig->addRealm()) {
+                if (false === strpos($authUser, '@')) {
+                    $authUser .= '@'.$addRealm;
+                }
+            }
 
-        if (!isset($ldapEntries['result'][$userIdAttribute][0])) {
-            throw new CredentialValidatorException(sprintf('user ID attribute "%s" not available in LDAP response', $userIdAttribute));
+            if (null !== $bindDnTemplate = $this->ldapAuthConfig->bindDnTemplate()) {
+                // we have a bind DN template to bind to the LDAP with the user's
+                // provided "Username", so use that
+                return str_replace('{{UID}}', LdapClient::escapeDn($authUser), $bindDnTemplate);
+            }
+
+            // Do (anonymous) LDAP bind to find the DN based on userFilterTemplate
+            $this->ldapClient->bind($this->ldapAuthConfig->searchBindDn(), $this->ldapAuthConfig->searchBindPass());
+            $userFilter = str_replace('{{UID}}', LdapClient::escapeFilter($authUser), $this->ldapAuthConfig->userFilterTemplate());
+            if (null === $ldapEntries = $this->ldapClient->search($this->ldapAuthConfig->baseDn(), $userFilter)) {
+                // XXX better error message, or perhaps return null?!
+                throw new CredentialValidatorException(__CLASS__.': user not found');
+            }
+
+            return $ldapEntries['dn'];
+        } catch (LdapClientException $e) {
+            // convert LDAP errors into `CredentialValidatorException`
+            throw new CredentialValidatorException($e->getMessage());
         }
-
-        return $ldapEntries['result'][$userIdAttribute][0];
     }
 
     /**
-     * @return false|string
+     * Get requested attributes for DN.
+     *
+     * If no attributes are available, or the user no longer exists, an empty
+     * array is returned.
+     *
+     * @param array<string> $attributeNameList
+     *
+     * @return array<string,array<string>>
      */
-    private function getBindDn(string $authUser)
+    private function attributesForDn(string $userDn, array $attributeNameList): array
     {
-        if (null !== $bindDnTemplate = $this->ldapAuthConfig->bindDnTemplate()) {
-            // we have a bind DN template to bind to the LDAP with the user's
-            // provided "Username", so use that
-            return str_replace('{{UID}}', LdapClient::escapeDn($authUser), $bindDnTemplate);
+        if (0 === count($attributeNameList)) {
+            // no attributes requested
+            return [];
         }
 
-        // we do not have a bind DN, so do an (anonymous) LDAP bind + search to
-        // find a DN we can bind with based on userFilterTemplate
-        $this->ldapClient->bind($this->ldapAuthConfig->searchBindDn(), $this->ldapAuthConfig->searchBindPass());
-        if (null === $userFilterTemplate = $this->ldapAuthConfig->userFilterTemplate()) {
-            $this->logger->error('"userFilterTemplate" not set, unable to search for DN');
+        try {
+            if (null === $searchResult = $this->ldapClient->search($userDn, null, $attributeNameList)) {
+                // no such entry, the user might no longer exist
+                return [];
+            }
 
-            return false;
+            return $searchResult['result'];
+        } catch (LdapClientException $e) {
+            // XXX should we log this and return empty array instead?!
+            // convert LDAP errors into `CredentialValidatorException`
+            throw new CredentialValidatorException($e->getMessage());
         }
-        $userFilter = str_replace('{{UID}}', LdapClient::escapeFilter($authUser), $userFilterTemplate);
-        if (null === $baseDn = $this->ldapAuthConfig->baseDn()) {
-            $this->logger->error('"baseDn" not set, unable to search for DN');
-
-            return false;
-        }
-        $ldapEntries = $this->ldapClient->search($baseDn, $userFilter);
-        if (!isset($ldapEntries['dn'])) {
-            // unable to find an entry in this baseDn with this filter
-            return false;
-        }
-
-        return $ldapEntries['dn'];
     }
 
     /**
+     * Return the values from all
+     *
+     * @param array<string,array<string>> $attributeNameValueList
      * @param array<string> $permissionAttributeList
      *
      * @return array<string>
      */
-    private function getPermissionList(string $baseDn, ?string $userFilter, array $permissionAttributeList): array
+    private static function flattenPermissionList(array $attributeNameValueList, array $permissionAttributeList): array
     {
-        if (0 === \count($permissionAttributeList)) {
-            return [];
-        }
-
-        $ldapEntries = $this->ldapClient->search(
-            $baseDn,
-            $userFilter,
-            $permissionAttributeList
-        );
-
         $permissionList = [];
-        foreach ($ldapEntries['result'] as $attributeName => $attributeValueList) {
-            $permissionList = array_merge($permissionList, $attributeValueList);
+        foreach ($permissionAttributeList as $permissionAttribute) {
+            if (array_key_exists($permissionAttribute, $attributeNameValueList)) {
+                $permissionList = array_merge($permissionList, $attributeNameValueList[$permissionAttribute]);
+            }
         }
 
-        return array_values(array_unique($permissionList));
+        return $permissionList;
     }
 }
