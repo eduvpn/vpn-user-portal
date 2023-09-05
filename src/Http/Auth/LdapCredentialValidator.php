@@ -50,7 +50,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
             // we "normalize" the `userId` by also requesting the
             // `userIdAttribute` from the directory together with the
             // permission attribute(s) in order to be able to uniquely identify
-            // the user as LDAP authentication is "case insenstive"
+            // the user as LDAP authentication is "case insensitive"
             $userIdAttribute = $this->ldapAuthConfig->userIdAttribute();
             $attributeNameValueList = $this->attributesForDn(
                 $bindDn,
@@ -60,10 +60,9 @@ class LdapCredentialValidator implements CredentialValidatorInterface
                 )
             );
 
-            // update userId with the "normalized" value from the LDAP
-            // server
+            // update userId with the "normalized" value from the LDAP server
             if (!isset($attributeNameValueList[$userIdAttribute][0])) {
-                throw new CredentialValidatorException(sprintf('unable to find userIdAttribute (=%s) in LDAP result', $userIdAttribute));
+                throw new CredentialValidatorException(sprintf('unable to find userIdAttribute (%s) in LDAP result', $userIdAttribute));
             }
             $userId = $attributeNameValueList[$userIdAttribute][0];
 
@@ -93,15 +92,15 @@ class LdapCredentialValidator implements CredentialValidatorInterface
                 return str_replace('{{UID}}', LdapClient::escapeDn($authUser), $bindDnTemplate);
             }
 
-            // Do (anonymous) LDAP bind to find the DN based on userFilterTemplate
+            // Do (anonymous) LDAP bind to find the DN based on
+            // userFilterTemplate
             $this->ldapClient->bind($this->ldapAuthConfig->searchBindDn(), $this->ldapAuthConfig->searchBindPass());
             $userFilter = str_replace('{{UID}}', LdapClient::escapeFilter($authUser), $this->ldapAuthConfig->userFilterTemplate());
-            if (null === $ldapEntries = $this->ldapClient->search($this->ldapAuthConfig->baseDn(), $userFilter)) {
-                // XXX better error message, or perhaps return null?!
-                throw new CredentialValidatorException(__CLASS__.': user not found');
+            if (null === $ldapResult = $this->ldapClient->search($this->ldapAuthConfig->baseDn(), $userFilter)) {
+                throw new CredentialValidatorException(sprintf('no such user "%s"', $authUser));
             }
 
-            return $ldapEntries['dn'];
+            return $ldapResult['dn'];
         } catch (LdapClientException $e) {
             // convert LDAP errors into `CredentialValidatorException`
             throw new CredentialValidatorException($e->getMessage());
@@ -127,20 +126,18 @@ class LdapCredentialValidator implements CredentialValidatorInterface
 
         try {
             if (null === $searchResult = $this->ldapClient->search($userDn, null, $attributeNameList)) {
-                // no such entry, the user might no longer exist
-                return [];
+                throw new CredentialValidatorException(sprintf('no such DN "%s"', $userDn));
             }
 
             return $searchResult['result'];
         } catch (LdapClientException $e) {
-            // XXX should we log this and return empty array instead?!
             // convert LDAP errors into `CredentialValidatorException`
             throw new CredentialValidatorException($e->getMessage());
         }
     }
 
     /**
-     * Return the values from all
+     * Flatten the array by merging the values of all attributes in one array.
      *
      * @param array<string,array<string>> $attributeNameValueList
      * @param array<string> $permissionAttributeList
@@ -156,6 +153,6 @@ class LdapCredentialValidator implements CredentialValidatorInterface
             }
         }
 
-        return $permissionList;
+        return array_values(array_unique($permissionList));
     }
 }
