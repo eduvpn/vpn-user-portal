@@ -100,13 +100,12 @@ class LdapClient
         }
         if (is_array($searchResource)) {
             // ldap_search can return an array when doing parallel search, we
-            // don't do that so this should not occur
-            throw new UnexpectedValueException('ldap_search returned `array`, expected `LDAP\Result` or `resource`');
+            // don't do that so this should never occur
+            throw new UnexpectedValueException('ldap_search returned `array`, expected `LDAP\Result|resource`');
         }
 
         if (0 === $resultCount = ldap_count_entries($this->ldapResource, $searchResource)) {
-            // no entries match our search, if base and filter are correct this
-            // means the user does not exist
+            // no entries match our search
             return null;
         }
 
@@ -115,11 +114,13 @@ class LdapClient
         }
 
         if (false === $ldapEntry = ldap_first_entry($this->ldapResource, $searchResource)) {
+            // TODO: does failing ldap_first_entry actually generate "LDAP errors"?
             throw new LdapClientException(sprintf('ldap_first_entry (%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
         }
 
         if (false === $entryDn = ldap_get_dn($this->ldapResource, $ldapEntry)) {
-            throw new LdapClientException('unable to determine "dn"');
+            // TODO: does failing ldap_get_dn actually generate "LDAP errors"?
+            throw new LdapClientException(sprintf('ldap_get_dn (%d) %s', ldap_errno($this->ldapResource), ldap_error($this->ldapResource)));
         }
 
         $attributeNameValues = [];
