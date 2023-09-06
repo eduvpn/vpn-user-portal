@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.3.7 (...)
+## 3.4.0 (2023-09-06)
 - update `fkooman/oauth2-server` dependency (7.7.0, 7.8.0)
 - allow search domains for VPN connections where all traffic is sent over the
   VPN ([#152](https://todo.sr.ht/~eduvpn/server/152))
