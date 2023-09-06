@@ -47,9 +47,12 @@ class LdapAuthConfig
         return $this->optionalString('bindDnTemplate');
     }
 
-    public function baseDn(): string
+    /**
+     * @return array<string>
+     */
+    public function baseDn(): array
     {
-        return $this->requireString('baseDn');
+        return $this->requireStringOrStringArray('baseDn');
     }
 
     public function userFilterTemplate(): string

@@ -96,11 +96,17 @@ class LdapCredentialValidator implements CredentialValidatorInterface
             // userFilterTemplate
             $this->ldapClient->bind($this->ldapAuthConfig->searchBindDn(), $this->ldapAuthConfig->searchBindPass());
             $userFilter = str_replace('{{UID}}', LdapClient::escapeFilter($authUser), $this->ldapAuthConfig->userFilterTemplate());
-            if (null === $ldapResult = $this->ldapClient->search($this->ldapAuthConfig->baseDn(), $userFilter)) {
-                throw new CredentialValidatorException(sprintf('no such user "%s"', $authUser));
+
+            foreach ($this->ldapAuthConfig->baseDn() as $baseDn) {
+                // loop over all DNs
+                if (null === $ldapResult = $this->ldapClient->search($baseDn, $userFilter)) {
+                    continue;
+                }
+
+                return $ldapResult['dn'];
             }
 
-            return $ldapResult['dn'];
+            throw new CredentialValidatorException(sprintf('no such user "%s"', $authUser));
         } catch (LdapClientException $e) {
             // convert LDAP errors into `CredentialValidatorException`
             throw new CredentialValidatorException($e->getMessage());
