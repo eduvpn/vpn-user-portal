@@ -381,12 +381,13 @@ class Tpl implements TplInterface
     public static function supportedLanguages(): array
     {
         return [
-            'en-US' => 'English',
+            'af-ZA' => 'Afrikaans',
             'ar-MA' => 'العربية',
-            'cs-CZ' => 'Čeština',
             'ca-ES' => 'Català',
+            'cs-CZ' => 'Čeština',
             'da-DK' => 'Dansk',
             'de-DE' => 'Deutsch',
+            'en-US' => 'English',
             'es-LA' => 'español',
             'et-EE' => 'Eesti',
             'fr-FR' => 'Français',
@@ -395,10 +396,9 @@ class Tpl implements TplInterface
             'pl-PL' => 'polski',
             'pt-PT' => 'Português',
             'ro-RO' => 'română',
-            'uk-UA' => 'Українська',
             'sk-SK' => 'Slovenčina',
             'sv-SE' => 'svenska',
-            'af-ZA' => 'Afrikaans',
+            'uk-UA' => 'Українська',
         ];
     }
 
