@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.4.1 (...)
+- add `cs-CZ` translation
+- add `sk-SK` translation
+
 ## 3.4.0 (2023-09-06)
 - update `fkooman/oauth2-server` dependency (7.7.0, 7.8.0)
 - allow search domains for VPN connections where all traffic is sent over the
