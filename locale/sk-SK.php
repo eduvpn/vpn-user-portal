@@ -76,6 +76,7 @@ return [
     'Issues' => 'Problémy',
     'Live' => 'Živé',
     'Log' => 'Záznam',
+    //'MTU' => '',
     'Max #Connections' => 'Max. #pripojení',
     'More' => 'Viac',
     'N/A' => 'Nie je dostupné',

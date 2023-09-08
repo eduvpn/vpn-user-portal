@@ -76,6 +76,7 @@ return [
     'Issues' => 'Problem',
     'Live' => 'Live',
     'Log' => 'Logg',
+    //'MTU' => '',
     'Max #Connections' => 'Max #anslutningar',
     'More' => 'Mer',
     'N/A' => 'Ej tillämpligt',

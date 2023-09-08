@@ -76,6 +76,7 @@ return [
     'Issues' => 'Probleme',
     'Live' => 'Live',
     'Log' => 'Jurnal',
+    //'MTU' => '',
     'Max #Connections' => 'Conexiuni maxime',
     'More' => 'Mai mult',
     'N/A' => 'Indisponibil',

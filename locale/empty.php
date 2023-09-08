@@ -76,6 +76,7 @@ return [
     'Issues' => '',
     'Live' => '',
     'Log' => '',
+    'MTU' => '',
     'Max #Connections' => '',
     'More' => '',
     'N/A' => '',

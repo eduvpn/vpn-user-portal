@@ -76,6 +76,7 @@ return [
     'Issues' => 'Probleeme',
     'Live' => 'Käigus',
     'Log' => 'Logi',
+    //'MTU' => '',
     'Max #Connections' => 'Maksimaalselt #ühendusi',
     'More' => 'Veel',
     'N/A' => 'N/A',
