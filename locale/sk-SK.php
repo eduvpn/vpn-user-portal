@@ -149,4 +149,3 @@ return [
     'Your account does not have access to any VPN profile.' => 'Váš účet nemá prístup k žiadnemu VPN profilu.',
     'Your new configuration will expire on %expiryDate%. Come back here to obtain a new configuration after expiry!' => 'Vaša nová konfigurácia vyprší %expiryDate%. Po vypršaní príďte sem pre získanie novej konfigurácie!',
 ];
-
