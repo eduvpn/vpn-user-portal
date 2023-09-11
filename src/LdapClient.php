@@ -62,7 +62,7 @@ class LdapClient
     public function bind(?string $bindUser = null, ?string $bindPass = null): void
     {
         if (!ldap_bind($this->ldapResource, $bindUser, $bindPass)) {
-            throw new LdapClientException(sprintf('ldap_bind (%d) %s (dn=%s)', ldap_errno($this->ldapResource), ldap_error($this->ldapResource), $bindUser));
+            throw new LdapClientException(sprintf('ldap_bind (%d) %s (dn=%s)', ldap_errno($this->ldapResource), ldap_error($this->ldapResource), $bindUser ?? 'NULL'));
         }
     }
 
@@ -96,7 +96,7 @@ class LdapClient
 
         $searchResource = ldap_search($this->ldapResource, $baseDn, $searchFilter ?? '(objectClass=*)', $attributeList, 0, 0, 10);
         if (false === $searchResource) {
-            throw new LdapClientException(sprintf('ldap_search (%d) %s (base_dn=%s,filter=%s)', ldap_errno($this->ldapResource), ldap_error($this->ldapResource), $baseDn, $searchFilter));
+            throw new LdapClientException(sprintf('ldap_search (%d) %s (base_dn=%s,filter=%s)', ldap_errno($this->ldapResource), ldap_error($this->ldapResource), $baseDn, $searchFilter ?? 'NULL'));
         }
         if (is_array($searchResource)) {
             // ldap_search can return an array when doing parallel search, we
