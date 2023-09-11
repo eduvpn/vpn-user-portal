@@ -3,6 +3,11 @@
 ## 3.4.1 (...)
 - add `cs-CZ` translation
 - add `sk-SK` translation
+- fix two LDAP bugs ([#156](https://todo.sr.ht/~eduvpn/server/156))
+  - restore support for `bindDnTemplate` format in common use with Active 
+    Directory
+  - switch to `ldap_read` when obtaining attributes of a DN instead of 
+    performing a subtree search
 
 ## 3.4.0 (2023-09-06)
 - update `fkooman/oauth2-server` dependency (7.7.0, 7.8.0)
