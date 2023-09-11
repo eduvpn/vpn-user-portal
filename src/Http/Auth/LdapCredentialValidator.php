@@ -42,7 +42,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
      */
     public function validate(string $authUser, string $authPass): UserInfo
     {
-        $bindDn = $this->authUserToDn($authUser);
+        $bindDn = $this->authUserToDn($authUser, $authPass);
 
         try {
             $this->ldapClient->bind($bindDn, $authPass);
@@ -76,9 +76,12 @@ class LdapCredentialValidator implements CredentialValidatorInterface
         }
     }
 
-    private function authUserToDn(string $authUser): string
+    private function authUserToDn(string $authUser, string $authPass): string
     {
         try {
+            $searchBindDn = $this->ldapAuthConfig->searchBindDn();
+            $searchBindPass = $this->ldapAuthConfig->searchBindPass();
+
             // add "realm" after user name if none is specified
             if (null !== $addRealm = $this->ldapAuthConfig->addRealm()) {
                 if (false === strpos($authUser, '@')) {
@@ -87,14 +90,21 @@ class LdapCredentialValidator implements CredentialValidatorInterface
             }
 
             if (null !== $bindDnTemplate = $this->ldapAuthConfig->bindDnTemplate()) {
-                // we have a bind DN template to bind to the LDAP with the user's
-                // provided "Username", so use that
-                return str_replace('{{UID}}', LdapClient::escapeDn($authUser), $bindDnTemplate);
+                $userDn = str_replace('{{UID}}', LdapClient::escapeDn($authUser), $bindDnTemplate);
+                if (false !== ldap_explode_dn($userDn, 0)) {
+                    // this is actually a valid LDAP DN, so use it
+                    return $userDn;
+                }
+
+                // we have a "DN" that is probably for Active Directory of the
+                // format EXAMPLE\user or user@example.org, we use the
+                // credentials to figure out the user's own DN
+                $searchBindDn = $userDn;
+                $searchBindPass = $authPass;
             }
 
-            // Do (anonymous) LDAP bind to find the DN based on
-            // userFilterTemplate
-            $this->ldapClient->bind($this->ldapAuthConfig->searchBindDn(), $this->ldapAuthConfig->searchBindPass());
+            // find DN based on userFilterTemplate
+            $this->ldapClient->bind($searchBindDn, $searchBindPass);
             $userFilter = str_replace('{{UID}}', LdapClient::escapeFilter($authUser), $this->ldapAuthConfig->userFilterTemplate());
 
             foreach ($this->ldapAuthConfig->baseDn() as $baseDn) {
