@@ -91,7 +91,7 @@ class LdapClient
      *
      * @return ?array{dn:string,result:array<string,array<string>>}
      */
-    public function search(string $baseDn, ?string $searchFilter, array $attributeList = [], int $queryType = self::LDAP_SCOPE_SUBTREE): ?array
+    public function search(string $baseDn, ?string $searchFilter, array $attributeList = [], int $ldapScope = self::LDAP_SCOPE_SUBTREE): ?array
     {
         // if no attributes are requested, explicitly request "dn", otherwise
         // all attributes/values are returned
@@ -99,7 +99,7 @@ class LdapClient
             $attributeList = ['dn'];
         }
 
-        switch ($queryType) {
+        switch ($ldapScope) {
             case self::LDAP_SCOPE_SUBTREE:
                 $searchResource = ldap_search($this->ldapResource, $baseDn, $searchFilter ?? '(objectClass=*)', $attributeList, 0, 0, 10);
 
@@ -113,7 +113,7 @@ class LdapClient
 
                 break;
             default:
-                throw new DomainException('invalid "queryType"');
+                throw new DomainException('invalid LDAP scope');
         }
         if (false === $searchResource) {
             throw new LdapClientException(sprintf('ldap_search (%d) %s (base_dn=%s,filter=%s)', ldap_errno($this->ldapResource), ldap_error($this->ldapResource), $baseDn, $searchFilter ?? 'NULL'));
