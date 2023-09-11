@@ -141,7 +141,7 @@ class LdapCredentialValidator implements CredentialValidatorInterface
         }
 
         try {
-            if (null === $searchResult = $this->ldapClient->search($userDn, null, $attributeNameList)) {
+            if (null === $searchResult = $this->ldapClient->search($userDn, null, $attributeNameList, LdapClient::LDAP_SCOPE_BASE)) {
                 throw new CredentialValidatorException(sprintf('no such DN "%s"', $userDn));
             }
 

@@ -11,12 +11,17 @@ declare(strict_types=1);
 
 namespace Vpn\Portal;
 
+use DomainException;
 use RuntimeException;
 use UnexpectedValueException;
 use Vpn\Portal\Exception\LdapClientException;
 
 class LdapClient
 {
+    public const LDAP_SCOPE_BASE = 0;
+    public const LDAP_SCOPE_ONELEVEL = 1;
+    public const LDAP_SCOPE_SUBTREE = 2;
+
     /** @var resource */
     private $ldapResource;
 
@@ -86,7 +91,7 @@ class LdapClient
      *
      * @return ?array{dn:string,result:array<string,array<string>>}
      */
-    public function search(string $baseDn, ?string $searchFilter, array $attributeList = []): ?array
+    public function search(string $baseDn, ?string $searchFilter, array $attributeList = [], int $queryType = self::LDAP_SCOPE_SUBTREE): ?array
     {
         // if no attributes are requested, explicitly request "dn", otherwise
         // all attributes/values are returned
@@ -94,7 +99,22 @@ class LdapClient
             $attributeList = ['dn'];
         }
 
-        $searchResource = ldap_search($this->ldapResource, $baseDn, $searchFilter ?? '(objectClass=*)', $attributeList, 0, 0, 10);
+        switch ($queryType) {
+            case self::LDAP_SCOPE_SUBTREE:
+                $searchResource = ldap_search($this->ldapResource, $baseDn, $searchFilter ?? '(objectClass=*)', $attributeList, 0, 0, 10);
+
+                break;
+            case self::LDAP_SCOPE_ONELEVEL:
+                $searchResource = ldap_list($this->ldapResource, $baseDn, $searchFilter ?? '(objectClass=*)', $attributeList, 0, 0, 10);
+
+                break;
+            case self::LDAP_SCOPE_BASE:
+                $searchResource = ldap_read($this->ldapResource, $baseDn, $searchFilter ?? '(objectClass=*)', $attributeList, 0, 0, 10);
+
+                break;
+            default:
+                throw new DomainException('invalid "queryType"');
+        }
         if (false === $searchResource) {
             throw new LdapClientException(sprintf('ldap_search (%d) %s (base_dn=%s,filter=%s)', ldap_errno($this->ldapResource), ldap_error($this->ldapResource), $baseDn, $searchFilter ?? 'NULL'));
         }
