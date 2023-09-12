@@ -18,11 +18,13 @@ use Vpn\Portal\Cfg\LogConfig;
  */
 class LogConnectionHook implements ConnectionHookInterface
 {
+    private Storage $storage;
     private LoggerInterface $logger;
     private LogConfig $logConfig;
 
-    public function __construct(LoggerInterface $logger, LogConfig $logConfig)
+    public function __construct(Storage $storage, LoggerInterface $logger, LogConfig $logConfig)
     {
+        $this->storage = $storage;
         $this->logger = $logger;
         $this->logConfig = $logConfig;
     }
@@ -45,6 +47,16 @@ class LogConnectionHook implements ConnectionHookInterface
     {
         if (!$this->logConfig->originatingIp() || null === $originatingIp) {
             $originatingIp = '*';
+        }
+
+        if ($this->logConfig->authData()) {
+            // also write "auth_data" to syslog if we (still) have the user in
+            // our 'users' table
+            if (null !== $userInfo = $this->storage->userInfo($userId)) {
+                if (null !== $authData = $userInfo->authData()) {
+                    $userId = sprintf('[%s => %s]', $userId, $authData);
+                }
+            }
         }
 
         return sprintf(

@@ -70,7 +70,7 @@ class ConnectionHooks implements ConnectionHookInterface
         $connectionHooks = new self($logger);
         $connectionHooks->add(new ConnectionLogHook($storage));
         if ($config->logConfig()->syslogConnectionEvents()) {
-            $connectionHooks->add(new LogConnectionHook($logger, $config->logConfig()));
+            $connectionHooks->add(new LogConnectionHook($storage, $logger, $config->logConfig()));
         }
         if (null !== $connectScriptPath = $config->connectScriptPath()) {
             $connectionHooks->add(new ScriptConnectionHook($connectScriptPath));
