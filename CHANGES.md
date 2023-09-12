@@ -8,6 +8,8 @@
     Directory
   - switch to `ldap_read` when obtaining attributes of a DN instead of 
     performing a subtree search
+- allow for writing "auth_data" to syslog 
+  ([#140](https://todo.sr.ht/~eduvpn/server/140))
 
 ## 3.4.0 (2023-09-06)
 - update `fkooman/oauth2-server` dependency (7.7.0, 7.8.0)
