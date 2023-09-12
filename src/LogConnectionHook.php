@@ -59,8 +59,8 @@ class LogConnectionHook implements ConnectionHookInterface
             $ipSix
         );
 
-        if (null !== $authData = $this->authData($userId)) {
-            $logMsg .= sprintf(' [AUTH_DATA=%s]', $authData);
+        if ($this->logConfig->authData()) {
+            $logMsg .= sprintf(' [AUTH_DATA=%s]', $this->authData($userId));
         }
 
         return $logMsg;
@@ -81,15 +81,15 @@ class LogConnectionHook implements ConnectionHookInterface
      * the database. It is currently used to store the originating local user
      * before HMAC'ing the user's identifier for use with "Guest Access".
      */
-    private function authData(string $userId): ?string
+    private function authData(string $userId): string
     {
         if (null === $userInfo = $this->storage->userInfo($userId)) {
             // user no longer exists
-            return null;
+            return '';
         }
         if (null === $authData = $userInfo->authData()) {
             // no auth_data for this user
-            return null;
+            return '';
         }
 
         return Base64UrlSafe::encodeUnpadded($authData);

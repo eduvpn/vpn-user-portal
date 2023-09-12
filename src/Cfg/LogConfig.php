@@ -31,4 +31,9 @@ class LogConfig
     {
         return $this->requireBool('originatingIp', false);
     }
+
+    public function authData(): bool
+    {
+        return $this->requireBool('authData', false);
+    }
 }
