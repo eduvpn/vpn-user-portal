@@ -31,14 +31,4 @@ class LogConfig
     {
         return $this->requireBool('originatingIp', false);
     }
-
-    /**
-     * Also write the `auth_data` from the `users` table of the database to
-     * syslog.
-     */
-    public function authData(): bool
-    {
-        return $this->requireBool('authData', false);
-    }
-
 }

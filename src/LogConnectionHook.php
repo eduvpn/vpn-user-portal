@@ -49,17 +49,7 @@ class LogConnectionHook implements ConnectionHookInterface
             $originatingIp = '*';
         }
 
-        if ($this->logConfig->authData()) {
-            // also write "auth_data" to syslog if we (still) have the user in
-            // our 'users' table
-            if (null !== $userInfo = $this->storage->userInfo($userId)) {
-                if (null !== $authData = $userInfo->authData()) {
-                    $userId = sprintf('[%s => %s]', $userId, $authData);
-                }
-            }
-        }
-
-        return sprintf(
+        $logMsg = sprintf(
             'CONNECT %s (%s:%s) [%s => %s,%s]',
             $userId,
             $profileId,
@@ -68,6 +58,12 @@ class LogConnectionHook implements ConnectionHookInterface
             $ipFour,
             $ipSix
         );
+
+        if (null !== $authData = $this->authData($userId)) {
+            $logMsg .= sprintf(' [AUTH_DATA=%s]', $authData);
+        }
+
+        return $logMsg;
     }
 
     private function logDisconnect(string $userId, string $profileId, string $connectionId, string $ipFour, string $ipSix): string
@@ -78,5 +74,24 @@ class LogConnectionHook implements ConnectionHookInterface
             $profileId,
             $connectionId
         );
+    }
+
+    /**
+     * Obtain the Base64 URL safe encoded "auth_data" column for this user from
+     * the database. It is currently used to store the originating local user
+     * before HMAC'ing the user's identifier for use with "Guest Access".
+     */
+    private function authData(string $userId): ?string
+    {
+        if (null === $userInfo = $this->storage->userInfo($userId)) {
+            // user no longer exists
+            return null;
+        }
+        if (null === $authData = $userInfo->authData()) {
+            // no auth_data for this user
+            return null;
+        }
+
+        return Base64UrlSafe::encodeUnpadded($authData);
     }
 }
