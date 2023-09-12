@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.4.1 (...)
+## 3.4.1 (2023-09-12)
 - add `cs-CZ` translation
 - add `sk-SK` translation
 - fix two LDAP bugs ([#156](https://todo.sr.ht/~eduvpn/server/156))
