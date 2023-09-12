@@ -8,7 +8,7 @@
     Directory
   - switch to `ldap_read` when obtaining attributes of a DN instead of 
     performing a subtree search
-- allow for writing "auth_data" to syslog 
+- allow for writing `authData` to syslog 
   ([#140](https://todo.sr.ht/~eduvpn/server/140))
 
 ## 3.4.0 (2023-09-06)
