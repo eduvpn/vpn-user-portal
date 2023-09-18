@@ -13,6 +13,4 @@ namespace Vpn\Portal\Http\Auth\Exception;
 
 use Exception;
 
-class RadiusException extends Exception
-{
-}
+class RadiusException extends Exception {}

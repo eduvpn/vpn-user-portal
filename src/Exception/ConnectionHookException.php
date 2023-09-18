@@ -13,6 +13,4 @@ namespace Vpn\Portal\Exception;
 
 use Exception;
 
-class ConnectionHookException extends Exception
-{
-}
+class ConnectionHookException extends Exception {}

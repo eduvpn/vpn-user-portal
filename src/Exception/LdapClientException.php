@@ -13,6 +13,4 @@ namespace Vpn\Portal\Exception;
 
 use Exception;
 
-class LdapClientException extends Exception
-{
-}
+class LdapClientException extends Exception {}

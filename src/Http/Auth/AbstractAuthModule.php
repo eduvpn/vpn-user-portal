@@ -20,9 +20,7 @@ use Vpn\Portal\Http\UserInfo;
 
 abstract class AbstractAuthModule implements AuthModuleInterface
 {
-    public function init(ServiceInterface $service): void
-    {
-    }
+    public function init(ServiceInterface $service): void {}
 
     public function userInfo(Request $request): ?UserInfo
     {

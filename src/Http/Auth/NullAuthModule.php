@@ -11,6 +11,4 @@ declare(strict_types=1);
 
 namespace Vpn\Portal\Http\Auth;
 
-class NullAuthModule extends AbstractAuthModule
-{
-}
+class NullAuthModule extends AbstractAuthModule {}

@@ -13,6 +13,4 @@ namespace Vpn\Portal\Exception;
 
 use Exception;
 
-class QrCodeException extends Exception
-{
-}
+class QrCodeException extends Exception {}

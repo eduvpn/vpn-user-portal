@@ -13,6 +13,4 @@ namespace Vpn\Portal\Http\Exception;
 
 use Exception;
 
-class NodeApiException extends Exception
-{
-}
+class NodeApiException extends Exception {}

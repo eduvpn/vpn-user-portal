@@ -13,6 +13,4 @@ namespace Vpn\Portal\OpenVpn\Exception;
 
 use Exception;
 
-class ClientConfigException extends Exception
-{
-}
+class ClientConfigException extends Exception {}

@@ -13,6 +13,4 @@ namespace Vpn\Portal\Exception;
 
 use Exception;
 
-class ServerConfigException extends Exception
-{
-}
+class ServerConfigException extends Exception {}

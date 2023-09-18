@@ -13,6 +13,4 @@ namespace Vpn\Portal\OpenVpn\CA\Exception;
 
 use Exception;
 
-class CaException extends Exception
-{
-}
+class CaException extends Exception {}

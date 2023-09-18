@@ -21,15 +21,9 @@ class NullSession implements SessionInterface
         return null;
     }
 
-    public function set(string $sessionKey, string $sessionValue): void
-    {
-    }
+    public function set(string $sessionKey, string $sessionValue): void {}
 
-    public function remove(string $sessionKey): void
-    {
-    }
+    public function remove(string $sessionKey): void {}
 
-    public function destroy(): void
-    {
-    }
+    public function destroy(): void {}
 }

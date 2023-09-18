@@ -13,6 +13,4 @@ namespace Vpn\Portal\Exception;
 
 use Exception;
 
-class TplException extends Exception
-{
-}
+class TplException extends Exception {}

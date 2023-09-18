@@ -13,6 +13,4 @@ namespace Vpn\Portal\Crypto\Minisign\Exception;
 
 use Exception;
 
-class MinisignException extends Exception
-{
-}
+class MinisignException extends Exception {}
