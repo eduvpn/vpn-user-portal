@@ -69,12 +69,17 @@
     <table class="tbl">
         <tbody>
             <tr>
-                <th><?=$this->t('CA'); ?></th>
+                <th><?=$this->t('OpenVPN'); ?></th>
                 <td>
                     <dl>
-                        <dt><?=$this->t('Created On'); ?></dt><dd><span title="<?=$this->d($serverInfo->ca()->caCert()->validFrom()); ?>"><?=$this->d($serverInfo->ca()->caCert()->validFrom(), 'Y-m-d'); ?></span></dd>
-                        <dt><?=$this->t('Expires On'); ?></dt><dd><span title="<?=$this->d($serverInfo->ca()->caCert()->validTo()); ?>"><?=$this->d($serverInfo->ca()->caCert()->validTo(), 'Y-m-d'); ?></span></dd>
-                        <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e(implode(' ', str_split($serverInfo->ca()->caCert()->fingerprint(), 4))); ?></code></dd>
+                        <dt><?=$this->t('CA'); ?></dt>
+                        <dd>
+                            <dl>
+                                <dt><?=$this->t('Created On'); ?></dt><dd><span title="<?=$this->d($serverInfo->ca()->caCert()->validFrom()); ?>"><?=$this->d($serverInfo->ca()->caCert()->validFrom(), 'Y-m-d'); ?></span></dd>
+                                <dt><?=$this->t('Expires On'); ?></dt><dd><span title="<?=$this->d($serverInfo->ca()->caCert()->validTo()); ?>"><?=$this->d($serverInfo->ca()->caCert()->validTo(), 'Y-m-d'); ?></span></dd>
+                                <dt><?=$this->t('Fingerprint'); ?></dt><dd><code><?=$this->e(implode(' ', str_split($serverInfo->ca()->caCert()->fingerprint(), 4))); ?></code></dd>
+                            </dl>
+                        </dd>
                     </dl>
                 </td>
             </tr>
