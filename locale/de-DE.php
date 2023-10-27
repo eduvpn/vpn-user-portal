@@ -28,7 +28,7 @@ return [
     'Approve' => 'Genehmigen',
     'Approve Application' => 'Genehmige Anwendung',
     //'Authentication Data' => '',
-    'Authorized Applications' => 'Autorsierte Anwendungen',
+    'Authorized Applications' => 'Autorisierte Anwendungen',
     'Authorized On' => 'Autorisiert am',
     'Available Profiles' => 'Verfügbare Profile',
     'Block LAN' => 'LAN blockieren',
