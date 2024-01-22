@@ -121,7 +121,7 @@ return [
     'The <em>Date/Time</em> MUST be in UTC.' => 'Die Angaben <em>Date/Time</em> MÜSSEN in UTC angegeben werden.',
     'The <em>Date/Time</em> field accepts dates of the format <code>Y-m-d H:i:s</code>, e.g. <code>2019-01-01 08:00:00</code>.' => 'Das <em>Datum/Zeit</em>-Feld erlaubt nur folgendes Format: <code>Y-m-d H:i:s</code>, Bsp. <code>2019-01-01 08:00:00</code>.',
     'The credentials you provided were not correct.' => 'Die eingegebenen Daten sind ungültig.',
-    'The list of applications you authorized to create a VPN connection.' => 'Liste der Anwendungen, welche Du erlaubst um eine VPN-Verbindung herzustellen.',
+    'The list of applications you authorized to create a VPN connection.' => 'Liste der Anwendungen, welchen Du erlaubst eine VPN-Verbindung herzustellen.',
     'The maximum number of simultaneously connected VPN clients at a particular moment in time over the last week' => 'Die maximale Anzahl der gleichzeitig verbundenen VPN Clients zu einem bestimmten Zeitpunkt in der letzten Woche.',
     'The most recent VPN connections with this account.' => 'Die letzte aktive VPN Verbindungen mit diesem Beutzerkonto.',
     //'The number of currently connected VPN clients, and the maximum possible number of connected VPN clients based on available IP-space for this profile.' => '',
